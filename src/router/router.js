@@ -1,28 +1,13 @@
-import React from 'react'
-import { TouchableOpacity, Text } from 'react-native'
-import * as userActions from '../redux/user/actions'
-import { connect } from 'react-redux'
-class Router extends React.Component {
-    render() {
-        return (
-            <TouchableOpacity
-                onPress={() => this.props.myUser()}>
-                <Text>
-                    hello mehdi amiri
-                </Text>
-            </TouchableOpacity>
-        )
-    }
-}
-const mapStateToProps = (state) => {
-    return {
-        loading: state.userReducer.loading
-    }
-}
-const mapDispatchToProps = (dispatch) => {
-    return {
-        myUser: () => dispatch(userActions.fetchUser(1))
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import Tour from '../screens/Tour/Tour';
+import Home from '../screens/Home/Home';
 
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Router)
+const MainNavigator = createStackNavigator({
+    Home: { screen: Home },
+    Tour: { screen: Tour },
+});
+
+const App = createAppContainer(MainNavigator);
+
+export default App;
