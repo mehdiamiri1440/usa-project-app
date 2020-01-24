@@ -38,7 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -53,5 +53,52 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>IranSans.woff</string>
+		<string>IRANSansWeb(FaNum)_Bold.ttf</string>
+		<string>IRANSansWeb(FaNum)_Bold.woff</string>
+		<string>IRANSansWeb(FaNum)_Bold.woff2</string>
+		<string>IRANSansWeb(FaNum)_Light.ttf</string>
+		<string>IRANSansWeb(FaNum)_Light.woff</string>
+		<string>IRANSansWeb(FaNum)_Light.woff2</string>
+		<string>IRANSansWeb(FaNum)_Medium.ttf</string>
+		<string>IRANSansWeb(FaNum)_Medium.woff</string>
+		<string>IRANSansWeb(FaNum)_Medium.woff2</string>
+		<string>IRANSansWeb(FaNum)_UltraLight.ttf</string>
+		<string>IRANSansWeb(FaNum)_UltraLight.woff</string>
+		<string>IRANSansWeb(FaNum)_UltraLight.woff2</string>
+		<string>IRANSansWeb(FaNum).ttf</string>
+		<string>IRANSansWeb(FaNum).woff</string>
+		<string>IRANSansWeb(FaNum).woff2</string>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Roboto_medium.ttf</string>
+		<string>Roboto.ttf</string>
+		<string>rubicon-icon-font.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Vazir-Bold-FD.ttf</string>
+		<string>Vazir-Bold-FD.woff</string>
+		<string>Vazir-Bold-FD.woff2</string>
+		<string>Vazir-FD.ttf</string>
+		<string>Vazir-FD.woff</string>
+		<string>Vazir-FD.woff2</string>
+		<string>Vazir.ttf</string>
+		<string>Vazir.woff</string>
+		<string>Vazir.woff2</string>
+	</array>
 </dict>
 </plist>

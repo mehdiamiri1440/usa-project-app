@@ -1,15 +1,16 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
-class Home extends React.Component {
+class Login extends React.Component {
     render() {
-        console.warn('hello', process.env.NODE_ENV)
         return (
             <TouchableOpacity
-                style={[styles.bgBlue, styles.colorr]}
+                style={[styles.backgroundColor]}
                 onPress={() => this.props.navigation.navigate('Tour')}
             >
                 <Text
                 >
+                    آخرین درخواست های خرید
+
                     {locales('alert.hello')}
                 </Text>
             </TouchableOpacity>
@@ -17,10 +18,8 @@ class Home extends React.Component {
     }
 }
 const styles = StyleSheet.create({
-    bgBlue: {
-        justifyContent: 'flex-start', alignItems: 'flex-start',
-        backgroundColor: 'red'
-    },
-    colorr: { color: 'yellow' }
+    backgroundColor: {
+        backgroundColor: '#21AD93'
+    }
 })
-export default Home
+export default Login

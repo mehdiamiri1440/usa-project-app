@@ -1,10 +1,10 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Tour from '../screens/Tour/Tour';
-import Home from '../screens/Home/Home';
+import Login from '../screens/Login/Login';
 
 const MainNavigator = createStackNavigator({
-    Home: { screen: Home },
+    Login: { screen: Login },
     Tour: { screen: Tour },
 });
 
