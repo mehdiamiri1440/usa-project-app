@@ -1,10 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux'
-import { View } from 'react-native'
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
 import configureStore from './src/redux/configureStore';
 import locales from './locales/index';
+import { deviceHeight, deviceWidth } from './src/utils/deviceDimenssions';
 const store = configureStore()
 const customTextProps = {
   style: {
@@ -20,7 +20,7 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <Router />
-      </Provider>
+      </Provider >
     )
   }
 }

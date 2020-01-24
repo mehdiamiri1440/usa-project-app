@@ -4,7 +4,12 @@ import Tour from '../screens/Tour/Tour';
 import Login from '../screens/Login/Login';
 
 const MainNavigator = createStackNavigator({
-    Login: { screen: Login },
+    Login: {
+        screen: Login,
+        navigationOptions: {
+            headerShown: false,
+        }
+    },
     Tour: { screen: Tour },
 });
 

@@ -36,6 +36,8 @@ target 'Baskool' do
 
   pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'BaskoolTests' do
     inherit! :search_paths
     # Pods for testing
