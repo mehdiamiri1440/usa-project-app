@@ -28,6 +28,7 @@ class Login extends React.Component {
                 </Text>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
+                        isRtl={true}
                         labelTextStyle={{ paddingTop: 5 }}
                         label={locales('titles.phoneNumber')}
                         keyboardType='phone-pad'

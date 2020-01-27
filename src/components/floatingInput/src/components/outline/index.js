@@ -90,7 +90,7 @@ export default class Line extends PureComponent {
 
     let topLineContainerStyle = {
       transform: [{
-        scaleX: !I18nManager.isRTL ? -1 : 1,
+        scaleX: this.props.isRTL ? 1 : -1,
       }, {
         translateX: Animated.multiply(labelAnimation, lineOffset),
       }],

@@ -504,6 +504,7 @@ export default class TextField extends PureComponent {
     return (
       <Label
         {...props}
+        isRtl={this.props.isRtl}
         fontSize={fontSize}
         activeFontSize={labelFontSize}
         offset={offset}

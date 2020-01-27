@@ -111,7 +111,9 @@ export default class Label extends PureComponent {
 
     return (
       <Animated.View style={[styles.container, containerStyle]}>
-        <Animated.Text style={[{ position: 'absolute', direction: 'rtl', right: 0 }, styles.text, style, textStyle]} {...props}>
+        <Animated.Text style={[this.props.isRtl ?
+          { position: 'absolute', direction: 'rtl', right: 0 } :
+          styles.text, style, textStyle]} {...props}>
           {label}
         </Animated.Text>
       </Animated.View>
