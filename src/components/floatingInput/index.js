@@ -55,7 +55,7 @@ export default class OutlinedTextField extends TextField {
         let { labelWidth } = this.state;
 
         return (
-            <Outline {...props} labelWidth={labelWidth} />
+            <Outline isRtl={this.props.isRtl} {...props} labelWidth={labelWidth} />
         );
     }
 }

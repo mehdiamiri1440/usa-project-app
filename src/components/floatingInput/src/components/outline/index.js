@@ -80,7 +80,6 @@ export default class Line extends PureComponent {
 
   render() {
     let { lineType, labelWidth, labelAnimation, contentInset } = this.props;
-
     if ('none' === lineType) {
       return null;
     }
@@ -90,7 +89,7 @@ export default class Line extends PureComponent {
 
     let topLineContainerStyle = {
       transform: [{
-        scaleX: this.props.isRTL ? 1 : -1,
+        scaleX: this.props.isRtl ? -1 : 1,
       }, {
         translateX: Animated.multiply(labelAnimation, lineOffset),
       }],
