@@ -1,19 +1,18 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base'
 import { deviceHeight, deviceWidth } from '../../utils/index'
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import {
-    TextField,
-    FilledTextField,
-    OutlinedTextField,
-} from 'react-native-material-textfield';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import OutlinedTextField from '../../components/floatingInput';
 class Login extends React.Component {
     render() {
         return (
             <>
                 <LinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.2 }}
                     colors={['#21AD93', '#12B87F', '#21AD93']}
                 >
                     <View style={styles.linearGradient}>
@@ -35,11 +34,23 @@ class Login extends React.Component {
                     />
                 </View>
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    {/* <OutlinedTextField
                         labelTextStyle={{ paddingTop: 5 }}
-                        label={locales('titles.password')}
+                        label={
+                            <>
+                                <AntDesign
+                                    name="mobile1"
+                                    style={{
+                                        fontSize: 15,
+                                        alignSelf: "center",
+                                        color: '#7E7E7E',
+                                    }}
+                                />
+                                <Text>{locales('titles.password')}</Text>
+                            </>
+                        }
                         keyboardType='phone-pad'
-                    />
+                    /> */}
                 </View>
                 <TouchableOpacity style={styles.forgotContainer}>
                     <EvilIcons
@@ -87,7 +98,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     linearGradient: {
-        height: deviceHeight * 0.2,
+        height: deviceHeight * 0.15,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -96,15 +107,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         textAlign: 'center',
         fontSize: 26,
-        bottom: 20
+        bottom: 40
     },
     textInputPadding: {
-        padding: 20
+        padding: 20,
     },
     userText: {
         flexWrap: 'wrap',
         paddingTop: '3%',
         fontSize: 20,
+        padding: 20,
         textAlign: 'center',
         color: '#7E7E7E'
     }
