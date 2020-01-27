@@ -134,7 +134,7 @@ export default class TextField extends PureComponent {
   static labelOffset = {
     x0: 0,
     y0: 0,
-    x1: deviceWidth * 0.28,
+    x1: 0,
     y1: 0,
   };
 
@@ -188,7 +188,7 @@ export default class TextField extends PureComponent {
       let { [name]: value } = this.props;
       let { [name]: defaultValue } = this.constructor;
 
-      return { ...defaultValue, ...value };
+      return { ...defaultValue, ...value, x1: this.props.isRtl ? deviceWidth * 0.28 : 0 };
     };
   }
 
