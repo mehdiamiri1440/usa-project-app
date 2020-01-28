@@ -28,8 +28,17 @@ class Login extends React.Component {
                 </Text>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
-                        isRtl={true}
                         labelTextStyle={{ paddingTop: 5 }}
+                        icon={
+                            <AntDesign
+                                name="mobile1"
+                                style={{
+                                    fontSize: 15,
+                                    alignSelf: "center",
+                                    color: '#7E7E7E',
+                                }}
+                            />
+                        }
                         label={locales('titles.phoneNumber')}
                         keyboardType='phone-pad'
                     />
