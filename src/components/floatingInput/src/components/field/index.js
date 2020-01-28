@@ -607,6 +607,7 @@ export default class TextField extends PureComponent {
       disabled,
       editable,
       tintColor,
+      password = false,
       style: inputStyleOverrides,
     } = this.props;
 
@@ -618,7 +619,7 @@ export default class TextField extends PureComponent {
         selectionColor={tintColor}
 
         {...props}
-
+        secureTextEntry={password}
         style={[styles.input, inputStyle, inputStyleOverrides]}
         editable={!disabled && editable}
         onChange={this.onChange}
