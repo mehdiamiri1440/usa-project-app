@@ -1,5 +1,5 @@
-import * as financialTransactions from './financialTransactions';
+import * as auth from './auth';
 
 export default {
-    financialTransactions,
+    auth,
 };
