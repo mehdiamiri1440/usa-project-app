@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv'
 
-const getUrl = route => `${API_ENDPOINT}/${route}`;
+const getUrl = route => `${REACT_APP_API_ENDPOINT}/${route}`;
 
 const getRequestHeaders = withAuth => {
     return {
