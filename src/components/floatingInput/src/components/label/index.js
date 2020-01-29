@@ -114,7 +114,7 @@ export default class Label extends PureComponent {
         <Animated.Text style={[this.props.isRtl ?
           { position: 'absolute', direction: 'rtl', right: 0 } :
           styles.text, style, textStyle]} {...props}>
-          {label}{this.props.icon}
+          {`${label} `}{this.props.icon}
         </Animated.Text>
       </Animated.View>
     );
