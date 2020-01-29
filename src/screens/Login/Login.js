@@ -1,15 +1,56 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base'
+import { connect } from 'react-redux'
+import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils/index'
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { validator } from '../../utils'
 import OutlinedTextField from '../../components/floatingInput';
+import * as authActions from '../../redux/auth/actions'
 class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mobileNumber: '',
+            password: '',
+            mobileNumberStatus: ''
+        }
+    }
+    mobileNumberRef = React.createRef();
+    passwordRef = React.createRef();
+
+    onMobileNumberSubmit = () => {
+        let { current: field } = this.mobileNumberRef;
+        setTimeout(() => {
+            if (validator.isMobileNumber(field.value()))
+                this.setState(() => ({
+                    mobileNumber: field.value(),
+                }));
+            else
+                this.setState(() => ({
+                    mobileNumber: ''
+                }));
+        }, 10);
+    };
+    onPasswordSubmit = () => {
+        let { current: field } = this.passwordRef;
+        setTimeout(() => {
+            this.setState(() => ({
+                password: field.value()
+            }));
+        }, 10);
+    };
+    onLogin = () => {
+        let { mobileNumber, password } = this.state
+        this.props.login(mobileNumber, password)
+    }
     render() {
+        let { mobileNumber, password } = this.state
         return (
-            <>
+            <ScrollView>
                 <LinearGradient
                     start={{ x: 0, y: 1 }}
                     end={{ x: 0.8, y: 0.2 }}
@@ -28,6 +69,9 @@ class Login extends React.Component {
                 </Text>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
+                        onChangeText={this.onMobileNumberSubmit}
+                        ref={this.mobileNumberRef}
+                        error=''
                         labelTextStyle={{ paddingTop: 5 }}
                         icon={
                             <AntDesign
@@ -44,23 +88,23 @@ class Login extends React.Component {
                     />
                 </View>
                 <View style={styles.textInputPadding}>
-                    {/* <OutlinedTextField
+                    <OutlinedTextField
                         labelTextStyle={{ paddingTop: 5 }}
-                        label={
-                            <>
-                                <AntDesign
-                                    name="mobile1"
-                                    style={{
-                                        fontSize: 15,
-                                        alignSelf: "center",
-                                        color: '#7E7E7E',
-                                    }}
-                                />
-                                <Text>{locales('titles.password')}</Text>
-                            </>
+                        icon={
+                            <AntDesign
+                                name="lock1"
+                                style={{
+                                    fontSize: 15,
+                                    alignSelf: "center",
+                                    color: '#7E7E7E',
+                                }}
+                            />
                         }
-                        keyboardType='phone-pad'
-                    /> */}
+                        onChangeText={this.onPasswordSubmit}
+                        ref={this.passwordRef}
+                        password={true}
+                        label={locales('titles.password')}
+                    />
                 </View>
                 <TouchableOpacity style={styles.forgotContainer}>
                     <EvilIcons
@@ -73,20 +117,30 @@ class Login extends React.Component {
                     />
                     <Text style={styles.forgotPassword}>{locales('messages.forgotPassword')}</Text>
                 </TouchableOpacity>
-                <Button style={styles.loginButton} rounded disabled>
-                    <Text style={{ color: 'white' }}>{locales('titles.login')}</Text>
+                <Button
+                    onPress={() => this.onLogin()}
+                    style={styles.loginButton}
+                    rounded
+                    disabled={!mobileNumber.length || !password.length}
+                >
+                    <Text style={styles.buttonText}>{locales('titles.login')}</Text>
                 </Button>
                 <Text style={styles.forgotPassword}>
                     {locales('messages.startToSignUp')}
                 </Text>
-                <Button style={styles.loginButton} success rounded>
+                <Button style={[styles.buttonText, styles.loginButton]} success rounded>
                     <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
                 </Button>
-            </>
+            </ScrollView>
         )
     }
 }
 const styles = StyleSheet.create({
+    buttonText: {
+        color: 'white',
+        width: '100%',
+        textAlign: 'center'
+    },
     loginButton: {
         textAlign: 'center',
         margin: 10,
@@ -131,4 +185,16 @@ const styles = StyleSheet.create({
         color: '#7E7E7E'
     }
 });
-export default Login
+const mapStateToProps = state => {
+    return {
+        loading: state.authReducer.loginLoading,
+        error: state.authReducer.loginError,
+        message: state.authReducer.loginMessage,
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
