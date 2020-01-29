@@ -69,6 +69,7 @@ class Login extends React.Component {
                 </Text>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
+                        baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMobileNumberSubmit}
                         ref={this.mobileNumberRef}
                         error=''
@@ -79,7 +80,6 @@ class Login extends React.Component {
                                 style={{
                                     fontSize: 15,
                                     alignSelf: "center",
-                                    color: '#7E7E7E',
                                 }}
                             />
                         }
@@ -89,6 +89,7 @@ class Login extends React.Component {
                 </View>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
+                        baseColor={password.length ? '#00C569' : '#a8a8a8'}
                         labelTextStyle={{ paddingTop: 5 }}
                         icon={
                             <AntDesign
@@ -96,7 +97,6 @@ class Login extends React.Component {
                                 style={{
                                     fontSize: 15,
                                     alignSelf: "center",
-                                    color: '#7E7E7E',
                                 }}
                             />
                         }
@@ -119,7 +119,7 @@ class Login extends React.Component {
                 </TouchableOpacity>
                 <Button
                     onPress={() => this.onLogin()}
-                    style={styles.loginButton}
+                    style={!mobileNumber.length || !password.length ? styles.disableLoginButton : styles.loginButton}
                     rounded
                     disabled={!mobileNumber.length || !password.length}
                 >
@@ -141,9 +141,19 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center'
     },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.8,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        backgroundColor: '#00C569',
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
