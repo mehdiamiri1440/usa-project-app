@@ -1,14 +1,14 @@
 import { requester } from '../utils';
 
-export const login = (userName, password) => {
+export const login = (mobileNumber, password) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `v1/auth/loginByUserNamePass`,
+                route: `dologin`,
                 method: 'POST',
                 withAuth: false,
                 data: {
-                    userName,
+                    phone: mobileNumber,
                     password
                 }
             })

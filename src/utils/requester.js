@@ -6,6 +6,7 @@ const getUrl = route => `${REACT_APP_API_ENDPOINT}/${route}`;
 const getRequestHeaders = withAuth => {
     return {
         'Content-Type': 'application/json; charset=utf-8',
+        'X-Requested-With': 'XMLHttpRequest'
     };
 };
 
@@ -20,6 +21,7 @@ export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, pa
                 params
             })
             .then(result => {
+                console.warn('result is==>', result)
                 resolve(result.data ? result.data : result);
             })
             .catch(err => {
