@@ -1,16 +1,29 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv'
 
 const getUrl = route => `${REACT_APP_API_ENDPOINT}/${route}`;
-
+getData = async () => {
+    try {
+        const value = await AsyncStorage.getItem('@Authorization')
+        if (value !== null) {
+            return value
+        }
+    } catch (e) {
+        return null
+    }
+}
 const getRequestHeaders = withAuth => {
+    let token = getData()
     return {
         'Content-Type': 'application/json; charset=utf-8',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'Authorization': `Bearer ${token}`
     };
 };
 
 export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+
     return new Promise((resolve, reject) => {
         axios
             .request({
@@ -21,17 +34,11 @@ export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, pa
                 params
             })
             .then(result => {
-                console.warn('result is==>', result)
                 resolve(result.data ? result.data : result);
             })
             .catch(err => {
-                console.error('error in connecting to network', err);
-
-                if (err.response && err.response.status === 401) {
-                    console.error(route, '401');
-                    window.location.pathname = '/login';
-                    reject(err);
-                } else if (err.response && err.response.status === 400) {
+                console.warn('error==>', err, 'error.response==>', err.response)
+                if (err.response && err.response.status === 400) {
                     reject(err.response.data);
                 } else {
                     reject(err);
