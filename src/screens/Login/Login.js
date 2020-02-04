@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../utils'
 import OutlinedTextField from '../../components/floatingInput';
 import * as authActions from '../../redux/auth/actions'
+import Spin from '../../components/loading/loading'
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -45,97 +46,119 @@ class Login extends React.Component {
     };
     onLogin = () => {
         let { mobileNumber, password } = this.state
-        this.props.login(mobileNumber, password)
+        this.props.login(mobileNumber, password).then((result) => {
+            if (this.props.error) this.props.navigation.navigate('SignUp')
+        })
     }
     render() {
+        let { message, loading, error } = this.props
         let { mobileNumber, password } = this.state
         return (
             <ScrollView>
-                <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
-                    colors={['#21AD93', '#12B87F', '#21AD93']}
-                >
-                    <View style={styles.linearGradient}>
-                        <Text
-                            style={styles.headerTextStyle}
-                        >
-                            {locales('titles.enterToBuskool')}
-                        </Text>
-                    </View >
-                </LinearGradient>
-                <Text style={styles.userText}>
-                    {locales('messages.signedUpUser')}
-                </Text>
-                <View style={styles.textInputPadding}>
-                    <OutlinedTextField
-                        baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onMobileNumberSubmit}
-                        ref={this.mobileNumberRef}
-                        error=''
-                        labelTextStyle={{ paddingTop: 5 }}
-                        icon={
-                            <AntDesign
-                                name="mobile1"
-                                style={{
-                                    fontSize: 15,
-                                    alignSelf: "center",
-                                }}
-                            />
-                        }
-                        label={locales('titles.phoneNumber')}
-                        keyboardType='phone-pad'
-                    />
-                </View>
-                <View style={styles.textInputPadding}>
-                    <OutlinedTextField
-                        baseColor={password.length ? '#00C569' : '#a8a8a8'}
-                        labelTextStyle={{ paddingTop: 5 }}
-                        icon={
-                            <AntDesign
-                                name="lock1"
-                                style={{
-                                    fontSize: 15,
-                                    alignSelf: "center",
-                                }}
-                            />
-                        }
-                        onChangeText={this.onPasswordSubmit}
-                        ref={this.passwordRef}
-                        password={true}
-                        label={locales('titles.password')}
-                    />
-                </View>
-                <TouchableOpacity style={styles.forgotContainer}>
-                    <EvilIcons
-                        name="refresh"
-                        style={{
-                            fontSize: 30,
-                            alignSelf: "center",
-                            color: '#7E7E7E',
-                        }}
-                    />
-                    <Text style={styles.forgotPassword}>{locales('messages.forgotPassword')}</Text>
-                </TouchableOpacity>
-                <Button
-                    onPress={() => this.onLogin()}
-                    style={!mobileNumber.length || !password.length ? styles.disableLoginButton : styles.loginButton}
-                    rounded
-                    disabled={!mobileNumber.length || !password.length}
-                >
-                    <Text style={styles.buttonText}>{locales('titles.login')}</Text>
-                </Button>
-                <Text style={styles.forgotPassword}>
-                    {locales('messages.startToSignUp')}
-                </Text>
-                <Button style={[styles.buttonText, styles.loginButton]} success rounded>
-                    <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
-                </Button>
+                <Spin spinning={loading} >
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['#21AD93', '#12B87F', '#21AD93']}
+                    >
+                        <View style={styles.linearGradient}>
+                            <Text
+                                style={styles.headerTextStyle}
+                            >
+                                {locales('titles.enterToBuskool')}
+                            </Text>
+                        </View >
+                    </LinearGradient>
+                    <Text style={styles.userText}>
+                        {locales('messages.signedUpUser')}
+                    </Text>
+                    {!error && message && message.length &&
+                        <View style={styles.loginFailedContainer}>
+                            <Text style={styles.loginFailedText}>
+                                {message}
+                            </Text>
+                        </View>
+                    }
+                    <View style={styles.textInputPadding}>
+                        <OutlinedTextField
+                            baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
+                            onChangeText={this.onMobileNumberSubmit}
+                            ref={this.mobileNumberRef}
+                            error=''
+                            labelTextStyle={{ paddingTop: 5 }}
+                            icon={
+                                <AntDesign
+                                    name="mobile1"
+                                    style={{
+                                        fontSize: 15,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                            }
+                            label={locales('titles.phoneNumber')}
+                            keyboardType='phone-pad'
+                        />
+                    </View>
+                    <View style={styles.textInputPadding}>
+                        <OutlinedTextField
+                            baseColor={password.length ? '#00C569' : '#a8a8a8'}
+                            labelTextStyle={{ paddingTop: 5 }}
+                            icon={
+                                <AntDesign
+                                    name="lock1"
+                                    style={{
+                                        fontSize: 15,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                            }
+                            onChangeText={this.onPasswordSubmit}
+                            ref={this.passwordRef}
+                            password={true}
+                            label={locales('titles.password')}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.forgotContainer}>
+                        <EvilIcons
+                            name="refresh"
+                            style={{
+                                fontSize: 30,
+                                alignSelf: "center",
+                                color: '#7E7E7E',
+                            }}
+                        />
+                        <Text style={styles.forgotPassword}>{locales('messages.forgotPassword')}</Text>
+                    </TouchableOpacity>
+                    <Button
+                        onPress={() => this.onLogin()}
+                        style={!mobileNumber.length || !password.length ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                        disabled={!mobileNumber.length || !password.length}
+                    >
+                        <Text style={styles.buttonText}>{locales('titles.login')}</Text>
+                    </Button>
+                    <Text style={styles.forgotPassword}>
+                        {locales('messages.startToSignUp')}
+                    </Text>
+                    <Button style={[styles.buttonText, styles.loginButton]} success rounded>
+                        <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
+                    </Button>
+                </Spin>
             </ScrollView>
         )
     }
 }
 const styles = StyleSheet.create({
+    loginFailedContainer: {
+        backgroundColor: '#F8D7DA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#761C24'
+    },
     buttonText: {
         color: 'white',
         width: '100%',
@@ -196,6 +219,7 @@ const styles = StyleSheet.create({
     }
 });
 const mapStateToProps = state => {
+    console.warn('state===>', state)
     return {
         loading: state.authReducer.loginLoading,
         error: state.authReducer.loginError,
