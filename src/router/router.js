@@ -1,6 +1,6 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Tour from '../screens/Tour/Tour';
+import SignUp from '../screens/SignUp/index';
 import Login from '../screens/Login/Login';
 
 const MainNavigator = createStackNavigator({
@@ -10,8 +10,17 @@ const MainNavigator = createStackNavigator({
             headerShown: false,
         }
     },
-    Tour: { screen: Tour },
-});
+    SignUp: {
+        screen: SignUp,
+        navigationOptions: {
+            headerShown: false,
+        }
+    },
+},
+    {
+        initialRouteName: 'SignUp'
+    }
+);
 
 const App = createAppContainer(MainNavigator);
 
