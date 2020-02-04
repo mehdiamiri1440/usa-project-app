@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { requester } from '../utils';
 
 export const login = (mobileNumber, password) => {
@@ -13,14 +14,19 @@ export const login = (mobileNumber, password) => {
                 }
             })
             .then(result => {
-                console.log('login successfully', result);
-                // cookies.set('accessToken', result.payload.accessToken, { expires: 0.03125 });
-                // cookies.set('refreshToken', result.payload.refreshToken, { expires: 60 });
-                resolve(result.payload);
+                console.warn('login successfully', result);
+                storeData = async () => {
+                    if (result.token)
+                        await AsyncStorage.setItem('@Authorization', result.token)
+                    else
+                        await AsyncStorage.removeItem('@Authorization')
+                    resolve(result);
+                }
+                storeData()
             })
             .catch(err => {
-                console.log('login error', err);
-                reject(err);
+                console.warn('login error', err);
+                return reject(err);
             });
     });
 };

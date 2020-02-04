@@ -12,13 +12,14 @@ export const login = (mobileNumber, password) => {
                 .login(mobileNumber, password)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
+                    console.warn('action error===>', err)
                     dispatch(generateErrorAction(err, { failure: actionTypes.LOGIN_FAILURE, reject: actionTypes.LOGIN_REJECT }));
                     throw err;
                 });
         };
     };
     const loading = () => action(actionTypes.LOGIN_LOADING);
-    const success = res => action(actionTypes.LOGIN_SUCCESS, res.payload);
+    const success = res => action(actionTypes.LOGIN_SUCCESS, res);
 
     return request();
 };
