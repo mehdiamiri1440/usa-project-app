@@ -6,6 +6,17 @@ const INITIAL_STATE = {
     is_buyer: 0,
     is_seller: 0,
     loginMessage: null,
+
+    checkAlreadySignedUpMobileNumberLoading: false,
+    checkAlreadySignedUpMobileNumberFailed: false,
+    checkAlreadySignedUpMobileNumberError: false,
+    checkAlreadySignedUpMobileNumberMessage: null,
+
+
+    checkActivisionCodeLoading: false,
+    checkActivisionCodeFailed: false,
+    checkActivisionCodeError: false,
+    checkActivisionCodeMessage: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -47,6 +58,88 @@ export default (state = INITIAL_STATE, action) => {
                 loginFailed: false,
                 loginError: true,
                 loginMessage: null
+            };
+        };
+
+
+        case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_LOADING: {
+            return {
+                ...state,
+                checkAlreadySignedUpMobileNumberLoading: true,
+                checkAlreadySignedUpMobileNumberFailed: false,
+                checkAlreadySignedUpMobileNumberError: false,
+                checkAlreadySignedUpMobileNumberMessage: null
+            };
+        };
+        case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_SUCCESSFULLY: {
+            let { msg, status } = action.payload
+            return {
+                ...state,
+                checkAlreadySignedUpMobileNumberLoading: false,
+                checkAlreadySignedUpMobileNumberFailed: false,
+                checkAlreadySignedUpMobileNumberError: false,
+                checkAlreadySignedUpMobileNumberMessage: msg,
+            };
+        };
+        case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                checkAlreadySignedUpMobileNumberLoading: false,
+                checkAlreadySignedUpMobileNumberFailed: true,
+                checkAlreadySignedUpMobileNumberError: false,
+                checkAlreadySignedUpMobileNumberMessage: msg
+            };
+        };
+        case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_REJECT: {
+            let { phone } = action.payload.data.errors
+            return {
+                ...state,
+                checkAlreadySignedUpMobileNumberLoading: false,
+                checkAlreadySignedUpMobileNumberFailed: false,
+                checkAlreadySignedUpMobileNumberError: true,
+                checkAlreadySignedUpMobileNumberMessage: phone
+            };
+        };
+
+
+        case actionTypes.CHECK_ACTIVISION_CODE_LOADING: {
+            return {
+                ...state,
+                checkActivisionCodeLoading: true,
+                checkActivisionCodeFailed: false,
+                checkActivisionCodeError: false,
+                checkActivisionCodeMessage: null
+            };
+        };
+        case actionTypes.CHECK_ACTIVISION_CODE_SUCCESSFULLY: {
+            let { msg, status } = action.payload
+            return {
+                ...state,
+                checkActivisionCodeLoading: false,
+                checkActivisionCodeFailed: false,
+                checkActivisionCodeError: false,
+                checkActivisionCodeMessage: msg,
+            };
+        };
+        case actionTypes.CHECK_ACTIVISION_CODE_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                checkActivisionCodeLoading: false,
+                checkActivisionCodeFailed: true,
+                checkActivisionCodeError: false,
+                checkActivisionCodeMessage: msg
+            };
+        };
+        case actionTypes.CHECK_ACTIVISION_CODE_REJECT: {
+            let { phone } = action.payload.data.errors
+            return {
+                ...state,
+                checkActivisionCodeLoading: false,
+                checkActivisionCodeFailed: false,
+                checkActivisionCodeError: true,
+                checkActivisionCodeMessage: phone
             };
         };
         default:
