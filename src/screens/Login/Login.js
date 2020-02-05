@@ -219,7 +219,6 @@ const styles = StyleSheet.create({
     }
 });
 const mapStateToProps = state => {
-    console.warn('state===>', state)
     return {
         loading: state.authReducer.loginLoading,
         error: state.authReducer.loginError,
