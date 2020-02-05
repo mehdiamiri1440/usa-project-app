@@ -1,16 +1,14 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
-import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
 import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
+import ENUMS from '../../../enums';
 class GetMobileNumberStep extends React.Component {
     constructor(props) {
         super(props);
@@ -21,7 +19,8 @@ class GetMobileNumberStep extends React.Component {
     mobileNumberRef = React.createRef();
 
     onSubmit = () => {
-        this.props.setMobileNumber(this.state.mobileNumber)
+        this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber)
+            .then(() => this.props.setMobileNumber(this.state.mobileNumber))
     }
 
     onMobileNumberSubmit = () => {
@@ -42,86 +41,71 @@ class GetMobileNumberStep extends React.Component {
         let { message, loading, error } = this.props
         let { mobileNumber } = this.state
         return (
-            <ScrollView>
-                <Spin spinning={loading} >
-                    <LinearGradient
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 0.8, y: 0.2 }}
-                        colors={['#21AD93', '#12B87F', '#21AD93']}
-                    >
-                        <View style={styles.linearGradient}>
-                            <Text
-                                style={styles.headerTextStyle}
-                            >
-                                {locales('titles.signUpInBuskool')}
-                            </Text>
-                        </View >
-                    </LinearGradient>
-                    <Text style={styles.userText}>
-                        {locales('messages.enterPhoneNumberToGetCode')}
-                    </Text>
-                    {!error && message && message.length &&
-                        <View style={styles.loginFailedContainer}>
-                            <Text style={styles.loginFailedText}>
-                                {message}
-                            </Text>
-                        </View>
-                    }
-                    <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
-                            onChangeText={this.onMobileNumberSubmit}
-                            ref={this.mobileNumberRef}
-                            error=''
-                            labelTextStyle={{ paddingTop: 5 }}
-                            icon={
-                                <AntDesign
-                                    name="mobile1"
-                                    style={{
-                                        fontSize: 15,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                            }
-                            label={locales('titles.phoneNumber')}
-                            keyboardType='phone-pad'
-                        />
-                    </View>
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                        disabled={!mobileNumber.length}
-                    >
-                        <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
-                    </Button>
-                    <Text
-                        style={styles.forgotPassword}>
-                        {locales('messages.backToLogin')}
-                    </Text>
-                    <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('Login')}
-                    >
-                        <Text
-                            style={styles.enterText}>
-                            {locales('titles.enterToBuskool')}
+            <Spin spinning={loading} >
+                <Text style={styles.userText}>
+                    {locales('messages.enterPhoneNumberToGetCode')}
+                </Text>
+                {!error && message && message.length &&
+                    <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>
+                            {ENUMS.VERIFICATION_MESSAGES.list.filter(item => item.value === message)[0].title}
                         </Text>
-                    </TouchableOpacity>
-                </Spin>
-            </ScrollView >
+                    </View>
+                }
+                <View style={styles.textInputPadding}>
+                    <OutlinedTextField
+                        baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
+                        onChangeText={this.onMobileNumberSubmit}
+                        ref={this.mobileNumberRef}
+                        error={error && message.length && message[0]}
+                        labelTextStyle={{ paddingTop: 5 }}
+                        icon={
+                            <AntDesign
+                                name="mobile1"
+                                style={{
+                                    fontSize: 15,
+                                    alignSelf: "center",
+                                }}
+                            />
+                        }
+                        label={locales('titles.phoneNumber')}
+                        keyboardType='phone-pad'
+                    />
+                </View>
+                <Button
+                    onPress={() => this.onSubmit()}
+                    style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
+                    rounded
+                    disabled={!mobileNumber.length}
+                >
+                    <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
+                </Button>
+                <Text
+                    style={styles.forgotPassword}>
+                    {locales('messages.backToLogin')}
+                </Text>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Login')}
+                >
+                    <Text
+                        style={styles.enterText}>
+                        {locales('titles.enterToBuskool')}
+                    </Text>
+                </TouchableOpacity>
+            </Spin>
         )
     }
 }
 const styles = StyleSheet.create({
     loginFailedContainer: {
-        backgroundColor: '#F8D7DA',
+        backgroundColor: '#D4EDDA',
         padding: 10,
         borderRadius: 5
     },
     loginFailedText: {
         textAlign: 'center',
         width: deviceWidth,
-        color: '#761C24'
+        color: '#155724'
     },
     buttonText: {
         color: 'white',
@@ -193,14 +177,15 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => {
     return {
-        loading: state.authReducer.loginLoading,
-        error: state.authReducer.loginError,
-        message: state.authReducer.loginMessage,
+        loading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
+        error: state.authReducer.checkAlreadySignedUpMobileNumberError,
+        failed: state.authReducer.checkAlreadySignedUpMobileNumberFailed,
+        message: state.authReducer.checkAlreadySignedUpMobileNumberMessage,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
+        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(GetMobileNumberStep)
