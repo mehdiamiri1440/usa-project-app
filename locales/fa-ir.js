@@ -3,11 +3,14 @@ export default {
   title: 'فارسی',
   strings: {
     "errors.mobileOrPasswordIncorrect": " شماره همراه یا کلمه عبور اشتباه است . ",
+    'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
 
     "titles.enterToBuskool": "ورود به باسکول",
     "titles.phoneNumber": 'شماره همراه',
     "titles.password": 'کلمه عبور',
     "titles.login": 'ورود',
+    'titles.sendVerificationCodeAgain': 'ارسال مجدد رمز عبور',
+    "titles.submitCode": 'ثبت کد',
     "titles.signUpInBuskool": "ثبت نام در باسکول",
     'titles.submitNumber': 'ثبت شماره',
 
@@ -17,5 +20,7 @@ export default {
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",
     'messages.enterPhoneNumberToGetCode': 'شماره همراه خود را برای دریافت کد فعال‌سازی وارد کنید',
     'messages.backToLogin': 'درصورت داشتن  حساب وارد باسکول شوید',
+    'messages.codeExpirationTime': 'مدت اعتبار کد',
+    'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شد یا خواهد شد را اینجا وارد کنید'
   }
 };
