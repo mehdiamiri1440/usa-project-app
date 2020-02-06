@@ -38,6 +38,8 @@ target 'Baskool' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'RCTRestart', :path => '../node_modules/react-native-restart'
+
   target 'BaskoolTests' do
     inherit! :search_paths
     # Pods for testing

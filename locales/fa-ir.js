@@ -13,11 +13,13 @@ export default {
     "titles.submitCode": 'ثبت کد',
     "titles.signUpInBuskool": "ثبت نام در باسکول",
     'titles.submitNumber': 'ثبت شماره',
+    "titles.fullName": 'نام و نام‌خانوادگی',
 
 
     "messages.signedUpUser": "اگر کاربر قبلی هستید برای ورود شماره همراه و رمز عبور خود را وارد کنید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",
+    'messages.enterUserBasicInfo': 'ثبت مشخصات فردی شما',
     'messages.enterPhoneNumberToGetCode': 'شماره همراه خود را برای دریافت کد فعال‌سازی وارد کنید',
     'messages.backToLogin': 'درصورت داشتن  حساب وارد باسکول شوید',
     'messages.codeExpirationTime': 'مدت اعتبار کد',

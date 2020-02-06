@@ -1,7 +1,9 @@
 import React from 'react';
+import { I18nManager } from 'react-native';
 import { Provider } from 'react-redux'
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
+import RNRestart from 'react-native-restart';
 import configureStore from './src/redux/configureStore';
 import locales from './locales/index';
 import { deviceHeight, deviceWidth } from './src/utils/deviceDimenssions';
@@ -16,6 +18,11 @@ setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
 class App extends React.Component {
+  // componentDidMount() {
+  //   if (!I18nManager.isRTL) {
+  //     I18nManager.forceRTL(true);
+  //   }
+  // }
   render() {
     return (
       <Provider store={store}>
