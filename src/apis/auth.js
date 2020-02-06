@@ -14,7 +14,6 @@ export const login = (mobileNumber, password) => {
                 }
             })
             .then(result => {
-                console.warn('login successfully', result);
                 storeData = async () => {
                     if (result.token)
                         await AsyncStorage.setItem('@Authorization', result.token)
@@ -25,7 +24,6 @@ export const login = (mobileNumber, password) => {
                 storeData()
             })
             .catch(err => {
-                console.warn('login error', err);
                 return reject(err);
             });
     });
@@ -44,11 +42,9 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
                 }
             })
             .then(result => {
-                console.warn('singup successfully', result);
                 resolve(result);
             })
             .catch(err => {
-                console.warn('singup error', err.response);
                 return reject(err.response);
             });
     });
@@ -67,11 +63,9 @@ export const checkActivisionCode = (code) => {
                 }
             })
             .then(result => {
-                console.warn('verified successfully', result);
                 resolve(result);
             })
             .catch(err => {
-                console.warn('verify error', err.response);
                 return reject(err.response);
             });
     });
