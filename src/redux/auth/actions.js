@@ -12,7 +12,6 @@ export const login = (mobileNumber, password) => {
                 .login(mobileNumber, password)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
-                    console.warn('action error===>', err)
                     dispatch(generateErrorAction(err, { failure: actionTypes.LOGIN_FAILURE, reject: actionTypes.LOGIN_REJECT }));
                     throw err;
                 });

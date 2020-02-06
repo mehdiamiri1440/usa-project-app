@@ -11,7 +11,7 @@ class SignUp extends React.Component {
         super(props)
         this.state = {
             mobileNumber: '09367751890',
-            stepNumber: 1
+            stepNumber: 3
         }
     }
 

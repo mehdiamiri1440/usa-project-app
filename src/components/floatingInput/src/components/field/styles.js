@@ -13,9 +13,6 @@ export default StyleSheet.create({
     margin: 0,
     flex: 1,
 
-    textAlign: I18nManager.isRTL ?
-      'right' :
-      'left',
 
     includeFontPadding: false,
     textAlignVertical: 'top',

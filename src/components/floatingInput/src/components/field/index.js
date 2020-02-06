@@ -620,7 +620,7 @@ export default class TextField extends PureComponent {
 
         {...props}
         secureTextEntry={password}
-        style={[styles.input, inputStyle, inputStyleOverrides]}
+        style={[styles.input, inputStyle, inputStyleOverrides, { textAlign: this.props.isRtl ? 'right' : 'left' }]}
         editable={!disabled && editable}
         onChange={this.onChange}
         onChangeText={this.onChangeText}

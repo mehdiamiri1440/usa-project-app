@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
-import OutlinedTextField from '../../../components/floatingInput';
+import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
@@ -239,7 +239,6 @@ const styles = StyleSheet.create({
     }
 });
 const mapStateToProps = state => {
-    console.warn('state-===>', state)
     return {
         loading: state.authReducer.checkActivisionCodeLoading,
         error: state.authReducer.checkActivisionCodeError,

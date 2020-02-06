@@ -140,7 +140,9 @@ class Login extends React.Component {
                     <Text style={styles.forgotPassword}>
                         {locales('messages.startToSignUp')}
                     </Text>
-                    <Button style={[styles.buttonText, styles.loginButton]} success rounded>
+                    <Button
+                        onPress={() => this.props.navigation.navigate('SignUp')}
+                        style={[styles.buttonText, styles.loginButton]} success rounded>
                         <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
                     </Button>
                 </Spin>
