@@ -5,6 +5,13 @@ export default {
     "errors.mobileOrPasswordIncorrect": " شماره همراه یا کلمه عبور اشتباه است . ",
     'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
 
+
+    "labels.man": "آقا",
+    "labels.selectProvince": "استان را انتخاب کنید",
+    "labels.selectCity": "شهر را انتخاب کنید",
+    "labels.woman": "خانم",
+
+
     "titles.enterToBuskool": "ورود به باسکول",
     "titles.phoneNumber": 'شماره همراه',
     "titles.password": 'کلمه عبور',
@@ -13,8 +20,9 @@ export default {
     "titles.submitCode": 'ثبت کد',
     "titles.signUpInBuskool": "ثبت نام در باسکول",
     'titles.submitNumber': 'ثبت شماره',
-    "titles.fullName": 'نام و نام‌خانوادگی',
-
+    'titles.firstName': 'نام',
+    'titles.lastName': 'نام‌خانوادگی',
+    'titles.submitInformation': 'ثبت اطلاعات',
 
     "messages.signedUpUser": "اگر کاربر قبلی هستید برای ورود شماره همراه و رمز عبور خود را وارد کنید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",

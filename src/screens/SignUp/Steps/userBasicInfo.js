@@ -1,9 +1,9 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
-import { Button } from 'native-base'
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Radio, Button } from 'native-base'
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { validator } from '../../../utils';
 import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
@@ -15,78 +15,142 @@ class UserBasicInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mobileNumber: '',
+            firstName: '',
+            lastName: '',
+            gender: 'woman'
         }
     }
-    mobileNumberRef = React.createRef();
+    lastNameRef = React.createRef();
+    firstNameRef = React.createRef();
 
 
 
     onSubmit = () => {
-        this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber)
-            .then(() => this.props.setMobileNumber(this.state.mobileNumber))
+        this.props.setFullNameAndGender(this.state.firstName, this.state.lastName, this.state.gender)
     }
 
-    onMobileNumberSubmit = () => {
-        let { current: field } = this.mobileNumberRef;
+    onFirstNameSubmit = () => {
+        let { current: field } = this.firstNameRef;
         setTimeout(() => {
-            if (validator.isMobileNumber(field.value()))
+            if (validator.isPersianName(field.value()))
                 this.setState(() => ({
-                    mobileNumber: field.value(),
+                    firstName: field.value(),
                 }));
             else
                 this.setState(() => ({
-                    mobileNumber: ''
+                    firstName: ''
+                }));
+        }, 10);
+    };
+
+    onLastNameRef = () => {
+        let { current: field } = this.lastNameRef;
+        setTimeout(() => {
+            if (validator.isPersianName(field.value()))
+                this.setState(() => ({
+                    lastName: field.value(),
+                }));
+            else
+                this.setState(() => ({
+                    lastName: ''
                 }));
         }, 10);
     };
 
     render() {
         let { message, loading, error } = this.props
-        let { mobileNumber } = this.state
+        let { lastName, firstName } = this.state
         return (
             <Spin spinning={loading} >
                 <Text style={styles.userText}>
                     {locales('messages.enterUserBasicInfo')}
                 </Text>
-                {!error && message && message.length &&
-                    <View style={styles.loginFailedContainer}>
-                        <Text style={styles.loginFailedText}>
-                            {ENUMS.VERIFICATION_MESSAGES.list.filter(item => item.value === message)[0].title}
-                        </Text>
-                    </View>
-                }
+                <View style={[styles.textInputPadding, {
+                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                }]}>
+                    <TouchableOpacity
+                        onPress={() => this.setState({ gender: 'man' })}
+                        style={{
+                            borderWidth: 1, borderColor: 'green',
+                            padding: 20, borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 10,
+                        }}>
+                        <Radio
+                            selected={this.state.gender === 'man'}
+                            color={"#f0ad4e"}
+                            style={{ marginHorizontal: 10 }}
+                            selectedColor={"#5cb85c"}
+                        />
+                        <View style={{ flexDirection: 'row-reverse' }}>
+                            <Ionicons
+                                name="ios-man"
+                                style={{
+                                    fontSize: 25,
+                                    alignSelf: "center",
+                                }}
+                            />
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            borderWidth: 1, borderColor: 'green',
+                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
+                            , justifyContent: 'space-between'
+                        }}
+                        onPress={() => this.setState({ gender: 'woman' })}
+                    >
+                        <Radio
+                            selected={this.state.gender === 'woman'}
+                            color={"#f0ad4e"}
+                            style={{ marginHorizontal: 10 }}
+                            selectedColor={"#5cb85c"}
+                        />
+                        <View style={{ flexDirection: 'row-reverse' }}>
+                            <Ionicons
+                                name="ios-woman"
+                                style={{
+                                    fontSize: 25,
+                                    alignSelf: "center",
+                                }}
+                            />
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
-                        baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onMobileNumberSubmit}
-                        ref={this.mobileNumberRef}
+                        baseColor={firstName.length ? '#00C569' : '#a8a8a8'}
+                        onChangeText={this.onFirstNameSubmit}
+                        ref={this.firstNameRef}
                         isRtl={true}
                         error={error && message.length && message[0]}
                         labelTextStyle={{ paddingTop: 5 }}
-                        label={locales('titles.fullName')}
+                        label={locales('titles.firstName')}
+                    />
+                </View>
+                <View style={styles.textInputPadding}>
+                    <OutlinedTextField
+                        baseColor={lastName.length ? '#00C569' : '#a8a8a8'}
+                        onChangeText={this.onLastNameRef}
+                        ref={this.lastNameRef}
+                        isRtl={true}
+                        error={error && message.length && message[0]}
+                        labelTextStyle={{ paddingTop: 5 }}
+                        label={locales('titles.lastName')}
                     />
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
+                    style={!firstName.length || !lastName.length ? styles.disableLoginButton : styles.loginButton}
                     rounded
-                    disabled={!mobileNumber.length}
+                    disabled={!firstName.length || !lastName.length}
                 >
-                    <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
+                    <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
                 </Button>
-                <Text
-                    style={styles.forgotPassword}>
-                    {locales('messages.backToLogin')}
-                </Text>
-                <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Login')}
-                >
-                    <Text
-                        style={styles.enterText}>
-                        {locales('titles.enterToBuskool')}
-                    </Text>
-                </TouchableOpacity>
             </Spin>
         )
     }

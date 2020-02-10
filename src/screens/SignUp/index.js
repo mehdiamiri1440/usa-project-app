@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';
+import ChooseCity from './Steps/chooseCity';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight } from '../../utils/index'
 class SignUp extends React.Component {
@@ -11,16 +12,30 @@ class SignUp extends React.Component {
         super(props)
         this.state = {
             mobileNumber: '09367751890',
-            stepNumber: 3
+            firstName: '',
+            lastName: '',
+            gender: '',
+            city: '',
+            province: '',
+            stepNumber: 4
         }
     }
 
     changeStep = stepNumber => {
         this.setState({ stepNumber })
-    }
+    };
+
     setMobileNumber = mobileNumber => {
         this.setState({ mobileNumber }, () => this.changeStep(2))
-    }
+    };
+
+    setFullNameAndGender = (firstName, lastName, gender) => {
+        this.setState({ firstName, lastName, gender }, () => this.changeStep(4))
+    };
+    setCityAndProvice = (city, province) => {
+        this.setState({ city, province }, () => this.changeStep(5))
+    };
+
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
@@ -34,7 +49,10 @@ class SignUp extends React.Component {
                 />
             }
             case 3: {
-                return <UserBasicInfo {...this.props} setMobileNumber={this.setMobileNumber} />
+                return <UserBasicInfo {...this.props} setFullName={this.setFullName} />
+            }
+            case 4: {
+                return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
             }
             default:
                 break;

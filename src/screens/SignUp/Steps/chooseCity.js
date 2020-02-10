@@ -1,45 +1,63 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
+import { Dropdown } from 'react-native-material-dropdown';
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
-import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
-class GetMobileNumberStep extends React.Component {
+class ChooseCity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mobileNumber: '',
+            province: '',
+            city: '',
+            index: -1
         }
     }
-    mobileNumberRef = React.createRef();
+    provinceRef = React.createRef();
+    cityRef = React.createRef();
 
     onSubmit = () => {
-        this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber)
-            .then(() => this.props.setMobileNumber(this.state.mobileNumber))
+
     }
 
-    onMobileNumberSubmit = () => {
-        let { current: field } = this.mobileNumberRef;
+    onProvinceSubmit = () => {
+        let { current: field } = this.provinceRef;
         setTimeout(() => {
-            if (validator.isMobileNumber(field.value()))
-                this.setState(() => ({
-                    mobileNumber: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    mobileNumber: ''
-                }));
+            this.setState(() => ({
+                mobileNumber: field.value(),
+            }));
         }, 10);
     };
 
+    onCitySubmit = () => {
+        let { current: field } = this.cityRef;
+        setTimeout(() => {
+            this.setState(() => ({
+                mobileNumber: field.value(),
+            }));
+        }, 10);
+    };
+    componentDidMount() {
+        if (!I18nManager.isRTL) {
+            I18nManager.forceRTL(true);
+        }
+    }
+
     render() {
         let { message, loading, error } = this.props
-        let { mobileNumber } = this.state
+        let { city = 'Mango', province } = this.state
+        let data = [{
+            value: 'Banana',
+        }, {
+            value: 'Mango',
+        }, {
+            value: 'Pear',
+        }];
         return (
             <Spin spinning={loading} >
                 <Text style={styles.userText}>
@@ -52,34 +70,21 @@ class GetMobileNumberStep extends React.Component {
                         </Text>
                     </View>
                 }
-                <View style={styles.textInputPadding}>
-                    <OutlinedTextField
-                        baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onMobileNumberSubmit}
-                        ref={this.mobileNumberRef}
-                        error={error && message.length && message[0]}
-                        labelTextStyle={{ paddingTop: 5 }}
-                        icon={
-                            <AntDesign
-                                name="mobile1"
-                                style={{
-                                    fontSize: 15,
-                                    alignSelf: "center",
-                                }}
-                            />
-                        }
-                        label={locales('titles.phoneNumber')}
-                        keyboardType='phone-pad'
-                    />
-                </View>
-                <Button
+                <Dropdown
+                    label={locales('labels.selectProvince')}
+                    data={data}
+                    isRtl={true}
+                    onChangeText={(value) => this.setState({ city: value })}
+
+                />
+                {/* <Button
                     onPress={() => this.onSubmit()}
                     style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
                     rounded
                     disabled={!mobileNumber.length}
                 >
                     <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
-                </Button>
+                </Button> */}
                 <Text
                     style={styles.forgotPassword}>
                     {locales('messages.backToLogin')}
@@ -188,4 +193,4 @@ const mapDispatchToProps = (dispatch) => {
         checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(GetMobileNumberStep)
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseCity)
