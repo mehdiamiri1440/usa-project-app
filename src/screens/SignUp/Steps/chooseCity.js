@@ -7,6 +7,7 @@ import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
 import * as authActions from '../../../redux/auth/actions'
+import * as locationActions from '../../../redux/locations/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 class ChooseCity extends React.Component {
@@ -43,23 +44,37 @@ class ChooseCity extends React.Component {
         }, 10);
     };
     componentDidMount() {
+        this.props.fetchAllProvinces();
         if (!I18nManager.isRTL) {
             I18nManager.forceRTL(true);
         }
     }
+    componentWillUnmount() {
+        if (I18nManager.isRTL) {
+            I18nManager.forceRTL(false);
+        }
+    }
+
+    setProvince = (value, index) => {
+        let { provinces = [] } = this.props.allProvincesObject;
+        if (provinces.length) {
+            this.props.fetchAllProvinces(provinces[index].id)
+        }
+    };
 
     render() {
-        let { message, loading, error } = this.props
-        let { city = 'Mango', province } = this.state
-        let data = [{
-            value: 'Banana',
-        }, {
-            value: 'Mango',
-        }, {
-            value: 'Pear',
-        }];
+        let { message, loading, error, allProvincesObject,
+            fetchCitiesLoading, fetchCitiesError, fetchCitiesFailed, fetchCitiesMessage,
+            allCitiesObject } = this.props;
+        let { provinces = [] } = allProvincesObject;
+        let cities = [];
+        provinces = provinces.map(item => ({ ...item, value: item.province_name }))
+        if (Object.entries(allCitiesObject).length) {
+            cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
+        }
+        console.warn('alll cities', allCitiesObject)
         return (
-            <Spin spinning={loading} >
+            <Spin spinning={loading || fetchCitiesLoading} >
                 <Text style={styles.userText}>
                     {locales('messages.enterPhoneNumberToGetCode')}
                 </Text>
@@ -70,13 +85,23 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
+                {/* <View style={{ flexDirection: 'column', width: deviceWidth * 0.4 }}> */}
                 <Dropdown
+                    onChangeText={(value, index) => this.setProvince(value, index)}
                     label={locales('labels.selectProvince')}
-                    data={data}
-                    isRtl={true}
-                    onChangeText={(value) => this.setState({ city: value })}
-
+                    data={provinces}
+                    containerStyle={{
+                        paddingHorizontal: 20
+                    }}
                 />
+                <Dropdown
+                    label={locales('labels.selectCity')}
+                    data={cities}
+                    containerStyle={{
+                        paddingHorizontal: 20
+                    }}
+                />
+                {/* </View> */}
                 {/* <Button
                     onPress={() => this.onSubmit()}
                     style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
@@ -182,14 +207,23 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => {
     return {
-        loading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
-        error: state.authReducer.checkAlreadySignedUpMobileNumberError,
-        failed: state.authReducer.checkAlreadySignedUpMobileNumberFailed,
-        message: state.authReducer.checkAlreadySignedUpMobileNumberMessage,
+        loading: state.locationsReducer.fetchAllProvincesLoading,
+        error: state.locationsReducer.fetchAllProvincesError,
+        failed: state.locationsReducer.fetchAllProvincesFailed,
+        message: state.locationsReducer.fetchAllProvincesMessage,
+        allProvincesObject: state.locationsReducer.allProvincesObject,
+
+        fetchCitiesLoading: state.locationsReducer.fetchAllCitiesLoading,
+        fetchCitiesError: state.locationsReducer.fetchAllCitiesError,
+        fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
+        fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
+        allCitiesObject: state.locationsReducer.allCitiesObject,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
         checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
     }
 }
