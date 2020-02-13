@@ -22,61 +22,62 @@ class ChooseCity extends React.Component {
     provinceRef = React.createRef();
     cityRef = React.createRef();
 
-    onSubmit = () => {
-
-    }
-
-    onProvinceSubmit = () => {
-        let { current: field } = this.provinceRef;
-        setTimeout(() => {
-            this.setState(() => ({
-                mobileNumber: field.value(),
-            }));
-        }, 10);
-    };
-
-    onCitySubmit = () => {
-        let { current: field } = this.cityRef;
-        setTimeout(() => {
-            this.setState(() => ({
-                mobileNumber: field.value(),
-            }));
-        }, 10);
-    };
     componentDidMount() {
         this.props.fetchAllProvinces();
         if (!I18nManager.isRTL) {
             I18nManager.forceRTL(true);
         }
     }
-    componentWillUnmount() {
-        if (I18nManager.isRTL) {
-            I18nManager.forceRTL(false);
-        }
-    }
+
+    onSubmit = () => {
+        let { city, province } = this.state;
+        this.props.setCityAndProvice(city, province);
+    };
 
     setProvince = (value, index) => {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
+            this.setState({ province: value })
             this.props.fetchAllProvinces(provinces[index].id)
         }
     };
 
+    setCity = (value) => {
+        this.setState({ city: value })
+    };
+
     render() {
-        let { message, loading, error, allProvincesObject,
-            fetchCitiesLoading, fetchCitiesError, fetchCitiesFailed, fetchCitiesMessage,
-            allCitiesObject } = this.props;
+        let {
+            message,
+            loading,
+            error,
+            allProvincesObject,
+            fetchCitiesLoading,
+            fetchCitiesError,
+            fetchCitiesFailed,
+            fetchCitiesMessage,
+            allCitiesObject
+        } = this.props;
+
+        let {
+            city,
+            province
+        } = this.state;
+
         let { provinces = [] } = allProvincesObject;
+
         let cities = [];
-        provinces = provinces.map(item => ({ ...item, value: item.province_name }))
+
+        provinces = provinces.map(item => ({ ...item, value: item.province_name }));
+
         if (Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
         }
-        console.warn('alll cities', allCitiesObject)
+
         return (
             <Spin spinning={loading || fetchCitiesLoading} >
                 <Text style={styles.userText}>
-                    {locales('messages.enterPhoneNumberToGetCode')}
+                    {locales('titles.chooseCityAndProvince')}
                 </Text>
                 {!error && message && message.length &&
                     <View style={styles.loginFailedContainer}>
@@ -95,33 +96,23 @@ class ChooseCity extends React.Component {
                     }}
                 />
                 <Dropdown
+                    onChangeText={(value) => this.setCity(value)}
                     label={locales('labels.selectCity')}
                     data={cities}
                     containerStyle={{
                         paddingHorizontal: 20
                     }}
                 />
-                {/* </View> */}
-                {/* <Button
-                    onPress={() => this.onSubmit()}
-                    style={!mobileNumber.length ? styles.disableLoginButton : styles.loginButton}
-                    rounded
-                    disabled={!mobileNumber.length}
-                >
-                    <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
-                </Button> */}
-                <Text
-                    style={styles.forgotPassword}>
-                    {locales('messages.backToLogin')}
-                </Text>
-                <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Login')}
-                >
-                    <Text
-                        style={styles.enterText}>
-                        {locales('titles.enterToBuskool')}
-                    </Text>
-                </TouchableOpacity>
+                <View style={{ marginVertical: 20 }}>
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!city.length || !province.length ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                        disabled={!city.length || !province.length}
+                    >
+                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                    </Button>
+                </View>
             </Spin>
         )
     }
@@ -224,7 +215,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
-        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseCity)

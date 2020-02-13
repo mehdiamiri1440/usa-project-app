@@ -4,7 +4,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';
+import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
+import UserActivity from './Steps/userActivity';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight } from '../../utils/index'
 class SignUp extends React.Component {
@@ -15,9 +17,11 @@ class SignUp extends React.Component {
             firstName: '',
             lastName: '',
             gender: '',
+            userName: '',
+            password: '',
             city: '',
             province: '',
-            stepNumber: 4
+            stepNumber: 5
         }
     }
 
@@ -36,6 +40,10 @@ class SignUp extends React.Component {
         this.setState({ city, province }, () => this.changeStep(5))
     };
 
+    setUserAuthorities = (userName, password) => {
+        this.setState({ userName, password }, () => this.changeStep(6))
+    };
+
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
@@ -43,16 +51,19 @@ class SignUp extends React.Component {
                 return <GetMobileNumberStep {...this.props} setMobileNumber={this.setMobileNumber} />
             }
             case 2: {
-                return <EnterActivisionCode
-                    changeStep={this.changeStep}
-                    mobileNumber={this.state.mobileNumber} {...this.props}
-                />
+                return <EnterActivisionCode changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
             }
             case 3: {
                 return <UserBasicInfo {...this.props} setFullName={this.setFullName} />
             }
             case 4: {
                 return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
+            }
+            case 5: {
+                return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
+            }
+            case 6: {
+                return <UserActivity setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             default:
                 break;
