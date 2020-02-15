@@ -2,8 +2,10 @@ import React from 'react'
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Radio, Button } from 'native-base'
 import { connect } from 'react-redux'
+import { Dropdown } from 'react-native-material-dropdown';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
 import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
@@ -15,51 +17,35 @@ class UserActivity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: '',
-            lastName: '',
-            gender: 'woman'
+            activityZone: '',
+            activityType: '',
+            selectedCategoryId: null
         }
     }
-    lastNameRef = React.createRef();
-    firstNameRef = React.createRef();
+    activityZone = React.createRef();
 
-
-
-    onSubmit = () => {
-        this.props.setFullNameAndGender(this.state.firstName, this.state.lastName, this.state.gender)
+    componentDidMount() {
+        this.props.fetchAllActivityZones();
     }
 
-    onFirstNameSubmit = () => {
-        let { current: field } = this.firstNameRef;
-        setTimeout(() => {
-            if (validator.isPersianName(field.value()))
-                this.setState(() => ({
-                    firstName: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    firstName: ''
-                }));
-        }, 10);
+    onSubmit = () => {
+        let { selectedCategoryId, activityType } = this.state;
+        this.props.setActivityZoneAndType(selectedCategoryId, activityType)
+    }
+
+    onActivityZoneSubmit = (value, index) => {
+        let { activityZones } = this.props;
+        let selectedCategoryId = activityZones[index].id;
+        this.setState({ selectedCategoryId })
     };
 
-    onLastNameRef = () => {
-        let { current: field } = this.lastNameRef;
-        setTimeout(() => {
-            if (validator.isPersianName(field.value()))
-                this.setState(() => ({
-                    lastName: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    lastName: ''
-                }));
-        }, 10);
-    };
 
     render() {
-        let { message, loading, error } = this.props
-        let { lastName, firstName } = this.state
+        let { message, failed, loading, error, activityZones } = this.props
+        let { selectedCategoryId, activityType } = this.state
+
+        activityZones = activityZones.map(item => ({ ...item, value: item.category_name }));
+
         return (
             <Spin spinning={loading} >
                 <Text style={styles.userText}>
@@ -69,7 +55,7 @@ class UserActivity extends React.Component {
                     alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                 }]}>
                     <TouchableOpacity
-                        onPress={() => this.setState({ gender: 'man' })}
+                        onPress={() => this.setState({ activityType: 'buyer' })}
                         style={{
                             borderWidth: 1, borderColor: 'green',
                             padding: 20, borderRadius: 5,
@@ -78,20 +64,20 @@ class UserActivity extends React.Component {
                             marginHorizontal: 10,
                         }}>
                         <Radio
-                            selected={this.state.gender === 'man'}
+                            selected={activityType === 'buyer'}
                             color={"#f0ad4e"}
                             style={{ marginHorizontal: 10 }}
                             selectedColor={"#5cb85c"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Ionicons
-                                name="ios-man"
+                            <AntDesign
+                                name="shoppingcart"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -100,54 +86,42 @@ class UserActivity extends React.Component {
                             padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
                             , justifyContent: 'space-between'
                         }}
-                        onPress={() => this.setState({ gender: 'woman' })}
+                        onPress={() => this.setState({ activityType: 'seller' })}
                     >
                         <Radio
-                            selected={this.state.gender === 'woman'}
+                            selected={activityType === 'seller'}
                             color={"#f0ad4e"}
                             style={{ marginHorizontal: 10 }}
                             selectedColor={"#5cb85c"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Ionicons
-                                name="ios-woman"
+                            <MaterialCommunityIcons
+                                name="account-tie"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
-                        baseColor={firstName.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onFirstNameSubmit}
-                        ref={this.firstNameRef}
-                        isRtl={true}
-                        error={error && message.length && message[0]}
-                        labelTextStyle={{ paddingTop: 5 }}
-                        label={locales('titles.firstName')}
-                    />
-                </View>
-                <View style={styles.textInputPadding}>
-                    <OutlinedTextField
-                        baseColor={lastName.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onLastNameRef}
-                        ref={this.lastNameRef}
-                        isRtl={true}
-                        error={error && message.length && message[0]}
-                        labelTextStyle={{ paddingTop: 5 }}
-                        label={locales('titles.lastName')}
+                    <Dropdown
+                        onChangeText={(value, index) => this.onActivityZoneSubmit(value, index)}
+                        label={locales('labels.selectActivityZone')}
+                        data={activityZones}
+                        containerStyle={{
+                            paddingHorizontal: 20
+                        }}
                     />
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!firstName.length || !lastName.length ? styles.disableLoginButton : styles.loginButton}
+                    style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
                     rounded
-                    disabled={!firstName.length || !lastName.length}
+                    disabled={!selectedCategoryId || !activityType.length}
                 >
                     <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
                 </Button>
@@ -236,15 +210,16 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => {
     return {
-        loading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
-        error: state.authReducer.checkAlreadySignedUpMobileNumberError,
-        failed: state.authReducer.checkAlreadySignedUpMobileNumberFailed,
-        message: state.authReducer.checkAlreadySignedUpMobileNumberMessage,
+        loading: state.authReducer.fetchAllActivityZonesLoading,
+        error: state.authReducer.fetchAllActivityZonesError,
+        failed: state.authReducer.fetchAllActivityZonesFailed,
+        message: state.authReducer.fetchAllActivityZonesMessage,
+        activityZones: state.authReducer.activityZones,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
+        fetchAllActivityZones: () => dispatch(authActions.fetchAllActivityZones()),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(UserActivity)

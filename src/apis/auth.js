@@ -70,3 +70,65 @@ export const checkActivisionCode = (code) => {
             });
     });
 };
+
+
+export const fetchAllActivityZones = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_category_list`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                console.warn('result===>', result)
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};
+
+
+export const submitRegister = ({
+    phone,
+    first_name,
+    last_name,
+    password,
+    user_name,
+    sex,
+    province,
+    city,
+    activity_type,
+    // national_code,
+    category_id
+}) => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `api/v1/users`,
+                method: 'POST',
+                withAuth: false,
+                data: {
+                    phone,
+                    first_name,
+                    last_name,
+                    password,
+                    user_name,
+                    sex,
+                    province,
+                    city,
+                    activity_type,
+                    // national_code,
+                    category_id
+                }
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};

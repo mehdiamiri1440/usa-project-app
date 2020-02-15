@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native'
+import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
 import EnterActivisionCode from './Steps/EnterActivisionCode';
@@ -7,8 +8,10 @@ import UserBasicInfo from './Steps/userBasicInfo';
 import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
+import * as authActions from '../../redux/auth/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight } from '../../utils/index'
+import Spin from '../../components/loading/loading';
 class SignUp extends React.Component {
     constructor(props) {
         super(props)
@@ -19,9 +22,11 @@ class SignUp extends React.Component {
             gender: '',
             userName: '',
             password: '',
+            activityZone: '',
+            activityType: '',
             city: '',
             province: '',
-            stepNumber: 5
+            stepNumber: 6
         }
     }
 
@@ -44,6 +49,40 @@ class SignUp extends React.Component {
         this.setState({ userName, password }, () => this.changeStep(6))
     };
 
+    setActivityZoneAndType = (activityZone, activityType) => {
+        this.setState({ activityZone, activityType }, () => this.submitRegitster());
+    };
+
+    submitRegitster = () => {
+        let {
+            mobileNumber,
+            firstName,
+            lastName,
+            gender,
+            userName,
+            password,
+            activityZone,
+            activityType,
+            city,
+            province,
+        } = this.state;
+
+        let registerObject = {
+            phone: mobileNumber,
+            first_name: firstName,
+            last_name: lastName,
+            password,
+            user_name: userName,
+            sex: gender,
+            province,
+            city,
+            activity_type: activityType,
+            category_id: activityZone
+        };
+
+        this.props.submitRegister(registerObject);
+    }
+
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
@@ -63,7 +102,7 @@ class SignUp extends React.Component {
                 return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             case 6: {
-                return <UserActivity setUserAuthorities={this.setUserAuthorities} {...this.props} />
+                return <UserActivity setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             default:
                 break;
@@ -71,22 +110,26 @@ class SignUp extends React.Component {
 
     }
     render() {
+        let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
+
         return (
             <ScrollView>
-                <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
-                    colors={['#21AD93', '#12B87F', '#21AD93']}
-                >
-                    <View style={styles.linearGradient}>
-                        <Text
-                            style={styles.headerTextStyle}
-                        >
-                            {locales('titles.signUpInBuskool')}
-                        </Text>
-                    </View >
-                </LinearGradient>
-                {this.renderSteps()}
+                <Spin spinning={submitLoading}>
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['#21AD93', '#12B87F', '#21AD93']}
+                    >
+                        <View style={styles.linearGradient}>
+                            <Text
+                                style={styles.headerTextStyle}
+                            >
+                                {locales('titles.signUpInBuskool')}
+                            </Text>
+                        </View >
+                    </LinearGradient>
+                    {this.renderSteps()}
+                </Spin>
             </ScrollView>
         )
     }
@@ -105,4 +148,20 @@ const styles = StyleSheet.create({
         bottom: 40
     },
 })
-export default SignUp
+
+const mapStateToProps = (state) => {
+    return {
+        submitLoading: state.authReducer.submitRegisterLoading,
+        submitError: state.authReducer.submitRegisterError,
+        submitFailed: state.authReducer.submitRegisterFailed,
+        sumbitMessage: state.authReducer.submitRegisterMessage,
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject))
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

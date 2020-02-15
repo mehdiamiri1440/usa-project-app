@@ -17,6 +17,18 @@ const INITIAL_STATE = {
     checkActivisionCodeFailed: false,
     checkActivisionCodeError: false,
     checkActivisionCodeMessage: null,
+
+    submitRegisterLoading: false,
+    submitRegisterFailed: false,
+    submitRegisterError: false,
+    submitRegisterMessage: null,
+
+
+    fetchAllActivityZonesLoading: false,
+    fetchAllActivityZonesFailed: false,
+    fetchAllActivityZonesError: false,
+    fetchAllActivityZonesMessage: null,
+    activityZones: []
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -140,6 +152,85 @@ export default (state = INITIAL_STATE, action) => {
                 checkActivisionCodeFailed: false,
                 checkActivisionCodeError: true,
                 checkActivisionCodeMessage: phone
+            };
+        };
+
+
+        case actionTypes.FETCH_ALL_ACTIVITIY_ZONE_LOADING: {
+            return {
+                ...state,
+                fetchAllActivityZonesLoading: true,
+                fetchAllActivityZonesFailed: false,
+                fetchAllActivityZonesError: false,
+                fetchAllActivityZonesMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_ACTIVITIY_ZONE_SUCCESSFULLY: {
+            return {
+                ...state,
+                fetchAllActivityZonesLoading: false,
+                fetchAllActivityZonesFailed: false,
+                fetchAllActivityZonesError: false,
+                fetchAllActivityZonesMessage: null,
+                activityZones: [...(action.payload.categories)]
+            };
+        };
+        case actionTypes.FETCH_ALL_ACTIVITIY_ZONE_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                fetchAllActivityZonesLoading: false,
+                fetchAllActivityZonesFailed: true,
+                fetchAllActivityZonesError: false,
+                fetchAllActivityZonesMessage: msg
+            };
+        };
+        case actionTypes.FETCH_ALL_ACTIVITIY_ZONE_REJECT: {
+            return {
+                ...state,
+                fetchAllActivityZonesLoading: false,
+                fetchAllActivityZonesFailed: false,
+                fetchAllActivityZonesError: true,
+                fetchAllActivityZonesMessage: action.payload.msg
+            };
+        };
+
+        case actionTypes.SUBMIT_REGISTER_LOADING: {
+            return {
+                ...state,
+                submitRegisterLoading: true,
+                submitRegisterFailed: false,
+                submitRegisterError: false,
+                submitRegisterMessage: null
+            };
+        };
+        case actionTypes.SUBMIT_REGISTER_SUCCESSFULLY: {
+            return {
+                ...state,
+                submitRegisterLoading: false,
+                submitRegisterFailed: false,
+                submitRegisterError: false,
+                submitRegisterMessage: null,
+            };
+        };
+        case actionTypes.SUBMIT_REGISTER_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                submitRegisterLoading: false,
+                submitRegisterFailed: true,
+                submitRegisterError: false,
+                submitRegisterMessage: msg
+            };
+        };
+        case actionTypes.SUBMIT_REGISTER_REJECT: {
+            let { phone } = action.payload.data.errors
+            return {
+                ...state,
+                submitRegisterLoading: false,
+                submitRegisterFailed: false,
+                submitRegisterError: true,
+                submitRegisterMessage: phone
             };
         };
         default:

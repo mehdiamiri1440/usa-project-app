@@ -65,3 +65,49 @@ export const checkActivisionCode = (code) => {
 
     return request();
 };
+
+
+export const fetchAllActivityZones = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .fetchAllActivityZones()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_ACTIVITIY_ZONE_FAILED,
+                        reject: actionTypes.FETCH_ALL_ACTIVITIY_ZONE_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_ACTIVITIY_ZONE_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_ACTIVITIY_ZONE_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
+export const submitRegister = registerObject => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .submitRegister(registerObject)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.SUBMIT_REGISTER_FAILED,
+                        reject: actionTypes.SUBMIT_REGISTER_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.SUBMIT_REGISTER_LOADING);
+    const success = res => action(actionTypes.SUBMIT_REGISTER_SUCCESSFULLY, res);
+
+    return request();
+};

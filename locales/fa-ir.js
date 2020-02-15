@@ -11,6 +11,9 @@ export default {
 
     "labels.man": "آقا",
     "labels.selectProvince": "استان را انتخاب کنید",
+    "labels.buyer": "خریدار",
+    "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
+    "labels.seller": "فروشنده",
     "labels.selectCity": "شهر را انتخاب کنید",
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
     "labels.woman": "خانم",
