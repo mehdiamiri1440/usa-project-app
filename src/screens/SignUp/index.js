@@ -116,19 +116,12 @@ class SignUp extends React.Component {
 
     }
     render() {
-        let { submitError, submitLoading, submitFailed, sumbitMessage, successfullAlert } = this.props;
+        let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
+        let { successfullAlert } = this.state;
 
         return (
             <ScrollView>
                 <Spin spinning={submitLoading}>
-                    {successfullAlert && <View style={styles.loginFailedContainer}>
-                        <Text
-                            style={styles.loginFailedText}
-                        >
-                            {locales('titles.signUpDoneSuccessfully')}
-                        </Text>
-                    </View >
-                    }
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 0.8, y: 0.2 }}
@@ -142,6 +135,14 @@ class SignUp extends React.Component {
                             </Text>
                         </View >
                     </LinearGradient>
+                    {successfullAlert && <View style={styles.loginFailedContainer}>
+                        <Text
+                            style={styles.loginFailedText}
+                        >
+                            {locales('titles.signUpDoneSuccessfully')}
+                        </Text>
+                    </View >
+                    }
                     {this.renderSteps()}
                 </Spin>
             </ScrollView>
