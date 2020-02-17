@@ -59,7 +59,7 @@ class Login extends React.Component {
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 0.8, y: 0.2 }}
-                        colors={['#21AD93', '#12B87F', '#21AD93']}
+                        colors={['#00C569', '#21AD93']}
                     >
                         <View style={styles.linearGradient}>
                             <Text

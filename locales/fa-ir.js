@@ -25,6 +25,7 @@ export default {
     "titles.password": 'کلمه عبور',
     "titles.login": 'ورود',
     "titles.repeatPassword": "تکرار کلمه عبور",
+    "titles.signUpDoneSuccessfully": "ثبت‌نام با موفقیت انجام شد",
     "titles.userName": "نام کاربری",
     'titles.sendVerificationCodeAgain': 'ارسال مجدد رمز عبور',
     "titles.submitCode": 'ثبت کد',

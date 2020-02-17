@@ -10,15 +10,16 @@ import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
 import * as authActions from '../../redux/auth/actions';
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceHeight } from '../../utils/index'
+import { deviceHeight, deviceWidth } from '../../utils';
 import Spin from '../../components/loading/loading';
 class SignUp extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            mobileNumber: '09367751890',
+            mobileNumber: '',
             firstName: '',
             lastName: '',
+            successfullAlert: false,
             gender: '',
             userName: '',
             password: '',
@@ -26,7 +27,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 6
+            stepNumber: 1
         }
     }
 
@@ -79,8 +80,13 @@ class SignUp extends React.Component {
             activity_type: activityType,
             category_id: activityZone
         };
-
-        this.props.submitRegister(registerObject);
+        this.props.submitRegister(registerObject).then(() => {
+            this.setState({ successfullAlert: true }, () => {
+                setTimeout(() => {
+                    this.props.navigation.navigate('Login');
+                }, 3000);
+            })
+        });
     }
 
     renderSteps = () => {
@@ -93,7 +99,7 @@ class SignUp extends React.Component {
                 return <EnterActivisionCode changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
             }
             case 3: {
-                return <UserBasicInfo {...this.props} setFullName={this.setFullName} />
+                return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
             }
             case 4: {
                 return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
@@ -110,15 +116,23 @@ class SignUp extends React.Component {
 
     }
     render() {
-        let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
+        let { submitError, submitLoading, submitFailed, sumbitMessage, successfullAlert } = this.props;
 
         return (
             <ScrollView>
                 <Spin spinning={submitLoading}>
+                    {successfullAlert && <View style={styles.loginFailedContainer}>
+                        <Text
+                            style={styles.loginFailedText}
+                        >
+                            {locales('titles.signUpDoneSuccessfully')}
+                        </Text>
+                    </View >
+                    }
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 0.8, y: 0.2 }}
-                        colors={['#21AD93', '#12B87F', '#21AD93']}
+                        colors={['#00C569', '#21AD93']}
                     >
                         <View style={styles.linearGradient}>
                             <Text
@@ -135,6 +149,16 @@ class SignUp extends React.Component {
     }
 }
 const styles = StyleSheet.create({
+    loginFailedContainer: {
+        backgroundColor: '#D4EDDA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#155724'
+    },
     linearGradient: {
         height: deviceHeight * 0.15,
         justifyContent: 'center',
