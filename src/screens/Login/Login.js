@@ -101,7 +101,7 @@ class Login extends React.Component {
                     </View>
                     <View style={styles.textInputPadding}>
                         <OutlinedTextField
-                            baseColor={password.length ? '#00C569' : '#a8a8a8'}
+                            baseColor={password.length >= 8 ? '#00C569' : '#a8a8a8'}
                             labelTextStyle={{ paddingTop: 5 }}
                             icon={
                                 <AntDesign

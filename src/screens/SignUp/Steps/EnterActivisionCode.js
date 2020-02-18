@@ -103,7 +103,7 @@ const EnterActivisionCode = (props) => {
                         {locales('messages.codeExpirationTime')} :
             </Text>
                     <CountDown
-                        until={5}
+                        until={120}
                         onFinish={() => setTimerFlag(true)}
                         size={20}
                         digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}

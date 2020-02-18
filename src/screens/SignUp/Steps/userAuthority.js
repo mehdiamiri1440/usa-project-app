@@ -126,7 +126,7 @@ class UserAuthority extends React.Component {
                 </View>
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
-                        baseColor={password.length ? '#00C569' : '#a8a8a8'}
+                        baseColor={password.length >= 8 ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onPasswordSubmit}
                         ref={this.passwordRef}
                         icon={
@@ -158,7 +158,7 @@ class UserAuthority extends React.Component {
                                 }}
                             />
                         }
-                        baseColor={repeatPassword.length ? '#00C569' : '#a8a8a8'}
+                        baseColor={repeatPassword.length >= 8 ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onRepeatPasswordSubmit}
                         ref={this.repeatPasswordRef}
                         password={true}

@@ -19,8 +19,9 @@ locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
 class App extends React.Component {
   // componentDidMount() {
-  //   if (!I18nManager.isRTL) {
-  //     I18nManager.forceRTL(true);
+  //   if (I18nManager.isRTL) {
+  //     I18nManager.forceRTL(false);
+  //     RNRestart.Restart();
   //   }
   // }
   render() {

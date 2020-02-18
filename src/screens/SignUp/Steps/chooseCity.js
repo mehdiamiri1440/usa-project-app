@@ -29,6 +29,12 @@ class ChooseCity extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        if (I18nManager.isRTL) {
+            I18nManager.forceRTL(false);
+        }
+    }
+
     onSubmit = () => {
         let { city, province } = this.state;
         this.props.setCityAndProvice(city, province);
