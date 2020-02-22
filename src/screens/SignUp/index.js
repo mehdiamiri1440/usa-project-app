@@ -12,6 +12,8 @@ import * as authActions from '../../redux/auth/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils';
 import Spin from '../../components/loading/loading';
+
+let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
     constructor(props) {
         super(props)
@@ -27,8 +29,11 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 1
+            stepNumber: 2
         }
+    }
+    componentWillUnmount() {
+        this.setState({ successfullAlert: false })
     }
 
     changeStep = stepNumber => {
@@ -117,7 +122,7 @@ class SignUp extends React.Component {
     }
     render() {
         let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
-        let { successfullAlert } = this.state;
+        let { successfullAlert, stepNumber } = this.state;
 
         return (
             <ScrollView>
@@ -134,6 +139,39 @@ class SignUp extends React.Component {
                                 {locales('titles.signUpInBuskool')}
                             </Text>
                         </View >
+                        <View style={{
+                            width: deviceWidth, position: 'absolute', bottom: -15,
+                            flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
+                        }}>
+                            <View style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row-reverse',
+                                alignItems: 'stretch',
+                                alignContent: 'center', alignSelf: 'center',
+                                width: deviceWidth - 80,
+
+                            }}>
+                                {stepsArray.map((item, index) => {
+                                    return (
+                                        <>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center', alignItems: 'center', justifyContent: 'center',
+                                                    alignSelf: 'center', alignContent: 'center',
+                                                    textAlignVertical: 'center',
+                                                    backgroundColor: stepNumber >= item ? "pink" : 'gray',
+                                                    width: 30, height: 30, borderWidth: 1, borderRadius: 15
+
+                                                }}
+                                            >
+                                                {item}
+                                            </Text>
+                                        </>
+                                    )
+                                }
+                                )}
+                            </View>
+                        </View>
                     </LinearGradient>
                     {successfullAlert && <View style={styles.loginFailedContainer}>
                         <Text
@@ -145,7 +183,7 @@ class SignUp extends React.Component {
                     }
                     {this.renderSteps()}
                 </Spin>
-            </ScrollView>
+            </ScrollView >
         )
     }
 }

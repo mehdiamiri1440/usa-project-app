@@ -10,6 +10,8 @@ import * as authActions from '../../../redux/auth/actions'
 import * as locationActions from '../../../redux/locations/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
+import RNRestart from 'react-native-restart';
+
 class ChooseCity extends React.Component {
     constructor(props) {
         super(props);
@@ -24,15 +26,17 @@ class ChooseCity extends React.Component {
 
     componentDidMount() {
         this.props.fetchAllProvinces();
-        if (!I18nManager.isRTL) {
-            I18nManager.forceRTL(true);
-        }
+        // if (!I18nManager.isRTL) {
+        //     RNRestart.Restart();
+        //     console.warn('here')
+        //     I18nManager.forceRTL(true);
+        // }
     }
 
     componentWillUnmount() {
-        if (I18nManager.isRTL) {
-            I18nManager.forceRTL(false);
-        }
+        // if (I18nManager.isRTL) {
+        //     I18nManager.forceRTL(false);
+        // }
     }
 
     onSubmit = () => {
