@@ -29,7 +29,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 2
+            stepNumber: 1
         }
     }
     componentWillUnmount() {
@@ -123,7 +123,6 @@ class SignUp extends React.Component {
     render() {
         let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
         let { successfullAlert, stepNumber } = this.state;
-
         return (
             <ScrollView>
                 <Spin spinning={submitLoading}>
@@ -144,7 +143,6 @@ class SignUp extends React.Component {
                             flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                         }}>
                             <View style={{
-                                justifyContent: 'space-between',
                                 flexDirection: 'row-reverse',
                                 alignItems: 'stretch',
                                 alignContent: 'center', alignSelf: 'center',
@@ -156,16 +154,27 @@ class SignUp extends React.Component {
                                         <>
                                             <Text
                                                 style={{
-                                                    textAlign: 'center', alignItems: 'center', justifyContent: 'center',
+                                                    textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
                                                     alignSelf: 'center', alignContent: 'center',
-                                                    textAlignVertical: 'center',
-                                                    backgroundColor: stepNumber >= item ? "pink" : 'gray',
+                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                    shadowColor: '#000000',
+                                                    shadowOffset: { width: 0, height: 3 },
+                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
                                                     width: 30, height: 30, borderWidth: 1, borderRadius: 15
 
                                                 }}
                                             >
                                                 {item}
                                             </Text>
+                                            {index < stepsArray.length - 1 && <View
+                                                style={{
+                                                    height: 8,
+                                                    flex: 1,
+                                                    alignSelf: 'center',
+                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                                }}>
+                                            </View>
+                                            }
                                         </>
                                     )
                                 }
@@ -173,21 +182,26 @@ class SignUp extends React.Component {
                             </View>
                         </View>
                     </LinearGradient>
-                    {successfullAlert && <View style={styles.loginFailedContainer}>
-                        <Text
-                            style={styles.loginFailedText}
-                        >
-                            {locales('titles.signUpDoneSuccessfully')}
-                        </Text>
-                    </View >
-                    }
-                    {this.renderSteps()}
+                    <View style={styles.stepsContainer}>
+                        {successfullAlert && <View style={styles.loginFailedContainer}>
+                            <Text
+                                style={styles.loginFailedText}
+                            >
+                                {locales('titles.signUpDoneSuccessfully')}
+                            </Text>
+                        </View >
+                        }
+                        {this.renderSteps()}
+                    </View>
                 </Spin>
             </ScrollView >
         )
     }
 }
 const styles = StyleSheet.create({
+    stepsContainer: {
+        marginVertical: 30
+    },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',
         padding: 10,
