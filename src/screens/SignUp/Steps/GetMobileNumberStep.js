@@ -85,7 +85,7 @@ class GetMobileNumberStep extends React.Component {
                     {locales('messages.backToLogin')}
                 </Text>
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Login')}
+                    onPress={() => this.props.navigation.navigate('Requests')}
                 >
                     <Text
                         style={styles.enterText}>

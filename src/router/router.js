@@ -1,27 +1,40 @@
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import SignUp from '../screens/SignUp/index';
-import Login from '../screens/Login/Login';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import tabs from './tabs';
 
-const MainNavigator = createStackNavigator({
-    Login: {
-        screen: Login,
-        navigationOptions: {
-            headerShown: false,
-        }
-    },
-    SignUp: {
-        screen: SignUp,
-        navigationOptions: {
-            headerShown: false,
-        }
-    },
-},
-    {
-        initialRouteName: 'SignUp'
+const Tab = createMaterialBottomTabNavigator()
+
+const App = () => {
+    return (
+        <NavigationContainer>
+            <Tab.Navigator
+                initialRouteName={tabs[0].name}
+                activeColor="#00C569"
+                inactiveColor="#FFFFFF"
+                barStyle={{ backgroundColor: '#313A43' }}
+            >
+                {tabs.map((route, index) => (
+                    <Tab.Screen
+                        key={index}
+                        options={{
+                            tabBarLabel: locales(route.label),
+                            tabBarIcon: ({ color }) => route.icon(color)
+                        }}
+                        name={route.name}
+                        component={route.component}
+                    />
+                ))}
+            </Tab.Navigator>
+        </NavigationContainer>
+    )
+}
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo: state.authREd
     }
-);
+};
 
-const App = createAppContainer(MainNavigator);
-
-export default App;
+export default connect(mapStateToProps)(App);

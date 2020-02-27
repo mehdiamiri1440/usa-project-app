@@ -15,7 +15,11 @@ export default {
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     "labels.seller": "فروشنده",
     "labels.selectCity": "شهر را انتخاب کنید",
+    'labels.messages': 'پیام‌ها',
+    'labels.search': 'جستجو',
+    'labels.registerProduct': 'ثبت ‌محصول',
     'labels.home': 'خانه',
+    'labels.requests': 'درخواست‌ها',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
     "labels.woman": "خانم",
 
