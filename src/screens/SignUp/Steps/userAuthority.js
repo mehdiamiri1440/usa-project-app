@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, I18nManager } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button } from 'native-base';
 import OutlinedTextField from '../../../components/floatingInput';
 import Spin from '../../../components/loading/loading';
@@ -130,8 +130,8 @@ class UserAuthority extends React.Component {
                         onChangeText={this.onPasswordSubmit}
                         ref={this.passwordRef}
                         icon={
-                            <MaterialCommunityIcons
-                                name="onepassword"
+                            <FontAwesome5
+                                name="unlock"
                                 style={{
                                     fontSize: 15,
                                     alignSelf: "center",
@@ -150,8 +150,8 @@ class UserAuthority extends React.Component {
                 <View style={styles.textInputPadding}>
                     <OutlinedTextField
                         icon={
-                            <MaterialCommunityIcons
-                                name="onepassword"
+                            <FontAwesome5
+                                name="unlock"
                                 style={{
                                     fontSize: 15,
                                     alignSelf: "center",

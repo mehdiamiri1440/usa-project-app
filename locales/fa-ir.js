@@ -16,8 +16,14 @@ export default {
     "labels.seller": "فروشنده",
     "labels.selectCity": "شهر را انتخاب کنید",
     'labels.messages': 'پیام‌ها',
+    'labels.promoteRegistration': 'ارتقا عضویت',
+    'labels.myProducts': 'محصولات من',
+    'labels.guid': 'راهنما',
+    'labels.editProfile': 'ویرایش پروفایل',
+    'labels.special': 'ویژه',
     'labels.search': 'جستجو',
     'labels.registerProduct': 'ثبت ‌محصول',
+    'labels.dashboard': 'داشبورد',
     'labels.home': 'خانه',
     'labels.requests': 'درخواست‌ها',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
@@ -48,6 +54,6 @@ export default {
     'messages.enterPhoneNumberToGetCode': 'شماره همراه خود را برای دریافت کد فعال‌سازی وارد کنید',
     'messages.backToLogin': 'درصورت داشتن  حساب وارد باسکول شوید',
     'messages.codeExpirationTime': 'مدت اعتبار کد',
-    'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شد یا خواهد شد را اینجا وارد کنید'
+    'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شده است را اینجا وارد کنید'
   }
 };
