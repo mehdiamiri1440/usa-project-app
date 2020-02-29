@@ -24,6 +24,7 @@ export default {
     'labels.search': 'جستجو',
     'labels.registerProduct': 'ثبت ‌محصول',
     'labels.dashboard': 'داشبورد',
+    'labels.signOut': 'خروج',
     'labels.home': 'خانه',
     'labels.requests': 'درخواست‌ها',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
