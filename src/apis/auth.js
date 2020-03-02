@@ -30,6 +30,26 @@ export const login = (mobileNumber, password) => {
 };
 
 
+export const logOut = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `logout`,
+                method: 'GET',
+                withAuth: false,
+            })
+            .then(async (result) => {
+                result = await AsyncStorage.removeItem('@Authorization')
+                console.warn('result', result)
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+
 export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
     return new Promise((resolve, reject) => {
         requester

@@ -6,12 +6,12 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import CountDown from 'react-native-countdown-component';
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { validator } from '../../../utils'
+import { validator } from '../../../utils';
+import Timer from '../../../components/timer';
 import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
@@ -85,52 +85,29 @@ const EnterActivisionCode = (props) => {
                     )}
                 />
             </SafeAreaView>
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 20 }}>
+                <Timer
+                    min={2}
+                    sec={0}
+                    isCountDownTimer={true}
+                    containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
+                    timerStyle={{ color: '#1CC625', fontSize: 18 }}
+                    onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber)}
+                    substitutionText={locales('titles.sendVerificationCodeAgain')}
+                />
+            </View>
             <Button
                 onPress={() => {
                     setFlag(true);
                     onSubmit(props, value)
                 }}
-                style={value.length !== 4 ? styles.disableLoginButton : styles.loginButton}
+                style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { marginVertical: 20 }]}
                 rounded
                 disabled={value.length !== 4}
             >
                 <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
             </Button>
-            {!timerFlag ?
-                <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                    <Text
-                        style={styles.forgotPassword}>
-                        {locales('messages.codeExpirationTime')} :
-            </Text>
-                    <CountDown
-                        until={120}
-                        onFinish={() => setTimerFlag(true)}
-                        size={20}
-                        digitStyle={{ backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625' }}
-                        digitTxtStyle={{ color: '#1CC625' }}
-                        timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-                        separatorStyle={{ color: '#1CC625' }}
-                        timeToShow={['M', 'S']}
-                        timeLabels={{ m: null, s: null }}
-                        showSeparator
-                    />
-                </View>
-                :
-                <TouchableOpacity
-                    onPress={
-                        () => props.checkAlreadySingedUpMobileNumber(mobileNumber)
-                            .then(() => {
-                                setValue('');
-                                setTimerFlag(false);
-                            })
-                    }
-                >
-                    <Text
-                        style={styles.enterText}>
-                        {locales('titles.sendVerificationCodeAgain')}
-                    </Text>
-                </TouchableOpacity>
-            }
         </Spin >
     )
 }

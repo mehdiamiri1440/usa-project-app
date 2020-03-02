@@ -49,7 +49,7 @@ const routes = [
     {
         label: 'labels.registerProduct',
         component: RegisterProductIndex,
-        icon: (color, focused) => <Feather size={25} name='plus-circle' color={color}
+        icon: (color, focused) => <Feather size={26} name='plus-square' color={color}
 
         />,
         name: 'RegisterProduct'

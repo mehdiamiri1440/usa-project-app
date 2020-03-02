@@ -102,6 +102,7 @@ class ChooseCity extends React.Component {
                     label={locales('labels.selectProvince')}
                     data={provinces}
                     containerStyle={{
+                        marginVertical: 20,
                         paddingHorizontal: 20
                     }}
                 />
@@ -113,7 +114,7 @@ class ChooseCity extends React.Component {
                         paddingHorizontal: 20
                     }}
                 />
-                <View style={{ marginVertical: 20 }}>
+                <View style={{ marginVertical: 50 }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!city.length || !province.length ? styles.disableLoginButton : styles.loginButton}

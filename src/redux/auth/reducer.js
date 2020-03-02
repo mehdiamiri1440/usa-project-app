@@ -23,6 +23,11 @@ const INITIAL_STATE = {
     submitRegisterError: false,
     submitRegisterMessage: null,
 
+    logOutLoading: false,
+    logOutFailed: false,
+    logOutError: false,
+    logOutMessage: null,
+
 
     fetchAllActivityZonesLoading: false,
     fetchAllActivityZonesFailed: false,
@@ -43,6 +48,7 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.LOGIN_SUCCESS: {
             let { is_buyer, is_seller, msg, status } = action.payload
+            console.warn(action.payload)
             return {
                 ...state,
                 loginLoading: false,
@@ -231,6 +237,50 @@ export default (state = INITIAL_STATE, action) => {
                 submitRegisterFailed: false,
                 submitRegisterError: true,
                 submitRegisterMessage: phone
+            };
+        };
+
+
+        case actionTypes.LOGOUT_LOADING: {
+            return {
+                ...state,
+                logOutLoading: true,
+                logOutFailed: false,
+                logOutError: false,
+                logOutMessage: null
+            };
+        };
+        case actionTypes.LOGOUT_SUCCESSFULLY: {
+            return {
+                ...state,
+                logOutLoading: false,
+                logOutFailed: false,
+                logOutError: false,
+                logOutMessage: null,
+
+                loginLoading: false,
+                loginFailed: false,
+                loginError: false,
+                loginMessage: null,
+            };
+        };
+        case actionTypes.LOGOUT_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                logOutLoading: false,
+                logOutFailed: true,
+                logOutError: false,
+                logOutMessage: msg
+            };
+        };
+        case actionTypes.LOGOUT_REJECT: {
+            return {
+                ...state,
+                logOutLoading: false,
+                logOutFailed: false,
+                logOutError: true,
+                logOutMessage: null
             };
         };
         default:

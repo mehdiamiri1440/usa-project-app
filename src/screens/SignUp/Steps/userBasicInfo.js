@@ -66,47 +66,22 @@ class UserBasicInfo extends React.Component {
                     {locales('messages.enterUserBasicInfo')}
                 </Text>
                 <View style={[styles.textInputPadding, {
-                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 30
                 }]}>
                     <TouchableOpacity
-                        onPress={() => this.setState({ gender: 'man' })}
                         style={{
-                            borderWidth: 1, borderColor: 'green',
-                            padding: 20, borderRadius: 5,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 10,
-                        }}>
-                        <Radio
-                            selected={this.state.gender === 'man'}
-                            color={"#f0ad4e"}
-                            style={{ marginHorizontal: 10 }}
-                            selectedColor={"#5cb85c"}
-                        />
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <Ionicons
-                                name="ios-man"
-                                style={{
-                                    fontSize: 25,
-                                    alignSelf: "center",
-                                }}
-                            />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            borderWidth: 1, borderColor: 'green',
+                            borderWidth: 1, borderColor: this.state.gender == 'woman' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
                             , justifyContent: 'space-between'
                         }}
                         onPress={() => this.setState({ gender: 'woman' })}
                     >
                         <Radio
+                            onPress={() => this.setState({ gender: 'woman' })}
                             selected={this.state.gender === 'woman'}
-                            color={"#f0ad4e"}
+                            color={"#BEBEBE"}
                             style={{ marginHorizontal: 10 }}
-                            selectedColor={"#5cb85c"}
+                            selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <Ionicons
@@ -117,6 +92,33 @@ class UserBasicInfo extends React.Component {
                                 }}
                             />
                             <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.setState({ gender: 'man' })}
+                        style={{
+                            borderWidth: 1, borderColor: this.state.gender == 'man' ? '#00C569' : '#BDC4CC',
+                            padding: 20, borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 10,
+                        }}>
+                        <Radio
+                            onPress={() => this.setState({ gender: 'man' })}
+                            selected={this.state.gender === 'man'}
+                            color={"#BEBEBE"}
+                            style={{ marginHorizontal: 10 }}
+                            selectedColor={"#00C569"}
+                        />
+                        <View style={{ flexDirection: 'row-reverse' }}>
+                            <Ionicons
+                                name="ios-man"
+                                style={{
+                                    fontSize: 25,
+                                    alignSelf: "center",
+                                }}
+                            />
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

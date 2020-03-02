@@ -57,17 +57,18 @@ class UserActivity extends React.Component {
                     <TouchableOpacity
                         onPress={() => this.setState({ activityType: 'buyer' })}
                         style={{
-                            borderWidth: 1, borderColor: 'green',
+                            borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5,
                             flexDirection: 'row-reverse',
                             justifyContent: 'space-between',
                             marginHorizontal: 10,
                         }}>
                         <Radio
+                            onPress={() => this.setState({ activityType: 'buyer' })}
                             selected={activityType === 'buyer'}
-                            color={"#f0ad4e"}
+                            color={"#BEBEBE"}
                             style={{ marginHorizontal: 10 }}
-                            selectedColor={"#5cb85c"}
+                            selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <AntDesign
@@ -82,17 +83,18 @@ class UserActivity extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
-                            borderWidth: 1, borderColor: 'green',
+                            borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
                             , justifyContent: 'space-between'
                         }}
                         onPress={() => this.setState({ activityType: 'seller' })}
                     >
                         <Radio
+                            onPress={() => this.setState({ activityType: 'seller' })}
                             selected={activityType === 'seller'}
-                            color={"#f0ad4e"}
+                            color={"#BEBEBE"}
                             style={{ marginHorizontal: 10 }}
-                            selectedColor={"#5cb85c"}
+                            selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <MaterialCommunityIcons
@@ -123,7 +125,7 @@ class UserActivity extends React.Component {
                     rounded
                     disabled={!selectedCategoryId || !activityType.length}
                 >
-                    <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
+                    <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
                 </Button>
             </Spin>
         )

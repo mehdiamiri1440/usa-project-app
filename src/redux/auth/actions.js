@@ -111,3 +111,26 @@ export const submitRegister = registerObject => {
 
     return request();
 };
+
+
+export const logOut = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .logOut()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.LOGOUT_FAILED,
+                        reject: actionTypes.LOGOUT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.LOGOUT_LOADING);
+    const success = res => action(actionTypes.LOGOUT_SUCCESSFULLY, res);
+
+    return request();
+};

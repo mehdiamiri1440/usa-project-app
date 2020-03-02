@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, BackHandler } from 'react-native'
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
@@ -9,9 +9,10 @@ import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
 import * as authActions from '../../redux/auth/actions';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils';
 import Spin from '../../components/loading/loading';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
@@ -32,13 +33,31 @@ class SignUp extends React.Component {
             stepNumber: 1
         }
     }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            if (this.state.stepNumber > 1) {
+                this.setState({ stepNumber: this.state.stepNumber - 1 })
+                return true;
+            }
+        })
+    }
+
+
     componentWillUnmount() {
         this.setState({ successfullAlert: false })
+        BackHandler.removeEventListener();
     }
 
     changeStep = stepNumber => {
         this.setState({ stepNumber })
     };
+
+
+    onHeaderBackButtonClicked = event => {
+        this.setState({ stepNumber: this.state.stepNumber - 1 });
+    };
+
 
     setMobileNumber = mobileNumber => {
         this.setState({ mobileNumber }, () => this.changeStep(2))
@@ -56,10 +75,10 @@ class SignUp extends React.Component {
     };
 
     setActivityZoneAndType = (activityZone, activityType) => {
-        this.setState({ activityZone, activityType }, () => this.submitRegitster());
+        this.setState({ activityZone, activityType }, () => this.submitRegister());
     };
 
-    submitRegitster = () => {
+    submitRegister = () => {
         let {
             mobileNumber,
             firstName,
@@ -88,8 +107,9 @@ class SignUp extends React.Component {
         this.props.submitRegister(registerObject).then(() => {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
-                    this.props.navigation.navigate('Login');
-                }, 3000);
+                    this.props.login(mobileNumber, password).then((result) => {
+                    })
+                }, 1500);
             })
         });
     }
@@ -132,56 +152,65 @@ class SignUp extends React.Component {
                         colors={['#00C569', '#21AD93']}
                     >
                         <View style={styles.linearGradient}>
+                            {stepNumber > 1 && <TouchableOpacity
+                                onPress={this.onHeaderBackButtonClicked}
+                                style={{ alignItems: 'flex-end', paddingBottom: 10, paddingHorizontal: 10, width: deviceWidth }}
+                            >
+                                <AntDesign name='arrowright' size={25} color='white' />
+                            </TouchableOpacity>}
                             <Text
                                 style={styles.headerTextStyle}
                             >
                                 {locales('titles.signUpInBuskool')}
                             </Text>
                         </View >
-                        <View style={{
-                            width: deviceWidth, position: 'absolute', bottom: -15,
-                            flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
-                        }}>
-                            <View style={{
-                                flexDirection: 'row-reverse',
-                                alignItems: 'stretch',
-                                alignContent: 'center', alignSelf: 'center',
-                                width: deviceWidth - 80,
-
-                            }}>
-                                {stepsArray.map((item, index) => {
-                                    return (
-                                        <>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
-                                                    alignSelf: 'center', alignContent: 'center',
-                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                    shadowColor: '#000000',
-                                                    shadowOffset: { width: 0, height: 3 },
-                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                    width: 30, height: 30, borderRadius: 15
-
-                                                }}
-                                            >
-                                                {item}
-                                            </Text>
-                                            {index < stepsArray.length - 1 && <View
-                                                style={{
-                                                    height: 8,
-                                                    flex: 1,
-                                                    alignSelf: 'center',
-                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                                }}>
-                                            </View>
-                                            }
-                                        </>
-                                    )
-                                }
-                                )}
-                            </View>
-                        </View>
                     </LinearGradient>
+                    <View style={{
+                        width: deviceWidth, paddingVertical: 10,
+                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
+                    }}>
+                        <View style={{
+                            flexDirection: 'row-reverse',
+                            alignItems: 'stretch',
+                            alignContent: 'center', alignSelf: 'center',
+                            width: deviceWidth - 80,
+
+                        }}>
+                            {stepsArray.map((item, index) => {
+                                return (
+                                    <>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                alignSelf: 'center', alignContent: 'center',
+                                                shadowOffset: { width: 20, height: 20 },
+                                                shadowColor: 'black',
+                                                shadowOpacity: 1.0,
+                                                elevation: 10,
+                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                width: 30, height: 30, borderRadius: 15
+
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                        {index < stepsArray.length - 1 && <View
+                                            style={{
+                                                height: 8,
+                                                flex: 1,
+                                                alignSelf: 'center',
+                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                            }}>
+                                        </View>
+                                        }
+                                    </>
+                                )
+                            }
+                            )}
+                        </View>
+                    </View>
+
                     <View style={styles.stepsContainer}>
                         {successfullAlert && <View style={styles.loginFailedContainer}>
                             <Text
@@ -237,7 +266,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject))
+        submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
+        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
+
     }
 };
 

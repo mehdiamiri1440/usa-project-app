@@ -42,6 +42,7 @@ export default {
     'titles.sendVerificationCodeAgain': 'ارسال مجدد رمز عبور',
     "titles.submitCode": 'ثبت کد',
     "titles.signUpInBuskool": "ثبت نام در باسکول",
+    'titles.submitSignUp': 'ثبت‌نام',
     "titles.nextStep": "مرحله بعد",
     'titles.submitNumber': 'ثبت شماره',
     'titles.firstName': 'نام',
