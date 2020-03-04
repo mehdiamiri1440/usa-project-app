@@ -57,6 +57,7 @@ class UserActivity extends React.Component {
                     <TouchableOpacity
                         onPress={() => this.setState({ activityType: 'buyer' })}
                         style={{
+                            width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5,
                             flexDirection: 'row-reverse',
@@ -71,8 +72,8 @@ class UserActivity extends React.Component {
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <AntDesign
-                                name="shoppingcart"
+                            <MaterialCommunityIcons
+                                name="account-tie"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",
@@ -83,6 +84,7 @@ class UserActivity extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
+                            width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
                             , justifyContent: 'space-between'
@@ -98,7 +100,7 @@ class UserActivity extends React.Component {
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <MaterialCommunityIcons
-                                name="account-tie"
+                                name="shovel"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",

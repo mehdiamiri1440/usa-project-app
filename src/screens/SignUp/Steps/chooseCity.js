@@ -17,6 +17,7 @@ class ChooseCity extends React.Component {
         super(props);
         this.state = {
             province: '',
+            errorFlag: false,
             city: '',
             index: -1
         }
@@ -41,7 +42,12 @@ class ChooseCity extends React.Component {
 
     onSubmit = () => {
         let { city, province } = this.state;
-        this.props.setCityAndProvice(city, province);
+        if (!city.length || !province.length) {
+            this.setState({ errorFlag: true })
+        }
+        else {
+            this.props.setCityAndProvice(city, province);
+        }
     };
 
     setProvince = (value, index) => {
@@ -96,6 +102,9 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
+                {this.state.errorFlag && <View style={styles.loginFailedContainer}>
+                    <Text style={styles.loginFailedText}>{locales('titles.cityAndProvinceRequired')}</Text>
+                </View>}
                 {/* <View style={{ flexDirection: 'column', width: deviceWidth * 0.4 }}> */}
                 <Dropdown
                     onChangeText={(value, index) => this.setProvince(value, index)}
@@ -119,7 +128,6 @@ class ChooseCity extends React.Component {
                         onPress={() => this.onSubmit()}
                         style={!city.length || !province.length ? styles.disableLoginButton : styles.loginButton}
                         rounded
-                        disabled={!city.length || !province.length}
                     >
                         <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                     </Button>
@@ -130,14 +138,14 @@ class ChooseCity extends React.Component {
 }
 const styles = StyleSheet.create({
     loginFailedContainer: {
-        backgroundColor: '#D4EDDA',
+        backgroundColor: '#F8D7DA',
         padding: 10,
         borderRadius: 5
     },
     loginFailedText: {
         textAlign: 'center',
         width: deviceWidth,
-        color: '#155724'
+        color: '#761C24'
     },
     buttonText: {
         color: 'white',
@@ -150,6 +158,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
+        backgroundColor: '#B5B5B5',
         alignSelf: 'center',
         justifyContent: 'center'
     },

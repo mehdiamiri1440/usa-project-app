@@ -66,13 +66,13 @@ class UserBasicInfo extends React.Component {
                     {locales('messages.enterUserBasicInfo')}
                 </Text>
                 <View style={[styles.textInputPadding, {
-                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 30
+                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
                 }]}>
                     <TouchableOpacity
                         style={{
+                            width: deviceWidth * 0.3,
                             borderWidth: 1, borderColor: this.state.gender == 'woman' ? '#00C569' : '#BDC4CC',
-                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
-                            , justifyContent: 'space-between'
+                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse', marginHorizontal: 20
                         }}
                         onPress={() => this.setState({ gender: 'woman' })}
                     >
@@ -100,8 +100,7 @@ class UserBasicInfo extends React.Component {
                             borderWidth: 1, borderColor: this.state.gender == 'man' ? '#00C569' : '#BDC4CC',
                             padding: 20, borderRadius: 5,
                             flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 10,
+                            width: deviceWidth * 0.3
                         }}>
                         <Radio
                             onPress={() => this.setState({ gender: 'man' })}

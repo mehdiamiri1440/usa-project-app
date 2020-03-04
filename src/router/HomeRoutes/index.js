@@ -6,6 +6,12 @@ import HomeIndex from '../../screens/Home/Home';
 import DashboardIndex from '../../screens/Home/Dashboard';
 import MyProducts from '../../screens/Home/MyProducts';
 import EditProfileIndex from '../../screens/Home/EditProfile';
+import SettingsIndex from '../../screens/Settings/Settings';
+import ChangePasswordIndex from '../../screens/ChangePassword/ChangePassword';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+
+
 const routes = [
     {
         label: 'labels.home',
@@ -32,6 +38,18 @@ const routes = [
         component: MyProducts,
         icon: color => <Fontisto size={25} name='list-1' color={color} />,
         name: 'MyProducts'
+    },
+    {
+        label: 'labels.settings',
+        component: SettingsIndex,
+        icon: color => <AntDesign size={25} name='setting' color={color} />,
+        name: 'Settings'
+    },
+    {
+        label: 'labels.changePassword',
+        component: ChangePasswordIndex,
+        icon: color => <FontAwesome size={25} name='unlock-alt' color={color} />,
+        name: 'ChangePassword'
     },
 ]
 export default routes;
