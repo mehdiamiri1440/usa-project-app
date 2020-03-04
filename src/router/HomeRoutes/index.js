@@ -10,6 +10,7 @@ import SettingsIndex from '../../screens/Settings/Settings';
 import ChangePasswordIndex from '../../screens/ChangePassword/ChangePassword';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import MessagesIndex from '../../screens/Messages/Messages';
 
 
 const routes = [
@@ -50,6 +51,12 @@ const routes = [
         component: ChangePasswordIndex,
         icon: color => <FontAwesome size={25} name='unlock-alt' color={color} />,
         name: 'ChangePassword'
+    },
+    {
+        label: 'labels.messages',
+        component: MessagesIndex,
+        icon: color => <Entypo size={25} name='message' color={color} />,
+        name: 'Messages'
     },
 ]
 export default routes;

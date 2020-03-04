@@ -18,7 +18,7 @@ let homeRoutes = [
     { label: 'labels.editProfile', icon: <FontAwesome5 size={25} name='user-circle' color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
     { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
-    { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Guid' },
+    { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
 ];
