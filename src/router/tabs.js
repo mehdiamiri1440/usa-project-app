@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import RequestsIndex from '../screens/Requests/Requests';
 import SearchIndex from '../screens/Search/Search';
 import MessagesIndex from '../screens/Messages/Messages';
-import RegisterProductIndex from '../screens/RegisterProduct/RegisterProduct';
+import RegisterProductRoutes from './RegisterProductRoutes';
 import HomeRoutes from './HomeRoutes'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -31,6 +31,24 @@ const HomeStack = () => (
     </Stack.Navigator>
 )
 
+
+const RegisterProductStack = () => (
+    <Stack.Navigator>
+        {RegisterProductRoutes.map((registerProduct, index) => (
+            <Stack.Screen
+                options={{
+                    headerTitleAlign: { ...(registerProduct.titleAlign) },
+                    headerShown: registerProduct.title ? true : false,
+                    title: locales(registerProduct.title)
+                }}
+                key={index}
+                name={registerProduct.name}
+                component={registerProduct.component}
+            />
+        ))}
+    </Stack.Navigator>
+)
+
 const routes = [
     {
         label: 'labels.home',
@@ -48,7 +66,7 @@ const routes = [
 
     {
         label: 'labels.registerProduct',
-        component: RegisterProductIndex,
+        component: RegisterProductStack,
         icon: (color, focused) => <Feather size={26} name='plus-square' color={color}
 
         />,
