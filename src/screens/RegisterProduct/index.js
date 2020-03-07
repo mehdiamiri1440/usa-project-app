@@ -5,6 +5,8 @@ import * as authActions from '../../redux/auth/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import SelectCategory from './Steps/SelectCategory';
+import StockAndPrice from './Steps/StockAndPrice'
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class RegisterProduct extends React.Component {
@@ -12,8 +14,10 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 1,
-            x: 1
+            stepNumber: 2,
+            productType: '',
+            category: '',
+            subCategory: ''
         }
     }
 
@@ -38,10 +42,50 @@ class RegisterProduct extends React.Component {
     };
 
 
+
+    setProductType = (productType, category, subCategory) => {
+        this.setState({ productType, category, subCategory, stepNumber: 2 });
+    };
+
+    renderSteps = () => {
+        let { stepNumber } = this.state
+        switch (stepNumber) {
+            case 1: {
+                return <SelectCategory
+                    setProductType={this.setProductType}
+                    changeStep={this.changeStep} {...this.props}
+                    setMobileNumber={this.setMobileNumber}
+                />
+            }
+            case 2: {
+                return <StockAndPrice changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
+            }
+            // case 3: {
+            //     return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
+            // }
+            // case 4: {
+            //     return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
+            // }
+            // case 5: {
+            //     return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
+            // }
+            // case 6: {
+            //     return <UserActivity setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
+            // }
+            default:
+                break;
+        }
+
+    };
+
     render() {
+
+        let { stepNumber, successfullAlert } = this.state;
 
         return (
             <View style={{ flex: 1 }}>
+
+
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -54,13 +98,17 @@ class RegisterProduct extends React.Component {
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
-                    <TouchableOpacity
+                    {stepNumber > 1 && <TouchableOpacity
                         style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
-                        onPress={() => console.warn('hello mehdi ')}
+                        onPress={() => this.setState({ stepNumber: this.state.stepNumber - 1 })}
                     >
-                        <AntDesign name='arrowright' size={25} color='red' />
+                        <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
-                    <View style={{ width: deviceWidth * 0.6, alignItems: 'flex-end' }}>
+                    }
+                    <View style={{
+                        width: stepNumber > 1 ? deviceWidth * 0.6 : deviceWidth,
+                        alignItems: stepNumber > 1 ? 'flex-end' : 'center'
+                    }}>
                         <Text
                             style={{ fontSize: 18 }}
                         >
@@ -68,14 +116,89 @@ class RegisterProduct extends React.Component {
                         </Text>
                     </View>
                 </View>
-                <Text> Mehdi amiri</Text>
+
+
+
+
+
+
+                <ScrollView>
+
+
+                    <View style={{
+                        width: deviceWidth, paddingVertical: 10,
+                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
+                    }}>
+                        <View style={{
+                            flexDirection: 'row-reverse',
+                            marginVertical: 10,
+                            alignItems: 'stretch',
+                            alignContent: 'center', alignSelf: 'center',
+                            width: deviceWidth - 80,
+
+                        }}>
+                            {stepsArray.map((item, index) => {
+                                return (
+                                    <>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                alignSelf: 'center', alignContent: 'center',
+                                                shadowOffset: { width: 20, height: 20 },
+                                                shadowColor: 'black',
+                                                shadowOpacity: 1.0,
+                                                elevation: 10,
+                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                width: 30, height: 30, borderRadius: 15
+
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                        {index < stepsArray.length - 1 && <View
+                                            style={{
+                                                height: 8,
+                                                flex: 1,
+                                                alignSelf: 'center',
+                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                            }}>
+                                        </View>
+                                        }
+                                    </>
+                                )
+                            }
+                            )}
+                        </View>
+                    </View>
+
+
+
+
+
+                    <View style={styles.stepsContainer}>
+                        {successfullAlert && <View style={styles.loginFailedContainer}>
+                            <Text
+                                style={styles.loginFailedText}
+                            >
+                                {locales('titles.signUpDoneSuccessfully')}
+                            </Text>
+                        </View >
+                        }
+                        {this.renderSteps()}
+                    </View>
+
+
+
+                </ScrollView>
+
             </View >
         )
     }
 }
 const styles = StyleSheet.create({
     stepsContainer: {
-        marginVertical: 30
+        marginVertical: 30,
     },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',
