@@ -6,7 +6,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import SelectCategory from './Steps/SelectCategory';
-import StockAndPrice from './Steps/StockAndPrice'
+import StockAndPrice from './Steps/StockAndPrice';
+import ChooseCity from './Steps/ChooseCity';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class RegisterProduct extends React.Component {
@@ -14,10 +15,16 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 2,
+            stepNumber: 3,
             productType: '',
             category: '',
-            subCategory: ''
+            subCategory: '',
+            minimumOrder: "",
+            maximumPrice: "",
+            minimumPrice: "",
+            amount: '',
+            city: '',
+            province: ''
         }
     }
 
@@ -47,6 +54,14 @@ class RegisterProduct extends React.Component {
         this.setState({ productType, category, subCategory, stepNumber: 2 });
     };
 
+    setStockAndPrice = (minimumOrder, maximumPrice, minimumPrice, amount) => {
+        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, stepNumber: 3 });
+    };
+
+    setCityAndProvice = (city, province) => {
+        this.setState({ city, province }, () => this.changeStep(5))
+    };
+
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
@@ -58,13 +73,18 @@ class RegisterProduct extends React.Component {
                 />
             }
             case 2: {
-                return <StockAndPrice changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
+                return <StockAndPrice
+                    changeStep={this.changeStep}
+                    mobileNumber={this.state.mobileNumber}
+                    setStockAndPrice={this.setStockAndPrice}
+                    {...this.props}
+                />
             }
-            // case 3: {
-            //     return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
-            // }
+            case 3: {
+                return <ChooseCity setCityAndProvice={this.setCityAndProvice}  {...this.props} />
+            }
             // case 4: {
-            //     return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
+            //     return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
             // }
             // case 5: {
             //     return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />

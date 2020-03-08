@@ -41,6 +41,7 @@ export default {
     "titles.phoneNumber": 'شماره همراه',
     "titles.password": 'کلمه عبور',
     "titles.login": 'ورود',
+    'titles.selectOrigin': 'انتخاب مبدا',
     'titles.minimumPriceWithExample': 'حداقل قیمت (هر کیلو به تومان) : مثلا 260000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',
     'titles.maximumPriceWithExample': 'حداکثر قیمت (هر کیلو به تومان) : مثلا 500000',
