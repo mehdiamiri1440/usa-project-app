@@ -8,6 +8,7 @@ import RNRestart from 'react-native-restart';
 import configureStore, { persistor } from './src/redux/configureStore';
 import locales from './locales/index';
 import { deviceHeight, deviceWidth } from './src/utils/deviceDimenssions';
+import { Root } from 'native-base';
 const store = configureStore()
 const customTextProps = {
   style: {
@@ -30,7 +31,9 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <Router />
+          <Root>
+            <Router />
+          </Root>
         </PersistGate>
       </Provider >
     )

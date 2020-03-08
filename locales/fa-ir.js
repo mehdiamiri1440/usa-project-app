@@ -24,6 +24,8 @@ export default {
     'labels.guid': 'راهنما',
     'labels.editProfile': 'ویرایش پروفایل',
     'labels.special': 'ویژه',
+    'labels.camera': 'دوربین',
+    'labels.gallery': 'گالری',
     'labels.search': 'جستجو',
     'labels.registerProduct': 'ثبت ‌محصول',
     'labels.dashboard': 'داشبورد',

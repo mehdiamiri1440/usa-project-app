@@ -8,6 +8,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import SelectCategory from './Steps/SelectCategory';
 import StockAndPrice from './Steps/StockAndPrice';
 import ChooseCity from './Steps/ChooseCity';
+import ProductImages from './Steps/ProductImages';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class RegisterProduct extends React.Component {
@@ -15,7 +16,7 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 3,
+            stepNumber: 4,
             productType: '',
             category: '',
             subCategory: '',
@@ -83,9 +84,9 @@ class RegisterProduct extends React.Component {
             case 3: {
                 return <ChooseCity setCityAndProvice={this.setCityAndProvice}  {...this.props} />
             }
-            // case 4: {
-            //     return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
-            // }
+            case 4: {
+                return <ProductImages {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
+            }
             // case 5: {
             //     return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
             // }

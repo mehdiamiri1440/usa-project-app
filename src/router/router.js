@@ -19,7 +19,7 @@ const Stack = createStackNavigator();
 const App = props => {
     return (
         <NavigationContainer>
-            {props.isLogin == false ?
+            {!props.isLogin == false ?
                 (
                     <Stack.Navigator headerMode='none'>
                         <Stack.Screen name='Login' component={Login} />
