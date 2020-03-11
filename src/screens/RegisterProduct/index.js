@@ -12,7 +12,8 @@ import ProductImages from './Steps/ProductImages';
 import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
 
-let stepsArray = [1, 2, 3, 4, 5, 6]
+let stepsArray = [1, 2, 3, 4, 5, 6],
+    tempDefaultArray = []
 class RegisterProduct extends React.Component {
     constructor(props) {
         super(props)
@@ -78,8 +79,8 @@ class RegisterProduct extends React.Component {
     };
 
 
-    setDetailsArray = detailsArray => {
-        console.warn(detailsArray)
+    setDetailsArray = (detailsArray, defaultArray) => {
+        tempDefaultArray = [...defaultArray]
         this.setState({ detailsArray }, () => this.submitAllSteps());
     };
 
@@ -113,7 +114,17 @@ class RegisterProduct extends React.Component {
             'images--->>', images,
             'city--->>', city,
             'description--->', description,
-            'province--->', province)
+            'province--->', province,
+            'temp---------->>>', tempDefaultArray);
+
+        detailsArray.forEach(element => {
+            if (!this.state.description.includes(tempDefaultArray.find(item => item.name == element.itemKey).description))
+                description = `${description} <hr/> ${tempDefaultArray.find(item => item.name == element.itemKey).description} : ${element.itemValue}`;
+        });
+        this.setState({ description }, () => {
+            console.warn('description---->>', this.state.description)
+
+        })
     }
 
     renderSteps = () => {

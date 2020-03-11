@@ -138,7 +138,7 @@ class ProductMoreDetails extends Component {
             this.setState(state => {
                 state.detailsArray = state.detailsArray.filter(item => item.itemKey)
                 return '';
-            }, () => this.props.setDetailsArray([...(this.state.detailsArray)]))
+            }, () => this.props.setDetailsArray([...(this.state.detailsArray)], [...tempDefaults]))
         }
     };
 
