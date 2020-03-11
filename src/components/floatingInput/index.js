@@ -4,6 +4,7 @@ import { Animated, StyleSheet } from 'react-native';
 import TextField from './src/components/field';
 import Outline from './src/components/outline';
 
+export { TextField };
 export default class OutlinedTextField extends TextField {
     static contentInset = {
         ...TextField.contentInset,

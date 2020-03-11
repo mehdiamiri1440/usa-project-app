@@ -9,6 +9,8 @@ import SelectCategory from './Steps/SelectCategory';
 import StockAndPrice from './Steps/StockAndPrice';
 import ChooseCity from './Steps/ChooseCity';
 import ProductImages from './Steps/ProductImages';
+import ProductDescription from './Steps/ProductDescription';
+import ProductMoreDetails from './Steps/ProductMoreDetails';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class RegisterProduct extends React.Component {
@@ -16,15 +18,18 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 4,
+            stepNumber: 6,
             productType: '',
             category: '',
+            detailsArray: [],
             subCategory: '',
             minimumOrder: "",
             maximumPrice: "",
             minimumPrice: "",
+            images: [],
             amount: '',
             city: '',
+            description: '',
             province: ''
         }
     }
@@ -60,8 +65,56 @@ class RegisterProduct extends React.Component {
     };
 
     setCityAndProvice = (city, province) => {
-        this.setState({ city, province }, () => this.changeStep(5))
+        this.setState({ city, province, stepNumber: 4 });
     };
+
+
+    setProductImages = images => {
+        this.setState({ images, stepNumber: 5 });
+    };
+
+    setProductDescription = description => {
+        this.setState({ description, stepNumber: 6 });
+    };
+
+
+    setDetailsArray = detailsArray => {
+        console.warn(detailsArray)
+        this.setState({ detailsArray }, () => this.submitAllSteps());
+    };
+
+
+    submitAllSteps = () => {
+        let {
+            productType,
+            category,
+            detailsArray,
+            subCategory,
+            minimumOrder,
+            maximumPrice,
+            minimumPrice,
+            amount,
+            city,
+            description,
+            images,
+            province
+
+        } = this.state;
+
+        console.warn(
+            'productType--->', productType,
+            'category--->', category,
+            'detailsarray---->', detailsArray,
+            'sub category---->>', subCategory,
+            'minimim order--->', minimumOrder,
+            'maximum price---->', maximumPrice,
+            'minimum price--->', minimumPrice,
+            'amount --->', amount,
+            'images--->>', images,
+            'city--->>', city,
+            'description--->', description,
+            'province--->', province)
+    }
 
     renderSteps = () => {
         let { stepNumber } = this.state
@@ -74,25 +127,20 @@ class RegisterProduct extends React.Component {
                 />
             }
             case 2: {
-                return <StockAndPrice
-                    changeStep={this.changeStep}
-                    mobileNumber={this.state.mobileNumber}
-                    setStockAndPrice={this.setStockAndPrice}
-                    {...this.props}
-                />
+                return <StockAndPrice changeStep={this.changeStep} setStockAndPrice={this.setStockAndPrice} {...this.props} />
             }
             case 3: {
-                return <ChooseCity setCityAndProvice={this.setCityAndProvice}  {...this.props} />
+                return <ChooseCity changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice}  {...this.props} />
             }
             case 4: {
-                return <ProductImages {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
+                return <ProductImages changeStep={this.changeStep} setProductImages={this.setProductImages} {...this.props} />
             }
-            // case 5: {
-            //     return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
-            // }
-            // case 6: {
-            //     return <UserActivity setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
-            // }
+            case 5: {
+                return <ProductDescription changeStep={this.changeStep} setProductDescription={this.setProductDescription} {...this.props} />
+            }
+            case 6: {
+                return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
+            }
             default:
                 break;
         }

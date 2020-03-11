@@ -8,9 +8,11 @@ import MyProducts from '../../screens/Home/MyProducts';
 import EditProfileIndex from '../../screens/Home/EditProfile';
 import SettingsIndex from '../../screens/Settings/Settings';
 import ChangePasswordIndex from '../../screens/ChangePassword/ChangePassword';
+import Octicons from 'react-native-vector-icons/dist/Octicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MessagesIndex from '../../screens/Messages/Messages';
+import TermsIndex from '../../screens/Home/Terms/Terms';
 
 
 const routes = [
@@ -57,6 +59,12 @@ const routes = [
         component: MessagesIndex,
         icon: color => <Entypo size={25} name='message' color={color} />,
         name: 'Messages'
+    },
+    {
+        label: 'labels.terms',
+        component: TermsIndex,
+        icon: color => <Octicons size={25} name='law' color={color} />,
+        name: 'Terms'
     },
 ]
 export default routes;

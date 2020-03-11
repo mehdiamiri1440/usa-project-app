@@ -131,7 +131,7 @@ class ChooseCity extends React.Component {
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
-                            onPress={() => this.props.changeStep(1)}
+                            onPress={() => this.props.changeStep(2)}
                             style={styles.backButtonContainer}
                             rounded
                         >
