@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
+        fontFamily: 'Vazir-Bold-FD',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,

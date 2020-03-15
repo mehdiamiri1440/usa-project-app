@@ -50,7 +50,7 @@ class Home extends React.Component {
                                 alignContent: 'center',
                                 backgroundColor: 'white',
                                 borderRadius: 5,
-                                marginBottom: 30,
+                                marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
                                 borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
                                 borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
                                 padding: 20,

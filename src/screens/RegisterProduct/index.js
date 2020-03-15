@@ -20,7 +20,7 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 0,
+            stepNumber: 4,
             productType: '',
             category: '',
             detailsArray: [],
@@ -232,7 +232,7 @@ class RegisterProduct extends React.Component {
 
 
                     <View style={{
-                        width: deviceWidth, paddingVertical: 10,
+                        width: deviceWidth, marginTop: 25,
                         flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                     }}>
                         <View style={{

@@ -72,6 +72,7 @@ export default {
     'titles.maximumPrice': 'حداکثر قیمت(هر کیلو به تومان)',
     'titles.productTypeWithExample': 'نوع محصول (مثلا : مضافتی)',
     'titles.productType': 'نوع محصول',
+    'titles.stockAndPrice': 'موجودی و قیمت محصول',
     'titles.finalSubmit': 'ثبت نهایی',
     'titles.amountWithExample': 'میزان موجودی (کیلوگرم) :مثلا 1000',
     'titles.amount': 'میزان موجودی (کیلوگرم)',

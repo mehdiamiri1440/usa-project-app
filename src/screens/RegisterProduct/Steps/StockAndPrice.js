@@ -114,10 +114,11 @@ class StockAndPrice extends Component {
                         marginVertical: 10,
                         color: '#666666',
                         fontSize: 20,
+                        fontFamily: 'Vazir-Bold-FD',
                         paddingHorizontal: 10
                     }}
                 >
-                    {locales('labels.selectProductType')}
+                    {locales('titles.stockAndPrice')}
                 </Text>
 
                 <View style={styles.textInputPadding}>
@@ -209,8 +210,7 @@ class StockAndPrice extends Component {
 
 const styles = StyleSheet.create({
     textInputPadding: {
-        padding: 20,
-        marginTop: 20
+        padding: 10,
     },
     buttonText: {
         color: 'white',

@@ -77,6 +77,7 @@ class SelectCategory extends Component {
                 <Text
                     style={{
                         marginVertical: 10,
+                        fontFamily: 'Vazir-Bold-FD',
                         color: '#666666',
                         fontSize: 20,
                         paddingHorizontal: 10

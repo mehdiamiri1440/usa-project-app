@@ -45,6 +45,7 @@ class ProductDecription extends Component {
                             marginVertical: 10,
                             color: '#666666',
                             fontSize: 20,
+                            fontFamily: 'Vazir-Bold-FD',
                             paddingHorizontal: 10
                         }}
                     >

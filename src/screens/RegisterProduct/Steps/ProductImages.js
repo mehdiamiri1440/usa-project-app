@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 class ProductImages extends Component {
     constructor(props) {
@@ -78,6 +79,14 @@ class ProductImages extends Component {
     }
 
 
+    deleteImage = index => {
+        this.setState(state => {
+            state.images = state.images.filter((item, ind) => ind !== index);
+            return '';
+        })
+    }
+
+
     render() {
 
         let { images } = this.state;
@@ -93,6 +102,7 @@ class ProductImages extends Component {
                             marginVertical: 10,
                             color: '#666666',
                             fontSize: 20,
+                            fontFamily: 'Vazir-Bold-FD',
                             paddingHorizontal: 10
                         }}
                     >
@@ -115,6 +125,7 @@ class ProductImages extends Component {
                         flexWrap: 'wrap'
                     }}>
                         {images.length ? images.map((image, index) => <TouchableOpacity
+                            key={index}
                             onPress={() => this.chooseProductImage(index)}
                             style={{
                                 width: 150,
@@ -122,6 +133,7 @@ class ProductImages extends Component {
                                 height: 150,
                                 margin: 20,
                                 borderWidth: 1,
+                                position: 'relative',
                                 borderRadius: 5,
                                 borderStyle: 'dashed',
                                 borderColor: '#707070',
@@ -131,13 +143,27 @@ class ProductImages extends Component {
                             }}>
                             <Image
                                 resizeMode="cover"
-                                key={index}
                                 style={{
                                     width: 150, height: 150,
                                     borderRadius: 5, alignContent: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
                                 source={{ uri: image }} />
+                            <TouchableOpacity
+                                onPress={() => this.deleteImage(index)}
+                                style={{
+                                    position: 'absolute',
+                                    opacity: 0.5,
+                                    width: 150,
+                                    zIndex: 999,
+                                    bottom: 0,
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    backgroundColor: 'black',
+                                }}
+                            >
+                                <FontAwesome name='trash' size={25} color='red' />
+                            </TouchableOpacity>
                         </TouchableOpacity>
                         ) : null}
                         <View style={{

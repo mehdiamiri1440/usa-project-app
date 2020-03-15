@@ -47,7 +47,8 @@ class GuidToRegisterProduct extends React.Component {
                         visible={showModal}
                         onDismiss={this.hideDialog}>
                         <Dialog.Content>
-                            <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center' }}>{locales('titles.maximumProductRegisteration')}</Paragraph>
+                            <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center' }}>
+                                {locales('titles.maximumProductRegisteration')}</Paragraph>
                         </Dialog.Content>
                         <Dialog.Actions style={{
                             width: '100%',
@@ -89,6 +90,7 @@ class GuidToRegisterProduct extends React.Component {
                         <Text
                             style={{
                                 width: '70%',
+                                fontSize: 16,
                                 textAlign: 'center',
                                 flexWrap: 'wrap'
                             }}
@@ -145,6 +147,7 @@ class GuidToRegisterProduct extends React.Component {
                             style={{
                                 width: '70%',
                                 fontFamily: 'Vazir-Bold-FD',
+                                fontSize: 16,
                                 textAlign: 'center',
                                 flexWrap: 'wrap'
                             }}
