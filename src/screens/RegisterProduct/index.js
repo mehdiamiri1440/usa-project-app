@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux';
-import * as authActions from '../../redux/auth/actions';
+import * as productActions from '../../redux/registerProduct/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import SelectCategory from './Steps/SelectCategory';
 import StockAndPrice from './Steps/StockAndPrice';
+import GuidToRegisterProduct from './Steps/GuidToRegisterProduct';
 import ChooseCity from './Steps/ChooseCity';
 import ProductImages from './Steps/ProductImages';
 import ProductDescription from './Steps/ProductDescription';
@@ -19,7 +20,7 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 6,
+            stepNumber: 0,
             productType: '',
             category: '',
             detailsArray: [],
@@ -122,14 +123,39 @@ class RegisterProduct extends React.Component {
                 description = `${description} <hr/> ${tempDefaultArray.find(item => item.name == element.itemKey).description} : ${element.itemValue}`;
         });
         this.setState({ description }, () => {
-            console.warn('description---->>', this.state.description)
+            let productObject = {
+                product_name: productType,
+                category,
+                detailsArray,
+                category_id: subCategory,
+                stock: amount,
+                max_sale_price: maximumPrice,
+                min_sale_price: minimumPrice,
+                min_sale_amount: minimumOrder,
+                city_id: city,
+                description: this.state.description,
+                images_count: images.length,
+                rules: true
+            };
 
+            images.forEach((element, index) => {
+                productObject[`images_${index}`] = element
+            });
+
+            this.props.addNewProduct(productObject)
         })
     }
 
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
+            case 0: {
+                return <GuidToRegisterProduct
+                    setProductType={this.setProductType}
+                    changeStep={this.changeStep} {...this.props}
+                    setMobileNumber={this.setMobileNumber}
+                />
+            }
             case 1: {
                 return <SelectCategory
                     setProductType={this.setProductType}
@@ -311,7 +337,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject))
     }
 };
 

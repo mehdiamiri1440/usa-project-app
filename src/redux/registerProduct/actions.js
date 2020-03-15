@@ -49,3 +49,47 @@ export const fetchAllSubCategories = id => {
 
     return request();
 };
+
+export const addNewProduct = productObject => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.registerProduct
+                .addNewProduct(productObject)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.ADD_NEW_PRODUCT_FAILED,
+                        reject: actionTypes.ADD_NEW_PRODUCT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.ADD_NEW_PRODUCT_LOADING);
+    const success = res => action(actionTypes.ADD_NEW_PRODUCT_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const checkUserPermissionToRegisterProduct = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.registerProduct
+                .checkUserPermissionToRegisterProduct()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_FAILED,
+                        reject: actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_LOADING);
+    const success = res => action(actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_SUCCESSFULLY, res);
+
+    return request();
+};

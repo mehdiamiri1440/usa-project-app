@@ -37,3 +37,43 @@ export const fetchAllSubCategories = id => {
             });
     });
 };
+
+export const addNewProduct = productObject => {
+    console.warn('in api--->', productObject)
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `user/add_product`,
+                method: 'POST',
+                data: productObject,
+                withAuth: false,
+            })
+            .then(result => {
+                console.warn('hereeee true--->', result)
+                resolve(result);
+            })
+            .catch(err => {
+                console.warn('hereeee false--->', err)
+                return reject(err.response);
+            });
+    });
+};
+
+export const checkUserPermissionToRegisterProduct = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `is_user_allowed_to_register_product`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                console.warn('hereeee true--->', result)
+                resolve(result);
+            })
+            .catch(err => {
+                console.warn('hereeee false--->', err)
+                return reject(err.response);
+            });
+    });
+};
