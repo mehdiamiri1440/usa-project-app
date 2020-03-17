@@ -57,7 +57,7 @@ class GuidToRegisterProduct extends React.Component {
                         }}>
                             <Button
                                 style={[styles.loginButton, { width: '30%' }]}
-                                onPress={this.hideDialog}>
+                                onPress={this.props.navigation.navigate('PromoteRegistration')}>
                                 <Text style={styles.buttonText}>
                                     {locales('titles.promoteRegistration')}
                                 </Text>

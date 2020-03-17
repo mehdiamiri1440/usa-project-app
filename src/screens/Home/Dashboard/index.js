@@ -1,9 +1,276 @@
-import React from 'react';
-import { Text } from 'react-native';
-class Dashboard extends React.Component {
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Card, CardItem, Body } from 'native-base';
+import { connect } from 'react-redux';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { deviceWidth, deviceHeight } from '../../../utils';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import * as homeActions from '../../../redux/home/actions';
+import Spin from '../../../components/loading/loading';
+import ENUMS from '../../../enums';
 
-    render() {
-        return <Text>dashboard</Text>
-    }
+const Dashboard = props => {
+
+
+    useEffect(() => {
+        props.fetchAllDashboardData();
+    },
+        [])
+
+
+    let {
+        dashboardLoading,
+        dashboardError,
+        dashboardFailed,
+        dashboardMessage,
+        dashboard
+    } = props;
+
+    let {
+        active_package_type: activePackageType = 0,
+        reputation_score: reputationScore,
+        accessable_buyAds: accessableBuyAds,
+        is_valid: isValid,
+        max_allowed_product_register_count: maxAllowedProductRegisterCount,
+        confirmed_products_count: confirmedProductsCount
+    } = dashboard;
+
+    return (
+        <>
+            <Spin spinning={dashboardLoading}>
+                {dashboardError &&
+                    <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>
+                            {dashboardMessage}
+                        </Text>
+                    </View>
+                }
+                {dashboardFailed &&
+                    <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>
+                            {dashboardMessage}
+                        </Text>
+                    </View>
+                }
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row-reverse',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 57,
+                    shadowOffset: { width: 20, height: 20 },
+                    shadowColor: 'black',
+                    shadowOpacity: 1.0,
+                    elevation: 5,
+                    justifyContent: 'center'
+                }}>
+                    <TouchableOpacity
+                        style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
+                        onPress={() => props.navigation.goBack()}
+                    >
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
+                    <View style={{
+                        width: deviceWidth * 0.6,
+                        alignItems: 'flex-end'
+                    }}>
+                        <Text
+                            style={{ fontSize: 18 }}
+                        >
+                            {locales('labels.dashboard')}
+                        </Text>
+                    </View>
+                </View>
+
+                <View style={{
+                    width: deviceWidth,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 20,
+                    flexDirection: 'row-reverse'
+                }}>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.yourActiveRegistration')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 18, paddingHorizontal: 10,
+                                    }}>
+                                        {ENUMS.PACKAGES_TYPES.list.filter(item => item.value == activePackageType)[0].title}
+                                    </Text>
+                                    <AntDesign name='idcard' size={55} color='#19668E' style={{ opacity: 0.3 }} />
+                                </View>
+                                {activePackageType < 3 && <TouchableOpacity
+                                    onPress={() => props.navigation.navigate('PromoteRegistration')}
+                                    style={{
+                                        backgroundColor: '#00C569', height: deviceWidth * 0.07, flexDirection: 'row-reverse', justifyContent: 'center',
+                                        alignItems: 'center',
+                                        bottom: -25, left: -16, position: 'absolute', width: deviceWidth * 0.465,
+                                    }}>
+                                    <AntDesign name='arrowup' color='white' size={25} />
+                                    <Text style={{ color: 'white', fontFamily: 'Vazir-Bold-FD' }}>{locales('labels.promoteRegistration')}</Text>
+                                </TouchableOpacity>}
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.countOfRegisterableProducts')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 18, paddingHorizontal: 10,
+                                        textAlign: 'right', textAlignVertical: 'center', width: '70%'
+
+                                    }}>
+                                        {locales('labels.product')} {maxAllowedProductRegisterCount == 0 ? locales('labels.zero') : maxAllowedProductRegisterCount}
+                                    </Text>
+                                    <FontAwesome5 name='list-ol' size={55} color='#AA49C8' style={{ opacity: 0.3 }} />
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                </View>
+
+
+                <View style={{
+                    width: deviceWidth,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 20,
+                    paddingTop: 0,
+                    flexDirection: 'row-reverse'
+                }}>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.viewableBuyRequests')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 18, paddingHorizontal: 10,
+                                        textAlign: 'right', textAlignVertical: 'center', width: '70%'
+                                    }}>
+                                        {locales('labels.request')} {accessableBuyAds}
+                                    </Text>
+                                    <FontAwesome5 name='list-alt' size={55} color='#D8A679' style={{ opacity: 0.3 }} />
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.186, marginTop: 15 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.authorizedSeller')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 18, paddingHorizontal: 10,
+                                        textAlign: 'right', textAlignVertical: 'center', width: '70%'
+                                    }}>
+                                        {isValid ? locales('titles.yes') : locales('titles.no')}
+                                    </Text>
+                                    <FontAwesome5 name='list-ol' size={55} color='#21AD93' style={{ opacity: 0.3 }} />
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                </View>
+
+
+                <View style={{
+                    width: deviceWidth,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 20,
+                    paddingTop: 0,
+                    flexDirection: 'row-reverse'
+                }}>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.authorizationLevel')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 16, paddingHorizontal: 10,
+                                        textAlign: 'right', textAlignVertical: 'center', width: '70%'
+                                    }}>
+                                        {reputationScore}
+                                    </Text>
+                                    <AntDesign name='star' size={55} color='#00C5BE' style={{ opacity: 0.3 }} />
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Card
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
+                        <CardItem>
+                            <Body>
+                                <Text style={{ textAlign: 'right', width: '100%' }}>
+                                    {locales('titles.registeredProductsCount')}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={{
+                                        fontFamily: 'Vazir-Bold-FD', fontSize: 16, paddingHorizontal: 10,
+                                        textAlign: 'right', textAlignVertical: 'center', width: '70%'
+                                    }}>
+                                        {confirmedProductsCount == 0 ? locales('labels.zero') : confirmedProductsCount}
+                                    </Text>
+                                    <FontAwesome5 name='list-ol' size={55} color='#FFAC58' style={{ opacity: 0.3 }} />
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                </View>
+            </Spin>
+
+        </>
+
+    )
 }
-export default Dashboard
+
+
+styles = StyleSheet.create({
+    loginFailedContainer: {
+        backgroundColor: '#F8D7DA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#761C24'
+    },
+})
+
+const mapStateToProps = (state) => {
+    return {
+        dashboardLoading: state.homeReducer.dashboardLoading,
+        dashboardError: state.homeReducer.dashboardError,
+        dashboardMessage: state.homeReducer.dashboardMessage,
+        dashboardFailed: state.homeReducer.dashboardFailed,
+        dashboard: state.homeReducer.dashboard,
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData())
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

@@ -1,9 +1,11 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import HomeIndex from '../../screens/Home/Home';
 import DashboardIndex from '../../screens/Home/Dashboard';
+import PromoteRegistrationIndex from '../../screens/Home/PromoteRegistration/PromoteRegistration';
 import MyProducts from '../../screens/Home/MyProducts';
 import EditProfileIndex from '../../screens/Home/EditProfile';
 import SettingsIndex from '../../screens/Settings/Settings';
@@ -13,6 +15,8 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MessagesIndex from '../../screens/Messages/Messages';
 import TermsIndex from '../../screens/Home/Terms/Terms';
+import { deviceWidth } from '../../utils/deviceDimenssions';
+
 
 
 const routes = [
@@ -29,6 +33,12 @@ const routes = [
         component: DashboardIndex,
         icon: color => <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color={color} />,
         name: 'Dashboard'
+    },
+    {
+        label: 'labels.promoteRegistration',
+        component: PromoteRegistrationIndex,
+        icon: color => <FontAwesome5 size={25} name='user-circle' color={color} />,
+        name: 'PromoteRegistration'
     },
     {
         label: 'labels.editProfile',
