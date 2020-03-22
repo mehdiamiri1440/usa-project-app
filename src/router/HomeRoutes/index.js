@@ -13,7 +13,7 @@ import ChangePasswordIndex from '../../screens/ChangePassword/ChangePassword';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import MessagesIndex from '../../screens/Messages/Messages';
+import MessagesIndex from '../../screens/Messages';
 import TermsIndex from '../../screens/Home/Terms/Terms';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 

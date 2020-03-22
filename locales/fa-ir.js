@@ -47,8 +47,10 @@ export default {
     'labels.productDescription': 'توضیحات محصول',
     'labels.changePassword': 'تغییر کلمه عبور',
     'labels.product': 'محصول',
+    'labels.searchContacts': 'جستجوی مخاطب',
     'labels.request': 'درخواست',
     'labels.requests': 'درخواست‌ها',
+    'labels.noChatFound': 'هیچ مکالمه‌ای وجود ندارد',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
     "labels.woman": "خانم",
 

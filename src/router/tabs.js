@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import RequestsIndex from '../screens/Requests/Requests';
 import SearchIndex from '../screens/Search/Search';
-import MessagesIndex from '../screens/Messages/Messages';
+import MessagesIndex from '../screens/Messages';
 import RegisterProductRoutes from './RegisterProductRoutes';
 import HomeRoutes from './HomeRoutes'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
