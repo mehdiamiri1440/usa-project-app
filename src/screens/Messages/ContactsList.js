@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Modal } from 'react-native';
 import { Card, CardItem, Body, } from 'native-base';
 import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv';
 import { connect } from 'react-redux';
@@ -8,30 +8,45 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import moment from 'moment';
 import Jmoment from 'moment-jalaali';
+import ChatModal from './ChatModal';
 
 
 class ContactsList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            modalFlag: false,
+            selectedContact: {
+                first_name: '',
+                last_name: '',
+                id: null
+            }
+        }
     }
 
-
-    componentDidMount() {
-        // this.props.fetchAllContactsList();
-    }
 
     render() {
+
         let { contactsList } = this.props;
-        console.warn(contactsList)
+        let { modalFlag, selectedContact } = this.state;
+
         return (
             <ScrollView style={{ padding: 5 }}>
+
+                {modalFlag && <ChatModal
+                    transparent={false}
+                    visible={modalFlag}
+                    contact={selectedContact}
+                    onRequestClose={() => this.setState({ modalFlag: false })}
+                />}
+
                 <Card>
                     <CardItem>
                         <Body>
                             {
                                 contactsList.map((contact, index) => (
                                     <TouchableOpacity
+                                        onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
                                         key={contact.contact_id}
                                         style={{
                                             borderBottomColor: '#DDDDDD', paddingVertical: 15,
@@ -39,6 +54,7 @@ class ContactsList extends React.Component {
                                             borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
                                         }}
                                     >
+
                                         <Image
                                             style={{
                                                 borderRadius: deviceWidth * 0.08,
@@ -48,22 +64,45 @@ class ContactsList extends React.Component {
                                                 { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }
                                                 : require('../../../assets/icons/user.png')}
                                         />
-                                        <View
-                                            style={{
-                                                width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 6,
-                                                flexDirection: 'row-reverse',
-                                                justifyContent: 'space-between',
-                                            }}
-                                        >
-                                            <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
-                                                {`${contact.first_name} ${contact.last_name}`}
-                                            </Text>
-                                            <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
-                                                {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
-                                            </Text>
 
+                                        <View>
+                                            <View
+                                                style={{
+                                                    width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                    flexDirection: 'row-reverse',
+                                                    justifyContent: 'space-between',
+                                                }}
+                                            >
+                                                <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
+                                                    {`${contact.first_name} ${contact.last_name}`}
+                                                </Text>
+                                                <Text style={{ color: '#666666' }}>
+                                                    {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
+                                                </Text>
+                                            </View>
+
+
+                                            <View
+                                                style={{
+                                                    width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                    flexDirection: 'row-reverse',
+                                                    justifyContent: 'space-between',
+                                                }}
+                                            >
+                                                <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
+                                                    {contact.last_msg.last_msg_text}
+                                                </Text>
+                                                {contact.unread_msgs_count > 0 && <Text style={{
+                                                    color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
+                                                    borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
+                                                }}>
+                                                    {contact.unread_msgs_count}
+                                                </Text>}
+                                            </View>
 
                                         </View>
+
+
                                     </TouchableOpacity>
                                 ))
                             }

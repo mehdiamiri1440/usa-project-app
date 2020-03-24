@@ -5,6 +5,19 @@ const INITIAL_STATE = {
     contactsListError: false,
     contactsListMessage: null,
     contactsList: [],
+
+
+    userChatHistoryLoading: false,
+    userChatHistoryFailed: false,
+    userChatHistoryError: false,
+    userChatHistoryMessage: null,
+    userChatHistory: [],
+
+
+    sendPrivateMessageLoading: false,
+    sendPrivateMessageFailed: false,
+    sendPrivateMessageError: false,
+    sendPrivateMessageMessage: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -48,6 +61,89 @@ export default (state = INITIAL_STATE, action) => {
                 contactsListFailed: false,
                 contactsListError: true,
                 contactsListMessage: null
+            };
+        };
+
+
+
+        case actionTypes.FETCH_USER_CHAT_HISTORY_LOADING: {
+            return {
+                ...state,
+                userChatHistory: [],
+                userChatHistoryLoading: true,
+                userChatHistoryFailed: false,
+                userChatHistoryError: false,
+                userChatHistoryMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_CHAT_HISTORY_SUCCESSFULLY: {
+            return {
+                ...state,
+                userChatHistory: [...action.payload.messages],
+                userChatHistoryLoading: false,
+                userChatHistoryFailed: false,
+                userChatHistoryError: false,
+                userChatHistoryMessage: null,
+            };
+        };
+        case actionTypes.FETCH_USER_CHAT_HISTORY_FAILED: {
+            return {
+                ...state,
+                userChatHistory: [],
+                userChatHistoryLoading: false,
+                userChatHistoryFailed: true,
+                userChatHistoryError: false,
+                userChatHistoryMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_CHAT_HISTORY_REJECT: {
+            return {
+                ...state,
+                userChatHistory: [],
+                userChatHistoryLoading: false,
+                userChatHistoryFailed: false,
+                userChatHistoryError: true,
+                userChatHistoryMessage: null
+            };
+        };
+
+
+
+
+        case actionTypes.SEND_PRIVATE_MESSAGE_LOADING: {
+            return {
+                ...state,
+                sendPrivateMessageLoading: true,
+                sendPrivateMessageFailed: false,
+                sendPrivateMessageError: false,
+                sendPrivateMessageMessage: null
+            };
+        };
+        case actionTypes.SEND_PRIVATE_MESSAGE_SUCCESSFULLY: {
+            return {
+                ...state,
+                sendPrivateMessageLoading: false,
+                sendPrivateMessageFailed: false,
+                sendPrivateMessageError: false,
+                sendPrivateMessageMessage: null,
+            };
+        };
+        case actionTypes.SEND_PRIVATE_MESSAGE_FAILED: {
+            return {
+                ...state,
+                sendPrivateMessageLoading: false,
+                sendPrivateMessageFailed: true,
+                sendPrivateMessageError: false,
+                sendPrivateMessageMessage: null
+            };
+        };
+        case actionTypes.SEND_PRIVATE_MESSAGE_REJECT: {
+            return {
+                ...state,
+                sendPrivateMessageLoading: false,
+                sendPrivateMessageFailed: false,
+                sendPrivateMessageError: true,
+                sendPrivateMessageMessage: null
             };
         };
 

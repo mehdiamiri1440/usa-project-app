@@ -89,9 +89,7 @@ export const sendMessage = (msgObject) => {
             .fetchAPI({
                 route: `messanger/send_message`,
                 method: 'POST',
-                data: {
-                    msgObject
-                },
+                data: msgObject,
                 withAuth: false,
             })
             .then(result => {

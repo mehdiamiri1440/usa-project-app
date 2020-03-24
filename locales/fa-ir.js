@@ -45,6 +45,7 @@ export default {
     'labels.settings': 'تنظیمات',
     'labels.zero': 'صفر',
     'labels.productDescription': 'توضیحات محصول',
+    'labels.writeAMessage': 'پیامی بگذارید',
     'labels.changePassword': 'تغییر کلمه عبور',
     'labels.product': 'محصول',
     'labels.searchContacts': 'جستجوی مخاطب',
