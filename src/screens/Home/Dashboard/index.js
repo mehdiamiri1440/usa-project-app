@@ -107,12 +107,15 @@ const Dashboard = props => {
                                 {activePackageType < 3 && <TouchableOpacity
                                     onPress={() => props.navigation.navigate('PromoteRegistration')}
                                     style={{
-                                        backgroundColor: '#00C569', height: deviceWidth * 0.07, flexDirection: 'row-reverse', justifyContent: 'center',
+                                        backgroundColor: '#00C569', height: deviceWidth * 0.07, flexDirection: 'row-reverse',
+                                        justifyContent: 'center',
                                         alignItems: 'center',
-                                        bottom: -25, left: -16, position: 'absolute', width: deviceWidth * 0.465,
+                                        bottom: -15, left: -16, width: deviceWidth * 0.465,
                                     }}>
                                     <AntDesign name='arrowup' color='white' size={25} />
-                                    <Text style={{ color: 'white', fontFamily: 'Vazir-Bold-FD' }}>{locales('labels.promoteRegistration')}</Text>
+                                    <Text
+                                        style={{ color: 'white', fontFamily: 'Vazir-Bold-FD' }}>
+                                        {locales('labels.promoteRegistration')}</Text>
                                 </TouchableOpacity>}
                             </Body>
                         </CardItem>
@@ -168,7 +171,7 @@ const Dashboard = props => {
                         </CardItem>
                     </Card>
                     <Card
-                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.186, marginTop: 15 }}>
+                        style={{ width: deviceWidth * 0.47, height: deviceHeight * 0.173 }}>
                         <CardItem>
                             <Body>
                                 <Text style={{ textAlign: 'right', width: '100%' }}>

@@ -1,8 +1,16 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv'
+import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE } from 'react-native-dotenv';
+import RNEmulatorCheck from 'react-native-emulator-check'
 
-const getUrl = route => `http://192.168.0.104:3030/${route}`;
+
+const getUrl = route => {
+    if (!RNEmulatorCheck.isEmulator())
+        return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
+    return `${REACT_APP_API_ENDPOINT}/${route}`;
+
+
+};
 getData = async () => {
     try {
         const value = await AsyncStorage.getItem('@Authorization')
