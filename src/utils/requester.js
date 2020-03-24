@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv'
 
-const getUrl = route => `${REACT_APP_API_ENDPOINT}/${route}`;
+const getUrl = route => `http://192.168.0.104:3030/${route}`;
 getData = async () => {
     try {
         const value = await AsyncStorage.getItem('@Authorization')
