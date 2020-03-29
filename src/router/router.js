@@ -16,10 +16,13 @@ const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
 
+
 const App = props => {
+
+
     return (
         <NavigationContainer>
-            {props.isLogin == false ?
+            {(!props.loggedInUserId) ?
                 (
                     <Stack.Navigator headerMode='none'>
                         <Stack.Screen name='Login' component={Login} />
@@ -58,7 +61,12 @@ const App = props => {
 
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.authReducer.loginError
+        loginError: state.authReducer.loginError,
+        loggedInUserId: state.authReducer.loggedInUserId,
+        logOutLoading: state.authReducer.logOutLoading,
+        logOutFailed: state.authReducer.logOutFailed,
+        logOutError: state.authReducer.logOutError,
+        logOutMessage: state.authReducer.logOutMessage
     }
 };
 

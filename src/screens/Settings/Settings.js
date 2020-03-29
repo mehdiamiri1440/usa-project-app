@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import * as authReducer from '../../redux/auth/actions';
+import Spin from '../../components/loading/loading';
 
 
 let settingRoutes = [
@@ -22,7 +23,7 @@ class Settings extends React.Component {
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
-            this.props.logOut().then(() => { })
+            this.props.logOut();
         }
         else {
             this.props.navigation.navigate(name)
@@ -34,39 +35,41 @@ class Settings extends React.Component {
     render() {
         return (
             <ScrollView style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
-                {settingRoutes.map((route, index) => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => this.handleRouteChange(route.name)}
-                            style={{
-                                alignContent: 'center',
-                                backgroundColor: 'white',
-                                borderRadius: 5,
-                                padding: 20,
-                                marginVertical: 10,
-                                flexDirection: 'row-reverse',
-                            }}
-                            key={index}>
-                            <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                <View style={{
+                <Spin spinning={this.props.logOutLoading}>
+                    {settingRoutes.map((route, index) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => this.handleRouteChange(route.name)}
+                                style={{
+                                    alignContent: 'center',
+                                    backgroundColor: 'white',
                                     borderRadius: 5,
-                                    backgroundColor: '#666666',
-                                    padding: 5
-                                }}>
-                                    {route.icon}
+                                    padding: 20,
+                                    marginVertical: 10,
+                                    flexDirection: 'row-reverse',
+                                }}
+                                key={index}>
+                                <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                    <View style={{
+                                        borderRadius: 5,
+                                        backgroundColor: '#666666',
+                                        padding: 5
+                                    }}>
+                                        {route.icon}
+                                    </View>
+                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                        {locales(route.label)}
+                                    </Text>
                                 </View>
-                                <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                    {locales(route.label)}
-                                </Text>
-                            </View>
-                            <View style={{ width: '55%', flexDirection: 'row' }}>
-                                <Text style={{ textAlignVertical: 'center' }}>
-                                    <Ionicons color={'#666666'} size={25} name='ios-arrow-back' />
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                })}
+                                <View style={{ width: '55%', flexDirection: 'row' }}>
+                                    <Text style={{ textAlignVertical: 'center' }}>
+                                        <Ionicons color={'#666666'} size={25} name='ios-arrow-back' />
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </Spin>
             </ScrollView>
         )
     }
@@ -80,6 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 const mapStateToProps = (state) => {
     return {
+        logOutLoading: state.authReducer.logOutLoading
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

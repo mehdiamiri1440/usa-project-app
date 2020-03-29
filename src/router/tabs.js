@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import RequestsIndex from '../screens/Requests/Requests';
 import SearchIndex from '../screens/Search/Search';
-import MessagesIndex from '../screens/Messages';
+import MessagesRoutes from './MessagesRoutes';
 import RegisterProductRoutes from './RegisterProductRoutes';
 import HomeRoutes from './HomeRoutes'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -17,17 +17,19 @@ const Stack = createStackNavigator();
 const HomeStack = () => (
     <Stack.Navigator>
         {HomeRoutes.map((home, index) => (
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerTitleAlign: { ...(home.titleAlign) },
-                    headerShown: home.title ? true : false,
-                    title: locales(home.title),
-                    headerRight: () => home.headerRight ? home.headerRight : null,
-                })}
-                key={index}
-                name={home.name}
-                component={home.component}
-            />
+            <>
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerTitleAlign: { ...(home.titleAlign) },
+                        headerShown: home.title ? true : false,
+                        title: locales(home.title),
+                        headerRight: () => home.headerRight ? home.headerRight : null,
+                    })}
+                    key={index}
+                    name={home.name}
+                    component={home.component}
+                />
+            </>
         ))}
     </Stack.Navigator>
 )
@@ -45,6 +47,24 @@ const RegisterProductStack = () => (
                 key={index}
                 name={registerProduct.name}
                 component={registerProduct.component}
+            />
+        ))}
+    </Stack.Navigator>
+)
+
+
+const MessagesStack = () => (
+    <Stack.Navigator>
+        {MessagesRoutes.map((messageRoute, index) => (
+            <Stack.Screen
+                options={{
+                    headerTitleAlign: { ...(messageRoute.titleAlign) },
+                    headerShown: messageRoute.title ? true : false,
+                    title: locales(messageRoute.title)
+                }}
+                key={index}
+                name={messageRoute.name}
+                component={messageRoute.component}
             />
         ))}
     </Stack.Navigator>
@@ -85,7 +105,7 @@ const routes = [
         label: 'labels.messages',
         header: true,
         title: 'labels.messages',
-        component: MessagesIndex,
+        component: MessagesStack,
         icon: color => <Entypo size={25} name='message' color={color} />,
         name: 'Messages'
     },

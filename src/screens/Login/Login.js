@@ -46,9 +46,7 @@ class Login extends React.Component {
     };
     onLogin = () => {
         let { mobileNumber, password } = this.state
-        this.props.login(mobileNumber, password).then((result) => {
-            if (this.props.error) this.props.navigation.navigate('SignUp')
-        })
+        this.props.login(mobileNumber, password);
     }
     render() {
         let { message, loading, error } = this.props

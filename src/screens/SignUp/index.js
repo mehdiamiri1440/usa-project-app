@@ -30,7 +30,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 4
+            stepNumber: 1
         }
     }
 

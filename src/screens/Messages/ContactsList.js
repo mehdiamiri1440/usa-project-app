@@ -31,7 +31,10 @@ class ContactsList extends React.Component {
         let { modalFlag, selectedContact } = this.state;
 
         return (
-            <ScrollView style={{ padding: 5 }}>
+            <ScrollView
+                keyboardDismissMode='on-drag'
+                keyboardShouldPersistTaps='handled'
+                style={{ padding: 5 }}>
 
                 {modalFlag && <ChatModal
                     transparent={false}

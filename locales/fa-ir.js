@@ -65,6 +65,7 @@ export default {
     'titles.authorizationLevel': 'میزان اعتبار',
     'titles.yes': 'بله',
     'titles.no': 'خیر',
+    'titles.noMessageFound': 'پیامی یافت نشد .',
     'titles.registeredProductsCount': 'تعداد محصولات ثبت شده',
     "titles.password": 'کلمه عبور',
     'titles.gotIt': 'متوجه شدم',

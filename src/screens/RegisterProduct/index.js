@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Text, View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux';
 import * as productActions from '../../redux/registerProduct/actions';
@@ -245,7 +245,7 @@ class RegisterProduct extends React.Component {
                         }}>
                             {stepsArray.map((item, index) => {
                                 return (
-                                    <>
+                                    <Fragment key={index}>
                                         <Text
                                             style={{
                                                 textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
@@ -271,7 +271,7 @@ class RegisterProduct extends React.Component {
                                             }}>
                                         </View>
                                         }
-                                    </>
+                                    </Fragment>
                                 )
                             }
                             )}

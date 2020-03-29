@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
+import MessagesContext from './MessagesContext';
 import ContactsList from './ContactsList';
 
 class Messages extends React.Component {
@@ -22,13 +23,21 @@ class Messages extends React.Component {
     serachInputRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchAllContactsList();
+        this.props.fetchAllContactsList()
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.contactsList.length)
+        if (prevState.loaded == false && this.props.contactsList.length) {
             this.setState({ contactsList: this.props.contactsList, loaded: true })
+        }
     }
+
+    setNewContactsList = contactsList => {
+        console.warn('jhgfd-->', contactsList)
+        if (contactsList && contactsList.length) {
+            this.setState({ contactsList })
+        }
+    };
 
 
     clearSearchBar = () => {
@@ -91,18 +100,21 @@ class Messages extends React.Component {
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
                 </View>
-
-                {contactsList.length
-                    ? <ContactsList
-                        contactsList={contactsList}
-                    />
-                    : <>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Entypo size={135} name='message' color='#BEBEBE' />
-                            <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
-                        </View>
-                    </>
-                }
+                <MessagesContext.Provider
+                    value={this.setNewContactsList}
+                >
+                    {contactsList.length
+                        ? <ContactsList
+                            contactsList={contactsList}
+                        />
+                        : <>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <Entypo size={135} name='message' color='#BEBEBE' />
+                                <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
+                            </View>
+                        </>
+                    }
+                </MessagesContext.Provider>
             </>
 
         )

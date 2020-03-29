@@ -14,6 +14,8 @@ import Octicons from 'react-native-vector-icons/dist/Octicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MessagesIndex from '../../screens/Messages';
+import LoginIndex from '../../screens/Login/Login';
+import SignUpIndex from '../../screens/SignUp';
 import TermsIndex from '../../screens/Home/Terms/Terms';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 
@@ -76,5 +78,6 @@ const routes = [
         icon: color => <Octicons size={25} name='law' color={color} />,
         name: 'Terms'
     },
+
 ]
 export default routes;

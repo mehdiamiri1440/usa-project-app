@@ -2,6 +2,7 @@ import actionTypes from './actionTypes';
 const INITIAL_STATE = {
     loginLoading: false,
     loginFailed: false,
+    loggedInUserId: '',
     loginError: false,
     is_buyer: 0,
     is_seller: 0,
@@ -43,16 +44,18 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: true,
                 loginFailed: false,
                 loginError: false,
+                loggedInUserId: '',
                 loginMessage: null
             };
         };
         case actionTypes.LOGIN_SUCCESS: {
-            let { is_buyer, is_seller, msg, status } = action.payload
+            let { is_buyer, is_seller, msg, status, id } = action.payload
             console.warn(action.payload)
             return {
                 ...state,
                 loginLoading: false,
                 loginFailed: false,
+                loggedInUserId: id,
                 loginError: status,
                 loginMessage: msg,
                 is_buyer,
@@ -66,6 +69,7 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: false,
                 loginFailed: true,
                 loginError: false,
+                loggedInUserId: '',
                 loginMessage: msg
             };
         };
@@ -74,6 +78,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 loginLoading: false,
                 loginFailed: false,
+                loggedInUserId: '',
                 loginError: true,
                 loginMessage: null
             };
@@ -261,6 +266,7 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: false,
                 loginFailed: false,
                 loginError: false,
+                loggedInUserId: '',
                 loginMessage: null,
             };
         };
