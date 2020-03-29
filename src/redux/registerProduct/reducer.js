@@ -174,7 +174,6 @@ export default (state = INITIAL_STATE, action) => {
 
 
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_LOADING: {
-            console.warn('in loading--->', action)
             return {
                 ...state,
                 userPermissionToRegisterProductLoading: true,
@@ -186,7 +185,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_SUCCESSFULLY: {
-            console.warn('in success--->', action)
             let { msg, status, is_limit } = action.payload
             return {
                 ...state,
@@ -199,7 +197,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_FAILED: {
-            console.warn('in failed--->', action)
             const { msg } = action.payload;
             return {
                 ...state,
@@ -212,7 +209,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_REJECT: {
-            console.warn('in reject--->', action)
             let { phone } = action.payload.data.errors;
             return {
                 ...state,

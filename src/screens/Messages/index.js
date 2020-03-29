@@ -33,7 +33,6 @@ class Messages extends React.Component {
     }
 
     setNewContactsList = contactsList => {
-        console.warn('jhgfd-->', contactsList)
         if (contactsList && contactsList.length) {
             this.setState({ contactsList })
         }

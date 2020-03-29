@@ -53,6 +53,9 @@ export default {
     'labels.requests': 'درخواست‌ها',
     'labels.noChatFound': 'هیچ مکالمه‌ای وجود ندارد',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
+    'labels.buyRequests': 'درخواست‌های خرید',
+    'labels.kiloGram': 'کیلوگرم',
+    'labels.messageToBuyer': 'پیام به خریدار',
     "labels.woman": "خانم",
 
 
@@ -65,6 +68,8 @@ export default {
     'titles.authorizationLevel': 'میزان اعتبار',
     'titles.yes': 'بله',
     'titles.no': 'خیر',
+    'titles.requirementQuantity': 'میزان نیازمندی',
+    'titles.update': 'به‌روز رسانی',
     'titles.noMessageFound': 'پیامی یافت نشد .',
     'titles.registeredProductsCount': 'تعداد محصولات ثبت شده',
     "titles.password": 'کلمه عبور',
@@ -77,6 +82,7 @@ export default {
     'titles.only': 'تنها',
     "titles.description": 'توضیحات محصول خود را بنویسید',
     'titles.descriptionWithExample': 'در مورد کیفیت و نوع بسته بندی محصول خود توضیح دهید',
+    'titles.requestTooOld': ' این درخواست کمی قدیمی است',
     'titles.selectOrigin': 'انتخاب مبدا',
     'titles.minimumPriceWithExample': 'حداقل قیمت (هر کیلو به تومان) : مثلا 260000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',
