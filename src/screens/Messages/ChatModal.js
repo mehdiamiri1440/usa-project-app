@@ -34,7 +34,7 @@ class ChatModal extends React.Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-
+        this.props.fetchUserProfilePhoto(this.props.contact.contact_id)
         Keyboard.addListener('keyboardDidShow', event => {
             this.setState({ keyboardHeight: event.endCoordinates.height }, () => {
                 return this.scrollViewRef.current.scrollTo({ x: 0, y: this.state.prevScrollPosition, animated: true });
@@ -104,16 +104,22 @@ class ChatModal extends React.Component {
     }
 
     render() {
-        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading } = this.props;
+        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo } = this.props;
         let { first_name: firstName, last_name: lastName, contact_id: id } = contact;
-        let { keyboardHeight, userChatHistory, isFirstLoad, messageText, loaded } = this.state;
+        let { keyboardHeight, userChatHistory, isFirstLoad, messageText } = this.state;
 
         return (
             <Modal
                 animationType="slide"
                 transparent={transparent}
                 visible={visible}
-                onRequestClose={onRequestClose}
+                onRequestClose={() => {
+                    this.props.fetchAllContactsList().then(() => {
+                        if (this.context)
+                            this.context(this.props.contactsList)
+                        onRequestClose()
+                    })
+                }}
             >
 
 
@@ -140,8 +146,14 @@ class ChatModal extends React.Component {
                             justifyContent: 'center',
                             alignItems: 'flex-end', paddingHorizontal: 10
                         }}
-                        onPress={onRequestClose}
-
+                        onPress={() => {
+                            this.props.fetchAllContactsList().then(() => {
+                                if (this.context)
+                                    this.context(this.props.contactsList)
+                                onRequestClose()
+                            })
+                        }
+                        }
                     >
                         <AntDesign name='arrowright' size={25}
                         />
@@ -151,8 +163,8 @@ class ChatModal extends React.Component {
                             borderRadius: 28,
                             width: 56, height: 56
                         }}
-                        source={contact.profile_photo ?
-                            { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }
+                        source={contact.profile_photo || profile_photo ?
+                            { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo || profile_photo}` }
                             : require('../../../assets/icons/user.png')}
                     />
                     <View style={{
@@ -290,6 +302,8 @@ const mapStateToProps = (state) => {
         loggedInUserId: state.authReducer.loggedInUserId,
 
         contactsList: state.messagesReducer.contactsList,
+        profile_photo: state.messagesReducer.profile_photo,
+
 
     }
 };
@@ -298,7 +312,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserChatHistory: (id) => dispatch(messagesActions.fetchUserChatHistory(id)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject)),
-        fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList())
+        fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
+        fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
     }
 };
 

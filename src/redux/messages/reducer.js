@@ -18,6 +18,12 @@ const INITIAL_STATE = {
     sendPrivateMessageFailed: false,
     sendPrivateMessageError: false,
     sendPrivateMessageMessage: null,
+
+
+    userProfilePhotoLoading: false,
+    userProfilePhotoFailed: false,
+    userProfilePhotoError: false,
+    userProfilePhotoMessage: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -144,6 +150,47 @@ export default (state = INITIAL_STATE, action) => {
                 sendPrivateMessageFailed: false,
                 sendPrivateMessageError: true,
                 sendPrivateMessageMessage: null
+            };
+        };
+
+        case actionTypes.FETCH_USER_PROFILE_PHOTO_LOADING: {
+            return {
+                ...state,
+                userProfilePhotoLoading: true,
+                userProfilePhotoFailed: false,
+                userProfilePhotoError: false,
+                userProfilePhotoMessage: null,
+                profile_photo: ''
+            };
+        };
+        case actionTypes.FETCH_USER_PROFILE_PHOTO_SUCCESSFULLY: {
+            return {
+                ...state,
+                userProfilePhotoLoading: false,
+                userProfilePhotoFailed: false,
+                userProfilePhotoError: false,
+                userProfilePhotoMessage: null,
+                profile_photo: action.payload.profile_photo
+            };
+        };
+        case actionTypes.FETCH_USER_PROFILE_PHOTO_FAILED: {
+            return {
+                ...state,
+                userProfilePhotoLoading: false,
+                userProfilePhotoFailed: true,
+                userProfilePhotoError: false,
+                userProfilePhotoMessage: null,
+                profile_photo: ''
+            };
+        };
+        case actionTypes.FETCH_USER_PROFILE_PHOTO_REJECT: {
+            return {
+                ...state,
+                userProfilePhotoLoading: false,
+                userProfilePhotoFailed: false,
+                userProfilePhotoError: true,
+                userProfilePhotoMessage: null,
+                profile_photo: ''
             };
         };
 

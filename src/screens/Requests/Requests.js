@@ -19,7 +19,9 @@ class Requests extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalFlag: false
+            updateFlag: false,
+            modalFlag: false,
+            selectedContact: {}
         }
     }
 
@@ -27,16 +29,17 @@ class Requests extends React.Component {
         this.props.fetchUserProfile();
         this.props.fetchAllBuyAdRequests();
     }
-
+    componentWillUnmount() {
+        this.setState({ updateFlag: false })
+    }
 
 
     render() {
 
-        let { buyAdRequestsList, userProfile, userProfileLoading, buyAdRequestLoading } = this.props;
-
-        let { modalFlag } = this.state;
-
-        console.warn('buyadd-->', userProfile)
+        let { buyAdRequestsList, userProfile: info, userProfileLoading, buyAdRequestLoading } = this.props;
+        let { user_info: userInfo = {} } = info;
+        let { modalFlag, updateFlag, selectedContact } = this.state;
+        console.warn('sdf', buyAdRequestsList)
         return (
             <>
                 <View style={{
@@ -53,7 +56,9 @@ class Requests extends React.Component {
                 }}>
                     <TouchableOpacity
                         style={{ width: deviceWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10, }}
-                        onPress={() => this.props.navigation.goBack()}
+                        onPress={() => {
+                            this.setState({ updateFlag: false }); this.props.navigation.goBack()
+                        }}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
@@ -70,117 +75,161 @@ class Requests extends React.Component {
                 </View>
 
 
+                {!updateFlag ?
+                    <Spin spinning={buyAdRequestLoading || userProfileLoading}>
 
 
-                <Spin spinning={buyAdRequestLoading || userProfileLoading}>
 
-
-
-                    {userProfile.active_pakage_type == 2 && <View style={{
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 10, marginHorizontal: 10,
-                        backgroundColor: 'white', borderRadius: 6, padding: 10, alignItems: 'center',
-                        flexDirection: 'row-reverse', justifyContent: 'space-around', marginTop: 25
-                    }}
-                    >
-                        <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
-                        <Button
-                            style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
+                        {userInfo.active_pakage_type == 0 && <View style={{
+                            shadowOffset: { width: 20, height: 20 },
+                            shadowColor: 'black',
+                            shadowOpacity: 1.0,
+                            elevation: 10, marginHorizontal: 10,
+                            backgroundColor: 'white', borderRadius: 6, padding: 10, alignItems: 'center',
+                            flexDirection: 'row-reverse', justifyContent: 'space-around', marginTop: 5
+                        }}
                         >
-                            <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
-                        </Button>
-                    </View>}
-
-
-
-                    <SafeAreaView
-                        style={{ padding: 10, height: deviceHeight * 0.67 }}
-                    >
-                        <ScrollView
-                        >
-
-                            {modalFlag && <ChatModal
-                                transparent={false}
-                                visible={modalFlag}
-                                contact={selectedContact}
-                                onRequestClose={() => this.setState({ modalFlag: false })}
-                            />}
-
-
-                            <Card
+                            <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
+                            <Button
+                                onPress={() => this.setState({ updateFlag: true })}
+                                style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
                             >
-                                <CardItem>
-                                    <Body>
-                                        {buyAdRequestsList.map((buyAd, index, self) => (
-                                            <View
-                                                style={{
-                                                    padding: 10,
-                                                    width: '100%', borderBottomColor: '#DDDDDD',
-                                                    borderBottomWidth: index < self.length - 1 ? 0.7 : 0
-                                                }}
-                                                key={buyAd.id}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row-reverse',
-                                                        alignItems: 'flex-start',
-                                                        justifyContent: 'space-between',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#666666'
-                                                        }}
-                                                    >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
-                                                    <Text
-                                                        style={{ color: '#666666' }}
-                                                    >
-                                                        {Jmoment(buyAd.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
-                                                    </Text>
-                                                </View>
+                                <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
+                            </Button>
+                        </View>}
 
 
+
+                        <SafeAreaView
+                            style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.72) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
+                        >
+                            <ScrollView
+                            >
+
+                                {modalFlag && <ChatModal
+                                    transparent={false}
+                                    visible={modalFlag}
+                                    contact={{ ...selectedContact }}
+                                    onRequestClose={() => this.setState({ modalFlag: false })}
+                                />}
+
+
+                                <Card
+                                >
+                                    <CardItem>
+                                        <Body>
+                                            {buyAdRequestsList.map((buyAd, index, self) => (
                                                 <View
                                                     style={{
-                                                        alignItems: 'center',
-                                                        flexDirection: 'row-reverse',
-                                                        justifyContent: 'space-between'
+                                                        padding: 10,
+                                                        width: '100%', borderBottomColor: '#DDDDDD',
+                                                        borderBottomWidth: index < self.length - 1 ? 0.7 : 0
                                                     }}
+                                                    key={buyAd.id}
                                                 >
-                                                    <Text
-                                                        style={{ color: '#666666' }}
-                                                    >{`${locales('titles.requirementQuantity')} : ${buyAd.requirement_amount} ${locales('labels.kiloGram')}`}
-                                                    </Text>
-                                                    <Button
-                                                        onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
+                                                    <View
                                                         style={{
-                                                            backgroundColor: '#00C569',
-                                                            borderRadius: 6,
-                                                            paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse'
+                                                            flexDirection: 'row-reverse',
+                                                            alignItems: 'flex-start',
+                                                            justifyContent: 'space-between',
                                                         }}
                                                     >
-                                                        <MaterialCommunityIcons name='message' color='white' size={18} />
-                                                        <Text style={{
-                                                            color: 'white', paddingHorizontal: 3
-                                                        }}>
-                                                            {locales('labels.messageToBuyer')}
+                                                        <Text
+                                                            style={{
+                                                                fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#666666'
+                                                            }}
+                                                        >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
+                                                        <Text
+                                                            style={{ color: '#666666' }}
+                                                        >
+                                                            {Jmoment(buyAd.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
                                                         </Text>
-                                                    </Button>
+                                                    </View>
+
+
+                                                    <View
+                                                        style={{
+                                                            alignItems: 'center',
+                                                            flexDirection: 'row-reverse',
+                                                            justifyContent: 'space-between'
+                                                        }}
+                                                    >
+                                                        <Text
+                                                            style={{ color: '#666666' }}
+                                                        >{`${locales('titles.requirementQuantity')} : ${buyAd.requirement_amount} ${locales('labels.kiloGram')}`}
+                                                        </Text>
+                                                        <Button
+                                                            onPress={() => this.setState({
+                                                                modalFlag: true,
+                                                                selectedContact: {
+                                                                    contact_id: buyAd.myuser_id,
+                                                                    first_name: buyAd.first_name,
+                                                                    last_name: buyAd.last_name
+                                                                }
+                                                            })}
+                                                            style={{
+                                                                backgroundColor: '#00C569',
+                                                                borderRadius: 6,
+                                                                paddingHorizontal: 10,
+                                                                flexDirection: 'row-reverse'
+                                                            }}
+                                                        >
+                                                            <MaterialCommunityIcons name='message' color='white' size={18} />
+                                                            <Text style={{
+                                                                color: 'white', paddingHorizontal: 3
+                                                            }}>
+                                                                {locales('labels.messageToBuyer')}
+                                                            </Text>
+                                                        </Button>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                        ))}
+                                            ))}
 
-                                    </Body>
-                                </CardItem>
-                            </Card>
-                        </ScrollView>
-                    </SafeAreaView>
+                                        </Body>
+                                    </CardItem>
+                                </Card>
+                            </ScrollView>
+                            {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
+                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
+                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
+                            </Text>
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('PromoteRegistration')}
+                                    style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
+                                >
+                                    <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
+                                </Button>
+                            </View>}
+                        </SafeAreaView>
 
 
-                </Spin>
+                    </Spin>
+                    :
+                    <View
+                        style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}
+                    >
+                        <Card
+                            style={{ width: '100%' }}
+                        >
+                            <CardItem>
+                                <Body>
+                                    <Text style={{ textAlign: 'center', fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: 'black' }}>
+                                        {locales('titles.buyadRequestsWith')} <Text style={{ fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#E41C38' }}>{locales('titles.twoHoursDelay')}</Text> {locales('titles.youWillBeInformed')} .
+                                </Text>
+                                    <Text style={{ textAlign: 'center', fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: 'black' }}>
+                                        {locales('titles.onTimeBuyAdRequestAndPromote')}
+                                    </Text>
+                                    <Button
+                                        onPress={() => this.props.navigation.navigate('PromoteRegistration')}
+                                        style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
+                                    >
+                                        <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
+                                    </Button>
+                                </Body>
+                            </CardItem>
+                        </Card>
+                    </View>
+                }
 
             </>
         )

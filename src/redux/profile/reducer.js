@@ -25,7 +25,7 @@ export default (state = INITIAL_STATE, action) => {
             let { msg, user_info } = action.payload
             return {
                 ...state,
-                userProfile: { ...user_info },
+                userProfile: { ...action.payload },
                 userProfileLoading: false,
                 userProfileFailed: false,
                 userProfileError: false,

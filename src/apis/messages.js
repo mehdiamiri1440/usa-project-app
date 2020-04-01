@@ -144,3 +144,25 @@ export const subscribeGroupForUser = (groupId) => {
     });
 };
 
+
+
+export const fetchUserProfilePhoto = (userId) => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_user_last_confirmed_profile_photo`,
+                method: 'POST',
+                data: {
+                    user_id: userId
+                },
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};
+

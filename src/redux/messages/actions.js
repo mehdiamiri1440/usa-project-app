@@ -73,3 +73,26 @@ export const sendMessage = (msgObject) => {
 
     return request();
 };
+
+
+export const fetchUserProfilePhoto = (userId) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .fetchUserProfilePhoto(userId)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_USER_PROFILE_PHOTO_FAILED,
+                        reject: actionTypes.FETCH_USER_PROFILE_PHOTO_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_USER_PROFILE_PHOTO_LOADING);
+    const success = res => action(actionTypes.FETCH_USER_PROFILE_PHOTO_SUCCESSFULLY, res);
+
+    return request();
+};
