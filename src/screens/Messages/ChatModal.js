@@ -115,7 +115,7 @@ class ChatModal extends React.Component {
                 visible={visible}
                 onRequestClose={() => {
                     this.props.fetchAllContactsList().then(() => {
-                        if (this.context)
+                        if (this.context.length)
                             this.context(this.props.contactsList)
                         onRequestClose()
                     })
@@ -148,7 +148,7 @@ class ChatModal extends React.Component {
                         }}
                         onPress={() => {
                             this.props.fetchAllContactsList().then(() => {
-                                if (this.context)
+                                if (this.context.length)
                                     this.context(this.props.contactsList)
                                 onRequestClose()
                             })
