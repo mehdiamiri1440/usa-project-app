@@ -1,13 +1,16 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import RNEmulatorCheck from 'react-native-emulator-check'
 
 
 const getUrl = route => {
-    if (!RNEmulatorCheck.isEmulator())
-        return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
-    return `${REACT_APP_API_ENDPOINT}/${route}`;
+    if (__DEV__) {
+        if (!RNEmulatorCheck.isEmulator())
+            return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
+        return `${REACT_APP_API_ENDPOINT}/${route}`;
+    }
+    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
 
 
 };

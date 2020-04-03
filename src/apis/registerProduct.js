@@ -49,11 +49,9 @@ export const addNewProduct = productObject => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('hereeee true--->', result)
                 resolve(result);
             })
             .catch(err => {
-                console.warn('hereeee false--->', err)
                 return reject(err.response);
             });
     });
@@ -68,11 +66,9 @@ export const checkUserPermissionToRegisterProduct = () => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('hereeee true--->', result)
                 resolve(result);
             })
             .catch(err => {
-                console.warn('hereeee false--->', err)
                 return reject(err.response);
             });
     });

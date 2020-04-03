@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
-        width: deviceWidth * 0.4,
+        width: '40%',
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',
