@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, Image, Modal } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Body, } from 'native-base';
 import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv';
 import { connect } from 'react-redux';
 import * as messagesActions from '../../redux/messages/actions';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import moment from 'moment';
 import Jmoment from 'moment-jalaali';
@@ -55,7 +55,7 @@ class ContactsList extends React.Component {
                                             onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
                                             key={contact.contact_id}
                                             style={{
-                                                borderBottomColor: '#DDDDDD', paddingVertical: 15,
+                                                borderBottomColor: '#DDDDDD', paddingVertical: 12,
                                                 flexDirection: 'row-reverse', width: '100%',
                                                 borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
                                             }}
@@ -63,8 +63,8 @@ class ContactsList extends React.Component {
 
                                             <Image
                                                 style={{
-                                                    borderRadius: deviceWidth * 0.08,
-                                                    width: deviceWidth * 0.16, height: deviceWidth * 0.16
+                                                    borderRadius: deviceWidth * 0.06,
+                                                    width: deviceWidth * 0.12, height: deviceWidth * 0.12
                                                 }}
                                                 source={contact.profile_photo ?
                                                     { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }

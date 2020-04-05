@@ -136,6 +136,7 @@ class Requests extends React.Component {
                                                     >
                                                         <Text
                                                             style={{
+                                                                flexWrap: 'wrap', width: '60%',
                                                                 fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#666666'
                                                             }}
                                                         >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
@@ -167,6 +168,7 @@ class Requests extends React.Component {
                                                                     last_name: buyAd.last_name
                                                                 }
                                                             })}
+                                                            small
                                                             style={{
                                                                 backgroundColor: '#00C569',
                                                                 borderRadius: 6,

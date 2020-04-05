@@ -194,12 +194,13 @@ class ChatModal extends React.Component {
                     >
 
                         {
-                            userChatHistory.map((message, index) => (
+                            userChatHistory.map((message, index,self) => (
 
                                 <View style={{
                                     width: deviceWidth,
                                     paddingHorizontal: 10,
-                                    marginVertical: 10,
+                                    marginTop:index==0?10:0,
+                                    marginBottom: index==self.length-1?20:(index<self.length-1&&self[index].receiver_id==self[index+1].receiver_id?5:10),
                                     flex: 1,
                                     alignItems: id == message.receiver_id ? 'flex-end' : 'flex-start'
                                 }}
@@ -263,12 +264,12 @@ class ChatModal extends React.Component {
                         onPress={this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
-                            width: 50,
-                            height: 50,
+                            width: 44,
+                            height: 44,
                             alignItems: 'center',
                             alignSelf: 'flex-end',
                             justifyContent: 'center',
-                            borderRadius: 25,
+                            borderRadius: 22,
                             marginHorizontal: 10
                         }}
                     >
@@ -278,9 +279,9 @@ class ChatModal extends React.Component {
                         value={messageText}
                         onChangeText={this.handleMessageTextChange}
                         style={{
-                            textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 10,
+                            textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 6,
                             width: deviceWidth * 0.8, paddingHorizontal: 20,
-                            maxHeight: 100,
+                            maxHeight: 100,height:44,
                             overflow: 'scroll'
                         }}
                         placeholder='پیامی بگذارید'

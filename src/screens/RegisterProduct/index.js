@@ -204,16 +204,16 @@ class RegisterProduct extends React.Component {
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
-                    {stepNumber > 1 && <TouchableOpacity
+                    <TouchableOpacity
                         style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
-                        onPress={() => this.setState({ stepNumber: this.state.stepNumber - 1 })}
+                        onPress={() => { stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) : this.props.navigation.goBack(); }}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
-                    }
+
                     <View style={{
-                        width: stepNumber > 1 ? deviceWidth * 0.6 : deviceWidth,
-                        alignItems: stepNumber > 1 ? 'flex-end' : 'center'
+                        width: deviceWidth * 0.6,
+                        alignItems: 'flex-end'
                     }}>
                         <Text
                             style={{ fontSize: 18 }}

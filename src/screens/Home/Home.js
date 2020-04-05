@@ -10,7 +10,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-
+import { deviceWidth } from '../../utils/deviceDimenssions';
 
 
 let homeRoutes = [
@@ -41,55 +41,88 @@ class Home extends React.Component {
 
     render() {
         return (
-            <ScrollView style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
-                {homeRoutes.map((route, index) => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => this.handleRouteChange(route.name)}
-                            style={{
-                                alignContent: 'center',
-                                backgroundColor: 'white',
-                                borderRadius: 5,
-                                marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
-                                borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
-                                padding: 20,
-                                marginVertical: 10,
-                                flexDirection: 'row-reverse',
-                            }}
-                            key={index}>
-                            <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                <View style={{
+            <>
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row-reverse',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 57,
+                    shadowOffset: { width: 20, height: 20 },
+                    shadowColor: 'black',
+                    shadowOpacity: 1.0,
+                    elevation: 5,
+                    justifyContent: 'center'
+                }}>
+                    <TouchableOpacity
+                        style={{ width: deviceWidth * 0.48, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10, }}
+                        onPress={() => this.props.navigation.goBack()}
+                    >
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
+                    <View style={{
+                        width: deviceWidth * 0.5,
+                        alignItems: 'flex-end'
+                    }}>
+                        <Text
+                            style={{ fontSize: 18 }}
+                        >
+                            {locales('labels.home')}
+                        </Text>
+                    </View>
+                </View>
+
+
+                <ScrollView style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
+                    {homeRoutes.map((route, index) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => this.handleRouteChange(route.name)}
+                                style={{
+                                    alignContent: 'center',
+                                    backgroundColor: 'white',
                                     borderRadius: 5,
-                                    backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
-                                    padding: 5
-                                }}>
-                                    {route.icon}
-                                </View>
-                                <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                    {locales(route.label)}
-                                </Text>
-                            </View>
-                            <View style={{ width: '55%', flexDirection: 'row' }}>
-                                <Text style={{ textAlignVertical: 'center' }}>
-                                    <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
-                                </Text>
-                                {route.name == 'PromoteRegistration' ?
-                                    <Text style={{
-                                        fontSize: 18,
-                                        backgroundColor: '#E41C38', color: 'white',
-                                        borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
-                                        textAlignVertical: 'center', width: 60
+                                    marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
+                                    borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
+                                    borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
+                                    padding: 20,
+                                    marginVertical: 10,
+                                    flexDirection: 'row-reverse',
+                                }}
+                                key={index}>
+                                <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                    <View style={{
+                                        borderRadius: 5,
+                                        backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
+                                        padding: 5
                                     }}>
-                                        {locales('labels.special')}
+                                        {route.icon}
+                                    </View>
+                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                        {locales(route.label)}
                                     </Text>
-                                    : null
-                                }
-                            </View>
-                        </TouchableOpacity>
-                    )
-                })}
-            </ScrollView>
+                                </View>
+                                <View style={{ width: '55%', flexDirection: 'row' }}>
+                                    <Text style={{ textAlignVertical: 'center' }}>
+                                        <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
+                                    </Text>
+                                    {route.name == 'PromoteRegistration' ?
+                                        <Text style={{
+                                            fontSize: 18,
+                                            backgroundColor: '#E41C38', color: 'white',
+                                            borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
+                                            textAlignVertical: 'center', width: 60
+                                        }}>
+                                            {locales('labels.special')}
+                                        </Text>
+                                        : null
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </ScrollView>
+            </>
         )
     }
 }

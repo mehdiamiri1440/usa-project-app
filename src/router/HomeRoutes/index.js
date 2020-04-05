@@ -25,8 +25,6 @@ const routes = [
     {
         label: 'labels.home',
         component: HomeIndex,
-        title: 'labels.home',
-        titleAlign: { textAlign: 'center' },
         icon: color => <AntDesign size={25} name='home' color={color} />,
         name: 'Home'
     },

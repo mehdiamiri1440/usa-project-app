@@ -39,7 +39,6 @@ export const fetchAllSubCategories = id => {
 };
 
 export const addNewProduct = productObject => {
-    console.warn('in api--->', productObject)
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
