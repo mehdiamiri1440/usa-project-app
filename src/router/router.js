@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -10,16 +10,27 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import tabs from './tabs';
 import Login from '../screens/Login/Login'
 import SignUp from '../screens/SignUp'
+import messaging from '@react-native-firebase/messaging';
 import { TouchableOpacity, Text } from 'react-native';
 import { deviceWidth, deviceHeight } from '../utils/deviceDimenssions';
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
 
+async function registerAppWithFCM() {
+    await messaging().registerDeviceForRemoteMessages();
+}
+
 
 const App = props => {
 
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        });
 
+        return unsubscribe;
+    }, []);
     return (
         <NavigationContainer>
             {(!props.loggedInUserId) ?

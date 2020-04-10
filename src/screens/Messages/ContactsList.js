@@ -35,8 +35,6 @@ class ContactsList extends React.Component {
 
                 style={{ height: deviceHeight * 0.6 }}>
                 <ScrollView
-                    keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps='handled'
                     style={{ padding: 5 }}>
 
                     {modalFlag && <ChatModal

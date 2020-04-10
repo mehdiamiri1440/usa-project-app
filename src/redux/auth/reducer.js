@@ -50,7 +50,6 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.LOGIN_SUCCESS: {
             let { is_buyer, is_seller, msg, status, id } = action.payload
-            console.warn(action.payload)
             return {
                 ...state,
                 loginLoading: false,

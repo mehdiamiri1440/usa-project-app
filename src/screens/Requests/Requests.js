@@ -39,7 +39,6 @@ class Requests extends React.Component {
         let { buyAdRequestsList, userProfile: info, userProfileLoading, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
         let { modalFlag, updateFlag, selectedContact } = this.state;
-        console.warn('sdf', buyAdRequestsList)
         return (
             <>
                 <View style={{
@@ -85,12 +84,13 @@ class Requests extends React.Component {
                             shadowColor: 'black',
                             shadowOpacity: 1.0,
                             elevation: 10, marginHorizontal: 10,
-                            backgroundColor: 'white', borderRadius: 6, padding: 10, alignItems: 'center',
+                            backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
                             flexDirection: 'row-reverse', justifyContent: 'space-around', marginTop: 5
                         }}
                         >
                             <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
                             <Button
+                                small
                                 onPress={() => this.setState({ updateFlag: true })}
                                 style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
                             >
@@ -135,13 +135,15 @@ class Requests extends React.Component {
                                                         }}
                                                     >
                                                         <Text
+                                                            numberOfLines={1}
                                                             style={{
-                                                                flexWrap: 'wrap', width: '60%',
+                                                                flexWrap: 'wrap', width: '75%',
                                                                 fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#666666'
                                                             }}
                                                         >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
                                                         <Text
-                                                            style={{ color: '#666666' }}
+                                                            numberOfLines={1}
+                                                            style={{ color: '#666666', width: '40%' }}
                                                         >
                                                             {Jmoment(buyAd.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
                                                         </Text>
@@ -156,7 +158,8 @@ class Requests extends React.Component {
                                                         }}
                                                     >
                                                         <Text
-                                                            style={{ color: '#666666' }}
+                                                            numberOfLines={1}
+                                                            style={{ color: '#666666', width: '70%' }}
                                                         >{`${locales('titles.requirementQuantity')} : ${buyAd.requirement_amount} ${locales('labels.kiloGram')}`}
                                                         </Text>
                                                         <Button
@@ -187,21 +190,21 @@ class Requests extends React.Component {
                                                 </View>
                                             ))}
 
+                                            {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
+                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
+                                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
+                            </Text>
+                                                <Button
+                                                    onPress={() => this.props.navigation.navigate('PromoteRegistration')}
+                                                    style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
+                                                >
+                                                    <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
+                                                </Button>
+                                            </View>}
                                         </Body>
                                     </CardItem>
                                 </Card>
                             </ScrollView>
-                            {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
-                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
-                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
-                            </Text>
-                                <Button
-                                    onPress={() => this.props.navigation.navigate('PromoteRegistration')}
-                                    style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
-                                >
-                                    <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
-                                </Button>
-                            </View>}
                         </SafeAreaView>
 
 

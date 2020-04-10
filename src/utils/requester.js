@@ -48,7 +48,6 @@ export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, pa
                 resolve(result.data ? result.data : result);
             })
             .catch(err => {
-                console.warn('error==>', err, 'error.response==>', err.response)
                 if (err.response && err.response.status === 400) {
                     reject(err.response.data);
                 } else {

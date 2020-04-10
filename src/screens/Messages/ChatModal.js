@@ -130,38 +130,38 @@ class ChatModal extends React.Component {
                 }} />
 
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 67,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
-                    elevation: 5,
-                }}>
-                    <TouchableOpacity
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.fetchAllContactsList().then(() => {
+                            if (this.context.length)
+                                this.context(this.props.contactsList)
+                            onRequestClose()
+                        })
+                    }
+                    } style={{
+                        backgroundColor: 'white',
+                        flexDirection: 'row-reverse',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        height: 53,
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                    }}>
+                    <View
                         style={{
                             justifyContent: 'center',
                             alignItems: 'flex-end', paddingHorizontal: 10
                         }}
-                        onPress={() => {
-                            this.props.fetchAllContactsList().then(() => {
-                                if (this.context.length)
-                                    this.context(this.props.contactsList)
-                                onRequestClose()
-                            })
-                        }
-                        }
                     >
                         <AntDesign name='arrowright' size={25}
                         />
-                    </TouchableOpacity>
+                    </View>
                     <Image
                         style={{
-                            borderRadius: 28,
-                            width: 56, height: 56
+                            borderRadius: 23,
+                            width: 46, height: 46
                         }}
                         source={contact.profile_photo || profile_photo ?
                             { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo || profile_photo}` }
@@ -178,7 +178,7 @@ class ChatModal extends React.Component {
                             {`${firstName} ${lastName}`}
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
 
 
@@ -194,13 +194,13 @@ class ChatModal extends React.Component {
                     >
 
                         {
-                            userChatHistory.map((message, index,self) => (
+                            userChatHistory.map((message, index, self) => (
 
                                 <View style={{
                                     width: deviceWidth,
                                     paddingHorizontal: 10,
-                                    marginTop:index==0?10:0,
-                                    marginBottom: index==self.length-1?20:(index<self.length-1&&self[index].receiver_id==self[index+1].receiver_id?5:10),
+                                    marginTop: index == 0 ? 10 : 0,
+                                    marginBottom: index == self.length - 1 ? 20 : (index < self.length - 1 && self[index].receiver_id == self[index + 1].receiver_id ? 5 : 10),
                                     flex: 1,
                                     alignItems: id == message.receiver_id ? 'flex-end' : 'flex-start'
                                 }}
@@ -281,7 +281,7 @@ class ChatModal extends React.Component {
                         style={{
                             textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 6,
                             width: deviceWidth * 0.8, paddingHorizontal: 20,
-                            maxHeight: 100,height:44,
+                            maxHeight: 100, height: 44,
                             overflow: 'scroll'
                         }}
                         placeholder='پیامی بگذارید'

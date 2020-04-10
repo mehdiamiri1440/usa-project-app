@@ -34,11 +34,8 @@ target 'Baskool' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
 
-  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
-  pod 'RCTRestart', :path => '../node_modules/react-native-restart'
 
   target 'BaskoolTests' do
     inherit! :search_paths
