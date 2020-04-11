@@ -16,7 +16,7 @@ import { deviceWidth, deviceHeight } from '../utils/deviceDimenssions';
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// key sotore up
+
 async function registerAppWithFCM() {
     await messaging().registerDeviceForRemoteMessages();
 }
