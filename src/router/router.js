@@ -16,7 +16,7 @@ import messaging from '@react-native-firebase/messaging';
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-async function registerAppWithFCM() {
+const registerAppWithFCM = async () => {
     await messaging().registerDeviceForRemoteMessages();
 }
 
