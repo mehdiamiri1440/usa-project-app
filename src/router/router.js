@@ -1,36 +1,60 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
-import { View, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { connect } from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Provider as PaperProvider } from 'react-native-paper';
+import * as messagesActions from '../redux/messages/actions';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import tabs from './tabs';
 import Login from '../screens/Login/Login'
+import firebase from '@react-native-firebase/app';
 import SignUp from '../screens/SignUp'
 import messaging from '@react-native-firebase/messaging';
-import { TouchableOpacity, Text } from 'react-native';
-import { deviceWidth, deviceHeight } from '../utils/deviceDimenssions';
+
+
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
-
 
 async function registerAppWithFCM() {
     await messaging().registerDeviceForRemoteMessages();
 }
 
-
 const App = props => {
 
-    useEffect(() => {
-        const unsubscribe = messaging().onMessage(async remoteMessage => {
-            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-        });
+    let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
 
-        return unsubscribe;
+    useEffect(() => {
+        if (isRegistered) {
+            firebase.messaging().getToken()
+                .then(fcmToken => {
+                    if (fcmToken) {
+                        firebase.messaging().hasPermission()
+                            .then(enabled => {
+                                if (enabled) {
+                                    messaging()
+                                        .subscribeToTopic(`FCM${props.loggedInUserId}`)
+                                        .then(() => {
+                                            messaging().onMessage(async remoteMessage => {
+                                                props.newMessageReceived(true)
+                                            });
+                                        });
+                                }
+                                else {
+                                    firebase.messaging().requestPermission()
+                                        .then(() => {
+                                            setIsRegistered(true);
+                                        })
+                                }
+                            });
+                    }
+                    else {
+                        Alert.alert('device is not registered');
+                    }
+                })
+        }
     }, []);
+
     return (
         <NavigationContainer>
             {(!props.loggedInUserId) ?
@@ -81,4 +105,10 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

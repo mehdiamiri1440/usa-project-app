@@ -5,13 +5,13 @@ import RNEmulatorCheck from 'react-native-emulator-check'
 
 
 const getUrl = route => {
-    if (__DEV__) {
-        if (!RNEmulatorCheck.isEmulator())
-            return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
-        return `${REACT_APP_API_ENDPOINT}/${route}`;
-    }
-    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
-
+    // if (__DEV__) {
+    //     if (!RNEmulatorCheck.isEmulator())
+    //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
+    //     return `${REACT_APP_API_ENDPOINT}/${route}`;
+    // }
+    // return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
+    return `https://www.buskool.com/${route}`
 
 };
 getData = async () => {

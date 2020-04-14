@@ -24,6 +24,8 @@ const INITIAL_STATE = {
     userProfilePhotoFailed: false,
     userProfilePhotoError: false,
     userProfilePhotoMessage: null,
+
+    message: false
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -193,7 +195,19 @@ export default (state = INITIAL_STATE, action) => {
                 profile_photo: ''
             };
         };
+        case actionTypes.NEW_MESSAGE_RECEIVED: {
+            return {
+                ...state,
+                message: action.payload
+            }
+        }
 
+        case actionTypes.EMPTY_MESSAGE_RECEIVED: {
+            return {
+                ...state,
+                message: {}
+            }
+        }
 
         default:
             return state

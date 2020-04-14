@@ -96,3 +96,13 @@ export const fetchUserProfilePhoto = (userId) => {
 
     return request();
 };
+
+
+export const newMessageReceived = (message) => {
+    return dispatch => dispatch(action(actionTypes.NEW_MESSAGE_RECEIVED, message));
+};
+
+
+export const emptyMessage = (message) => {
+    return dispatch => dispatch(action(actionTypes.EMPTY_MESSAGE_RECEIVED, message));
+};

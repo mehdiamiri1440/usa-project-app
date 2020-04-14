@@ -25,6 +25,7 @@ class ContactsList extends React.Component {
     }
 
 
+
     render() {
 
         let { contactsList } = this.props;
@@ -35,6 +36,8 @@ class ContactsList extends React.Component {
 
                 style={{ height: deviceHeight * 0.6 }}>
                 <ScrollView
+                    keyboardShouldPersistTaps='handled'
+                    keyboardDismissMode='on-drag'
                     style={{ padding: 5 }}>
 
                     {modalFlag && <ChatModal

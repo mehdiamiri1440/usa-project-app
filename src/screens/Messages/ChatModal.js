@@ -14,6 +14,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
 import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv';
 import Spin from '../../components/loading/loading';
+import messaging from '@react-native-firebase/messaging';
 import MessagesContext from './MessagesContext';
 import { formatter } from '../../utils';
 import { FlatList } from 'react-native-gesture-handler';
@@ -39,6 +40,15 @@ class ChatModal extends React.Component {
             this.setState({ keyboardHeight: event.endCoordinates.height }, () => {
                 return this.scrollViewRef.current.scrollTo({ x: 0, y: this.state.prevScrollPosition, animated: true });
             })
+            // messaging().onMesonmesage(message => {
+            //     console.warn('dfsfd-->>', this.state.userChatHistory)
+            //     this.props.fetchUserChatHistory(this.props.contact.contact_id).then(() => {
+            //         this.setState({ userChatHistory: this.props.userChatHistory }, () => {
+            //         })
+            //         this.props.fetchAllContactsList().then(_ => {
+            //         })
+            //     })
+            // })
         });
 
 
@@ -55,6 +65,18 @@ class ChatModal extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
             this.setState({ userChatHistory: this.props.userChatHistory, loaded: true })
+        }
+        if (this.props.message) {
+            console.warn('herer-->', this.props.message)
+            this.props.newMessageReceived(false)
+            setTimeout(() => {
+                this.props.fetchUserChatHistory(this.props.contact.contact_id).then(() => {
+                    this.setState({ userChatHistory: this.props.userChatHistory }, () => {
+                        this.scrollViewRef.current.scrollToEnd({ animated: true });
+                    })
+                })
+            }, 1000);
+            console.warn('reached', this.props.message)
         }
     }
 
@@ -182,12 +204,12 @@ class ChatModal extends React.Component {
 
 
 
-                <Spin spinning={isFirstLoad && userChatHistoryLoading}>
+                <Spin spinning={isFirstLoad && userChatHistoryLoading && !this.state.loaded}>
 
                     <ScrollView
                         keyboardShouldPersistTaps='handled'
-                        onScroll={event => this.setState({ prevScrollPosition: event.nativeEvent.contentOffset.y })}
                         keyboardDismissMode='on-drag'
+                        onScroll={event => this.setState({ prevScrollPosition: event.nativeEvent.contentOffset.y })}
                         onContentSizeChange={() => this.scrollViewRef.current.scrollToEnd({ animated: true })}
                         ref={this.scrollViewRef}
                         style={{ height: keyboardHeight == 0 ? deviceHeight * 0.77 : (deviceHeight * 0.77) - keyboardHeight }}
@@ -305,13 +327,14 @@ const mapStateToProps = (state) => {
         contactsList: state.messagesReducer.contactsList,
         profile_photo: state.messagesReducer.profile_photo,
 
-
+        message: state.messagesReducer.message
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserChatHistory: (id) => dispatch(messagesActions.fetchUserChatHistory(id)),
+        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
