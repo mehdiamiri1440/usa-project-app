@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import * as messagesActions from '../redux/messages/actions';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,11 @@ import firebase from '@react-native-firebase/app';
 import SignUp from '../screens/SignUp'
 import messaging from '@react-native-firebase/messaging';
 
+const navigationRef = React.createRef();
+
+const navigate = (name, params) => {
+    navigationRef.current?.navigate(name, params);
+}
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,7 +40,18 @@ const App = props => {
                                     messaging()
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
+                                            messaging().setBackgroundMessageHandler(async remoteMessage => {
+                                                messaging().onNotificationOpenedApp(remoteMessage => {
+                                                    navigate('Messages')
+                                                    console.warn(
+                                                        'Notification caused app to open from background state:',
+                                                        remoteMessage.notification,
+                                                    );
+                                                })
+                                            })
+
                                             messaging().onMessage(async remoteMessage => {
+                                                console.warn('datea', remoteMessage.data)
                                                 props.newMessageReceived(true)
                                             });
                                         });
@@ -49,6 +65,8 @@ const App = props => {
                             });
                     }
                     else {
+                        messaging()
+                            .subscribeToTopic(`FCM${props.loggedInUserId}`)
                         Alert.alert('device is not registered');
                     }
                 })
@@ -56,7 +74,9 @@ const App = props => {
     }, []);
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            ref={navigationRef}
+        >
             {(!props.loggedInUserId) ?
                 (
                     <Stack.Navigator headerMode='none'>
