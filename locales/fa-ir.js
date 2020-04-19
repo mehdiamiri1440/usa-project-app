@@ -122,6 +122,7 @@ export default {
     'titles.lastName': 'نام‌خانوادگی',
     'titles.writeDescription': 'توضیح دهید',
     'titles.submitInformation': 'ثبت اطلاعات',
+    'titles.chatHistoryIsEmpty': 'تاریخچه پیام‌ها خالی می‌باشد',
 
     "messages.signedUpUser": "اگر کاربر قبلی هستید برای ورود شماره همراه و رمز عبور خود را وارد کنید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",

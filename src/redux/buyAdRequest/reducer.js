@@ -48,7 +48,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_BUYAD_REQUEST_REJECT: {
-            let { phone } = action.payload.data.errors;
             return {
                 ...state,
                 buyAdRequestList: [],
@@ -56,7 +55,7 @@ export default (state = INITIAL_STATE, action) => {
                 buyAdRequestLoading: false,
                 buyAdRequestFailed: false,
                 buyAdRequestError: true,
-                buyAdRequestMessage: phone
+                buyAdRequestMessage: ''
             };
         };
 

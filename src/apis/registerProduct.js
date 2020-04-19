@@ -48,9 +48,11 @@ export const addNewProduct = productObject => {
                 withAuth: false,
             })
             .then(result => {
+                console.warn('registeeereeedd----->', result)
                 resolve(result);
             })
             .catch(err => {
+                console.warn('not registereed----->', err)
                 return reject(err.response);
             });
     });

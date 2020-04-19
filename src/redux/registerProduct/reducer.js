@@ -67,7 +67,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_CATEGORIES_REJECT: {
-            let { phone } = action.payload.data.errors;
             return {
                 ...state,
                 categoriesList: [],
@@ -75,7 +74,7 @@ export default (state = INITIAL_STATE, action) => {
                 categoriesLoading: false,
                 categoriesFailed: false,
                 categoriesError: true,
-                categoriesMessage: phone
+                categoriesMessage: ''
             };
         };
 
@@ -116,7 +115,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_SUB_CATEGORIES_REJECT: {
-            let { phone } = action.payload.data.errors;
             return {
                 ...state,
                 subCategoriesList: [],
@@ -124,7 +122,7 @@ export default (state = INITIAL_STATE, action) => {
                 subCategoriesLoading: false,
                 subCategoriesFailed: false,
                 subCategoriesError: true,
-                subCategoriesMessage: phone
+                subCategoriesMessage: ''
             };
         };
 
@@ -161,13 +159,12 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_REJECT: {
-            let { phone } = action.payload.data.errors;
             return {
                 ...state,
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: true,
-                addNewProductMessage: phone
+                addNewProductMessage: ''
             };
         };
 
@@ -209,13 +206,12 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_REJECT: {
-            let { phone } = action.payload.data.errors;
             return {
                 ...state,
                 userPermissionToRegisterProductLoading: false,
                 userPermissionToRegisterProductFailed: false,
                 userPermissionToRegisterProductError: true,
-                userPermissionToRegisterProductMessage: phone,
+                userPermissionToRegisterProductMessage: '',
                 isUserLimitedToRegisterProduct: false,
                 userPermissionToRegisterProductStatus: false
             };

@@ -32,13 +32,11 @@ class ContactsList extends React.Component {
         let { modalFlag, selectedContact } = this.state;
 
         return (
-            <View
-
-                style={{ height: deviceHeight * 0.6 }}>
+            <View>
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                     keyboardDismissMode='on-drag'
-                    style={{ padding: 5 }}>
+                    style={{ paddingHorizontal: 5 }}>
 
                     {modalFlag && <ChatModal
                         transparent={false}
@@ -47,7 +45,7 @@ class ContactsList extends React.Component {
                         onRequestClose={() => this.setState({ modalFlag: false })}
                     />}
 
-                    <Card>
+                    <Card style={{ height: deviceHeight * 0.68 }}>
                         <CardItem>
                             <Body>
                                 {

@@ -88,13 +88,12 @@ class Messages extends React.Component {
                 </View>
 
 
-                <View style={{ padding: 20 }}>
+                <View style={{ marginTop: 5, padding: 10 }}>
                     <InputGroup rounded style={{ backgroundColor: 'white' }}>
-                        <Icon name='ios-close' style={{ color: '#7E7E7E', marginHorizontal: 5, fontSize: 30 }} onPress={this.clearSearchBar} />
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'Vazir' }}
+                            style={{ fontFamily: 'Vazir', height: 44, textAlignVertical: 'center' }}
                             placeholder={locales('labels.searchContacts')} />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
