@@ -19,6 +19,7 @@ import MessagesContext from './MessagesContext';
 import { formatter } from '../../utils';
 import { FlatList } from 'react-native-gesture-handler';
 
+Jmoment.locale('en')
 class ChatModal extends React.Component {
     constructor(props) {
         super(props);
@@ -66,16 +67,16 @@ class ChatModal extends React.Component {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
             this.setState({ userChatHistory: this.props.userChatHistory, loaded: true })
         }
-        if (this.props.message) {
-            console.warn('herer-->', this.props.message)
+        if (this.props.message || this.props.contactsListUpdated) {
             this.props.newMessageReceived(false)
+            this.props.setcontactsListUpdated(false);
             setTimeout(() => {
                 this.props.fetchUserChatHistory(this.props.contact.contact_id).then(() => {
                     this.setState({ userChatHistory: this.props.userChatHistory }, () => {
                         this.scrollViewRef.current.scrollToEnd({ animated: true });
                     })
                 })
-            }, 1000);
+            }, 10);
             console.warn('reached', this.props.message)
         }
     }
@@ -111,8 +112,6 @@ class ChatModal extends React.Component {
                             return '';
                         }, () => {
                             this.props.fetchAllContactsList().then(() => {
-                                if (this.context)
-                                    this.context(this.props.contactsList)
                                 return this.scrollViewRef.current.scrollToEnd({ animated: true });
 
                             })
@@ -135,13 +134,7 @@ class ChatModal extends React.Component {
                 animationType="slide"
                 transparent={transparent}
                 visible={visible}
-                onRequestClose={() => {
-                    this.props.fetchAllContactsList().then(() => {
-                        if (this.context.length)
-                            this.context(this.props.contactsList)
-                        onRequestClose()
-                    })
-                }}
+                onRequestClose={() => onRequestClose()}
             >
 
 
@@ -152,15 +145,8 @@ class ChatModal extends React.Component {
                 }} />
 
 
-                <TouchableOpacity
-                    onPress={() => {
-                        this.props.fetchAllContactsList().then(() => {
-                            if (this.context.length)
-                                this.context(this.props.contactsList)
-                            onRequestClose()
-                        })
-                    }
-                    } style={{
+                <View
+                    style={{
                         backgroundColor: 'white',
                         flexDirection: 'row-reverse',
                         alignContent: 'center',
@@ -171,24 +157,28 @@ class ChatModal extends React.Component {
                         shadowOpacity: 1.0,
                         elevation: 5,
                     }}>
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            alignItems: 'flex-end', paddingHorizontal: 10
-                        }}
-                    >
-                        <AntDesign name='arrowright' size={25}
+                    <TouchableOpacity
+                        style={{ flexDirection: 'row-reverse' }}
+                        onPress={() => onRequestClose()}>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'flex-end', paddingHorizontal: 10
+                            }}
+                        >
+                            <AntDesign name='arrowright' size={25}
+                            />
+                        </View>
+                        <Image
+                            style={{
+                                borderRadius: 23,
+                                width: 46, height: 46
+                            }}
+                            source={contact.profile_photo || profile_photo ?
+                                { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo || profile_photo}` }
+                                : require('../../../assets/icons/user.png')}
                         />
-                    </View>
-                    <Image
-                        style={{
-                            borderRadius: 23,
-                            width: 46, height: 46
-                        }}
-                        source={contact.profile_photo || profile_photo ?
-                            { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo || profile_photo}` }
-                            : require('../../../assets/icons/user.png')}
-                    />
+                    </TouchableOpacity>
                     <View style={{
                         paddingHorizontal: 10,
                         width: deviceWidth * 0.63,
@@ -200,7 +190,7 @@ class ChatModal extends React.Component {
                             {`${firstName} ${lastName}`}
                         </Text>
                     </View>
-                </TouchableOpacity>
+                </View>
 
 
 
@@ -212,7 +202,7 @@ class ChatModal extends React.Component {
                         onScroll={event => this.setState({ prevScrollPosition: event.nativeEvent.contentOffset.y })}
                         onContentSizeChange={() => this.scrollViewRef.current.scrollToEnd({ animated: true })}
                         ref={this.scrollViewRef}
-                        style={{ height: keyboardHeight == 0 ? deviceHeight * 0.77 : (deviceHeight * 0.77) - keyboardHeight }}
+                        style={{ height: keyboardHeight == 0 ? deviceHeight * 0.87 : (deviceHeight * 0.87) - keyboardHeight }}
                     >
 
                         {
@@ -222,7 +212,7 @@ class ChatModal extends React.Component {
                                     width: deviceWidth,
                                     paddingHorizontal: 10,
                                     marginTop: index == 0 ? 10 : 0,
-                                    marginBottom: index == self.length - 1 ? 20 : (index < self.length - 1 && self[index].receiver_id == self[index + 1].receiver_id ? 5 : 10),
+                                    marginBottom: index == self.length - 1 ? 50 : (index < self.length - 1 && self[index].receiver_id == self[index + 1].receiver_id ? 5 : 10),
                                     flex: 1,
                                     alignItems: id == message.receiver_id ? 'flex-end' : 'flex-start'
                                 }}
@@ -230,31 +220,38 @@ class ChatModal extends React.Component {
                                 >
                                     <View
                                         style={{
-                                            width: deviceWidth * 0.65, padding: 10, borderRadius: 6,
-                                            backgroundColor: id == message.receiver_id ? '#DCF8C6' : 'white',
+                                            shadowOffset: { width: 20, height: 20 },
+                                            shadowColor: 'black',
+                                            shadowOpacity: 1.0,
+                                            elevation: 5,
+                                            maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
+                                            backgroundColor: id == message.receiver_id ? '#DCF8C6' : '#F7F7F7',
                                         }}
                                     >
                                         <Text style={{
                                             textAlign: 'right',
                                             fontSize: 16,
-                                            color: '#777777'
+                                            color: '#333333'
                                         }}>
                                             {message.text}
                                         </Text>
                                         <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
                                             {id == message.receiver_id && (message.created_at ? <MaterialCommunityIcons
                                                 style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                                name={message.is_read ? 'check-all' : 'check'} size={16}
+                                                name={message.is_read ? 'check-all' : 'check'} size={14}
                                                 color={message.is_read ? '#60CAF1' : '#617D8A'} /> :
-                                                <Feather name='clock' size={16} color='#617D8A' />
+                                                <Feather name='clock' size={14} color='#617D8A'
+                                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                                />
                                             )
                                             }
                                             <Text
                                                 style={{
-                                                    color: '#AAAAAA',
-                                                    fontSize: 14
+                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    color: '#333333',
+                                                    fontSize: 12
                                                 }}>
-                                                {Jmoment(message.created_at).format('jYYYY/jM/jD , hh:mm A')}
+                                                {Jmoment(message.created_at).format('jYY/jM/jD , hh:mm A ')}
                                             </Text>
                                         </View>
                                     </View>

@@ -12,6 +12,7 @@ export default {
     "labels.man": "آقا",
     "labels.selectProvince": "استان را انتخاب کنید",
     "labels.buyer": "خریدار",
+    'labels.noContactFound': 'مخاطبی یافت نشد',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     "labels.seller": "فروشنده",
     'labels.addMoreDetails': 'ثبت جزییات بیشتر',

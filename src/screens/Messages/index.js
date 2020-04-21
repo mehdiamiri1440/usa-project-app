@@ -88,12 +88,12 @@ class Messages extends React.Component {
                 </View>
 
 
-                <View style={{ marginTop: 5, padding: 10 }}>
+                <View style={{ marginTop: 5, padding: 4 }}>
                     <InputGroup rounded style={{ backgroundColor: 'white' }}>
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'Vazir', height: 44, textAlignVertical: 'center' }}
+                            style={{ fontFamily: 'Vazir', height: 42, textAlignVertical: 'center' }}
                             placeholder={locales('labels.searchContacts')} />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
@@ -105,12 +105,20 @@ class Messages extends React.Component {
                         ? <ContactsList
                             contactsList={contactsList}
                         />
-                        : <>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Entypo size={135} name='message' color='#BEBEBE' />
-                                <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
-                            </View>
-                        </>
+                        : (searchText ?
+                            <>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <AntDesign size={135} name='contacts' color='#BEBEBE' />
+                                    <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
+                                </View>
+                            </>
+                            : <>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Entypo size={135} name='message' color='#BEBEBE' />
+                                    <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
+                                </View>
+                            </>
+                        )
                     }
                 </MessagesContext.Provider>
             </>
@@ -126,12 +134,15 @@ const mapStateToProps = (state) => {
         contactsListError: state.messagesReducer.contactsListError,
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
+
+        message: state.messagesReducer.message
+
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList())
+        fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
     }
 };
 

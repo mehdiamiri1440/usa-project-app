@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import * as messagesActions from '../../redux/messages/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import moment from 'moment';
 import Jmoment from 'moment-jalaali';
 import ChatModal from './ChatModal';
+import Spin from '../../components/loading/loading';
 
 
 class ContactsList extends React.Component {
@@ -16,6 +16,8 @@ class ContactsList extends React.Component {
         super(props);
         this.state = {
             modalFlag: false,
+            contactsListUpdated: false,
+            loaded: false,
             selectedContact: {
                 first_name: '',
                 last_name: '',
@@ -24,98 +26,130 @@ class ContactsList extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.props.fetchAllContactsList();
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+
+        if (prevState.loaded == false && this.props.contactsList.length) {
+            this.setState({ contactsList: this.props.contactsList, loaded: true })
+        }
+
+        if (this.props.message) {
+            this.props.newMessageReceived(false)
+            setTimeout(() => {
+                this.props.fetchAllContactsList().then(() => {
+                    this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
+                    })
+                })
+            }, 10);
+            console.warn('reached', this.props.message)
+        }
+    }
+
+    closeChatModal = () => {
+        this.setState({ modalFlag: false, loaded: false }, () => {
+            this.props.fetchAllContactsList()
+        });
+    }
+
+    setcontactsListUpdated = contactsListUpdated => this.setState({ contactsListUpdated })
 
     render() {
 
-        let { contactsList } = this.props;
-        let { modalFlag, selectedContact } = this.state;
+        let { contactsListLoading } = this.props;
+        let { modalFlag, selectedContact, loaded, contactsList, contactsListUpdated } = this.state;
 
         return (
             <View>
-                <ScrollView
-                    keyboardShouldPersistTaps='handled'
-                    keyboardDismissMode='on-drag'
-                    style={{ paddingHorizontal: 5 }}>
+                <Spin spinning={contactsListLoading && !loaded}>
+                    <ScrollView
+                        keyboardShouldPersistTaps='handled'
+                        keyboardDismissMode='on-drag'
+                        style={{ paddingHorizontal: 5 }}>
 
-                    {modalFlag && <ChatModal
-                        transparent={false}
-                        visible={modalFlag}
-                        contact={selectedContact}
-                        onRequestClose={() => this.setState({ modalFlag: false })}
-                    />}
+                        {modalFlag ? <ChatModal
+                            transparent={false}
+                            setcontactsListUpdated={this.setcontactsListUpdated}
+                            visible={modalFlag}
+                            contactsListUpdated={contactsListUpdated}
+                            contact={selectedContact}
+                            onRequestClose={this.closeChatModal}
+                        /> : null}
 
-                    <Card style={{ height: deviceHeight * 0.68 }}>
-                        <CardItem>
-                            <Body>
-                                {
-                                    contactsList.map((contact, index) => (
-                                        <TouchableOpacity
-                                            onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
-                                            key={contact.contact_id}
-                                            style={{
-                                                borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                                                flexDirection: 'row-reverse', width: '100%',
-                                                borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
-                                            }}
-                                        >
-
-                                            <Image
+                        <Card style={{ height: deviceHeight * 0.70 }}>
+                            <CardItem>
+                                <Body>
+                                    {
+                                        contactsList && contactsList.map((contact, index) => (
+                                            <TouchableOpacity
+                                                onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
+                                                key={contact.contact_id}
                                                 style={{
-                                                    borderRadius: deviceWidth * 0.06,
-                                                    width: deviceWidth * 0.12, height: deviceWidth * 0.12
+                                                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
+                                                    flexDirection: 'row-reverse', width: '100%',
+                                                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
                                                 }}
-                                                source={contact.profile_photo ?
-                                                    { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }
-                                                    : require('../../../assets/icons/user.png')}
-                                            />
+                                            >
 
-                                            <View>
-                                                <View
+                                                <Image
                                                     style={{
-                                                        width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                        flexDirection: 'row-reverse',
-                                                        justifyContent: 'space-between',
+                                                        borderRadius: deviceWidth * 0.06,
+                                                        width: deviceWidth * 0.12, height: deviceWidth * 0.12
                                                     }}
-                                                >
-                                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
-                                                        {`${contact.first_name} ${contact.last_name}`}
-                                                    </Text>
-                                                    <Text style={{ color: '#666666' }}>
-                                                        {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
-                                                    </Text>
+                                                    source={contact.profile_photo ?
+                                                        { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }
+                                                        : require('../../../assets/icons/user.png')}
+                                                />
+
+                                                <View>
+                                                    <View
+                                                        style={{
+                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                            flexDirection: 'row-reverse',
+                                                            justifyContent: 'space-between',
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
+                                                            {`${contact.first_name} ${contact.last_name}`}
+                                                        </Text>
+                                                        <Text style={{ color: '#666666' }}>
+                                                            {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
+                                                        </Text>
+                                                    </View>
+
+
+                                                    <View
+                                                        style={{
+                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                            flexDirection: 'row-reverse',
+                                                            justifyContent: 'space-between',
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
+                                                            {contact.last_msg.last_msg_text}
+                                                        </Text>
+                                                        {contact.unread_msgs_count > 0 && <Text style={{
+                                                            color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
+                                                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
+                                                        }}>
+                                                            {contact.unread_msgs_count}
+                                                        </Text>}
+                                                    </View>
+
                                                 </View>
 
 
-                                                <View
-                                                    style={{
-                                                        width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                        flexDirection: 'row-reverse',
-                                                        justifyContent: 'space-between',
-                                                    }}
-                                                >
-                                                    <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
-                                                        {contact.last_msg.last_msg_text}
-                                                    </Text>
-                                                    {contact.unread_msgs_count > 0 && <Text style={{
-                                                        color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
-                                                        borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
-                                                    }}>
-                                                        {contact.unread_msgs_count}
-                                                    </Text>}
-                                                </View>
+                                            </TouchableOpacity>
+                                        ))
+                                    }
+                                </Body>
+                            </CardItem>
+                        </Card>
 
-                                            </View>
-
-
-                                        </TouchableOpacity>
-                                    ))
-                                }
-                            </Body>
-                        </CardItem>
-                    </Card>
-
-                </ScrollView>
+                    </ScrollView>
+                </Spin>
             </View>
         )
     }
@@ -123,17 +157,22 @@ class ContactsList extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        // contactsList: state.messagesReducer.contactsList,
-        // contactsListMessage: state.messagesReducer.contactsListMessage,
-        // contactsListError: state.messagesReducer.contactsListError,
-        // contactsListFailed: state.messagesReducer.contactsListFailed,
-        // contactsListLoading: state.messagesReducer.contactsListLoading,
+        contactsList: state.messagesReducer.contactsList,
+        contactsListMessage: state.messagesReducer.contactsListMessage,
+        contactsListError: state.messagesReducer.contactsListError,
+        contactsListFailed: state.messagesReducer.contactsListFailed,
+        contactsListLoading: state.messagesReducer.contactsListLoading,
+
+        message: state.messagesReducer.message
+
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList())
+        fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
+        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+
     }
 };
 
