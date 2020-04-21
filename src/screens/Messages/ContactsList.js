@@ -67,7 +67,7 @@ class ContactsList extends React.Component {
                     <ScrollView
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='on-drag'
-                        style={{ paddingHorizontal: 5 }}>
+                        style={{ paddingHorizontal: 5, height: deviceHeight * 0.73 }}>
 
                         {modalFlag ? <ChatModal
                             transparent={false}
@@ -78,7 +78,7 @@ class ContactsList extends React.Component {
                             onRequestClose={this.closeChatModal}
                         /> : null}
 
-                        <Card style={{ height: deviceHeight * 0.70 }}>
+                        <Card style={{ minHeight: deviceHeight * 0.77 }}>
                             <CardItem>
                                 <Body>
                                     {
