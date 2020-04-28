@@ -29,12 +29,12 @@ export const fetchAllContactsList = () => {
 };
 
 
-export const fetchUserChatHistory = (userId) => {
+export const fetchUserChatHistory = (userId, msgCount) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.messages
-                .fetchUserChatHistory(userId)
+                .fetchUserChatHistory(userId, msgCount)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -93,6 +93,29 @@ export const fetchUserProfilePhoto = (userId) => {
     };
     const loading = () => action(actionTypes.FETCH_USER_PROFILE_PHOTO_LOADING);
     const success = res => action(actionTypes.FETCH_USER_PROFILE_PHOTO_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
+export const fetchTotalUnreadMessages = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .fetchTotalUnreadMessages()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_FAILED,
+                        reject: actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_LOADING);
+    const success = res => action(actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_SUCCESSFULLY, res);
 
     return request();
 };

@@ -26,10 +26,9 @@ const registerAppWithFCM = async () => {
 }
 
 const App = props => {
-
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
-
     useEffect(() => {
+        props.fetchTotalUnreadMessages();
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -52,6 +51,7 @@ const App = props => {
 
                                             messaging().onMessage(async remoteMessage => {
                                                 console.warn('datea', remoteMessage.data)
+                                                props.fetchTotalUnreadMessages();
                                                 props.newMessageReceived(true)
                                             });
                                         });
@@ -97,7 +97,7 @@ const App = props => {
                             <Tab.Screen
                                 key={index}
                                 options={{
-                                    tabBarBadge: route.name == 'Messages' ? true : false,
+                                    tabBarBadge: route.name == 'Messages' && props.totalUnreadMessages > 0 ? true : false,
                                     tabBarLabel: route.label && locales(route.label),
                                     tabBarIcon: ({ focused, color }) => route.icon(color, focused),
                                 }}
@@ -121,12 +121,16 @@ const mapStateToProps = (state) => {
         logOutLoading: state.authReducer.logOutLoading,
         logOutFailed: state.authReducer.logOutFailed,
         logOutError: state.authReducer.logOutError,
-        logOutMessage: state.authReducer.logOutMessage
+        logOutMessage: state.authReducer.logOutMessage,
+
+        totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
+        totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message))
     }
 }

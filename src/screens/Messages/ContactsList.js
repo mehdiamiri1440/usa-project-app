@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Body, } from 'native-base';
-import { REACT_APP_API_ENDPOINT } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
 import * as messagesActions from '../../redux/messages/actions';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -67,7 +67,7 @@ class ContactsList extends React.Component {
                     <ScrollView
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='on-drag'
-                        style={{ paddingHorizontal: 5, height: deviceHeight * 0.73 }}>
+                        style={{ paddingHorizontal: 5, height: deviceHeight * 0.78 }}>
 
                         {modalFlag ? <ChatModal
                             transparent={false}
@@ -99,7 +99,7 @@ class ContactsList extends React.Component {
                                                         width: deviceWidth * 0.12, height: deviceWidth * 0.12
                                                     }}
                                                     source={contact.profile_photo ?
-                                                        { uri: `${REACT_APP_API_ENDPOINT}/storage/${contact.profile_photo}` }
+                                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${contact.profile_photo}` }
                                                         : require('../../../assets/icons/user.png')}
                                                 />
 

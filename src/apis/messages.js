@@ -38,13 +38,14 @@ export const fetchAllGroupList = () => {
 };
 
 
-export const fetchUserChatHistory = (userId) => {
+export const fetchUserChatHistory = (userId, msgCount = 10) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `get_user_chat_history`,
                 method: 'POST',
                 data: {
+                    msg_count: msgCount,
                     user_id: userId
                 },
                 withAuth: false,
@@ -155,6 +156,26 @@ export const fetchUserProfilePhoto = (userId) => {
                 data: {
                     user_id: userId
                 },
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};
+
+
+
+
+export const fetchTotalUnreadMessages = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_total_unread_messages_for_current_user`,
+                method: 'POST',
                 withAuth: false,
             })
             .then(result => {

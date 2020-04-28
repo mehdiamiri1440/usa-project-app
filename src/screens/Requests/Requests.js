@@ -13,7 +13,7 @@ import Spin from '../../components/loading/loading';
 import ChatModal from '../Messages/ChatModal';
 
 
-
+Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
 class Requests extends React.Component {
     constructor(props) {
@@ -143,7 +143,7 @@ class Requests extends React.Component {
                                                         >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
                                                         <Text
                                                             numberOfLines={1}
-                                                            style={{ color: '#666666', width: '40%' }}
+                                                            style={{ color: '#666666', width: '40%', flexWrap: 'wrap' }}
                                                         >
                                                             {Jmoment(buyAd.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
                                                         </Text>

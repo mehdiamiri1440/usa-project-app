@@ -8,6 +8,11 @@ export const DEFAULT_MIN_LENGTH = 32;
 export const DEFAULT_MAX_VALUE = 10000;
 export const DEFAULT_MIN_VALUE = 5;
 
+export const isValidEmailOrUsername = text => {
+  const re = /^(?!^[@\\.\\_\\-\\d])(?!.[@\.\_\-]$)(?!.[@\.\_\-]{ 2,})(?!.@+(?![a-zA-Z0-9-]\.+[a-zA-Z0-9]{2,4}))^([a-zA-Z0-9\-\_@.]{4,64})+$/;
+  return re.test(text);
+};
+
 export const isWebsiteUrl = text => {
   const re = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
   return re.test(text);

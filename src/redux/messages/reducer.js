@@ -25,6 +25,13 @@ const INITIAL_STATE = {
     userProfilePhotoError: false,
     userProfilePhotoMessage: null,
 
+
+    totalUnreadMessagesLoading: false,
+    totalUnreadMessagesFailed: false,
+    totalUnreadMessagesError: false,
+    totalUnreadMessagesMessage: null,
+    totalUnreadMessages: {},
+
     message: false
 };
 export default (state = INITIAL_STATE, action) => {
@@ -195,6 +202,53 @@ export default (state = INITIAL_STATE, action) => {
                 profile_photo: ''
             };
         };
+
+
+
+
+        case actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_LOADING: {
+            return {
+                ...state,
+                totalUnreadMessagesLoading: true,
+                totalUnreadMessagesFailed: false,
+                totalUnreadMessagesError: false,
+                totalUnreadMessagesMessage: null,
+                totalUnreadMessages: {}
+            };
+        };
+        case actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_SUCCESSFULLY: {
+            return {
+                ...state,
+                totalUnreadMessagesLoading: false,
+                totalUnreadMessagesFailed: false,
+                totalUnreadMessagesError: false,
+                totalUnreadMessagesMessage: null,
+                totalUnreadMessages: action.payload.msg_count,
+            };
+        };
+        case actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_FAILED: {
+            return {
+                ...state,
+                totalUnreadMessagesLoading: false,
+                totalUnreadMessagesFailed: true,
+                totalUnreadMessagesError: false,
+                totalUnreadMessagesMessage: null,
+                totalUnreadMessages: {},
+            };
+        };
+        case actionTypes.FETCH_TOTAL_UNDREAD_MESSAGES_REJECT: {
+            return {
+                ...state,
+                totalUnreadMessagesLoading: false,
+                totalUnreadMessagesFailed: false,
+                totalUnreadMessagesError: true,
+                totalUnreadMessagesMessage: null,
+                totalUnreadMessages: {},
+            };
+        };
+
+
+
         case actionTypes.NEW_MESSAGE_RECEIVED: {
             return {
                 ...state,
