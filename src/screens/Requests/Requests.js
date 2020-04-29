@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, View, SafeAreaView, FlatList } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { Button, Card, CardItem, Body } from 'native-base';
@@ -103,6 +103,123 @@ class Requests extends React.Component {
                         <SafeAreaView
                             style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.72) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                         >
+
+
+
+
+                            <FlatList
+                                data={buyAdRequestsList}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({ item, index, separators }) => (
+                                    <View
+                                        style={{
+                                            padding: 10, backgroundColor: '#FFFFFF',
+                                            width: '100%', borderBottomColor: '#DDDDDD',
+                                            borderBottomWidth: index < buyAdRequestsList.length - 1 ? 0.7 : 0
+                                        }}
+                                        key={item.id}
+                                    >
+
+                                        <View>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    marginVertical: 5,
+                                                    flexWrap: 'wrap', width: '100%', textAlign: 'center',
+                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                }}
+                                            >{`${item.category_name} | ${item.subcategory_name} | ${item.name}`}</Text>
+                                        </View>
+
+
+                                        <View>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    marginVertical: 5,
+                                                    flexWrap: 'wrap', width: '100%', textAlign: 'center',
+                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                }}
+                                            >{`${locales('titles.requirementQuantity')} : ${item.requirement_amount} ${locales('labels.kiloGram')}`}
+                                            </Text>
+                                        </View>
+
+                                        <View>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    marginVertical: 5,
+                                                    flexWrap: 'wrap', width: '100%', textAlign: 'center',
+                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                }}
+                                            >
+                                                {Jmoment(item.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
+                                            </Text>
+                                        </View>
+
+
+
+                                        <View style={{
+                                            marginVertical: 5,
+                                            flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+                                        }}>
+                                            <Text style={{ color: '#E41C38', fontFamily: 'Vazir-Bold-FD', fontSize: 16, }}>+10</Text>
+                                            <MaterialCommunityIcons name='comment-alert' size={25} color={'#777777'} />
+                                        </View>
+
+
+                                        <View style={{ marginVertical: 5 }}>
+                                            <Button
+                                                small
+                                                onPress={() => this.setState({
+                                                    modalFlag: true,
+                                                    selectedContact: {
+                                                        contact_id: item.myuser_id,
+                                                        first_name: item.first_name,
+                                                        last_name: item.last_name
+                                                    }
+                                                })}
+                                                style={{
+                                                    backgroundColor: '#00C569',
+                                                    borderRadius: 6,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    paddingHorizontal: 10,
+                                                    flexDirection: 'row-reverse'
+                                                }}
+                                            >
+                                                <MaterialCommunityIcons name='message' color='white' size={14} />
+                                                <Text style={{
+                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 14,
+                                                    color: 'white', paddingHorizontal: 3
+                                                }}>
+                                                    {locales('labels.messageToBuyer')}
+                                                </Text>
+                                            </Button>
+                                        </View>
+                                    </View>
+
+                                )} />
+
+
+
+                            {modalFlag && <ChatModal
+                                transparent={false}
+                                visible={modalFlag}
+                                contact={{ ...selectedContact }}
+                                onRequestClose={() => this.setState({ modalFlag: false })}
+                            />}
+
+
+
+
+
+
+                            {/* 
+
+
+
+
                             <ScrollView
                             >
 
@@ -188,7 +305,8 @@ class Requests extends React.Component {
                                                         </Button>
                                                     </View>
                                                 </View>
-                                            ))}
+                                         
+                                         ))}
 
                                             {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
                                                 <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
@@ -204,11 +322,12 @@ class Requests extends React.Component {
                                         </Body>
                                     </CardItem>
                                 </Card>
-                            </ScrollView>
+                            </ScrollView> */}
+
                         </SafeAreaView>
 
 
-                    </Spin>
+                    </Spin >
                     :
                     <View
                         style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}

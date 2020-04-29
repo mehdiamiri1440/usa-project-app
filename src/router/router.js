@@ -33,6 +33,7 @@ const App = props => {
             firebase.messaging().getToken()
                 .then(fcmToken => {
                     if (fcmToken) {
+
                         firebase.messaging().hasPermission()
                             .then(enabled => {
                                 if (enabled) {
@@ -40,6 +41,10 @@ const App = props => {
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
                                             messaging().setBackgroundMessageHandler(async remoteMessage => {
+                                                console.log(
+                                                    'Notification caused app to open from background state:',
+                                                    remoteMessage,
+                                                );
                                                 messaging().onNotificationOpenedApp(remoteMessage => {
                                                     navigate('Messages')
                                                     console.warn(
@@ -50,7 +55,7 @@ const App = props => {
                                             })
 
                                             messaging().onMessage(async remoteMessage => {
-                                                console.warn('datea', remoteMessage.data)
+                                                console.warn('datea', remoteMessage)
                                                 props.fetchTotalUnreadMessages();
                                                 props.newMessageReceived(true)
                                             });

@@ -17,19 +17,17 @@ const Stack = createStackNavigator();
 const HomeStack = () => (
     <Stack.Navigator>
         {HomeRoutes.map((home, index) => (
-            <>
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerTitleAlign: { ...(home.titleAlign) },
-                        headerShown: home.title ? true : false,
-                        title: locales(home.title),
-                        headerRight: () => home.headerRight ? home.headerRight : null,
-                    })}
-                    key={index}
-                    name={home.name}
-                    component={home.component}
-                />
-            </>
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerTitleAlign: { ...(home.titleAlign) },
+                    headerShown: home.title ? true : false,
+                    title: locales(home.title),
+                    headerRight: () => home.headerRight ? home.headerRight : null,
+                })}
+                key={index}
+                name={home.name}
+                component={home.component}
+            />
         ))}
     </Stack.Navigator>
 )

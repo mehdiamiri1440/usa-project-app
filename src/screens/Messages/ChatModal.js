@@ -154,6 +154,7 @@ class ChatModal extends React.Component {
                 transparent={transparent}
                 visible={visible}
                 onRequestClose={() => {
+                    Jmoment.locale('fa')
                     this.props.fetchTotalUnreadMessages();
                     onRequestClose()
                 }}
@@ -182,6 +183,7 @@ class ChatModal extends React.Component {
                     <TouchableOpacity
                         style={{ flexDirection: 'row-reverse' }}
                         onPress={() => {
+                            Jmoment.locale('fa')
                             this.props.fetchTotalUnreadMessages();
                             onRequestClose()
                         }}>
