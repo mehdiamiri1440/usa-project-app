@@ -6,9 +6,12 @@ import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
 import RNRestart from 'react-native-restart';
 import configureStore, { persistor } from './src/redux/configureStore';
+import messaging from '@react-native-firebase/messaging';
+
 import locales from './locales/index';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Root } from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
 const store = configureStore()
 const customTextProps = {
   style: {
@@ -21,12 +24,22 @@ setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
 class App extends React.Component {
-  // componentDidMount() {
-  //   if (I18nManager.isRTL) {
-  //     I18nManager.forceRTL(false);
-  //     RNRestart.Restart();
-  //   }
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      fromMessages: false
+    }
+  }
+  componentDidMount() {
+    messaging().setBackgroundMessageHandler(async _ => {
+      await AsyncStorage.setItem('@fromMessages', JSON.stringify(true))
+    });
+    // if (I18nManager.isRTL) {
+    //   I18nManager.forceRTL(false);
+    //   RNRestart.Restart();
+    // }
+  }
+
   render() {
     return (
       <Provider store={store}>

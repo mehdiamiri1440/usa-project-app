@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import * as messagesActions from '../redux/messages/actions';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import tabs from './tabs';
@@ -11,11 +11,16 @@ import Login from '../screens/Login/Login'
 import firebase from '@react-native-firebase/app';
 import SignUp from '../screens/SignUp'
 import messaging from '@react-native-firebase/messaging';
+import { NavigationActions } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const navigationRef = React.createRef();
-
-const navigate = (name, params) => {
-    navigationRef.current?.navigate(name, params);
+const isMountedRef = React.createRef();
+const push = async (...args) => {
+    const navigation = await navigationRef;
+    const ready = await navigation.current;
+    if (!!ready)
+        ready.navigate(tabs[4]);
 }
 
 const Tab = createMaterialBottomTabNavigator();
@@ -25,8 +30,32 @@ const registerAppWithFCM = async () => {
     await messaging().registerDeviceForRemoteMessages();
 }
 
+const getRoute = () => {
+    return new Promise((resolve, reject) => {
+        AsyncStorage.getItem('@fromMessages').then(value => {
+            if (value && JSON.parse(value)) {
+                resolve(JSON.parse(value));
+            }
+            else {
+                resolve(false)
+            }
+        }).catch(err => reject(err))
+        // if (value) {
+        //     resolve(true)
+        // }
+        // else {
+        //     resolve(false)
+        // }
+    })
+
+}
 const App = props => {
+    // const navigation = useNavigation();
+    const [initialRoute, setInitialRoute] = useState('Home');
+    const [loading, setLoading] = useState(true);
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
+    let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
+    let unsubscribe;
     useEffect(() => {
         props.fetchTotalUnreadMessages();
         if (isRegistered) {
@@ -40,26 +69,28 @@ const App = props => {
                                     messaging()
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
-                                            messaging().setBackgroundMessageHandler(async remoteMessage => {
-                                                console.log(
-                                                    'Notification caused app to open from background state:',
-                                                    remoteMessage,
-                                                );
-                                                messaging().onNotificationOpenedApp(remoteMessage => {
-                                                    navigate('Messages')
-                                                    console.warn(
-                                                        'Notification caused app to open from background state:',
-                                                        remoteMessage.notification,
-                                                    );
-                                                })
+                                            messaging().onNotificationOpenedApp(async remoteMessage => {
                                             })
+                                            messaging().getInitialNotification(() => {
+                                                messaging().setBackgroundMessageHandler(async remoteMessage => {
+                                                    try {
+                                                        await setBackgroundIncomingMessage(true)
+                                                    }
+                                                    catch (err) {
+                                                        console.log('catch----->>>', err)
+                                                    }
+                                                })
+                                            });
 
-                                            messaging().onMessage(async remoteMessage => {
-                                                console.warn('datea', remoteMessage)
+
+                                            unsubscribe = messaging().onMessage(async remoteMessage => {
+                                                if (remoteMessage)
+                                                    console.warn('datea', remoteMessage)
                                                 props.fetchTotalUnreadMessages();
                                                 props.newMessageReceived(true)
                                             });
-                                        });
+                                        })
+
                                 }
                                 else {
                                     firebase.messaging().requestPermission()
@@ -76,7 +107,10 @@ const App = props => {
                     }
                 })
         }
-    }, []);
+
+        return unsubscribe
+    }, [initialRoute]);
+
 
     return (
         <NavigationContainer
@@ -90,7 +124,15 @@ const App = props => {
                     </Stack.Navigator>
                 )
                 : (< Tab.Navigator
-                    initialRouteName={tabs[0].name}
+                    initialRouteName={
+                        getRoute().then(res => {
+                            if (res)
+                                setTimeout(() => {
+                                    navigationRef.current.navigate(tabs[4]);
+                                    setInitialRoute('Messages')
+                                }, 10);
+                        })
+                    }
                     shifting={false}
                     activeColor="#00C569"
                     inactiveColor="#FFFFFF"

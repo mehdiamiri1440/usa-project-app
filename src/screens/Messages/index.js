@@ -8,6 +8,7 @@ import { deviceWidth } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
 import ContactsList from './ContactsList';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Messages extends React.Component {
     constructor(props) {
@@ -22,7 +23,8 @@ class Messages extends React.Component {
 
     serachInputRef = React.createRef();
 
-    componentDidMount() {
+    async componentDidMount() {
+        await AsyncStorage.setItem('@fromMessages', JSON.stringify(false))
         this.props.fetchAllContactsList()
     }
 
