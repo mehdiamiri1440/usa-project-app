@@ -262,6 +262,12 @@ export default (state = INITIAL_STATE, action) => {
                 message: {}
             }
         }
+        case actionTypes.IS_FROM_OUTSIDE: {
+            return {
+                ...state,
+                isFromOutSide: action.payload
+            }
+        }
 
         default:
             return state

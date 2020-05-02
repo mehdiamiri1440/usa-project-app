@@ -7,8 +7,6 @@ const monitorReducerEnhander = createStore => (reducer, initialState, enhancer) 
     const end = performance.now();
     const diff = round(end - start);
 
-    console.log('reducer process time: ', diff);
-
     return newState;
   };
 

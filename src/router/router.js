@@ -77,7 +77,6 @@ const App = props => {
                                                         await setBackgroundIncomingMessage(true)
                                                     }
                                                     catch (err) {
-                                                        console.log('catch----->>>', err)
                                                     }
                                                 })
                                             });
@@ -124,14 +123,14 @@ const App = props => {
                     </Stack.Navigator>
                 )
                 : (< Tab.Navigator
-                    initialRouteName={
-                        getRoute().then(res => {
-                            if (res)
-                                setTimeout(() => {
-                                    navigationRef.current.navigate(tabs[4]);
-                                    setInitialRoute('Messages')
-                                }, 10);
-                        })
+                    initialRouteName={props.isFromOutSide ? 'Messages' : 'Home'
+                        // getRoute().then(res => {
+                        //     if (res)
+                        //         setTimeout(() => {
+                        //             navigationRef.current.navigate(tabs[4]);
+                        //             setInitialRoute('Messages')
+                        //         }, 10);
+                        // })
                     }
                     shifting={false}
                     activeColor="#00C569"
@@ -172,6 +171,7 @@ const mapStateToProps = (state) => {
 
         totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
+        isFromOutSide: state.messagesReducer.isFromOutSide,
     }
 };
 

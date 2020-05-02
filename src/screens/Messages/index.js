@@ -24,7 +24,8 @@ class Messages extends React.Component {
     serachInputRef = React.createRef();
 
     async componentDidMount() {
-        await AsyncStorage.setItem('@fromMessages', JSON.stringify(false))
+        // await AsyncStorage.setItem('@fromMessages', JSON.stringify(false))
+        this.props.isFromOutSide(false)
         this.props.fetchAllContactsList()
     }
 
@@ -145,6 +146,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
+        isFromOutSide: (message) => dispatch(messagesActions.isFromOutSide(message)),
     }
 };
 

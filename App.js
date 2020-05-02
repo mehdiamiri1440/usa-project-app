@@ -8,6 +8,7 @@ import RNRestart from 'react-native-restart';
 import configureStore, { persistor } from './src/redux/configureStore';
 import messaging from '@react-native-firebase/messaging';
 
+import * as messageActions from './src/redux/messages/actions';
 import locales from './locales/index';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Root } from 'native-base';
@@ -32,7 +33,7 @@ class App extends React.Component {
   }
   componentDidMount() {
     messaging().setBackgroundMessageHandler(async _ => {
-      await AsyncStorage.setItem('@fromMessages', JSON.stringify(true))
+      store.dispatch(messageActions.isFromOutSide(true))
     });
     // if (I18nManager.isRTL) {
     //   I18nManager.forceRTL(false);
