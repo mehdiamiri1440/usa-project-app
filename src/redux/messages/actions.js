@@ -52,12 +52,12 @@ export const fetchUserChatHistory = (userId, msgCount) => {
 };
 
 
-export const sendMessage = (msgObject) => {
+export const sendMessage = (msgObject, buyAdId) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.messages
-                .sendMessage(msgObject)
+                .sendMessage(msgObject, buyAdId)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

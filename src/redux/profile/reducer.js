@@ -6,6 +6,12 @@ const INITIAL_STATE = {
     userProfileMessage: null,
     userProfile: {},
 
+    isUserAllowedToSendMessageLoading: false,
+    isUserAllowedToSendMessageFailed: false,
+    isUserAllowedToSendMessageError: false,
+    isUserAllowedToSendMessageMessage: null,
+    isUserAllowedToSendMessage: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -52,6 +58,50 @@ export default (state = INITIAL_STATE, action) => {
                 userProfileFailed: false,
                 userProfileError: true,
                 userProfileMessage: phone
+            };
+        };
+
+
+        case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_LOADING: {
+            return {
+                ...state,
+                isUserAllowedToSendMessage: {},
+                isUserAllowedToSendMessageLoading: true,
+                isUserAllowedToSendMessageFailed: false,
+                isUserAllowedToSendMessageError: false,
+                isUserAllowedToSendMessageMessage: null
+            };
+        };
+        case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_SUCCESSFULLY: {
+            return {
+                ...state,
+                isUserAllowedToSendMessage: { ...action.payload },
+                isUserAllowedToSendMessageLoading: false,
+                isUserAllowedToSendMessageFailed: false,
+                isUserAllowedToSendMessageError: false,
+                isUserAllowedToSendMessageMessage: false,
+            };
+        };
+        case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_FAILED: {
+            const { status } = action.payload;
+            return {
+                ...state,
+                isUserAllowedToSendMessage: {},
+                isUserAllowedToSendMessageLoading: false,
+                isUserAllowedToSendMessageFailed: true,
+                isUserAllowedToSendMessageError: false,
+                isUserAllowedToSendMessageMessage: status
+            };
+        };
+        case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_REJECT: {
+            let { phone } = action.payload.data.errors;
+            return {
+                ...state,
+                isUserAllowedToSendMessage: {},
+                isUserAllowedToSendMessageLoading: false,
+                isUserAllowedToSendMessageFailed: false,
+                isUserAllowedToSendMessageError: true,
+                isUserAllowedToSendMessageMessage: phone
             };
         };
 

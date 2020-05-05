@@ -84,21 +84,46 @@ export const fetchGroupChats = (groupId, messageCount) => {
 
 
 
-export const sendMessage = (msgObject) => {
+export const sendMessage = (msgObject, buyAdId) => {
+    console.warn('message-------->>>', msgObject, buyAdId)
     return new Promise((resolve, reject) => {
-        requester
-            .fetchAPI({
-                route: `messanger/send_message`,
-                method: 'POST',
-                data: msgObject,
-                withAuth: false,
-            })
-            .then(result => {
-                resolve(result);
-            })
-            .catch(err => {
-                return reject(err.response);
-            });
+
+        if (buyAdId != undefined) {
+            requester
+                .fetchAPI({
+                    route: `send_reply_to_buyAd`,
+                    method: 'POST',
+                    data: {
+                        buy_ad_id: buyAdId,
+                        text: msgObject.text
+                    },
+                    withAuth: false,
+                })
+                .then(result => {
+                    resolve(result);
+                })
+                .catch(err => {
+                    return reject(err.response);
+                });
+        }
+        else {
+            requester
+                .fetchAPI({
+                    route: `messanger/send_message`,
+                    method: 'POST',
+                    data: msgObject,
+                    withAuth: false,
+                })
+                .then(result => {
+                    resolve(result);
+                })
+                .catch(err => {
+                    return reject(err.response);
+                });
+        }
+
+
+
     });
 };
 

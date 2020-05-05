@@ -27,3 +27,25 @@ export const fetchUserProfile = () => {
 
     return request();
 };
+
+export const isUserAllowedToSendMessage = (id) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .isUserAllowedToSendMessage(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_FAILED,
+                        reject: actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_LOADING);
+    const success = res => action(actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_SUCCESSFULLY, res);
+
+    return request();
+};

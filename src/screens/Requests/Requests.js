@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button, Card, CardItem, Body } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -21,6 +21,8 @@ class Requests extends React.Component {
         this.state = {
             updateFlag: false,
             modalFlag: false,
+            showDialog: false,
+            selectedBuyAdId: -1,
             selectedContact: {}
         }
     }
@@ -34,13 +36,75 @@ class Requests extends React.Component {
     }
 
 
+    checkForSendingMessage = (item) => {
+        this.props.isUserAllowedToSendMessage(item.id).then(() => {
+            if (this.props.isUserAllowedToSendMessage) {
+                this.setState({
+                    modalFlag: true,
+                    selectedBuyAdId: item.id,
+                    selectedContact: {
+                        contact_id: item.myuser_id,
+                        first_name: item.first_name,
+                        last_name: item.last_name
+                    }
+                });
+            }
+            else {
+                this.setState({ showDialog: true })
+            }
+        });
+
+    };
+
+    hideDialog = () => this.setState({ showDialog: false });
+
+
     render() {
 
-        let { buyAdRequestsList, userProfile: info, userProfileLoading, buyAdRequestLoading } = this.props;
+        let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
+            isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
-        let { modalFlag, updateFlag, selectedContact } = this.state;
+        let { modalFlag, updateFlag, selectedContact, showDialog, selectedBuyAdId } = this.state;
         return (
             <>
+                <Portal>
+                    <Dialog
+                        visible={showDialog}
+                        onDismiss={this.hideDialog}>
+                        <Dialog.Content>
+                            <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center' }}>
+                                {locales('titles.maximumBuyAdResponse')}
+                            </Paragraph>
+                            <Paragraph
+                                style={{ fontFamily: 'Vazir-Bold-FD', color: 'red' }}>
+                                {locales('titles.promoteForBuyAd')}
+                            </Paragraph>
+                        </Dialog.Content>
+                        <Dialog.Actions style={{
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            alignItems: 'space-between'
+                        }}>
+                            <Button
+                                style={[styles.closeButton, { width: '30%' }]}
+                                onPress={this.hideDialog}>
+                                <Text style={styles.buttonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                            <Button
+                                style={[styles.loginButton, { width: '30%' }]}
+                                onPress={() => {
+                                    this.hideDialog();
+                                    this.props.navigation.navigate('PromoteRegistration');
+                                }}>
+                                <Text style={styles.buttonText}>
+                                    {locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -75,7 +139,7 @@ class Requests extends React.Component {
 
 
                 {!updateFlag ?
-                    <Spin spinning={buyAdRequestLoading || userProfileLoading}>
+                    <Spin spinning={buyAdRequestLoading || userProfileLoading || isUserAllowedToSendMessageLoading}>
 
 
 
@@ -163,7 +227,7 @@ class Requests extends React.Component {
                                             marginVertical: 5,
                                             flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
                                         }}>
-                                            <Text style={{ color: '#E41C38', fontFamily: 'Vazir-Bold-FD', fontSize: 16, }}>+10</Text>
+                                            <Text style={{ color: '#E41C38', fontFamily: 'Vazir-Bold-FD', fontSize: 16, }}>+{item.reply_capacity}</Text>
                                             <MaterialCommunityIcons name='comment-alert' size={25} color={'#777777'} />
                                         </View>
 
@@ -171,14 +235,7 @@ class Requests extends React.Component {
                                         <View style={{ marginVertical: 5 }}>
                                             <Button
                                                 small
-                                                onPress={() => this.setState({
-                                                    modalFlag: true,
-                                                    selectedContact: {
-                                                        contact_id: item.myuser_id,
-                                                        first_name: item.first_name,
-                                                        last_name: item.last_name
-                                                    }
-                                                })}
+                                                onPress={() => this.checkForSendingMessage(item)}
                                                 style={{
                                                     backgroundColor: '#00C569',
                                                     borderRadius: 6,
@@ -206,6 +263,7 @@ class Requests extends React.Component {
                             {modalFlag && <ChatModal
                                 transparent={false}
                                 visible={modalFlag}
+                                buyAdId={selectedBuyAdId}
                                 contact={{ ...selectedContact }}
                                 onRequestClose={() => this.setState({ modalFlag: false })}
                             />}
@@ -361,6 +419,116 @@ class Requests extends React.Component {
 }
 
 
+
+const styles = StyleSheet.create({
+    loginFailedContainer: {
+        backgroundColor: '#F8D7DA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#761C24'
+    },
+    buttonText: {
+        color: 'white',
+        width: '80%',
+        textAlign: 'center'
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    closeButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#777777',
+        width: deviceWidth * 0.5,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        backgroundColor: '#B5B5B5',
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        width: deviceWidth * 0.5,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
+    },
+    enterText: {
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#00C569',
+        fontSize: 20,
+        padding: 10,
+    },
+    linearGradient: {
+        height: deviceHeight * 0.15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTextStyle: {
+        color: 'white',
+        position: 'absolute',
+        textAlign: 'center',
+        fontSize: 26,
+        bottom: 40
+    },
+    textInputPadding: {
+        padding: 20,
+    },
+    userText: {
+        flexWrap: 'wrap',
+        paddingTop: '3%',
+        fontSize: 20,
+        padding: 20,
+        textAlign: 'right',
+        color: '#7E7E7E'
+    }
+});
+
+
+
 const mapStateToProps = (state) => {
     return {
         buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
@@ -369,14 +537,18 @@ const mapStateToProps = (state) => {
 
 
         userProfileLoading: state.profileReducer.userProfileLoading,
-        userProfile: state.profileReducer.userProfile
+        userProfile: state.profileReducer.userProfile,
+
+        isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
+        isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
-        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile())
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Requests);

@@ -432,12 +432,12 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
         newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
-        sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject)),
+        sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
     }
