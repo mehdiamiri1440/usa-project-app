@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllContactsList = () => {
+export const fetchAllContactsList = (from, to) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.messages
-                .fetchAllContactsList()
+                .fetchAllContactsList(from, to)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

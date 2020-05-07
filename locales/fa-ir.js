@@ -75,6 +75,7 @@ export default {
     'titles.no': 'خیر',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
+    'titles.remianedCapacityToSendMessageToBuyer': 'ظرفیت باقی‌مانده برای ارسال پیام به خریدار این محصول',
     'titles.update': 'به‌روز رسانی',
     'titles.noMessageFound': 'پیامی یافت نشد .',
     'titles.registeredProductsCount': 'تعداد محصولات ثبت شده',

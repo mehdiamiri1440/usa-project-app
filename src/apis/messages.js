@@ -1,12 +1,16 @@
 import { requester } from '../utils';
 
 
-export const fetchAllContactsList = () => {
+export const fetchAllContactsList = (from, to) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `get_contact_list`,
                 method: 'POST',
+                data: {
+                    from,
+                    to
+                },
                 withAuth: false,
             })
             .then(result => {

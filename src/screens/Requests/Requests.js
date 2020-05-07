@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, ToastAndroid } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { Button, Card, CardItem, Body } from 'native-base';
+import { Button, Card, CardItem, Body, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -20,6 +20,7 @@ class Requests extends React.Component {
         super(props);
         this.state = {
             updateFlag: false,
+            showToast: false,
             modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
@@ -64,9 +65,11 @@ class Requests extends React.Component {
         let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
             isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
-        let { modalFlag, updateFlag, selectedContact, showDialog, selectedBuyAdId } = this.state;
+        let { modalFlag, updateFlag, selectedContact, showToast, showDialog, selectedBuyAdId } = this.state;
         return (
             <>
+                {showToast && ToastAndroid.show(locales('titles.remianedCapacityToSendMessageToBuyer'),
+                    ToastAndroid.LONG, ToastAndroid.BOTTOM)}
                 <Portal>
                     <Dialog
                         visible={showDialog}
@@ -228,7 +231,9 @@ class Requests extends React.Component {
                                             flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
                                         }}>
                                             <Text style={{ color: '#E41C38', fontFamily: 'Vazir-Bold-FD', fontSize: 16, }}>+{item.reply_capacity}</Text>
-                                            <MaterialCommunityIcons name='comment-alert' size={25} color={'#777777'} />
+                                            <MaterialCommunityIcons
+                                                onPress={() => this.setState({ showToast: true })}
+                                                name='comment-alert' size={25} color={'#777777'} />
                                         </View>
 
 
