@@ -89,7 +89,7 @@ class ContactsList extends React.Component {
                                     keyExtractor={item => item.contact_id.toString()}
                                     keyboardShouldPersistTaps='handled'
                                     keyboardDismissMode='on-drag'
-                                    showsVerticalScrollIndicator={true}
+                                    showsVerticalScrollIndicator={false}
                                     onEndReachedThreshold={0.5}
                                     onEndReached={() => this.fetchMoreContacts()}
                                     style={{ width: '100%', height: deviceHeight * 0.68 }}

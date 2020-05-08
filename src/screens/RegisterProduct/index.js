@@ -240,7 +240,9 @@ class RegisterProduct extends React.Component {
 
 
 
-                <ScrollView>
+                <ScrollView
+                    keyboardShouldPersistTaps='handled'
+                >
 
 
                     <View style={{
