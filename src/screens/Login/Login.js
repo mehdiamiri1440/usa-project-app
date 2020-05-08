@@ -52,7 +52,9 @@ class Login extends React.Component {
         let { message, loading, error } = this.props
         let { mobileNumber, password } = this.state
         return (
-            <ScrollView>
+            <ScrollView
+                keyboardShouldPersistTaps='handled'
+            >
                 <Spin spinning={loading} >
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
