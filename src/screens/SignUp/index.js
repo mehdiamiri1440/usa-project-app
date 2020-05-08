@@ -144,7 +144,9 @@ class SignUp extends React.Component {
         let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
         let { successfullAlert, stepNumber } = this.state;
         return (
-            <ScrollView>
+            <ScrollView
+                keyboardShouldPersistTaps='handled'
+            >
                 <Spin spinning={submitLoading}>
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
