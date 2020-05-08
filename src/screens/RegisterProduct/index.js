@@ -147,33 +147,45 @@ class RegisterProduct extends React.Component {
     }
 
     renderSteps = () => {
-        let { stepNumber } = this.state
+        let { stepNumber, category, subCategory, productType, images, description,
+            minimumOrder, maximumPrice, minimumPrice, amount, city, province } = this.state
         switch (stepNumber) {
             case 0: {
                 return <GuidToRegisterProduct
                     setProductType={this.setProductType}
                     changeStep={this.changeStep} {...this.props}
-                    setMobileNumber={this.setMobileNumber}
                 />
             }
             case 1: {
                 return <SelectCategory
                     setProductType={this.setProductType}
                     changeStep={this.changeStep} {...this.props}
-                    setMobileNumber={this.setMobileNumber}
+                    category={category}
+                    subCategory={subCategory}
+                    productType={productType}
                 />
             }
             case 2: {
-                return <StockAndPrice changeStep={this.changeStep} setStockAndPrice={this.setStockAndPrice} {...this.props} />
+                return <StockAndPrice
+                    minimumOrder={minimumOrder}
+                    maximumPrice={maximumPrice}
+                    minimumPrice={minimumPrice}
+                    amount={amount}
+                    changeStep={this.changeStep} setStockAndPrice={this.setStockAndPrice} {...this.props} />
             }
             case 3: {
-                return <ChooseCity changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice}  {...this.props} />
+                return <ChooseCity
+                    city={city} province={province
+                    } changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice}  {...this.props} />
             }
             case 4: {
-                return <ProductImages changeStep={this.changeStep} setProductImages={this.setProductImages} {...this.props} />
+                return <ProductImages
+                    images={images} changeStep={this.changeStep} setProductImages={this.setProductImages} {...this.props} />
             }
             case 5: {
-                return <ProductDescription changeStep={this.changeStep} setProductDescription={this.setProductDescription} {...this.props} />
+                return <ProductDescription
+                    description={description}
+                    changeStep={this.changeStep} setProductDescription={this.setProductDescription} {...this.props} />
             }
             case 6: {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />

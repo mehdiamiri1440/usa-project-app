@@ -16,6 +16,7 @@ class StockAndPrice extends Component {
             isMaximumPriceFocused: false,
             minimumOrder: '',
             amount: '',
+            loaded: false,
             maximumPrice: '',
             minimumPrice: ''
         }
@@ -26,6 +27,15 @@ class StockAndPrice extends Component {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
+
+    componentDidMount() {
+        const { minimumOrder, maximumPrice, minimumPrice, amount } = this.props;
+        this.amountRef.current.setValue(amount);
+        this.minimumPriceRef.current.setValue(minimumPrice);
+        this.maximumPriceRef.current.setValue(maximumPrice);
+        this.minimumOrderRef.current.setValue(minimumOrder);
+        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
+    }
 
 
     onAmountSubmit = () => {

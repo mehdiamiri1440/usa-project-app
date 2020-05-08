@@ -17,9 +17,16 @@ class ProductImages extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            images: []
+            images: [],
+            loaded: false
         }
     }
+
+    componentDidMount() {
+        const { images } = this.props;
+        this.setState({ images, loaded: true });
+    }
+
     chooseProductImage = (index) => ActionSheet.show(
         {
             options: [locales('labels.camera'), locales('labels.gallery')],

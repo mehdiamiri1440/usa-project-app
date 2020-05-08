@@ -19,6 +19,14 @@ class ProductDecription extends Component {
 
     descriptionRef = React.createRef();
 
+    componentDidMount() {
+        if (this.props.description) {
+            const { description } = this.props;
+            this.descriptionRef.current.setValue(description);
+            this.setState({ description })
+        }
+    }
+
     onDescriptionSubmit = () => {
         let { current: field } = this.descriptionRef;
         setTimeout(() => {

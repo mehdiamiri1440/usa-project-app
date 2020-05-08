@@ -16,7 +16,8 @@ class SelectCategory extends Component {
             category: '',
             subCategory: '',
             productType: '',
-            isFocused: false
+            isFocused: false,
+            loaded: false
         }
     }
 
@@ -25,6 +26,15 @@ class SelectCategory extends Component {
 
     componentDidMount() {
         this.props.fetchAllCategories();
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false) {
+            const { category, subCategory, productType } = this.props;
+            this.productTypeRef.current.setValue(productType);
+            this.setState({ category, subCategory, productType, loaded: true })
+        }
     }
 
     setCategory = (value, index) => {
@@ -54,6 +64,7 @@ class SelectCategory extends Component {
         }, 10);
     };
 
+
     onSubmit = () => {
 
         let { productType, category, subCategory } = this.state;
@@ -63,7 +74,7 @@ class SelectCategory extends Component {
     render() {
 
         let { categoriesList, subCategoriesList } = this.props;
-        let { productType } = this.state;
+        let { productType, category, subCategory } = this.state;
 
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -91,6 +102,7 @@ class SelectCategory extends Component {
                     onChangeText={(value, index) => this.setCategory(value, index)}
                     label={locales('labels.selectCategory')}
                     data={categoriesList}
+                    value={category}
                     containerStyle={{
                         paddingHorizontal: 20
                     }}
@@ -99,6 +111,7 @@ class SelectCategory extends Component {
                     onChangeText={(value) => this.setSubCategory(value)}
                     label={locales('labels.selectSubCategory')}
                     data={subCategoriesList}
+                    value={subCategory}
                     containerStyle={{
                         paddingHorizontal: 20
                     }}

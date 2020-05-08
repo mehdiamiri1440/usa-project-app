@@ -16,7 +16,8 @@ class ChooseCity extends React.Component {
             province: '',
             errorFlag: false,
             city: '',
-            index: -1
+            index: -1,
+            loaded: false
         }
     }
     provinceRef = React.createRef();
@@ -29,6 +30,14 @@ class ChooseCity extends React.Component {
         //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false) {
+            const { province, city } = this.props;
+            this.setState({ province, city, loaded: true })
+        }
     }
 
     componentWillUnmount() {
@@ -108,12 +117,14 @@ class ChooseCity extends React.Component {
                         onChangeText={(value, index) => this.setProvince(value, index)}
                         label={locales('labels.selectProvince')}
                         data={provinces}
+                        value={province}
                         containerStyle={{
                             marginVertical: 20,
                             paddingHorizontal: 20
                         }}
                     />
                     <Dropdown
+                        value={city}
                         onChangeText={(value) => this.setCity(value)}
                         label={locales('labels.selectCity')}
                         data={cities}
