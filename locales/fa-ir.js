@@ -94,7 +94,7 @@ export default {
     'titles.only': 'تنها',
     "titles.description": 'توضیحات محصول خود را بنویسید',
     'titles.descriptionWithExample': 'در مورد کیفیت و نوع بسته بندی محصول خود توضیح دهید',
-    'titles.requestTooOld': ' این درخواست کمی قدیمی است',
+    'titles.requestTooOld': ' این درخواست‌ها کمی قدیمی است',
     'titles.selectOrigin': 'انتخاب مبدا',
     'titles.minimumPriceWithExample': 'حداقل قیمت (هر کیلو به تومان) : مثلا 260000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Content, Tabs, Header, Button, Icon, InputGroup, Input } from 'native-base';
+import { Icon, InputGroup, Input } from 'native-base';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
 import ContactsList from './ContactsList';
-import AsyncStorage from '@react-native-community/async-storage';
 
 class Messages extends React.Component {
     constructor(props) {
@@ -16,7 +15,8 @@ class Messages extends React.Component {
         this.state = {
             loaded: false,
             contactsList: [],
-            searchText: ''
+            searchText: '',
+            isSearched: false
         }
     }
 
@@ -42,22 +42,23 @@ class Messages extends React.Component {
     };
 
 
-    clearSearchBar = () => {
-        this.setState({ searchText: '', contactsList: [...this.props.contactsList] })
-    };
-
     handleSearch = text => {
-        this.setState(state => {
-            state.searchText = text;
-            state.contactsList = [...(this.props.contactsList.filter(item => item.first_name.includes(text) || item.last_name.includes(text)))];
-            return '';
+        let contactsList = this.props.contactsList;
+        console.warn('text--->',
+            [...(this.props.contactsList.filter(item => item.first_name.includes(text) || item.last_name.includes(text)))])
+        contactsList = text ? [...(this.props.contactsList.filter(item => item.first_name.includes(text) || item.last_name.includes(text)))] : [...this.props.contactsList];
+
+        this.setState({
+            searchText: text,
+            isSearched: true,
+            contactsList
         })
     }
 
     render() {
 
-        let { contactsList, searchText } = this.state
-
+        let { contactsList, searchText, isSearched } = this.state
+        console.warn('tex1111111111111t-->>', contactsList)
         return (
             <>
                 <View style={{
@@ -115,12 +116,13 @@ class Messages extends React.Component {
                                     <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
                                 </View>
                             </>
-                            : <>
+                            : (isSearched &&
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                     <Entypo size={135} name='message' color='#BEBEBE' />
                                     <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
                                 </View>
-                            </>
+                            )
+
                         )
                     }
                 </MessagesContext.Provider>
