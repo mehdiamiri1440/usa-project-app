@@ -7,10 +7,10 @@ export const fetchAllContactsList = (from, to) => {
             .fetchAPI({
                 route: `get_contact_list`,
                 method: 'POST',
-                data: {
-                    from,
-                    to
-                },
+                // data: {
+                //     from,
+                //     to
+                // },
                 withAuth: false,
             })
             .then(result => {
