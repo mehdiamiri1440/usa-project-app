@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { Button } from 'native-base';
+import { Button, Input, Item, Label } from 'native-base';
 import { Dropdown } from 'react-native-material-dropdown';
 import OutlinedTextField from '../../../components/floatingInput';
-import { deviceWidth, validator } from '../../../utils';
+import { deviceWidth, validator, formatter } from '../../../utils';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { deviceHeight } from '../../../utils/deviceDimenssions';
 
 
 class SelectCategory extends Component {
@@ -32,7 +33,7 @@ class SelectCategory extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false) {
             const { category, subCategory, productType } = this.props;
-            this.productTypeRef.current.setValue(productType);
+            this.productTypeRef.current.value = productType;
             this.setState({ category, subCategory, productType, loaded: true })
         }
     }
@@ -46,22 +47,20 @@ class SelectCategory extends Component {
     };
 
     setSubCategory = (value) => {
-        this.setState({ subCategory: value })
+        this.setState({ subCategory: formatter.toStandard(this.props.subCategoriesList.findIndex(item => item.category_name == value)) }, () => {
+        })
     };
 
 
-    onProductTypeSubmit = () => {
-        let { current: field } = this.productTypeRef;
-        setTimeout(() => {
-            if (validator.isPersianName(field.value()))
-                this.setState(() => ({
-                    productType: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    productType: ''
-                }));
-        }, 10);
+    onProductTypeSubmit = (field) => {
+        if (validator.isPersianName(field))
+            this.setState(() => ({
+                productType: field,
+            }));
+        else
+            this.setState(() => ({
+                productType: ''
+            }));
     };
 
 
@@ -117,25 +116,45 @@ class SelectCategory extends Component {
                     }}
                 />
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    <Item fixedLabel>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.enterYourProductType')}
+                        </Label>
+                    </Item>
+                    <Item error='' regular style={{
+                        borderColor: productType.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                            onChangeText={this.onProductTypeSubmit}
+                            value={productType}
+                            placeholder={locales('titles.productTypeWithExample')}
+                            ref={this.productTypeRef}
+                        />
+                    </Item>
+                    {/* <OutlinedTextField
                         baseColor={productType.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onProductTypeSubmit}
                         ref={this.productTypeRef}
                         isRtl={true}
+                        placeholder={(this.state.isFocused || productType.length) ? locales('titles.productTypeWithExample') : ''}
                         onFocus={() => this.setState({ isFocused: true })}
                         onBlur={() => this.setState({ isFocused: false })}
-                        labelTextStyle={{ paddingTop: 5 }}
+                        labelTextStyle={{ paddingTop: 5, fontFamily: 'Vazir' }}
                         label={this.state.isFocused || productType.length
                             ? locales('titles.productType') :
                             locales('titles.productTypeWithExample')}
-                    />
+                    /> */}
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!this.state.category.length || !this.state.subCategory.length || !productType
+                    style={!this.state.category.length || !this.state.subCategory || !productType
                         ? styles.disableLoginButton : styles.loginButton}
                     rounded
-                    disabled={!this.state.category.length || !this.state.subCategory.length || !productType}
+                    disabled={!this.state.category.length || !this.state.subCategory || !productType}
                 >
                     <AntDesign name='arrowleft' size={25} color='white' />
                     <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>

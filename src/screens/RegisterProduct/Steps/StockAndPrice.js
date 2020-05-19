@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Input, Label, Item } from 'native-base';
 import OutlinedTextField from '../../../components/floatingInput';
 import { deviceWidth, validator } from '../../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -30,68 +30,56 @@ class StockAndPrice extends Component {
 
     componentDidMount() {
         const { minimumOrder, maximumPrice, minimumPrice, amount } = this.props;
-        this.amountRef.current.setValue(amount);
-        this.minimumPriceRef.current.setValue(minimumPrice);
-        this.maximumPriceRef.current.setValue(maximumPrice);
-        this.minimumOrderRef.current.setValue(minimumOrder);
+        this.amountRef.current.value = amount;
+        this.minimumPriceRef.current.value = minimumPrice;
+        this.maximumPriceRef.current.value = maximumPrice;
+        this.minimumOrderRef.current.value = minimumOrder;
         this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
     }
 
 
-    onAmountSubmit = () => {
-        let { current: field } = this.amountRef;
-        setTimeout(() => {
-            if (validator.isNumber(field.value()))
-                this.setState(() => ({
-                    amount: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    amount: ''
-                }));
-        }, 10);
+    onAmountSubmit = field => {
+        if (validator.isNumber(field))
+            this.setState(() => ({
+                amount: field,
+            }));
+        else
+            this.setState(() => ({
+                amount: ''
+            }));
     };
 
-    onMinimumPriceSubmit = () => {
-        let { current: field } = this.minimumPriceRef;
-        setTimeout(() => {
-            if (validator.isNumber(field.value()))
-                this.setState(() => ({
-                    minimumPrice: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    minimumPrice: ''
-                }));
-        }, 10);
+    onMinimumPriceSubmit = field => {
+        if (validator.isNumber(field))
+            this.setState(() => ({
+                minimumPrice: field,
+            }));
+        else
+            this.setState(() => ({
+                minimumPrice: ''
+            }));
     };
 
-    onMaximumPriceSubmit = () => {
-        let { current: field } = this.maximumPriceRef;
-        setTimeout(() => {
-            if (validator.isNumber(field.value()))
-                this.setState(() => ({
-                    maximumPrice: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    maximumPrice: ''
-                }));
-        }, 10);
+    onMaximumPriceSubmit = field => {
+        if (validator.isNumber(field))
+            this.setState(() => ({
+                maximumPrice: field,
+            }));
+        else
+            this.setState(() => ({
+                maximumPrice: ''
+            }));
     };
 
-    onMinimumOrderSubmit = () => {
-        let { current: field } = this.minimumOrderRef;
-        setTimeout(() => {
-            if (validator.isNumber(field.value()))
-                this.setState(() => ({
-                    minimumOrder: field.value(),
-                }));
-            else
-                this.setState(() => ({
-                    minimumOrder: ''
-                }));
-        }, 10);
+    onMinimumOrderSubmit = field => {
+        if (validator.isNumber(field))
+            this.setState(() => ({
+                minimumOrder: field,
+            }));
+        else
+            this.setState(() => ({
+                minimumOrder: ''
+            }));
     };
 
     onSubmit = () => {
@@ -132,7 +120,29 @@ class StockAndPrice extends Component {
                 </Text>
 
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    <Item fixedLabel>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.amount')}
+                        </Label>
+                    </Item>
+                    <Item error='' regular style={{
+                        borderColor: amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            keyboardType='number-pad'
+                            autoCompleteType='off'
+                            style={{ fontFamily: 'Vazir', flexDirection: 'row', textDecorationLine: 'none' }}
+                            onChangeText={this.onAmountSubmit}
+                            value={amount}
+                            placeholder={locales('titles.amountWithExample')}
+                            ref={this.amountRef}
+
+                        />
+                    </Item>
+                    {/* <OutlinedTextField
+                        placeholder={(this.state.isAmountFocused || amount.length) ? locales('titles.amountWithExample') : ''}
                         type='number'
                         baseColor={amount.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onAmountSubmit}
@@ -145,13 +155,35 @@ class StockAndPrice extends Component {
                         label={isAmountFocused || amount.length
                             ? locales('titles.amount') :
                             locales('titles.amountWithExample')}
-                    />
+                    /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    <Item fixedLabel>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.minimumOrder')}
+                        </Label>
+                    </Item>
+                    <Item error='' regular style={{
+                        borderColor: minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            keyboardType='number-pad'
+                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                            onChangeText={this.onMinimumOrderSubmit}
+                            value={minimumOrder}
+                            placeholder={locales('titles.minimumOrderWithExample')}
+                            ref={this.minimumOrderRef}
+
+                        />
+                    </Item>
+                    {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMinimumOrderSubmit}
                         keyboardType='phone-pad'
+                        placeholder={(this.state.isMinimumOrderFocused || minimumOrder.length) ? locales('titles.minimumOrderWithExample') : ''}
                         ref={this.minimumOrderRef}
                         isRtl={true}
                         onFocus={() => this.setState({ isMinimumOrderFocused: true })}
@@ -160,13 +192,35 @@ class StockAndPrice extends Component {
                         label={isMinimumOrderFocused || minimumOrder.length
                             ? locales('titles.minimumOrder') :
                             locales('titles.minimumOrderWithExample')}
-                    />
+                    /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    <Item fixedLabel>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.minimumPrice')}
+                        </Label>
+                    </Item>
+                    <Item error='' regular style={{
+                        borderColor: minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            keyboardType='number-pad'
+                            autoCompleteType='off'
+                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                            onChangeText={this.onMinimumPriceSubmit}
+                            value={minimumPrice}
+                            placeholder={locales('titles.minimumPriceWithExample')}
+                            ref={this.minimumPriceRef}
+
+                        />
+                    </Item>
+                    {/* <OutlinedTextField
                         baseColor={minimumPrice.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMinimumPriceSubmit}
                         ref={this.minimumPriceRef}
+                        placeholder={(this.state.isMinimumPriceFocused || minimumPrice.length) ? locales('titles.minimumPriceWithExample') : ''}
                         isRtl={true}
                         keyboardType='phone-pad'
                         onFocus={() => this.setState({ isMinimumPriceFocused: true })}
@@ -175,10 +229,31 @@ class StockAndPrice extends Component {
                         label={isMinimumPriceFocused || minimumPrice.length
                             ? locales('titles.minimumPrice') :
                             locales('titles.minimumPriceWithExample')}
-                    />
+                    /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <OutlinedTextField
+                    <Item fixedLabel>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.maximumPrice')}
+                        </Label>
+                    </Item>
+                    <Item error='' regular style={{
+                        borderColor: maximumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            keyboardType='number-pad'
+                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                            onChangeText={this.onMaximumPriceSubmit}
+                            value={maximumPrice}
+                            placeholder={locales('titles.maximumPriceWithExample')}
+                            ref={this.maximumPriceRef}
+
+                        />
+                    </Item>
+                    {/* <OutlinedTextField
                         baseColor={maximumPrice.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMaximumPriceSubmit}
                         ref={this.maximumPriceRef}
@@ -190,7 +265,7 @@ class StockAndPrice extends Component {
                         label={isMaximumPriceFocused || maximumPrice.length
                             ? locales('titles.maximumPrice') :
                             locales('titles.maximumPriceWithExample')}
-                    />
+                    /> */}
                 </View>
                 <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                     <Button

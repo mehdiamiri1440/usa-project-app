@@ -1,6 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button } from 'native-base';
+import { Button, Item, Input, Label } from 'native-base';
 import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from 'react-native-material-dropdown';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -163,21 +163,19 @@ class ProductMoreDetails extends Component {
     };
 
     onDescriptionSubmit = (index, value) => {
-        setTimeout(() => {
-            if (validator.isValidDescription(value) && value.length) {
-                this.setState(state => {
-                    state.detailsArray[index].itemValue = value;
-                    state.detailsArray[index].error = '';
-                    return '';
-                });
-            }
-            else {
-                this.setState(state => {
-                    state.detailsArray[index].error = locales('labels.incorrectFormat');
-                    return '';
-                });
-            }
-        }, 10);
+        if (validator.isValidDescription(value) && value.length) {
+            this.setState(state => {
+                state.detailsArray[index].itemValue = value;
+                state.detailsArray[index].error = '';
+                return '';
+            });
+        }
+        else {
+            this.setState(state => {
+                state.detailsArray[index].error = locales('labels.incorrectFormat');
+                return '';
+            });
+        }
     };
 
     addMoreRow = () => {
@@ -221,7 +219,6 @@ class ProductMoreDetails extends Component {
                                 style={{
                                     color: 'red',
                                     fontSize: 14,
-                                    paddingHorizontal: 10
                                 }}
                             >
                                 {locales('labels.example')} :
@@ -230,7 +227,6 @@ class ProductMoreDetails extends Component {
                                 style={{
                                     color: '#666666',
                                     fontSize: 14,
-                                    paddingHorizontal: 10
                                 }}
                             >
                                 {locales('labels.boxing')}
@@ -242,7 +238,6 @@ class ProductMoreDetails extends Component {
                                 style={{
                                     color: 'red',
                                     fontSize: 14,
-                                    paddingHorizontal: 10
                                 }}
                             >
                                 {locales('labels.example')} :
@@ -251,7 +246,6 @@ class ProductMoreDetails extends Component {
                                 style={{
                                     color: '#666666',
                                     fontSize: 14,
-                                    paddingHorizontal: 10
                                 }}
                             >
                                 {locales('labels.8kMotherBox')}
@@ -286,7 +280,27 @@ class ProductMoreDetails extends Component {
                                     width: 195
                                 }}
                             />
-                            <TextField
+                            <View style={{
+                                width: 170,
+
+                            }}>
+                                <Item error={detail.error} regular style={{
+                                    borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                }}>
+                                    <Input
+                                        disabled={!detail.itemKey}
+                                        autoCapitalize='none'
+                                        autoCorrect={false}
+                                        autoCompleteType='off'
+                                        style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                                        onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                        placeholder={locales('titles.writeDescription')}
+
+
+                                    />
+                                </Item>
+                            </View>
+                            {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
                                 onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                 error={detail.error}
@@ -296,7 +310,7 @@ class ProductMoreDetails extends Component {
                                 isRtl={true}
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
-                            />
+                            /> */}
                         </View>
                     )
                     )}

@@ -48,7 +48,7 @@ class ChooseCity extends React.Component {
 
     onSubmit = () => {
         let { city, province } = this.state;
-        if (!city.length || !province.length) {
+        if (!city || !province.length) {
             this.setState({ errorFlag: true })
         }
         else {
@@ -65,7 +65,7 @@ class ChooseCity extends React.Component {
     };
 
     setCity = (value) => {
-        this.setState({ city: value })
+        this.setState({ city: this.props.allCitiesObject.cities.findIndex(item => item.city_name == value) })
     };
 
     render() {
@@ -135,7 +135,7 @@ class ChooseCity extends React.Component {
                     <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                         <Button
                             onPress={() => this.onSubmit()}
-                            style={!city.length || !province.length ? styles.disableLoginButton : styles.loginButton}
+                            style={!city || !province.length ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <AntDesign name='arrowleft' size={25} color='white' />

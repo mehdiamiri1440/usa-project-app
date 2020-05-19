@@ -1,6 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button } from 'native-base';
+import { Button, Textarea, Label } from 'native-base';
 import { View, Text, StyleSheet } from "react-native";
 import OutlinedTextField from '../../../components/floatingInput';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,18 +22,15 @@ class ProductDecription extends Component {
     componentDidMount() {
         if (this.props.description) {
             const { description } = this.props;
-            this.descriptionRef.current.setValue(description);
+            this.descriptionRef.current.value = description;
             this.setState({ description })
         }
     }
 
-    onDescriptionSubmit = () => {
-        let { current: field } = this.descriptionRef;
-        setTimeout(() => {
-            this.setState(() => ({
-                description: field.value()
-            }));
-        }, 10);
+    onDescriptionSubmit = field => {
+        this.setState(() => ({
+            description: field
+        }));
     };
 
     onSubmit = () => {
@@ -61,20 +58,22 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={description.length ? '#00C569' : '#a8a8a8'}
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.description')}
+                        </Label>
+                        <Textarea
                             onChangeText={this.onDescriptionSubmit}
-                            onFocus={() => this.setState({ isDescriptionFocused: true })}
-                            onBlur={() => this.setState({ isDescriptionFocused: false })}
-                            ref={this.descriptionRef}
                             error=''
-                            multiline={true}
-                            isRtl={true}
-                            fontSize={isDescriptionFocused || description.length ? 16 : 14}
-                            labelTextStyle={{ padding: 5 }}
-                            label={isDescriptionFocused || description.length
-                                ? locales('titles.description') :
-                                locales('titles.descriptionWithExample')}
+                            autoCapitalize='none'
+                            autoCompleteType='off'
+                            autoCorrect={false}
+                            placeholder={locales('titles.descriptionWithExample')}
+                            ref={this.descriptionRef}
+                            style={{
+                                fontFamily: 'Vazir', borderRadius: 5,
+                                borderColor: description.length ? '#00C569' : '#a8a8a8'
+                            }}
+                            rowSpan={5} bordered
                         />
                     </View>
 

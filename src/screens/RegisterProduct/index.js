@@ -103,20 +103,20 @@ class RegisterProduct extends React.Component {
 
         } = this.state;
 
-        console.warn(
-            'productType--->', productType,
-            'category--->', category,
-            'detailsarray---->', detailsArray,
-            'sub category---->>', subCategory,
-            'minimim order--->', minimumOrder,
-            'maximum price---->', maximumPrice,
-            'minimum price--->', minimumPrice,
-            'amount --->', amount,
-            'images--->>', images,
-            'city--->>', city,
-            'description--->', description,
-            'province--->', province,
-            'temp---------->>>', tempDefaultArray);
+        // console.warn(
+        //     'productType--->', productType,
+        //     'category--->', category,
+        //     'detailsarray---->', detailsArray,
+        //     'sub category---->>', subCategory,
+        //     'minimim order--->', minimumOrder,
+        //     'maximum price---->', maximumPrice,
+        //     'minimum price--->', minimumPrice,
+        //     'amount --->', amount,
+        //     'images--->>', images,
+        //     'city--->>', city,
+        //     'description--->', description,
+        //     'province--->', province,
+        //     'temp---------->>>', tempDefaultArray);
 
         detailsArray.forEach(element => {
             if (!this.state.description.includes(tempDefaultArray.find(item => item.name == element.itemKey).description))
@@ -142,6 +142,7 @@ class RegisterProduct extends React.Component {
                 productObject[`images_${index}`] = element
             });
 
+            console.log('my final product->', productObject)
             this.props.addNewProduct(productObject)
         })
     }
@@ -201,7 +202,7 @@ class RegisterProduct extends React.Component {
         let { stepNumber, successfullAlert } = this.state;
 
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
 
 
                 <View style={{
@@ -245,13 +246,17 @@ class RegisterProduct extends React.Component {
                 >
 
 
-                    <View style={{
-                        width: deviceWidth, marginTop: 25,
+                    {stepNumber > 0 && <View style={{
+                        borderBottomColor: '#00C569',
+                        borderBottomWidth: 2,
+                        paddingVertical: 10,
+                        width: deviceWidth, marginVertical: 5,
                         flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                     }}>
                         <View style={{
                             flexDirection: 'row-reverse',
-                            marginVertical: 10,
+                            marginVertical: 5,
+
                             alignItems: 'stretch',
                             alignContent: 'center', alignSelf: 'center',
                             width: deviceWidth - 80,
@@ -264,13 +269,13 @@ class RegisterProduct extends React.Component {
                                             style={{
                                                 textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
                                                 alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 20, height: 20 },
+                                                shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
                                                 shadowOpacity: 1.0,
-                                                elevation: 10,
+                                                elevation: 5,
                                                 textAlignVertical: 'center', borderColor: '#FFFFFF',
                                                 backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 30, height: 30, borderRadius: 15
+                                                width: 26, height: 26, borderRadius: 13
 
                                             }}
                                         >
@@ -278,7 +283,7 @@ class RegisterProduct extends React.Component {
                                         </Text>
                                         {index < stepsArray.length - 1 && <View
                                             style={{
-                                                height: 8,
+                                                height: 4,
                                                 flex: 1,
                                                 alignSelf: 'center',
                                                 backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
@@ -290,7 +295,7 @@ class RegisterProduct extends React.Component {
                             }
                             )}
                         </View>
-                    </View>
+                    </View>}
 
 
 
@@ -318,7 +323,8 @@ class RegisterProduct extends React.Component {
 }
 const styles = StyleSheet.create({
     stepsContainer: {
-        marginVertical: 30,
+        marginVertical: 5,
+        height: deviceHeight
     },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',

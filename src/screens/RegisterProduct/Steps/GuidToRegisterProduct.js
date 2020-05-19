@@ -75,7 +75,7 @@ class GuidToRegisterProduct extends React.Component {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
-                <View style={{ backgroundColor: 'white', height: deviceHeight * 0.55 }}>
+                <View style={{ backgroundColor: 'white', height: deviceHeight, alignItems: 'center', justifyContent: 'center' }}>
                     {userPermissionToRegisterProductError && <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>
                             {message}
@@ -84,7 +84,6 @@ class GuidToRegisterProduct extends React.Component {
                     }
                     <View
                         style={{
-                            paddingVertical: 10,
                             width: deviceWidth,
                             justifyContent: 'center',
                             alignItems: 'center'
@@ -171,7 +170,6 @@ class GuidToRegisterProduct extends React.Component {
                             rounded
                         >
                             <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
-                            <AntDesign name='plus' size={25} color='white' />
                         </Button>
                     </View>
                     <Spinner animating={userPermissionToRegisterProductLoading} />
