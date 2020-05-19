@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
         alignItems: 'center',
+        borderRadius: 5,
         alignSelf: 'flex-end',
         justifyContent: 'center'
     },
@@ -261,6 +262,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
+        borderRadius: 5,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
@@ -269,6 +271,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
+        borderRadius: 5,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

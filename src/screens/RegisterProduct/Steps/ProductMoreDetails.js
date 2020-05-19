@@ -339,7 +339,6 @@ class ProductMoreDetails extends Component {
                             style={styles.loginButton}
                             rounded
                         >
-                            <AntDesign name='arrowleft' size={25} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
                         </Button>
                         <Button
@@ -388,6 +387,7 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
+        borderRadius: 5,
         margin: 10,
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
@@ -408,6 +408,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
         color: 'white',
@@ -419,6 +420,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: 'white',
+        borderRadius: 5,
         width: deviceWidth * 0.4,
         color: '#00C569',
         alignItems: 'center',

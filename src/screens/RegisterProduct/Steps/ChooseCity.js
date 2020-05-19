@@ -34,9 +34,9 @@ class ChooseCity extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false) {
+        if (prevState.loaded == false && Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities.length && this.props.city) {
             const { province, city } = this.props;
-            this.setState({ province, city, loaded: true })
+            this.setState({ province, city: this.props.allCitiesObject.cities[city].city_name, loaded: true })
         }
     }
 
@@ -135,7 +135,7 @@ class ChooseCity extends React.Component {
                     <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                         <Button
                             onPress={() => this.onSubmit()}
-                            style={!city || !province.length ? styles.disableLoginButton : styles.loginButton}
+                            style={!(parseInt(city) + 1) || !province.length ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <AntDesign name='arrowleft' size={25} color='white' />
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
+        borderRadius: 5,
         margin: 10,
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         width: deviceWidth * 0.4,
+        borderRadius: 5,
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
@@ -199,6 +201,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',

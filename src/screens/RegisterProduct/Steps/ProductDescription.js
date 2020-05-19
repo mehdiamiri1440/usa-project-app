@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         width: deviceWidth * 0.4,
+        borderRadius: 5,
         backgroundColor: 'white',
         alignItems: 'center',
         alignSelf: 'flex-end',
@@ -157,6 +158,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
+        borderRadius: 5,
         backgroundColor: '#B5B5B5',
         alignSelf: 'flex-start',
         justifyContent: 'center'
@@ -165,6 +167,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',

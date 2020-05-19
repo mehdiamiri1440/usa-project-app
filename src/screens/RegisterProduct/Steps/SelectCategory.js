@@ -31,10 +31,10 @@ class SelectCategory extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false) {
+        if (prevState.loaded == false && this.props.subCategoriesList.length && this.props.subCategory) {
             const { category, subCategory, productType } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory, productType, loaded: true })
+            this.setState({ category, subCategory: this.props.subCategoriesList[subCategory].category_name, productType, loaded: true })
         }
     }
 
@@ -151,10 +151,10 @@ class SelectCategory extends Component {
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!this.state.category.length || !this.state.subCategory || !productType
+                    style={!this.state.category.length || !(parseInt(this.state.subCategory) + 1) || !productType
                         ? styles.disableLoginButton : styles.loginButton}
                     rounded
-                    disabled={!this.state.category.length || !this.state.subCategory || !productType}
+                    disabled={!this.state.category.length || !(parseInt(this.state.subCategory) + 1) || !productType}
                 >
                     <AntDesign name='arrowleft' size={25} color='white' />
                     <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
         width: '40%',
         color: 'white',
         alignItems: 'center',
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
+        borderRadius: 5,
         margin: 10,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,

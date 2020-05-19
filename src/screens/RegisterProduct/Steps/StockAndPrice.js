@@ -309,6 +309,7 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
+        borderRadius: 5,
         margin: 10,
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
@@ -319,6 +320,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
@@ -329,6 +331,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
