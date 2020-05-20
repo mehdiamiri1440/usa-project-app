@@ -126,7 +126,17 @@ export const isPersianName = (text, { typing = false, maxLength = MAX_NAME_LENGT
     'و',
     'ه',
     'ی',
-    'ء'
+    'ء',
+    '۰',
+    '۱',
+    '۲',
+    '۳',
+    '۴',
+    '۵',
+    '۶',
+    '۷',
+    '۸',
+    '۹',
   ];
   const arabicChars = ['ك', 'ة', 'ئ', 'أ', 'إ', 'ؤ', 'ي'];
 

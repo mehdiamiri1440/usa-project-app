@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Input, Item, Label } from 'native-base';
+import { Button, Input, Item, Label, InputGroup } from 'native-base';
 import { Dropdown } from 'react-native-material-dropdown';
 import OutlinedTextField from '../../../components/floatingInput';
 import { deviceWidth, validator, formatter } from '../../../utils';
@@ -16,6 +16,9 @@ class SelectCategory extends Component {
         this.state = {
             category: '',
             subCategory: '',
+            productTypeError: '',
+            categoryError: '',
+            subCategoryError: '',
             productType: '',
             isFocused: false,
             loaded: false
@@ -31,49 +34,77 @@ class SelectCategory extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.subCategoriesList.length && this.props.subCategory) {
+        if (prevState.loaded == false && this.props.subCategoriesList && this.props.subCategoriesList.length && this.props.subCategory) {
             const { category, subCategory, productType } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory: this.props.subCategoriesList[subCategory].category_name, productType, loaded: true })
+            this.setState({ category, subCategory: this.props.subCategoriesList[this.props.subCategoriesList.findIndex(item => item.id == subCategory)].category_name, productType, loaded: true }, () => {
+            })
         }
     }
 
     setCategory = (value, index) => {
         let { categoriesList = [] } = this.props;
         if (categoriesList.length) {
-            this.setState({ category: value })
+            this.setState({ category: value, categoryError: '' })
             this.props.fetchAllSubCategories(categoriesList[index].id)
         }
     };
 
     setSubCategory = (value) => {
-        this.setState({ subCategory: formatter.toStandard(this.props.subCategoriesList.findIndex(item => item.category_name == value)) }, () => {
+        this.setState({
+            subCategoryError: '', subCategory: value
+        }, () => {
         })
     };
 
 
     onProductTypeSubmit = (field) => {
-        if (validator.isPersianName(field))
-            this.setState(() => ({
-                productType: field,
-            }));
-        else
-            this.setState(() => ({
-                productType: ''
-            }));
+        this.setState(() => ({
+            productType: field,
+            productTypeError: ''
+        }));
     };
 
 
     onSubmit = () => {
 
         let { productType, category, subCategory } = this.state;
-        this.props.setProductType(productType, category, subCategory);
+        let productTypeError = '', categoryError = '', subCategoryError = '';
+
+
+        if (!productType) {
+            productTypeError = locales('titles.productTypeEmpty');
+        }
+        else if (!validator.isPersianName(productType)) {
+            productTypeError = locales('titles.productTypeInvalid');
+        }
+        else {
+            productTypeError = '';
+        }
+
+        if (!category) {
+            categoryError = locales('titles.categoryError');
+        }
+        else {
+            categoryError = '';
+        }
+
+        if (!subCategory) {
+            subCategoryError = locales('titles.subCategoryError');
+        }
+        else {
+            subCategoryError = '';
+        }
+        this.setState({ productTypeError, subCategoryError, categoryError })
+        if (!productTypeError && !categoryError && !subCategoryError) {
+            this.props.setProductType(productType, category, formatter.toStandard(this.props.subCategoriesList.find(item => item.category_name == subCategory).id));
+        }
     }
 
     render() {
 
         let { categoriesList, subCategoriesList } = this.props;
-        let { productType, category, subCategory } = this.state;
+        let { productType, category, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
 
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -98,6 +129,7 @@ class SelectCategory extends Component {
 
 
                 <Dropdown
+                    error={categoryError}
                     onChangeText={(value, index) => this.setCategory(value, index)}
                     label={locales('labels.selectCategory')}
                     data={categoriesList}
@@ -107,6 +139,7 @@ class SelectCategory extends Component {
                     }}
                 />
                 <Dropdown
+                    error={subCategoryError}
                     onChangeText={(value) => this.setSubCategory(value)}
                     label={locales('labels.selectSubCategory')}
                     data={subCategoriesList}
@@ -116,13 +149,11 @@ class SelectCategory extends Component {
                     }}
                 />
                 <View style={styles.textInputPadding}>
-                    <Item fixedLabel>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
-                            {locales('titles.enterYourProductType')}
-                        </Label>
-                    </Item>
-                    <Item error='' regular style={{
-                        borderColor: productType.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        {locales('titles.enterYourProductType')}
+                    </Label>
+                    <Item regular style={{
+                        borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
                     }}>
                         <Input
                             autoCapitalize='none'
@@ -135,6 +166,7 @@ class SelectCategory extends Component {
                             ref={this.productTypeRef}
                         />
                     </Item>
+                    {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
                     {/* <OutlinedTextField
                         baseColor={productType.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onProductTypeSubmit}
@@ -151,16 +183,15 @@ class SelectCategory extends Component {
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!this.state.category.length || !(parseInt(this.state.subCategory) + 1) || !productType
+                    style={!this.state.category.length || this.state.subCategory === '' || !productType || !validator.isPersianName(productType)
                         ? styles.disableLoginButton : styles.loginButton}
                     rounded
-                    disabled={!this.state.category.length || !(parseInt(this.state.subCategory) + 1) || !productType}
                 >
                     <AntDesign name='arrowleft' size={25} color='white' />
                     <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                 </Button>
 
-            </View>
+            </View >
         );
     }
 }
@@ -179,6 +210,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         borderRadius: 5,
+        backgroundColor: '#B5B5B5',
         width: '40%',
         color: 'white',
         alignItems: 'center',
