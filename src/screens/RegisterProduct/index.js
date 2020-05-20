@@ -20,7 +20,7 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 0,
+            stepNumber: 5,
             productType: '',
             category: '',
             detailsArray: [],
@@ -36,8 +36,16 @@ class RegisterProduct extends React.Component {
         }
     }
 
+    mainContainer = React.createRef();
+
+    componentDidUpdate() {
+        if (this.mainContainer && this.mainContainer.current)
+            this.mainContainer.current.scrollTo({ y: 0 });
+    }
 
     componentDidMount() {
+        if (this.mainContainer && this.mainContainer.current)
+            this.mainContainer.current.scrollTo({ y: 0 });
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.state.stepNumber > 1) {
                 this.setState({ stepNumber: this.state.stepNumber - 1 })
@@ -242,6 +250,7 @@ class RegisterProduct extends React.Component {
 
 
                 <ScrollView
+                    ref={this.mainContainer}
                     keyboardShouldPersistTaps='handled'
                 >
 

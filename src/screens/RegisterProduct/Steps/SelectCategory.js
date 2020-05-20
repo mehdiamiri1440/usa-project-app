@@ -37,7 +37,7 @@ class SelectCategory extends Component {
         if (prevState.loaded == false && this.props.subCategoriesList && this.props.subCategoriesList.length && this.props.subCategory) {
             const { category, subCategory, productType } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory: this.props.subCategoriesList[this.props.subCategoriesList.findIndex(item => item.id == subCategory)].category_name, productType, loaded: true }, () => {
+            this.setState({ category, subCategory: this.props.subCategoriesList.find(item => item.id == subCategory).category_name, productType, loaded: true }, () => {
             })
         }
     }

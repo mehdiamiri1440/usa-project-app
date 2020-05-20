@@ -36,7 +36,7 @@ class ChooseCity extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities.length && this.props.city) {
             const { province, city } = this.props;
-            this.setState({ province, city: this.props.allCitiesObject.cities[city].city_name, loaded: true })
+            this.setState({ province, city: this.props.allCitiesObject.cities.find(item => item.id == city).city_name, loaded: true })
         }
     }
 
@@ -52,7 +52,7 @@ class ChooseCity extends React.Component {
             this.setState({ errorFlag: true })
         }
         else {
-            this.props.setCityAndProvice(city, province);
+            this.props.setCityAndProvice(this.props.allCitiesObject.cities.find(item => item.city_name == city).id, province);
         }
     };
 
@@ -65,7 +65,7 @@ class ChooseCity extends React.Component {
     };
 
     setCity = (value) => {
-        this.setState({ city: this.props.allCitiesObject.cities.findIndex(item => item.city_name == value) })
+        this.setState({ city: value })
     };
 
     render() {
@@ -135,7 +135,7 @@ class ChooseCity extends React.Component {
                     <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                         <Button
                             onPress={() => this.onSubmit()}
-                            style={!(parseInt(city) + 1) || !province.length ? styles.disableLoginButton : styles.loginButton}
+                            style={!city || !province.length ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <AntDesign name='arrowleft' size={25} color='white' />

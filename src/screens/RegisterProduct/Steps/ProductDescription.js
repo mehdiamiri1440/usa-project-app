@@ -1,7 +1,7 @@
 // import react-native element
 import React, { Component } from 'react';
 import { Button, Textarea, Label } from 'native-base';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Linking } from "react-native";
 import OutlinedTextField from '../../../components/floatingInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -87,7 +87,13 @@ class ProductDecription extends Component {
                         }}
                     >
                         با کلیک روی دکمه ثبت نهایی موافقت خود را  با <Text
-                            onPress={() => this.props.navigation.navigate('Terms')}
+                            onPress={() => {
+                                return Linking.canOpenURL('https://www.buskool.com/privacy-and-policy').then(supported => {
+                                    if (supported) {
+                                        Linking.openURL('https://www.buskool.com/privacy-and-policy');
+                                    }
+                                });
+                            }}
                             style={{ color: '#00C569' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
                     </Text>
 

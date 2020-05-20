@@ -285,6 +285,7 @@ class ProductMoreDetails extends Component {
 
                             }}>
                                 <Item error={detail.error} regular style={{
+                                    height: 55,
                                     borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                 }}>
                                     <Input
