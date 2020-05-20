@@ -23,6 +23,24 @@ export const toStandard = text => {
   return result;
 };
 
+export const toPersianDigits = text => {
+  if (!text) return text;
+
+  let result = String(text).trim();
+  result = result.split('0').join('۰');
+  result = result.split('1').join('۱');
+  result = result.split('2').join('۲');
+  result = result.split('3').join('۳');
+  result = result.split('4').join('۴');
+  result = result.split('5').join('۵');
+  result = result.split('6').join('۶');
+  result = result.split('7').join('۷');
+  result = result.split('8').join('۸');
+  result = result.split('9').join('۹');
+
+  return result;
+};
+
 export const numberWithCommas = number => {
   if (number || typeof number === "number")
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
