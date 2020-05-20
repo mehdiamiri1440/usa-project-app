@@ -17,6 +17,8 @@ class ChooseCity extends React.Component {
             errorFlag: false,
             city: '',
             index: -1,
+            provinceError: '',
+            cityError: '',
             loaded: false
         }
     }
@@ -48,10 +50,26 @@ class ChooseCity extends React.Component {
 
     onSubmit = () => {
         let { city, province } = this.state;
-        if (!city || !province.length) {
-            this.setState({ errorFlag: true })
+
+        let provinceError = '', cityError = '';
+
+        if (!province) {
+            provinceError = locales('errors.fieldNeeded', { fieldName: locales('labels.province') });
         }
         else {
+            provinceError = '';
+        }
+
+        if (!city) {
+            cityError = locales('errors.fieldNeeded', { fieldName: locales('labels.city') });
+        }
+        else {
+            cityError = '';
+        }
+
+        this.setState({ provinceError, cityError });
+
+        if (!cityError && !provinceError) {
             this.props.setCityAndProvice(this.props.allCitiesObject.cities.find(item => item.city_name == city).id, province);
         }
     };
@@ -59,13 +77,13 @@ class ChooseCity extends React.Component {
     setProvince = (value, index) => {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value })
+            this.setState({ province: value, provinceError: '' })
             this.props.fetchAllProvinces(provinces[index].id)
         }
     };
 
     setCity = (value) => {
-        this.setState({ city: value })
+        this.setState({ city: value, cityError: '' })
     };
 
     render() {
@@ -83,7 +101,9 @@ class ChooseCity extends React.Component {
 
         let {
             city,
-            province
+            province,
+            provinceError,
+            cityError
         } = this.state;
 
         let { provinces = [] } = allProvincesObject;
@@ -109,14 +129,11 @@ class ChooseCity extends React.Component {
                             </Text>
                         </View>
                     }
-                    {this.state.errorFlag && <View style={styles.loginFailedContainer}>
-                        <Text style={styles.loginFailedText}>{locales('titles.cityAndProvinceRequired')}</Text>
-                    </View>}
-                    {/* <View style={{ flexDirection: 'column', width: deviceWidth * 0.4 }}> */}
                     <Dropdown
                         onChangeText={(value, index) => this.setProvince(value, index)}
                         label={locales('labels.selectProvince')}
                         data={provinces}
+                        error={provinceError}
                         value={province}
                         containerStyle={{
                             marginVertical: 20,
@@ -125,6 +142,7 @@ class ChooseCity extends React.Component {
                     />
                     <Dropdown
                         value={city}
+                        error={cityError}
                         onChangeText={(value) => this.setCity(value)}
                         label={locales('labels.selectCity')}
                         data={cities}

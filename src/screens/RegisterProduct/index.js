@@ -20,7 +20,7 @@ class RegisterProduct extends React.Component {
         super(props)
         this.state = {
             successfullAlert: false,
-            stepNumber: 5,
+            stepNumber: 0,
             productType: '',
             category: '',
             detailsArray: [],

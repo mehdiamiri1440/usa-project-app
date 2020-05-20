@@ -18,6 +18,7 @@ class ProductImages extends Component {
         super(props);
         this.state = {
             images: [],
+            errorFlag: false,
             loaded: false
         }
     }
@@ -36,7 +37,8 @@ class ProductImages extends Component {
 
     onActionSheetClicked = (buttonIndex, index) => {
         switch (buttonIndex) {
-            case 0:
+            case 0: {
+                this.setState({ errorFlag: false });
                 ImagePicker.openCamera({
                     width: 300,
                     height: 400,
@@ -55,7 +57,9 @@ class ProductImages extends Component {
                     )
                 });
                 break;
-            case 1:
+            }
+            case 1: {
+                this.setState({ errorFlag: false });
                 ImagePicker.openPicker({
                     width: 300,
                     height: 400,
@@ -72,6 +76,7 @@ class ProductImages extends Component {
                     )
                 });
                 break;
+            }
             default:
                 break;
         }
@@ -82,7 +87,12 @@ class ProductImages extends Component {
 
 
     onSubmit = () => {
-        this.props.setProductImages(this.state.images)
+        if (!this.state.images.length) {
+            this.setState({ errorFlag: true })
+        }
+        else {
+            this.props.setProductImages(this.state.images)
+        }
     }
 
 
@@ -126,7 +136,9 @@ class ProductImages extends Component {
                         {locales('labels.uploadProductImages')}
                     </Text>
 
-
+                    {this.state.errorFlag && <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>{locales('errors.fieldNeeded', { fieldName: locales('titles.chooseImage') })}</Text>
+                    </View>}
                     <View style={{
                         width: deviceWidth, flexDirection: 'row-reverse',
                         flexWrap: 'wrap'

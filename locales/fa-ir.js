@@ -11,6 +11,8 @@ export default {
 
 
     "labels.man": "آقا",
+    'labels.province': 'استان',
+    'labels.city': 'شهر',
     "labels.selectProvince": "استان را انتخاب کنید",
     "labels.buyer": "خریدار",
     'labels.noContactFound': 'مخاطبی یافت نشد',
@@ -114,6 +116,7 @@ export default {
     'titles.productType': 'نوع محصول',
     'titles.stockAndPrice': 'موجودی و قیمت محصول',
     'titles.finalSubmit': 'ثبت نهایی',
+    'titles.chooseImage': 'انتخاب عکس',
     'titles.amountNeeded': 'میزان نیازمندی',
     'titles.amountWithExample': 'میزان موجودی (کیلوگرم) :مثلا 1000',
     'titles.yourActiveRegistration': 'نوع عضویت فعال شما',
