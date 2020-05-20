@@ -75,7 +75,7 @@ class SelectCategory extends Component {
         if (!productType) {
             productTypeError = locales('titles.productTypeEmpty');
         }
-        else if (!validator.isPersianName(productType)) {
+        else if (!validator.isPersianNameWithDigits(productType)) {
             productTypeError = locales('titles.productTypeInvalid');
         }
         else {
@@ -153,7 +153,7 @@ class SelectCategory extends Component {
                         {locales('titles.enterYourProductType')}
                     </Label>
                     <Item regular style={{
-                        borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
+                        borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
                     }}>
                         <Input
                             autoCapitalize='none'
@@ -183,7 +183,7 @@ class SelectCategory extends Component {
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!this.state.category.length || this.state.subCategory === '' || !productType || !validator.isPersianName(productType)
+                    style={!this.state.category.length || this.state.subCategory === '' || !productType || !validator.isPersianNameWithDigits(productType)
                         ? styles.disableLoginButton : styles.loginButton}
                     rounded
                 >

@@ -126,17 +126,7 @@ export const isPersianName = (text, { typing = false, maxLength = MAX_NAME_LENGT
     'و',
     'ه',
     'ی',
-    'ء',
-    '۰',
-    '۱',
-    '۲',
-    '۳',
-    '۴',
-    '۵',
-    '۶',
-    '۷',
-    '۸',
-    '۹',
+    'ء'
   ];
   const arabicChars = ['ك', 'ة', 'ئ', 'أ', 'إ', 'ؤ', 'ي'];
 
@@ -156,6 +146,86 @@ export const isPersianName = (text, { typing = false, maxLength = MAX_NAME_LENGT
 
   return isValid;
 };
+
+
+
+export const isPersianNameWithDigits = (text, { typing = false, maxLength = MAX_NAME_LENGTH } = {}) => {
+  if (!text) {
+    return false;
+  }
+
+  if (text.length > maxLength) {
+    return false;
+  }
+
+  let persianChars = [
+    ' ',
+    'آ',
+    'ا',
+    'ب',
+    'پ',
+    'ت',
+    'ث',
+    'ج',
+    'چ',
+    'ح',
+    'خ',
+    'د',
+    'ذ',
+    'ر',
+    'ز',
+    'ژ',
+    'س',
+    'ش',
+    'ص',
+    'ض',
+    'ط',
+    'ظ',
+    'ع',
+    'غ',
+    'ف',
+    'ڤ',
+    'ق',
+    'ک',
+    'گ',
+    'ل',
+    'م',
+    'ن',
+    'و',
+    'ه',
+    'ی',
+    'ء',
+    '۰',
+    '۱',
+    '۲',
+    '۳',
+    '۴',
+    '۵',
+    '۶',
+    '۷',
+    '۸',
+    '۹'
+  ];
+  const arabicChars = ['ك', 'ة', 'ئ', 'أ', 'إ', 'ؤ', 'ي'];
+
+  if (typing === true) {
+    persianChars = [...persianChars, ...arabicChars];
+  }
+
+  let isValid = true;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (persianChars.indexOf(char) < 0) {
+      isValid = false;
+      break;
+    }
+  }
+
+  return isValid;
+};
+
+
 
 export const hasMaxLength = (text, { maxLength = MAX_NAME_LENGTH } = {}) => {
   if (!text) {
