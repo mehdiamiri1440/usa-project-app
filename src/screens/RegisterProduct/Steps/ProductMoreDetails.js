@@ -1,11 +1,13 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button, Item, Input, Label } from 'native-base';
+import { Button, Item, Input, Label, Picker } from 'native-base';
 import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from 'react-native-material-dropdown';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import RNPickerSelect from 'react-native-picker-select';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { TextField } from '../../../components/floatingInput';
 import { dataGenerator, validator } from '../../../utils';
@@ -125,7 +127,7 @@ class ProductMoreDetails extends Component {
             isDescriptionFocused: false
         }
     }
-
+    pickerRef = React.createRef();
     onSubmit = () => {
         let { detailsArray } = this.state;
         if (detailsArray.some(item => item.itemKey && !item.itemValue)) {
@@ -145,22 +147,31 @@ class ProductMoreDetails extends Component {
 
     deleteRow = index => {
         let selectedIndex = tempDefaults.findIndex(item => item.name == this.state.detailsArray[index].itemKey);
+        console.log(this.state.detailsArray)
         if (selectedIndex > -1) {
             this.setState(state => {
-                state.detailsArray.splice(index, 1);
+                state.detailsArray = state.detailsArray.filter((item, ind) => index != ind);
                 state.defaultFieldsOptions.splice(index, 0, tempDefaults[selectedIndex]);
                 return '';
             });
         }
     }
 
-    setItemKey = (value, dropDownIndex, index) => {
-        this.setState(state => {
-            state.detailsArray[index].itemKey = value;
-            state.defaultFieldsOptions = state.defaultFieldsOptions.filter((item, ind) => dropDownIndex !== ind);
-            return '';
-        })
+    setItemKey = (value, index) => {
+
+        console.log('here')
+        if (!!value) {
+            this.pickerRef.current.value = value
+            this.setState(state => {
+                state.detailsArray[index].itemKey = value;
+
+                state.defaultFieldsOptions = state.defaultFieldsOptions.filter(item => item.name != value)
+                return '';
+            })
+        }
+
     };
+
 
     onDescriptionSubmit = (index, value) => {
         if (validator.isValidDescription(value) && value.length) {
@@ -194,11 +205,10 @@ class ProductMoreDetails extends Component {
 
     render() {
         let { description, detailsArray, defaultFieldsOptions } = this.state;
-
-        defaultFieldsOptions = defaultFieldsOptions.map(item => ({ ...item, value: item.name }))
+        // defaultFieldsOptions = defaultFieldsOptions.map(item => ({ ...item, label: item.name, value: item.name }))
 
         return (
-            <ScrollView>
+            <ScrollView style={{ height: deviceHeight * 0.5 }}>
                 <View
                     style={{ backgroundColor: 'white' }}>
                     <Text
@@ -214,7 +224,7 @@ class ProductMoreDetails extends Component {
                     </Text>
                     <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
 
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
                             <Text
                                 style={{
                                     color: 'red',
@@ -256,20 +266,54 @@ class ProductMoreDetails extends Component {
                     </View>
 
                     {detailsArray.map((detail, index) => (
-                        <View
-                            key={detail.keyId}
-                            style={{ flexDirection: 'row-reverse', paddingVertical: 20 }}>
-                            <TouchableOpacity
-                                onPress={() => this.deleteRow(index)}
+                        <>
+                            <View
+                                key={detail.keyId}
                                 style={{
-                                    paddingRight: 10,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    height: 80
+                                    flexDirection: 'row-reverse', paddingBottom: 0,
+                                    justifyContent: 'space-between', alignItems: 'center', padding: 5
                                 }}>
-                                <FontAwesome name='trash' color='red' size={25} />
-                            </TouchableOpacity>
-                            <Dropdown
+                                <TouchableOpacity
+                                    onPress={() => this.deleteRow(index)}
+                                    style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: 80
+                                    }}>
+                                    <FontAwesome name='trash' color='red' size={25} />
+                                </TouchableOpacity>
+
+                                <View style={styles.labelInputPadding}>
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.45,
+                                            height: 55,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: detail.error ? '#00C569' : detail.error ? '#D50000' : '#a8a8a8'
+                                        }}
+                                    >
+                                        {console.log('det', detail.itemKey)}
+                                        <RNPickerSelect
+
+                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={(value) => this.setItemKey(value, index)}
+                                            style={styles}
+                                            onOpen={() => this.pickerRef.current.value = null}
+                                            ref={this.pickerRef}
+                                            placeholder={{
+                                                label: detail.itemKey || locales('titles.selectOne'),
+                                                fontFamily: 'Vazir-Bold-FD',
+
+                                            }}
+                                            items={[...defaultFieldsOptions.map(item => ({
+                                                label: item.name, value: detail.itemKey || item.name
+                                            }))]}
+                                        />
+                                    </Item>
+                                </View>
+                                {/* <Dropdown
                                 error={detail.error}
                                 onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
                                 label={locales('titles.selectOne')}
@@ -279,29 +323,29 @@ class ProductMoreDetails extends Component {
                                     paddingHorizontal: 20,
                                     width: 195
                                 }}
-                            />
-                            <View style={{
-                                width: 170,
+                            /> */}
+                                <View style={{
+                                    width: 170,
 
-                            }}>
-                                <Item error={detail.error} regular style={{
-                                    height: 55,
-                                    borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                 }}>
-                                    <Input
-                                        disabled={!detail.itemKey}
-                                        autoCapitalize='none'
-                                        autoCorrect={false}
-                                        autoCompleteType='off'
-                                        style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
-                                        onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                        placeholder={locales('titles.writeDescription')}
+                                    <Item error={detail.error} regular style={{
+                                        height: 55,
+                                        borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                    }}>
+                                        <Input
+                                            disabled={!detail.itemKey}
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            autoCompleteType='off'
+                                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                                            onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                            placeholder={locales('titles.writeDescription')}
 
 
-                                    />
-                                </Item>
-                            </View>
-                            {/* <TextField
+                                        />
+                                    </Item>
+                                </View>
+                                {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
                                 onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                 error={detail.error}
@@ -312,7 +356,9 @@ class ProductMoreDetails extends Component {
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
                             /> */}
-                        </View>
+                            </View>
+                            {!!detail.error && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                        </>
                     )
                     )}
 
@@ -390,7 +436,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         borderRadius: 5,
         margin: 10,
-        width: deviceWidth * 0.4,
+        width: deviceWidth * 0.45,
         backgroundColor: 'white',
         alignItems: 'center',
         alignSelf: 'flex-end',
@@ -399,7 +445,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
-        width: deviceWidth * 0.4,
+        width: deviceWidth * 0.45,
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
@@ -411,7 +457,7 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#00C569',
-        width: deviceWidth * 0.4,
+        width: deviceWidth * 0.45,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',
@@ -422,7 +468,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        width: deviceWidth * 0.4,
+        width: deviceWidth * 0.45,
         color: '#00C569',
         alignItems: 'center',
         alignSelf: 'flex-start',
@@ -470,6 +516,40 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'right',
         color: '#7E7E7E'
+    },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'Vazir',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.45,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
     }
 });
 

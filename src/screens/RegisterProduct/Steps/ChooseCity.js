@@ -2,8 +2,10 @@ import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { Dropdown } from 'react-native-material-dropdown';
-import { Button } from 'native-base'
+import { Button, Item, Label } from 'native-base'
 import { connect } from 'react-redux'
+import RNPickerSelect from 'react-native-picker-select';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import * as locationActions from '../../../redux/locations/actions'
 import Spin from '../../../components/loading/loading'
@@ -38,7 +40,7 @@ class ChooseCity extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities.length && this.props.city) {
             const { province, city } = this.props;
-            this.setState({ province, city: this.props.allCitiesObject.cities.find(item => item.id == city).city_name, loaded: true })
+            this.setState({ province, city, loaded: true })
         }
     }
 
@@ -70,7 +72,7 @@ class ChooseCity extends React.Component {
         this.setState({ provinceError, cityError });
 
         if (!cityError && !provinceError) {
-            this.props.setCityAndProvice(this.props.allCitiesObject.cities.find(item => item.city_name == city).id, province);
+            this.props.setCityAndProvice(city, province);
         }
     };
 
@@ -78,12 +80,13 @@ class ChooseCity extends React.Component {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
             this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces[index].id)
+            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
         }
     };
 
     setCity = (value) => {
-        this.setState({ city: value, cityError: '' })
+        if (!!value)
+            this.setState({ city: value, cityError: '' })
     };
 
     render() {
@@ -129,7 +132,36 @@ class ChooseCity extends React.Component {
                             </Text>
                         </View>
                     }
-                    <Dropdown
+                    <View style={styles.labelInputPadding}>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('labels.province')}
+                        </Label>
+                        <Item regular
+                            style={{
+                                width: deviceWidth * 0.9,
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
+                            }}
+                        >
+                            <RNPickerSelect
+                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={this.setProvince}
+                                style={styles}
+                                value={province}
+                                placeholder={{
+                                    label: locales('labels.selectProvince'),
+                                    fontFamily: 'Vazir-Bold-FD',
+                                }}
+                                items={[...provinces.map(item => ({
+                                    label: item.province_name, value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+                    </View>
+                    {/* <Dropdown
                         onChangeText={(value, index) => this.setProvince(value, index)}
                         label={locales('labels.selectProvince')}
                         data={provinces}
@@ -139,8 +171,38 @@ class ChooseCity extends React.Component {
                             marginVertical: 20,
                             paddingHorizontal: 20
                         }}
-                    />
-                    <Dropdown
+                    /> */}
+
+                    <View style={styles.labelInputPadding}>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('labels.city')}
+                        </Label>
+                        <Item regular
+                            style={{
+                                width: deviceWidth * 0.9,
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
+                            }}
+                        >
+                            <RNPickerSelect
+                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={this.setCity}
+                                style={styles}
+                                value={city}
+                                placeholder={{
+                                    label: locales('labels.selectCity'),
+                                    fontFamily: 'Vazir-Bold-FD',
+                                }}
+                                items={[...provinces.map(item => ({
+                                    label: item.province_name, value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{cityError}</Label>}
+                    </View>
+                    {/* <Dropdown
                         value={city}
                         error={cityError}
                         onChangeText={(value) => this.setCity(value)}
@@ -149,11 +211,11 @@ class ChooseCity extends React.Component {
                         containerStyle={{
                             paddingHorizontal: 20
                         }}
-                    />
+                    /> */}
                     <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                         <Button
                             onPress={() => this.onSubmit()}
-                            style={!city || !province.length ? styles.disableLoginButton : styles.loginButton}
+                            style={!city || !province ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <AntDesign name='arrowleft' size={25} color='white' />
@@ -269,6 +331,44 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'right',
         color: '#7E7E7E'
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'Vazir',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.9,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
     }
 });
 const mapStateToProps = state => {

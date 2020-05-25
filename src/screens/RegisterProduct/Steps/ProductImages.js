@@ -12,6 +12,7 @@ import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 
 class ProductImages extends Component {
     constructor(props) {
@@ -160,6 +161,21 @@ class ProductImages extends Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
+                            <TouchableOpacity
+                                onPress={() => this.chooseProductImage(index)}
+                                style={{
+                                    position: 'absolute',
+                                    opacity: 0.5,
+                                    width: 150,
+                                    zIndex: 999,
+                                    top: 0,
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    backgroundColor: 'black',
+                                }}
+                            >
+                                <FontAwesome name='pencil' size={25} color='white' />
+                            </TouchableOpacity>
                             <Image
                                 resizeMode="cover"
                                 style={{
@@ -181,7 +197,7 @@ class ProductImages extends Component {
                                     backgroundColor: 'black',
                                 }}
                             >
-                                <FontAwesome name='trash' size={25} color='red' />
+                                <FontAwesome name='trash' size={25} color='white' />
                             </TouchableOpacity>
                         </TouchableOpacity>
                         ) : null}

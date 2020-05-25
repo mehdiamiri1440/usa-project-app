@@ -187,7 +187,7 @@ class ContactsList extends React.Component {
                                                 data={contactsList}
                                                 renderItem={({ item, index, separators }) => (
                                                     <TouchableOpacity
-                                                        onPress={() => this.setState({ modalFlag: true, selectedContact: item })}
+                                                        onPress={() => this.setState({ modalFlag: true, selectedContact: item, searchText: '' })}
                                                         key={item.contact_id}
                                                         style={{
                                                             borderBottomColor: '#DDDDDD', paddingVertical: 12,

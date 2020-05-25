@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { Button, Input, Item, Label, InputGroup } from 'native-base';
+import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 import { Dropdown } from 'react-native-material-dropdown';
 import OutlinedTextField from '../../../components/floatingInput';
 import { deviceWidth, validator, formatter } from '../../../utils';
+import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
 
 
@@ -37,24 +39,25 @@ class SelectCategory extends Component {
         if (prevState.loaded == false && this.props.subCategoriesList && this.props.subCategoriesList.length && this.props.subCategory) {
             const { category, subCategory, productType } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory: this.props.subCategoriesList.find(item => item.id == subCategory).category_name, productType, loaded: true }, () => {
+            this.setState({ category, subCategory, productType, loaded: true }, () => {
             })
         }
     }
 
-    setCategory = (value, index) => {
+    setCategory = (value) => {
         let { categoriesList = [] } = this.props;
-        if (categoriesList.length) {
+        if (categoriesList.length && value) {
             this.setState({ category: value, categoryError: '' })
-            this.props.fetchAllSubCategories(categoriesList[index].id)
+            this.props.fetchAllSubCategories(categoriesList.find(item => item.id == value).id)
         }
     };
 
     setSubCategory = (value) => {
-        this.setState({
-            subCategoryError: '', subCategory: value
-        }, () => {
-        })
+        if (!!value)
+            this.setState({
+                subCategoryError: '', subCategory: value
+            }, () => {
+            })
     };
 
 
@@ -97,7 +100,7 @@ class SelectCategory extends Component {
         }
         this.setState({ productTypeError, subCategoryError, categoryError })
         if (!productTypeError && !categoryError && !subCategoryError) {
-            this.props.setProductType(productType, category, formatter.toStandard(this.props.subCategoriesList.find(item => item.category_name == subCategory).id));
+            this.props.setProductType(productType, category, subCategory);
         }
     }
 
@@ -127,8 +130,63 @@ class SelectCategory extends Component {
                     {locales('labels.selectProductType')}
                 </Text>
 
+                <View style={styles.labelInputPadding}>
+                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        {locales('labels.category')}
+                    </Label>
+                    <Item regular
+                        style={{
+                            width: deviceWidth * 0.9,
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            borderColor: category ? '#00C569' : categoryError ? '#D50000' : '#a8a8a8'
+                        }}
+                    >
+                        <RNPickerSelect
+                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={this.setCategory}
+                            style={styles}
+                            value={category}
+                            placeholder={{
+                                label: locales('labels.selectCategory'),
+                                fontFamily: 'Vazir-Bold-FD',
+                            }}
+                            items={[...categoriesList.map(item => ({
+                                label: item.category_name, value: item.id
+                            }))]}
+                        />
+                    </Item>
+                    {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
+                </View>
+                {/* <Item regular
+                    style={styles}
+                    useNativeAndroidPickerStyle={false}
+                >
+                    <Picker
+                        useNativeAndroidPickerStyle={false}
+                        style={styles}
+                        mode="dialog"
+                        iosIcon={<AntDesign name='plus' size={25} color='#00C569' />}
+                        selectedValue={category}
+                        onValueChange={this.setCategory}
 
-                <Dropdown
+                    >
+                        <Picker.Item
+                            useNativeAndroidPickerStyle={false}
+                            style={styles} label={locales('labels.selectCategory')} value='' />
+                        {categoriesList.map((item, index) => {
+                            return (
+                                <Picker.Item
+                                    label={item.category_name}
+                                    value={item.id}
+                                    key={index}
+                                />
+                            )
+                        })}
+                    </Picker>
+                </Item> */}
+                {/* <Dropdown
                     error={categoryError}
                     onChangeText={(value, index) => this.setCategory(value, index)}
                     label={locales('labels.selectCategory')}
@@ -137,8 +195,37 @@ class SelectCategory extends Component {
                     containerStyle={{
                         paddingHorizontal: 20
                     }}
-                />
-                <Dropdown
+                /> */}
+                <View style={styles.labelInputPadding}>
+                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        {locales('labels.subCategory')}
+                    </Label>
+                    <Item regular
+                        style={{
+                            width: deviceWidth * 0.9,
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
+                        }}
+                    >
+                        <RNPickerSelect
+                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={this.setSubCategory}
+                            style={styles}
+                            value={subCategory}
+                            placeholder={{
+                                label: locales('labels.selectSubCategory'),
+                                fontFamily: 'Vazir-Bold-FD',
+                            }}
+                            items={[...subCategoriesList.map(item => ({
+                                label: item.category_name, value: item.id
+                            }))]}
+                        />
+                    </Item>
+                    {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
+                </View>
+                {/* <Dropdown
                     error={subCategoryError}
                     onChangeText={(value) => this.setSubCategory(value)}
                     label={locales('labels.selectSubCategory')}
@@ -147,8 +234,8 @@ class SelectCategory extends Component {
                     containerStyle={{
                         paddingHorizontal: 20
                     }}
-                />
-                <View style={styles.textInputPadding}>
+                /> */}
+                <View style={styles.labelInputPadding}>
                     <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
@@ -183,7 +270,7 @@ class SelectCategory extends Component {
                 </View>
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={!this.state.category.length || this.state.subCategory === '' || !productType || !validator.isPersianNameWithDigits(productType)
+                    style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)
                         ? styles.disableLoginButton : styles.loginButton}
                     rounded
                 >
@@ -228,7 +315,47 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'Vazir',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.9,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
+    }
 })
+
+
 
 const mapStateToProps = (state) => {
     return {
@@ -256,5 +383,13 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCategory);
+
+
+
+
+
+
+
+
 
 

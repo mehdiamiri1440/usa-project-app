@@ -28,6 +28,8 @@ export default {
     'labels.boxing': 'بسته‌بندی',
     'labels.8kMotherBox': 'کارتن مادر 8 کیلویی',
     'labels.selectSubCategory': 'انتخاب زیر دسته‌بندی',
+    'labels.subCategory': 'زیردسته‌بندی',
+    'labels.category': 'دسته‌بندی محصول',
     'labels.promoteRegistration': 'ارتقا عضویت',
     'labels.completeCase': 'این مورد را تکمیل کنید',
     'labels.incorrectFormat': 'فرمت نادرست است',

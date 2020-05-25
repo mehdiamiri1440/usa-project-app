@@ -42,6 +42,9 @@ class GuidToRegisterProduct extends React.Component {
 
         return (
             <>
+
+
+
                 <Portal>
                     <Dialog
                         visible={showModal}
@@ -75,13 +78,22 @@ class GuidToRegisterProduct extends React.Component {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
-                <View style={{ backgroundColor: 'white', height: deviceHeight, alignItems: 'center', justifyContent: 'center' }}>
+
+
+                <View style={{ width: deviceWidth, paddingVertical: 40, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                        {locales('labels.registerProduct')}
+                    </Text>
+                </View>
+                <View style={{ backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                     {userPermissionToRegisterProductError && <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>
                             {message}
                         </Text>
                     </View>
                     }
+
+
                     <View
                         style={{
                             width: deviceWidth,
