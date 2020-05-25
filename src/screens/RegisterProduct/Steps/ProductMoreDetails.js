@@ -102,6 +102,7 @@ class ProductMoreDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            deletedIndexes:[],
             defaultFieldsOptions: [...tempDefaults],
             description: '',
             detailsArray: [
@@ -124,7 +125,8 @@ class ProductMoreDetails extends Component {
                     keyId: dataGenerator.generateKey()
                 },
             ],
-            isDescriptionFocused: false
+            isDescriptionFocused: false,
+            deletedRows:[]
         }
     }
     pickerRef = React.createRef();
@@ -146,29 +148,44 @@ class ProductMoreDetails extends Component {
 
 
     deleteRow = index => {
-        let selectedIndex = tempDefaults.findIndex(item => item.name == this.state.detailsArray[index].itemKey);
-        console.log(this.state.detailsArray)
-        if (selectedIndex > -1) {
+        let selectedIndex = this.state.defaultFieldsOptions.findIndex(item => item.name == this.state.detailsArray[index].itemKey);
+console.log('selssssssssssected',selectedIndex)
+if(selectedIndex>-1){
             this.setState(state => {
-                state.detailsArray = state.detailsArray.filter((item, ind) => index != ind);
-                state.defaultFieldsOptions.splice(index, 0, tempDefaults[selectedIndex]);
+                state.deletedRows.push(index);
+                state.detailsArray[index].itemKey='';
+                state.detailsArray[index].itemValue='';
+                state.detailsArray[index].error='';
+state.defaultFieldsOptions[selectedIndex].alreadySelected=false;
+state.defaultFieldsOptions[selectedIndex].selectedIndex=null;
                 return '';
             });
-        }
+    }
     }
 
-    setItemKey = (value, index) => {
-
-        console.log('here')
-        if (!!value) {
-            this.pickerRef.current.value = value
-            this.setState(state => {
-                state.detailsArray[index].itemKey = value;
-
-                state.defaultFieldsOptions = state.defaultFieldsOptions.filter(item => item.name != value)
-                return '';
-            })
-        }
+    setItemKey = (value, dropIndex,index) => {
+const selectedIndex=this.state.defaultFieldsOptions.findIndex(item=>item.name==value);
+if(this.state.detailsArray[index].itemKey.length){
+    this.setState(state=>{
+        const deletedIndex=state.defaultFieldsOptions.findIndex(item=>item.name==state.detailsArray[index].itemKey);
+        let inDeleteds=state.deletedIndexes.indexOf(deletedIndex);
+        state.deletedIndexes.splice(inDeleteds,1);
+        return'';
+    })
+}
+this.setState(state=>{
+    this.state.detailsArray[index].itemKey=value;
+    state.deletedIndexes.push(selectedIndex);
+    state.defaultFieldsOptions[selectedIndex].alreadySelected=true;
+    state.defaultFieldsOptions[selectedIndex].selectedIndex=selectedIndex;
+state.defaultFieldsOptions.forEach(item=>{
+if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
+    item.alreadySelected=false;
+    item.selectedIndex=null;
+}
+})
+    return '';
+})
 
     };
 
@@ -205,7 +222,6 @@ class ProductMoreDetails extends Component {
 
     render() {
         let { description, detailsArray, defaultFieldsOptions } = this.state;
-        // defaultFieldsOptions = defaultFieldsOptions.map(item => ({ ...item, label: item.name, value: item.name }))
 
         return (
             <ScrollView style={{ height: deviceHeight * 0.5 }}>
@@ -267,7 +283,7 @@ class ProductMoreDetails extends Component {
 
                     {detailsArray.map((detail, index) => (
                         <>
-                            <View
+                            {(this.state.deletedRows.indexOf(index) <0 ||!this.state.deletedRows.length)&&<View
                                 key={detail.keyId}
                                 style={{
                                     flexDirection: 'row-reverse', paddingBottom: 0,
@@ -290,26 +306,23 @@ class ProductMoreDetails extends Component {
                                             height: 55,
                                             borderRadius: 5,
                                             alignSelf: 'center',
-                                            borderColor: detail.error ? '#00C569' : detail.error ? '#D50000' : '#a8a8a8'
+                                            borderColor: detail.error&&!detail.error.length ? '#00C569' : detail.error&&detail.error.length ? '#D50000' : '#a8a8a8'
                                         }}
                                     >
-                                        {console.log('det', detail.itemKey)}
                                         <RNPickerSelect
-
                                             Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
                                             useNativeAndroidPickerStyle={false}
-                                            onValueChange={(value) => this.setItemKey(value, index)}
+                                            onValueChange={(value,dropIndex) => this.setItemKey(value, dropIndex,index)}
                                             style={styles}
-                                            onOpen={() => this.pickerRef.current.value = null}
                                             ref={this.pickerRef}
                                             placeholder={{
-                                                label: detail.itemKey || locales('titles.selectOne'),
+                                                label: locales('titles.selectOne'),
                                                 fontFamily: 'Vazir-Bold-FD',
-
+                                                value:detail.itemKey
                                             }}
-                                            items={[...defaultFieldsOptions.map(item => ({
-                                                label: item.name, value: detail.itemKey || item.name
-                                            }))]}
+                                            items={defaultFieldsOptions.filter(item=>!item.alreadySelected).map(item => ({
+                                                label: item.name, value: item.name
+                                            }))}
                                         />
                                     </Item>
                                 </View>
@@ -356,8 +369,8 @@ class ProductMoreDetails extends Component {
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
                             /> */}
-                            </View>
-                            {!!detail.error && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                            </View>}
+                            {!!detail.error &&detail.error.length&& <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
                         </>
                     )
                     )}
