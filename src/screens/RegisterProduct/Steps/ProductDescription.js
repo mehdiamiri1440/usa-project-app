@@ -64,6 +64,7 @@ class ProductDecription extends Component {
                         <Textarea
                             onChangeText={this.onDescriptionSubmit}
                             error=''
+                            value={description}
                             autoCapitalize='none'
                             autoCompleteType='off'
                             autoCorrect={false}

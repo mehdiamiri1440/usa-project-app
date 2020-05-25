@@ -149,7 +149,6 @@ class ProductMoreDetails extends Component {
 
     deleteRow = index => {
         let selectedIndex = this.state.defaultFieldsOptions.findIndex(item => item.name == this.state.detailsArray[index].itemKey);
-console.log('selssssssssssected',selectedIndex)
 if(selectedIndex>-1){
             this.setState(state => {
                 state.deletedRows.push(index);
