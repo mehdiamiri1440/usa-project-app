@@ -44,7 +44,7 @@ class RegisterProduct extends React.Component {
                 "category_id",
                 "city_id"
             ],
-            stepNumber: 4,
+            stepNumber: 0,
             productType: '',
             category: '',
             detailsArray: [],
