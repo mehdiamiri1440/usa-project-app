@@ -142,7 +142,7 @@ class ProductMoreDetails extends Component {
             this.setState(state => {
                 state.detailsArray = state.detailsArray.filter(item => item.itemKey)
                 return '';
-            }, () => this.props.setDetailsArray([...(this.state.detailsArray)], [...tempDefaults]))
+            }, () => this.props.setDetailsArray([...(this.state.detailsArray)], [...tempDefaults],this.state.defaultFieldsOptions))
         }
     };
 
@@ -184,6 +184,8 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
 }
 })
     return '';
+},()=>{
+    console.log('itemkje--->',this.state.detailsArray)
 })
 
     };

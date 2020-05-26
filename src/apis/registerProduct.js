@@ -39,6 +39,7 @@ export const fetchAllSubCategories = id => {
 };
 
 export const addNewProduct = productObject => {
+    console.log('product object in api',productObject)
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
@@ -52,7 +53,10 @@ export const addNewProduct = productObject => {
                 resolve(result);
             })
             .catch(err => {
-                console.warn('not registereed----->', err)
+                console.log('mes', err.message)
+                console.log('res', err.response)
+                console.log('req', err.request)
+                console.log('not registereed----->', err)
                 return reject(err.response);
             });
     });

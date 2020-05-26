@@ -1,6 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-picker';
 import { ActionSheet, Button } from 'native-base';
 import {
     TouchableOpacity,
@@ -19,6 +19,7 @@ class ProductImages extends Component {
         super(props);
         this.state = {
             images: [],
+            avatarSource:'',
             errorFlag: false,
             loaded: false
         }
@@ -37,21 +38,44 @@ class ProductImages extends Component {
     )
 
     onActionSheetClicked = (buttonIndex, index) => {
+        const options = {
+            width: 300,
+            height: 400,
+            title: 'عکس را انتخاب کنید',
+            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        const prevImagePickerLibraryOptions = {
+            width: 300,
+            height: 400,
+            cropping: true,
+            mediaType: 'photo',
+        };
+
         switch (buttonIndex) {
             case 0: {
                 this.setState({ errorFlag: false });
-                ImagePicker.openCamera({
-                    width: 300,
-                    height: 400,
-                    cropping: true,
-                    mediaType: 'photo'
-                }).then(image => {
+                ImagePicker.launchCamera(options, image => {
+                    console.log('111111111', image)
+                    const source = { uri: image.uri };
                     this.setState(state => {
+                        state.avatarSource=source;
+                    let    resultObj={
+                        uri:image.uri,
+                            type:image.type,
+                            size:image.fileSize,
+                            name:image.fileName
+                        }
+                   
+                        
                         if (index >= 0) {
-                            state.images[index] = image.path
+                            state.images[index] = resultObj
                         }
                         else {
-                            state.images.push(image.path)
+                            state.images.push(resultObj)
                         }
                         return '';
                     }
@@ -61,17 +85,15 @@ class ProductImages extends Component {
             }
             case 1: {
                 this.setState({ errorFlag: false });
-                ImagePicker.openPicker({
-                    width: 300,
-                    height: 400,
-                    cropping: true,
-                    mediaType: 'photo',
-                }).then(image => {
+                ImagePicker.launchImageLibrary(options, image => {
+                    console.log('1112222222222222222111111', image)
+                    const source = { uri: image.uri };
                     this.setState(state => {
+                        state.avatarSource = source;
                         if (index >= 0)
-                            state.images[index] = image.path
+                            state.images[index] = image.uri
                         else
-                            state.images.push(image.path)
+                            state.images.push(image.uri)
                         return '';
                     }
                     )
@@ -183,7 +205,7 @@ class ProductImages extends Component {
                                     borderRadius: 5, alignContent: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
-                                source={{ uri: image }} />
+                                source={this.state.avatarSource} />
                             <TouchableOpacity
                                 onPress={() => this.deleteImage(index)}
                                 style={{

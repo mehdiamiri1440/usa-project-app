@@ -195,8 +195,8 @@ class ChooseCity extends React.Component {
                                     label: locales('labels.selectCity'),
                                     fontFamily: 'Vazir-Bold-FD',
                                 }}
-                                items={[...provinces.map(item => ({
-                                    label: item.province_name, value: item.id
+                                items={[...cities.map(item => ({
+                                    label: item.city_name, value: item.id
                                 }))]}
                             />
                         </Item>

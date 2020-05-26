@@ -19,8 +19,32 @@ class RegisterProduct extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            product: {
+                product_name: "",
+                stock: "",
+                min_sale_price: "",
+                max_sale_price: "",
+                min_sale_amount: "",
+                description: "",
+                address: "",
+                category_id: "",
+                city_id: "",
+                rules: true
+            },
+            productFiles:[],
             successfullAlert: false,
-            stepNumber: 6,
+             productFields:[
+                "product_name",
+                "stock",
+                "min_sale_price",
+                "max_sale_price",
+                "min_sale_amount",
+                "description",
+                "address",
+                "category_id",
+                "city_id"
+            ],
+            stepNumber: 4,
             productType: '',
             category: '',
             detailsArray: [],
@@ -80,19 +104,69 @@ class RegisterProduct extends React.Component {
 
 
     setProductImages = images => {
-        this.setState({ images, stepNumber: 5 });
+        console.log('min', images)
+        this.setState({ productFiles:images,images, stepNumber: 5 });
     };
 
     setProductDescription = description => {
         this.setState({ description, stepNumber: 6 });
     };
+    getItemDescription=(itemKey, defaultFieldsOptions) =>{
+         return defaultFieldsOptions.find((item) => itemKey == item.name).description;
+    }
+
+    setDetailsArray = (detailsArray, defaultArray, defaultFieldsOptions) => {
+        const {productType}=this.state;
+        let description='<hr/>';
+        let temp = 'برای اطلاع از قیمت روز ' + productType + ' و خرید مستقیم پیام ارسال کنید.' + '<hr/>';
+        this.setState({description:this.state.description.replace(temp,"")})
+        description = description + temp;
 
 
-    setDetailsArray = (detailsArray, defaultArray) => {
-        tempDefaultArray = [...defaultArray]
-        this.setState({ detailsArray }, () => this.submitAllSteps());
+        for (let i = 0; i < detailsArray.length; i++) {
+            if (detailsArray[i].itemValue) {
+                let itemDescription = this.getItemDescription(detailsArray[i].itemKey, defaultFieldsOptions);
+                itemDescription = itemDescription + ' : ' + detailsArray[i].itemValue + '<hr/>';
+                this.setState({description:this.state.description.replace(itemDescription,"")})
+                description = description + itemDescription;
+            }
+        }
+
+
+
+        temp = 'مقدار موجودی آماده فروش برای این محصول : ' + this.state.amount + ' کیلوگرم' + '<hr/>';
+        this.setState({description:this.state.description.replace(temp,"")})
+        description = description + temp;
+
+
+        temp = 'حداقل مقدار فروش این محصول توسط فروشنده در یک معامله : ' + this.state.minimumOrder + ' کیلوگرم' + '<hr/>';
+        this.setState({description:this.state.description.replace(temp,"")})
+        description = description + temp;
+
+        this.setState({description:this.state.description+description},()=>{
+            return this.submitAllSteps();
+        })
+
+
     };
+     toLatinNumbers=(num) =>{
+    if (num == null) {
+        return null;
+    }
 
+    num = num.toString().replace(/^0+/, "");
+    num = num.toString().replace(/^\u0660+/, "");
+    num = num.toString().replace(/^\u06f0+/, "");
+
+    return num
+        .toString()
+        .replace(/[\u0660-\u0669]/g, function (c) {
+            return c.charCodeAt(0) - 0x0660;
+        })
+        .replace(/[\u06f0-\u06f9]/g, function (c) {
+            return c.charCodeAt(0) - 0x06f0;
+        });
+}
 
     submitAllSteps = () => {
         let {
@@ -126,33 +200,60 @@ class RegisterProduct extends React.Component {
         //     'province--->', province,
         //     'temp---------->>>', tempDefaultArray);
 
-        detailsArray.forEach(element => {
-            if (!this.state.description.includes(tempDefaultArray.find(item => item.name == element.itemKey).description))
-                description = `${description} <hr/> ${tempDefaultArray.find(item => item.name == element.itemKey).description} : ${element.itemValue}`;
-        });
-        this.setState({ description }, () => {
-            let productObject = {
-                product_name: productType,
-                category,
-                detailsArray,
-                category_id: subCategory,
-                stock: amount,
-                max_sale_price: maximumPrice,
-                min_sale_price: minimumPrice,
-                min_sale_amount: minimumOrder,
-                city_id: city,
-                description: this.state.description,
-                images_count: images.length,
-                rules: true
-            };
-
-            images.forEach((element, index) => {
-                productObject[`images_${index}`] = element
-            });
-
-            console.log('my final product->', productObject)
-            this.props.addNewProduct(productObject)
+        let formData = new FormData();
+        let cnt = this.state.productFields.length;
+      
+        this.setState(state=>{
+            state.product.product_name=productType;
+            state.product.stock=amount;
+            state.product.min_sale_amount=minimumOrder;
+            state.product.max_sale_price=maximumPrice;
+            state.product.min_sale_price = minimumPrice;
+            state.product.description=description;
+            state.product.address="";
+            state.product.category_id=subCategory;
+            state.product.city_id=city;
+            state.product.rules=true;
+            return '';
+        },()=>{
+                for (var i = 0; i < cnt; i++) {
+                    formData.append(
+                        this.state.productFields[i],
+                        this.toLatinNumbers(this.state.product[this.state.productFields[i]])
+                    );
+                }
+                for (var i = 0; i < this.state.productFiles.length; i++) {
+                    let file = this.state.productFiles[i];
+                    formData.append("image_" + i, file);
+                }
+                formData.append("images_count", this.state.productFiles.length);
+console.log('formdata',formData)
+                return this.props.addNewProduct(formData)
         })
+
+  
+        // this.setState({ description }, () => {
+        //     let productObject = {
+        //         product_name: productType,
+        //         category,
+        //                category_id: subCategory,
+        //         stock: amount,
+        //         max_sale_price: maximumPrice,
+        //         min_sale_price: minimumPrice,
+        //         min_sale_amount: minimumOrder,
+        //         city_id: city,
+        //         description: this.state.description,
+        //         images_count: images.length,
+        //         rules: true
+        //     };
+
+        //     images.forEach((element, index) => {
+        //         productObject[`images_${index}`] = element
+        //     });
+
+        //     console.log('my final product->', productObject)
+        //     this.props.addNewProduct(productObject)
+        // })
     }
 
     renderSteps = () => {
