@@ -1,5 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Button, Item, Input, Label, Picker } from 'native-base';
 import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from 'react-native-material-dropdown';
@@ -11,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { TextField } from '../../../components/floatingInput';
 import { dataGenerator, validator } from '../../../utils';
+import Spin from '../../../components/loading/loading';
 
 
 let tempDefaults = [
@@ -184,8 +186,6 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
 }
 })
     return '';
-},()=>{
-    console.log('itemkje--->',this.state.detailsArray)
 })
 
     };
@@ -226,6 +226,11 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
 
         return (
             <ScrollView style={{ height: deviceHeight * 0.5 }}>
+                <Spin spininng={this.props.addNewProductLoading}>
+                {!!this.props.addNewProductMessage&&
+                this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
+                    <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
+                </View>}
                 <View
                     style={{ backgroundColor: 'white' }}>
                     <Text
@@ -413,6 +418,7 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
                     </View>
 
                 </View>
+                </Spin>
             </ScrollView >
         )
     }
@@ -567,4 +573,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProductMoreDetails;
+
+const mapStateToProps = (state) => {
+    return {
+        addNewProductMessage: state.registerProductReducer.addNewProductMessage,
+        addNewProductLoading: state.registerProductReducer.addNewProductLoading,
+    }
+}
+export default connect(mapStateToProps)(ProductMoreDetails);

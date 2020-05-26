@@ -53,11 +53,7 @@ export const addNewProduct = productObject => {
                 resolve(result);
             })
             .catch(err => {
-                console.log('mes', err.message)
-                console.log('res', err.response)
-                console.log('req', err.request)
-                console.log('not registereed----->', err)
-                return reject(err.response);
+                             return reject(err.response);
             });
     });
 };

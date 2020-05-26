@@ -59,7 +59,6 @@ class ProductImages extends Component {
             case 0: {
                 this.setState({ errorFlag: false });
                 ImagePicker.launchCamera(options, image => {
-                    console.log('111111111', image)
                     const source = { uri: image.uri };
                     this.setState(state => {
                         state.avatarSource=source;
@@ -86,14 +85,21 @@ class ProductImages extends Component {
             case 1: {
                 this.setState({ errorFlag: false });
                 ImagePicker.launchImageLibrary(options, image => {
-                    console.log('1112222222222222222111111', image)
                     const source = { uri: image.uri };
                     this.setState(state => {
                         state.avatarSource = source;
+                        let resultObj = {
+                            uri: image.uri,
+                            type: image.type,
+                            size: image.fileSize,
+                            name: image.fileName
+                        }
+
+
                         if (index >= 0)
-                            state.images[index] = image.uri
+                            state.images[index] = resultObj
                         else
-                            state.images.push(image.uri)
+                            state.images.push(resultObj)
                         return '';
                     }
                     )
@@ -205,7 +211,7 @@ class ProductImages extends Component {
                                     borderRadius: 5, alignContent: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
-                                source={this.state.avatarSource} />
+                                source={{uri:image.uri}} />
                             <TouchableOpacity
                                 onPress={() => this.deleteImage(index)}
                                 style={{
