@@ -5,6 +5,7 @@ export default {
     "errors.mobileOrPasswordIncorrect": " شماره همراه یا کلمه عبور اشتباه است . ",
     "errors.invalidUserName": "نام کاربری نا‌معتبر است",
     'errors.fieldNeeded': '{fieldName} الزامی است',
+    'errors.imageSizeError':'حجم تصویر نباید از 5مگابایت بیشتر و از 20 کیلوبایت کمتر باشد',
     "errors.passwordLength": "طول کلمه عبور حداقل باید 8 کارکتر باشد",
     "errors.notSamePasswords": "کلمه عبور و تکرار آن باهم مطابقت ندارند",
     'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',

@@ -21,6 +21,7 @@ class ProductImages extends Component {
             images: [],
             avatarSource:'',
             errorFlag: false,
+            imageSizeError:false,
             loaded: false
         }
     }
@@ -41,8 +42,10 @@ class ProductImages extends Component {
         const options = {
             width: 300,
             height: 400,
+        maxWidth:1024,
+        maxHeight:1024,
+        quality:1,
             title: 'عکس را انتخاب کنید',
-            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -59,6 +62,14 @@ class ProductImages extends Component {
             case 0: {
                 this.setState({ errorFlag: false });
                 ImagePicker.launchCamera(options, image => {
+                    if(image.didCancel)
+                    return ;
+                    else if(image.error)
+                    return ;
+                    
+                    if (image.fileSize > 5242880 || image.fileSize<20480) {
+                        return this.setState({imageSizeError:true})
+                                    }
                     const source = { uri: image.uri };
                     this.setState(state => {
                         state.avatarSource=source;
@@ -85,6 +96,14 @@ class ProductImages extends Component {
             case 1: {
                 this.setState({ errorFlag: false });
                 ImagePicker.launchImageLibrary(options, image => {
+                    if (image.didCancel)
+                        return;
+                    else if (image.error)
+                        return ;
+
+                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
+                        return this.setState({ imageSizeError: true })
+                    }
                     const source = { uri: image.uri };
                     this.setState(state => {
                         state.avatarSource = source;
@@ -165,6 +184,9 @@ class ProductImages extends Component {
                         {locales('labels.uploadProductImages')}
                     </Text>
 
+                    {this.state.imageSizeError && <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>{locales('errors.imageSizeError')}</Text>
+                    </View>}
                     {this.state.errorFlag && <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>{locales('errors.fieldNeeded', { fieldName: locales('titles.chooseImage') })}</Text>
                     </View>}
