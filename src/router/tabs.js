@@ -1,9 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text } from 'react-native';
 import RequestsIndex from '../screens/Requests/Requests';
 import ProductsListIndex from '../screens/ProductsList';
-import SearchIndex from '../screens/Search/Search';
 import MessagesRoutes from './MessagesRoutes';
 import RegisterProductRoutes from './RegisterProductRoutes';
 import HomeRoutes from './HomeRoutes'

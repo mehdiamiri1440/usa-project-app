@@ -5,6 +5,7 @@ import * as home from './home';
 import * as messages from './messages';
 import * as buyAdRequest from './buyAdRequest';
 import * as profile from './profile';
+import * as productsList from './productsList';
 
 export default {
     auth,
@@ -13,5 +14,6 @@ export default {
     home,
     messages,
     buyAdRequest,
-    profile
+    profile,
+    productsList
 };
