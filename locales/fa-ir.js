@@ -21,6 +21,7 @@ export default {
     "labels.seller": "فروشنده",
     'labels.addMoreDetails': 'ثبت جزییات بیشتر',
     'labels.addMore': 'افزودن بیشتر',
+    'labels.myBuskool':'باسکول من',
     "labels.selectCity": "شهر را انتخاب کنید",
     'labels.messages': 'پیام‌ها',
     'labels.selectProductType': 'انتخاب نوع محصول',

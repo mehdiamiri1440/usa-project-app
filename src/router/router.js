@@ -1,18 +1,19 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Alert, Linking } from 'react-native';
+import { Alert, Image } from 'react-native';
 import { connect } from 'react-redux';
 import * as messagesActions from '../redux/messages/actions';
-import { NavigationContainer, StackActions, useNavigation } from '@react-navigation/native';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import tabs from './tabs';
+import routes from './tabs';
 import Login from '../screens/Login/Login'
 import firebase from '@react-native-firebase/app';
 import SignUp from '../screens/SignUp'
 import messaging from '@react-native-firebase/messaging';
-import { NavigationActions } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
+import { deviceWidth } from '../utils/deviceDimenssions';
 
 const navigationRef = React.createRef();
 const isMountedRef = React.createRef();
@@ -20,7 +21,7 @@ const push = async (...args) => {
     const navigation = await navigationRef;
     const ready = await navigation.current;
     if (!!ready)
-        ready.navigate(tabs[4]);
+        ready.navigate(routes[3]);
 }
 
 const Tab = createMaterialBottomTabNavigator();
@@ -52,12 +53,12 @@ const getRoute = () => {
 const App = props => {
     // const navigation = useNavigation();
     const [initialRoute, setInitialRoute] = useState('Home');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
     useEffect(() => {
-        props.fetchTotalUnreadMessages();
+             props.fetchTotalUnreadMessages();
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -106,7 +107,7 @@ const App = props => {
                     }
                 })
         }
-
+        
         return unsubscribe
     }, [initialRoute]);
 
@@ -139,13 +140,26 @@ const App = props => {
                     }
                 >
                     {
-                        tabs.map((route, index) => (
+                        routes.map((route, index) => (
                             <Tab.Screen
                                 key={index}
                                 options={{
                                     tabBarBadge: route.name == 'Messages' && props.totalUnreadMessages > 0 ? true : false,
                                     tabBarLabel: route.label && locales(route.label),
-                                    tabBarIcon: ({ focused, color }) => route.icon(color, focused),
+                                    tabBarIcon: route.name != 'MyBuskool' ? ({ focused, color }) => route.icon(color, focused) : ()=>{
+                                      return( 
+                                           <Image
+                                            style={{
+                                                borderRadius: deviceWidth * 0.032,
+                                                width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                                            }}
+                                              source={!!props.userProfile && !!props.userProfile.profile && props.userProfile.profile.profile_photo&&props.userProfile.profile.profile_photo.length?
+                                                  { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${props.userProfile.profile.profile_photo}`}
+                                            :require('../../assets/icons/user.png')
+                                    }
+                                        />
+            )
+                                    },
                                 }}
                                 name={route.name}
                                 component={route.component}
@@ -168,6 +182,8 @@ const mapStateToProps = (state) => {
         logOutFailed: state.authReducer.logOutFailed,
         logOutError: state.authReducer.logOutError,
         logOutMessage: state.authReducer.logOutMessage,
+
+        userProfile: state.profileReducer.userProfile,
 
         totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         totalUnreadMessages: state.messagesReducer.totalUnreadMessages,

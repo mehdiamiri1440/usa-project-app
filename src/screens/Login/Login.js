@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../utils'
 import OutlinedTextField from '../../components/floatingInput';
 import * as authActions from '../../redux/auth/actions'
+import * as profileActions from '../../redux/profile/actions'
 import Spin from '../../components/loading/loading'
 class Login extends React.Component {
     constructor(props) {
@@ -46,7 +47,9 @@ class Login extends React.Component {
     };
     onLogin = () => {
         let { mobileNumber, password } = this.state
-        this.props.login(mobileNumber, password);
+        this.props.login(mobileNumber, password).then(_=>{
+            this.props.fetchUserProfile();
+        });
     }
     render() {
         let { message, loading, error } = this.props
@@ -229,6 +232,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
     }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import RequestsIndex from '../screens/Requests/Requests';
+import ProductsListIndex from '../screens/ProductsList';
 import SearchIndex from '../screens/Search/Search';
 import MessagesRoutes from './MessagesRoutes';
 import RegisterProductRoutes from './RegisterProductRoutes';
@@ -71,7 +72,7 @@ const MessagesStack = () => (
 const routes = [
     {
         label: 'labels.home',
-        component: HomeStack,
+        component: ProductsListIndex,
         icon: color => <Octicons size={25} name='home' color={color} />,
         name: 'Home'
     },
@@ -91,14 +92,6 @@ const routes = [
         />,
         name: 'RegisterProduct'
     },
-
-    {
-        label: 'labels.search',
-        component: SearchIndex,
-        icon: color => <AntDesign size={25} name='search1' color={color} />,
-        name: 'Search'
-    },
-
     {
         label: 'labels.messages',
         header: true,
@@ -107,5 +100,13 @@ const routes = [
         icon: color => <Entypo size={25} name='message' color={color} />,
         name: 'Messages'
     },
+
+    {
+        label: 'labels.myBuskool',
+        component: HomeStack,
+        icon: color => <AntDesign size={25} name='search1' color={color} />,
+        name: 'MyBuskool'
+    },
+
 ]
 export default routes
