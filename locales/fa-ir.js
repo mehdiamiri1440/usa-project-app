@@ -72,6 +72,7 @@ export default {
     "titles.enterToBuskool": "ورود به باسکول",
     'titles.authorizedSeller': 'فروشنده معتبر',
     "titles.chooseCityAndProvince": "با وارد کردن شهر، شما می توانید با دیگران بهتر ارتباط برقرار کنید",
+    'titles.achiveSaleStatus': 'استعلام شرایط فروش',
     "titles.phoneNumber": 'شماره همراه',
     'titles.sellerHintToRegisterProduct': ' فروشنده محترم برای استفاده از خدمات باسکول و ارتباط مستقیم با خریداران ابتدا باید محصولات خود را در سامانه باسکول ثبت کنید. ',
     'titles.registerNewProduct': 'ثبت محصول جدید',
