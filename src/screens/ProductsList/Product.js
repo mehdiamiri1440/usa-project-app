@@ -1,18 +1,20 @@
-import React, { Component } from 'react';
-import { Image, Text, View, StyleSheet } from 'react-native';
-import { Card, CardItem, Body, Icon, InputGroup, Input, Button } from 'native-base';
+import React, { PureComponent } from 'react';
+import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { Card, CardItem, Body, Toast, Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 
 
-
-class Product extends Component {
+class Product extends PureComponent {
     render() {
 
+        const { loggedInUserId } = this.props;
         const { main, photos, profile_info, user_info } = this.props.productItem;
+        console.log('pri', loggedInUserId, this.props.productItem)
         const {
             address,
             category_id,
@@ -52,9 +54,10 @@ class Product extends Component {
             <Card>
                 <CardItem>
                     <Body>
-
-
-                        <View style={{ flexDirection: 'row-reverse', width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#EEEEEE', paddingVertical: 4 }}>
+                        <View style={{
+                            flexDirection: 'row-reverse',
+                            width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#EEEEEE', paddingVertical: 4
+                        }}>
                             <Image
                                 style={{
                                     alignSelf: 'center', width: deviceWidth * 0.12,
@@ -69,21 +72,29 @@ class Product extends Component {
                             <View style={{ width: '59%', justifyContent: 'flex-start' }}>
                                 <Text style={{
                                     fontFamily: 'Vazir-Bold-FD',
-                                    fontSize: 18, marginTop: response_rate > 0 ? 0 : 10,
+                                    fontSize: 18, marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
                                     paddingHorizontal: 7, paddingBottom: 2
                                 }}>
                                     {`${first_name} ${last_name}`}
                                 </Text>
-                                {response_rate > 0 && <Text style={{ color: '#7E7E7E', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
-                                    {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                                </Text>}
+                                {response_rate > 0 && loggedInUserId != myuser_id &&
+                                    <Text style={{ color: '#7E7E7E', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
+                                        {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                    </Text>}
                             </View>
-                            <Text style={{ color: '#00C569', fontSize: 16, textAlignVertical: 'center' }}>
-                                {locales('labels.seeProfile')}
-                            </Text>
+                            {loggedInUserId == myuser_id ?
+                                <Text style={{ color: '#E41C38', fontSize: 16, textAlignVertical: 'center' }}>
+                                    {locales('labels.deleteProduct')}
+                                </Text>
+                                :
+                                <Text style={{ color: '#00C569', fontSize: 16, textAlignVertical: 'center' }}>
+                                    {locales('labels.seeProfile')}
+                                </Text>}
                         </View>
 
-                        <View style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('ProductDetails')}
+                            style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                             <Image
                                 style={{
                                     width: deviceWidth * 0.25,
@@ -134,15 +145,64 @@ class Product extends Component {
 
                             </View>
 
-                        </View>
+                        </TouchableOpacity>
 
-                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', padding: 5, width: '100%', justifyContent: 'center' }}>
-                            <Button
-                                style={styles.loginButton}
-                            >
-                                <Text style={styles.buttonText}>{locales('titles.achiveSaleStatus')}</Text>
-                            </Button>
-                            <FontAwesome5 name='chart-line' size={30} color='white' style={{ backgroundColor: '#7E7E7E', padding: 7, borderRadius: 4 }} />
+                        <View style={{
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center', padding: 5,
+                            width: '100%', justifyContent: 'center'
+                        }}>
+                            {loggedInUserId != myuser_id ?
+                                <Button
+                                    style={[styles.loginButton, { width: !!is_elevated ? '92%' : '100%' }]}
+                                >
+                                    <Text style={styles.buttonText}>{locales('titles.achiveSaleStatus')}</Text>
+                                </Button>
+                                :
+                                <View style={{
+                                    flexDirection: 'row', justifyContent: 'space-around',
+                                    width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth
+                                }}>
+                                    <Button
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            borderRadius: 5,
+                                            fontFamily: 'Vazir-Bold-FD',
+                                            width: !!is_elevated ? '45%' : '55%',
+                                            paddingRight: 40,
+                                            backgroundColor: '#E41C38'
+                                        }}
+                                    >
+                                        <Text style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>{locales('titles.elevateProduct')}</Text>
+                                        <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    </Button>
+                                    <Button
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            borderRadius: 5,
+                                            fontFamily: 'Vazir-Bold-FD',
+                                            width: '40%',
+                                            paddingRight: 15,
+                                            backgroundColor: '#000546'
+                                        }}
+                                    >
+                                        <Text style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>{locales('titles.edit')}</Text>
+                                        <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    </Button>
+                                </View>
+                            }
+                            {!!is_elevated && <FontAwesome5
+                                onPress={() => Toast.show({
+                                    text: locales('titles.elevatorHasAdded'),
+                                    position: "bottom",
+                                    style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                                    textStyle: { fontFamily: 'Vazir' },
+                                    duration: 3000
+                                })}
+                                name='chart-line' size={30} color='white' style={{ backgroundColor: '#7E7E7E', padding: 7, borderRadius: 4 }}
+                            />}
                         </View>
 
                     </Body>
@@ -222,4 +282,11 @@ const styles = StyleSheet.create({
         color: '#7E7E7E'
     }
 });
-export default Product
+
+const mapStateToProps = (state) => {
+    return {
+        loggedInUserId: state.authReducer.loggedInUserId
+    }
+};
+
+export default connect(mapStateToProps)(Product)

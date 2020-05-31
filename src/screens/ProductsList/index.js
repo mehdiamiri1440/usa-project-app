@@ -3,6 +3,7 @@ import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Product from './Product';
 import Spin from '../../components/loading/loading';
@@ -17,7 +18,7 @@ class ProductsList extends Component {
             searchText: '',
             from_record_number: 0,
             productsListArray: [],
-            to_record_number: 20,
+            to_record_number: 5,
             response_rate: null,
             sort_by: '',
             loaded: false
@@ -76,7 +77,6 @@ class ProductsList extends Component {
         } = this.props;
 
         const { searchText, loaded, productsListArray } = this.state;
-        console.log('le', productsListArray.length)
 
         return (
             <>
@@ -169,17 +169,24 @@ class ProductsList extends Component {
 
                 <Spin spinning={productsListLoading || categoriesLoading}>
                     <FlatList
-                        ListEmptyComponent={<Text>nothing</Text>}
+                        ListEmptyComponent={<View style={{
+                            alignSelf: 'center', justifyContent: 'center',
+                            alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
+                        }}>
+                            <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
+                            <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>{locales('titles.noProductFound')}</Text>
+                        </View>
+                        }
                         getItemLayout={(data, index) => (
-                            { length: productsListArray.length, offset: 100 * index, index }
+                            { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
                         )}
                         extraData={this.state}
-                        style={{ height: deviceHeight * 0.68 }}
+                        style={{ height: deviceHeight * 0.66 }}
                         onEndReached={() => {
-                            if (loaded && productsListArray.length >= 20)
+                            if (loaded && productsListArray.length >= this.state.to_record_number)
                                 this.setState({
-                                    from_record_number: this.state.from_record_number + 20,
-                                    to_record_number: this.state.to_record_number + this.state.from_record_number + 20,
+                                    from_record_number: this.state.from_record_number + 5,
+                                    to_record_number: this.state.to_record_number + 5,
                                 }, () => {
                                     const { from_record_number, to_record_number, sort_by, response_rate } = this.state;
 
@@ -194,10 +201,12 @@ class ProductsList extends Component {
                                     })
                                 })
                         }}
+                        initialNumToRender={2}
+                        initialScrollIndex={0}
                         onEndReachedThreshold={0.1}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={(_, index) => index.toString()}
                         data={productsListArray}
-                        renderItem={({ item }) => <Product productItem={item} />}
+                        renderItem={({ item }) => <Product productItem={item} {...this.props} />}
                     />
                 </Spin>
 

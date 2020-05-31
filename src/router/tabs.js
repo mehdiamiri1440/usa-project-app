@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RequestsIndex from '../screens/Requests/Requests';
-import ProductsListIndex from '../screens/ProductsList';
+import ProductsListRoutes from './ProductsListRoutes';
 import MessagesRoutes from './MessagesRoutes';
 import RegisterProductRoutes from './RegisterProductRoutes';
 import HomeRoutes from './HomeRoutes'
@@ -26,6 +26,23 @@ const HomeStack = () => (
                 key={index}
                 name={home.name}
                 component={home.component}
+            />
+        ))}
+    </Stack.Navigator>
+)
+const ProductsListStack = () => (
+    <Stack.Navigator>
+        {ProductsListRoutes.map((product, index) => (
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerTitleAlign: { ...(product.titleAlign) },
+                    headerShown: product.title ? true : false,
+                    title: locales(product.title),
+                    headerRight: () => product.headerRight ? product.headerRight : null,
+                })}
+                key={index}
+                name={product.name}
+                component={product.component}
             />
         ))}
     </Stack.Navigator>
@@ -70,7 +87,7 @@ const MessagesStack = () => (
 const routes = [
     {
         label: 'labels.home',
-        component: ProductsListIndex,
+        component: ProductsListStack,
         icon: color => <Octicons size={25} name='home' color={color} />,
         name: 'Home'
     },
