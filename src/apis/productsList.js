@@ -7,7 +7,7 @@ export const fetchAllProductsList = item => {
             .fetchAPI({
                 route: `user/get_product_list`,
                 method: 'POST',
-                daa:item,
+                data: item,
                 withAuth: false,
             })
             .then(result => {

@@ -48,14 +48,13 @@ class Product extends Component {
             ums,
             user_name
         } = user_info;
-        console.log('photos', photos)
         return (
             <Card>
                 <CardItem>
                     <Body>
 
 
-                        <View style={{ flexDirection: 'row-reverse', width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#EEEEEE', paddingVertical: 5 }}>
+                        <View style={{ flexDirection: 'row-reverse', width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#EEEEEE', paddingVertical: 4 }}>
                             <Image
                                 style={{
                                     alignSelf: 'center', width: deviceWidth * 0.12,
@@ -67,7 +66,7 @@ class Product extends Component {
                                     :
                                     require('../../../assets/icons/user.png')
                                 } />
-                            <View style={{ width: '52%', justifyContent: 'flex-start' }}>
+                            <View style={{ width: '59%', justifyContent: 'flex-start' }}>
                                 <Text style={{
                                     fontFamily: 'Vazir-Bold-FD',
                                     fontSize: 18, marginTop: response_rate > 0 ? 0 : 10,
@@ -79,7 +78,7 @@ class Product extends Component {
                                     {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                                 </Text>}
                             </View>
-                            <Text style={{ color: '#00C569', fontSize: 18, textAlignVertical: 'center' }}>
+                            <Text style={{ color: '#00C569', fontSize: 16, textAlignVertical: 'center' }}>
                                 {locales('labels.seeProfile')}
                             </Text>
                         </View>
@@ -88,6 +87,8 @@ class Product extends Component {
                             <Image
                                 style={{
                                     width: deviceWidth * 0.25,
+                                    borderWidth: 0.4,
+                                    borderColor: '#BEBEBE',
                                     height: deviceWidth * 0.25, borderRadius: 10,
                                     marginHorizontal: 5
                                 }}
@@ -96,6 +97,17 @@ class Product extends Component {
                                     :
                                     require('../../../assets/icons/user.png')
                                 } />
+
+                            {photos.length > 0 && <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    backgroundColor: 'black', position: 'absolute',
+                                    left: 5, bottom: 5, borderRadius: 4, padding: 3
+                                }}>
+                                <Entypo name='images' size={20} color='white' />
+                                <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
+                            </View>}
+
                             <View style={{ width: '60%', justifyContent: 'space-between' }}>
                                 <Text style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
                                     {category_name} | {sub_category_name} <Text style={{ color: '#777777', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
