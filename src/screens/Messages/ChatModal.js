@@ -228,7 +228,7 @@ class ChatModal extends React.Component {
                         // refreshing={this.state.userChatHistory}
                         data={userChatHistory}
                         getItemLayout={(data, index) => (
-                            { length: userChatHistory.length, offset: 100 * index, index }
+                            { length: 100, offset: 100 * index, index }
                         )}
                         inverted
                         ref={this.scrollViewRef}

@@ -169,6 +169,8 @@ class ProductsList extends Component {
 
                 <Spin spinning={productsListLoading || categoriesLoading}>
                     <FlatList
+                        keyboardDismissMode='on-drag'
+                        keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={<View style={{
                             alignSelf: 'center', justifyContent: 'center',
                             alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight

@@ -89,7 +89,6 @@ export const fetchGroupChats = (groupId, messageCount) => {
 
 
 export const sendMessage = (msgObject, buyAdId) => {
-    console.warn('message-------->>>', msgObject, buyAdId)
     return new Promise((resolve, reject) => {
 
         if (buyAdId != undefined) {
