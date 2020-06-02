@@ -26,17 +26,16 @@ class ProductsList extends Component {
     }
 
     serachInputRef = React.createRef();
+    amountRef = React.createRef();
+    minimumOrderRef = React.createRef();
+    maximumPriceRef = React.createRef();
+    minimumPriceRef = React.createRef();
+
+
+
 
     componentDidMount() {
-        const { from_record_number, to_record_number, sort_by, response_rate } = this.state;
-
-        let item = {
-            from_record_number,
-            // response_rate,
-            // sort_by,
-            to_record_number,
-        };
-        this.props.fetchAllProductsList(item);
+        this.fetchAllProducts();
         this.props.fetchAllCategories();
     }
 
@@ -49,6 +48,18 @@ class ProductsList extends Component {
             })
         }
     }
+
+    fetchAllProducts = () => {
+        const { from_record_number, to_record_number, sort_by, response_rate } = this.state;
+
+        let item = {
+            from_record_number,
+            // response_rate,
+            // sort_by,
+            to_record_number,
+        };
+        this.props.fetchAllProductsList(item);
+    };
 
 
     handleSearch = text => {
@@ -146,6 +157,7 @@ class ProductsList extends Component {
                                 data={categoriesList}
                                 horizontal={true}
                                 inverted={true}
+                                showsHorizontalScrollIndicator={false}
                                 style={{ marginVertical: 8 }}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
@@ -208,7 +220,15 @@ class ProductsList extends Component {
                         onEndReachedThreshold={0.1}
                         keyExtractor={(_, index) => index.toString()}
                         data={productsListArray}
-                        renderItem={({ item }) => <Product productItem={item} {...this.props} />}
+                        renderItem={({ item }) => <Product
+                            minimumOrderRef={this.minimumOrderRef}
+                            maximumPriceRef={this.maximumPriceRef}
+                            amountRef={this.amountRef}
+                            minimumPriceRef={this.minimumPriceRef}
+                            productItem={item}
+                            fetchAllProducts={this.fetchAllProducts}
+                            {...this.props}
+                        />}
                     />
                 </Spin>
 

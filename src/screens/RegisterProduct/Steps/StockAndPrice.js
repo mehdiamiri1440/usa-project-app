@@ -164,10 +164,10 @@ class StockAndPrice extends Component {
                 </Text>
 
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'Vazir', padding: 5 }}>
+                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
                         {locales('titles.amount')}
                     </Label>
-                    <Item error='' regular style={{
+                    <Item regular style={{
                         borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                     }}>
                         <Input
@@ -205,7 +205,7 @@ class StockAndPrice extends Component {
                     <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
                         {locales('titles.minimumOrder')}
                     </Label>
-                    <Item error='' regular style={{
+                    <Item regular style={{
                         borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                     }}>
                         <Input
@@ -241,7 +241,7 @@ class StockAndPrice extends Component {
                     <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
                         {locales('titles.minimumPrice')}
                     </Label>
-                    <Item error='' regular style={{
+                    <Item regular style={{
                         borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                     }}>
                         <Input
@@ -277,7 +277,7 @@ class StockAndPrice extends Component {
                     <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
                         {locales('titles.maximumPrice')}
                     </Label>
-                    <Item error='' regular style={{
+                    <Item regular style={{
                         borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                     }}>
                         <Input

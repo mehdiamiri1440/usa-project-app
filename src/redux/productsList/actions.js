@@ -27,3 +27,47 @@ export const fetchAllProductsList = item => {
 
     return request();
 };
+
+export const editProduct = item => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .editProduct(item)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.EDIT_PRODUCT_FAILED,
+                        reject: actionTypes.EDIT_PRODUCT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.EDIT_PRODUCT_LOADING);
+    const success = res => action(actionTypes.EDIT_PRODUCT_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const deleteProduct = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .deleteProduct(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.DELETE_PRODUCT_FAILED,
+                        reject: actionTypes.DELETE_PRODUCT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.DELETE_PRODUCT_LOADING);
+    const success = res => action(actionTypes.DELETE_PRODUCT_SUCCESSFULLY, res);
+
+    return request();
+};
