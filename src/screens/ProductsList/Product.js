@@ -658,9 +658,14 @@ class Product extends PureComponent {
                                     {loggedInUserId != myuser_id ?
                                         <Button
                                             onPress={() => this.setState({ modalFlag: true })}
-                                            style={[styles.loginButton, { width: !!is_elevated ? '92%' : '100%' }]}
+                                            style={[styles.loginButton, {
+                                                width: !!is_elevated ? '92%' : '100%'
+                                            }]}
                                         >
-                                            <Text style={styles.buttonText}>{locales('titles.achiveSaleStatus')}</Text>
+                                            <Text style={[styles.buttonText, { paddingRight: 30 }]}>
+                                                {locales('titles.achiveSaleStatus')}</Text>
+                                            <FontAwesome name='envelope' size={25} color='white'
+                                                style={{ position: 'absolute', right: 95 }} />
                                         </Button>
                                         :
                                         <View style={{

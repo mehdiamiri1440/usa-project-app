@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -11,17 +11,23 @@ import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import ENUMS from '../../enums';
+
+let myTimeout;
 class ProductsList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            searchText: '',
+            sortModalFlag: false,
+            searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
+            categoryModalFlag: false,
             to_record_number: 5,
-            response_rate: null,
-            sort_by: '',
-            loaded: false
+            sort_by: ENUMS.SORT_LIST.values.BM,
+            loaded: false,
+            searchFlag: false
         }
     }
 
@@ -40,30 +46,60 @@ class ProductsList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-
         if (this.state.loaded == false && this.props.productsListArray.length) {
             this.setState({
                 loaded: true,
                 productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
             })
         }
+
+        if (this.state.searchFlag) {
+            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
+        }
     }
 
     fetchAllProducts = () => {
-        const { from_record_number, to_record_number, sort_by, response_rate } = this.state;
+        const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
         let item = {
             from_record_number,
-            // response_rate,
-            // sort_by,
+            sort_by,
             to_record_number,
+        };
+        if (searchText && searchText.length) {
+            item = {
+                from_record_number,
+                sort_by,
+                search_text: searchText,
+                to_record_number,
+            };
         };
         this.props.fetchAllProductsList(item);
     };
 
 
-    handleSearch = text => {
-        const { productsListArray } = this.props;
+    handleSearch = (text) => {
+        clearTimeout(myTimeout)
+        const { from_record_number, to_record_number, sort_by } = this.state;
+
+        this.setState({ searchText: text });
+        let item = {
+            from_record_number,
+            to_record_number,
+            sort_by
+        };
+        if (text)
+            item = {
+                from_record_number,
+                search_text: text,
+                to_record_number,
+                sort_by
+            };
+        myTimeout = setTimeout(() => {
+            this.props.fetchAllProductsList(item).then(_ => {
+                this.setState({ searchFlag: true })
+            });
+        }, 1500);
 
     };
 
@@ -71,8 +107,10 @@ class ProductsList extends Component {
 
     };
 
-    sortProducts = event => {
-
+    sortProducts = id => {
+        this.props.fetchAllSubCategories(id).then(_ => {
+            this.setState({ categoryModalFlag: true })
+        });
     };
 
     render() {
@@ -82,16 +120,87 @@ class ProductsList extends Component {
             productsListFailed,
             productsListMessage,
             productsListError,
-
+            subCategoriesList,
             categoriesList,
             categoriesLoading
         } = this.props;
 
-        const { searchText, loaded, productsListArray } = this.state;
+        const { searchText, loaded, productsListArray, categoryModalFlag, sortModalFlag } = this.state;
 
         return (
             <>
+                <Modal
+                    animationType="slide"
+                    visible={sortModalFlag}
+                    onRequestClose={() => this.setState({ sortModalFlag: false })}>
+                    <FlatList
+                        data={ENUMS.SORT_LIST.list}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => this.setState({ sort_by: item.value }, () => {
+                                    const { from_record_number, to_record_number, searchText } = this.state;
+                                    let searchItem = {
+                                        from_record_number,
+                                        sort_by: item.value,
+                                        to_record_number,
+                                    };
+                                    if (searchText && searchText.length) {
+                                        searchItem = {
+                                            from_record_number,
+                                            sort_by: item.value,
+                                            search_text: searchText,
+                                            to_record_number
+                                        }
+                                    }
+                                    this.props.fetchAllProductsList(searchItem).then(_ => {
+                                        this.setState({ sortModalFlag: false, searchFlag: true })
+                                    });
+                                })}
+                                style={{
+                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                }}>
+                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
+                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.title}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </Modal>
 
+                <Modal
+                    animationType="slide"
+                    visible={categoryModalFlag}
+                    onRequestClose={() => this.setState({ categoryModalFlag: false })}>
+                    <FlatList
+                        data={subCategoriesList}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => this.setState({ searchText: item.category_name }, () => {
+                                    const { from_record_number, to_record_number, sort_by } = this.state;
+                                    let searchItem = {
+                                        from_record_number,
+                                        sort_by,
+                                        search_text: item.category_name,
+                                        to_record_number,
+                                    };
+                                    this.props.fetchAllProductsList(searchItem).then(_ => {
+                                        this.setState({ categoryModalFlag: false, searchFlag: true })
+                                    });
+                                })}
+                                style={{
+                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                }}>
+                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
+                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.category_name}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </Modal>
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -135,7 +244,7 @@ class ProductsList extends Component {
                             </TouchableOpacity>
                             <Input value={searchText}
                                 ref={this.serachInputRef}
-                                onChangeText={this.handleSearch}
+                                onChangeText={text => this.handleSearch(text)}
                                 style={{ fontFamily: 'Vazir', height: 42, textAlignVertical: 'center' }}
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
@@ -143,7 +252,7 @@ class ProductsList extends Component {
 
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <TouchableOpacity
-                                onPress={this.sortProducts}
+                                onPress={() => this.setState({ sortModalFlag: true })}
                                 style={{
                                     borderRadius: 18, marginVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: deviceWidth * 0.25, borderWidth: 0.8, borderColor: '#060446'
@@ -162,7 +271,7 @@ class ProductsList extends Component {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        onPress={this.sortProducts}
+                                        onPress={() => this.sortProducts(item.id)}
                                         style={{
                                             borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                             minWidth: deviceWidth * 0.25, borderWidth: 0.8, borderColor: '#7E7E7E'
@@ -184,7 +293,7 @@ class ProductsList extends Component {
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={<View style={{
-                            alignSelf: 'center', justifyContent: 'center',
+                            alignSelf: 'center', justifyContent: 'flex-start', paddingTop: 80,
                             alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
                         }}>
                             <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
@@ -202,14 +311,21 @@ class ProductsList extends Component {
                                     from_record_number: this.state.from_record_number + 5,
                                     to_record_number: this.state.to_record_number + 5,
                                 }, () => {
-                                    const { from_record_number, to_record_number, sort_by, response_rate } = this.state;
+                                    const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
                                     let item = {
                                         from_record_number,
-                                        // response_rate,
-                                        // sort_by,
+                                        sort_by,
                                         to_record_number,
                                     };
+                                    if (searchText && searchText.length) {
+                                        item = {
+                                            from_record_number,
+                                            sort_by,
+                                            to_record_number,
+                                            search_text: searchText
+                                        }
+                                    }
                                     this.props.fetchAllProductsList(item).then(_ => {
                                         this.setState({ loaded: false })
                                     })
@@ -254,13 +370,22 @@ const mapStateToProps = (state) => {
         categories: state.registerProductReducer.categories,
 
 
+        subCategoriesLoading: state.registerProductReducer.subCategoriesLoading,
+        subCategoriesMessage: state.registerProductReducer.subCategoriesMessage,
+        subCategoriesError: state.registerProductReducer.subCategoriesError,
+        subCategoriesFailed: state.registerProductReducer.subCategoriesFailed,
+        subCategoriesList: state.registerProductReducer.subCategoriesList,
+        subCategories: state.registerProductReducer.subCategories,
+
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item))
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
+        fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id))
+
     }
 };
 
