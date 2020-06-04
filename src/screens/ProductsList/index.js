@@ -108,10 +108,11 @@ class ProductsList extends Component {
     };
 
     sortProducts = id => {
-        this.props.fetchAllSubCategories(id).then(_ => {
-            this.setState({ categoryModalFlag: true })
-        });
+        this.setState({ categoryModalFlag: true }, () => {
+            this.props.fetchAllSubCategories(id)
+        })
     };
+
 
     render() {
         const {
@@ -122,7 +123,8 @@ class ProductsList extends Component {
             productsListError,
             subCategoriesList,
             categoriesList,
-            categoriesLoading
+            categoriesLoading,
+            subCategoriesLoading
         } = this.props;
 
         const { searchText, loaded, productsListArray, categoryModalFlag, sortModalFlag } = this.state;
@@ -134,6 +136,8 @@ class ProductsList extends Component {
                     visible={sortModalFlag}
                     onRequestClose={() => this.setState({ sortModalFlag: false })}>
                     <FlatList
+                        refreshing={productsListLoading || categoriesLoading}
+                        onRefresh={() => <Spin spininng={productsListLoading} />}
                         data={ENUMS.SORT_LIST.list}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
@@ -176,6 +180,8 @@ class ProductsList extends Component {
                     <FlatList
                         data={subCategoriesList}
                         keyExtractor={(item, index) => index.toString()}
+                        refreshing={subCategoriesLoading || productsListLoading}
+                        onRefresh={() => <Spin spininng={subCategoriesLoading || productsListLoading} />}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
@@ -288,65 +294,66 @@ class ProductsList extends Component {
                 </View>
 
 
-                <Spin spinning={productsListLoading || categoriesLoading}>
-                    <FlatList
-                        keyboardDismissMode='on-drag'
-                        keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={<View style={{
-                            alignSelf: 'center', justifyContent: 'flex-start', paddingTop: 80,
-                            alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
-                        }}>
-                            <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                            <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>{locales('titles.noProductFound')}</Text>
-                        </View>
-                        }
-                        getItemLayout={(data, index) => (
-                            { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
-                        )}
-                        extraData={this.state}
-                        style={{ height: deviceHeight * 0.66 }}
-                        onEndReached={() => {
-                            if (loaded && productsListArray.length >= this.state.to_record_number)
-                                this.setState({
-                                    from_record_number: this.state.from_record_number + 5,
-                                    to_record_number: this.state.to_record_number + 5,
-                                }, () => {
-                                    const { from_record_number, to_record_number, sort_by, searchText } = this.state;
+                <FlatList
+                    keyboardDismissMode='on-drag'
+                    keyboardShouldPersistTaps='handled'
+                    refreshing={productsListLoading}
+                    ListEmptyComponent={!productsListLoading && <View style={{
+                        alignSelf: 'center', justifyContent: 'flex-start', paddingTop: 80,
+                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
+                    }}>
+                        <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>{locales('titles.noProductFound')}</Text>
+                    </View>
+                    }
+                    getItemLayout={(data, index) => (
+                        { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
+                    )}
+                    extraData={this.state}
+                    style={{ height: deviceHeight * 0.66 }}
+                    onEndReached={() => {
+                        if (loaded && productsListArray.length >= this.state.to_record_number)
+                            this.setState({
+                                from_record_number: this.state.from_record_number + 5,
+                                to_record_number: this.state.to_record_number + 5,
+                            }, () => {
+                                const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
-                                    let item = {
+                                let item = {
+                                    from_record_number,
+                                    sort_by,
+                                    to_record_number,
+                                };
+                                if (searchText && searchText.length) {
+                                    item = {
                                         from_record_number,
                                         sort_by,
                                         to_record_number,
-                                    };
-                                    if (searchText && searchText.length) {
-                                        item = {
-                                            from_record_number,
-                                            sort_by,
-                                            to_record_number,
-                                            search_text: searchText
-                                        }
+                                        search_text: searchText
                                     }
-                                    this.props.fetchAllProductsList(item).then(_ => {
-                                        this.setState({ loaded: false })
-                                    })
+                                }
+                                this.props.fetchAllProductsList(item).then(_ => {
+                                    this.setState({ loaded: false })
                                 })
-                        }}
-                        initialNumToRender={2}
-                        initialScrollIndex={0}
-                        onEndReachedThreshold={0.1}
-                        keyExtractor={(_, index) => index.toString()}
-                        data={productsListArray}
-                        renderItem={({ item }) => <Product
-                            minimumOrderRef={this.minimumOrderRef}
-                            maximumPriceRef={this.maximumPriceRef}
-                            amountRef={this.amountRef}
-                            minimumPriceRef={this.minimumPriceRef}
-                            productItem={item}
-                            fetchAllProducts={this.fetchAllProducts}
-                            {...this.props}
-                        />}
-                    />
-                </Spin>
+                            })
+                    }}
+                    initialNumToRender={2}
+                    initialScrollIndex={0}
+                    refreshing={productsListLoading || categoriesLoading}
+                    onRefresh={() => <Spin spininng={productsListLoading} />}
+                    onEndReachedThreshold={0.4}
+                    keyExtractor={(_, index) => index.toString()}
+                    data={productsListArray}
+                    renderItem={({ item }) => <Product
+                        minimumOrderRef={this.minimumOrderRef}
+                        maximumPriceRef={this.maximumPriceRef}
+                        amountRef={this.amountRef}
+                        minimumPriceRef={this.minimumPriceRef}
+                        productItem={item}
+                        fetchAllProducts={this.fetchAllProducts}
+                        {...this.props}
+                    />}
+                />
 
             </>
         )
