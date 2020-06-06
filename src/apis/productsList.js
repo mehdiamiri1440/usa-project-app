@@ -21,6 +21,27 @@ export const fetchAllProductsList = item => {
 
 
 
+export const fetchAllMyProducts = user_name => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_product_list_by_user_name`,
+                method: 'POST',
+                data: { user_name },
+                withAuth: false,
+            })
+            .then(result => {
+                console.log('here-->', result)
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};
+
+
+
 export const editProduct = item => {
     return new Promise((resolve, reject) => {
         requester

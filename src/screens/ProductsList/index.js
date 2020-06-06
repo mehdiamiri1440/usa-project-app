@@ -20,11 +20,12 @@ class ProductsList extends Component {
         super(props)
         this.state = {
             sortModalFlag: false,
+            refreshed: false,
             searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
             categoryModalFlag: false,
-            to_record_number: 5,
+            to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false
@@ -56,6 +57,11 @@ class ProductsList extends Component {
         if (this.state.searchFlag) {
             this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
         }
+
+
+        if (this.state.refreshed) {
+            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
+        }
     }
 
     fetchAllProducts = () => {
@@ -80,24 +86,22 @@ class ProductsList extends Component {
 
     handleSearch = (text) => {
         clearTimeout(myTimeout)
-        const { from_record_number, to_record_number, sort_by } = this.state;
+        const { sort_by } = this.state;
 
         this.setState({ searchText: text });
         let item = {
-            from_record_number,
-            to_record_number,
-            sort_by
+            sort_by,
+            from_record_number: 0,
+            to_record_number: 15
         };
         if (text)
             item = {
-                from_record_number,
                 search_text: text,
-                to_record_number,
-                sort_by
+                sort_by,
             };
         myTimeout = setTimeout(() => {
             this.props.fetchAllProductsList(item).then(_ => {
-                this.setState({ searchFlag: true })
+                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             });
         }, 1500);
 
@@ -144,22 +148,22 @@ class ProductsList extends Component {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    const { from_record_number, to_record_number, searchText } = this.state;
+                                    const { searchText } = this.state;
                                     let searchItem = {
-                                        from_record_number,
+                                        from_record_number: 0,
                                         sort_by: item.value,
-                                        to_record_number,
+                                        to_record_number: 15,
                                     };
                                     if (searchText && searchText.length) {
                                         searchItem = {
-                                            from_record_number,
+                                            from_record_number: 0,
                                             sort_by: item.value,
                                             search_text: searchText,
-                                            to_record_number
+                                            to_record_number: 15
                                         }
                                     }
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ sortModalFlag: false, searchFlag: true })
+                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     });
                                 })}
                                 style={{
@@ -186,15 +190,15 @@ class ProductsList extends Component {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    const { from_record_number, to_record_number, sort_by } = this.state;
+                                    const { sort_by } = this.state;
                                     let searchItem = {
-                                        from_record_number,
+                                        from_record_number: 0,
                                         sort_by,
                                         search_text: item.category_name,
-                                        to_record_number,
+                                        to_record_number: 15,
                                     };
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ categoryModalFlag: false, searchFlag: true })
+                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     });
                                 })}
                                 style={{
@@ -297,9 +301,8 @@ class ProductsList extends Component {
                 <FlatList
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
-                    refreshing={productsListLoading}
                     ListEmptyComponent={!productsListLoading && <View style={{
-                        alignSelf: 'center', justifyContent: 'flex-start', paddingTop: 80,
+                        alignSelf: 'center', justifyContent: 'flex-start',
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
@@ -310,12 +313,11 @@ class ProductsList extends Component {
                         { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
                     )}
                     extraData={this.state}
-                    style={{ height: deviceHeight * 0.66 }}
                     onEndReached={() => {
                         if (loaded && productsListArray.length >= this.state.to_record_number)
                             this.setState({
-                                from_record_number: this.state.from_record_number + 5,
-                                to_record_number: this.state.to_record_number + 5,
+                                from_record_number: this.state.from_record_number + 15,
+                                to_record_number: this.state.to_record_number + 15,
                             }, () => {
                                 const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
@@ -340,8 +342,29 @@ class ProductsList extends Component {
                     initialNumToRender={2}
                     initialScrollIndex={0}
                     refreshing={productsListLoading || categoriesLoading}
-                    onRefresh={() => <Spin spininng={productsListLoading} />}
-                    onEndReachedThreshold={0.4}
+                    onRefresh={() => {
+                        let item = {
+                            from_record_number: 0,
+                            sort_by: 'BM',
+                            to_record_number: 15,
+                        };
+                        // if (searchText && searchText.length) {
+                        //     item = {
+                        //         from_record_number,
+                        //         sort_by,
+                        //         to_record_number,
+                        //         search_text: searchText
+                        //     }
+                        // }
+                        this.props.fetchAllProductsList(item).then(_ => {
+                            this.setState({
+                                searchText: '', sort_by: 'BM'
+                                , refreshed: true, from_record_number: 0, to_record_number: 15
+                            })
+                        })
+                    }
+                    }
+                    onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product

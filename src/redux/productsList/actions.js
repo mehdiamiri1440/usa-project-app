@@ -28,6 +28,28 @@ export const fetchAllProductsList = item => {
     return request();
 };
 
+export const fetchAllMyProducts = userName => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchAllMyProducts(userName)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_MY_PRODUCTS_FAILED,
+                        reject: actionTypes.FETCH_ALL_MY_PRODUCTS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_MY_PRODUCTS_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_MY_PRODUCTS_SUCCESSFULLY, res);
+
+    return request();
+};
+
 export const editProduct = item => {
     const request = () => {
         return dispatch => {

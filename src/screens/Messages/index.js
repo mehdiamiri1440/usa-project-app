@@ -158,6 +158,7 @@ class ContactsList extends React.Component {
                 <Spin spinning={contactsListLoading && !loaded}>
                     {modalFlag ? <ChatModal
                         transparent={false}
+                        {...this.props}
                         setcontactsListUpdated={this.setcontactsListUpdated}
                         visible={modalFlag}
                         contactsListUpdated={contactsListUpdated}
@@ -170,20 +171,24 @@ class ContactsList extends React.Component {
                     >
                         {contactsList.length ?
                             <>
-                                <Card style={{ minHeight: deviceHeight * 0.77 }}>
+                                <Card >
                                     <CardItem>
                                         <Body>
                                             <FlatList
+                                                refreshing={contactsListLoading && !loaded}
+                                                onRefresh={() => this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
+                                                    this.setState({ loaded: false });
+                                                })}
                                                 keyExtractor={item => item.contact_id.toString()}
                                                 keyboardShouldPersistTaps='handled'
                                                 keyboardDismissMode='on-drag'
                                                 showsVerticalScrollIndicator={false}
                                                 getItemLayout={(data, index) => (
-                                                    { length: contactsList.length, offset: 100 * index, index }
+                                                    { length: 100, offset: 100 * index, index }
                                                 )}
                                                 // onEndReachedThreshold={0.3}
                                                 // onEndReached={this.fetchMoreContacts}
-                                                style={{ width: '100%', height: deviceHeight * 0.68 }}
+                                                style={{ width: '100%', height: deviceHeight * 0.74 }}
                                                 data={contactsList}
                                                 renderItem={({ item, index, separators }) => (
                                                     <TouchableOpacity

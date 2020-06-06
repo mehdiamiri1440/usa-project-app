@@ -10,7 +10,7 @@ const Spin = props => {
         <>
             {spinning && <View style={{
                 position: 'absolute', flex: 1, backgroundColor: 'white',
-                opacity: 0.4, zIndex: 999, width: deviceWidth, alignSelf: 'center', height: deviceHeight,
+                opacity: 0.8, zIndex: 999, width: deviceWidth, alignSelf: 'center', height: deviceHeight,
                 flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingVertical: 10
             }}>
                 <ActivityIndicator animating size={size} color={color} />

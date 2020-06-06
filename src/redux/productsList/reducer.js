@@ -7,6 +7,13 @@ const INITIAL_STATE = {
     productsListObject: {},
     productsListArray: [],
 
+    myProductsLoading: false,
+    myProductsFailed: false,
+    myProductsError: false,
+    myProductsMessage: null,
+    myProductsObject: {},
+    myProductsArray: [],
+
     editProductLoading: false,
     editProductFailed: false,
     editProductError: false,
@@ -66,6 +73,54 @@ export default (state = INITIAL_STATE, action) => {
                 productsListFailed: false,
                 productsListError: true,
                 productsListMessage: null
+            };
+        };
+
+
+
+        case actionTypes.FETCH_ALL_MY_PRODUCTS_LOADING: {
+            return {
+                ...state,
+                myProductsObject: {},
+                myProductsArray: [],
+                myProductsLoading: true,
+                myProductsFailed: false,
+                myProductsError: false,
+                myProductsMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_MY_PRODUCTS_SUCCESSFULLY: {
+            return {
+                ...state,
+                myProductsObject: { ...action.payload },
+                myProductsArray: [...action.payload.products],
+                myProductsLoading: false,
+                myProductsFailed: false,
+                myProductsError: false,
+                myProductsMessage: null,
+            };
+        };
+        case actionTypes.FETCH_ALL_MY_PRODUCTS_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                myProductsObject: {},
+                myProductsArray: [],
+                myProductsLoading: false,
+                myProductsFailed: true,
+                myProductsError: false,
+                myProductsMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_MY_PRODUCTS_REJECT: {
+            return {
+                ...state,
+                myProductsObject: {},
+                myProductsArray: [],
+                myProductsLoading: false,
+                myProductsFailed: false,
+                myProductsError: true,
+                myProductsMessage: null
             };
         };
 

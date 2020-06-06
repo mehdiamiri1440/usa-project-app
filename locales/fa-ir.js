@@ -19,7 +19,7 @@ export default {
     'labels.noContactFound': 'مخاطبی یافت نشد',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     "labels.seller": "فروشنده",
-    'labels.seeProfile': 'مشاهده پروفایل',
+    'labels.seeProfile': 'پروفایل',
     'labels.responseRate': 'احتمال پاسخگویی',
     'labels.addMoreDetails': 'ثبت جزییات بیشتر',
     'labels.addMore': 'افزودن بیشتر',

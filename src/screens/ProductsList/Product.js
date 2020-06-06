@@ -543,19 +543,20 @@ class Product extends PureComponent {
                     {modalFlag && <ChatModal
                         transparent={false}
                         visible={modalFlag}
+                        {...this.props}
                         contact={{ ...selectedContact }}
                         onRequestClose={() => this.setState({ modalFlag: false })}
                     />}
 
-                    <Card>
-                        <CardItem>
-                            <Body>
+                    <Card style={{ width: deviceWidth * 0.97, alignSelf: 'center' }}>
+                        <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
+                            <Body >
                                 <TouchableOpacity
                                     onPress={() => this.props.navigation.navigate('Profile')}
                                     activeOpacity={1}
                                     style={{
-                                        flexDirection: 'row-reverse',
-                                        width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#EEEEEE', paddingVertical: 4
+                                        flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
+                                        width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#7E7E7E'
                                     }}>
                                     <Image
                                         style={{
@@ -569,7 +570,7 @@ class Product extends PureComponent {
                                             require('../../../assets/icons/user.png')
                                         } />
                                     <View
-                                        style={{ width: '59%', justifyContent: 'flex-start' }}
+                                        style={{ width: '62%', justifyContent: 'flex-start' }}
                                     >
                                         <Text style={{
                                             fontFamily: 'Vazir-Bold-FD',
@@ -579,7 +580,7 @@ class Product extends PureComponent {
                                             {`${first_name} ${last_name}`}
                                         </Text>
                                         {response_rate > 0 && loggedInUserId != myuser_id &&
-                                            <Text style={{ color: '#7E7E7E', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
+                                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
                                                 {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                                             </Text>}
                                     </View>
@@ -590,11 +591,14 @@ class Product extends PureComponent {
                                             {locales('labels.deleteProduct')}
                                         </Text>
                                         :
-                                        <Text onPress={() => this.props.navigation.navigate('Profile')} style={{ color: '#00C569', fontSize: 16, textAlignVertical: 'center' }}>
+                                        <Text onPress={() => this.props.navigation.navigate('Profile')} style={{
+                                            width: '30%', textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
+                                        }}>
                                             {locales('labels.seeProfile')}
                                         </Text>}
                                 </TouchableOpacity>
-
+                                {active_pakage_type > 1 && <Image
+                                    source={require('../../../assets/icons/special-label.png')} />}
                                 <TouchableOpacity
                                     activeOpacity={1}
                                     onPress={() => this.props.navigation.navigate('ProductDetails')}
@@ -659,13 +663,13 @@ class Product extends PureComponent {
                                         <Button
                                             onPress={() => this.setState({ modalFlag: true })}
                                             style={[styles.loginButton, {
-                                                width: !!is_elevated ? '92%' : '100%'
+                                                width: !!is_elevated ? '92%' : '88%'
                                             }]}
                                         >
                                             <Text style={[styles.buttonText, { paddingRight: 30 }]}>
                                                 {locales('titles.achiveSaleStatus')}</Text>
-                                            <FontAwesome name='envelope' size={25} color='white'
-                                                style={{ position: 'absolute', right: 95 }} />
+                                            <FontAwesome name='envelope' size={20} color='white'
+                                                style={{ position: 'absolute', right: 108 }} />
                                         </Button>
                                         :
                                         <View style={{

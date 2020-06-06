@@ -101,7 +101,8 @@ class ChatModal extends React.Component {
 
 
     componentWillUnmount() {
-        Jmoment.locale('fa')
+        Jmoment.locale('fa');
+        this.props.fetchAllContactsList();
     }
 
     handleMessageTextChange = text => {
@@ -129,7 +130,8 @@ class ChatModal extends React.Component {
 
             this.props.sendMessage(msgObject).then(() => {
                 setTimeout(() => {
-                    this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                    if (this.scrollViewRef && this.scrollViewRef.current)
+                        this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 10);
                 this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
                     this.setState(state => {
@@ -206,17 +208,23 @@ class ChatModal extends React.Component {
                                 : require('../../../assets/icons/user.png')}
                         />
                     </TouchableOpacity>
-                    <View style={{
-                        paddingHorizontal: 10,
-                        width: deviceWidth * 0.63,
-                        alignItems: 'flex-end',
-                    }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            Jmoment.locale('fa');
+                            onRequestClose();
+                            this.props.navigation.navigate('Profile');
+                        }}
+                        style={{
+                            paddingHorizontal: 10,
+                            width: deviceWidth * 0.63,
+                            alignItems: 'flex-end',
+                        }}>
                         <Text
                             style={{ fontSize: 18 }}
                         >
                             {`${firstName} ${lastName}`}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
 
