@@ -10,8 +10,10 @@ import StockAndPrice from './Steps/StockAndPrice';
 import GuidToRegisterProduct from './Steps/GuidToRegisterProduct';
 import ChooseCity from './Steps/ChooseCity';
 import ProductImages from './Steps/ProductImages';
+import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
+import Spin from '../../components/loading/loading';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -31,9 +33,9 @@ class RegisterProduct extends React.Component {
                 city_id: "",
                 rules: true
             },
-            productFiles:[],
+            productFiles: [],
             successfullAlert: false,
-             productFields:[
+            productFields: [
                 "product_name",
                 "stock",
                 "min_sale_price",
@@ -105,21 +107,21 @@ class RegisterProduct extends React.Component {
 
     setProductImages = images => {
         console.log('min', images)
-        this.setState({ productFiles:images,images, stepNumber: 5 });
+        this.setState({ productFiles: images, images, stepNumber: 5 });
     };
 
     setProductDescription = description => {
         this.setState({ description, stepNumber: 6 });
     };
-    getItemDescription=(itemKey, defaultFieldsOptions) =>{
-         return defaultFieldsOptions.find((item) => itemKey == item.name).description;
+    getItemDescription = (itemKey, defaultFieldsOptions) => {
+        return defaultFieldsOptions.find((item) => itemKey == item.name).description;
     }
 
     setDetailsArray = (detailsArray, defaultArray, defaultFieldsOptions) => {
-        const {productType}=this.state;
-        let description='<hr/>';
+        const { productType } = this.state;
+        let description = '<hr/>';
         let temp = 'برای اطلاع از قیمت روز ' + productType + ' و خرید مستقیم پیام ارسال کنید.' + '<hr/>';
-        this.setState({description:this.state.description.replace(temp,"")})
+        this.setState({ description: this.state.description.replace(temp, "") })
         description = description + temp;
 
 
@@ -127,7 +129,7 @@ class RegisterProduct extends React.Component {
             if (detailsArray[i].itemValue) {
                 let itemDescription = this.getItemDescription(detailsArray[i].itemKey, defaultFieldsOptions);
                 itemDescription = itemDescription + ' : ' + detailsArray[i].itemValue + '<hr/>';
-                this.setState({description:this.state.description.replace(itemDescription,"")})
+                this.setState({ description: this.state.description.replace(itemDescription, "") })
                 description = description + itemDescription;
             }
         }
@@ -135,38 +137,38 @@ class RegisterProduct extends React.Component {
 
 
         temp = 'مقدار موجودی آماده فروش برای این محصول : ' + this.state.amount + ' کیلوگرم' + '<hr/>';
-        this.setState({description:this.state.description.replace(temp,"")})
+        this.setState({ description: this.state.description.replace(temp, "") })
         description = description + temp;
 
 
         temp = 'حداقل مقدار فروش این محصول توسط فروشنده در یک معامله : ' + this.state.minimumOrder + ' کیلوگرم' + '<hr/>';
-        this.setState({description:this.state.description.replace(temp,"")})
+        this.setState({ description: this.state.description.replace(temp, "") })
         description = description + temp;
 
-        this.setState({description:this.state.description+description},()=>{
+        this.setState({ description: this.state.description + description }, () => {
             return this.submitAllSteps();
         })
 
 
     };
-     toLatinNumbers=(num) =>{
-    if (num == null) {
-        return null;
+    toLatinNumbers = (num) => {
+        if (num == null) {
+            return null;
+        }
+
+        num = num.toString().replace(/^0+/, "");
+        num = num.toString().replace(/^\u0660+/, "");
+        num = num.toString().replace(/^\u06f0+/, "");
+
+        return num
+            .toString()
+            .replace(/[\u0660-\u0669]/g, function (c) {
+                return c.charCodeAt(0) - 0x0660;
+            })
+            .replace(/[\u06f0-\u06f9]/g, function (c) {
+                return c.charCodeAt(0) - 0x06f0;
+            });
     }
-
-    num = num.toString().replace(/^0+/, "");
-    num = num.toString().replace(/^\u0660+/, "");
-    num = num.toString().replace(/^\u06f0+/, "");
-
-    return num
-        .toString()
-        .replace(/[\u0660-\u0669]/g, function (c) {
-            return c.charCodeAt(0) - 0x0660;
-        })
-        .replace(/[\u06f0-\u06f9]/g, function (c) {
-            return c.charCodeAt(0) - 0x06f0;
-        });
-}
 
     submitAllSteps = () => {
         let {
@@ -185,75 +187,40 @@ class RegisterProduct extends React.Component {
 
         } = this.state;
 
-        // console.warn(
-        //     'productType--->', productType,
-        //     'category--->', category,
-        //     'detailsarray---->', detailsArray,
-        //     'sub category---->>', subCategory,
-        //     'minimim order--->', minimumOrder,
-        //     'maximum price---->', maximumPrice,
-        //     'minimum price--->', minimumPrice,
-        //     'amount --->', amount,
-        //     'images--->>', images,
-        //     'city--->>', city,
-        //     'description--->', description,
-        //     'province--->', province,
-        //     'temp---------->>>', tempDefaultArray);
 
         let formData = new FormData();
         let cnt = this.state.productFields.length;
-      
-        this.setState(state=>{
-            state.product.product_name=productType;
-            state.product.stock=amount;
-            state.product.min_sale_amount=minimumOrder;
-            state.product.max_sale_price=maximumPrice;
+
+        this.setState(state => {
+            state.product.product_name = productType;
+            state.product.stock = amount;
+            state.product.min_sale_amount = minimumOrder;
+            state.product.max_sale_price = maximumPrice;
             state.product.min_sale_price = minimumPrice;
-            state.product.description=description;
-            state.product.address="";
-            state.product.category_id=subCategory;
-            state.product.city_id=city;
-            state.product.rules=true;
+            state.product.description = description;
+            state.product.address = "";
+            state.product.category_id = subCategory;
+            state.product.city_id = city;
+            state.product.rules = true;
             return '';
-        },()=>{
-                for (var i = 0; i < cnt; i++) {
-                    formData.append(
-                        this.state.productFields[i],
-                        this.toLatinNumbers(this.state.product[this.state.productFields[i]])
-                    );
-                }
-                for (var i = 0; i < this.state.productFiles.length; i++) {
-                    let file = this.state.productFiles[i];
-                    formData.append("image_" + i, file);
-                }
-                formData.append("images_count", this.state.productFiles.length);
-console.log('formdata',formData)
-                return this.props.addNewProduct(formData)
+        }, () => {
+            for (var i = 0; i < cnt; i++) {
+                formData.append(
+                    this.state.productFields[i],
+                    this.toLatinNumbers(this.state.product[this.state.productFields[i]])
+                );
+            }
+            for (var i = 0; i < this.state.productFiles.length; i++) {
+                let file = this.state.productFiles[i];
+                formData.append("image_" + i, file);
+            }
+            formData.append("images_count", this.state.productFiles.length);
+            console.log('formdata', formData)
+            return this.props.addNewProduct(formData).then(_ => {
+                this.changeStep(7);
+            })
         })
 
-  
-        // this.setState({ description }, () => {
-        //     let productObject = {
-        //         product_name: productType,
-        //         category,
-        //                category_id: subCategory,
-        //         stock: amount,
-        //         max_sale_price: maximumPrice,
-        //         min_sale_price: minimumPrice,
-        //         min_sale_amount: minimumOrder,
-        //         city_id: city,
-        //         description: this.state.description,
-        //         images_count: images.length,
-        //         rules: true
-        //     };
-
-        //     images.forEach((element, index) => {
-        //         productObject[`images_${index}`] = element
-        //     });
-
-        //     console.log('my final product->', productObject)
-        //     this.props.addNewProduct(productObject)
-        // })
     }
 
     renderSteps = () => {
@@ -299,6 +266,9 @@ console.log('formdata',formData)
             }
             case 6: {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
+            }
+            case 7: {
+                return <RegisterProductSuccessfully {...this.props} />
             }
             default:
                 break;
@@ -349,83 +319,84 @@ console.log('formdata',formData)
 
 
 
+                <Spin spinning={this.props.addNewProductLoading}>
+                    <ScrollView
+                        ref={this.mainContainer}
+                        keyboardShouldPersistTaps='handled'
+                    >
 
-                <ScrollView
-                    ref={this.mainContainer}
-                    keyboardShouldPersistTaps='handled'
-                >
 
-
-                    {stepNumber > 0 && <View style={{
-                        borderBottomColor: '#00C569',
-                        borderBottomWidth: 2,
-                        paddingVertical: 10,
-                        width: deviceWidth, marginVertical: 5,
-                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
-                    }}>
-                        <View style={{
-                            flexDirection: 'row-reverse',
-                            marginVertical: 5,
-
-                            alignItems: 'stretch',
-                            alignContent: 'center', alignSelf: 'center',
-                            width: deviceWidth - 80,
-
+                        {stepNumber > 0 && <View style={{
+                            borderBottomColor: '#00C569',
+                            borderBottomWidth: 2,
+                            paddingVertical: 10,
+                            width: deviceWidth, marginVertical: 5,
+                            flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                         }}>
-                            {stepsArray.map((item, index) => {
-                                return (
-                                    <Fragment key={index}>
-                                        <Text
-                                            style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
-                                                alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 10, height: 10 },
-                                                shadowColor: 'black',
-                                                shadowOpacity: 1.0,
-                                                elevation: 5,
-                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 26, height: 26, borderRadius: 13
+                            <View style={{
+                                flexDirection: 'row-reverse',
+                                marginVertical: 5,
 
-                                            }}
-                                        >
-                                            {item}
-                                        </Text>
-                                        {index < stepsArray.length - 1 && <View
-                                            style={{
-                                                height: 4,
-                                                flex: 1,
-                                                alignSelf: 'center',
-                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                            }}>
-                                        </View>
-                                        }
-                                    </Fragment>
-                                )
+                                alignItems: 'stretch',
+                                alignContent: 'center', alignSelf: 'center',
+                                width: deviceWidth - 80,
+
+                            }}>
+                                {stepsArray.map((item, index) => {
+                                    return (
+                                        <Fragment key={index}>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                    alignSelf: 'center', alignContent: 'center',
+                                                    shadowOffset: { width: 10, height: 10 },
+                                                    shadowColor: 'black',
+                                                    shadowOpacity: 1.0,
+                                                    elevation: 5,
+                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                    width: 26, height: 26, borderRadius: 13
+
+                                                }}
+                                            >
+                                                {item}
+                                            </Text>
+                                            {index < stepsArray.length - 1 && <View
+                                                style={{
+                                                    height: 4,
+                                                    flex: 1,
+                                                    alignSelf: 'center',
+                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                                }}>
+                                            </View>
+                                            }
+                                        </Fragment>
+                                    )
+                                }
+                                )}
+                            </View>
+                        </View>}
+
+
+
+
+
+                        <View style={styles.stepsContainer}>
+                            {successfullAlert && <View style={styles.loginFailedContainer}>
+                                <Text
+                                    style={styles.loginFailedText}
+                                >
+                                    {locales('titles.signUpDoneSuccessfully')}
+                                </Text>
+                            </View >
                             }
-                            )}
+                            {this.renderSteps()}
                         </View>
-                    </View>}
 
 
 
-
-
-                    <View style={styles.stepsContainer}>
-                        {successfullAlert && <View style={styles.loginFailedContainer}>
-                            <Text
-                                style={styles.loginFailedText}
-                            >
-                                {locales('titles.signUpDoneSuccessfully')}
-                            </Text>
-                        </View >
-                        }
-                        {this.renderSteps()}
-                    </View>
-
-
-
-                </ScrollView>
+                    </ScrollView>
+                </Spin>
 
             </View >
         )
@@ -462,6 +433,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
+        addNewProductLoading: state.registerProductReducer.addNewProductLoading
     }
 };
 

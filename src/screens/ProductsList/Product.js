@@ -556,7 +556,7 @@ class Product extends PureComponent {
                                     activeOpacity={1}
                                     style={{
                                         flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
-                                        width: '100%', borderBottomWidth: 0.6, borderBottomColor: '#7E7E7E'
+                                        width: '100%', borderBottomWidth: 1, borderBottomColor: '#7E7E7E'
                                     }}>
                                     <Image
                                         style={{
@@ -598,6 +598,7 @@ class Product extends PureComponent {
                                         </Text>}
                                 </TouchableOpacity>
                                 {active_pakage_type > 1 && <Image
+                                    style={{ position: 'absolute', left: 0, top: 48 }}
                                     source={require('../../../assets/icons/special-label.png')} />}
                                 <TouchableOpacity
                                     activeOpacity={1}
@@ -669,7 +670,7 @@ class Product extends PureComponent {
                                             <Text style={[styles.buttonText, { paddingRight: 30 }]}>
                                                 {locales('titles.achiveSaleStatus')}</Text>
                                             <FontAwesome name='envelope' size={20} color='white'
-                                                style={{ position: 'absolute', right: 108 }} />
+                                                style={{ position: 'absolute', right: !is_elevated ? 101 : 108 }} />
                                         </Button>
                                         :
                                         <View style={{
@@ -716,7 +717,10 @@ class Product extends PureComponent {
                                             textStyle: { fontFamily: 'Vazir' },
                                             duration: 3000
                                         })}
-                                        name='chart-line' size={30} color='white' style={{ backgroundColor: '#7E7E7E', padding: 7, borderRadius: 4 }}
+                                        name='chart-line' size={30} color='white' style={{
+                                            backgroundColor: '#7E7E7E',
+                                            padding: 7, right: loggedInUserId == myuser_id ? 10 : 0, borderRadius: 4
+                                        }}
                                     />}
                                 </View>
 

@@ -8,7 +8,10 @@ import DashboardIndex from '../../screens/Home/Dashboard';
 import PromoteRegistrationIndex from '../../screens/Home/PromoteRegistration/PromoteRegistration';
 import MyProducts from '../../screens/Home/MyProducts';
 import EditProfileIndex from '../../screens/Home/EditProfile';
+import ProductDetails from '../../screens/ProductDetails';
 import SettingsIndex from '../../screens/Settings/Settings';
+import Profile from '../../screens/Profile';
+import Payment from '../../screens/Payment';
 import ChangePasswordIndex from '../../screens/ChangePassword/ChangePassword';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -75,6 +78,24 @@ const routes = [
         component: TermsIndex,
         icon: color => <Octicons size={25} name='law' color={color} />,
         name: 'Terms'
+    },
+    {
+        label: 'labels.ProductDetails',
+        component: ProductDetails,
+        icon: color => <Octicons size={25} name='home' color={color} />,
+        name: 'ProductDetails'
+    },
+    {
+        label: 'labels.profile',
+        component: Profile,
+        icon: color => <AntDesign size={25} name='profile' color={color} />,
+        name: 'Profile'
+    },
+    {
+        label: 'labels.payment',
+        component: Payment,
+        icon: color => <MaterialIcons size={25} name='payment' color={color} />,
+        name: 'Payment'
     },
 
 ]

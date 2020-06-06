@@ -192,7 +192,7 @@ class Requests extends React.Component {
                                     renderItem={({ item, index, separators }) => (
                                         <View
                                             style={{
-                                                padding: 10, backgroundColor: '#FFFFFF',
+                                                padding: 10, backgroundColor: '#FFFFFF', marginVertical: 5,
                                                 width: '100%', borderBottomColor: '#DDDDDD',
                                                 borderBottomWidth: index < buyAdRequestsList.length - 1 ? 0.7 : 0
                                             }}
@@ -263,6 +263,8 @@ class Requests extends React.Component {
                                                         backgroundColor: '#00C569',
                                                         borderRadius: 6,
                                                         alignItems: 'center',
+                                                        width: "85%",
+                                                        alignSelf: 'center',
                                                         justifyContent: 'center',
                                                         paddingHorizontal: 10,
                                                         flexDirection: 'row-reverse'
@@ -289,7 +291,9 @@ class Requests extends React.Component {
                                     visible={modalFlag}
                                     buyAdId={selectedBuyAdId}
                                     contact={{ ...selectedContact }}
-                                    onRequestClose={() => this.setState({ modalFlag: false })}
+                                    onRequestClose={() => this.setState({ modalFlag: false }, () => {
+                                        this.props.fetchAllBuyAdRequests();
+                                    })}
                                 />}
 
 

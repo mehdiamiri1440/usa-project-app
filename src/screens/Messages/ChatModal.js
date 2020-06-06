@@ -240,7 +240,7 @@ class ChatModal extends React.Component {
                         )}
                         inverted
                         ref={this.scrollViewRef}
-                        style={{ marginBottom: 105, marginTop: 10 }}
+                        style={{ marginBottom: 50, marginTop: 10 }}
                         extraData={this.state}
                         onEndReached={() => {
                             if (loaded && userChatHistory.length >= 9)
