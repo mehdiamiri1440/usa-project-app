@@ -602,7 +602,7 @@ class Product extends PureComponent {
                                     source={require('../../../assets/icons/special-label.png')} />}
                                 <TouchableOpacity
                                     activeOpacity={1}
-                                    onPress={() => this.props.navigation.navigate('ProductDetails')}
+                                    onPress={() => this.props.navigation.navigate('ProductDetails', { productId })}
                                     style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                                     <Image
                                         style={{
@@ -690,7 +690,8 @@ class Product extends PureComponent {
                                             >
                                                 <Text
                                                     onPress={() => this.setState({ elevatorFlag: true })}
-                                                    style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>{locales('titles.elevateProduct')}</Text>
+                                                    style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>
+                                                    {locales('titles.elevateProduct')}</Text>
                                                 <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
                                             </Button>
                                             <Button

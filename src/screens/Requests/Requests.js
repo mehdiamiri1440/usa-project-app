@@ -180,7 +180,7 @@ class Requests extends React.Component {
 
 
                             <SafeAreaView
-                                style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.9) : userInfo.active_pakage_type !== 3 ? (deviceHeight) : (deviceHeight * 0.98) }}
+                                style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.72) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                             >
 
 

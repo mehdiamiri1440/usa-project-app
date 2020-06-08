@@ -9,8 +9,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { deviceHeight } from '../../../utils/deviceDimenssions';
-
+import Spin from '../../../components/loading/loading';
 
 class SelectCategory extends Component {
     constructor(props) {
@@ -106,7 +105,7 @@ class SelectCategory extends Component {
 
     render() {
 
-        let { categoriesList, subCategoriesList } = this.props;
+        let { categoriesList, subCategoriesList, subCategoriesLoading, categoriesLoading } = this.props;
         let { productType, category, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
 
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -196,36 +195,37 @@ class SelectCategory extends Component {
                         paddingHorizontal: 20
                     }}
                 /> */}
-                <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
-                        {locales('labels.subCategory')}
-                    </Label>
-                    <Item regular
-                        style={{
-                            width: deviceWidth * 0.9,
-                            borderRadius: 5,
-                            alignSelf: 'center',
-                            borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
-                        }}
-                    >
-                        <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                            useNativeAndroidPickerStyle={false}
-                            onValueChange={this.setSubCategory}
-                            style={styles}
-                            value={subCategory}
-                            placeholder={{
-                                label: locales('labels.selectSubCategory'),
-                                fontFamily: 'Vazir-Bold-FD',
+                <Spin spinning={categoriesLoading || subCategoriesLoading}>
+                    <View style={styles.labelInputPadding}>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('labels.subCategory')}
+                        </Label>
+                        <Item regular
+                            style={{
+                                width: deviceWidth * 0.9,
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
                             }}
-                            items={[...subCategoriesList.map(item => ({
-                                label: item.category_name, value: item.id
-                            }))]}
-                        />
-                    </Item>
-                    {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
-                </View>
-                {/* <Dropdown
+                        >
+                            <RNPickerSelect
+                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={this.setSubCategory}
+                                style={styles}
+                                value={subCategory}
+                                placeholder={{
+                                    label: locales('labels.selectSubCategory'),
+                                    fontFamily: 'Vazir-Bold-FD',
+                                }}
+                                items={[...subCategoriesList.map(item => ({
+                                    label: item.category_name, value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
+                    </View>
+                    {/* <Dropdown
                     error={subCategoryError}
                     onChangeText={(value) => this.setSubCategory(value)}
                     label={locales('labels.selectSubCategory')}
@@ -235,26 +235,26 @@ class SelectCategory extends Component {
                         paddingHorizontal: 20
                     }}
                 /> */}
-                <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
-                        {locales('titles.enterYourProductType')}
-                    </Label>
-                    <Item regular style={{
-                        borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
-                    }}>
-                        <Input
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            autoCompleteType='off'
-                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
-                            onChangeText={this.onProductTypeSubmit}
-                            value={productType}
-                            placeholder={locales('titles.productTypeWithExample')}
-                            ref={this.productTypeRef}
-                        />
-                    </Item>
-                    {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-                    {/* <OutlinedTextField
+                    <View style={styles.labelInputPadding}>
+                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                            {locales('titles.enterYourProductType')}
+                        </Label>
+                        <Item regular style={{
+                            borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
+                        }}>
+                            <Input
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                autoCompleteType='off'
+                                style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                                onChangeText={this.onProductTypeSubmit}
+                                value={productType}
+                                placeholder={locales('titles.productTypeWithExample')}
+                                ref={this.productTypeRef}
+                            />
+                        </Item>
+                        {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
+                        {/* <OutlinedTextField
                         baseColor={productType.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onProductTypeSubmit}
                         ref={this.productTypeRef}
@@ -267,7 +267,8 @@ class SelectCategory extends Component {
                             ? locales('titles.productType') :
                             locales('titles.productTypeWithExample')}
                     /> */}
-                </View>
+                    </View>
+                </Spin>
                 <Button
                     onPress={() => this.onSubmit()}
                     style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)

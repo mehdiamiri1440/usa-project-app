@@ -93,3 +93,25 @@ export const deleteProduct = id => {
 
     return request();
 };
+
+export const fetchProductDetails = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchProductDetails(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_PRODUCT_DETAILS_FAILED,
+                        reject: actionTypes.FETCH_PRODUCT_DETAILS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_PRODUCT_DETAILS_LOADING);
+    const success = res => action(actionTypes.FETCH_PRODUCT_DETAILS_SUCCESSFULLY, res);
+
+    return request();
+};

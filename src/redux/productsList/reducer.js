@@ -25,6 +25,13 @@ const INITIAL_STATE = {
     deleteProductFailed: false,
     deleteProductError: false,
     deleteProductMessage: null,
+
+    productDetailsStatus: null,
+    productDetails: {},
+    productDetailsLoading: false,
+    productDetailsFailed: false,
+    productDetailsError: false,
+    productDetailsMessage: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -208,6 +215,54 @@ export default (state = INITIAL_STATE, action) => {
                 deleteProductFailed: false,
                 deleteProductError: true,
                 deleteProductMessage: 'محصول موجود نیست و یا  قبلا حذف شده‌است'
+            };
+        };
+
+
+
+        case actionTypes.FETCH_PRODUCT_DETAILS_LOADING: {
+            return {
+                ...state,
+                productDetailsStatus: action.payload.status,
+                productDetails: {},
+                productDetailsLoading: true,
+                productDetailsFailed: false,
+                productDetailsError: false,
+                productDetailsMessage: null,
+            };
+        };
+        case actionTypes.FETCH_PRODUCT_DETAILS_SUCCESSFULLY: {
+            return {
+                ...state,
+                productDetailsStatus: action.payload.status,
+                productDetails: { ...action.payload.product },
+                productDetailsLoading: false,
+                productDetailsFailed: false,
+                productDetailsError: false,
+                productDetailsMessage: action.payload.msg,
+            };
+        };
+        case actionTypes.FETCH_PRODUCT_DETAILS_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                productDetailsLoading: false,
+                productDetailsStatus: action.payload.status,
+                productDetails: {},
+                productDetailsFailed: true,
+                productDetailsError: false,
+                productDetailsMessage: null
+            };
+        };
+        case actionTypes.FETCH_PRODUCT_DETAILS_REJECT: {
+            return {
+                ...state,
+                productDetailsStatus: action.payload.status,
+                productDetails: {},
+                productDetailsLoading: false,
+                productDetailsFailed: false,
+                productDetailsError: true,
+                productDetailsMessage: 'محصول موجود نیست و یا  قبلا حذف شده‌است'
             };
         };
 

@@ -6,7 +6,7 @@ class Profile extends Component {
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <Text> {locales('titles.close')} </Text>
             </View>
         )
     }

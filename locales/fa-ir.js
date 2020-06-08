@@ -23,6 +23,7 @@ export default {
     'labels.responseRate': 'احتمال پاسخگویی',
     'labels.addMoreDetails': 'ثبت جزییات بیشتر',
     'labels.addMore': 'افزودن بیشتر',
+    'labels.share': 'اشتراک گذاری',
     'labels.myBuskool': 'باسکول من',
     'labels.searchProduct': 'جستجوی محصول',
     "labels.selectCity": "شهر را انتخاب کنید",

@@ -32,14 +32,6 @@ class ProductsList extends Component {
         }
     }
 
-    serachInputRef = React.createRef();
-    amountRef = React.createRef();
-    minimumOrderRef = React.createRef();
-    maximumPriceRef = React.createRef();
-    minimumPriceRef = React.createRef();
-
-
-
 
     componentDidMount() {
         this.fetchAllProducts();
@@ -368,10 +360,6 @@ class ProductsList extends Component {
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product
-                        minimumOrderRef={this.minimumOrderRef}
-                        maximumPriceRef={this.maximumPriceRef}
-                        amountRef={this.amountRef}
-                        minimumPriceRef={this.minimumPriceRef}
                         productItem={item}
                         fetchAllProducts={this.fetchAllProducts}
                         {...this.props}
