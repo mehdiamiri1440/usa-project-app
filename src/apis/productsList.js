@@ -21,6 +21,26 @@ export const fetchAllProductsList = item => {
 
 
 
+export const fetchAllRelatedProducts = id => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_related_products`,
+                method: 'POST',
+                data: { product_id: id },
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                return reject(err.response);
+            });
+    });
+};
+
+
+
 export const fetchAllMyProducts = user_name => {
     return new Promise((resolve, reject) => {
         requester

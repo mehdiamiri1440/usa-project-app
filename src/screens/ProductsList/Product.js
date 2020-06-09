@@ -602,7 +602,7 @@ class Product extends PureComponent {
                                     source={require('../../../assets/icons/special-label.png')} />}
                                 <TouchableOpacity
                                     activeOpacity={1}
-                                    onPress={() => this.props.navigation.navigate('ProductDetails', { productId })}
+                                    onPress={() => this.props.navigation.navigate('ProductDetails', { key: productId, productId })}
                                     style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                                     <Image
                                         style={{

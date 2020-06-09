@@ -7,6 +7,14 @@ const INITIAL_STATE = {
     productsListObject: {},
     productsListArray: [],
 
+
+    relatedProductsLoading: false,
+    relatedProductsFailed: false,
+    relatedProductsError: false,
+    relatedProductsMessage: null,
+    relatedProductsObject: {},
+    relatedProductsArray: [],
+
     myProductsLoading: false,
     myProductsFailed: false,
     myProductsError: false,
@@ -80,6 +88,56 @@ export default (state = INITIAL_STATE, action) => {
                 productsListFailed: false,
                 productsListError: true,
                 productsListMessage: null
+            };
+        };
+
+
+
+
+        case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_LOADING: {
+            return {
+                ...state,
+                relatedProductsObject: {},
+                relatedProductsArray: [],
+                relatedProductsLoading: true,
+                relatedProductsFailed: false,
+                relatedProductsError: false,
+                relatedProductsMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_SUCCESSFULLY: {
+            console.log('red', action)
+            return {
+                ...state,
+                relatedProductsObject: { ...action.payload },
+                relatedProductsArray: [...action.payload.related_products],
+                relatedProductsLoading: false,
+                relatedProductsFailed: false,
+                relatedProductsError: false,
+                relatedProductsMessage: null,
+            };
+        };
+        case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                relatedProductsObject: {},
+                relatedProductsArray: [],
+                relatedProductsLoading: false,
+                relatedProductsFailed: true,
+                relatedProductsError: false,
+                relatedProductsMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_REJECT: {
+            return {
+                ...state,
+                relatedProductsObject: {},
+                relatedProductsArray: [],
+                relatedProductsLoading: false,
+                relatedProductsFailed: false,
+                relatedProductsError: true,
+                relatedProductsMessage: null
             };
         };
 

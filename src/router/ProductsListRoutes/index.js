@@ -2,6 +2,7 @@ import React from 'react';
 import ProductsListIndex from '../../screens/ProductsList';
 import ProductDetails from '../../screens/ProductDetails';
 import Profile from '../../screens/Profile';
+import EditProfileIndex from '../../screens/Home/EditProfile';
 import Payment from '../../screens/Payment';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -33,6 +34,11 @@ const routes = [
         icon: color => <MaterialIcons size={25} name='payment' color={color} />,
         name: 'Payment'
     },
-
+    {
+        label: 'labels.editProfile',
+        component: EditProfileIndex,
+        icon: color => <FontAwesome5 size={25} name='user-circle' color={color} />,
+        name: 'EditProfile'
+    },
 ]
 export default routes;
