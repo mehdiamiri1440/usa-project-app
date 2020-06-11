@@ -11,7 +11,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import * as productListActions from '../../redux/productsList/actions'
 import ChatModal from '../Messages/ChatModal';
-import { formatter, validator } from '../../utils';
+import { formatter, validator, dataGenerator } from '../../utils';
 import Spin from '../../components/loading/loading';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -602,7 +602,11 @@ class Product extends PureComponent {
                                     source={require('../../../assets/icons/special-label.png')} />}
                                 <TouchableOpacity
                                     activeOpacity={1}
-                                    onPress={() => this.props.navigation.navigate('ProductDetails', { key: productId, productId })}
+                                    onPress={() => {
+                                        this.props.navigation.navigate({
+                                            name: `ProductDetails`, params: { productId }, key: `ProductDetails${productId}`
+                                        })
+                                    }}
                                     style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                                     <Image
                                         style={{

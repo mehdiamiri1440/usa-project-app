@@ -15,6 +15,13 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import { deviceWidth } from '../utils/deviceDimenssions';
 
+import Octicons from 'react-native-vector-icons/dist/Octicons';
+import ProductsListRoutes from './ProductsListRoutes';
+import ProductDetails from '../screens/ProductDetails';
+import Payment from '../screens/Payment';
+import ProductsListIndex from '../screens/ProductsList';
+
+
 const navigationRef = React.createRef();
 const isMountedRef = React.createRef();
 const push = async (...args) => {
@@ -30,6 +37,44 @@ const Stack = createStackNavigator();
 const registerAppWithFCM = async () => {
     await messaging().registerDeviceForRemoteMessages();
 }
+
+const ProductsListStack = () => {
+    return <Stack.Navigator
+        screenOptions={{
+            headerShown: false
+        }}
+    >
+        <Stack.Screen
+            key='ProductsList'
+            name='ProductsList'
+            component={ProductsListIndex}
+        />
+        <Stack.Screen
+            key='Payment'
+            name='Payment'
+            component={Payment}
+        />
+        <Stack.Screen
+            key='ProductDetails'
+            name='ProductDetails'
+            component={ProductDetails}
+        />
+        {/* {ProductsListRoutes.map((product, index) => (
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerTitleAlign: { ...(product.titleAlign) },
+                    headerShown: product.title ? true : false,
+                    title: locales(product.title),
+                    headerRight: () => product.headerRight ? product.headerRight : null,
+                })}
+                key={product.key}
+                name={product.name}
+                component={product.component}
+            />
+        ))} */}
+    </Stack.Navigator>
+}
+
 
 const getRoute = () => {
     return new Promise((resolve, reject) => {
@@ -58,7 +103,7 @@ const App = props => {
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
     useEffect(() => {
-             props.fetchTotalUnreadMessages();
+        props.fetchTotalUnreadMessages();
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -107,11 +152,24 @@ const App = props => {
                     }
                 })
         }
-        
+
         return unsubscribe
     }, [initialRoute]);
 
-
+    // () => {
+    //     return (
+    //         <Image
+    //             style={{
+    //                 borderRadius: deviceWidth * 0.032,
+    //                 width: deviceWidth * 0.064, height: deviceWidth * 0.064
+    //             }}
+    //             source={!!props.userProfile && !!props.userProfile.profile && props.userProfile.profile.profile_photo && props.userProfile.profile.profile_photo.length ?
+    //                 { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${props.userProfile.profile.profile_photo}` }
+    //                 : require('../../assets/icons/user.png')
+    //             }
+    //         />
+    //     )
+    // }
     return (
         <NavigationContainer
             ref={navigationRef}
@@ -125,13 +183,6 @@ const App = props => {
                 )
                 : (< Tab.Navigator
                     initialRouteName={props.isFromOutSide ? 'Messages' : 'Home'
-                        // getRoute().then(res => {
-                        //     if (res)
-                        //         setTimeout(() => {
-                        //             navigationRef.current.navigate(tabs[4]);
-                        //             setInitialRoute('Messages')
-                        //         }, 10);
-                        // })
                     }
                     shifting={false}
                     activeColor="#00C569"
@@ -139,33 +190,42 @@ const App = props => {
                     barStyle={{ backgroundColor: '#313A43' }
                     }
                 >
-                    {
+                    <Tab.Screen
+                        key='ProductsList'
+                        options={{
+                            tabBarLabel: locales('labels.home'),
+                            tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+                        }}
+                        name='ProductsList'
+                        component={ProductsListStack}
+                    />
+                    {/* {
                         routes.map((route, index) => (
                             <Tab.Screen
                                 key={index}
                                 options={{
                                     tabBarBadge: route.name == 'Messages' && props.totalUnreadMessages > 0 ? true : false,
                                     tabBarLabel: route.label && locales(route.label),
-                                    tabBarIcon: route.name != 'MyBuskool' ? ({ focused, color }) => route.icon(color, focused) : ()=>{
-                                      return( 
-                                           <Image
-                                            style={{
-                                                borderRadius: deviceWidth * 0.032,
-                                                width: deviceWidth * 0.064, height: deviceWidth * 0.064
-                                            }}
-                                              source={!!props.userProfile && !!props.userProfile.profile && props.userProfile.profile.profile_photo&&props.userProfile.profile.profile_photo.length?
-                                                  { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${props.userProfile.profile.profile_photo}`}
-                                            :require('../../assets/icons/user.png')
-                                    }
-                                        />
-            )
+                                    tabBarIcon: route.name != 'MyBuskool' ? ({ focused, color }) => route.icon(color, focused) : () => {
+                                        return (
+                                            <Image
+                                                style={{
+                                                    borderRadius: deviceWidth * 0.032,
+                                                    width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                                                }}
+                                                source={!!props.userProfile && !!props.userProfile.profile && props.userProfile.profile.profile_photo && props.userProfile.profile.profile_photo.length ?
+                                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${props.userProfile.profile.profile_photo}` }
+                                                    : require('../../assets/icons/user.png')
+                                                }
+                                            />
+                                        )
                                     },
                                 }}
                                 name={route.name}
                                 component={route.component}
                             />
                         ))
-                    }
+                    } */}
                 </Tab.Navigator>
                 )
             }

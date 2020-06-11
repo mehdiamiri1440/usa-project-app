@@ -42,6 +42,7 @@ export default {
     'labels.promoteRegistration': 'ارتقا عضویت',
     'labels.completeCase': 'این مورد را تکمیل کنید',
     'labels.incorrectFormat': 'فرمت نادرست است',
+    'labels.relatedProducts': 'محصولات مرتبط',
     'labels.myProducts': 'محصولات من',
     'labels.guid': 'راهنما',
     'labels.editProfile': 'ویرایش پروفایل',
