@@ -534,16 +534,13 @@ class ProductDetails extends Component {
                         onRequestClose={() => this.setState({ showFullSizeImageModal: false })}
                     >
                         <View style={{
-                            backgroundColor: 'rgb(59,59,59)',
+                            backgroundColor: 'rgba(59,59,59,0.85)',
                             height: deviceHeight, alignItems: 'center', justifyContent: 'center'
                         }}>
-                            <Button
-                                style={[styles.loginButton, { width: '30%', alignSelf: 'flex-start' }]}
-                                onPress={() => this.setState({ showFullSizeImageModal: false })}>
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.close')}
-                                </Text>
-                            </Button>
+                            <AntDesign name='arrowright' size={30} color='white'
+                                style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
+                                onPress={() => this.setState({ showFullSizeImageModal: false })}
+                            />
                             <Image
                                 style={{
                                     alignSelf: 'center', width: deviceWidth,

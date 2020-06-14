@@ -69,7 +69,6 @@ class Rating extends React.Component {
         } = this.props;
 
         let { iconName, color = '#FFBB00', names } = this.state;
-        console.log('names', names)
         let stars = []
 
         for (let i = 0; i < starsCount; i++) {

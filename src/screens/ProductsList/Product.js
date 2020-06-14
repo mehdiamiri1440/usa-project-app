@@ -215,7 +215,9 @@ class Product extends PureComponent {
         const {
             loggedInUserId,
             deleteProductStatus,
-            deleteProductLoading
+            deleteProductLoading,
+
+            width = deviceWidth * 0.97
         } = this.props;
         const { main, photos, profile_info, user_info } = this.props.productItem;
         const {
@@ -548,7 +550,7 @@ class Product extends PureComponent {
                         onRequestClose={() => this.setState({ modalFlag: false })}
                     />}
 
-                    <Card style={{ width: deviceWidth * 0.97, alignSelf: 'center' }}>
+                    <Card style={{ width: width, alignSelf: 'center' }}>
                         <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
                             <Body >
                                 <TouchableOpacity
@@ -672,7 +674,7 @@ class Product extends PureComponent {
                                             <Text style={[styles.buttonText, { paddingRight: 30 }]}>
                                                 {locales('titles.achiveSaleStatus')}</Text>
                                             <FontAwesome name='envelope' size={20} color='white'
-                                                style={{ position: 'absolute', right: !is_elevated ? 101 : 108 }} />
+                                                style={{ position: 'absolute', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} />
                                         </Button>
                                         :
                                         <View style={{

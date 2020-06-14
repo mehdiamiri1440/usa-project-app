@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, Share } from 'react-native';
-import { Button } from 'native-base';
+import { Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, Share, FlatList, Modal } from 'react-native';
+import { Button, CardItem, Card, Body } from 'native-base';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import * as profileActions from '../../redux/profile/actions';
+import * as productsListActions from '../../redux/productsList/actions';
 import ChatModal from '../Messages/ChatModal';
+import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import Spin from '../../components/loading/loading';
 
@@ -16,7 +20,11 @@ class Profile extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalFlag: false
+            modalFlag: false,
+            selectedEvidenceModal: false,
+            selectedImageModal: false,
+            selectedEvidenceIndex: -1,
+            selectedImageIndex: -1
         }
     }
 
@@ -28,6 +36,18 @@ class Profile extends Component {
         }
     }
 
+
+
+    fetchAllProducts = () => {
+        const { from_record_number = 0, to_record_number = 15, sort_by = 'BM' } = this.state;
+
+        let item = {
+            from_record_number,
+            sort_by,
+            to_record_number,
+        };
+        this.props.fetchAllProductsList(item);
+    };
     shareProfileLink = async () => {
         try {
             const result = await Share.share({
@@ -73,7 +93,7 @@ class Profile extends Component {
             profileByUserNameMessage,
 
 
-            productsListByUserName,
+            productsListByUserName = {},
             productsListByUserNameLoading,
             productsListByUserNameFailed,
             productsListByUserNameError,
@@ -128,7 +148,7 @@ class Profile extends Component {
 
         const {
             product_count,
-            rating_info,
+            rating_info = {},
             reputation_score,
             response_rate,
             transaction_count,
@@ -174,7 +194,7 @@ class Profile extends Component {
             active_pakage_type: activePackageTypeFromByUserName
         } = userInfoFromByUserName;
 
-        let { modalFlag } = this.state;
+        let { modalFlag, selectedEvidenceModal, selectedImageModal, selectedEvidenceIndex, selectedImageIndex } = this.state;
 
         const selectedContact = {
             first_name: firstNameFromByUserName,
@@ -183,7 +203,57 @@ class Profile extends Component {
         }
 
         return (
-            <View>
+            <>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={selectedImageModal}
+                    onRequestClose={() => this.setState({ selectedImageModal: false })}
+                >
+                    <View style={{
+                        backgroundColor: 'rgba(59,59,59,0.85)',
+                        height: deviceHeight, alignItems: 'center', justifyContent: 'center'
+                    }}>
+                        <AntDesign name='arrowright' size={30} color='white'
+                            style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
+                            onPress={() => this.setState({ selectedImageModal: false })}
+                        />
+                        <Image
+                            style={{
+                                alignSelf: 'center', width: deviceWidth,
+                                height: deviceHeight * 0.6,
+                                resizeMode: 'contain'
+                            }}
+                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${relatedsFromByUserName[selectedImageIndex]}` }} />
+                    </View>
+                </Modal>
+
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={selectedEvidenceModal}
+                    onRequestClose={() => this.setState({ selectedEvidenceModal: false })}
+                >
+                    <View style={{
+                        backgroundColor: 'rgba(59,59,59,0.85)',
+                        height: deviceHeight, alignItems: 'center', justifyContent: 'center'
+                    }}>
+                        <AntDesign name='arrowright' size={30} color='white'
+                            style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
+                            onPress={() => this.setState({ selectedEvidenceModal: false })}
+                        />
+                        <Image
+                            style={{
+                                alignSelf: 'center', width: deviceWidth,
+                                height: deviceHeight * 0.6,
+                                resizeMode: 'contain'
+                            }}
+                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
+                    </View>
+                </Modal>
+
 
                 {modalFlag && <ChatModal
                     transparent={false}
@@ -258,10 +328,10 @@ class Profile extends Component {
                                         onPress={() => this.setState({ modalFlag: true })}
                                         style={[styles.loginButton]}
                                     >
-                                        <Text style={[styles.buttonText, { paddingRight: 30 }]}>
+                                        <Text style={[styles.buttonText, { paddingRight: 30, paddingBottom: 5 }]}>
                                             {locales('titles.sendMessage')}</Text>
                                         <FontAwesome name='envelope' size={20} color='white'
-                                            style={{ position: 'absolute', right: 85 }} />
+                                            style={{ position: 'absolute', right: 85, paddingBottom: 5 }} />
                                     </Button>
                                     : <Button
                                         style={{
@@ -308,18 +378,225 @@ class Profile extends Component {
                                 {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                             </Text>
                         </View>
-                        <StarRating
-                            starsCount={5}
-                            defaultRate={2.2}
-                            disable={true}
-                            color='#FFBB00'
-                            size={25}
-                        />
-                    </ScrollView>
+
+                        {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
+                            width: deviceWidth * 0.6,
+                            alignSelf: 'center', justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                        }}>
+                            <View style={{
+                                borderRadius: 4, borderWidth: 0.8, borderColor: '#777777', backgroundColor: '#FAFAFA',
+                                padding: 5, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
+                                marginVertical: 10,
+                                justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                            }}>
+                                <Text style={{ marginHorizontal: 15, fontSize: 20, color: '#777777' }}>{rating_info.avg_score}</Text>
+                                <StarRating
+                                    starsCount={5}
+                                    defaultRate={2.2}
+                                    disable={true}
+                                    color='#FFBB00'
+                                    size={25}
+                                />
+                            </View>
+                            <View style={{
+                                borderRadius: 4, borderWidth: 0.8, borderRightWidth: 0, borderColor: '#777777',
+                                padding: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0,
+                                marginVertical: 10,
+                                justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                            }}
+                            >
+                                <Text style={{ fontSize: 20, color: '#777777', width: '43%' }}>
+                                    {locales('labels.comment')} {rating_info.total_count}
+                                </Text>
+                            </View>
+                        </View> : null}
+
+                        <View style={{
+                            borderRadius: 1, borderColor: '#FAFAFA',
+                            borderWidth: 0.8, width: deviceWidth * 0.93, alignSelf: 'center'
+                        }}>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', justifyContent: 'space-between', borderColor: '#FAFAFA',
+                                borderWidth: 0.7, backgroundColor: '#FAFAFA', padding: 10
+                            }}>
+                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                    <FontAwesome5 name='tasks' size={25} color='#7E7E7E' />
+                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.activityZone')}</Text>
+                                </View>
+                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{activityDomainFromByUserName}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
+                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                    <Entypo name='location-pin' size={25} color='#7E7E7E' />
+                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
+                                </View>
+                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{addressFromByUserName}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
+                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                    <FontAwesome name='building' size={25} color='#7E7E7E' />
+                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.companyName')}</Text>
+                                </View>
+                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
+                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                    <FontAwesome name='file-text' size={25} color='#7E7E7E' />
+                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.registrationNumber')}</Text>
+                                </View>
+                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
+                            </View>
+
+                        </View>
+
+                        <View style={{
+                            width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                            justifyContent: 'center', marginVertical: 10, padding: 5,
+                        }}>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignContent: 'center', borderBottomColor: '#00C569',
+                                borderBottomWidth: 3, width: '95%',
+                                padding: 10, justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <Image source={require('../../../assets/icons/incobac-medium.png')}
+                                    style={{ marginHorizontal: 5 }}
+                                />
+                                <Text style={{ color: '#556080', fontSize: 18, fontFamily: 'Vazir-Bold-FD' }}>
+                                    {locales('titles.basicInfo')}
+                                </Text>
+                            </View>
+
+                            <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                                <Text style={{ color: '#666666', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
+                                    {locales('titles.headerDescription')}
+                                </Text>
+                                <Text style={{ color: '#777777', marginVertical: 10 }}>
+                                    {descriptionFromByUserName}
+                                </Text>
+                            </View>
+
+                        </View>
+                        <View style={{
+                            alignSelf: 'center', alignItems: 'flex-end',
+                            justifyContent: 'center', marginVertical: 10
+                        }}>
+                            <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
+                            {productsListByUserName && productsListByUserName.products && productsListByUserName.products.length ?
+                                productsListByUserName.products.map((item, index) => (
+                                    <Product
+                                        key={index}
+                                        productItem={item}
+                                        fetchAllProducts={this.fetchAllProducts}
+                                        {...this.props}
+                                        width={deviceWidth * 0.93}
+                                    />
+                                ))
+                                : <View style={{
+                                    alignSelf: 'center', justifyContent: 'flex-start',
+                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                                }}>
+                                    <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                        {locales('titles.noProductFound')}</Text>
+                                </View>
+                            }
+                        </View>
+
+                        <View style={{
+                            width: deviceWidth * 0.93,
+                            alignSelf: 'center', alignItems: 'flex-end',
+                            justifyContent: 'center', marginVertical: 10
+                        }}>
+                            <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.relatedPhotos')}</Text>
+                            <FlatList
+                                data={relatedsFromByUserName}
+                                horizontal
+                                ListEmptyComponent={() => (
+                                    <View style={{
+                                        alignSelf: 'center', justifyContent: 'flex-start',
+                                        alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                                    }}>
+                                        <Entypo name='image' size={30} color='#BEBEBE' />
+                                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                            {locales('labels.noImageFound')}</Text>
+                                    </View>
+                                )}
+                                keyExtractor={((_, index) => index.toString())}
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity
+                                        onPress={() => this.setState({ selectedImageModal: true, selectedImageIndex: index })}
+                                    >
+                                        <Image
+                                            style={{
+                                                width: deviceWidth * 0.4,
+                                                borderWidth: 0.7,
+                                                borderColor: '#BEBEBE',
+                                                borderRadius: 4, marginHorizontal: 5, height: deviceWidth * 0.4
+                                            }}
+                                            source={{
+                                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </View>
+
+                        <View style={{
+                            width: deviceWidth * 0.93,
+                            alignSelf: 'center', alignItems: 'flex-end',
+                            justifyContent: 'center', marginVertical: 10
+                        }}>
+                            <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.myEvidences')}</Text>
+                            <FlatList
+                                showsHorizontalScrollIndicator={false}
+                                data={certificatesFromByUserName}
+                                horizontal
+                                ListEmptyComponent={() => (
+                                    <View style={{
+                                        alignSelf: 'center', justifyContent: 'flex-start',
+                                        alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                                    }}>
+                                        <FontAwesome5 name='tasks' size={30} color='#BEBEBE' />
+                                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                            {locales('labels.noevidenceFound')}</Text>
+                                    </View>
+                                )}
+                                keyExtractor={((_, index) => index.toString())}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity
+                                        onPress={() => this.setState({ selectedEvidenceModal: true, selectedEvidenceIndex: index })}
+                                    >
+                                        <Image
+                                            style={{
+                                                borderWidth: 0.7,
+                                                borderColor: '#BEBEBE',
+                                                borderRadius: 4,
+                                                width: deviceWidth * 0.4, borderRadius: 4,
+                                                marginHorizontal: 5, height: deviceWidth * 0.4
+                                            }}
+                                            source={{
+                                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </View>
+
+                    </ScrollView >
+
 
                 </Spin>
 
-            </View>
+
+            </ >
         )
     }
 }
@@ -473,6 +750,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
         fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
         fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
     }
 }

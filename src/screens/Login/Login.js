@@ -47,7 +47,7 @@ class Login extends React.Component {
     };
     onLogin = () => {
         let { mobileNumber, password } = this.state
-        this.props.login(mobileNumber, password).then(_=>{
+        this.props.login(mobileNumber, password).then(_ => {
             this.props.fetchUserProfile();
         });
     }
@@ -55,10 +55,10 @@ class Login extends React.Component {
         let { message, loading, error } = this.props
         let { mobileNumber, password } = this.state
         return (
-            <ScrollView
-                keyboardShouldPersistTaps='handled'
-            >
-                <Spin spinning={loading} >
+            <Spin spinning={loading} >
+                <ScrollView
+                    keyboardShouldPersistTaps='handled'
+                >
                     <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 0.8, y: 0.2 }}
@@ -148,8 +148,8 @@ class Login extends React.Component {
                         style={[styles.buttonText, styles.loginButton]} success rounded>
                         <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
                     </Button>
-                </Spin>
-            </ScrollView>
+                </ScrollView>
+            </Spin>
         )
     }
 }
