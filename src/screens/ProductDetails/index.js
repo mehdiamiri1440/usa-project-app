@@ -315,7 +315,7 @@ class ProductDetails extends Component {
         let descriptionWithoutHtml = ''
         if (!!description && description.length) {
             console.log('des-------------------------------------------c', description)
-            descriptionWithoutHtml = description
+            descriptionWithoutHtml = description.replaceAll('<hr/>', '\n')
         }
 
 
@@ -529,24 +529,29 @@ class ProductDetails extends Component {
 
                     <Modal
                         animationType="slide"
-                        transparent={false}
+                        transparent={true}
                         visible={showFullSizeImageModal}
                         onRequestClose={() => this.setState({ showFullSizeImageModal: false })}
                     >
-                        <Button
-                            style={[styles.loginButton, { width: '30%', alignSelf: 'flex-end' }]}
-                            onPress={() => this.setState({ showFullSizeImageModal: false })}>
-                            <Text style={styles.buttonText}>
-                                {locales('titles.close')}
-                            </Text>
-                        </Button>
-                        <Image
-                            style={{
-                                alignSelf: 'center', width: deviceWidth,
-                                height: deviceHeight,
-                                resizeMode: 'contain'
-                            }}
-                            source={{ uri: photosWithCompletePath[selectedImage] }} />
+                        <View style={{
+                            backgroundColor: 'rgb(59,59,59)',
+                            height: deviceHeight, alignItems: 'center', justifyContent: 'center'
+                        }}>
+                            <Button
+                                style={[styles.loginButton, { width: '30%', alignSelf: 'flex-start' }]}
+                                onPress={() => this.setState({ showFullSizeImageModal: false })}>
+                                <Text style={styles.buttonText}>
+                                    {locales('titles.close')}
+                                </Text>
+                            </Button>
+                            <Image
+                                style={{
+                                    alignSelf: 'center', width: deviceWidth,
+                                    height: deviceHeight * 0.6,
+                                    resizeMode: 'contain'
+                                }}
+                                source={{ uri: photosWithCompletePath[selectedImage] }} />
+                        </View>
                     </Modal>
 
                     <View style={{
@@ -763,37 +768,45 @@ class ProductDetails extends Component {
                                         <View style={{ width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
                                             <Image
                                                 style={{ width: deviceWidth * 0.35, height: deviceWidth * 0.35, borderRadius: deviceWidth * 0.175 }}
-                                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }} />
-                                            {active_pakage_type == 3 && <Image source={require('../../../assets/icons/valid_user.png')} style={{ bottom: 18, left: 3 }} />}
+                                                source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                                    : require('../../../assets/icons/user.png')}
+                                            />
+                                            {active_pakage_type == 3 && <Image source={require('../../../assets/icons/valid_user.png')}
+                                                style={{ bottom: 18, left: 3 }} />}
                                         </View>
-                                        <Text style={{
-                                            color: '#777777', textAlign: 'center', width: '100%', top: -20,
-                                            fontFamily: 'Vazir-Bold-FD', fontSize: 16
-                                        }}>
-                                            {is_seller ? locales('labels.seller') : locales('labels.buyer')}
-                                        </Text>
+                                        <View
+                                            style={{
+                                                top: active_pakage_type == 3 ? -20 : 0,
+                                                width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center'
+                                            }}>
+                                            <Text style={{
+                                                color: '#777777', textAlign: 'center', width: '100%',
+                                                fontFamily: 'Vazir-Bold-FD', fontSize: 16
+                                            }}>
+                                                {is_seller ? locales('labels.seller') : locales('labels.buyer')}
+                                            </Text>
 
 
-                                        <Text style={{
-                                            textAlign: 'center', width: '100%', top: -20,
-                                            fontFamily: 'Vazir-Bold-FD', fontSize: 20
-                                        }}>
-                                            {`${first_name} ${last_name}`}
-                                        </Text>
+                                            <Text style={{
+                                                textAlign: 'center', width: '100%',
+                                                fontFamily: 'Vazir-Bold-FD', fontSize: 20
+                                            }}>
+                                                {`${first_name} ${last_name}`}
+                                            </Text>
 
-                                        {active_pakage_type == 3 && <Text style={{
-                                            color: '#00C569', textAlign: 'center', width: '100%', top: -20,
-                                            fontFamily: 'Vazir-Bold-FD', fontSize: 18
-                                        }}>
-                                            {locales('labels.confirmedUser')}
-                                        </Text>}
+                                            {active_pakage_type == 3 && <Text style={{
+                                                color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'Vazir-Bold-FD', fontSize: 18
+                                            }}>
+                                                {locales('labels.confirmedUser')}
+                                            </Text>}
 
-                                        <Text style={{
-                                            textAlign: 'center', width: '100%', top: -20,
-                                            fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#777777'
-                                        }}>
-                                            {locales('labels.responseRate')} <Text style={{ color: 'red' }}>%{response_rate}</Text>
-                                        </Text>
+                                            {response_rate > 0 ? <Text style={{
+                                                textAlign: 'center', width: '100%',
+                                                fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#777777'
+                                            }}>
+                                                {locales('labels.responseRate')} <Text style={{ color: 'red' }}>%{response_rate}</Text>
+                                            </Text> : null}
+                                        </View>
                                         <Button
                                             onPress={() => this.props.navigation.navigate('Profile')}
                                             style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
@@ -828,7 +841,7 @@ class ProductDetails extends Component {
                             </View>
 
                         </View>
-                        <View style={{ paddingVertical: 10 }}>
+                        {/* <View style={{ paddingVertical: 10 }}>
                             <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                                 <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                                 <View
@@ -858,9 +871,7 @@ class ProductDetails extends Component {
                                         <TouchableOpacity
                                             activeOpacity={1}
                                             onPress={() => {
-                                                this.props.navigation.navigate({
-                                                    name: `ProductDetails`, params: { productId: item.id }, key: `ProductDetails${item.id}`
-                                                })
+                                                return this.props.navigation.navigate(`ProductDetails`, { productId: item.id })
                                             }}>
                                             <Image
                                                 resizeMode='cover'
@@ -876,7 +887,7 @@ class ProductDetails extends Component {
                                     </Card>
                                 )}
                             />
-                        </View>
+                        </View> */}
 
                     </ScrollView>
                 </Spin>

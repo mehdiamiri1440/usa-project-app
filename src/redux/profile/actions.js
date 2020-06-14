@@ -49,3 +49,69 @@ export const isUserAllowedToSendMessage = (id) => {
 
     return request();
 };
+
+export const fetchProfileStatistics = (userName) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchProfileStatistics(userName)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_PROFILE_STATISTICS_FAILED,
+                        reject: actionTypes.FETCH_PROFILE_STATISTICS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_PROFILE_STATISTICS_LOADING);
+    const success = res => action(actionTypes.FETCH_PROFILE_STATISTICS_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchProfileByUserName = (userName) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchProfileByUserName(userName)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_PROFILE_BY_USERNAME_FAILED,
+                        reject: actionTypes.FETCH_PROFILE_BY_USERNAME_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_PROFILE_BY_USERNAME_LOADING);
+    const success = res => action(actionTypes.FETCH_PROFILE_BY_USERNAME_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchProductsListByUserName = (userName) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchProductsListByUserName(userName)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_FAILED,
+                        reject: actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_LOADING);
+    const success = res => action(actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_SUCCESSFULLY, res);
+
+    return request();
+};

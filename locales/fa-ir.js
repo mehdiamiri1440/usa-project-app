@@ -27,6 +27,7 @@ export default {
     'labels.addMore': 'افزودن بیشتر',
     'labels.share': 'اشتراک گذاری',
     'labels.myBuskool': 'باسکول من',
+
     'labels.searchProduct': 'جستجوی محصول',
     "labels.selectCity": "شهر را انتخاب کنید",
     'labels.messages': 'پیام‌ها',
@@ -52,6 +53,7 @@ export default {
     'labels.addProductImages': 'افزودن تصاویر محصول',
     'labels.gallery': 'گالری',
     'labels.search': 'جستجو',
+    'labels.credit': 'اعتبار',
     'labels.addImage': 'افزودن تصویر',
     'labels.uploadProductImages': 'لطفا فقط عکس‌های مرتبط با محصول خود را ثبت کنید',
     'labels.terms': 'قوانین',

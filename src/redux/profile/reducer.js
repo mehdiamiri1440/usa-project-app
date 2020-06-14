@@ -12,6 +12,24 @@ const INITIAL_STATE = {
     isUserAllowedToSendMessageMessage: null,
     isUserAllowedToSendMessage: {},
 
+    profileStatisticsLoading: false,
+    profileStatisticsFailed: false,
+    profileStatisticsError: false,
+    profileStatisticsMessage: null,
+    profileStatistics: {},
+
+    profileByUserNameLoading: false,
+    profileByUserNameFailed: false,
+    profileByUserNameError: false,
+    profileByUserNameMessage: null,
+    profileByUserName: {},
+
+    productsListByUserNameLoading: false,
+    productsListByUserNameFailed: false,
+    productsListByUserNameError: false,
+    productsListByUserNameMessage: null,
+    productsListByUserName: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -102,6 +120,135 @@ export default (state = INITIAL_STATE, action) => {
                 isUserAllowedToSendMessageFailed: false,
                 isUserAllowedToSendMessageError: true,
                 isUserAllowedToSendMessageMessage: phone
+            };
+        };
+
+
+        case actionTypes.FETCH_PROFILE_STATISTICS_LOADING: {
+            return {
+                ...state,
+                profileStatistics: {},
+                profileStatisticsLoading: true,
+                profileStatisticsFailed: false,
+                profileStatisticsError: false,
+                profileStatisticsMessage: null
+            };
+        };
+        case actionTypes.FETCH_PROFILE_STATISTICS_SUCCESSFULLY: {
+            return {
+                ...state,
+                profileStatistics: { ...action.payload.statistics },
+                profileStatisticsLoading: false,
+                profileStatisticsFailed: false,
+                profileStatisticsError: false,
+                profileStatisticsMessage: false,
+            };
+        };
+        case actionTypes.FETCH_PROFILE_STATISTICS_FAILED: {
+            const { status } = action.payload;
+            return {
+                ...state,
+                profileStatistics: {},
+                profileStatisticsLoading: false,
+                profileStatisticsFailed: true,
+                profileStatisticsError: false,
+                profileStatisticsMessage: status
+            };
+        };
+        case actionTypes.FETCH_PROFILE_STATISTICS_REJECT: {
+            let { phone } = action.payload.data.errors;
+            return {
+                ...state,
+                profileStatistics: {},
+                profileStatisticsLoading: false,
+                profileStatisticsFailed: false,
+                profileStatisticsError: true,
+                profileStatisticsMessage: phone
+            };
+        };
+
+        case actionTypes.FETCH_PROFILE_BY_USERNAME_LOADING: {
+            return {
+                ...state,
+                profileByUserName: {},
+                profileByUserNameLoading: true,
+                profileByUserNameFailed: false,
+                profileByUserNameError: false,
+                profileByUserNameMessage: null
+            };
+        };
+        case actionTypes.FETCH_PROFILE_BY_USERNAME_SUCCESSFULLY: {
+            return {
+                ...state,
+                profileByUserName: { ...action.payload },
+                profileByUserNameLoading: false,
+                profileByUserNameFailed: false,
+                profileByUserNameError: false,
+                profileByUserNameMessage: false,
+            };
+        };
+        case actionTypes.FETCH_PROFILE_BY_USERNAME_FAILED: {
+            const { status } = action.payload;
+            return {
+                ...state,
+                profileByUserName: {},
+                profileByUserNameLoading: false,
+                profileByUserNameFailed: true,
+                profileByUserNameError: false,
+                profileByUserNameMessage: status
+            };
+        };
+        case actionTypes.FETCH_PROFILE_BY_USERNAME_REJECT: {
+            return {
+                ...state,
+                profileByUserName: {},
+                profileByUserNameLoading: false,
+                profileByUserNameFailed: false,
+                profileByUserNameError: true,
+                profileByUserNameMessage: action.payload
+            };
+        };
+
+        case actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_LOADING: {
+            return {
+                ...state,
+                productsListByUserName: {},
+                productsListByUserNameLoading: true,
+                productsListByUserNameFailed: false,
+                productsListByUserNameError: false,
+                productsListByUserNameMessage: null
+            };
+        };
+        case actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_SUCCESSFULLY: {
+            return {
+                ...state,
+                productsListByUserName: { ...action.payload },
+                productsListByUserNameLoading: false,
+                productsListByUserNameFailed: false,
+                productsListByUserNameError: false,
+                productsListByUserNameMessage: false,
+            };
+        };
+        case actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_FAILED: {
+            const { status } = action.payload;
+            return {
+                ...state,
+                productsListByUserName: {},
+                productsListByUserNameLoading: false,
+                productsListByUserNameFailed: true,
+                productsListByUserNameError: false,
+                productsListByUserNameMessage: status
+            };
+        };
+        case actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_REJECT: {
+            let { phone } = action.payload.data.errors;
+            return {
+                ...state,
+                productsListByUserName: {},
+                productsListByUserNameLoading: false,
+                productsListByUserNameFailed: false,
+                productsListByUserNameError: true,
+                productsListByUserNameMessage: phone
             };
         };
 

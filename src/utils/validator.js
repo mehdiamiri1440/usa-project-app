@@ -13,6 +13,15 @@ export const isValidEmailOrUsername = text => {
   return re.test(text);
 };
 
+
+export const isInt = value => {
+
+  var er = /^-?[0-9]+$/;
+
+  return er.test(value);
+}
+
+
 export const isWebsiteUrl = text => {
   const re = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
   return re.test(text);
