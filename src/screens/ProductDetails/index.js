@@ -20,7 +20,7 @@ class ProductDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            edittionFlag: false,
+            editionFlag: false,
             showEditionMessage: false,
             showFullSizeImageModal: false,
             selectedImage: -1,
@@ -49,27 +49,31 @@ class ProductDetails extends Component {
 
 
     componentDidMount() {
-        this.props.fetchAllRelatedProducts(this.props.route.params.productId);
-        this.props.fetchProductDetails(this.props.route.params.productId).then(_ => {
-            const {
-                max_sale_price,
-                min_sale_price,
-                stock,
-                min_sale_amount
-            } = this.props.productDetails.main;
+        if (this.props.route && this.props.route.params && this.props.route.params.productId) {
+            this.props.fetchAllRelatedProducts(this.props.route.params.productId);
+            this.props.fetchProductDetails(this.props.route.params.productId).then(_ => {
+                if (this.props.productDetails && this.props.productDetails.main) {
+                    const {
+                        max_sale_price,
+                        min_sale_price,
+                        stock,
+                        min_sale_amount
+                    } = this.props.productDetails.main;
 
-            this.setState({
-                minimumOrder: min_sale_amount.toString(),
-                maximumPrice: max_sale_price.toString(),
-                minimumPrice: min_sale_price.toString(),
-                amount: stock.toString(),
-                loaded: true
-            });
-        })
+                    this.setState({
+                        minimumOrder: min_sale_amount.toString(),
+                        maximumPrice: max_sale_price.toString(),
+                        minimumPrice: min_sale_price.toString(),
+                        amount: stock.toString(),
+                        loaded: true
+                    });
+                }
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.productDetails).length) {
+        if (prevState.loaded == false && Object.entries(this.props.productDetails).length && this.props.productDetails.main) {
             const {
                 max_sale_price,
                 min_sale_price,
@@ -232,7 +236,8 @@ class ProductDetails extends Component {
             editProductStatus,
             productDetailsLoading,
             loggedInUserId,
-            is_seller } = this.props;
+            is_seller
+        } = this.props;
 
 
         const {
@@ -241,7 +246,6 @@ class ProductDetails extends Component {
             profile_info = {},
             user_info = {},
         } = this.props.productDetails;
-        console.log('efs', this.props.productDetails)
 
         let {
             showFullSizeImageModal,
@@ -266,35 +270,35 @@ class ProductDetails extends Component {
         const { profile_photo } = profile_info;
 
         const {
-            active_pakage_type,
+            active_pakage_type = '',
             created_at,
-            first_name,
-            id: userId,
-            last_name,
-            response_rate,
+            first_name = '',
+            id: userId = '',
+            last_name = '',
+            response_rate = '',
             review_info = {}
         } = user_info;
 
         const {
             address,
             category_id,
-            category_name,
+            category_name = '',
             city_id,
-            city_name,
+            city_name = '',
             confirmed,
             description = '',
             id: productId,
-            is_elevated,
+            is_elevated = '',
             max_sale_price,
-            min_sale_amount,
+            min_sale_amount = '',
             min_sale_price,
             myuser_id,
-            product_name,
+            product_name = '',
             province_id,
-            province_name,
-            stock,
+            province_name = '',
+            stock = '',
             sub_category_id,
-            sub_category_name,
+            sub_category_name = '',
             updated_at
         } = main;
 
@@ -311,11 +315,9 @@ class ProductDetails extends Component {
         }
 
         let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
-        console.log('desc', description)
-        let descriptionWithoutHtml = ''
-        if (!!description && description.length) {
-            console.log('des-------------------------------------------c', description)
-            descriptionWithoutHtml = description.replaceAll('<hr/>', '\n')
+        let descriptionWithoutHtml = '';
+        if (description != undefined && typeof (description) == 'string' && !!description && description.length) {
+            descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), '\n')
         }
 
 
@@ -393,7 +395,7 @@ class ProductDetails extends Component {
                                     textAlign: 'center', width: '100%',
                                     fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#7E7E7E'
                                 }}>
-                                    {locales('labels.edition', { fieldName: `${category_name} | ${sub_category_name}` })}
+                                    {locales('labels.edition', { fieldName: `${category_name || '---'} | ${sub_category_name || '---'}` })}
                                 </Text>
                             </View>
                             {!showEditionMessage ?
@@ -500,7 +502,7 @@ class ProductDetails extends Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { width: '50%' }]}
-                                            onPress={this.onSubmit}>
+                                            onPress={() => this.onSubmit()}>
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
                                                 {locales('titles.submitChanges')}
                                             </Text>
@@ -586,7 +588,7 @@ class ProductDetails extends Component {
                             shadowOpacity: 1.0,
                             elevation: 5,
                         }}>
-                            <SliderBox
+                            {photosWithCompletePath && photosWithCompletePath.length ? <SliderBox
                                 dotColor='#0095F6'
                                 inactiveDotColor='#A8A8A8'
                                 sliderBoxHeight={400}
@@ -594,40 +596,48 @@ class ProductDetails extends Component {
                                 images={photosWithCompletePath}
                                 onCurrentImagePressed={this.showFullSizeImage}
                             // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    Linking.openURL(url)
-                                }}
+                            /> : null}
+                            <View
                                 style={{
                                     flexDirection: 'row-reverse', alignItems: 'center',
                                     marginVertical: 30, width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
                                 }}>
                                 <Text style={{ fontFamily: 'Vazir-Bold-FD', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
-                                    {product_name}
+                                    {product_name ? product_name : '---'}
                                 </Text>
-                                <Text style={{
-                                    color: '#777777', borderWidth: 0.8, borderColor: '#777777', fontSize: 14,
-                                    textAlign: 'center', textAlignVertical: 'center', width: '30%', borderRadius: 6, padding: 5
-                                }}>
-                                    <FontAwesome name='share' size={14} color='#777777' /> {locales('labels.share')}
-                                </Text>
-                            </TouchableOpacity>
+                                <View style={{ marginLeft: 4 }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            Linking.openURL(url)
+                                        }}
+                                        style={{
+                                            borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
+                                            flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                        <FontAwesome name='share-alt' size={14} color='#777777' />
+                                        <Text style={{
+                                            color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                        }}>
+                                            {locales('labels.share')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
 
                             <View style={{
                                 flexDirection: 'row-reverse', alignItems: 'center',
                                 width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
                             }}>
                                 {userId == loggedInUserId ? <View style={{
-                                    flexDirection: 'row', justifyContent: 'space-around',
-                                    width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth
+                                    flexDirection: 'row', justifyContent: 'space-around', marginLeft: -10,
+                                    width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
                                 }}>
                                     <Button
                                         style={{
                                             color: 'white',
                                             fontSize: 18,
                                             borderRadius: 5,
-                                            marginLeft: !is_elevated ? 10 : 0,
+                                            marginLeft: !is_elevated ? 5 : 0,
                                             fontFamily: 'Vazir-Bold-FD',
                                             width: !!is_elevated ? '45%' : '55%',
                                             paddingRight: 40,
@@ -677,7 +687,7 @@ class ProductDetails extends Component {
                                         textStyle: { fontFamily: 'Vazir' },
                                         duration: 3000
                                     })} name='chart-line' size={30} color='white'
-                                    style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 7 }} />
+                                    style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 7, paddingLeft: 5, marginLeft: 4 }} />
                                     : null
                                 }
                             </View>
@@ -703,7 +713,7 @@ class ProductDetails extends Component {
                                 <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
                                     {locales('titles.province/city')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{`${province_name}-${city_name}`}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{`${province_name || '---'}-${city_name || '==='}`}</Text>
                             </View>
 
                             <View style={{
@@ -754,7 +764,7 @@ class ProductDetails extends Component {
                                 <Text style={{ fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
-                                <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml}</Text>
+                                <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
                             </View>
                         </View>
 
@@ -768,8 +778,8 @@ class ProductDetails extends Component {
                                                 source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
                                                     : require('../../../assets/icons/user.png')}
                                             />
-                                            {active_pakage_type == 3 && <Image source={require('../../../assets/icons/valid_user.png')}
-                                                style={{ bottom: 18, left: 3 }} />}
+                                            {active_pakage_type == 3 ? <Image source={require('../../../assets/icons/valid_user.png')}
+                                                style={{ bottom: 18, left: 3 }} /> : null}
                                         </View>
                                         <View
                                             style={{
@@ -791,11 +801,11 @@ class ProductDetails extends Component {
                                                 {`${first_name} ${last_name}`}
                                             </Text>
 
-                                            {active_pakage_type == 3 && <Text style={{
+                                            {active_pakage_type == 3 ? <Text style={{
                                                 color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'Vazir-Bold-FD', fontSize: 18
                                             }}>
                                                 {locales('labels.confirmedUser')}
-                                            </Text>}
+                                            </Text> : null}
 
                                             {response_rate > 0 ? <Text style={{
                                                 textAlign: 'center', width: '100%',

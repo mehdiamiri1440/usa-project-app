@@ -678,8 +678,8 @@ class Product extends PureComponent {
                                         </Button>
                                         :
                                         <View style={{
-                                            flexDirection: 'row', justifyContent: 'space-around',
-                                            width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth
+                                            flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 10,
+                                            width: !this.props.width ? (!!is_elevated ? deviceWidth * 0.88 : deviceWidth) : (!!is_elevated ? deviceWidth * 0.82 : deviceWidth * 0.94)
                                         }}>
                                             <Button
                                                 style={{

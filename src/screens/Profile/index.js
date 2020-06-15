@@ -334,21 +334,14 @@ class Profile extends Component {
                                             style={{ position: 'absolute', right: 85, paddingBottom: 5 }} />
                                     </Button>
                                     : <Button
-                                        style={{
-                                            color: 'white',
-                                            fontSize: 18,
-                                            borderRadius: 5,
-                                            fontFamily: 'Vazir-Bold-FD',
-                                            width: '40%',
-                                            paddingRight: 15,
-                                            backgroundColor: '#000546'
-                                        }}
+                                        small
+                                        onPress={() => this.props.navigation.navigate('EditProfile')}
+                                        style={[styles.loginButton]}
                                     >
-                                        <Text onPress={() => this.props.navigation.navigate('EditProfile')
-                                        } style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>
-                                            {locales('titles.edit')}</Text>
-                                        <EvilIcons name='pencil' size={30}
-                                            color='white' style={{ position: 'absolute', right: 10 }} />
+                                        <Text style={[styles.buttonText, { paddingRight: 30, fontSize: 16, paddingBottom: 5 }]}>
+                                            {locales('labels.editProfile')}</Text>
+                                        <EvilIcons name='pencil' size={25} color='white'
+                                            style={{ position: 'absolute', right: 73, paddingBottom: 5 }} />
                                     </Button>}
                             </View>
                         </View>
