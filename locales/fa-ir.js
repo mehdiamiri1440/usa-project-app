@@ -44,6 +44,7 @@ export default {
     'labels.products': 'محصولات',
     'labels.selectSubCategory': 'انتخاب زیر دسته‌بندی',
     'labels.subCategory': 'زیردسته‌بندی',
+    'labels.myProfile': "پروفایل من",
     'labels.category': 'دسته‌بندی محصول',
     'labels.promoteRegistration': 'ارتقا عضویت',
     'labels.completeCase': 'این مورد را تکمیل کنید',

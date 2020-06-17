@@ -354,7 +354,7 @@ class Profile extends Component {
                             <TouchableOpacity
                                 onPress={() => this.shareProfileLink()}
                                 style={{
-                                    borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
+                                    borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5, marginBottom: 5,
                                     width: '30%', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
                                 }}>
                                 <FontAwesome name='share-alt' size={14} color='#777777' />
@@ -366,11 +366,11 @@ class Profile extends Component {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{ paddingHorizontal: 10 }}>
+                        {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
                             <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
                                 {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                             </Text>
-                        </View>
+                        </View> : null}
 
                         {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
                             width: deviceWidth * 0.6,
@@ -425,24 +425,24 @@ class Profile extends Component {
                                     <Entypo name='location-pin' size={25} color='#7E7E7E' />
                                     <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
                                 </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{addressFromByUserName}</Text>
+                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
+                            {companyNameFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <FontAwesome name='building' size={25} color='#7E7E7E' />
                                     <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.companyName')}</Text>
                                 </View>
                                 <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
-                            </View>
+                            </View> : null}
 
-                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
+                            {companyRegisterCodeFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <FontAwesome name='file-text' size={25} color='#7E7E7E' />
                                     <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.registrationNumber')}</Text>
                                 </View>
                                 <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
-                            </View>
+                            </View> : null}
 
                         </View>
 

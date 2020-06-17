@@ -17,6 +17,7 @@ let homeRoutes = [
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
     // { label: 'labels.editProfile', icon: <FontAwesome5 size={25} name='user-circle' color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
+    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
@@ -31,6 +32,9 @@ class Home extends React.Component {
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
             this.props.logOut().then(() => { })
+        }
+        if (name == 'MyProfile') {
+            this.props.navigation.navigate(name, { user_name: this.props.userProfile.user_info.user_name })
         }
         else {
             this.props.navigation.navigate(name)
@@ -135,6 +139,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 const mapStateToProps = (state, ownProps) => {
     return {
+        userProfile: state.profileReducer.userProfile,
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

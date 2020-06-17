@@ -147,7 +147,7 @@ class ChatModal extends React.Component {
 
     render() {
         let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo } = this.props;
-        let { first_name: firstName, last_name: lastName, contact_id: id } = contact;
+        let { first_name: firstName, last_name: lastName, contact_id: id, user_name } = contact;
         let { keyboardHeight, userChatHistory, isFirstLoad, messageText, loaded } = this.state;
 
         return (
@@ -212,7 +212,8 @@ class ChatModal extends React.Component {
                         onPress={() => {
                             Jmoment.locale('fa');
                             onRequestClose();
-                            this.props.navigation.navigate('Profile');
+                            if (!this.props.buyAdId)
+                                this.props.navigation.navigate('Profile', { user_name });
                         }}
                         style={{
                             paddingHorizontal: 10,

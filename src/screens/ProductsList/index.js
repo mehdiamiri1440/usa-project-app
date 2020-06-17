@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef, PureComponent } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
 
 let myTimeout;
-class ProductsList extends Component {
+class ProductsList extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -30,15 +30,20 @@ class ProductsList extends Component {
             loaded: false,
             searchFlag: false
         }
+
     }
 
 
+    productsListRef = createRef();
+
     componentDidMount() {
+
         this.fetchAllProducts();
         this.props.fetchAllCategories();
     }
 
     componentDidUpdate(prevProps, prevState) {
+
         if (this.state.loaded == false && this.props.productsListArray.length) {
             this.setState({
                 loaded: true,
@@ -72,7 +77,10 @@ class ProductsList extends Component {
                 to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item);
+        this.props.fetchAllProductsList(item).then(_ => {
+            if (this.productsListRef && this.productsListRef.current)
+                this.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+        });
     };
 
 
@@ -92,6 +100,10 @@ class ProductsList extends Component {
                 sort_by,
             };
         myTimeout = setTimeout(() => {
+
+            if (this.productsListRef && this.productsListRef.current)
+                this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             });
@@ -140,6 +152,8 @@ class ProductsList extends Component {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
+                                    if (this.productsListRef && this.productsListRef.current)
+                                        this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -182,6 +196,9 @@ class ProductsList extends Component {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
+                                    if (this.productsListRef && this.productsListRef.current)
+                                        this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -305,6 +322,7 @@ class ProductsList extends Component {
                         { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
                     )}
                     extraData={this.state}
+                    ref={this.productsListRef}
                     onEndReached={() => {
                         if (loaded && productsListArray.length >= this.state.to_record_number)
                             this.setState({

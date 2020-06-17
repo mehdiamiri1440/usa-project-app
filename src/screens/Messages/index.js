@@ -261,7 +261,7 @@ class ContactsList extends React.Component {
                                     <AntDesign size={135} name='contacts' color='#BEBEBE' />
                                     <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
                                 </View> :
-                                loaded && <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                     <Entypo size={135} name='message' color='#BEBEBE' />
                                     <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
                                 </View>}

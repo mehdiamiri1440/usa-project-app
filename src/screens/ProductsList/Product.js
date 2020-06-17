@@ -593,7 +593,7 @@ class Product extends PureComponent {
                                             {locales('labels.deleteProduct')}
                                         </Text>
                                         :
-                                        <Text onPress={() => this.props.navigation.navigate('Profile')} style={{
+                                        <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
                                             width: '30%', textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
                                         }}>
                                             {locales('labels.seeProfile')}

@@ -276,7 +276,8 @@ class ProductDetails extends Component {
             id: userId = '',
             last_name = '',
             response_rate = '',
-            review_info = {}
+            review_info = {},
+            user_name
         } = user_info;
 
         const {
@@ -669,14 +670,14 @@ class ProductDetails extends Component {
                                     <Button
                                         onPress={() => this.setState({ modalFlag: true })}
                                         style={[styles.loginButton, {
-                                            height: '70%',
+                                            height: '70%', paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
                                             width: !!is_elevated ? '50%' : '46%'
                                         }]}
                                     >
-                                        <Text style={[styles.buttonText, { fontSize: 16 }]}>
+                                        <Text style={[styles.buttonText, { fontSize: 16, right: 10 }]}>
                                             {locales('titles.achiveSaleStatus')}</Text>
                                         <FontAwesome name='envelope' size={20} color='white'
-                                            style={{ position: 'absolute', right: !!is_elevated ? 35 : 30 }} />
+                                            style={{ position: 'absolute', right: !!is_elevated ? 45 : 40 }} />
                                     </Button>
                                 }
                                 {is_elevated ? <FontAwesome5
@@ -815,7 +816,7 @@ class ProductDetails extends Component {
                                             </Text> : null}
                                         </View>
                                         <Button
-                                            onPress={() => this.props.navigation.navigate('Profile')}
+                                            onPress={() => this.props.navigation.navigate('Profile', { user_name })}
                                             style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
                                         >
                                             <Text style={[styles.buttonText, { fontSize: 16 }]}>
