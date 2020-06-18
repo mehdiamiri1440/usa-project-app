@@ -26,7 +26,7 @@ class Rating extends React.Component {
             let isDefaultRateInteger = validator.isInt(defaultRate);
 
             this.setState({
-                hoveredIndex: isDefaultRateInteger ? starsCount - defaultRate - 1 : starsCount - 0.5 - defaultRate,
+                hoveredIndex: isDefaultRateInteger ? defaultRate : defaultRate - 0.5,
                 half: !isDefaultRateInteger
             }, () => {
                 this.renderStars();

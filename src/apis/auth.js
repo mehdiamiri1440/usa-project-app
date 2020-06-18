@@ -120,7 +120,7 @@ export const submitRegister = ({
     sex,
     province,
     city,
-    activity_type,
+    activity_type = '',
     // national_code,
     category_id
 }) => {

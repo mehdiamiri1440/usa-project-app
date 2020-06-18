@@ -102,14 +102,14 @@ class Profile extends Component {
         } = this.props;
 
         const {
-            profile,
-            user_info,
+            profile = {},
+            user_info = {},
             certificates,
             relateds
         } = userProfile;
 
         const {
-            activity_domain,
+            activity_domain = '',
             address,
             company_name,
             company_register_code,
@@ -123,14 +123,14 @@ class Profile extends Component {
             postal_code,
             profile_photo,
             public_phone,
-            related_activity_history,
+            related_activity_history = '',
             shaba_code,
             updated_at
         } = profile;
 
         const {
             active_pakage_type,
-            activity_type,
+            activity_type = '',
             category_id,
             city,
             contract_confirmed,
@@ -184,7 +184,7 @@ class Profile extends Component {
             sex: sexFromByUserName,
             province: provinceFromByUserName,
             city: cityFromByUserName,
-            activity_type: activityTypeFromByUserName,
+            activity_type: activityTypeFromByUserName = '',
             contract_confirmed: contractConfirmedFromByUserName,
             is_buyer: isBuyerFromByUserName,
             is_seller: isSellerFromByUserName,
@@ -385,7 +385,7 @@ class Profile extends Component {
                                 <Text style={{ marginHorizontal: 15, fontSize: 20, color: '#777777' }}>{rating_info.avg_score}</Text>
                                 <StarRating
                                     starsCount={5}
-                                    defaultRate={2.2}
+                                    defaultRate={rating_info.avg_score}
                                     disable={true}
                                     color='#FFBB00'
                                     size={25}
@@ -494,7 +494,7 @@ class Profile extends Component {
                                     alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                 }}>
                                     <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>
                                         {locales('titles.noProductFound')}</Text>
                                 </View>
                             }

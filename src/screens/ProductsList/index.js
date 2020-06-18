@@ -315,7 +315,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>{locales('titles.noProductFound')}</Text>
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     getItemLayout={(data, index) => (
