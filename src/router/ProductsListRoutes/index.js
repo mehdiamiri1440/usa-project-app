@@ -2,6 +2,7 @@ import React from 'react';
 import ProductsListIndex from '../../screens/ProductsList';
 import ProductDetails from '../../screens/ProductDetails';
 import Payment from '../../screens/Payment';
+import PromoteRegistrationIndex from '../../screens/Home/PromoteRegistration/PromoteRegistration';
 import Profile from '../../screens/Profile';
 import EditProfileIndex from '../../screens/Home/EditProfile';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
@@ -40,6 +41,12 @@ const routes = [
         component: EditProfileIndex,
         icon: color => <FontAwesome5 size={25} name='user-circle' color={color} />,
         name: 'EditProfile'
+    },
+    {
+        label: 'labels.promoteRegistration',
+        component: PromoteRegistrationIndex,
+        icon: color => <FontAwesome5 size={25} name='user-circle' color={color} />,
+        name: 'PromoteRegistration'
     },
 ]
 export default routes;

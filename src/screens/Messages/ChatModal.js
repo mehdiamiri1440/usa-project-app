@@ -209,11 +209,13 @@ class ChatModal extends React.Component {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
+                        activeOpacity={this.props.buyAdId ? 1 : 0}
                         onPress={() => {
                             Jmoment.locale('fa');
-                            onRequestClose();
-                            if (!this.props.buyAdId)
+                            if (!this.props.buyAdId) {
+                                onRequestClose();
                                 this.props.navigation.navigate('Profile', { user_name });
+                            }
                         }}
                         style={{
                             paddingHorizontal: 10,

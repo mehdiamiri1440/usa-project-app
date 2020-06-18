@@ -468,7 +468,7 @@ class Product extends PureComponent {
                                 <Button
                                     style={[styles.loginButton, { width: '50%' }]}
                                     onPress={() => this.setState({ elevatorFlag: false }, () => {
-                                        return this.props.navigation.navigate('Payment')
+                                        return this.props.navigation.navigate('PromoteRegistration')
                                     })}>
                                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                     </Text>
