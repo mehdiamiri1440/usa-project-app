@@ -122,11 +122,11 @@ class MyProducts extends Component {
                     keyboardShouldPersistTaps='handled'
                     refreshing={myProductsLoading}
                     ListEmptyComponent={!myProductsLoading && <View style={{
-                        alignSelf: 'center', justifyContent: 'flex-start',
-                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
+                        alignSelf: 'center', justifyContent: 'center',
+                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.78
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>{locales('titles.noProductFound')}</Text>
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     getItemLayout={(data, index) => (

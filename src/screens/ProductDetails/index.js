@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, FlatList, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { Text, Image, View, StyleSheet, Modal, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
@@ -16,6 +16,8 @@ import { validator, dataGenerator } from '../../utils';
 import Spin from '../../components/loading/loading';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
+
+
 class ProductDetails extends Component {
     constructor(props) {
         super(props);
@@ -840,8 +842,16 @@ class ProductDetails extends Component {
                                 <Card>
                                     <CardItem>
                                         <Body>
-                                            <Text style={{ color: '#777777', textAlign: 'center', fontSize: 16 }}>
-                                                {locales('labels.buskoolSmallTerms')}
+                                            <Text
+                                                onPress={() => {
+                                                    return Linking.canOpenURL('https://blog.buskool.com/راهنمای-خرید-امن').then(supported => {
+                                                        if (supported) {
+                                                            Linking.openURL('https://blog.buskool.com/راهنمای-خرید-امن');
+                                                        }
+                                                    });
+                                                }}
+                                                style={{ color: '#777777', textAlign: 'center', fontSize: 16 }}>
+                                                {locales('labels.buskoolSmallTerms')} <Text style={{ color: '#00C569' }}>{locales('labels.safeShop')}</Text> , {locales('labels.dealEasier')}
                                             </Text>
                                         </Body>
                                     </CardItem>

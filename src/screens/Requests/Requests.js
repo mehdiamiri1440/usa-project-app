@@ -154,7 +154,7 @@ class Requests extends React.Component {
 
                 {
                     !updateFlag ?
-                        <Spin spinning={buyAdRequestLoading || userProfileLoading || isUserAllowedToSendMessageLoading}>
+                        <Spin spinning={isUserAllowedToSendMessageLoading}>
 
 
 
@@ -187,6 +187,8 @@ class Requests extends React.Component {
 
 
                                 <FlatList
+                                    refreshing={buyAdRequestLoading}
+                                    onRefresh={() => this.props.fetchAllBuyAdRequests()}
                                     data={buyAdRequestsList}
                                     keyExtractor={(item) => item.id.toString()}
                                     renderItem={({ item, index, separators }) => (
@@ -207,7 +209,7 @@ class Requests extends React.Component {
                                                         flexWrap: 'wrap', width: '100%', textAlign: 'center',
                                                         fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
                                                     }}
-                                                >{`${item.category_name} | ${item.subcategory_name} | ${item.name}`}</Text>
+                                                >{`${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
                                             </View>
 
 
@@ -263,9 +265,10 @@ class Requests extends React.Component {
                                                         backgroundColor: '#00C569',
                                                         borderRadius: 6,
                                                         alignItems: 'center',
-                                                        width: "85%",
+                                                        width: "80%",
                                                         alignSelf: 'center',
                                                         justifyContent: 'center',
+                                                        height: 35,
                                                         paddingHorizontal: 10,
                                                         flexDirection: 'row-reverse'
                                                     }}
@@ -291,9 +294,7 @@ class Requests extends React.Component {
                                     visible={modalFlag}
                                     buyAdId={selectedBuyAdId}
                                     contact={{ ...selectedContact }}
-                                    onRequestClose={() => this.setState({ modalFlag: false }, () => {
-                                        this.props.fetchAllBuyAdRequests();
-                                    })}
+                                    onRequestClose={() => this.setState({ modalFlag: false })}
                                 />}
 
 

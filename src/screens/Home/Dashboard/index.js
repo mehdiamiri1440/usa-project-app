@@ -29,7 +29,7 @@ const Dashboard = props => {
     let {
         active_package_type: activePackageType = 0,
         reputation_score: reputationScore,
-        accessable_buyAds: accessableBuyAds,
+        max_buyAds_reply: maxBuyAdsReply,
         is_valid: isValid,
         max_allowed_product_register_count: maxAllowedProductRegisterCount,
         confirmed_products_count: confirmedProductsCount
@@ -125,7 +125,7 @@ const Dashboard = props => {
                                 <Text style={{
                                     fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
                                 }}>
-                                    {locales('labels.product')} {maxAllowedProductRegisterCount == 0 ? locales('labels.zero') : maxAllowedProductRegisterCount}
+                                    {maxAllowedProductRegisterCount == 0 ? locales('labels.zero') : maxAllowedProductRegisterCount}  {locales('labels.product')}
                                 </Text>
                                 <FontAwesome5 name='list-ol' size={95} color='#AA49C8' style={{ opacity: 0.3 }} />
                             </View>
@@ -143,7 +143,7 @@ const Dashboard = props => {
                                 <Text style={{
                                     fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
                                 }}>
-                                    {locales('labels.request')} {accessableBuyAds}
+                                    {maxBuyAdsReply} {locales('labels.response')}
                                 </Text>
                                 <FontAwesome5 name='list-alt' size={95} color='#D8A679' style={{ opacity: 0.3 }} />
                             </View>
@@ -162,7 +162,7 @@ const Dashboard = props => {
                                 }}>
                                     {isValid ? locales('titles.yes') : locales('titles.no')}
                                 </Text>
-                                <FontAwesome5 name='list-ol' size={95} color='#21AD93' style={{ opacity: 0.3 }} />
+                                <FontAwesome5 name='award' size={95} color='#21AD93' style={{ opacity: 0.3 }} />
                             </View>
                         </Body>
                     </CardItem>
