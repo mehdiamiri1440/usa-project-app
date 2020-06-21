@@ -318,9 +318,9 @@ class ProductsList extends PureComponent {
                         <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
-                    getItemLayout={(data, index) => (
-                        { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
-                    )}
+                    // getItemLayout={(data, index) => (
+                    //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
+                    // )}
                     extraData={this.state}
                     ref={this.productsListRef}
                     onEndReached={() => {
@@ -349,8 +349,8 @@ class ProductsList extends PureComponent {
                                 })
                             })
                     }}
-                    initialNumToRender={2}
-                    initialScrollIndex={0}
+                    // initialNumToRender={2}
+                    // initialScrollIndex={0}
                     refreshing={productsListLoading || categoriesLoading}
                     onRefresh={() => {
                         let item = {

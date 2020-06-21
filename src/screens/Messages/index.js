@@ -183,9 +183,9 @@ class ContactsList extends React.Component {
                                                 keyboardShouldPersistTaps='handled'
                                                 keyboardDismissMode='on-drag'
                                                 showsVerticalScrollIndicator={false}
-                                                getItemLayout={(data, index) => (
-                                                    { length: 100, offset: 100 * index, index }
-                                                )}
+                                                // getItemLayout={(data, index) => (
+                                                //     { length: 100, offset: 100 * index, index }
+                                                // )}
                                                 // onEndReachedThreshold={0.3}
                                                 // onEndReached={this.fetchMoreContacts}
                                                 style={{ width: '100%', height: deviceHeight * 0.74 }}

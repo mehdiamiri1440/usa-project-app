@@ -129,9 +129,9 @@ class MyProducts extends Component {
                         <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
-                    getItemLayout={(data, index) => (
-                        { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
-                    )}
+                    // getItemLayout={(data, index) => (
+                    //     { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
+                    // )}
                     extraData={this.state}
                     onEndReached={() => {
                         if (loaded && myProductsArray.length >= this.state.to_record_number)
@@ -144,8 +144,8 @@ class MyProducts extends Component {
                                 })
                             })
                     }}
-                    initialNumToRender={2}
-                    initialScrollIndex={0}
+                    // initialNumToRender={2}
+                    // initialScrollIndex={0}
                     onRefresh={() => {
                         this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
                             this.setState({

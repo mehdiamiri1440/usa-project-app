@@ -74,7 +74,7 @@ class ChatModal extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
             this.props.fetchTotalUnreadMessages();
-            this.setState({ userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
+            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
                 //     setTimeout(() => {
                 //         this.scrollViewRef.current.scrollToEnd({ animated: true });
@@ -87,7 +87,7 @@ class ChatModal extends React.Component {
             this.props.setcontactsListUpdated(false);
             setTimeout(() => {
                 this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.setState({ userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
+                    this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
                         // if (!this.state.isFirstLoad)
                         //     setTimeout(() => {
                         //         this.scrollViewRef.current.scrollToEnd({ animated: true });
@@ -239,7 +239,7 @@ class ChatModal extends React.Component {
                         // refreshing={this.state.userChatHistory}
                         data={userChatHistory}
                         getItemLayout={(data, index) => (
-                            { length: 100, offset: 100 * index, index }
+                            { length: 40, offset: 40 * index, index }
                         )}
                         inverted
                         ref={this.scrollViewRef}
