@@ -33,7 +33,8 @@ class Home extends React.Component {
         if (name == 'SignOut') {
             this.props.logOut().then(() => { })
         }
-        if (name == 'MyProfile') {
+        if (name == 'Profile') {
+            console.log('this', this.props)
             this.props.navigation.navigate(name, { user_name: this.props.userProfile.user_info.user_name })
         }
         else {

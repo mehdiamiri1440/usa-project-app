@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { Card, Body, CardItem, Button } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -10,7 +10,20 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
 class PromoteRegistration extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
 
+    componentWillUnmount() { }
+
+    pay = () => {
+        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+            if (supported) {
+                Linking.openURL('https://www.buskool.com/payment/3');
+            }
+        })
+    };
     render() {
 
         let {
@@ -340,7 +353,7 @@ class PromoteRegistration extends React.Component {
                                     :
                                     <Button
                                         style={[styles.loginButton, { width: '50%', alignSelf: 'center' }]}
-                                        onPress={() => { }}>
+                                        onPress={() => this.pay()}>
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                         </Text>
                                     </Button>
