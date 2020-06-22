@@ -18,9 +18,9 @@ class PromoteRegistration extends React.Component {
     componentWillUnmount() { }
 
     pay = () => {
-        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+        return Linking.canOpenURL('https://www.buskool.com/payment/5').then(supported => {
             if (supported) {
-                Linking.openURL('https://www.buskool.com/payment/3');
+                Linking.openURL('https://www.buskool.com/payment/5');
             }
         })
     };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Card, CardItem, Body, Icon, InputGroup, Input } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -34,6 +35,7 @@ class ContactsList extends React.Component {
     }
 
     serachInputRef = React.createRef();
+    contactsListRef = React.createRef();
 
 
     componentDidMount() {
@@ -175,6 +177,7 @@ class ContactsList extends React.Component {
                                     <CardItem>
                                         <Body>
                                             <FlatList
+                                                ref={this.props.contactsListRef}
                                                 refreshing={contactsListLoading && !loaded}
                                                 onRefresh={() => this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                                                     this.setState({ loaded: false });
@@ -381,4 +384,15 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsList)
+
+
+
+const Wrapper = (props) => {
+    const ref = React.useRef(null);
+
+    useScrollToTop(ref);
+
+    return <ContactsList {...props} contactsListRef={ref} />;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)

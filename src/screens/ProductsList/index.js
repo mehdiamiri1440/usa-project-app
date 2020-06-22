@@ -1,6 +1,7 @@
 import React, { Component, createRef, PureComponent } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { connect } from 'react-redux';
+import { useScrollToTop } from '@react-navigation/native';
 import { Icon, InputGroup, Input } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -78,8 +79,8 @@ class ProductsList extends PureComponent {
             };
         };
         this.props.fetchAllProductsList(item).then(_ => {
-            if (this.productsListRef && this.productsListRef.current)
-                this.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            if (this.props.productsListRef && this.props.productsListRef.current)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         });
     };
 
@@ -101,8 +102,8 @@ class ProductsList extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.productsListRef && this.productsListRef.current)
-                this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+            if (this.props.productsListRef && this.props.productsListRef.current)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
 
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
@@ -152,8 +153,8 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.productsListRef && this.productsListRef.current)
-                                        this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                                    if (this.props.productsListRef && this.props.productsListRef.current)
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -196,8 +197,8 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.productsListRef && this.productsListRef.current)
-                                        this.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                                    if (this.props.productsListRef && this.props.productsListRef.current)
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
 
                                     const { sort_by } = this.state;
                                     let searchItem = {
@@ -322,7 +323,7 @@ class ProductsList extends PureComponent {
                     //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
                     // )}
                     extraData={this.state}
-                    ref={this.productsListRef}
+                    ref={this.props.productsListRef}
                     onEndReached={() => {
                         if (loaded && productsListArray.length >= this.state.to_record_number)
                             this.setState({
@@ -425,4 +426,14 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductsList)
+
+const Wrapper = (props) => {
+    const ref = React.useRef(null);
+
+    useScrollToTop(ref);
+
+    return <ProductsList {...props} productsListRef={ref} />;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
+

@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, ToastAndroid } from 'react-native';
 import { Dialog, Portal, Paragraph, Snackbar } from 'react-native-paper';
 import { connect } from 'react-redux';
+import { useScrollToTop } from '@react-navigation/native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Jmoment from 'moment-jalaali';
@@ -27,6 +28,8 @@ class Requests extends React.Component {
             selectedContact: {}
         }
     }
+
+    requestsRef = React.createRef();
 
     componentDidMount() {
         this.props.fetchUserProfile();
@@ -187,6 +190,7 @@ class Requests extends React.Component {
 
 
                                 <FlatList
+                                    ref={this.props.requestsRef}
                                     refreshing={buyAdRequestLoading}
                                     onRefresh={() => this.props.fetchAllBuyAdRequests()}
                                     data={buyAdRequestsList}
@@ -580,4 +584,15 @@ const mapDispatchToProps = (dispatch) => {
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Requests);
+
+
+
+const Wrapper = (props) => {
+    const ref = React.useRef(null);
+
+    useScrollToTop(ref);
+
+    return <Requests {...props} requestsRef={ref} />;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper);

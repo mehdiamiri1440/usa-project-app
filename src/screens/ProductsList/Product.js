@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { Input, Label, Item } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -209,6 +209,15 @@ class Product extends PureComponent {
                 }, 4000);
             });
         });
+    };
+
+
+    pay = () => {
+        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+            if (supported) {
+                Linking.openURL('https://www.buskool.com/payment/3');
+            }
+        })
     };
 
     render() {
@@ -468,7 +477,7 @@ class Product extends PureComponent {
                                 <Button
                                     style={[styles.loginButton, { width: '50%' }]}
                                     onPress={() => this.setState({ elevatorFlag: false }, () => {
-                                        return this.props.navigation.navigate('PromoteRegistration')
+                                        return this.pay()
                                     })}>
                                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                     </Text>

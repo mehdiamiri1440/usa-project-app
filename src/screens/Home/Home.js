@@ -4,6 +4,7 @@ import * as authReducer from '../../redux/auth/actions';
 import { Text, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { useScrollToTop } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -28,6 +29,8 @@ class Home extends React.Component {
         super(props);
         this.state = {}
     }
+
+    homeRef = React.createRef();
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
@@ -78,7 +81,9 @@ class Home extends React.Component {
                 </View>
 
 
-                <ScrollView style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
+                <ScrollView
+                    ref={this.props.homeRef}
+                    style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
                     {homeRoutes.map((route, index) => {
                         return (
                             <TouchableOpacity
@@ -143,4 +148,15 @@ const mapStateToProps = (state, ownProps) => {
         userProfile: state.profileReducer.userProfile,
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+
+
+
+const Wrapper = (props) => {
+    const ref = React.useRef(null);
+
+    useScrollToTop(ref);
+
+    return <Home {...props} homeRef={ref} />;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
