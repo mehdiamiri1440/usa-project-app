@@ -31,7 +31,7 @@
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
         <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/" />
+        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/seller/pricing" />
         <!-- note that the leading "/" is required for pathPrefix-->
       </intent-filter>
       <intent-filter>
@@ -39,7 +39,7 @@
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
         <!-- Accepts URIs that begin with "example://gizmos” -->
-        <data android:scheme="buskool" android:host="privacy-and-policy" />
+        <data android:scheme="buskool" android:host="/seller/pricing" />
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

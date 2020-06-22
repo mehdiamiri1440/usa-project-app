@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image } from 'react-native';
+import { Alert, Image, Linking, Text } from 'react-native';
 import { connect } from 'react-redux';
 import * as messagesActions from '../redux/messages/actions';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -111,9 +111,15 @@ const App = props => {
         return unsubscribe
     }, [initialRoute]);
 
+    // const prefix = Linking.makeUrl('https://app.buskool.com');
 
+
+    const linking = {
+        prefixes: ['buskool://Home'],
+    };
     return (
         <NavigationContainer
+            linking={linking} fallback={<Text>Loading...</Text>}
             ref={navigationRef}
         >
             {(!props.loggedInUserId) ?
