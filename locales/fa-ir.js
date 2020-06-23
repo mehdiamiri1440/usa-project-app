@@ -104,14 +104,17 @@ export default {
     'labels.doElevation': 'اعمال نردبان',
     'labels.messageToBuyer': 'پیام به خریدار',
     "labels.woman": "خانم",
+    "labels.locationsFilter": 'فیلتر مکان',
     'labels.deleteProduct': 'حذف محصول',
     "labels.product": 'محصول',
+    'labels.deleteFilter': 'حذف فیلتر',
     'labels.productsList': 'لیست محصولات',
     "labels.ProductDetails": 'جزییات محصول',
 
 
     "titles.enterToBuskool": "ورود به باسکول",
     'titles.minOrder': 'حداقل سفارش',
+    'titles.AllIran': 'همه ایران',
     'titles.promotionText': 'در صورت ارتقاء به عضویت ویژه اگر پس از سه ماه از نتیجه آن رضایت نداشته باشید ',
     'titles.promotionTextContinue': '100% مبلغ پرداختی به شما بازگردانده می شود',
     'titles.annualSpecialRegistration': 'عضویت ویژه سالیانه',

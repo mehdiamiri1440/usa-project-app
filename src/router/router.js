@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, Linking, Text } from 'react-native';
+import { Alert, Image, Linking, Text, I18nManager } from 'react-native';
 import { connect } from 'react-redux';
+import RNRestart from 'react-native-restart';
 import * as messagesActions from '../redux/messages/actions';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { NavigationContainer } from '@react-navigation/native';
@@ -59,6 +60,13 @@ const App = props => {
     let unsubscribe;
     useEffect(() => {
         props.fetchTotalUnreadMessages();
+
+        if (I18nManager.isRTL) {
+            I18nManager.forceRTL(false);
+            I18nManager.allowRTL(false);
+            RNRestart.Restart();
+        }
+
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {

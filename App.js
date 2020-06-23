@@ -35,10 +35,11 @@ class App extends React.Component {
     messaging().setBackgroundMessageHandler(async _ => {
       store.dispatch(messageActions.isFromOutSide(true))
     });
-    // if (I18nManager.isRTL) {
-    //   I18nManager.forceRTL(false);
-    //   RNRestart.Restart();
-    // }
+    if (I18nManager.isRTL) {
+      I18nManager.forceRTL(false);
+      I18nManager.allowRTL(false);
+      RNRestart.Restart();
+    }
   }
 
   render() {

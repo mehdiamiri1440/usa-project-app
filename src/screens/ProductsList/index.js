@@ -1,8 +1,9 @@
 import React, { Component, createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
-import { Icon, InputGroup, Input } from 'native-base';
+import RNPickerSelect from 'react-native-picker-select';
+import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -10,6 +11,7 @@ import Product from './Product';
 import Spin from '../../components/loading/loading';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
+import * as locationActions from '../../redux/locations/actions'
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
@@ -20,7 +22,10 @@ class ProductsList extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
+            city: '',
+            province: '',
             sortModalFlag: false,
+            locationsFlag: false,
             refreshed: false,
             searchText: undefined,
             from_record_number: 0,
@@ -40,6 +45,7 @@ class ProductsList extends PureComponent {
     componentDidMount() {
 
         this.fetchAllProducts();
+        this.props.fetchAllProvinces();
         this.props.fetchAllCategories();
     }
 
@@ -112,14 +118,77 @@ class ProductsList extends PureComponent {
 
     };
 
-    changeLocation = event => {
-
-    };
-
     sortProducts = id => {
         this.setState({ categoryModalFlag: true }, () => {
             this.props.fetchAllSubCategories(id)
         })
+    };
+
+
+
+    setProvince = (value, index) => {
+        let { provinces = [] } = this.props.allProvincesObject;
+        if (provinces.length) {
+            this.setState({ province: value, provinceError: '' })
+            this.props.fetchAllProvinces(value)
+        }
+    };
+
+    setCity = (value) => {
+        if (!!value)
+            this.setState({ city: value, cityError: '' })
+    };
+
+    searchLocation = () => {
+        const { searchText, province, city, sort_by } = this.state;
+
+        let searchItem = {
+            from_record_number: 0,
+            sort_by,
+            to_record_number: 15,
+        };
+        if (searchText && searchText.length) {
+            searchItem = {
+                from_record_number: 0,
+                sort_by,
+                search_text: searchText,
+                to_record_number: 15
+            }
+        }
+        if (province) {
+            searchItem = { ...searchItem, province_id: province }
+        }
+        if (city) {
+            searchItem = { ...searchItem, city_id: city }
+        }
+
+        return this.props.fetchAllProductsList(searchItem).then(result => {
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
+        });
+
+    };
+
+    deleteFilter = () => {
+        const { searchText, province, city, sort_by } = this.state;
+
+        let searchItem = {
+            from_record_number: 0,
+            sort_by,
+            to_record_number: 15,
+        };
+        if (searchText && searchText.length) {
+            searchItem = {
+                from_record_number: 0,
+                sort_by,
+                search_text: searchText,
+                to_record_number: 15
+            }
+        }
+
+        this.props.fetchAllProductsList(searchItem).then(result => {
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
+        });
+
     };
 
 
@@ -133,13 +202,159 @@ class ProductsList extends PureComponent {
             subCategoriesList,
             categoriesList,
             categoriesLoading,
-            subCategoriesLoading
+            subCategoriesLoading,
+
+            allProvincesObject,
+            allCitiesObject
         } = this.props;
 
-        const { searchText, loaded, productsListArray, categoryModalFlag, sortModalFlag } = this.state;
+        const { searchText, loaded, productsListArray, categoryModalFlag, sortModalFlag, locationsFlag, province, city } = this.state;
+
+        let { provinces = [] } = allProvincesObject;
+
+        let cities = [];
+        provinces = provinces.map(item => ({ ...item, value: item.id }));
+
+        if (Object.entries(allCitiesObject).length) {
+            cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
+        }
 
         return (
             <>
+                <Modal
+                    animationType="slide"
+                    visible={locationsFlag}
+                    onRequestClose={() => this.setState({ locationsFlag: false })}>
+
+
+                    <View style={{
+                        backgroundColor: 'white',
+                        flexDirection: 'row-reverse',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        height: 57,
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        justifyContent: 'center'
+                    }}>
+                        <TouchableOpacity
+                            style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
+                            onPress={() => this.setState({ locationsFlag: false })}
+                        >
+                            <AntDesign name='arrowright' size={25} />
+                        </TouchableOpacity>
+
+                        <View style={{
+                            width: deviceWidth * 0.6,
+                            alignItems: 'flex-end'
+                        }}>
+                            <Text
+                                style={{ fontSize: 18 }}
+                            >
+                                {locales('labels.locationsFilter')}
+                            </Text>
+                        </View>
+                    </View>
+                    <Spin spinning={this.props.provinceLoading || this.props.fetchCitiesLoading || productsListLoading}>
+                        <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
+                            <Card>
+                                <CardItem>
+                                    <Body>
+                                        <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+
+                                            <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
+                                                <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                                    {locales('labels.province')}
+                                                </Label>
+                                                <Item regular
+                                                    style={{
+                                                        width: deviceWidth * 0.9,
+                                                        borderRadius: 5,
+                                                        alignSelf: 'center',
+                                                        borderColor: '#a8a8a8'
+                                                    }}
+                                                >
+                                                    <RNPickerSelect
+                                                        Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                        useNativeAndroidPickerStyle={false}
+                                                        onValueChange={this.setProvince}
+                                                        style={styles}
+                                                        value={province}
+                                                        placeholder={{
+                                                            label: locales('labels.selectProvince'),
+                                                            fontFamily: 'Vazir-Bold-FD',
+                                                        }}
+                                                        items={[...provinces.map(item => ({
+                                                            label: item.province_name, value: item.id
+                                                        }))]}
+                                                    />
+                                                </Item>
+                                            </View>
+
+                                            <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
+                                                <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                                    {locales('labels.city')}
+                                                </Label>
+                                                <Item regular
+                                                    style={{
+                                                        width: deviceWidth * 0.9,
+                                                        borderRadius: 5,
+                                                        alignSelf: 'center',
+                                                        borderColor: '#a8a8a8'
+                                                    }}
+                                                >
+                                                    <RNPickerSelect
+                                                        Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                        useNativeAndroidPickerStyle={false}
+                                                        onValueChange={this.setCity}
+                                                        style={styles}
+                                                        value={city}
+                                                        placeholder={{
+                                                            label: locales('labels.selectCity'),
+                                                            fontFamily: 'Vazir-Bold-FD',
+                                                        }}
+                                                        items={[...cities.map(item => ({
+                                                            label: item.city_name, value: item.id
+                                                        }))]}
+                                                    />
+                                                </Item>
+                                            </View>
+
+                                            <View style={{
+                                                flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
+                                                alignItems: 'center'
+                                            }}>
+                                                <Button
+                                                    style={[styles.loginButton, { width: '50%' }]}
+                                                    onPress={this.searchLocation}>
+                                                    <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
+                                                        {locales('labels.search')}
+                                                    </Text>
+                                                </Button>
+                                                <Button
+                                                    style={[styles.loginButton, { width: '50%', backgroundColor: '#556080', }]}
+                                                    onPress={this.deleteFilter}>
+                                                    <Text style={[styles.buttonText, {
+                                                        alignSelf: 'center',
+                                                        fontSize: 16
+                                                    }]}>
+                                                        {locales('labels.deleteFilter')}
+                                                    </Text>
+                                                </Button>
+                                            </View>
+
+                                        </View>
+                                    </Body>
+                                </CardItem>
+                            </Card>
+
+                        </View>
+                    </Spin>
+
+                </Modal>
+
                 <Modal
                     animationType="slide"
                     visible={sortModalFlag}
@@ -255,12 +470,14 @@ class ProductsList extends PureComponent {
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5 }}>
                             <TouchableOpacity
-                                onPress={this.changeLocation}
+                                onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} color='#BEBEBE' />
                                 <Text
                                     style={{ fontFamily: 'Vazir', color: '#BEBEBE', fontSize: 16 }}
-                                >همه ایران</Text>
+                                >
+                                    {locales('titles.AllIran')}
+                                </Text>
                             </TouchableOpacity>
                             <Input value={searchText}
                                 ref={this.serachInputRef}
@@ -293,7 +510,8 @@ class ProductsList extends PureComponent {
                                     <TouchableOpacity
                                         onPress={() => this.sortProducts(item.id)}
                                         style={{
-                                            borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                            borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
+                                            alignItems: 'center', justifyContent: 'center',
                                             minWidth: deviceWidth * 0.25, borderWidth: 0.8, borderColor: '#7E7E7E'
                                         }}>
                                         <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E' }}>
@@ -312,8 +530,8 @@ class ProductsList extends PureComponent {
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
                     ListEmptyComponent={!productsListLoading && <View style={{
-                        alignSelf: 'center', justifyContent: 'flex-start',
-                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight
+                        alignSelf: 'center', justifyContent: 'center',
+                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
                         <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
@@ -390,6 +608,144 @@ class ProductsList extends PureComponent {
     }
 }
 
+
+const styles = StyleSheet.create({
+    loginFailedContainer: {
+        backgroundColor: '#F8D7DA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#761C24'
+    },
+    buttonText: {
+        color: 'white',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.4,
+        borderRadius: 5,
+        color: 'white',
+        alignItems: 'center',
+        backgroundColor: '#B5B5B5',
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        borderRadius: 5,
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
+    },
+    enterText: {
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#00C569',
+        fontSize: 20,
+        padding: 10,
+    },
+    linearGradient: {
+        height: deviceHeight * 0.15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTextStyle: {
+        color: 'white',
+        position: 'absolute',
+        textAlign: 'center',
+        fontSize: 26,
+        bottom: 40
+    },
+    textInputPadding: {
+        padding: 20,
+    },
+    userText: {
+        flexWrap: 'wrap',
+        fontFamily: 'Vazir-Bold-FD',
+        paddingTop: '3%',
+        fontSize: 20,
+        padding: 20,
+        textAlign: 'right',
+        color: '#7E7E7E'
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'Vazir',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.9,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
+    }
+});
+
 const mapStateToProps = (state) => {
     return {
         productsListArray: state.productsListReducer.productsListArray,
@@ -414,6 +770,18 @@ const mapStateToProps = (state) => {
         subCategoriesList: state.registerProductReducer.subCategoriesList,
         subCategories: state.registerProductReducer.subCategories,
 
+        provinceLoading: state.locationsReducer.fetchAllProvincesLoading,
+        provinceError: state.locationsReducer.fetchAllProvincesError,
+        provinceFailed: state.locationsReducer.fetchAllProvincesFailed,
+        provinceMessage: state.locationsReducer.fetchAllProvincesMessage,
+        allProvincesObject: state.locationsReducer.allProvincesObject,
+
+        fetchCitiesLoading: state.locationsReducer.fetchAllCitiesLoading,
+        fetchCitiesError: state.locationsReducer.fetchAllCitiesError,
+        fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
+        fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
+        allCitiesObject: state.locationsReducer.allCitiesObject,
+
     }
 };
 
@@ -421,7 +789,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
         fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
-        fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id))
+        fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
 
     }
 };
