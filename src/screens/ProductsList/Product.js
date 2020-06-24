@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking } from 'react-native';
+import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { Input, Label, Item } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -10,6 +10,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import * as productListActions from '../../redux/productsList/actions'
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ChatModal from '../Messages/ChatModal';
 import { formatter, validator, dataGenerator } from '../../utils';
 import Spin from '../../components/loading/loading';
@@ -22,6 +23,7 @@ class Product extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
+            showValidatedUserModal: false,
             minimumOrder: '',
             amount: '',
             loaded: false,
@@ -41,7 +43,6 @@ class Product extends PureComponent {
             deleteMessageText: ''
         }
     }
-
 
     amountRef = React.createRef();
     minimumOrderRef = React.createRef();
@@ -265,6 +266,7 @@ class Product extends PureComponent {
             response_time,
             ums,
             id: contact_id,
+            is_verified,
             user_name
         } = user_info;
 
@@ -287,19 +289,99 @@ class Product extends PureComponent {
             maximumPriceError,
             minimumPriceError,
             amountError,
-            editProductLoading
+            editProductLoading,
+
+            showValidatedUserModal
         } = this.state;
 
         const selectedContact = {
             first_name,
             contact_id,
             last_name,
+            is_verified
         }
 
         return (
             <SafeAreaView>
                 <Spin spinning={deleteProductLoading || editProductLoading}>
 
+                    {/* 
+                    <Portal>
+                        <Dialog
+                            visible={showValidatedUserModal}
+                            onDismiss={() => this.setState({ showValidatedUserModal: false })}>
+                            <View style={{
+                                padding: 10, marginBottom: 5,
+                                borderBottomWidth: 0.7, width: '100%',
+                                justifyContent: 'center', alignItems: 'center',
+                                borderBottomColor: '#BEBEBE'
+                            }}>
+                                <Paragraph style={{
+                                    textAlign: 'center', width: '100%',
+                                    flexDirection: 'row-reverse', paddingTop: 10,
+                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#777777'
+                                }}>
+                                    {locales('labels.validatedUser')}
+                                </Paragraph>
+                            </View>
+                            <Dialog.Content>
+                                <Text style={{
+                                    width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'Vazir',
+                                    color: '#00C569'
+                                }}>
+                                    {locales('titles.thisUserIsValidated')}
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        return Linking.canOpenURL('https://www.buskool.com/verification').then(supported => {
+                                            if (supported) {
+                                                Linking.openURL('https://www.buskool.com/verification');
+                                            }
+                                        })
+                                    }}
+                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text
+                                        style={{
+                                            marginHorizontal: 2,
+                                            fontFamily: 'Vazir', textAlign: 'center',
+                                            fontSize: 16, color: '#777777'
+                                        }}
+                                    >{locales('titles.forMoreDetails')}</Text>
+                                    <Text style={{
+                                        color: '#1DA1F2',
+                                        fontFamily: 'Vazir-Bold-FD', textAlign: 'center',
+                                        fontSize: 18,
+                                    }}>
+                                        {locales('titles.here')}
+                                    </Text>
+                                    <Text style={{
+                                        color: '#777777', marginHorizontal: 2,
+                                        fontFamily: 'Vazir', textAlign: 'center',
+                                        fontSize: 16,
+                                    }}>
+                                        {locales('titles.goForClick')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </Dialog.Content>
+                            <Dialog.Actions style={{
+                                borderTopColor: '#BEBEBE',
+                                borderTopWidth: 0.8,
+                                width: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <Button
+                                    style={[styles.loginButton, { width: '50%' }]}
+                                    onPress={() => this.setState({ showValidatedUserModal: false })}>
+                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
+
+
+ */}
 
                     {editionFlag ? <Portal>
                         <Dialog
@@ -581,19 +663,27 @@ class Product extends PureComponent {
                                             require('../../../assets/icons/user.png')
                                         } />
                                     <View
-                                        style={{ width: '62%', justifyContent: 'flex-start' }}
+                                        style={{ width: '62%', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
                                     >
-                                        <Text style={{
-                                            fontFamily: 'Vazir-Bold-FD',
-                                            fontSize: 18, marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
-                                            paddingHorizontal: 7, paddingBottom: 2
-                                        }}>
-                                            {`${first_name} ${last_name}`}
-                                        </Text>
-                                        {response_rate > 0 && loggedInUserId != myuser_id &&
-                                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
-                                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                                            </Text>}
+                                        <View>
+                                            <View style={{ flexDirection: 'row-reverse' }}>
+                                                <Text style={{
+                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    marginHorizontal: 5,
+                                                    fontSize: 18,
+                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
+                                                    paddingBottom: 2
+                                                }}>
+                                                    {`${first_name} ${last_name}`}
+                                                </Text>
+                                                {is_verified ? <ValidatedUserIcon /> : null}
+                                            </View>
+                                            {response_rate > 0 && loggedInUserId != myuser_id &&
+                                                <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
+                                                    {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                                </Text>}
+                                        </View>
+
                                     </View>
                                     {loggedInUserId == myuser_id ?
                                         <Text

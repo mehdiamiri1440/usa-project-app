@@ -71,7 +71,6 @@ const App = props => {
             firebase.messaging().getToken()
                 .then(fcmToken => {
                     if (fcmToken) {
-
                         firebase.messaging().hasPermission()
                             .then(enabled => {
                                 if (enabled) {
@@ -116,11 +115,13 @@ const App = props => {
                 })
         }
 
+        Linking.addEventListener(url => {
+            console.log('url', url)
+        })
         return unsubscribe
     }, [initialRoute]);
 
     // const prefix = Linking.makeUrl('https://app.buskool.com');
-
 
     const linking = {
         prefixes: ['buskool://Home'],

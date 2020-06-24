@@ -16,6 +16,7 @@ import { validator, dataGenerator } from '../../utils';
 import Spin from '../../components/loading/loading';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 
 class ProductDetails extends Component {
@@ -279,7 +280,8 @@ class ProductDetails extends Component {
             last_name = '',
             response_rate = '',
             review_info = {},
-            user_name
+            user_name,
+            is_verified
         } = user_info;
 
         const {
@@ -315,6 +317,7 @@ class ProductDetails extends Component {
             first_name,
             contact_id: userId,
             last_name,
+            is_verified
         }
 
         let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
@@ -796,13 +799,15 @@ class ProductDetails extends Component {
                                                 {is_seller ? locales('labels.seller') : locales('labels.buyer')}
                                             </Text>
 
-
-                                            <Text style={{
-                                                textAlign: 'center', width: '100%',
-                                                fontFamily: 'Vazir-Bold-FD', fontSize: 20
-                                            }}>
-                                                {`${first_name} ${last_name}`}
-                                            </Text>
+                                            <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
+                                                <Text style={{
+                                                    textAlign: 'center', marginHorizontal: 5,
+                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 20
+                                                }}>
+                                                    {`${first_name} ${last_name}`}
+                                                </Text>
+                                                {is_verified ? <ValidatedUserIcon /> : null}
+                                            </View>
 
                                             {active_pakage_type == 3 ? <Text style={{
                                                 color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'Vazir-Bold-FD', fontSize: 18

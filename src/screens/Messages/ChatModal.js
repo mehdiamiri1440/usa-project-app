@@ -17,6 +17,7 @@ import Spin from '../../components/loading/loading';
 import messaging from '@react-native-firebase/messaging';
 import MessagesContext from './MessagesContext';
 import { formatter, dataGenerator } from '../../utils';
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 class ChatModal extends React.Component {
     constructor(props) {
@@ -147,8 +148,8 @@ class ChatModal extends React.Component {
 
     render() {
         let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo } = this.props;
-        let { first_name: firstName, last_name: lastName, contact_id: id, user_name } = contact;
-        let { keyboardHeight, userChatHistory, isFirstLoad, messageText, loaded } = this.state;
+        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
+        let { userChatHistory, isFirstLoad, messageText, loaded } = this.state;
 
         return (
             <Modal
@@ -222,11 +223,14 @@ class ChatModal extends React.Component {
                             width: deviceWidth * 0.63,
                             alignItems: 'flex-end',
                         }}>
-                        <Text
-                            style={{ fontSize: 18 }}
-                        >
-                            {`${firstName} ${lastName}`}
-                        </Text>
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                            <Text
+                                style={{ fontSize: 18, marginHorizontal: 5 }}
+                            >
+                                {`${firstName} ${lastName}`}
+                            </Text>
+                            {is_verified ? <ValidatedUserIcon /> : null}
+                        </View>
                     </TouchableOpacity>
                 </View>
 

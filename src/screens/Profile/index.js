@@ -15,6 +15,7 @@ import ChatModal from '../Messages/ChatModal';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import Spin from '../../components/loading/loading';
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 class Profile extends Component {
     constructor(props) {
@@ -143,7 +144,7 @@ class Profile extends Component {
             profile_visit,
             province,
             sex,
-            user_name
+            user_name,
         } = user_info
 
         const {
@@ -191,7 +192,8 @@ class Profile extends Component {
             is_blocked: isBlockedFromByUserName,
             category_id: categoryIdFromByUserName,
             profile_visit: profileVisitFromByUserName,
-            active_pakage_type: activePackageTypeFromByUserName
+            active_pakage_type: activePackageTypeFromByUserName,
+            is_verified
         } = userInfoFromByUserName;
 
         let { modalFlag, selectedEvidenceModal, selectedImageModal, selectedEvidenceIndex, selectedImageIndex } = this.state;
@@ -200,6 +202,7 @@ class Profile extends Component {
             first_name: firstNameFromByUserName,
             contact_id: userIdFromByUserName,
             last_name: lastNameFromByUserName,
+            is_verified
         }
 
         return (
@@ -347,10 +350,13 @@ class Profile extends Component {
                         </View>
 
                         <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
-                            <Text
-                                style={{ color: '#666666', fontSize: 18, fontFamily: 'Vazir-Bold-FD' }}>
-                                {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                            </Text>
+                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                                <Text
+                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginHorizontal: 5 }}>
+                                    {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
+                                </Text>
+                                {is_verified ? <ValidatedUserIcon /> : null}
+                            </View>
                             <TouchableOpacity
                                 onPress={() => this.shareProfileLink()}
                                 style={{

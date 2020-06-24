@@ -13,6 +13,7 @@ import Jmoment from 'moment-jalaali';
 import ChatModal from './ChatModal';
 import MessagesContext from './MessagesContext';
 import Spin from '../../components/loading/loading';
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 
 class ContactsList extends React.Component {
@@ -222,9 +223,12 @@ class ContactsList extends React.Component {
                                                                     justifyContent: 'space-between',
                                                                 }}
                                                             >
-                                                                <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
-                                                                    {`${item.first_name} ${item.last_name}`}
-                                                                </Text>
+                                                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                                                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginHorizontal: 5 }}>
+                                                                        {`${item.first_name} ${item.last_name}`}
+                                                                    </Text>
+                                                                    {item.is_verified ? <ValidatedUserIcon /> : null}
+                                                                </View>
                                                                 <Text style={{ color: '#666666' }}>
                                                                     {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
                                                                 </Text>

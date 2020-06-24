@@ -49,7 +49,7 @@ class Requests extends React.Component {
                     selectedContact: {
                         contact_id: item.myuser_id,
                         first_name: item.first_name,
-                        last_name: item.last_name
+                        last_name: item.last_name,
                     }
                 });
             }
