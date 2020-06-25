@@ -1,4 +1,4 @@
-package com.baskool;
+package com.buskool;
 
 import android.app.Application;
 import android.content.Context;

@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'Baskool' do
-  # Pods for Baskool
+target 'Buskool' do
+  # Pods for Buskool
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -37,7 +37,7 @@ target 'Baskool' do
 
 
 
-  target 'BaskoolTests' do
+  target 'BuskoolTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -45,10 +45,10 @@ target 'Baskool' do
   use_native_modules!
 end
 
-target 'Baskool-tvOS' do
-  # Pods for Baskool-tvOS
+target 'Buskool-tvOS' do
+  # Pods for Buskool-tvOS
 
-  target 'Baskool-tvOSTests' do
+  target 'Buskool-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
