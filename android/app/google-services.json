@@ -10,6 +10,35 @@
       "client_info": {
         "mobilesdk_app_id": "1:946346601127:android:a92b56222fa0204a9bc982",
         "android_client_info": {
+          "package_name": "com.baskool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946346601127-6l8nm37affkk6dh8aovg4i3go7f2jqij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmpxHiPuFBOj3Rlnz5SfPbYAX1WLzy_9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946346601127-6l8nm37affkk6dh8aovg4i3go7f2jqij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946346601127:android:0460b52327f12a2b9bc982",
+        "android_client_info": {
           "package_name": "com.buskool"
         }
       },
