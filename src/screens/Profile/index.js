@@ -49,6 +49,7 @@ class Profile extends Component {
         };
         this.props.fetchAllProductsList(item);
     };
+
     shareProfileLink = async () => {
         try {
             const result = await Share.share({

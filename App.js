@@ -1,7 +1,8 @@
 import React from 'react';
-import { I18nManager } from 'react-native';
+import { I18nManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import NetInfo from "@react-native-community/netinfo";
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
 import RNRestart from 'react-native-restart';
@@ -11,12 +12,12 @@ import messaging from '@react-native-firebase/messaging';
 import * as messageActions from './src/redux/messages/actions';
 import locales from './locales/index';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { Root } from 'native-base';
+import { Root, Toast } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 const store = configureStore()
 const customTextProps = {
   style: {
-    fontFamily: "Vazir-FD",
+    fontFamily: "IRANSansWeb(FaNum)_Light",
     fontWeight: 'normal',
     direction: 'rtl',
   }
@@ -28,9 +29,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fromMessages: false
+      fromMessages: false,
+      isConnected: true
     }
   }
+
   componentDidMount() {
     messaging().setBackgroundMessageHandler(async _ => {
       store.dispatch(messageActions.isFromOutSide(true))
@@ -40,19 +43,38 @@ class App extends React.Component {
       I18nManager.allowRTL(false);
       RNRestart.Restart();
     }
+    NetInfo.addEventListener(this.handleConnectivityChange);
   }
+
+  componentWillUnmount() {
+    NetInfo.removeEventListener(this.handleConnectivityChange);
+  }
+
+
+
+  handleConnectivityChange = state => {
+    if (!state.isConnected) {
+      return ToastAndroid.showWithGravity(
+        'اتصال شما به اینترنت دچار مشکل شده‌است .',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
+    }
+  };
 
   render() {
     return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <PaperProvider>
-            <Root>
-              <Router />
-            </Root>
-          </PaperProvider>
-        </PersistGate>
-      </Provider >
+      <>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <PaperProvider>
+              <Root>
+                <Router />
+              </Root>
+            </PaperProvider>
+          </PersistGate>
+        </Provider >
+      </>
     )
   }
 }

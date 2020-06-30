@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { Text, Image, View, StyleSheet, Modal, ScrollView, TouchableOpacity, Linking, Share, FlatList } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -52,6 +53,7 @@ class ProductDetails extends Component {
 
 
     componentDidMount() {
+        console.log('this.props', this.props)
         if (this.props.route && this.props.route.params && this.props.route.params.productId) {
             this.props.fetchAllRelatedProducts(this.props.route.params.productId);
             this.props.fetchProductDetails(this.props.route.params.productId).then(_ => {
@@ -229,7 +231,28 @@ class ProductDetails extends Component {
                 "/" +
                 this.props.productDetails.main.id
             );
-    }
+    };
+
+    shareProductLink = async (url) => {
+        try {
+            const result = await Share.share({
+                message: url,
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+
 
     render() {
         const {
@@ -328,9 +351,7 @@ class ProductDetails extends Component {
 
 
 
-        var Message = "https://buskool.com" + this.getProductUrl();
-        var messageToWhatsApp = encodeURIComponent(Message);
-        var url = "whatsapp://send?text=" + messageToWhatsApp;
+        var url = "https://buskool.com" + this.getProductUrl();
 
         return (
             <>
@@ -613,9 +634,7 @@ class ProductDetails extends Component {
                                 </Text>
                                 <View style={{ marginLeft: 4 }}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            Linking.openURL(url)
-                                        }}
+                                        onPress={() => this.shareProductLink(url)}
                                         style={{
                                             borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
                                             flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
@@ -864,7 +883,7 @@ class ProductDetails extends Component {
                             </View>
 
                         </View>
-                        {/* <View style={{ paddingVertical: 10 }}>
+                        <View style={{ paddingVertical: 10 }}>
                             <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                                 <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                                 <View
@@ -894,7 +913,10 @@ class ProductDetails extends Component {
                                         <TouchableOpacity
                                             activeOpacity={1}
                                             onPress={() => {
-                                                return this.props.navigation.navigate(`ProductDetails`, { productId: item.id })
+                                                this.props.setProductDetailsId(item.id)
+                                                setTimeout(() => {
+                                                    return this.props.navigation.push(`ProductDetails${item.id}`, { productId: item.id })
+                                                }, 100);
                                             }}>
                                             <Image
                                                 resizeMode='cover'
@@ -910,7 +932,7 @@ class ProductDetails extends Component {
                                     </Card>
                                 )}
                             />
-                        </View> */}
+                        </View>
 
                     </ScrollView>
                 </Spin>
@@ -1045,6 +1067,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product))

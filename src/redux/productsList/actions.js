@@ -138,3 +138,11 @@ export const fetchProductDetails = id => {
 
     return request();
 };
+
+
+
+
+export const setProductDetailsId = (id) => {
+    return dispatch => dispatch(action(actionTypes.SET_PRODUCT_DETAILS_ID, id));
+};
+

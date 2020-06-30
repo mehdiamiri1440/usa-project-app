@@ -324,6 +324,13 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
 
+        case actionTypes.SET_PRODUCT_DETAILS_ID: {
+            console.log('payload', action.payload)
+            return {
+                ...state,
+                productDetailsId: action.payload
+            }
+        }
 
         default:
             return state

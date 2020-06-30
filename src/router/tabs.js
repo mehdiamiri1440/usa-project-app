@@ -9,29 +9,41 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import { connect } from 'react-redux';
+import * as productListActions from '../redux/productsList/actions';
 
 
 const Stack = createStackNavigator();
 
-const HomeStack = () => (
-    <Stack.Navigator>
-        {HomeRoutes.map((home, index) => (
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerTitleAlign: { ...(home.titleAlign) },
-                    headerShown: home.title ? true : false,
-                    title: locales(home.title),
-                    headerRight: () => home.headerRight ? home.headerRight : null,
-                })}
-                key={index}
-                name={home.name}
-                component={home.component}
-            />
-        ))}
-    </Stack.Navigator>
-)
-const ProductsListStack = () => (
-    <Stack.Navigator>
+function HomeStack(props) {
+    return (
+        <Stack.Navigator>
+            {HomeRoutes.map((home, index) => (
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerTitleAlign: { ...(home.titleAlign) },
+                        headerShown: home.title ? true : false,
+                        title: locales(home.title),
+                        headerRight: () => home.headerRight ? home.headerRight : null,
+                    })}
+                    key={index}
+                    name={home.name.includes('ProductDetails') ? `ProductDetails${props.productDetailsId}` : home.name}
+                    component={home.component}
+                />
+            ))}
+        </Stack.Navigator>
+    )
+}
+const mapperForProps = (state) => {
+    return {
+        productDetailsId: state.productsListReducer.productDetailsId,
+    }
+}
+HomeStack = connect(mapperForProps)(HomeStack);
+
+function ProductsListStack(props) {
+    console.log('prop[s', props)
+    return <Stack.Navigator>
         {ProductsListRoutes.map((product, index) => (
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -41,13 +53,18 @@ const ProductsListStack = () => (
                     headerRight: () => product.headerRight ? product.headerRight : null,
                 })}
                 key={index}
-                name={product.name}
+                name={product.name.includes('ProductDetails') ? `ProductDetails${props.productDetailsId}` : product.name}
                 component={product.component}
             />
         ))}
     </Stack.Navigator>
-)
-
+}
+const mapStateToProps = (state) => {
+    return {
+        productDetailsId: state.productsListReducer.productDetailsId,
+    }
+}
+ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
 const RegisterProductStack = () => (
     <Stack.Navigator>

@@ -140,7 +140,7 @@ class Login extends React.Component {
                     >
                         <Text style={styles.buttonText}>{locales('titles.login')}</Text>
                     </Button>
-                    <Text style={styles.forgotPassword}>
+                    <Text style={[{ fontFamily: 'IRANSansMobile' }, styles.forgotPassword]}>
                         {locales('messages.startToSignUp')}
                     </Text>
                     <Button

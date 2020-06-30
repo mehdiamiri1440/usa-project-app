@@ -117,6 +117,7 @@ export default {
     'titles.minOrder': 'حداقل سفارش',
     'titles.forMoreDetails': 'برای مشاهده اطلاعات بیشتر',
     'titles.here': 'اینجا',
+    'titles.noInternetConnection': 'اتصال شما به اینترنت دچار مشکل شده‌است .',
     'titles.goForClick': 'را لمس کنید',
     'titles.AllIran': 'همه ایران',
     'titles.thisUserIsValidated': 'اطلاعات هویتی این کاربر احراز شده‌است.',

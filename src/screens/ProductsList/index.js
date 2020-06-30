@@ -47,6 +47,11 @@ class ProductsList extends PureComponent {
         this.fetchAllProducts();
         this.props.fetchAllProvinces();
         this.props.fetchAllCategories();
+        if (this.props.productDetailsId) {
+            console.warn('here')
+            this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
+        }
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -110,6 +115,12 @@ class ProductsList extends PureComponent {
 
             if (this.props.productsListRef && this.props.productsListRef.current)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+            if (province) {
+                item = { ...item, province_id: province }
+            }
+            if (city) {
+                item = { ...item, city_id: city }
+            }
 
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
@@ -384,6 +395,13 @@ class ProductsList extends PureComponent {
                                             to_record_number: 15
                                         }
                                     }
+                                    if (province) {
+                                        searchItem = { ...searchItem, province_id: province }
+                                    }
+                                    if (city) {
+                                        searchItem = { ...searchItem, city_id: city }
+                                    }
+
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     });
@@ -422,6 +440,13 @@ class ProductsList extends PureComponent {
                                         search_text: item.category_name,
                                         to_record_number: 15,
                                     };
+                                    if (province) {
+                                        searchItem = { ...searchItem, province_id: province }
+                                    }
+                                    if (city) {
+                                        searchItem = { ...searchItem, city_id: city }
+                                    }
+
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     });
@@ -563,6 +588,13 @@ class ProductsList extends PureComponent {
                                         search_text: searchText
                                     }
                                 }
+                                if (province) {
+                                    item = { ...item, province_id: province }
+                                }
+                                if (city) {
+                                    item = { ...item, city_id: city }
+                                }
+
                                 this.props.fetchAllProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
                                 })
@@ -574,23 +606,25 @@ class ProductsList extends PureComponent {
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
-                            sort_by: 'BM',
+                            sort_by: this.state.sort_by,
                             to_record_number: 15,
                         };
-                        // if (searchText && searchText.length) {
-                        //     item = {
-                        //         from_record_number,
-                        //         sort_by,
-                        //         to_record_number,
-                        //         search_text: searchText
-                        //     }
-                        // }
-                        this.props.fetchAllProductsList(item).then(_ => {
-                            this.setState({
-                                searchText: '', sort_by: 'BM'
-                                , refreshed: true, from_record_number: 0, to_record_number: 15
-                            })
-                        })
+                        if (searchText && searchText.length) {
+                            item = {
+                                from_record_number: 0,
+                                sort_by: this.state.sort_by,
+                                to_record_number: 15,
+                                search_text: this.statesearchText
+                            }
+                        }
+                        if (province) {
+                            item = { ...item, province_id: province }
+                        }
+                        if (city) {
+                            item = { ...item, city_id: city }
+                        }
+
+                        this.props.fetchAllProductsList(item)
                     }
                     }
                     onEndReachedThreshold={0.2}
@@ -781,6 +815,9 @@ const mapStateToProps = (state) => {
         fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
         fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
         allCitiesObject: state.locationsReducer.allCitiesObject,
+
+        productDetailsId: state.productsListReducer.productDetailsId,
+
 
     }
 };

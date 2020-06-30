@@ -6,6 +6,7 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, CardItem, Body, Toast, Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -668,7 +669,7 @@ class Product extends PureComponent {
                                         <View>
                                             <View style={{ flexDirection: 'row-reverse' }}>
                                                 <Text style={{
-                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     marginHorizontal: 5,
                                                     fontSize: 18,
                                                     marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
@@ -704,7 +705,10 @@ class Product extends PureComponent {
                                 <TouchableOpacity
                                     activeOpacity={1}
                                     onPress={() => {
-                                        this.props.navigation.navigate(`ProductDetails`, { productId })
+                                        this.props.setProductDetailsId(productId)
+                                        setTimeout(() => {
+                                            return this.props.navigation.push(`ProductDetails${productId}`, { productId, key: productId })
+                                        }, 100);
                                     }}
                                     style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                                     <Image
@@ -770,7 +774,7 @@ class Product extends PureComponent {
                                                 width: !!is_elevated ? '92%' : '88%'
                                             }]}
                                         >
-                                            <Text style={[styles.buttonText, { paddingRight: 30 }]}>
+                                            <Text style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
                                                 {locales('titles.achiveSaleStatus')}</Text>
                                             <FontAwesome name='envelope' size={20} color='white'
                                                 style={{ position: 'absolute', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} />
@@ -933,6 +937,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
+        setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         deleteProduct: id => dispatch(productListActions.deleteProduct(id)),
         editProduct: product => dispatch(productListActions.editProduct(product))
     }

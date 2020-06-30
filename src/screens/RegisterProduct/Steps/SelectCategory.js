@@ -246,7 +246,7 @@ class SelectCategory extends Component {
                                 autoCapitalize='none'
                                 autoCorrect={false}
                                 autoCompleteType='off'
-                                style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
                                 onChangeText={this.onProductTypeSubmit}
                                 value={productType}
                                 placeholder={locales('titles.productTypeWithExample')}
