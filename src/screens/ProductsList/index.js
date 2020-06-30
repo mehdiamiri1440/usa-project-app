@@ -276,7 +276,7 @@ class ProductsList extends PureComponent {
                                         <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
 
                                             <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                     {locales('labels.province')}
                                                 </Label>
                                                 <Item regular
@@ -295,7 +295,7 @@ class ProductsList extends PureComponent {
                                                         value={province}
                                                         placeholder={{
                                                             label: locales('labels.selectProvince'),
-                                                            fontFamily: 'Vazir-Bold-FD',
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                         }}
                                                         items={[...provinces.map(item => ({
                                                             label: item.province_name, value: item.id
@@ -305,7 +305,7 @@ class ProductsList extends PureComponent {
                                             </View>
 
                                             <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                     {locales('labels.city')}
                                                 </Label>
                                                 <Item regular
@@ -324,7 +324,7 @@ class ProductsList extends PureComponent {
                                                         value={city}
                                                         placeholder={{
                                                             label: locales('labels.selectCity'),
-                                                            fontFamily: 'Vazir-Bold-FD',
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                         }}
                                                         items={[...cities.map(item => ({
                                                             label: item.city_name, value: item.id
@@ -499,7 +499,7 @@ class ProductsList extends PureComponent {
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} color='#BEBEBE' />
                                 <Text
-                                    style={{ fontFamily: 'Vazir', color: '#BEBEBE', fontSize: 16 }}
+                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', color: '#BEBEBE', fontSize: 16 }}
                                 >
                                     {locales('titles.AllIran')}
                                 </Text>
@@ -507,7 +507,7 @@ class ProductsList extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'Vazir', height: 42, textAlignVertical: 'center' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', height: 42, textAlignVertical: 'center' }}
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
@@ -559,7 +559,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     // getItemLayout={(data, index) => (
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
@@ -768,7 +768,7 @@ const styles = StyleSheet.create({
     inputAndroid: {
         fontSize: 16,
         paddingHorizontal: 10,
-        fontFamily: 'Vazir',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingVertical: 8,
         height: 60,
         width: deviceWidth * 0.9,

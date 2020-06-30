@@ -353,7 +353,7 @@ class Profile extends Component {
                         <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
                             <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
                                 <Text
-                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginHorizontal: 5 }}>
+                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
                                     {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
                                 </Text>
                                 {is_verified ? <ValidatedUserIcon /> : null}
@@ -374,7 +374,7 @@ class Profile extends Component {
                         </View>
 
                         {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
-                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
+                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                             </Text>
                         </View> : null}
@@ -466,13 +466,13 @@ class Profile extends Component {
                                 <Image source={require('../../../assets/icons/incobac-medium.png')}
                                     style={{ marginHorizontal: 5 }}
                                 />
-                                <Text style={{ color: '#556080', fontSize: 18, fontFamily: 'Vazir-Bold-FD' }}>
+                                <Text style={{ color: '#556080', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                     {locales('titles.basicInfo')}
                                 </Text>
                             </View>
 
                             <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
-                                <Text style={{ color: '#666666', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
+                                <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
                                 <Text style={{ color: '#777777', marginVertical: 10 }}>
@@ -501,7 +501,7 @@ class Profile extends Component {
                                     alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                 }}>
                                     <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>
                                         {locales('titles.noProductFound')}</Text>
                                 </View>
                             }
@@ -522,7 +522,7 @@ class Profile extends Component {
                                         alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                     }}>
                                         <Entypo name='image' size={30} color='#BEBEBE' />
-                                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
                                             {locales('labels.noImageFound')}</Text>
                                     </View>
                                 )}
@@ -564,7 +564,7 @@ class Profile extends Component {
                                         alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                     }}>
                                         <FontAwesome5 name='tasks' size={30} color='#BEBEBE' />
-                                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
                                             {locales('labels.noevidenceFound')}</Text>
                                     </View>
                                 )}
@@ -627,7 +627,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
     },

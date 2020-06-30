@@ -378,16 +378,16 @@ class ProductDetails extends Component {
                             }}>
                                 <Paragraph style={{
                                     textAlign: 'center', width: '100%',
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#7E7E7E'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
                                 }}>
                                     {locales('labels.doElevation')}
                                 </Paragraph>
                             </View>
                             <Dialog.Content>
-                                <Text style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'Vazir-Bold-FD', color: '#00C569' }}>
+                                <Text style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}>
                                     {formatter.numberWithCommas(25000)} {locales('titles.toman')}
                                 </Text>
-                                <Text style={{ fontFamily: 'Vazir', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
+                                <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
                                     {locales('titles.elevationText')}</Text>
                             </Dialog.Content>
                             <Dialog.Actions style={{
@@ -420,7 +420,7 @@ class ProductDetails extends Component {
                             }}>
                                 <Text style={{
                                     textAlign: 'center', width: '100%',
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#7E7E7E'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
                                 }}>
                                     {locales('labels.edition', { fieldName: `${category_name || '---'} | ${sub_category_name || '---'}` })}
                                 </Text>
@@ -429,7 +429,7 @@ class ProductDetails extends Component {
                                 <>
                                     <Dialog.ScrollArea>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.amount')}
                                             </Label>
                                             <Item regular style={{
@@ -440,7 +440,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'Vazir-FD', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', flexDirection: 'row', textDecorationLine: 'none' }}
                                                     onChangeText={this.onAmountSubmit}
                                                     value={amount}
                                                     placeholder={locales('titles.amountWithExample')}
@@ -451,7 +451,7 @@ class ProductDetails extends Component {
                                             {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.minimumOrder')}
                                             </Label>
                                             <Item regular style={{
@@ -462,7 +462,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumOrderSubmit}
                                                     value={minimumOrder}
                                                     placeholder={locales('titles.minimumOrderWithExample')}
@@ -473,7 +473,7 @@ class ProductDetails extends Component {
                                             {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.minimumPrice')}
                                             </Label>
                                             <Item regular style={{
@@ -484,7 +484,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumPriceSubmit}
                                                     value={minimumPrice}
                                                     placeholder={locales('titles.minimumPriceWithExample')}
@@ -496,7 +496,7 @@ class ProductDetails extends Component {
                                                 {minimumPriceError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.maximumPrice')}
                                             </Label>
                                             <Item regular
@@ -509,7 +509,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMaximumPriceSubmit}
                                                     value={maximumPrice}
                                                     placeholder={locales('titles.maximumPriceWithExample')}
@@ -545,7 +545,7 @@ class ProductDetails extends Component {
                                         />}
                                         <Paragraph
                                             style={[editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText,
-                                            { width: '100%', fontFamily: 'Vazir' }]}
+                                            { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
                                         >
                                             {editionMessageText}
                                         </Paragraph>
@@ -629,7 +629,7 @@ class ProductDetails extends Component {
                                     flexDirection: 'row-reverse', alignItems: 'center',
                                     marginVertical: 30, width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
                                 }}>
-                                <Text style={{ fontFamily: 'Vazir-Bold-FD', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
+                                <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
                                     {product_name ? product_name : '---'}
                                 </Text>
                                 <View style={{ marginLeft: 4 }}>
@@ -663,7 +663,7 @@ class ProductDetails extends Component {
                                             fontSize: 18,
                                             borderRadius: 5,
                                             marginLeft: !is_elevated ? 5 : 0,
-                                            fontFamily: 'Vazir-Bold-FD',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             width: !!is_elevated ? '45%' : '55%',
                                             paddingRight: 40,
                                             backgroundColor: '#E41C38'
@@ -671,7 +671,7 @@ class ProductDetails extends Component {
                                     >
                                         <Text
                                             onPress={() => this.setState({ elevatorFlag: true })}
-                                            style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>
+                                            style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
                                             {locales('titles.elevateProduct')}</Text>
                                         <FontAwesome5
                                             name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
@@ -681,13 +681,13 @@ class ProductDetails extends Component {
                                             color: 'white',
                                             fontSize: 18,
                                             borderRadius: 5,
-                                            fontFamily: 'Vazir-Bold-FD',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             width: '40%',
                                             paddingRight: 15,
                                             backgroundColor: '#000546'
                                         }}
                                     >
-                                        <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>{locales('titles.edit')}</Text>
+                                        <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
                                         <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
                                     </Button>
                                 </View> :
@@ -709,7 +709,7 @@ class ProductDetails extends Component {
                                         text: locales('titles.elevatorHasAdded'),
                                         position: "bottom",
                                         style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                        textStyle: { fontFamily: 'Vazir' },
+                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
                                         duration: 3000
                                     })} name='chart-line' size={30} color='white'
                                     style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 7, paddingLeft: 5, marginLeft: 4 }} />
@@ -723,10 +723,10 @@ class ProductDetails extends Component {
                                 marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
-                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.category')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{category_name}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{category_name}</Text>
                             </View>
 
                             <View style={{
@@ -735,10 +735,10 @@ class ProductDetails extends Component {
                                 marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
-                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.province/city')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{`${province_name || '---'}-${city_name || '==='}`}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{`${province_name || '---'}-${city_name || '==='}`}</Text>
                             </View>
 
                             <View style={{
@@ -747,10 +747,10 @@ class ProductDetails extends Component {
                                 marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
-                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.stockQuantity')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}</Text>
                             </View>
 
                             <View style={{
@@ -760,11 +760,11 @@ class ProductDetails extends Component {
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
                                 <Text style={{
-                                    color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20
+                                    color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20
                                 }}>
                                     {locales('titles.minOrder')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{formatter.numberWithCommas(min_sale_amount)} {locales('labels.kiloGram')}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(min_sale_amount)} {locales('labels.kiloGram')}</Text>
                             </View>
 
                             <View style={{
@@ -773,10 +773,10 @@ class ProductDetails extends Component {
                                 marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
-                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.price')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>{locales('titles.achiveThePrice')}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{locales('titles.achiveThePrice')}</Text>
                             </View>
 
                             <View
@@ -786,7 +786,7 @@ class ProductDetails extends Component {
                                     marginVertical: 10, width: deviceWidth * 0.97,
                                     paddingHorizontal: 10
                                 }}>
-                                <Text style={{ fontSize: 18, fontFamily: 'Vazir-Bold-FD', marginBottom: 20 }}>
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
                                 <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
@@ -813,7 +813,7 @@ class ProductDetails extends Component {
                                             }}>
                                             <Text style={{
                                                 color: '#777777', textAlign: 'center', width: '100%',
-                                                fontFamily: 'Vazir-Bold-FD', fontSize: 16
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16
                                             }}>
                                                 {is_seller ? locales('labels.seller') : locales('labels.buyer')}
                                             </Text>
@@ -821,7 +821,7 @@ class ProductDetails extends Component {
                                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
                                                 <Text style={{
                                                     textAlign: 'center', marginHorizontal: 5,
-                                                    fontFamily: 'Vazir-Bold-FD', fontSize: 20
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 20
                                                 }}>
                                                     {`${first_name} ${last_name}`}
                                                 </Text>
@@ -829,14 +829,14 @@ class ProductDetails extends Component {
                                             </View>
 
                                             {active_pakage_type == 3 ? <Text style={{
-                                                color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'Vazir-Bold-FD', fontSize: 18
+                                                color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18
                                             }}>
                                                 {locales('labels.confirmedUser')}
                                             </Text> : null}
 
                                             {response_rate > 0 ? <Text style={{
                                                 textAlign: 'center', width: '100%',
-                                                fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#777777'
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#777777'
                                             }}>
                                                 {locales('labels.responseRate')} <Text style={{ color: 'red' }}>%{response_rate}</Text>
                                             </Text> : null}
@@ -924,7 +924,7 @@ class ProductDetails extends Component {
                                                 source={{
                                                     uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
                                                 }} />
-                                            <Text style={{ paddingHorizontal: 10, alignSelf: 'center', width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'Vazir-Bold-FD' }}>
+                                            <Text style={{ paddingHorizontal: 10, alignSelf: 'center', width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                                 {item.product_name}</Text>
                                             <Text style={{ paddingHorizontal: 10, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }}>
                                                 {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
@@ -967,7 +967,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
     },

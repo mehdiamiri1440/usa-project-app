@@ -104,7 +104,7 @@ class ProductMoreDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            deletedIndexes:[],
+            deletedIndexes: [],
             defaultFieldsOptions: [...tempDefaults],
             description: '',
             detailsArray: [
@@ -128,7 +128,7 @@ class ProductMoreDetails extends Component {
                 },
             ],
             isDescriptionFocused: false,
-            deletedRows:[]
+            deletedRows: []
         }
     }
     pickerRef = React.createRef();
@@ -144,49 +144,49 @@ class ProductMoreDetails extends Component {
             this.setState(state => {
                 state.detailsArray = state.detailsArray.filter(item => item.itemKey)
                 return '';
-            }, () => this.props.setDetailsArray([...(this.state.detailsArray)], [...tempDefaults],this.state.defaultFieldsOptions))
+            }, () => this.props.setDetailsArray([...(this.state.detailsArray)], [...tempDefaults], this.state.defaultFieldsOptions))
         }
     };
 
 
     deleteRow = index => {
         let selectedIndex = this.state.defaultFieldsOptions.findIndex(item => item.name == this.state.detailsArray[index].itemKey);
-if(selectedIndex>-1){
+        if (selectedIndex > -1) {
             this.setState(state => {
                 state.deletedRows.push(index);
-                state.detailsArray[index].itemKey='';
-                state.detailsArray[index].itemValue='';
-                state.detailsArray[index].error='';
-state.defaultFieldsOptions[selectedIndex].alreadySelected=false;
-state.defaultFieldsOptions[selectedIndex].selectedIndex=null;
+                state.detailsArray[index].itemKey = '';
+                state.detailsArray[index].itemValue = '';
+                state.detailsArray[index].error = '';
+                state.defaultFieldsOptions[selectedIndex].alreadySelected = false;
+                state.defaultFieldsOptions[selectedIndex].selectedIndex = null;
                 return '';
             });
-    }
+        }
     }
 
-    setItemKey = (value, dropIndex,index) => {
-const selectedIndex=this.state.defaultFieldsOptions.findIndex(item=>item.name==value);
-if(this.state.detailsArray[index].itemKey.length){
-    this.setState(state=>{
-        const deletedIndex=state.defaultFieldsOptions.findIndex(item=>item.name==state.detailsArray[index].itemKey);
-        let inDeleteds=state.deletedIndexes.indexOf(deletedIndex);
-        state.deletedIndexes.splice(inDeleteds,1);
-        return'';
-    })
-}
-this.setState(state=>{
-    this.state.detailsArray[index].itemKey=value;
-    state.deletedIndexes.push(selectedIndex);
-    state.defaultFieldsOptions[selectedIndex].alreadySelected=true;
-    state.defaultFieldsOptions[selectedIndex].selectedIndex=selectedIndex;
-state.defaultFieldsOptions.forEach(item=>{
-if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
-    item.alreadySelected=false;
-    item.selectedIndex=null;
-}
-})
-    return '';
-})
+    setItemKey = (value, dropIndex, index) => {
+        const selectedIndex = this.state.defaultFieldsOptions.findIndex(item => item.name == value);
+        if (this.state.detailsArray[index].itemKey.length) {
+            this.setState(state => {
+                const deletedIndex = state.defaultFieldsOptions.findIndex(item => item.name == state.detailsArray[index].itemKey);
+                let inDeleteds = state.deletedIndexes.indexOf(deletedIndex);
+                state.deletedIndexes.splice(inDeleteds, 1);
+                return '';
+            })
+        }
+        this.setState(state => {
+            this.state.detailsArray[index].itemKey = value;
+            state.deletedIndexes.push(selectedIndex);
+            state.defaultFieldsOptions[selectedIndex].alreadySelected = true;
+            state.defaultFieldsOptions[selectedIndex].selectedIndex = selectedIndex;
+            state.defaultFieldsOptions.forEach(item => {
+                if (item.selectedIndex && state.deletedIndexes.indexOf(item.selectedIndex) < 0) {
+                    item.alreadySelected = false;
+                    item.selectedIndex = null;
+                }
+            })
+            return '';
+        })
 
     };
 
@@ -227,112 +227,112 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
         return (
             <ScrollView style={{ height: deviceHeight * 0.5 }}>
                 <Spin spininng={this.props.addNewProductLoading}>
-                {!!this.props.addNewProductMessage&&
-                this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
-                    <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                </View>}
-                <View
-                    style={{ backgroundColor: 'white' }}>
-                    <Text
-                        style={{
-                            marginVertical: 10,
-                            color: '#666666',
-                            fontSize: 20,
-                            fontFamily: 'Vazir-Bold-FD',
-                            paddingHorizontal: 10
-                        }}
-                    >
-                        {locales('labels.addMoreDetails')}
-                    </Text>
-                    <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
+                    {!!this.props.addNewProductMessage &&
+                        this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
+                            <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
+                        </View>}
+                    <View
+                        style={{ backgroundColor: 'white' }}>
+                        <Text
+                            style={{
+                                marginVertical: 10,
+                                color: '#666666',
+                                fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                paddingHorizontal: 10
+                            }}
+                        >
+                            {locales('labels.addMoreDetails')}
+                        </Text>
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
 
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.boxing')}
-                            </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.8kMotherBox')}
-                            </Text>
-                        </View>
-
-
-                    </View>
-
-                    {detailsArray.map((detail, index) => (
-                        <>
-                            {(this.state.deletedRows.indexOf(index) <0 ||!this.state.deletedRows.length)&&<View
-                                key={detail.keyId}
-                                style={{
-                                    flexDirection: 'row-reverse', paddingBottom: 0,
-                                    justifyContent: 'space-between', alignItems: 'center', padding: 5
-                                }}>
-                                <TouchableOpacity
-                                    onPress={() => this.deleteRow(index)}
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
+                                <Text
                                     style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        height: 80
-                                    }}>
-                                    <FontAwesome name='trash' color='red' size={25} />
-                                </TouchableOpacity>
+                                        color: 'red',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
+                            </Text>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.boxing')}
+                                </Text>
+                            </View>
 
-                                <View style={styles.labelInputPadding}>
-                                    <Item regular
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
+                                <Text
+                                    style={{
+                                        color: 'red',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
+                            </Text>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.8kMotherBox')}
+                                </Text>
+                            </View>
+
+
+                        </View>
+
+                        {detailsArray.map((detail, index) => (
+                            <>
+                                {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
+                                    key={detail.keyId}
+                                    style={{
+                                        flexDirection: 'row-reverse', paddingBottom: 0,
+                                        justifyContent: 'space-between', alignItems: 'center', padding: 5
+                                    }}>
+                                    <TouchableOpacity
+                                        onPress={() => this.deleteRow(index)}
                                         style={{
-                                            width: deviceWidth * 0.45,
-                                            height: 55,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: detail.error&&!detail.error.length ? '#00C569' : detail.error&&detail.error.length ? '#D50000' : '#a8a8a8'
-                                        }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={(value,dropIndex) => this.setItemKey(value, dropIndex,index)}
-                                            style={styles}
-                                            ref={this.pickerRef}
-                                            placeholder={{
-                                                label: locales('titles.selectOne'),
-                                                fontFamily: 'Vazir-Bold-FD',
-                                                value:detail.itemKey
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: 80
+                                        }}>
+                                        <FontAwesome name='trash' color='red' size={25} />
+                                    </TouchableOpacity>
+
+                                    <View style={styles.labelInputPadding}>
+                                        <Item regular
+                                            style={{
+                                                width: deviceWidth * 0.45,
+                                                height: 55,
+                                                borderRadius: 5,
+                                                alignSelf: 'center',
+                                                borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
                                             }}
-                                            items={defaultFieldsOptions.filter(item=>!item.alreadySelected).map(item => ({
-                                                label: item.name, value: item.name
-                                            }))}
-                                        />
-                                    </Item>
-                                </View>
-                                {/* <Dropdown
+                                        >
+                                            <RNPickerSelect
+                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                useNativeAndroidPickerStyle={false}
+                                                onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
+                                                style={styles}
+                                                ref={this.pickerRef}
+                                                placeholder={{
+                                                    label: locales('titles.selectOne'),
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    value: detail.itemKey
+                                                }}
+                                                items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
+                                                    label: item.name, value: item.name
+                                                }))}
+                                            />
+                                        </Item>
+                                    </View>
+                                    {/* <Dropdown
                                 error={detail.error}
                                 onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
                                 label={locales('titles.selectOne')}
@@ -343,28 +343,28 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
                                     width: 195
                                 }}
                             /> */}
-                                <View style={{
-                                    width: 170,
+                                    <View style={{
+                                        width: 170,
 
-                                }}>
-                                    <Item error={detail.error} regular style={{
-                                        height: 55,
-                                        borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                     }}>
-                                        <Input
-                                            disabled={!detail.itemKey}
-                                            autoCapitalize='none'
-                                            autoCorrect={false}
-                                            autoCompleteType='off'
-                                            style={{ fontFamily: 'Vazir', textDecorationLine: 'none' }}
-                                            onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                            placeholder={locales('titles.writeDescription')}
+                                        <Item error={detail.error} regular style={{
+                                            height: 55,
+                                            borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                disabled={!detail.itemKey}
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                                placeholder={locales('titles.writeDescription')}
 
 
-                                        />
-                                    </Item>
-                                </View>
-                                {/* <TextField
+                                            />
+                                        </Item>
+                                    </View>
+                                    {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
                                 onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                 error={detail.error}
@@ -375,49 +375,49 @@ if(item.selectedIndex&&state.deletedIndexes.indexOf(item.selectedIndex)<0){
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
                             /> */}
-                            </View>}
-                            {!!detail.error &&detail.error.length&& <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
-                        </>
-                    )
-                    )}
+                                </View>}
+                                {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                            </>
+                        )
+                        )}
 
 
-                    <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
-                    }}>
-                        <Button
-                            onPress={() => this.addMoreRow()}
-                            style={styles.addMoreButton}
-                            rounded
-                        >
-                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                            <AntDesign name='plus' size={25} color='#00C569' />
-                        </Button>
+                        <View style={{
+                            marginVertical: 20, flexDirection: 'row',
+                            width: deviceWidth, justifyContent: 'space-between'
+                        }}>
+                            <Button
+                                onPress={() => this.addMoreRow()}
+                                style={styles.addMoreButton}
+                                rounded
+                            >
+                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                                <AntDesign name='plus' size={25} color='#00C569' />
+                            </Button>
+                        </View>
+
+                        <View style={{
+                            marginVertical: 20, flexDirection: 'row',
+                            width: deviceWidth, justifyContent: 'space-between'
+                        }}>
+                            <Button
+                                onPress={() => this.onSubmit()}
+                                style={styles.loginButton}
+                                rounded
+                            >
+                                <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
+                            </Button>
+                            <Button
+                                onPress={() => this.props.changeStep(5)}
+                                style={styles.backButtonContainer}
+                                rounded
+                            >
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            </Button>
+                        </View>
+
                     </View>
-
-                    <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
-                    }}>
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={styles.loginButton}
-                            rounded
-                        >
-                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(5)}
-                            style={styles.backButtonContainer}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
-                    </View>
-
-                </View>
                 </Spin>
             </ScrollView >
         )
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
     inputAndroid: {
         fontSize: 16,
         paddingHorizontal: 10,
-        fontFamily: 'Vazir',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingVertical: 8,
         height: 60,
         width: deviceWidth * 0.45,

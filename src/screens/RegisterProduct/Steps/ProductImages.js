@@ -19,9 +19,9 @@ class ProductImages extends Component {
         super(props);
         this.state = {
             images: [],
-            avatarSource:'',
+            avatarSource: '',
             errorFlag: false,
-            imageSizeError:false,
+            imageSizeError: false,
             loaded: false
         }
     }
@@ -42,9 +42,9 @@ class ProductImages extends Component {
         const options = {
             width: 300,
             height: 400,
-        maxWidth:1024,
-        maxHeight:1024,
-        quality:1,
+            maxWidth: 1024,
+            maxHeight: 1024,
+            quality: 1,
             title: 'عکس را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
@@ -62,25 +62,25 @@ class ProductImages extends Component {
             case 0: {
                 this.setState({ errorFlag: false });
                 ImagePicker.launchCamera(options, image => {
-                    if(image.didCancel)
-                    return ;
-                    else if(image.error)
-                    return ;
-                    
-                    if (image.fileSize > 5242880 || image.fileSize<20480) {
-                        return this.setState({imageSizeError:true})
-                                    }
+                    if (image.didCancel)
+                        return;
+                    else if (image.error)
+                        return;
+
+                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
+                        return this.setState({ imageSizeError: true })
+                    }
                     const source = { uri: image.uri };
                     this.setState(state => {
-                        state.avatarSource=source;
-                    let    resultObj={
-                        uri:image.uri,
-                            type:image.type,
-                            size:image.fileSize,
-                            name:image.fileName
+                        state.avatarSource = source;
+                        let resultObj = {
+                            uri: image.uri,
+                            type: image.type,
+                            size: image.fileSize,
+                            name: image.fileName
                         }
-                   
-                        
+
+
                         if (index >= 0) {
                             state.images[index] = resultObj
                         }
@@ -99,7 +99,7 @@ class ProductImages extends Component {
                     if (image.didCancel)
                         return;
                     else if (image.error)
-                        return ;
+                        return;
 
                     if (image.fileSize > 5242880 || image.fileSize < 20480) {
                         return this.setState({ imageSizeError: true })
@@ -167,7 +167,7 @@ class ProductImages extends Component {
                             marginVertical: 10,
                             color: '#666666',
                             fontSize: 20,
-                            fontFamily: 'Vazir-Bold-FD',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             paddingHorizontal: 10
                         }}
                     >
@@ -233,7 +233,7 @@ class ProductImages extends Component {
                                     borderRadius: 5, alignContent: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
-                                source={{uri:image.uri}} />
+                                source={{ uri: image.uri }} />
                             <TouchableOpacity
                                 onPress={() => this.deleteImage(index)}
                                 style={{

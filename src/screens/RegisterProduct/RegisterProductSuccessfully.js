@@ -14,7 +14,7 @@ class RegisterProductSuccessfully extends Component {
                     }}>
                         <Text style={{
                             textAlign: 'center', textAlignVertical: 'center',
-                            fontSize: 20, fontFamily: 'Vazir-Bold-FD'
+                            fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold'
                         }}>{locales('titles.registerProductDoneSuccessfully')}</Text>
                     </CardItem>
                     <CardItem>
@@ -27,7 +27,7 @@ class RegisterProductSuccessfully extends Component {
                             </Text>
                             <Text style={{
                                 marginVertical: 10,
-                                fontFamily: 'Vazir-Bold-FD', width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '100%',
                                 textAlign: 'center', textAlignVertical: 'center', fontSize: 20, color: '#E41C38'
                             }}>
                                 {locales('titles.whoWantsWhat')}
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
     },

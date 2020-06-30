@@ -90,7 +90,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {ENUMS.PACKAGES_TYPES.list.filter(item => item.value == activePackageType)[0].title}
                                 </Text>
@@ -109,7 +109,7 @@ const Dashboard = props => {
                                 }}>
                                 <AntDesign name='arrowup' color='white' size={25} />
                                 <Text
-                                    style={{ color: 'white', fontFamily: 'Vazir-Bold-FD' }}>
+                                    style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                     {locales('labels.promoteRegistration')}</Text>
                             </TouchableOpacity>}
                         </Body>
@@ -123,7 +123,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {maxAllowedProductRegisterCount == 0 ? locales('labels.zero') : maxAllowedProductRegisterCount}  {locales('labels.product')}
                                 </Text>
@@ -141,7 +141,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {maxBuyAdsReply} {locales('labels.response')}
                                 </Text>
@@ -158,7 +158,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {isValid ? locales('titles.yes') : locales('titles.no')}
                                 </Text>
@@ -176,7 +176,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {reputationScore}
                                 </Text>
@@ -193,7 +193,7 @@ const Dashboard = props => {
                             </Text>
                             <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'space-between', paddingVertical: 20 }}>
                                 <Text style={{
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 26, paddingLeft: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26, paddingLeft: 10,
                                 }}>
                                     {confirmedProductsCount == 0 ? locales('labels.zero') : confirmedProductsCount}
                                 </Text>

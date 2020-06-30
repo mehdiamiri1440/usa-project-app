@@ -133,7 +133,7 @@ class ChooseCity extends React.Component {
                         </View>
                     }
                     <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.province')}
                         </Label>
                         <Item regular
@@ -152,7 +152,7 @@ class ChooseCity extends React.Component {
                                 value={province}
                                 placeholder={{
                                     label: locales('labels.selectProvince'),
-                                    fontFamily: 'Vazir-Bold-FD',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
                                 items={[...provinces.map(item => ({
                                     label: item.province_name, value: item.id
@@ -174,7 +174,7 @@ class ChooseCity extends React.Component {
                     /> */}
 
                     <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.city')}
                         </Label>
                         <Item regular
@@ -193,7 +193,7 @@ class ChooseCity extends React.Component {
                                 value={city}
                                 placeholder={{
                                     label: locales('labels.selectCity'),
-                                    fontFamily: 'Vazir-Bold-FD',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
                                 items={[...cities.map(item => ({
                                     label: item.city_name, value: item.id
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     inputAndroid: {
         fontSize: 16,
         paddingHorizontal: 10,
-        fontFamily: 'Vazir',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingVertical: 8,
         height: 60,
         width: deviceWidth * 0.9,

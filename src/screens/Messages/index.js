@@ -149,7 +149,7 @@ class ContactsList extends React.Component {
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'Vazir', height: 42, textAlignVertical: 'center' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', height: 42, textAlignVertical: 'center' }}
                             placeholder={locales('labels.searchContacts')} />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
@@ -224,7 +224,7 @@ class ContactsList extends React.Component {
                                                                 }}
                                                             >
                                                                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                                                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD', marginHorizontal: 5 }}>
+                                                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
                                                                         {`${item.first_name} ${item.last_name}`}
                                                                     </Text>
                                                                     {item.is_verified ? <ValidatedUserIcon /> : null}
@@ -266,11 +266,11 @@ class ContactsList extends React.Component {
                             </> : searchText ?
                                 <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                     <AntDesign size={135} name='contacts' color='#BEBEBE' />
-                                    <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
+                                    <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
                                 </View> :
                                 <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                     <Entypo size={135} name='message' color='#BEBEBE' />
-                                    <Text style={{ fontSize: 20, fontFamily: 'Vazir-Bold-FD', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
+                                    <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
                                 </View>}
                         {/* <ScrollView
                         keyboardShouldPersistTaps='handled'
@@ -319,7 +319,7 @@ class ContactsList extends React.Component {
                                                             justifyContent: 'space-between',
                                                         }}
                                                     >
-                                                        <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'Vazir-Bold-FD' }}>
+                                                        <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                                             {`${contact.first_name} ${contact.last_name}`}
                                                         </Text>
                                                         <Text style={{ color: '#666666' }}>

@@ -50,7 +50,7 @@ class ProductDecription extends Component {
                             marginVertical: 10,
                             color: '#666666',
                             fontSize: 20,
-                            fontFamily: 'Vazir-Bold-FD',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             paddingHorizontal: 10
                         }}
                     >
@@ -58,7 +58,7 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('titles.description')}
                         </Label>
                         <Textarea
@@ -71,7 +71,7 @@ class ProductDecription extends Component {
                             placeholder={locales('titles.descriptionWithExample')}
                             ref={this.descriptionRef}
                             style={{
-                                fontFamily: 'Vazir', borderRadius: 5,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light', borderRadius: 5,
                                 borderColor: description.length ? '#00C569' : '#a8a8a8'
                             }}
                             rowSpan={5} bordered

@@ -89,11 +89,11 @@ class Requests extends React.Component {
                         visible={showDialog}
                         onDismiss={this.hideDialog}>
                         <Dialog.Content>
-                            <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center' }}>
+                            <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
                                 {locales('titles.maximumBuyAdResponse')}
                             </Paragraph>
                             <Paragraph
-                                style={{ fontFamily: 'Vazir-Bold-FD', color: 'red' }}>
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red' }}>
                                 {locales('titles.promoteForBuyAd')}
                             </Paragraph>
                         </Dialog.Content>
@@ -211,7 +211,7 @@ class Requests extends React.Component {
                                                     style={{
                                                         marginVertical: 5,
                                                         flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                                        fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                                                     }}
                                                 >{`${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
                                             </View>
@@ -223,7 +223,7 @@ class Requests extends React.Component {
                                                     style={{
                                                         marginVertical: 5,
                                                         flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                                        fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                                                     }}
                                                 >{`${locales('titles.requirementQuantity')} : ${item.requirement_amount} ${locales('labels.kiloGram')}`}
                                                 </Text>
@@ -235,7 +235,7 @@ class Requests extends React.Component {
                                                     style={{
                                                         marginVertical: 5,
                                                         flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                                        fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#333333'
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                                                     }}
                                                 >
                                                     {Jmoment(item.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
@@ -248,13 +248,13 @@ class Requests extends React.Component {
                                                 marginVertical: 5,
                                                 flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
                                             }}>
-                                                <Text style={{ color: '#E41C38', fontFamily: 'Vazir-Bold-FD', fontSize: 16, }}>+{item.reply_capacity}</Text>
+                                                <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
                                                 <MaterialCommunityIcons
                                                     onPress={() => Toast.show({
                                                         text: locales('titles.remianedCapacityToSendMessageToBuyer'),
                                                         position: "bottom",
                                                         style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                                        textStyle: { fontFamily: 'Vazir' },
+                                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
                                                         duration: 3000
                                                     })}
                                                     name='comment-alert' size={25} color={'#777777'} />
@@ -279,7 +279,7 @@ class Requests extends React.Component {
                                                 >
                                                     <MaterialCommunityIcons name='message' color='white' size={14} />
                                                     <Text style={{
-                                                        fontFamily: 'Vazir-Bold-FD', fontSize: 14,
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14,
                                                         color: 'white', paddingHorizontal: 3
                                                     }}>
                                                         {locales('labels.messageToBuyer')}
@@ -346,7 +346,7 @@ class Requests extends React.Component {
                                                             numberOfLines={1}
                                                             style={{
                                                                 flexWrap: 'wrap', width: '75%',
-                                                                fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#666666'
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#666666'
                                                             }}
                                                         >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
                                                         <Text
@@ -400,8 +400,8 @@ class Requests extends React.Component {
                                          ))}
 
                                             {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
-                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
-                                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
+                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
                             </Text>
                                                 <Button
                                                     onPress={() => this.props.navigation.navigate('PromoteRegistration')}
@@ -428,10 +428,10 @@ class Requests extends React.Component {
                             >
                                 <CardItem>
                                     <Body>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: 'black' }}>
-                                            {locales('titles.buyadRequestsWith')} <Text style={{ fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#E41C38' }}>{locales('titles.twoHoursDelay')}</Text> {locales('titles.youWillBeInformed')} .
+                                        <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
+                                            {locales('titles.buyadRequestsWith')} <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#E41C38' }}>{locales('titles.twoHoursDelay')}</Text> {locales('titles.youWillBeInformed')} .
                                 </Text>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: 'black' }}>
+                                        <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                                             {locales('titles.onTimeBuyAdRequestAndPromote')}
                                         </Text>
                                         <Button

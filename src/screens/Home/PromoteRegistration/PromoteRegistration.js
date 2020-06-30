@@ -76,17 +76,17 @@ class PromoteRegistration extends React.Component {
                                     </View>
                                     <View style={{ width: '70%', alignItems: 'center', justifyContent: 'center' }}>
                                         <Text style={{
-                                            color: '#666666', fontFamily: 'Vazir-Bold-FD', fontSize: 24, textAlign: 'center',
+                                            color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 24, textAlign: 'center',
                                             textAlignVertical: 'center'
                                         }}>{locales('titles.moneyRetention')}</Text>
                                         <Text
                                             style={{
-                                                color: '#666666', fontFamily: 'Vazir-Bold-FD', fontSize: 18, textAlign: 'center',
+                                                color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
                                                 textAlignVertical: 'center'
                                             }}>
                                             {locales('titles.promotionText')} <Text style={{
                                                 color: '#00C569',
-                                                fontFamily: 'Vazir-Bold-FD', fontSize: 18, textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
                                                 textAlignVertical: 'center'
                                             }}>{locales('titles.promotionTextContinue')}</Text>
                                         </Text>
@@ -102,7 +102,7 @@ class PromoteRegistration extends React.Component {
                                 <View style={{ borderBottomWidth: 3, paddingVertical: 5, borderBottomColor: '#00C569', flexDirection: 'row-reverse', justifyContent: 'space-between', width: '100%' }}>
                                     <View style={{ flexDirection: 'row-reverse' }}>
                                         <Text style={{
-                                            color: '#666666', fontFamily: 'Vazir-Bold-FD', fontSize: 18, textAlign: 'center',
+                                            color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
                                             textAlignVertical: 'center'
                                         }}>
                                             {locales('titles.annualSpecialRegistration')}
@@ -119,7 +119,7 @@ class PromoteRegistration extends React.Component {
 
                                     <View style={{ flexDirection: 'row-reverse' }}>
                                         <Text style={{
-                                            color: '#00C569', fontFamily: 'Vazir-Bold-FD', fontSize: 24, textAlign: 'center',
+                                            color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 24, textAlign: 'center',
                                             textAlignVertical: 'center'
                                         }}>
                                             689,000
@@ -348,7 +348,7 @@ class PromoteRegistration extends React.Component {
                                 {activePackageType == 3 ? <Text style={{
                                     color: '#00C569', fontSize: 20,
                                     width: '100%', textAlign: 'center',
-                                    fontFamily: 'Vazir-Bold-FD'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                 }}>{locales('labels.inUse')}</Text>
                                     :
                                     <Button
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
     },

@@ -366,7 +366,7 @@ class ChatModal extends React.Component {
                                             }
                                             <Text
                                                 style={{
-                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     color: '#333333',
                                                     fontSize: 12
                                                 }}>

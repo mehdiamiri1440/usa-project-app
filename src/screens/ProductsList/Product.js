@@ -320,14 +320,14 @@ class Product extends PureComponent {
                                 <Paragraph style={{
                                     textAlign: 'center', width: '100%',
                                     flexDirection: 'row-reverse', paddingTop: 10,
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#777777'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#777777'
                                 }}>
                                     {locales('labels.validatedUser')}
                                 </Paragraph>
                             </View>
                             <Dialog.Content>
                                 <Text style={{
-                                    width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'Vazir',
+                                    width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     color: '#00C569'
                                 }}>
                                     {locales('titles.thisUserIsValidated')}
@@ -344,20 +344,20 @@ class Product extends PureComponent {
                                     <Text
                                         style={{
                                             marginHorizontal: 2,
-                                            fontFamily: 'Vazir', textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center',
                                             fontSize: 16, color: '#777777'
                                         }}
                                     >{locales('titles.forMoreDetails')}</Text>
                                     <Text style={{
                                         color: '#1DA1F2',
-                                        fontFamily: 'Vazir-Bold-FD', textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center',
                                         fontSize: 18,
                                     }}>
                                         {locales('titles.here')}
                                     </Text>
                                     <Text style={{
                                         color: '#777777', marginHorizontal: 2,
-                                        fontFamily: 'Vazir', textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center',
                                         fontSize: 16,
                                     }}>
                                         {locales('titles.goForClick')}
@@ -396,7 +396,7 @@ class Product extends PureComponent {
                             }}>
                                 <Text style={{
                                     textAlign: 'center', width: '100%',
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 18, color: '#7E7E7E'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
                                 }}>
                                     {locales('labels.edition', { fieldName: `${category_name} | ${sub_category_name}` })}
                                 </Text>
@@ -405,7 +405,7 @@ class Product extends PureComponent {
                                 <>
                                     <Dialog.ScrollArea>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.amount')}
                                             </Label>
                                             <Item regular style={{
@@ -416,7 +416,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'Vazir-FD', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', flexDirection: 'row', textDecorationLine: 'none' }}
                                                     onChangeText={this.onAmountSubmit}
                                                     value={amount}
                                                     placeholder={locales('titles.amountWithExample')}
@@ -427,7 +427,7 @@ class Product extends PureComponent {
                                             {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.minimumOrder')}
                                             </Label>
                                             <Item regular style={{
@@ -438,7 +438,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumOrderSubmit}
                                                     value={minimumOrder}
                                                     placeholder={locales('titles.minimumOrderWithExample')}
@@ -449,7 +449,7 @@ class Product extends PureComponent {
                                             {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.minimumPrice')}
                                             </Label>
                                             <Item regular style={{
@@ -460,7 +460,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumPriceSubmit}
                                                     value={minimumPrice}
                                                     placeholder={locales('titles.minimumPriceWithExample')}
@@ -471,7 +471,7 @@ class Product extends PureComponent {
                                             {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumPriceError}</Label>}
                                         </View>
                                         <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('titles.maximumPrice')}
                                             </Label>
                                             <Item regular style={{
@@ -482,7 +482,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'Vazir-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMaximumPriceSubmit}
                                                     value={maximumPrice}
                                                     placeholder={locales('titles.maximumPriceWithExample')}
@@ -514,7 +514,7 @@ class Product extends PureComponent {
                                             name='checkbox-marked-circle-outline' color='white' size={40}
                                         />}
                                         <Paragraph
-                                            style={[!editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'Vazir' }]}
+                                            style={[!editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
                                         >
                                             {editionMessageText}
                                         </Paragraph>
@@ -540,16 +540,16 @@ class Product extends PureComponent {
                             }}>
                                 <Paragraph style={{
                                     textAlign: 'center', width: '100%',
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#7E7E7E'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
                                 }}>
                                     {locales('labels.doElevation')}
                                 </Paragraph>
                             </View>
                             <Dialog.Content>
-                                <Text style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'Vazir-Bold-FD', color: '#00C569' }}>
+                                <Text style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}>
                                     {formatter.numberWithCommas(25000)} {locales('titles.toman')}
                                 </Text>
-                                <Text style={{ fontFamily: 'Vazir', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
+                                <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
                                     {locales('titles.elevationText')}</Text>
                             </Dialog.Content>
                             <Dialog.Actions style={{
@@ -583,7 +583,7 @@ class Product extends PureComponent {
                             }}>
                                 <Paragraph style={{
                                     textAlign: 'center', width: '100%',
-                                    fontFamily: 'Vazir-Bold-FD', fontSize: 16, color: '#7E7E7E'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
                                 }}>
                                     {locales('labels.deleteProduct')}
                                 </Paragraph>
@@ -593,7 +593,7 @@ class Product extends PureComponent {
                                     <Feather
                                         style={{ alignSelf: 'center', width: '100%', padding: 5, textAlign: 'center' }}
                                         name='alert-circle' size={40} color='#FFE484' />
-                                    <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
+                                    <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
                                         {locales('titles.doYouWishToDeleteProduct')} ؟ </Paragraph>
                                 </Dialog.Content>
                                 <Dialog.Actions style={{
@@ -623,7 +623,7 @@ class Product extends PureComponent {
                                             name='checkbox-marked-circle-outline' color='white' size={40}
                                         />}
                                         <Paragraph
-                                            style={[deleteProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'Vazir' }]}
+                                            style={[deleteProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
                                         >
                                             {deleteMessageText}
                                         </Paragraph>
@@ -680,7 +680,7 @@ class Product extends PureComponent {
                                                 {is_verified ? <ValidatedUserIcon /> : null}
                                             </View>
                                             {response_rate > 0 && loggedInUserId != myuser_id &&
-                                                <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'Vazir-Bold-FD' }}>
+                                                <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                                     {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
                                                 </Text>}
                                         </View>
@@ -735,8 +735,8 @@ class Product extends PureComponent {
                                     </View>}
 
                                     <View style={{ width: '60%', justifyContent: 'space-between' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
-                                            {category_name} | {sub_category_name} <Text style={{ color: '#777777', fontFamily: 'Vazir-Bold-FD', fontSize: 18 }}>
+                                        <Text style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                            {category_name} | {sub_category_name} <Text style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
                                                 {product_name}
                                             </Text>
                                         </Text>
@@ -789,7 +789,7 @@ class Product extends PureComponent {
                                                     color: 'white',
                                                     fontSize: 18,
                                                     borderRadius: 5,
-                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     width: !!is_elevated ? '45%' : '55%',
                                                     paddingRight: 40,
                                                     backgroundColor: '#E41C38'
@@ -797,7 +797,7 @@ class Product extends PureComponent {
                                             >
                                                 <Text
                                                     onPress={() => this.setState({ elevatorFlag: true })}
-                                                    style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>
+                                                    style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
                                                     {locales('titles.elevateProduct')}</Text>
                                                 <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
                                             </Button>
@@ -806,13 +806,13 @@ class Product extends PureComponent {
                                                     color: 'white',
                                                     fontSize: 18,
                                                     borderRadius: 5,
-                                                    fontFamily: 'Vazir-Bold-FD',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     width: '40%',
                                                     paddingRight: 15,
                                                     backgroundColor: '#000546'
                                                 }}
                                             >
-                                                <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'Vazir-Bold-FD' }]}>{locales('titles.edit')}</Text>
+                                                <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
                                                 <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
                                             </Button>
                                         </View>
@@ -822,7 +822,7 @@ class Product extends PureComponent {
                                             text: locales('titles.elevatorHasAdded'),
                                             position: "bottom",
                                             style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                            textStyle: { fontFamily: 'Vazir' },
+                                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
                                             duration: 3000
                                         })}
                                         name='chart-line' size={30} color='white' style={{
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Vazir-Bold-FD',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
     },

@@ -120,7 +120,7 @@ class SelectCategory extends Component {
                 <Text
                     style={{
                         marginVertical: 10,
-                        fontFamily: 'Vazir-Bold-FD',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#666666',
                         fontSize: 20,
                         paddingHorizontal: 10
@@ -130,7 +130,7 @@ class SelectCategory extends Component {
                 </Text>
 
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('labels.category')}
                     </Label>
                     <Item regular
@@ -149,7 +149,7 @@ class SelectCategory extends Component {
                             value={category}
                             placeholder={{
                                 label: locales('labels.selectCategory'),
-                                fontFamily: 'Vazir-Bold-FD',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             }}
                             items={[...categoriesList.map(item => ({
                                 label: item.category_name, value: item.id
@@ -197,7 +197,7 @@ class SelectCategory extends Component {
                 /> */}
                 <Spin spinning={categoriesLoading || subCategoriesLoading}>
                     <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.subCategory')}
                         </Label>
                         <Item regular
@@ -216,7 +216,7 @@ class SelectCategory extends Component {
                                 value={subCategory}
                                 placeholder={{
                                     label: locales('labels.selectSubCategory'),
-                                    fontFamily: 'Vazir-Bold-FD',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
                                 items={[...subCategoriesList.map(item => ({
                                     label: item.category_name, value: item.id
@@ -236,7 +236,7 @@ class SelectCategory extends Component {
                     }}
                 /> */}
                     <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'Vazir-Bold-FD', padding: 5 }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('titles.enterYourProductType')}
                         </Label>
                         <Item regular style={{
@@ -262,7 +262,7 @@ class SelectCategory extends Component {
                         placeholder={(this.state.isFocused || productType.length) ? locales('titles.productTypeWithExample') : ''}
                         onFocus={() => this.setState({ isFocused: true })}
                         onBlur={() => this.setState({ isFocused: false })}
-                        labelTextStyle={{ paddingTop: 5, fontFamily: 'Vazir' }}
+                        labelTextStyle={{ paddingTop: 5, fontFamily: 'IRANSansWeb(FaNum)_Light' }}
                         label={this.state.isFocused || productType.length
                             ? locales('titles.productType') :
                             locales('titles.productTypeWithExample')}
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     inputAndroid: {
         fontSize: 16,
         paddingHorizontal: 10,
-        fontFamily: 'Vazir',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingVertical: 8,
         height: 60,
         width: deviceWidth * 0.9,

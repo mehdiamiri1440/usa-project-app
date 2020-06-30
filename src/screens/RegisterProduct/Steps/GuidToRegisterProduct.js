@@ -50,7 +50,7 @@ class GuidToRegisterProduct extends React.Component {
                         visible={showModal}
                         onDismiss={this.hideDialog}>
                         <Dialog.Content>
-                            <Paragraph style={{ fontFamily: 'Vazir', textAlign: 'center' }}>
+                            <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
                                 {locales('titles.maximumProductRegisteration')}</Paragraph>
                         </Dialog.Content>
                         <Dialog.Actions style={{
@@ -81,7 +81,7 @@ class GuidToRegisterProduct extends React.Component {
 
 
                 <View style={{ width: deviceWidth, paddingVertical: 40, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontFamily: 'Vazir-Bold-FD', fontSize: 28 }}>
+                    <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
                         {locales('labels.registerProduct')}
                     </Text>
                 </View>
@@ -140,7 +140,7 @@ class GuidToRegisterProduct extends React.Component {
                             style={{
                                 textAlign: 'center',
                                 paddingTop: 20,
-                                fontFamily: 'Vazir-Bold-FD',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlignVertical: 'center',
                             }}
                         >
@@ -160,7 +160,7 @@ class GuidToRegisterProduct extends React.Component {
                         <Text
                             style={{
                                 width: '70%',
-                                fontFamily: 'Vazir-Bold-FD',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 16,
                                 textAlign: 'center',
                                 flexWrap: 'wrap'

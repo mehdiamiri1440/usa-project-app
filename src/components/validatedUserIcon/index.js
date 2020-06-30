@@ -62,7 +62,7 @@ const ValidatedUserIcon = _ => {
                         <Entypo color='white' name='check' size={65} style={{ position: 'absolute' }} />
                     </TouchableOpacity>
                     <Text style={{
-                        width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'Vazir-Bold-FD',
+                        width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#00C569', marginVertical: 7
                     }}>
                         {locales('titles.thisUserIsValidated')}
@@ -79,7 +79,7 @@ const ValidatedUserIcon = _ => {
                         <FontAwesome name='exclamation-circle' size={25} color='#E41C38' />
                         <Text style={{
                             color: '#E41C38', marginHorizontal: 4,
-                            fontFamily: 'Vazir', textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center',
                             fontSize: 18,
                         }}>
                             {locales('titles.moreDetails')}

@@ -90,15 +90,15 @@
 			<string>rubicon-icon-font.ttf</string>
 			<string>SimpleLineIcons.ttf</string>
 			<string>Zocial.ttf</string>
-			<string>Vazir-Bold-FD.ttf</string>
-			<string>Vazir-Bold-FD.woff</string>
-			<string>Vazir-Bold-FD.woff2</string>
-			<string>Vazir-FD.ttf</string>
-			<string>Vazir-FD.woff</string>
-			<string>Vazir-FD.woff2</string>
-			<string>Vazir.ttf</string>
-			<string>Vazir.woff</string>
-			<string>Vazir.woff2</string>
+			<string>IRANSansWeb(FaNum)_Bold.ttf</string>
+			<string>IRANSansWeb(FaNum)_Bold.woff</string>
+			<string>IRANSansWeb(FaNum)_Bold.woff2</string>
+			<string>IRANSansWeb(FaNum)_Light-FD.ttf</string>
+			<string>IRANSansWeb(FaNum)_Light-FD.woff</string>
+			<string>IRANSansWeb(FaNum)_Light-FD.woff2</string>
+			<string>IRANSansWeb(FaNum)_Light.ttf</string>
+			<string>IRANSansWeb(FaNum)_Light.woff</string>
+			<string>IRANSansWeb(FaNum)_Light.woff2</string>
 		</array>
 	</dict>
 </plist>

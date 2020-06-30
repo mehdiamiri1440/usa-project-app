@@ -126,7 +126,7 @@ class MyProducts extends Component {
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.78
                     }}>
                         <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'Vazir-Bold-FD', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     // getItemLayout={(data, index) => (
