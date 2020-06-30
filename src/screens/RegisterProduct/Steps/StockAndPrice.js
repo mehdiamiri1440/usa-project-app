@@ -175,7 +175,7 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             keyboardType='number-pad'
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', flexDirection: 'row', textDecorationLine: 'none' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
                             onChangeText={this.onAmountSubmit}
                             value={amount}
                             placeholder={locales('titles.amountWithExample')}
@@ -213,7 +213,7 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             keyboardType='number-pad'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                             onChangeText={this.onMinimumOrderSubmit}
                             value={minimumOrder}
                             placeholder={locales('titles.minimumOrderWithExample')}
@@ -249,7 +249,7 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             keyboardType='number-pad'
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                             onChangeText={this.onMinimumPriceSubmit}
                             value={minimumPrice}
                             placeholder={locales('titles.minimumPriceWithExample')}
@@ -285,7 +285,7 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             keyboardType='number-pad'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                             onChangeText={this.onMaximumPriceSubmit}
                             value={maximumPrice}
                             placeholder={locales('titles.maximumPriceWithExample')}

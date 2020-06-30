@@ -48,7 +48,6 @@ class ProductsList extends PureComponent {
         this.props.fetchAllProvinces();
         this.props.fetchAllCategories();
         if (this.props.productDetailsId) {
-            console.warn('here')
             this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
         }
 

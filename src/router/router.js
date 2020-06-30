@@ -116,7 +116,6 @@ const App = props => {
         }
 
         Linking.addEventListener(url => {
-            console.log('url', url)
         })
         return unsubscribe
     }, [initialRoute]);
@@ -134,8 +133,7 @@ const App = props => {
             {(!props.loggedInUserId) ?
                 (
                     <Stack.Navigator headerMode='none'>
-                        <Stack.Screen name='Login' component={Login} />
-                        <Stack.Screen name='SignUp' component={SignUp} />
+                        <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
                     </Stack.Navigator>
                 )
                 : (< Tab.Navigator

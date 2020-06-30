@@ -1,6 +1,8 @@
 import React from 'react'
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
-import { Radio, Button } from 'native-base'
+import RNPickerSelect from 'react-native-picker-select';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Button, Item, Label, Radio } from 'native-base';
 import { connect } from 'react-redux'
 import { Dropdown } from 'react-native-material-dropdown';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
@@ -18,6 +20,8 @@ class UserActivity extends React.Component {
         super(props);
         this.state = {
             activityZone: '',
+            activityZoneError: '',
+            activityTypeError: '',
             activityType: '',
             selectedCategoryId: null
         }
@@ -30,87 +34,146 @@ class UserActivity extends React.Component {
 
     onSubmit = () => {
         let { selectedCategoryId, activityType } = this.state;
-        this.props.setActivityZoneAndType(selectedCategoryId, activityType)
+
+        let activityZoneError, activityTypeError, isActivityZoneValid, isActivityTypeValid;
+
+        if (!selectedCategoryId) {
+            activityZoneError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityZone') });
+            isActivityZoneValid = false;
+        }
+        else {
+            activityZoneError = ''
+            isActivityZoneValid = true;
+        }
+
+        if (!activityType) {
+            activityTypeError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityType') });
+            isActivityTypeValid = false;
+        }
+        else {
+            activityTypeError = '';
+            isActivityTypeValid = true;
+        }
+
+        if (isActivityTypeValid && isActivityZoneValid) {
+
+            this.props.setActivityZoneAndType(selectedCategoryId, activityType);
+        }
+        else {
+            this.setState({ activityTypeError, activityZoneError });
+        }
     }
 
-    onActivityZoneSubmit = (value, index) => {
-        let { activityZones } = this.props;
-        let selectedCategoryId = activityZones[index].id;
-        this.setState({ selectedCategoryId })
+    onActivityZoneSubmit = (value) => {
+        this.setState({ selectedCategoryId: value, activityZoneError: '' })
     };
 
 
     render() {
         let { message, failed, loading, error, activityZones } = this.props
-        let { selectedCategoryId, activityType } = this.state
+        let { selectedCategoryId, activityType, activityZoneError, activityTypeError } = this.state
 
         activityZones = activityZones.map(item => ({ ...item, value: item.category_name }));
 
         return (
             <Spin spinning={loading} >
-                <Text style={styles.userText}>
-                    {locales('messages.enterUserBasicInfo')}
-                </Text>
-                <View style={[styles.textInputPadding, {
-                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
-                }]}>
-                    <TouchableOpacity
-                        onPress={() => this.setState({ activityType: 'buyer' })}
-                        style={{
-                            width: deviceWidth * 0.4,
-                            borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
-                            padding: 20, borderRadius: 5,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 10,
-                        }}>
-                        <Radio
-                            onPress={() => this.setState({ activityType: 'buyer' })}
-                            selected={activityType === 'buyer'}
-                            color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
-                            selectedColor={"#00C569"}
-                        />
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <MaterialCommunityIcons
-                                name="account-tie"
-                                style={{
-                                    fontSize: 25,
-                                    alignSelf: "center",
-                                }}
+                <View style={{ marginTop: -30 }}>
+                    <Text style={styles.userText}>
+                        {locales('messages.enterUserBasicInfo')}
+                    </Text>
+                    <View style={[styles.textInputPadding, {
+                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                    }]}>
+                        <TouchableOpacity
+                            onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
+                            style={{
+                                width: deviceWidth * 0.4,
+                                borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'buyer' ? '#00C569' : '#BDC4CC'),
+                                padding: 20, borderRadius: 5,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 10,
+                            }}>
+                            <Radio
+                                onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
+                                selected={activityType === 'buyer'}
+                                color={"#BEBEBE"}
+                                style={{ marginHorizontal: 10 }}
+                                selectedColor={"#00C569"}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            width: deviceWidth * 0.4,
-                            borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
-                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
-                            , justifyContent: 'space-between'
-                        }}
-                        onPress={() => this.setState({ activityType: 'seller' })}
-                    >
-                        <Radio
-                            onPress={() => this.setState({ activityType: 'seller' })}
-                            selected={activityType === 'seller'}
-                            color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
-                            selectedColor={"#00C569"}
-                        />
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <MaterialCommunityIcons
-                                name="shovel"
-                                style={{
-                                    fontSize: 25,
-                                    alignSelf: "center",
-                                }}
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <MaterialCommunityIcons
+                                    name="account-tie"
+                                    style={{
+                                        fontSize: 25,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                width: deviceWidth * 0.4,
+                                borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#00C569' : '#BDC4CC'),
+                                padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
+                                , justifyContent: 'space-between'
+                            }}
+                            onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
+                        >
+                            <Radio
+                                onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
+                                selected={activityType === 'seller'}
+                                color={"#BEBEBE"}
+                                style={{ marginHorizontal: 10 }}
+                                selectedColor={"#00C569"}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <MaterialCommunityIcons
+                                    name="shovel"
+                                    style={{
+                                        fontSize: 25,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    {!!activityTypeError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>
+                        {activityTypeError}</Label>}
 
+                    <View style={styles.labelInputPadding}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.selectActivityZone')}
+                        </Label>
+                        <Item regular
+                            style={{
+                                width: deviceWidth * 0.9,
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                borderColor: selectedCategoryId ? '#00C569' : activityZoneError ? '#D50000' : '#a8a8a8'
+                            }}
+                        >
+                            <RNPickerSelect
+                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={(category) => this.onActivityZoneSubmit(category)}
+                                style={styles}
+                                value={selectedCategoryId}
+                                placeholder={{
+                                    label: locales('labels.activityZone'),
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}
+                                items={[...activityZones.map(item => ({
+                                    label: item.category_name, value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        {!!activityZoneError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>
+                            {activityZoneError}</Label>}
+                    </View>
+                    {/* 
                 <View style={styles.textInputPadding}>
                     <Dropdown
                         onChangeText={(value, index) => this.onActivityZoneSubmit(value, index)}
@@ -120,15 +183,15 @@ class UserActivity extends React.Component {
                             paddingHorizontal: 20
                         }}
                     />
+                </View> */}
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                    >
+                        <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
+                    </Button>
                 </View>
-                <Button
-                    onPress={() => this.onSubmit()}
-                    style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
-                    rounded
-                    disabled={!selectedCategoryId || !activityType.length}
-                >
-                    <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
-                </Button>
             </Spin>
         )
     }
@@ -144,14 +207,54 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         color: '#155724'
     },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.9,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
+    },
     buttonText: {
         color: 'white',
         width: '100%',
         textAlign: 'center'
     },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
@@ -162,6 +265,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',

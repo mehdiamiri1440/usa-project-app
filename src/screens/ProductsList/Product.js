@@ -416,7 +416,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
                                                     onChangeText={this.onAmountSubmit}
                                                     value={amount}
                                                     placeholder={locales('titles.amountWithExample')}
@@ -438,7 +438,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumOrderSubmit}
                                                     value={minimumOrder}
                                                     placeholder={locales('titles.minimumOrderWithExample')}
@@ -460,7 +460,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumPriceSubmit}
                                                     value={minimumPrice}
                                                     placeholder={locales('titles.minimumPriceWithExample')}
@@ -482,7 +482,7 @@ class Product extends PureComponent {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMaximumPriceSubmit}
                                                     value={maximumPrice}
                                                     placeholder={locales('titles.maximumPriceWithExample')}
@@ -668,13 +668,15 @@ class Product extends PureComponent {
                                     >
                                         <View>
                                             <View style={{ flexDirection: 'row-reverse' }}>
-                                                <Text style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    marginHorizontal: 5,
-                                                    fontSize: 18,
-                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
-                                                    paddingBottom: 2
-                                                }}>
+                                                <Text
+                                                    numberOfLines={1}
+                                                    style={{
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                        marginHorizontal: 5,
+                                                        fontSize: 18,
+                                                        marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
+                                                        paddingBottom: 2
+                                                    }}>
                                                     {`${first_name} ${last_name}`}
                                                 </Text>
                                                 {is_verified ? <ValidatedUserIcon /> : null}
@@ -735,13 +737,18 @@ class Product extends PureComponent {
                                     </View>}
 
                                     <View style={{ width: '60%', justifyContent: 'space-between' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
-                                            {category_name} | {sub_category_name} <Text style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                            {category_name} | {sub_category_name} <Text
+                                                style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
                                                 {product_name}
                                             </Text>
                                         </Text>
                                         <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
-                                            <Text style={{ textAlign: 'right' }}>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{ textAlign: 'right' }}>
                                                 <Entypo name='location-pin' size={25} color='#BEBEBE' />
                                             </Text>
                                             <Text style={{ color: '#BEBEBE', fontSize: 16 }}>

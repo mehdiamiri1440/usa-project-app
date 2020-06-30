@@ -106,7 +106,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_SUCCESSFULLY: {
-            console.log('red', action)
             return {
                 ...state,
                 relatedProductsObject: { ...action.payload },
@@ -325,7 +324,6 @@ export default (state = INITIAL_STATE, action) => {
         };
 
         case actionTypes.SET_PRODUCT_DETAILS_ID: {
-            console.log('payload', action.payload)
             return {
                 ...state,
                 productDetailsId: action.payload

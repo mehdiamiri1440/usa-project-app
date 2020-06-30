@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, I18nManager } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { Button } from 'native-base';
+import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 import OutlinedTextField from '../../../components/floatingInput';
 import Spin from '../../../components/loading/loading';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -12,6 +12,7 @@ class UserAuthority extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            passwordError: '',
             userName: '',
             password: '',
             repeatPassword: '',
@@ -32,16 +33,32 @@ class UserAuthority extends React.Component {
 
     onSubmit = () => {
         let { userName, password, repeatPassword } = this.state;
-        let errors = []
-        if (!validator.isValidInstagramUserName(userName))
-            errors.push({ errorName: 'invalidUserName', errorText: locales('errors.invalidUserName') })
-        if (password !== repeatPassword)
-            errors.push({ errorName: 'passwordsNotSame', errorText: locales('errors.notSamePasswords') })
-        if (password === repeatPassword && password.length < 8)
-            errors.push({ errorName: 'passwordLength', errorText: locales('errors.passwordLength') })
-        if (errors.length) this.setState({ errors: [...errors], errorFlag: true });
+
+        // let errors = []
+        // if (!validator.isValidInstagramUserName(userName))
+        //     errors.push({ errorName: 'invalidUserName', errorText: locales('errors.invalidUserName') })
+        // if (password !== repeatPassword)
+        //     errors.push({ errorName: 'passwordsNotSame', errorText: locales('errors.notSamePasswords') })
+        // if (password === repeatPassword && password.length < 8)
+        //     errors.push({ errorName: 'passwordLength', errorText: locales('errors.passwordLength') })
+        // if (errors.length) this.setState({ errors: [...errors], errorFlag: true });
+        let isPasswordValid, passwordError;
+        if (!password) {
+            passwordError = locales('errors.fieldNeeded', { fieldName: locales('titles.password') });
+            isPasswordValid = false;
+        }
+        else if (password && password.length < 8) {
+            passwordError = locales('errors.passwordShouldBe8AtLeast');
+            isPasswordValid = false;
+        }
         else {
+            passwordError = '';
+            isPasswordValid = true;
+        }
+        if (isPasswordValid)
             this.props.setUserAuthorities(userName, password)
+        else {
+            this.setState({ passwordError })
         }
 
     };
@@ -63,21 +80,8 @@ class UserAuthority extends React.Component {
         }, 10);
     };
 
-    onPasswordSubmit = () => {
-        let { current: field } = this.passwordRef;
-        setTimeout(() => {
-            this.setState(state => {
-                let index = -1
-                if (state.errors.length)
-                    index = state.errors.some(item => item.errorName == 'passwordsNotSame') ?
-                        index = state.errors.findIndex(item => item.errorName == 'passwordsNotSame') : -1;
-                if (index > -1)
-                    delete state.errors[index];
-                state.password = field.value();
-                state.errorFlag = false;
-                return "";
-            });
-        }, 10);
+    onPasswordSubmit = password => {
+        this.setState({ password, passwordError: '' });
     };
 
     onRepeatPasswordSubmit = () => {
@@ -97,14 +101,14 @@ class UserAuthority extends React.Component {
         }, 10);
     };
     render() {
-        let { password, repeatPassword, userName, errors, errorFlag } = this.state;
+        let { password, repeatPassword, userName, passwordError, errors, errorFlag } = this.state;
 
         return (
-            <>
+            <View style={{ marginTop: -30 }}>
                 <Text style={styles.userText}>
-                    {locales('labels.submitUserBasics')}
+                    {locales('labels.registerPassword')}
                 </Text>
-                <View style={styles.textInputPadding}>
+                {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
                         baseColor={userName.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onUserNameSubmit}
@@ -123,8 +127,31 @@ class UserAuthority extends React.Component {
                         labelTextStyle={{ paddingTop: 5 }}
                         label={locales('titles.userName')}
                     />
+                </View> */}
+                <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        {locales('titles.enterPassword')}
+                    </Label>
+                    <Item regular style={{
+                        borderColor: (passwordError ? '#D50000' : (password.length && validator.hasMinLength(password, { minLength: 8 })) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            last
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            secureTextEntry={true}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            onChangeText={this.onPasswordSubmit}
+                            value={password}
+                            placeholder={locales('titles.password')}
+                            ref={this.passwordRef}
+
+                        />
+                    </Item>
+                    {!!passwordError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{passwordError}</Label>}
                 </View>
-                <View style={styles.textInputPadding}>
+                {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
                         baseColor={password.length >= 8 ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onPasswordSubmit}
@@ -146,8 +173,8 @@ class UserAuthority extends React.Component {
                         labelTextStyle={{ paddingTop: 5 }}
                         label={locales('titles.password')}
                     />
-                </View>
-                <View style={styles.textInputPadding}>
+                </View> */}
+                {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
                         icon={
                             <FontAwesome5
@@ -169,20 +196,18 @@ class UserAuthority extends React.Component {
                         labelTextStyle={{ paddingTop: 5 }}
                         label={locales('titles.repeatPassword')}
                     />
-                </View>
+                </View> */}
                 <Button
                     onPress={() => this.onSubmit()}
-                    style={(!userName.length || !password.length || !repeatPassword.length) || (password.length < 8 || repeatPassword.length < 8)
+                    style={!password || password.length < 8
                         ? styles.disableLoginButton
                         : styles.loginButton
                     }
                     rounded
-                    disabled={(!userName.length || !password.length || !repeatPassword.length)
-                        || (password.length < 8 || repeatPassword.length < 8)}
                 >
                     <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                 </Button>
-            </>
+            </View>
         )
     }
 }
@@ -202,9 +227,15 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center'
     },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
@@ -215,6 +246,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',

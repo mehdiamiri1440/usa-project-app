@@ -4,6 +4,8 @@ import {
 } from '../actions';
 import actionTypes from './actionTypes';
 import API from '../../apis'
+
+
 export const login = (mobileNumber, password) => {
     const request = () => {
         return dispatch => {
@@ -11,6 +13,29 @@ export const login = (mobileNumber, password) => {
             return API.auth
                 .login(mobileNumber, password)
                 .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, { failure: actionTypes.LOGIN_FAILURE, reject: actionTypes.LOGIN_REJECT }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.LOGIN_LOADING);
+    const success = res => action(actionTypes.LOGIN_SUCCESS, res);
+
+    return request();
+};
+
+
+
+export const fastLogin = (payload) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .fastLogin(payload)
+                .then(res => {
+                    return dispatch(success(res))
+                })
                 .catch(err => {
                     dispatch(generateErrorAction(err, { failure: actionTypes.LOGIN_FAILURE, reject: actionTypes.LOGIN_REJECT }));
                     throw err;
@@ -44,12 +69,12 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
 };
 
 
-export const checkActivisionCode = (code) => {
+export const checkActivisionCode = (code, mobileNumber) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.auth
-                .checkActivisionCode(code)
+                .checkActivisionCode(code, mobileNumber)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

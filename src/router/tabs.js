@@ -42,7 +42,6 @@ const mapperForProps = (state) => {
 HomeStack = connect(mapperForProps)(HomeStack);
 
 function ProductsListStack(props) {
-    console.log('prop[s', props)
     return <Stack.Navigator>
         {ProductsListRoutes.map((product, index) => (
             <Stack.Screen

@@ -30,6 +30,20 @@ export const login = (mobileNumber, password) => {
 };
 
 
+export const fastLogin = (payload) => {
+    return new Promise((resolve, reject) => {
+        storeData = async () => {
+            if (payload.token)
+                await AsyncStorage.setItem('@Authorization', payload.token)
+            else
+                await AsyncStorage.removeItem('@Authorization')
+            resolve(payload);
+        }
+        storeData()
+    })
+};
+
+
 export const logOut = () => {
     return new Promise((resolve, reject) => {
         requester
@@ -71,7 +85,7 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
 };
 
 
-export const checkActivisionCode = (code) => {
+export const checkActivisionCode = (code, mobileNumber) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
@@ -79,6 +93,7 @@ export const checkActivisionCode = (code) => {
                 method: 'POST',
                 withAuth: false,
                 data: {
+                    phone: mobileNumber,
                     verification_code: code,
                 }
             })
@@ -101,7 +116,6 @@ export const fetchAllActivityZones = () => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('result===>', result)
                 resolve(result);
             })
             .catch(err => {

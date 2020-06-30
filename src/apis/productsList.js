@@ -51,7 +51,6 @@ export const fetchAllMyProducts = user_name => {
                 withAuth: false,
             })
             .then(result => {
-                console.log('here-->', result)
                 resolve(result);
             })
             .catch(err => {
@@ -110,11 +109,9 @@ export const fetchProductDetails = id => {
                 withAuth: false,
             })
             .then(result => {
-                console.log('action-------------->>>>>>', result)
                 resolve(result);
             })
             .catch(err => {
-                console.log('action111111111111111111-------------->>>>>>', err)
                 return reject(err.response);
             });
     });

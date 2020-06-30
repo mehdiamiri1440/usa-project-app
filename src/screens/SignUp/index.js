@@ -13,6 +13,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils';
 import Spin from '../../components/loading/loading';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Login from '../Login/Login';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
@@ -30,7 +31,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 6
+            stepNumber: 1
         }
     }
 
@@ -97,7 +98,7 @@ class SignUp extends React.Component {
             first_name: firstName,
             last_name: lastName,
             password,
-            user_name: userName,
+            user_name: '',
             sex: gender,
             province,
             city,
@@ -117,8 +118,9 @@ class SignUp extends React.Component {
     renderSteps = () => {
         let { stepNumber } = this.state
         switch (stepNumber) {
+
             case 1: {
-                return <GetMobileNumberStep {...this.props} setMobileNumber={this.setMobileNumber} />
+                return <Login setMobileNumber={this.setMobileNumber}  {...this.props} />
             }
             case 2: {
                 return <EnterActivisionCode changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
@@ -153,17 +155,11 @@ class SignUp extends React.Component {
                         end={{ x: 0.8, y: 0.2 }}
                         colors={['#00C569', '#21AD93']}
                     >
-                        <View style={styles.linearGradient}>
-                            {stepNumber > 1 && <TouchableOpacity
-                                onPress={this.onHeaderBackButtonClicked}
-                                style={{ alignItems: 'flex-end', paddingBottom: 10, paddingHorizontal: 10, width: deviceWidth }}
-                            >
-                                <AntDesign name='arrowright' size={25} color='white' />
-                            </TouchableOpacity>}
+                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: 10 }]}>
                             <Text
-                                style={styles.headerTextStyle}
+                                style={[styles.headerTextStyle]}
                             >
-                                {locales('titles.signUpInBuskool')}
+                                {locales('titles.enterToBuskool')}
                             </Text>
                         </View >
                     </LinearGradient>
@@ -172,6 +168,7 @@ class SignUp extends React.Component {
                         flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                     }}>
                         <View style={{
+                            marginTop: 25,
                             flexDirection: 'row-reverse',
                             alignItems: 'stretch',
                             alignContent: 'center', alignSelf: 'center',
@@ -180,18 +177,18 @@ class SignUp extends React.Component {
                         }}>
                             {stepsArray.map((item, index) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={index}>
                                         <Text
                                             style={{
                                                 textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
                                                 alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 20, height: 20 },
+                                                shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
                                                 shadowOpacity: 1.0,
-                                                elevation: 10,
+                                                elevation: 5,
                                                 textAlignVertical: 'center', borderColor: '#FFFFFF',
                                                 backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 30, height: 30, borderRadius: 15
+                                                width: 26, height: 26, borderRadius: 13
 
                                             }}
                                         >
@@ -206,7 +203,7 @@ class SignUp extends React.Component {
                                             }}>
                                         </View>
                                         }
-                                    </>
+                                    </React.Fragment>
                                 )
                             }
                             )}
@@ -247,6 +244,32 @@ const styles = StyleSheet.create({
         height: deviceHeight * 0.15,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
+        width: deviceWidth * 0.8,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        borderRadius: 5,
+        width: deviceWidth * 0.8,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
     },
     headerTextStyle: {
         color: 'white',

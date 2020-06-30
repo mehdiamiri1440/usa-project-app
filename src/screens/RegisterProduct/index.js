@@ -106,7 +106,6 @@ class RegisterProduct extends React.Component {
 
 
     setProductImages = images => {
-        console.log('min', images)
         this.setState({ productFiles: images, images, stepNumber: 5 });
     };
 

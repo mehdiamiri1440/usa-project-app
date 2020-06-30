@@ -58,7 +58,6 @@ class ContactsList extends React.Component {
                     })
                 })
             }, 10);
-            console.warn('reached', this.props.message)
         }
     }
 

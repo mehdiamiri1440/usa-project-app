@@ -39,7 +39,6 @@ export const fetchAllSubCategories = id => {
 };
 
 export const addNewProduct = productObject => {
-    console.log('product object in api',productObject)
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
@@ -49,11 +48,10 @@ export const addNewProduct = productObject => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('registeeereeedd----->', result)
                 resolve(result);
             })
             .catch(err => {
-                             return reject(err.response);
+                return reject(err.response);
             });
     });
 };

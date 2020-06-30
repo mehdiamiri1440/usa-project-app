@@ -53,7 +53,6 @@ class ProductDetails extends Component {
 
 
     componentDidMount() {
-        console.log('this.props', this.props)
         if (this.props.route && this.props.route.params && this.props.route.params.productId) {
             this.props.fetchAllRelatedProducts(this.props.route.params.productId);
             this.props.fetchProductDetails(this.props.route.params.productId).then(_ => {
@@ -248,7 +247,6 @@ class ProductDetails extends Component {
                 // dismissed
             }
         } catch (error) {
-            console.log(error.message);
         }
     };
 
@@ -440,7 +438,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
                                                     onChangeText={this.onAmountSubmit}
                                                     value={amount}
                                                     placeholder={locales('titles.amountWithExample')}
@@ -462,7 +460,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumOrderSubmit}
                                                     value={minimumOrder}
                                                     placeholder={locales('titles.minimumOrderWithExample')}
@@ -484,7 +482,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     keyboardType='number-pad'
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMinimumPriceSubmit}
                                                     value={minimumPrice}
                                                     placeholder={locales('titles.minimumPriceWithExample')}
@@ -509,7 +507,7 @@ class ProductDetails extends Component {
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
                                                     keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light-FD', textDecorationLine: 'none' }}
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
                                                     onChangeText={this.onMaximumPriceSubmit}
                                                     value={maximumPrice}
                                                     placeholder={locales('titles.maximumPriceWithExample')}

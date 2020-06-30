@@ -6,7 +6,7 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import { Button } from 'native-base'
+import { Button, Label } from 'native-base'
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -17,20 +17,17 @@ import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 
-const onSubmit = (props, value) => {
-    props.checkActivisionCode(value).then((res) => {
-        if (res.payload.status) props.changeStep(3)
-    })
-
-};
 
 
 
 const EnterActivisionCode = (props) => {
+
+
     const CELL_COUNT = 4;
 
     const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
     const [value, setValue] = useState('');
+    const [valueError, setValueError] = useState(null);
     const [codeProps, getCellOnLayoutHandler] = useClearByFocusCell({
         value,
         setValue,
@@ -42,24 +39,54 @@ const EnterActivisionCode = (props) => {
     activisionCodeRef = React.createRef();
 
     let { message, loading, error, mobileNumber, getAgainLoading } = props
+
+
+
+
+    const onSubmit = (value) => {
+        if (!value || value.length != 4) {
+            setValueError(locales('errors.errorInVerificationCode'))
+        }
+
+        else {
+            setValueError('')
+            props.checkActivisionCode(value, mobileNumber).then((res) => {
+                setValueError('');
+                if (res.payload.redirected) {
+                    props.fastLogin(res.payload)
+                }
+                else if (res.payload.status) props.changeStep(3);
+                else if (!res.payload.status) {
+                    setValueError(locales('labels.invalidCode'));
+                }
+            }).catch(err => {
+                setValueError(err.data.errors.phone[0])
+            })
+        }
+
+    };
+
+
+
     return (
         <Spin spinning={loading || getAgainLoading} >
             <Text style={styles.userText}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
             </Text>
-            {!error && value.length === 4 && flag && message && message.length &&
+            {/* {!error && value.length === 4 && flag && message && message.length &&
                 <View style={styles.loginFailedContainer}>
                     <Text style={styles.loginFailedText}>
                         {locales('errors.errorInVerificationCode')}
                     </Text>
                 </View>
-            }
-            <SafeAreaView style={styles.root}>
+            } */}
+            <SafeAreaView style={[styles.root]}>
                 <CodeField
                     ref={ref}
                     {...codeProps}
                     value={value}
                     onChangeText={value => {
+                        setValueError('');
                         setValue(value);
                         setFlag(false)
                     }}
@@ -71,8 +98,8 @@ const EnterActivisionCode = (props) => {
                             key={index}
                             style={[styles.cell, isFocused && styles.focusCell,
                             {
-                                borderColor: value.length === 4 && !error && !message ? "#155724"
-                                    : value.length === 4 && flag && !error && message && message.length
+                                borderColor: value.length === 4 && !valueError ? "#155724"
+                                    : value.length === 4 && valueError
                                         ? '#de3545' :
                                         "grey"
                             }]}
@@ -84,11 +111,12 @@ const EnterActivisionCode = (props) => {
                         </Text>
                     )}
                 />
+                {!!valueError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{valueError}</Label>}
             </SafeAreaView>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 20 }}>
                 <Timer
-                    min={2}
-                    sec={0}
+                    min={0}
+                    sec={5}
                     isCountDownTimer={true}
                     containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
@@ -100,11 +128,10 @@ const EnterActivisionCode = (props) => {
             <Button
                 onPress={() => {
                     setFlag(true);
-                    onSubmit(props, value)
+                    onSubmit(value)
                 }}
-                style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { marginVertical: 20 }]}
+                style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
                 rounded
-                disabled={value.length !== 4}
             >
                 <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
             </Button>
@@ -112,7 +139,7 @@ const EnterActivisionCode = (props) => {
     )
 }
 const styles = StyleSheet.create({
-    root: { flex: 1, padding: 20 },
+    root: { flex: 1, paddingHorizontal: 20 },
     title: { textAlign: 'center', fontSize: 30 },
     codeFiledRoot: { marginTop: 20 },
     cell: {
@@ -155,6 +182,8 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
@@ -165,6 +194,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
+        borderRadius: 5,
         width: deviceWidth * 0.8,
         color: 'white',
         alignItems: 'center',
@@ -208,9 +238,9 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
-        paddingTop: '3%',
         fontSize: 16,
-        padding: 20,
+        marginTop: -10,
+        paddingHorizontal: 20,
         textAlign: 'center',
         color: '#7E7E7E'
     }
@@ -230,7 +260,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkActivisionCode: (code) => dispatch(authActions.checkActivisionCode(code)),
+        fastLogin: (payload) => dispatch(authActions.fastLogin(payload)),
+        checkActivisionCode: (code, mobileNumber) => dispatch(authActions.checkActivisionCode(code, mobileNumber)),
         checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
     }
 }
