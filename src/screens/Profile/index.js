@@ -78,7 +78,7 @@ class Profile extends Component {
             userProfileFailed,
             userProfileError,
             userProfileMessage,
-            userProfile,
+            userProfile = {},
 
 
             profileStatistics,

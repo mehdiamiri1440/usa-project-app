@@ -22,7 +22,8 @@ class ChooseCity extends React.Component {
             provinceError: '',
             errorFlag: false,
             city: '',
-            index: -1
+            index: -1,
+            loaded: false
         }
     }
     provinceRef = React.createRef();
@@ -35,6 +36,14 @@ class ChooseCity extends React.Component {
         //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities.length && this.props.city) {
+            const { province, city } = this.props;
+            this.setState({ province, city, loaded: true })
+        }
     }
 
     componentWillUnmount() {
@@ -78,14 +87,14 @@ class ChooseCity extends React.Component {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
             this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces[index].id)
+            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
         }
     };
 
     setCity = (value) => {
-        this.setState({ city: value, cityError: '' })
+        if (!!value)
+            this.setState({ city: value, cityError: '' })
     };
-
     render() {
         let {
             message,
@@ -118,7 +127,7 @@ class ChooseCity extends React.Component {
 
         return (
             <Spin spinning={loading || fetchCitiesLoading} >
-                <View style={{ marginTop: -40 }}>
+                <View>
                     <Text style={styles.userText}>
                         {locales('titles.chooseCityAndProvince')}
                     </Text>
@@ -160,7 +169,7 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
                     </View>
                     {/* <Dropdown
                     onChangeText={(value, index) => this.setProvince(value, index)}
@@ -198,7 +207,7 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{cityError}</Label>}
+                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{cityError}</Label>}
                     </View>
                     {/* <Dropdown
                     onChangeText={(value) => this.setCity(value)}
@@ -208,13 +217,21 @@ class ChooseCity extends React.Component {
                         paddingHorizontal: 20
                     }}
                 /> */}
-                    <View style={{ marginVertical: 20 }}>
+                    <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
                         <Button
                             onPress={() => this.onSubmit()}
                             style={!city || !province ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                        </Button>
+                        <Button
+                            onPress={() => this.props.changeStep(3)}
+                            style={styles.backButtonContainer}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
                         </Button>
                     </View>
                 </View>
@@ -243,10 +260,25 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
         justifyContent: 'center'
     },
     loginButton: {
@@ -254,7 +286,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',

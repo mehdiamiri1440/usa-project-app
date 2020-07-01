@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView } from 'react-native'
 import {
     CodeField,
@@ -14,6 +14,7 @@ import { validator } from '../../../utils';
 import Timer from '../../../components/timer';
 import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
+import * as profileActions from '../../../redux/profile/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 
@@ -38,10 +39,14 @@ const EnterActivisionCode = (props) => {
 
     activisionCodeRef = React.createRef();
 
-    let { message, loading, error, mobileNumber, getAgainLoading } = props
+    let { verificationCode, message, loading, error, mobileNumber, getAgainLoading } = props
 
 
-
+    useEffect(() => {
+        if (!!verificationCode) {
+            setValue(verificationCode);
+        }
+    }, [])
 
     const onSubmit = (value) => {
         if (!value || value.length != 4) {
@@ -53,9 +58,11 @@ const EnterActivisionCode = (props) => {
             props.checkActivisionCode(value, mobileNumber).then((res) => {
                 setValueError('');
                 if (res.payload.redirected) {
-                    props.fastLogin(res.payload)
+                    props.fastLogin(res.payload).then(_ => {
+                        props.fetchUserProfile();
+                    })
                 }
-                else if (res.payload.status) props.changeStep(3);
+                else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
                     setValueError(locales('labels.invalidCode'));
                 }
@@ -70,7 +77,7 @@ const EnterActivisionCode = (props) => {
 
     return (
         <Spin spinning={loading || getAgainLoading} >
-            <Text style={styles.userText}>
+            <Text style={[styles.userText, { marginTop: 12 }]}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
             </Text>
             {/* {!error && value.length === 4 && flag && message && message.length &&
@@ -111,12 +118,12 @@ const EnterActivisionCode = (props) => {
                         </Text>
                     )}
                 />
-                {!!valueError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{valueError}</Label>}
+                {!!valueError && <Label style={{ fontSize: 14, marginVertical: 5, color: '#D81A1A', textAlign: 'center' }}>{valueError}</Label>}
             </SafeAreaView>
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 20 }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 10 }}>
                 <Timer
-                    min={0}
-                    sec={5}
+                    min={2}
+                    sec={0}
                     isCountDownTimer={true}
                     containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
@@ -125,23 +132,33 @@ const EnterActivisionCode = (props) => {
                     substitutionText={locales('titles.sendVerificationCodeAgain')}
                 />
             </View>
-            <Button
-                onPress={() => {
-                    setFlag(true);
-                    onSubmit(value)
-                }}
-                style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
-                rounded
-            >
-                <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
-            </Button>
+            <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                <Button
+                    onPress={() => {
+                        setFlag(true);
+                        onSubmit(value)
+                    }}
+                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
+                    rounded
+                >
+                    <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
+                </Button>
+                <Button
+                    onPress={() => props.changeStep(1)}
+                    style={styles.backButtonContainer}
+                    rounded
+                >
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                </Button>
+            </View>
         </Spin >
     )
 }
 const styles = StyleSheet.create({
     root: { flex: 1, paddingHorizontal: 20 },
     title: { textAlign: 'center', fontSize: 30 },
-    codeFiledRoot: { marginTop: 20 },
+    codeFiledRoot: { marginTop: 10 },
     cell: {
         width: 70,
         height: 70,
@@ -155,6 +172,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
     },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
     focusCell: {
         borderColor: 'green',
         alignContent: 'center',
@@ -163,6 +190,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 70,
         height: 70,
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
@@ -184,7 +226,7 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
@@ -195,7 +237,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
@@ -260,6 +302,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         fastLogin: (payload) => dispatch(authActions.fastLogin(payload)),
         checkActivisionCode: (code, mobileNumber) => dispatch(authActions.checkActivisionCode(code, mobileNumber)),
         checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))

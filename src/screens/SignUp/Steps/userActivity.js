@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native'
 import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { Button, Item, Label, Radio } from 'native-base';
@@ -21,6 +21,7 @@ class UserActivity extends React.Component {
         this.state = {
             activityZone: '',
             activityZoneError: '',
+            loaded: false,
             activityTypeError: '',
             activityType: '',
             selectedCategoryId: null
@@ -30,6 +31,14 @@ class UserActivity extends React.Component {
 
     componentDidMount() {
         this.props.fetchAllActivityZones();
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && Object.entries(this.props.activityZones).length) {
+            const { activityZones, activityType, activityZone } = this.props;
+            this.setState({ activityType, selectedCategoryId: activityZone, loaded: true })
+        }
     }
 
     onSubmit = () => {
@@ -57,7 +66,7 @@ class UserActivity extends React.Component {
 
         if (isActivityTypeValid && isActivityZoneValid) {
 
-            this.props.setActivityZoneAndType(selectedCategoryId, activityType);
+            this.props.setActivityZoneAndType(selectedCategoryId, activityType, false);
         }
         else {
             this.setState({ activityTypeError, activityZoneError });
@@ -77,11 +86,12 @@ class UserActivity extends React.Component {
 
         return (
             <Spin spinning={loading} >
-                <View style={{ marginTop: -30 }}>
+                <View>
                     <Text style={styles.userText}>
-                        {locales('messages.enterUserBasicInfo')}
+                        {locales('messages.userActivityZone')}
                     </Text>
                     <View style={[styles.textInputPadding, {
+                        marginTop: -20,
                         alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                     }]}>
                         <TouchableOpacity
@@ -102,10 +112,10 @@ class UserActivity extends React.Component {
                                 selectedColor={"#00C569"}
                             />
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <MaterialCommunityIcons
-                                    name="account-tie"
+                                <Image
+                                    source={require('../../../../assets/icons/buyer.png')}
                                     style={{
-                                        fontSize: 25,
+                                        marginHorizontal: 5,
                                         alignSelf: "center",
                                     }}
                                 />
@@ -129,10 +139,10 @@ class UserActivity extends React.Component {
                                 selectedColor={"#00C569"}
                             />
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <MaterialCommunityIcons
-                                    name="shovel"
+                                <Image
+                                    source={require('../../../../assets/icons/seller.png')}
                                     style={{
-                                        fontSize: 25,
+                                        marginHorizontal: 5,
                                         alignSelf: "center",
                                     }}
                                 />
@@ -140,7 +150,7 @@ class UserActivity extends React.Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    {!!activityTypeError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>
+                    {!!activityTypeError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
                         {activityTypeError}</Label>}
 
                     <View style={styles.labelInputPadding}>
@@ -170,7 +180,7 @@ class UserActivity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!activityZoneError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>
+                        {!!activityZoneError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
                             {activityZoneError}</Label>}
                     </View>
                     {/* 
@@ -184,19 +194,48 @@ class UserActivity extends React.Component {
                         }}
                     />
                 </View> */}
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                    >
-                        <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
-                    </Button>
+                    <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                        <Button
+                            onPress={() => this.onSubmit()}
+                            style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
+                            rounded
+                        >
+                            <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
+                        </Button>
+                        <Button
+                            onPress={() => {
+                                this.props.setActivityZoneAndType(selectedCategoryId ? selectedCategoryId : '', activityType ? activityType : '', true);
+                                this.props.changeStep(5);
+                            }}
+                            style={styles.backButtonContainer}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                        </Button>
+                    </View>
+
                 </View>
             </Spin>
         )
     }
 }
 const styles = StyleSheet.create({
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',
         padding: 10,
@@ -255,7 +294,7 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
@@ -266,7 +305,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',

@@ -903,7 +903,7 @@ class ProductDetails extends Component {
                             </View>
                             <FlatList
                                 horizontal={true}
-                                ListEmptyComponent={() => <Text>{locales('titles.noRelatedProductFound')}</Text>}
+                                ListEmptyComponent={() => <Text style={{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.noRelatedProductFound')}</Text>}
                                 keyExtractor={(_, index) => index.toString()}
                                 data={relatedProductsArray}
                                 renderItem={({ item }) => (
@@ -922,7 +922,7 @@ class ProductDetails extends Component {
                                                 source={{
                                                     uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
                                                 }} />
-                                            <Text style={{ paddingHorizontal: 10, alignSelf: 'center', width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                            <Text style={{ paddingHorizontal: 10, alignSelf: 'center', }}>
                                                 {item.product_name}</Text>
                                             <Text style={{ paddingHorizontal: 10, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }}>
                                                 {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>

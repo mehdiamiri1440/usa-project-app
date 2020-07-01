@@ -6,6 +6,7 @@ import { deviceHeight, deviceWidth } from '../../../utils/index'
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { validator } from '../../../utils';
 import OutlinedTextField from '../../../components/floatingInput';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as authActions from '../../../redux/auth/actions'
 import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
@@ -26,7 +27,11 @@ class UserBasicInfo extends React.Component {
     lastNameRef = React.createRef();
     firstNameRef = React.createRef();
 
-
+    componentDidMount() {
+        if (!!this.props.gender && !!this.props.firstName && !!this.props.lastName) {
+            this.setState({ gender: this.props.gender, lastName: this.props.lastName, firstName: this.props.firstName });
+        }
+    }
 
     onSubmit = () => {
 
@@ -100,12 +105,13 @@ class UserBasicInfo extends React.Component {
         let { lastName, firstName, firstNameError, lastNameError, genderError } = this.state
         return (
             <Spin spinning={loading} >
-                <View style={{ marginTop: -27 }}>
+                <View >
                     <Text style={styles.userText}>
                         {locales('messages.enterUserBasicInfo')}
                     </Text>
                     <View style={[styles.textInputPadding, {
-                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
+                        marginTop: -20,
+                        alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
                     }]}>
                         <TouchableOpacity
                             style={{
@@ -161,11 +167,11 @@ class UserBasicInfo extends React.Component {
                         </TouchableOpacity>
                     </View>
                     {!!genderError && <Label
-                        style={{ fontSize: 14, color: '#D81A1A', marginVertical: -10, marginHorizontal: 20 }}>
+                        style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', marginVertical: -10, marginHorizontal: 20 }}>
                         {genderError}
                     </Label>}
 
-                    <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
+                    <View style={[styles.labelInputPadding]}>
                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('titles.enterFirstName')}
                         </Label>
@@ -184,7 +190,7 @@ class UserBasicInfo extends React.Component {
 
                             />
                         </Item>
-                        {!!firstNameError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{firstNameError}</Label>}
+                        {!!firstNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{firstNameError}</Label>}
                     </View>
                     {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
@@ -217,7 +223,7 @@ class UserBasicInfo extends React.Component {
 
                             />
                         </Item>
-                        {!!lastNameError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{lastNameError}</Label>}
+                        {!!lastNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{lastNameError}</Label>}
                     </View>
                     {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
@@ -230,19 +236,45 @@ class UserBasicInfo extends React.Component {
                             label={locales('titles.lastName')}
                         />
                     </View> */}
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                    >
-                        <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
-                    </Button>
+                    <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between', marginTop: 5 }}>
+                        <Button
+                            onPress={() => this.onSubmit()}
+                            style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
+                            rounded
+                        >
+                            <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
+                        </Button>
+                        <Button
+                            onPress={() => this.props.changeStep(2)}
+                            style={styles.backButtonContainer}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                        </Button>
+                    </View>
+
                 </View>
             </Spin>
         )
     }
 }
 const styles = StyleSheet.create({
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',
         padding: 10,
@@ -267,7 +299,7 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
@@ -278,7 +310,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',

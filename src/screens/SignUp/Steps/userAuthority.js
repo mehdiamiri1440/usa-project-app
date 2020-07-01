@@ -29,6 +29,9 @@ class UserAuthority extends React.Component {
         // if (I18nManager.isRTL) {
         //     I18nManager.forceRTL(false);
         // }
+        if (!!this.props.password) {
+            this.setState({ password: this.props.password });
+        }
     };
 
     onSubmit = () => {
@@ -104,7 +107,7 @@ class UserAuthority extends React.Component {
         let { password, repeatPassword, userName, passwordError, errors, errorFlag } = this.state;
 
         return (
-            <View style={{ marginTop: -30 }}>
+            <View>
                 <Text style={styles.userText}>
                     {locales('labels.registerPassword')}
                 </Text>
@@ -128,9 +131,9 @@ class UserAuthority extends React.Component {
                         label={locales('titles.userName')}
                     />
                 </View> */}
-                <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
+                <View style={[styles.labelInputPadding, { marginTop: -10 }]}>
                     <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterPassword')}
+                        {locales('titles.enterPassword')} <Text style={{ color: 'red' }}>({locales('titles.8CharLeast')})</Text>
                     </Label>
                     <Item regular style={{
                         borderColor: (passwordError ? '#D50000' : (password.length && validator.hasMinLength(password, { minLength: 8 })) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
@@ -141,7 +144,7 @@ class UserAuthority extends React.Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             secureTextEntry={true}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            style={{ direction: 'rtl', textAlign: 'right', fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
                             onChangeText={this.onPasswordSubmit}
                             value={password}
                             placeholder={locales('titles.password')}
@@ -149,7 +152,7 @@ class UserAuthority extends React.Component {
 
                         />
                     </Item>
-                    {!!passwordError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{passwordError}</Label>}
+                    {!!passwordError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{passwordError}</Label>}
                 </View>
                 {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
@@ -197,16 +200,27 @@ class UserAuthority extends React.Component {
                         label={locales('titles.repeatPassword')}
                     />
                 </View> */}
-                <Button
-                    onPress={() => this.onSubmit()}
-                    style={!password || password.length < 8
-                        ? styles.disableLoginButton
-                        : styles.loginButton
-                    }
-                    rounded
-                >
-                    <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                </Button>
+                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!password || password.length < 8
+                            ? styles.disableLoginButton
+                            : styles.loginButton
+                        }
+                        rounded
+                    >
+                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                    </Button>
+                    <Button
+                        onPress={() => this.props.changeStep(4)}
+                        style={styles.backButtonContainer}
+                        rounded
+                    >
+                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    </Button>
+                </View>
+
             </View>
         )
     }
@@ -222,6 +236,21 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         color: '#155724'
     },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
     buttonText: {
         color: 'white',
         width: '100%',
@@ -236,7 +265,7 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
@@ -247,7 +276,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.8,
+        width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',

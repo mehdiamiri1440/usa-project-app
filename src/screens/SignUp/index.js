@@ -9,6 +9,7 @@ import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
 import * as authActions from '../../redux/auth/actions';
+import * as profileActions from '../../redux/profile/actions';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils';
 import Spin from '../../components/loading/loading';
@@ -20,6 +21,7 @@ class SignUp extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            verificationCode: '',
             mobileNumber: '',
             firstName: '',
             lastName: '',
@@ -28,6 +30,7 @@ class SignUp extends React.Component {
             userName: '',
             password: '',
             activityZone: '',
+            signUpError: '',
             activityType: '',
             city: '',
             province: '',
@@ -75,8 +78,8 @@ class SignUp extends React.Component {
         this.setState({ userName, password }, () => this.changeStep(6))
     };
 
-    setActivityZoneAndType = (activityZone, activityType) => {
-        this.setState({ activityZone, activityType }, () => this.submitRegister());
+    setActivityZoneAndType = (activityZone, activityType, fromBack) => {
+        this.setState({ activityZone, activityType }, () => { if (!fromBack) this.submitRegister() });
     };
 
     submitRegister = () => {
@@ -109,33 +112,56 @@ class SignUp extends React.Component {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
-                    })
-                }, 1500);
+                        this.props.fetchUserProfile();
+                        this.setState({ signUpError: '' })
+                    }, 100);
+                })
             })
+        }).catch(err => {
+            this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
         });
+    };
+
+    setVerificationCode = verificationCode => {
+        this.setState({ verificationCode }, () => {
+            this.changeStep(3);
+        })
     }
 
     renderSteps = () => {
-        let { stepNumber } = this.state
+        let {
+            stepNumber,
+            mobileNumber,
+            verificationCode,
+            gender,
+            firstName,
+            lastName,
+            province,
+            city,
+            password,
+            activityType,
+            activityZone
+        } = this.state;
+
         switch (stepNumber) {
 
             case 1: {
-                return <Login setMobileNumber={this.setMobileNumber}  {...this.props} />
+                return <Login mobileNumber={mobileNumber} changeStep={this.changeStep} setMobileNumber={this.setMobileNumber}  {...this.props} />
             }
             case 2: {
-                return <EnterActivisionCode changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
+                return <EnterActivisionCode setVerificationCode={this.setVerificationCode} verificationCode={verificationCode} changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
             }
             case 3: {
-                return <UserBasicInfo {...this.props} setFullNameAndGender={this.setFullNameAndGender} />
+                return <UserBasicInfo gender={gender} firstName={firstName} lastName={lastName} {...this.props} changeStep={this.changeStep} setFullNameAndGender={this.setFullNameAndGender} />
             }
             case 4: {
-                return <ChooseCity {...this.props} setCityAndProvice={this.setCityAndProvice} />
+                return <ChooseCity province={province} city={city} {...this.props} changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice} />
             }
             case 5: {
-                return <UserAuthority setUserAuthorities={this.setUserAuthorities} {...this.props} />
+                return <UserAuthority password={password} changeStep={this.changeStep} setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             case 6: {
-                return <UserActivity setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
+                return <UserActivity activityType={activityType} activityZone={activityZone} changeStep={this.changeStep} setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             default:
                 break;
@@ -144,7 +170,7 @@ class SignUp extends React.Component {
     }
     render() {
         let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
-        let { successfullAlert, stepNumber } = this.state;
+        let { successfullAlert, stepNumber, signUpError } = this.state;
         return (
             <ScrollView
                 keyboardShouldPersistTaps='handled'
@@ -155,7 +181,7 @@ class SignUp extends React.Component {
                         end={{ x: 0.8, y: 0.2 }}
                         colors={['#00C569', '#21AD93']}
                     >
-                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: 10 }]}>
+                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: -5 }]}>
                             <Text
                                 style={[styles.headerTextStyle]}
                             >
@@ -164,11 +190,11 @@ class SignUp extends React.Component {
                         </View >
                     </LinearGradient>
                     <View style={{
-                        width: deviceWidth, paddingVertical: 10,
+                        width: deviceWidth,
                         flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                     }}>
                         <View style={{
-                            marginTop: 25,
+                            marginTop: 20,
                             flexDirection: 'row-reverse',
                             alignItems: 'stretch',
                             alignContent: 'center', alignSelf: 'center',
@@ -180,7 +206,8 @@ class SignUp extends React.Component {
                                     <React.Fragment key={index}>
                                         <Text
                                             style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                textAlign: 'center', color: 'white', alignItems: 'center',
+                                                justifyContent: 'center',
                                                 alignSelf: 'center', alignContent: 'center',
                                                 shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
@@ -210,8 +237,14 @@ class SignUp extends React.Component {
                         </View>
                     </View>
 
+                    {signUpError ? <Text style={{
+                        color: 'white', backgroundColor: '#DC3545',
+                        padding: 10, textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 16,
+                        marginVertical: 10
+                    }}>{signUpError}</Text> : null}
                     <View style={styles.stepsContainer}>
-                        {successfullAlert && <View style={styles.loginFailedContainer}>
+                        {successfullAlert && <View style={[styles.loginFailedContainer, { marginVertical: 10 }]}>
                             <Text
                                 style={styles.loginFailedText}
                             >
@@ -228,7 +261,6 @@ class SignUp extends React.Component {
 }
 const styles = StyleSheet.create({
     stepsContainer: {
-        marginVertical: 30
     },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',
@@ -291,6 +323,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
         login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
 

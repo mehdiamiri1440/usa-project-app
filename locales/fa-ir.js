@@ -240,12 +240,14 @@ export default {
     'titles.writeDescription': 'توضیح دهید',
     'titles.submitInformation': 'ثبت اطلاعات',
     'titles.chatHistoryIsEmpty': 'تاریخچه پیام‌ها خالی می‌باشد',
+    'titles.8CharLeast': 'حداقل 8 کارکتر',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌نام وارد نمایید . ",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",
     'messages.enterUserBasicInfo': 'ثبت مشخصات فردی شما',
     'messages.enterPhoneNumberToGetCode': 'شماره همراه خود را برای دریافت کد فعال‌سازی وارد کنید',
+    'messages.userActivityZone': 'حوزه فعالیت شما',
     'messages.backToLogin': 'درصورت داشتن  حساب وارد باسکول شوید',
     'messages.codeExpirationTime': 'مدت اعتبار کد',
     'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شده است را اینجا وارد کنید'

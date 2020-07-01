@@ -25,6 +25,12 @@ class Login extends React.Component {
     mobileNumberRef = React.createRef();
     passwordRef = React.createRef();
 
+    componentDidMount() {
+        if (!!this.props.mobileNumber) {
+            this.setState({ mobileNumber: this.props.mobileNumber })
+        }
+    }
+
     onMobileNumberSubmit = mobileNumber => {
         this.setState(() => ({
             mobileNumber,
@@ -76,7 +82,7 @@ class Login extends React.Component {
                     keyboardShouldPersistTaps='handled'
                 >
 
-                    <View style={{ alignSelf: 'flex-start', marginTop: -18 }}>
+                    <View style={{ alignSelf: 'flex-start' }}>
                         <Text style={[styles.userText, { fontSize: 18 }]}>
                             {locales('messages.signedUpUser')}
                         </Text>
@@ -87,7 +93,7 @@ class Login extends React.Component {
                                 </Text>
                             </View>
                         } */}
-                        <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
+                        <View style={[styles.labelInputPadding,]}>
                             <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                 {locales('titles.enterPhoneNumber')}
                             </Label>
@@ -107,7 +113,7 @@ class Login extends React.Component {
 
                                 />
                             </Item>
-                            {!!mobileNumberError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{mobileNumberError}</Label>}
+                            {!!mobileNumberError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>{mobileNumberError}</Label>}
                         </View>
                         {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
