@@ -302,32 +302,6 @@ class Profile extends Component {
                     </View>
                 </View>
 
-                {(userProfileLoading || profileStatisticsLoading
-                    || profileByUserNameLoading || productsListByUserNameLoading) ?
-                    <View style={{
-                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
-                        position: 'absolute',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white',
-                    }}>
-                        <ActivityIndicator size="large"
-                            style={{
-                                position: 'absolute', left: '44%', top: '40%',
-                                shadowOffset: { width: 20, height: 20 },
-                                shadowColor: 'black',
-                                shadowOpacity: 1.0,
-                                elevation: 5,
-                                borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                            }}
-                            color="#00C569"
-
-                        />
-                    </View> : null}
 
 
                 <ScrollView
@@ -433,6 +407,7 @@ class Profile extends Component {
                             />
                         </View>
                         <View style={{
+                            width: '50%',
                             borderRadius: 4, borderWidth: 0.8, borderRightWidth: 0, borderColor: '#777777',
                             padding: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0,
                             marginVertical: 10,
