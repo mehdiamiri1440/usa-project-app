@@ -500,7 +500,11 @@ class ProductsList extends PureComponent {
                                 <Text
                                     style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', color: '#BEBEBE', fontSize: 16 }}
                                 >
-                                    {locales('titles.AllIran')}
+                                    {
+                                        (city && cities.find(item => item.id == city).city_name) ||
+                                        (province && provinces.find(item => item.id == province).province_name) ||
+                                        locales('titles.AllIran')
+                                    }
                                 </Text>
                             </TouchableOpacity>
                             <Input value={searchText}

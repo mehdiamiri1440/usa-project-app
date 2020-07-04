@@ -252,6 +252,14 @@ class ProductDetails extends Component {
 
 
 
+    elevatorPay = () => {
+        return Linking.canOpenURL(`https://www.buskool.com/payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
+            if (supported) {
+                Linking.openURL(`https://www.buskool.com/payment/elevator/${this.props.productDetails.main.id}`);
+            }
+        })
+    };
+
     render() {
         const {
             relatedProductsArray,
@@ -382,7 +390,10 @@ class ProductDetails extends Component {
                                 </Paragraph>
                             </View>
                             <Dialog.Content>
-                                <Text style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}>
+                                <Text style={{
+                                    width: '100%', textAlign: 'center',
+                                    fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                                }}>
                                     {formatter.numberWithCommas(25000)} {locales('titles.toman')}
                                 </Text>
                                 <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
@@ -396,7 +407,7 @@ class ProductDetails extends Component {
                                 <Button
                                     style={[styles.loginButton, { width: '50%' }]}
                                     onPress={() => this.setState({ elevatorFlag: false }, () => {
-                                        return this.props.navigation.navigate('PromoteRegistration')
+                                        return this.elevatorPay();
                                     })}>
                                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                     </Text>
