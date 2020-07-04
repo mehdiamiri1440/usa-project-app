@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label, Picker } from 'native-base';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Dropdown } from 'react-native-material-dropdown';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -12,8 +12,6 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { TextField } from '../../../components/floatingInput';
 import { dataGenerator, validator } from '../../../utils';
-import Spin from '../../../components/loading/loading';
-
 
 let tempDefaults = [
     {
@@ -226,113 +224,114 @@ class ProductMoreDetails extends Component {
 
         return (
             <ScrollView style={{ height: deviceHeight * 0.5 }}>
-                <Spin spininng={this.props.addNewProductLoading}>
-                    {!!this.props.addNewProductMessage &&
-                        this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
-                            <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                        </View>}
-                    <View
-                        style={{ backgroundColor: 'white' }}>
-                        <Text
-                            style={{
-                                marginVertical: 10,
-                                color: '#666666',
-                                fontSize: 20,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                paddingHorizontal: 10
-                            }}
-                        >
-                            {locales('labels.addMoreDetails')}
-                        </Text>
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
 
-                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
-                                <Text
-                                    style={{
-                                        color: 'red',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {locales('labels.example')} :
+
+                {!!this.props.addNewProductMessage &&
+                    this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
+                    </View>}
+                <View
+                    style={{ backgroundColor: 'white' }}>
+                    <Text
+                        style={{
+                            marginVertical: 10,
+                            color: '#666666',
+                            fontSize: 20,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            paddingHorizontal: 10
+                        }}
+                    >
+                        {locales('labels.addMoreDetails')}
+                    </Text>
+                    <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
+
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text
+                                style={{
+                                    color: 'red',
+                                    fontSize: 14,
+                                }}
+                            >
+                                {locales('labels.example')} :
                             </Text>
-                                <Text
-                                    style={{
-                                        color: '#666666',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {locales('labels.boxing')}
-                                </Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                                <Text
-                                    style={{
-                                        color: 'red',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {locales('labels.example')} :
+                            <Text
+                                style={{
+                                    color: '#666666',
+                                    fontSize: 14,
+                                }}
+                            >
+                                {locales('labels.boxing')}
                             </Text>
-                                <Text
-                                    style={{
-                                        color: '#666666',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {locales('labels.8kMotherBox')}
-                                </Text>
-                            </View>
-
-
                         </View>
 
-                        {detailsArray.map((detail, index) => (
-                            <>
-                                {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
-                                    key={detail.keyId}
-                                    style={{
-                                        flexDirection: 'row-reverse', paddingBottom: 0,
-                                        justifyContent: 'space-between', alignItems: 'center', padding: 5
-                                    }}>
-                                    <TouchableOpacity
-                                        onPress={() => this.deleteRow(index)}
-                                        style={{
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            height: 80
-                                        }}>
-                                        <FontAwesome name='trash' color='red' size={25} />
-                                    </TouchableOpacity>
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text
+                                style={{
+                                    color: 'red',
+                                    fontSize: 14,
+                                }}
+                            >
+                                {locales('labels.example')} :
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#666666',
+                                    fontSize: 14,
+                                }}
+                            >
+                                {locales('labels.8kMotherBox')}
+                            </Text>
+                        </View>
 
-                                    <View style={styles.labelInputPadding}>
-                                        <Item regular
-                                            style={{
-                                                width: deviceWidth * 0.45,
-                                                height: 55,
-                                                borderRadius: 5,
-                                                alignSelf: 'center',
-                                                borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
+
+                    </View>
+
+                    {detailsArray.map((detail, index) => (
+                        <>
+                            {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
+                                key={detail.keyId}
+                                style={{
+                                    flexDirection: 'row-reverse', paddingBottom: 0,
+                                    justifyContent: 'space-between', alignItems: 'center', padding: 5
+                                }}>
+                                <TouchableOpacity
+                                    onPress={() => this.deleteRow(index)}
+                                    style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: 80
+                                    }}>
+                                    <FontAwesome name='trash' color='red' size={25} />
+                                </TouchableOpacity>
+
+                                <View style={styles.labelInputPadding}>
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.45,
+                                            height: 55,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
+                                        }}
+                                    >
+                                        <RNPickerSelect
+                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
+                                            style={styles}
+                                            ref={this.pickerRef}
+                                            placeholder={{
+                                                label: locales('titles.selectOne'),
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                value: detail.itemKey
                                             }}
-                                        >
-                                            <RNPickerSelect
-                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                                useNativeAndroidPickerStyle={false}
-                                                onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
-                                                style={styles}
-                                                ref={this.pickerRef}
-                                                placeholder={{
-                                                    label: locales('titles.selectOne'),
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    value: detail.itemKey
-                                                }}
-                                                items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
-                                                    label: item.name, value: item.name
-                                                }))}
-                                            />
-                                        </Item>
-                                    </View>
-                                    {/* <Dropdown
+                                            items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
+                                                label: item.name, value: item.name
+                                            }))}
+                                        />
+                                    </Item>
+                                </View>
+                                {/* <Dropdown
                                 error={detail.error}
                                 onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
                                 label={locales('titles.selectOne')}
@@ -343,28 +342,28 @@ class ProductMoreDetails extends Component {
                                     width: 195
                                 }}
                             /> */}
-                                    <View style={{
-                                        width: 170,
+                                <View style={{
+                                    width: 170,
 
+                                }}>
+                                    <Item error={detail.error} regular style={{
+                                        height: 55,
+                                        borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                     }}>
-                                        <Item error={detail.error} regular style={{
-                                            height: 55,
-                                            borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                disabled={!detail.itemKey}
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
-                                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                                placeholder={locales('titles.writeDescription')}
+                                        <Input
+                                            disabled={!detail.itemKey}
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            autoCompleteType='off'
+                                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                                            onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                            placeholder={locales('titles.writeDescription')}
 
 
-                                            />
-                                        </Item>
-                                    </View>
-                                    {/* <TextField
+                                        />
+                                    </Item>
+                                </View>
+                                {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
                                 onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                 error={detail.error}
@@ -375,50 +374,56 @@ class ProductMoreDetails extends Component {
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
                             /> */}
-                                </View>}
-                                {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
-                            </>
-                        )
-                        )}
+                            </View>}
+                            {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                        </>
+                    )
+                    )}
 
 
-                        <View style={{
-                            marginVertical: 20, flexDirection: 'row',
-                            width: deviceWidth, justifyContent: 'space-between'
-                        }}>
-                            <Button
-                                onPress={() => this.addMoreRow()}
-                                style={styles.addMoreButton}
-                                rounded
-                            >
-                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                                <AntDesign name='plus' size={25} color='#00C569' />
-                            </Button>
-                        </View>
-
-                        <View style={{
-                            marginVertical: 20, flexDirection: 'row',
-                            width: deviceWidth, justifyContent: 'space-between'
-                        }}>
-                            <Button
-                                onPress={() => this.onSubmit()}
-                                style={styles.loginButton}
-                                rounded
-                            >
-                                <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
-                            </Button>
-                            <Button
-                                onPress={() => this.props.changeStep(5)}
-                                style={styles.backButtonContainer}
-                                rounded
-                            >
-                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                            </Button>
-                        </View>
-
+                    <View style={{
+                        marginVertical: 20, flexDirection: 'row',
+                        width: deviceWidth, justifyContent: 'space-between'
+                    }}>
+                        <Button
+                            onPress={() => this.addMoreRow()}
+                            style={styles.addMoreButton}
+                            rounded
+                        >
+                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                            <AntDesign name='plus' size={25} color='#00C569' />
+                        </Button>
                     </View>
-                </Spin>
+
+                    <View style={{
+                        marginVertical: 20, flexDirection: 'row',
+                        width: deviceWidth, justifyContent: 'space-between'
+                    }}>
+                        <Button
+                            onPress={() => this.onSubmit()}
+                            style={styles.loginButton}
+                            rounded
+                        >
+                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
+                            <ActivityIndicator size="small" color="white"
+                                animating={!!this.props.addNewProductLoading}
+                                style={{
+                                    position: 'absolute', left: 0, top: '25%',
+                                    width: 30, height: 30, borderRadius: 15
+                                }}
+                            />
+                        </Button>
+                        <Button
+                            onPress={() => this.props.changeStep(5)}
+                            style={styles.backButtonContainer}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                        </Button>
+                    </View>
+
+                </View>
             </ScrollView >
         )
     }

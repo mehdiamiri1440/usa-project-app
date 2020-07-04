@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import * as authReducer from '../../redux/auth/actions';
-import Spin from '../../components/loading/loading';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -68,42 +67,52 @@ class Settings extends React.Component {
                 </View>
 
                 <ScrollView style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
-                    <Spin spinning={this.props.logOutLoading}>
-                        {settingRoutes.map((route, index) => {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
+                    {settingRoutes.map((route, index) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => this.handleRouteChange(route.name)}
+                                style={{
+                                    alignContent: 'center',
+                                    backgroundColor: 'white',
+                                    borderRadius: 5,
+                                    padding: 20,
+                                    marginVertical: 10,
+                                    flexDirection: 'row-reverse',
+                                }}
+                                key={index}>
+                                <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                    <View style={{
                                         borderRadius: 5,
-                                        padding: 20,
-                                        marginVertical: 10,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-                                    <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                        <View style={{
-                                            borderRadius: 5,
-                                            backgroundColor: '#666666',
-                                            padding: 5
-                                        }}>
-                                            {route.icon}
-                                        </View>
-                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                            {locales(route.label)}
-                                        </Text>
+                                        backgroundColor: '#666666',
+                                        padding: 5
+                                    }}>
+                                        {route.icon}
                                     </View>
-                                    <View style={{ width: '55%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <Ionicons color={'#666666'} size={25} name='ios-arrow-back' />
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        })}
-                    </Spin>
+                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                        {locales(route.label)}
+                                    </Text>
+                                </View>
+                                <View style={{ width: '55%', flexDirection: 'row' }}>
+                                    <Text style={{ textAlignVertical: 'center' }}>
+                                        <Ionicons color={'#666666'} size={25} name='ios-arrow-back' />
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+
+                        )
+                    })}
                 </ScrollView>
+                {this.props.logOutLoading ? <ActivityIndicator size="small" color="#00C569"
+                    style={{
+                        position: 'absolute', left: '44%', top: '40%',
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white', width: 40, height: 40, borderRadius: 20
+                    }}
+                /> : null}
             </>
         )
     }

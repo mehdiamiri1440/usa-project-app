@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking, Alert } from 'react-native';
+import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Input, Label, Item } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -313,9 +313,22 @@ class Product extends PureComponent {
 
         return (
             <SafeAreaView>
-                <Spin spinning={deleteProductLoading || editProductLoading}>
 
-                    {/* 
+
+                {(deleteProductLoading || editProductLoading) ? <ActivityIndicator size="large" color="#00C569"
+                    style={{
+                        position: 'absolute', left: '44%', top: '40%',
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                    }}
+                /> : null}
+
+
+                {/* 
                     <Portal>
                         <Dialog
                             visible={showValidatedUserModal}
@@ -393,467 +406,474 @@ class Product extends PureComponent {
 
  */}
 
-                    {editionFlag ? <Portal>
-                        <Dialog
-                            visible={editionFlag}
-                            onDismiss={() => this.setState({ editionFlag: false })}>
-                            <View style={{
-                                padding: 10, marginBottom: 5,
-                                borderBottomWidth: 0.7, width: '100%',
-                                justifyContent: 'center', alignItems: 'center',
-                                borderBottomColor: '#BEBEBE'
+                {editionFlag ? <Portal>
+                    <Dialog
+                        visible={editionFlag}
+                        onDismiss={() => this.setState({ editionFlag: false })}>
+                        <View style={{
+                            padding: 10, marginBottom: 5,
+                            borderBottomWidth: 0.7, width: '100%',
+                            justifyContent: 'center', alignItems: 'center',
+                            borderBottomColor: '#BEBEBE'
+                        }}>
+                            <Text style={{
+                                textAlign: 'center', width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
                             }}>
-                                <Text style={{
-                                    textAlign: 'center', width: '100%',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
-                                }}>
-                                    {locales('labels.edition', { fieldName: `${category_name} | ${sub_category_name}` })}
-                                </Text>
-                            </View>
-                            {!showEditionMessage ?
-                                <>
-                                    <Dialog.ScrollArea>
-                                        <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('titles.amount')}
-                                            </Label>
-                                            <Item regular style={{
-                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                            }}>
-                                                <Input
-                                                    autoCapitalize='none'
-                                                    autoCorrect={false}
-                                                    keyboardType='number-pad'
-                                                    autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
-                                                    onChangeText={this.onAmountSubmit}
-                                                    value={amount}
-                                                    placeholder={locales('titles.amountWithExample')}
-                                                    ref={this.amountRef}
+                                {locales('labels.edition', { fieldName: `${category_name} | ${sub_category_name}` })}
+                            </Text>
+                        </View>
+                        {!showEditionMessage ?
+                            <>
+                                <Dialog.ScrollArea>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.amount')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                onChangeText={this.onAmountSubmit}
+                                                value={amount}
+                                                placeholder={locales('titles.amountWithExample')}
+                                                ref={this.amountRef}
 
-                                                />
-                                            </Item>
-                                            {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
-                                        </View>
-                                        <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('titles.minimumOrder')}
-                                            </Label>
-                                            <Item regular style={{
-                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                            }}>
-                                                <Input
-                                                    autoCapitalize='none'
-                                                    autoCorrect={false}
-                                                    autoCompleteType='off'
-                                                    keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                    onChangeText={this.onMinimumOrderSubmit}
-                                                    value={minimumOrder}
-                                                    placeholder={locales('titles.minimumOrderWithExample')}
-                                                    ref={this.minimumOrderRef}
-
-                                                />
-                                            </Item>
-                                            {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
-                                        </View>
-                                        <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('titles.minimumPrice')}
-                                            </Label>
-                                            <Item regular style={{
-                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                            }}>
-                                                <Input
-                                                    autoCapitalize='none'
-                                                    autoCorrect={false}
-                                                    keyboardType='number-pad'
-                                                    autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                    onChangeText={this.onMinimumPriceSubmit}
-                                                    value={minimumPrice}
-                                                    placeholder={locales('titles.minimumPriceWithExample')}
-                                                    ref={this.minimumPriceRef}
-
-                                                />
-                                            </Item>
-                                            {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumPriceError}</Label>}
-                                        </View>
-                                        <View style={styles.textInputPadding}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('titles.maximumPrice')}
-                                            </Label>
-                                            <Item regular style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                            }}>
-                                                <Input
-                                                    autoCapitalize='none'
-                                                    autoCorrect={false}
-                                                    autoCompleteType='off'
-                                                    keyboardType='number-pad'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                    onChangeText={this.onMaximumPriceSubmit}
-                                                    value={maximumPrice}
-                                                    placeholder={locales('titles.maximumPriceWithExample')}
-                                                    ref={this.maximumPriceRef}
-
-                                                />
-                                            </Item>
-                                            {!!maximumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{maximumPriceError}</Label>}
-                                        </View>
-                                    </Dialog.ScrollArea>
-                                    <Dialog.Actions style={{
-                                        width: '100%',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Button
-                                            style={[styles.loginButton, { width: '50%' }]}
-                                            onPress={this.onSubmit}>
-                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.submitChanges')}
-                                            </Text>
-                                        </Button>
-                                    </Dialog.Actions>
-                                </>
-                                :
-                                <Dialog.Content style={{ padding: 50 }}>
-                                    <View style={[{ justifyContent: 'center', alignItems: 'center' },
-                                    !editProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
-                                        {editProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
-                                            name='checkbox-marked-circle-outline' color='white' size={40}
-                                        />}
-                                        <Paragraph
-                                            style={[!editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
-                                        >
-                                            {editionMessageText}
-                                        </Paragraph>
+                                            />
+                                        </Item>
+                                        {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
                                     </View>
-                                </Dialog.Content>
-                            }
-                        </Dialog>
-                    </Portal>
-                        : null}
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.minimumOrder')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMinimumOrderSubmit}
+                                                value={minimumOrder}
+                                                placeholder={locales('titles.minimumOrderWithExample')}
+                                                ref={this.minimumOrderRef}
 
+                                            />
+                                        </Item>
+                                        {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
+                                    </View>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.minimumPrice')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMinimumPriceSubmit}
+                                                value={minimumPrice}
+                                                placeholder={locales('titles.minimumPriceWithExample')}
+                                                ref={this.minimumPriceRef}
 
+                                            />
+                                        </Item>
+                                        {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumPriceError}</Label>}
+                                    </View>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.maximumPrice')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMaximumPriceSubmit}
+                                                value={maximumPrice}
+                                                placeholder={locales('titles.maximumPriceWithExample')}
+                                                ref={this.maximumPriceRef}
 
-
-                    <Portal>
-                        <Dialog
-                            visible={elevatorFlag}
-                            onDismiss={() => this.setState({ elevatorFlag: false })}>
-                            <View style={{
-                                padding: 10, marginBottom: 5,
-                                borderBottomWidth: 0.7, width: '100%',
-                                justifyContent: 'center', alignItems: 'center',
-                                borderBottomColor: '#BEBEBE'
-                            }}>
-                                <Paragraph style={{
-                                    textAlign: 'center', width: '100%',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
+                                            />
+                                        </Item>
+                                        {!!maximumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{maximumPriceError}</Label>}
+                                    </View>
+                                </Dialog.ScrollArea>
+                                <Dialog.Actions style={{
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}>
-                                    {locales('labels.doElevation')}
-                                </Paragraph>
-                            </View>
-                            <Dialog.Content>
-                                <Text
-                                    style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}
-                                >
-                                    {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                                    <Button
+                                        style={[styles.loginButton, { width: '50%' }]}
+                                        onPress={this.onSubmit}>
+                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.submitChanges')}
+                                        </Text>
+                                        <ActivityIndicator
+                                            animating={!!editProductLoading}
+                                            size="small" color="white"
+                                            style={{
+                                                position: 'absolute', left: '3%', top: '24%',
+                                                width: 30, height: 30, borderRadius: 15
+                                            }}
+                                        />
+                                    </Button>
+                                </Dialog.Actions>
+                            </>
+                            :
+                            <Dialog.Content style={{ padding: 50 }}>
+                                <View style={[{ justifyContent: 'center', alignItems: 'center' },
+                                !editProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
+                                    {editProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
+                                        name='checkbox-marked-circle-outline' color='white' size={40}
+                                    />}
+                                    <Paragraph
+                                        style={[!editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
+                                    >
+                                        {editionMessageText}
+                                    </Paragraph>
+                                </View>
+                            </Dialog.Content>
+                        }
+                    </Dialog>
+                </Portal>
+                    : null}
+
+
+
+
+                <Portal>
+                    <Dialog
+                        visible={elevatorFlag}
+                        onDismiss={() => this.setState({ elevatorFlag: false })}>
+                        <View style={{
+                            padding: 10, marginBottom: 5,
+                            borderBottomWidth: 0.7, width: '100%',
+                            justifyContent: 'center', alignItems: 'center',
+                            borderBottomColor: '#BEBEBE'
+                        }}>
+                            <Paragraph style={{
+                                textAlign: 'center', width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
+                            }}>
+                                {locales('labels.doElevation')}
+                            </Paragraph>
+                        </View>
+                        <Dialog.Content>
+                            <Text
+                                style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}
+                            >
+                                {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                            </Text>
+                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
+                                {locales('titles.elevationText')}</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.loginButton, { width: '50%' }]}
+                                onPress={() => this.setState({ elevatorFlag: false }, () => {
+                                    return this.elevatorPay()
+                                })}>
+                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                 </Text>
-                                <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                    {locales('titles.elevationText')}</Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+
+
+
+                <Portal>
+                    <Dialog
+                        visible={deleteProductFlag}
+                        onDismiss={() => this.setState({ deleteProductFlag: false })}>
+                        <View style={{
+                            padding: 10, marginBottom: 5,
+                            borderBottomWidth: 0.7, width: '100%',
+                            justifyContent: 'center', alignItems: 'center',
+                            borderBottomColor: '#BEBEBE'
+                        }}>
+                            <Paragraph style={{
+                                textAlign: 'center', width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
+                            }}>
+                                {locales('labels.deleteProduct')}
+                            </Paragraph>
+                        </View>
+                        {!showDeletationMessage ? <>
+                            <Dialog.Content>
+                                <Feather
+                                    style={{ alignSelf: 'center', width: '100%', padding: 5, textAlign: 'center' }}
+                                    name='alert-circle' size={40} color='#FFE484' />
+                                <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
+                                    {locales('titles.doYouWishToDeleteProduct')} ؟ </Paragraph>
                             </Dialog.Content>
                             <Dialog.Actions style={{
                                 width: '100%',
-                                justifyContent: 'center',
-                                alignItems: 'center'
+                                justifyContent: 'space-between',
+                                alignItems: 'space-between'
                             }}>
                                 <Button
-                                    style={[styles.loginButton, { width: '50%' }]}
-                                    onPress={() => this.setState({ elevatorFlag: false }, () => {
-                                        return this.elevatorPay()
-                                    })}>
-                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                    style={[styles.loginButton, { width: '40%' }]}
+                                    onPress={() => this.setState({ deleteProductFlag: false })}>
+                                    <Text style={styles.buttonText}>{locales('titles.cancel')}
+                                    </Text>
+                                </Button>
+                                <Button
+                                    style={[styles.loginButton, { backgroundColor: '#E41C39', width: '40%' }]}
+                                    onPress={() => this.deleteProduct(productId)}>
+                                    <Text style={styles.buttonText}>
+                                        {locales('titles.deleteIt')}
                                     </Text>
                                 </Button>
                             </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-
-
-
-                    <Portal>
-                        <Dialog
-                            visible={deleteProductFlag}
-                            onDismiss={() => this.setState({ deleteProductFlag: false })}>
-                            <View style={{
-                                padding: 10, marginBottom: 5,
-                                borderBottomWidth: 0.7, width: '100%',
-                                justifyContent: 'center', alignItems: 'center',
-                                borderBottomColor: '#BEBEBE'
-                            }}>
-                                <Paragraph style={{
-                                    textAlign: 'center', width: '100%',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
-                                }}>
-                                    {locales('labels.deleteProduct')}
-                                </Paragraph>
-                            </View>
-                            {!showDeletationMessage ? <>
-                                <Dialog.Content>
-                                    <Feather
-                                        style={{ alignSelf: 'center', width: '100%', padding: 5, textAlign: 'center' }}
-                                        name='alert-circle' size={40} color='#FFE484' />
-                                    <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                        {locales('titles.doYouWishToDeleteProduct')} ؟ </Paragraph>
-                                </Dialog.Content>
-                                <Dialog.Actions style={{
-                                    width: '100%',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'space-between'
-                                }}>
-                                    <Button
-                                        style={[styles.loginButton, { width: '40%' }]}
-                                        onPress={() => this.setState({ deleteProductFlag: false })}>
-                                        <Text style={styles.buttonText}>{locales('titles.cancel')}
-                                        </Text>
-                                    </Button>
-                                    <Button
-                                        style={[styles.loginButton, { backgroundColor: '#E41C39', width: '40%' }]}
-                                        onPress={() => this.deleteProduct(productId)}>
-                                        <Text style={styles.buttonText}>
-                                            {locales('titles.deleteIt')}
-                                        </Text>
-                                    </Button>
-                                </Dialog.Actions>
-                            </> :
-                                <Dialog.Content style={{ padding: 50 }}>
-                                    <View style={[{ justifyContent: 'center', alignItems: 'center' },
-                                    deleteProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
-                                        {!deleteProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
-                                            name='checkbox-marked-circle-outline' color='white' size={40}
-                                        />}
-                                        <Paragraph
-                                            style={[deleteProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
-                                        >
-                                            {deleteMessageText}
-                                        </Paragraph>
-                                    </View>
-                                </Dialog.Content>
-                            }
-                        </Dialog>
-                    </Portal>
-
-
-                    {modalFlag && <ChatModal
-                        transparent={false}
-                        visible={modalFlag}
-                        {...this.props}
-                        contact={{ ...selectedContact }}
-                        onRequestClose={() => this.setState({ modalFlag: false })}
-                    />}
-
-                    <Card style={{ width: width, alignSelf: 'center' }}>
-                        <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
-                            <Body >
-                                <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate('Profile', { user_name })}
-                                    activeOpacity={1}
-                                    style={{
-                                        flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
-                                        width: '100%', borderBottomWidth: 1, borderBottomColor: '#7E7E7E'
-                                    }}>
-                                    <Image
-                                        style={{
-                                            alignSelf: 'center', width: deviceWidth * 0.12,
-                                            height: deviceWidth * 0.12, borderRadius: deviceWidth * 0.06,
-                                            marginHorizontal: 5
-                                        }}
-                                        source={!!profile_photo && profile_photo.length ?
-                                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
-                                            :
-                                            require('../../../assets/icons/user.png')
-                                        } />
-                                    <View
-                                        style={{ width: '62%', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
+                        </> :
+                            <Dialog.Content style={{ padding: 50 }}>
+                                <View style={[{ justifyContent: 'center', alignItems: 'center' },
+                                deleteProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
+                                    {!deleteProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
+                                        name='checkbox-marked-circle-outline' color='white' size={40}
+                                    />}
+                                    <Paragraph
+                                        style={[deleteProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
                                     >
-                                        <View>
-                                            <View style={{ flexDirection: 'row-reverse' }}>
-                                                <Text
-                                                    numberOfLines={1}
-                                                    style={{
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        marginHorizontal: 5,
-                                                        fontSize: 18,
-                                                        marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
-                                                        paddingBottom: 2
-                                                    }}>
-                                                    {`${first_name} ${last_name}`}
-                                                </Text>
-                                                {is_verified ? <ValidatedUserIcon /> : null}
-                                            </View>
-                                            {response_rate > 0 && loggedInUserId != myuser_id &&
-                                                <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                                    {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                                                </Text>}
-                                        </View>
+                                        {deleteMessageText}
+                                    </Paragraph>
+                                </View>
+                            </Dialog.Content>
+                        }
+                    </Dialog>
+                </Portal>
 
-                                    </View>
-                                    {loggedInUserId == myuser_id ?
-                                        <Text
-                                            onPress={() => this.setState({ deleteProductFlag: true })}
-                                            style={{ color: '#E41C38', fontSize: 16, textAlignVertical: 'center' }}>
-                                            {locales('labels.deleteProduct')}
-                                        </Text>
-                                        :
-                                        <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
-                                            width: '30%', textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
-                                        }}>
-                                            {locales('labels.seeProfile')}
-                                        </Text>}
-                                </TouchableOpacity>
-                                {active_pakage_type > 1 && <Image
-                                    style={{ position: 'absolute', left: 0, top: 48 }}
-                                    source={require('../../../assets/icons/special-label.png')} />}
-                                <TouchableOpacity
-                                    activeOpacity={1}
-                                    onPress={() => {
-                                        this.props.setProductDetailsId(productId)
-                                        setTimeout(() => {
-                                            return this.props.navigation.push(`ProductDetails${productId}`, { productId, key: productId })
-                                        }, 100);
+
+                {modalFlag && <ChatModal
+                    transparent={false}
+                    visible={modalFlag}
+                    {...this.props}
+                    contact={{ ...selectedContact }}
+                    onRequestClose={() => this.setState({ modalFlag: false })}
+                />}
+
+                <Card style={{ width: width, alignSelf: 'center' }}>
+                    <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
+                        <Body >
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate('Profile', { user_name })}
+                                activeOpacity={1}
+                                style={{
+                                    flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
+                                    width: '100%', borderBottomWidth: 1, borderBottomColor: '#7E7E7E'
+                                }}>
+                                <Image
+                                    style={{
+                                        alignSelf: 'center', width: deviceWidth * 0.12,
+                                        height: deviceWidth * 0.12, borderRadius: deviceWidth * 0.06,
+                                        marginHorizontal: 5
                                     }}
-                                    style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
-                                    <Image
-                                        style={{
-                                            borderRadius: 10,
-                                            width: deviceWidth * 0.25,
-                                            height: deviceWidth * 0.25,
-                                            marginHorizontal: 5
-                                        }}
-                                        source={photos.length ?
-                                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
-                                            :
-                                            require('../../../assets/icons/user.png')
-                                        } />
-
-                                    {photos.length > 0 && <View
-                                        style={{
-                                            flexDirection: 'row-reverse',
-                                            backgroundColor: 'black', position: 'absolute',
-                                            left: 5, bottom: 5, borderRadius: 4, padding: 3
-                                        }}>
-                                        <Entypo name='images' size={20} color='white' />
-                                        <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
-                                    </View>}
-
-                                    <View style={{ width: '60%', justifyContent: 'space-between' }}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
-                                            {category_name} | {sub_category_name} <Text
-                                                style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
-                                                {product_name}
-                                            </Text>
-                                        </Text>
-                                        <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                    source={!!profile_photo && profile_photo.length ?
+                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                        :
+                                        require('../../../assets/icons/user.png')
+                                    } />
+                                <View
+                                    style={{ width: '62%', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
+                                >
+                                    <View>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
                                             <Text
                                                 numberOfLines={1}
-                                                style={{ textAlign: 'right' }}>
-                                                <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    marginHorizontal: 5,
+                                                    fontSize: 18,
+                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 8,
+                                                    paddingBottom: 2
+                                                }}>
+                                                {`${first_name} ${last_name}`}
                                             </Text>
-                                            <Text style={{ color: '#BEBEBE', fontSize: 16 }}>
-                                                {province_name} ، {city_name}
-                                            </Text>
+                                            {is_verified ? <ValidatedUserIcon /> : null}
                                         </View>
-
-                                        <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
-                                            <Text style={{ textAlign: 'right' }}>
-                                                <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
-                                            </Text>
-                                            <Text style={{ color: '#BEBEBE', fontSize: 16 }}>
-                                                {formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}
-                                            </Text>
-                                        </View>
-
+                                        {response_rate > 0 && loggedInUserId != myuser_id &&
+                                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                            </Text>}
                                     </View>
 
-                                </TouchableOpacity>
-
-                                <View style={{
-                                    flexDirection: 'row-reverse',
-                                    alignItems: 'center', padding: 5,
-                                    width: '100%', justifyContent: 'center'
-                                }}>
-                                    {loggedInUserId != myuser_id ?
-                                        <Button
-                                            onPress={() => this.setState({ modalFlag: true })}
-                                            style={[styles.loginButton, {
-                                                width: !!is_elevated ? '92%' : '88%'
-                                            }]}
-                                        >
-                                            <Text style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                                {locales('titles.achiveSaleStatus')}</Text>
-                                            <FontAwesome name='envelope' size={20} color='white'
-                                                style={{ position: 'absolute', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} />
-                                        </Button>
+                                </View>
+                                {loggedInUserId == myuser_id ?
+                                    <Text
+                                        onPress={() => this.setState({ deleteProductFlag: true })}
+                                        style={{ color: '#E41C38', fontSize: 16, textAlignVertical: 'center' }}>
+                                        {locales('labels.deleteProduct')}
+                                    </Text>
+                                    :
+                                    <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
+                                        width: '30%', textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
+                                    }}>
+                                        {locales('labels.seeProfile')}
+                                    </Text>}
+                            </TouchableOpacity>
+                            {active_pakage_type > 1 && <Image
+                                style={{ position: 'absolute', left: 0, top: 48 }}
+                                source={require('../../../assets/icons/special-label.png')} />}
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => {
+                                    this.props.setProductDetailsId(productId)
+                                    setTimeout(() => {
+                                        return this.props.navigation.push(`ProductDetails${productId}`, { productId, key: productId })
+                                    }, 100);
+                                }}
+                                style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
+                                <Image
+                                    style={{
+                                        borderRadius: 10,
+                                        width: deviceWidth * 0.25,
+                                        height: deviceWidth * 0.25,
+                                        marginHorizontal: 5
+                                    }}
+                                    source={photos.length ?
+                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
                                         :
-                                        <View style={{
-                                            flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 10,
-                                            width: !this.props.width ? (!!is_elevated ? deviceWidth * 0.88 : deviceWidth) : (!!is_elevated ? deviceWidth * 0.82 : deviceWidth * 0.94)
-                                        }}>
-                                            <Button
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: 18,
-                                                    borderRadius: 5,
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    width: !!is_elevated ? '45%' : '55%',
-                                                    paddingRight: 40,
-                                                    backgroundColor: '#E41C38'
-                                                }}
-                                            >
-                                                <Text
-                                                    onPress={() => this.setState({ elevatorFlag: true })}
-                                                    style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                                    {locales('titles.elevateProduct')}</Text>
-                                                <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
-                                            </Button>
-                                            <Button
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: 18,
-                                                    borderRadius: 5,
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    width: '40%',
-                                                    paddingRight: 15,
-                                                    backgroundColor: '#000546'
-                                                }}
-                                            >
-                                                <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                                <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
-                                            </Button>
-                                        </View>
-                                    }
-                                    {!!is_elevated && <FontAwesome5
-                                        onPress={() => Toast.show({
-                                            text: locales('titles.elevatorHasAdded'),
-                                            position: "bottom",
-                                            style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
-                                            duration: 3000
-                                        })}
-                                        name='chart-line' size={30} color='white' style={{
-                                            backgroundColor: '#7E7E7E',
-                                            padding: 7, right: loggedInUserId == myuser_id ? 10 : 0, borderRadius: 4
-                                        }}
-                                    />}
+                                        require('../../../assets/icons/user.png')
+                                    } />
+
+                                {photos.length > 0 && <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        backgroundColor: 'black', position: 'absolute',
+                                        left: 5, bottom: 5, borderRadius: 4, padding: 3
+                                    }}>
+                                    <Entypo name='images' size={20} color='white' />
+                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
+                                </View>}
+
+                                <View style={{ width: '60%', justifyContent: 'space-between' }}>
+                                    <Text
+                                        numberOfLines={1}
+                                        style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                        {category_name} | {sub_category_name} <Text
+                                            style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                            {product_name}
+                                        </Text>
+                                    </Text>
+                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{ textAlign: 'right' }}>
+                                            <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                        </Text>
+                                        <Text style={{ color: '#BEBEBE', fontSize: 16 }}>
+                                            {province_name} ، {city_name}
+                                        </Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                        <Text style={{ textAlign: 'right' }}>
+                                            <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
+                                        </Text>
+                                        <Text style={{ color: '#BEBEBE', fontSize: 16 }}>
+                                            {formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}
+                                        </Text>
+                                    </View>
+
                                 </View>
 
-                            </Body>
-                        </CardItem>
-                    </Card>
-                </Spin>
+                            </TouchableOpacity>
+
+                            <View style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center', padding: 5,
+                                width: '100%', justifyContent: 'center'
+                            }}>
+                                {loggedInUserId != myuser_id ?
+                                    <Button
+                                        onPress={() => this.setState({ modalFlag: true })}
+                                        style={[styles.loginButton, {
+                                            width: !!is_elevated ? '92%' : '88%'
+                                        }]}
+                                    >
+                                        <Text style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                            {locales('titles.achiveSaleStatus')}</Text>
+                                        <FontAwesome name='envelope' size={20} color='white'
+                                            style={{ position: 'absolute', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} />
+                                    </Button>
+                                    :
+                                    <View style={{
+                                        flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 10,
+                                        width: !this.props.width ? (!!is_elevated ? deviceWidth * 0.88 : deviceWidth) : (!!is_elevated ? deviceWidth * 0.82 : deviceWidth * 0.94)
+                                    }}>
+                                        <Button
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 18,
+                                                borderRadius: 5,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                width: !!is_elevated ? '45%' : '55%',
+                                                paddingRight: 40,
+                                                backgroundColor: '#E41C38'
+                                            }}
+                                        >
+                                            <Text
+                                                onPress={() => this.setState({ elevatorFlag: true })}
+                                                style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                                {locales('titles.elevateProduct')}</Text>
+                                            <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                        </Button>
+                                        <Button
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 18,
+                                                borderRadius: 5,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                width: '40%',
+                                                paddingRight: 15,
+                                                backgroundColor: '#000546'
+                                            }}
+                                        >
+                                            <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
+                                            <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                        </Button>
+                                    </View>
+                                }
+                                {!!is_elevated && <FontAwesome5
+                                    onPress={() => Toast.show({
+                                        text: locales('titles.elevatorHasAdded'),
+                                        position: "bottom",
+                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
+                                        duration: 3000
+                                    })}
+                                    name='chart-line' size={30} color='white' style={{
+                                        backgroundColor: '#7E7E7E',
+                                        padding: 7, right: loggedInUserId == myuser_id ? 10 : 0, borderRadius: 4
+                                    }}
+                                />}
+                            </View>
+
+                        </Body>
+                    </CardItem>
+                </Card>
             </SafeAreaView >
         )
     }

@@ -8,7 +8,6 @@ import { validator } from '../../../utils';
 import OutlinedTextField from '../../../components/floatingInput';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as authActions from '../../../redux/auth/actions'
-import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 
 
@@ -104,95 +103,94 @@ class UserBasicInfo extends React.Component {
         let { message, loading, error } = this.props
         let { lastName, firstName, firstNameError, lastNameError, genderError } = this.state
         return (
-            <Spin spinning={loading} >
-                <View >
-                    <Text style={styles.userText}>
-                        {locales('messages.enterUserBasicInfo')}
-                    </Text>
-                    <View style={[styles.textInputPadding, {
-                        marginTop: -20,
-                        alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
-                    }]}>
-                        <TouchableOpacity
-                            style={{
-                                width: deviceWidth * 0.3,
-                                borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'woman' ? '#00C569' : '#BDC4CC'),
-                                padding: 20, borderRadius: 5, flexDirection: 'row-reverse', marginHorizontal: 20
-                            }}
+            <View >
+                <Text style={styles.userText}>
+                    {locales('messages.enterUserBasicInfo')}
+                </Text>
+                <View style={[styles.textInputPadding, {
+                    marginTop: -20,
+                    alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
+                }]}>
+                    <TouchableOpacity
+                        style={{
+                            width: deviceWidth * 0.3,
+                            borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'woman' ? '#00C569' : '#BDC4CC'),
+                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse', marginHorizontal: 20
+                        }}
+                        onPress={() => this.setState({ gender: 'woman', genderError: '' })}
+                    >
+                        <Radio
                             onPress={() => this.setState({ gender: 'woman', genderError: '' })}
-                        >
-                            <Radio
-                                onPress={() => this.setState({ gender: 'woman', genderError: '' })}
-                                selected={this.state.gender === 'woman'}
-                                color={"#BEBEBE"}
-                                style={{ marginHorizontal: 10 }}
-                                selectedColor={"#00C569"}
+                            selected={this.state.gender === 'woman'}
+                            color={"#BEBEBE"}
+                            style={{ marginHorizontal: 10 }}
+                            selectedColor={"#00C569"}
+                        />
+                        <View style={{ flexDirection: 'row-reverse' }}>
+                            <Ionicons
+                                name="ios-woman"
+                                style={{
+                                    fontSize: 25,
+                                    alignSelf: "center",
+                                }}
                             />
-                            <View style={{ flexDirection: 'row-reverse' }}>
-                                <Ionicons
-                                    name="ios-woman"
-                                    style={{
-                                        fontSize: 25,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => this.setState({ gender: 'man', genderError: '' })}
-                            style={{
-                                borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
-                                padding: 20, borderRadius: 5,
-                                flexDirection: 'row-reverse',
-                                width: deviceWidth * 0.3
-                            }}>
-                            <Radio
-                                onPress={() => this.setState({ gender: 'man', genderError: '' })}
-                                selected={this.state.gender === 'man'}
-                                color={"#BEBEBE"}
-                                style={{ marginHorizontal: 10 }}
-                                selectedColor={"#00C569"}
-                            />
-                            <View style={{ flexDirection: 'row-reverse' }}>
-                                <Ionicons
-                                    name="ios-man"
-                                    style={{
-                                        fontSize: 25,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    {!!genderError && <Label
-                        style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', marginVertical: -10, marginHorizontal: 20 }}>
-                        {genderError}
-                    </Label>}
-
-                    <View style={[styles.labelInputPadding]}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('titles.enterFirstName')}
-                        </Label>
-                        <Item regular style={{
-                            borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.setState({ gender: 'man', genderError: '' })}
+                        style={{
+                            borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
+                            padding: 20, borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            width: deviceWidth * 0.3
                         }}>
-                            <Input
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                autoCompleteType='off'
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
-                                onChangeText={this.onFirstNameSubmit}
-                                value={firstName}
-                                placeholder={locales('titles.firstName')}
-                                ref={this.firstNameRef}
-
+                        <Radio
+                            onPress={() => this.setState({ gender: 'man', genderError: '' })}
+                            selected={this.state.gender === 'man'}
+                            color={"#BEBEBE"}
+                            style={{ marginHorizontal: 10 }}
+                            selectedColor={"#00C569"}
+                        />
+                        <View style={{ flexDirection: 'row-reverse' }}>
+                            <Ionicons
+                                name="ios-man"
+                                style={{
+                                    fontSize: 25,
+                                    alignSelf: "center",
+                                }}
                             />
-                        </Item>
-                        {!!firstNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{firstNameError}</Label>}
-                    </View>
-                    {/* <View style={styles.textInputPadding}>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                {!!genderError && <Label
+                    style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', marginVertical: -10, marginHorizontal: 20 }}>
+                    {genderError}
+                </Label>}
+
+                <View style={[styles.labelInputPadding]}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        {locales('titles.enterFirstName')}
+                    </Label>
+                    <Item regular style={{
+                        borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            onChangeText={this.onFirstNameSubmit}
+                            value={firstName}
+                            placeholder={locales('titles.firstName')}
+                            ref={this.firstNameRef}
+
+                        />
+                    </Item>
+                    {!!firstNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{firstNameError}</Label>}
+                </View>
+                {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
                             baseColor={firstName.length ? '#00C569' : '#a8a8a8'}
                             onChangeText={this.onFirstNameSubmit}
@@ -204,28 +202,28 @@ class UserBasicInfo extends React.Component {
                         />
                     </View> */}
 
-                    <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('titles.enterLastName')}
-                        </Label>
-                        <Item regular style={{
-                            borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
-                        }}>
-                            <Input
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                autoCompleteType='off'
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
-                                onChangeText={this.onLastNameRef}
-                                value={lastName}
-                                placeholder={locales('titles.lastName')}
-                                ref={this.lastNameRef}
+                <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        {locales('titles.enterLastName')}
+                    </Label>
+                    <Item regular style={{
+                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
+                    }}>
+                        <Input
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            onChangeText={this.onLastNameRef}
+                            value={lastName}
+                            placeholder={locales('titles.lastName')}
+                            ref={this.lastNameRef}
 
-                            />
-                        </Item>
-                        {!!lastNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{lastNameError}</Label>}
-                    </View>
-                    {/* <View style={styles.textInputPadding}>
+                        />
+                    </Item>
+                    {!!lastNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{lastNameError}</Label>}
+                </View>
+                {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
                             baseColor={lastName.length ? '#00C569' : '#a8a8a8'}
                             onChangeText={this.onLastNameRef}
@@ -236,26 +234,25 @@ class UserBasicInfo extends React.Component {
                             label={locales('titles.lastName')}
                         />
                     </View> */}
-                    <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between', marginTop: 5 }}>
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
-                            rounded
-                        >
-                            <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(2)}
-                            style={styles.backButtonContainer}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
-                    </View>
-
+                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between', marginTop: 5 }}>
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                    >
+                        <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
+                    </Button>
+                    <Button
+                        onPress={() => this.props.changeStep(2)}
+                        style={styles.backButtonContainer}
+                        rounded
+                    >
+                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    </Button>
                 </View>
-            </Spin>
+
+            </View>
         )
     }
 }

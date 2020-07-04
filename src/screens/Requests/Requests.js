@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, ToastAndroid } from 'react-native';
-import { Dialog, Portal, Paragraph, Snackbar } from 'react-native-paper';
+import { Dialog, Portal, Paragraph, Snackbar, ActivityIndicator } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
@@ -10,7 +10,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as profileActions from '../../redux/profile/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
-import Spin from '../../components/loading/loading';
 import ChatModal from '../Messages/ChatModal';
 
 
@@ -71,6 +70,18 @@ class Requests extends React.Component {
         let { modalFlag, updateFlag, selectedContact, showToast, showDialog, selectedBuyAdId } = this.state;
         return (
             <>
+                {isUserAllowedToSendMessageLoading ? <ActivityIndicator size="small" color="#00C569"
+                    style={{
+                        position: 'absolute', left: '44%', top: '40%',
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white', width: 40, height: 40, borderRadius: 20
+                    }}
+                /> : null}
+
                 {/* <Snackbar
                     onDismiss={() => this.setState({ showToast: false })}
                     duration={2000}
@@ -154,13 +165,9 @@ class Requests extends React.Component {
                     </View>
                 </View>
 
-
                 {
                     !updateFlag ?
-                        <Spin spinning={isUserAllowedToSendMessageLoading}>
-
-
-
+                        <>
                             {userInfo.active_pakage_type == 0 && <View style={{
                                 shadowOffset: { width: 20, height: 20 },
                                 shadowColor: 'black',
@@ -283,6 +290,8 @@ class Requests extends React.Component {
                                                         color: 'white', paddingHorizontal: 3
                                                     }}>
                                                         {locales('labels.messageToBuyer')}
+
+
                                                     </Text>
                                                 </Button>
                                             </View>
@@ -416,9 +425,7 @@ class Requests extends React.Component {
                             </ScrollView> */}
 
                             </SafeAreaView>
-
-
-                        </Spin >
+                        </>
                         :
                         <View
                             style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}

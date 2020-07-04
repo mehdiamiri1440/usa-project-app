@@ -4,7 +4,7 @@ import Jmoment from 'moment-jalaali';
 import { Button } from 'native-base';
 import {
     View, Text, Modal, TouchableOpacity, Image, TextInput, KeyboardAvoidingView,
-    Keyboard, ScrollView, TouchableWithoutFeedback, FlatList,
+    Keyboard, ScrollView, TouchableWithoutFeedback, FlatList, ActivityIndicator
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -13,7 +13,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
-import Spin from '../../components/loading/loading';
 import messaging from '@react-native-firebase/messaging';
 import MessagesContext from './MessagesContext';
 import { formatter, dataGenerator } from '../../utils';
@@ -235,86 +234,96 @@ class ChatModal extends React.Component {
                 </View>
 
 
-
-                <Spin spinning={isFirstLoad && userChatHistoryLoading && !this.state.loaded}>
-
-
-                    <FlatList
-                        // refreshing={this.state.userChatHistory}
-                        data={userChatHistory}
-                        getItemLayout={(data, index) => (
-                            { length: 40, offset: 40 * index, index }
-                        )}
-                        inverted
-                        ref={this.scrollViewRef}
-                        style={{ marginBottom: 50, marginTop: 10 }}
-                        extraData={this.state}
-                        onEndReached={() => {
-                            if (loaded && userChatHistory.length >= 9)
-                                this.setState({ msgCount: this.state.msgCount + 10, loaded: false }, () => {
-                                    this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                                })
+                {(isFirstLoad && userChatHistoryLoading && !this.state.loaded) ?
+                    <ActivityIndicator size="large" color="#00C569"
+                        style={{
+                            position: 'absolute', left: '44%', top: '40%',
+                            shadowOffset: { width: 20, height: 20 },
+                            shadowColor: 'black',
+                            shadowOpacity: 1.0,
+                            elevation: 5,
+                            borderColor: 'black',
+                            backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                         }}
-                        // pagingEnabled={true}
-                        onEndReachedThreshold={0.1}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index, separators }) => (
+                    /> : null}
+
+
+                <FlatList
+                    // refreshing={this.state.userChatHistory}
+                    data={userChatHistory}
+                    getItemLayout={(data, index) => (
+                        { length: 40, offset: 40 * index, index }
+                    )}
+                    inverted
+                    ref={this.scrollViewRef}
+                    style={{ marginBottom: 50, marginTop: 10 }}
+                    extraData={this.state}
+                    onEndReached={() => {
+                        if (loaded && userChatHistory.length >= 9)
+                            this.setState({ msgCount: this.state.msgCount + 10, loaded: false }, () => {
+                                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                            })
+                    }}
+                    // pagingEnabled={true}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index, separators }) => (
+                        <View
+                            style={{
+                                width: deviceWidth,
+                                paddingHorizontal: 10,
+                                marginBottom: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 10),
+                                flex: 1,
+                                alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
+                            }}
+                            key={index}
+                        >
                             <View
                                 style={{
-                                    width: deviceWidth,
-                                    paddingHorizontal: 10,
-                                    marginBottom: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 10),
-                                    flex: 1,
-                                    alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
+                                    shadowOffset: { width: 20, height: 20 },
+                                    shadowColor: 'black',
+                                    shadowOpacity: 1.0,
+                                    elevation: 5,
+                                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
+                                    backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                                 }}
-                                key={index}
                             >
-                                <View
-                                    style={{
-                                        shadowOffset: { width: 20, height: 20 },
-                                        shadowColor: 'black',
-                                        shadowOpacity: 1.0,
-                                        elevation: 5,
-                                        maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
-                                        backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
-                                    }}
-                                >
-                                    <Text style={{
-                                        textAlign: 'right',
-                                        fontSize: 16,
-                                        color: '#333333'
-                                    }}>
-                                        {item.text}
-                                    </Text>
-                                    <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
-                                        {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
+                                <Text style={{
+                                    textAlign: 'right',
+                                    fontSize: 16,
+                                    color: '#333333'
+                                }}>
+                                    {item.text}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
+                                    {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
+                                        style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                        name={item.is_read ? 'check-all' : 'check'} size={14}
+                                        color={item.is_read ? '#60CAF1' : '#617D8A'} /> :
+                                        <Feather name='clock' size={14} color='#617D8A'
                                             style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                            name={item.is_read ? 'check-all' : 'check'} size={14}
-                                            color={item.is_read ? '#60CAF1' : '#617D8A'} /> :
-                                            <Feather name='clock' size={14} color='#617D8A'
-                                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                            />
-                                        )
-                                        }
-                                        <Text
-                                            style={{
-                                                color: '#333333',
-                                                fontSize: 12
-                                            }}>
-                                            {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
-                                        </Text>
-                                    </View>
+                                        />
+                                    )
+                                    }
+                                    <Text
+                                        style={{
+                                            color: '#333333',
+                                            fontSize: 12
+                                        }}>
+                                        {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
+                                    </Text>
                                 </View>
                             </View>
+                        </View>
 
-                        )}
-                    />
-
-
-
+                    )}
+                />
 
 
-                    {/* 
+
+
+
+                {/* 
                     <ScrollView
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='on-drag'
@@ -382,7 +391,6 @@ class ChatModal extends React.Component {
                     </ScrollView>
  */}
 
-                </Spin>
 
                 <View
                     style={{

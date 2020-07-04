@@ -13,7 +13,6 @@ import ProductImages from './Steps/ProductImages';
 import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
-import Spin from '../../components/loading/loading';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -314,88 +313,82 @@ class RegisterProduct extends React.Component {
                     </View>
                 </View>
 
+                <ScrollView
+                    ref={this.mainContainer}
+                    keyboardShouldPersistTaps='handled'
+                >
 
 
+                    {stepNumber > 0 && <View style={{
+                        borderBottomColor: '#00C569',
+                        borderBottomWidth: 2,
+                        paddingVertical: 10,
+                        width: deviceWidth, marginVertical: 5,
+                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
+                    }}>
+                        <View style={{
+                            flexDirection: 'row-reverse',
+                            marginVertical: 5,
 
+                            alignItems: 'stretch',
+                            alignContent: 'center', alignSelf: 'center',
+                            width: deviceWidth - 80,
 
-                <Spin spinning={this.props.addNewProductLoading}>
-                    <ScrollView
-                        ref={this.mainContainer}
-                        keyboardShouldPersistTaps='handled'
-                    >
-
-
-                        {stepNumber > 0 && <View style={{
-                            borderBottomColor: '#00C569',
-                            borderBottomWidth: 2,
-                            paddingVertical: 10,
-                            width: deviceWidth, marginVertical: 5,
-                            flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                         }}>
-                            <View style={{
-                                flexDirection: 'row-reverse',
-                                marginVertical: 5,
+                            {stepsArray.map((item, index) => {
+                                return (
+                                    <Fragment key={index}>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                alignSelf: 'center', alignContent: 'center',
+                                                shadowOffset: { width: 10, height: 10 },
+                                                shadowColor: 'black',
+                                                shadowOpacity: 1.0,
+                                                elevation: 5,
+                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                width: 26, height: 26, borderRadius: 13
 
-                                alignItems: 'stretch',
-                                alignContent: 'center', alignSelf: 'center',
-                                width: deviceWidth - 80,
-
-                            }}>
-                                {stepsArray.map((item, index) => {
-                                    return (
-                                        <Fragment key={index}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
-                                                    alignSelf: 'center', alignContent: 'center',
-                                                    shadowOffset: { width: 10, height: 10 },
-                                                    shadowColor: 'black',
-                                                    shadowOpacity: 1.0,
-                                                    elevation: 5,
-                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                    width: 26, height: 26, borderRadius: 13
-
-                                                }}
-                                            >
-                                                {item}
-                                            </Text>
-                                            {index < stepsArray.length - 1 && <View
-                                                style={{
-                                                    height: 4,
-                                                    flex: 1,
-                                                    alignSelf: 'center',
-                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                                }}>
-                                            </View>
-                                            }
-                                        </Fragment>
-                                    )
-                                }
-                                )}
-                            </View>
-                        </View>}
-
-
-
-
-
-                        <View style={styles.stepsContainer}>
-                            {successfullAlert && <View style={styles.loginFailedContainer}>
-                                <Text
-                                    style={styles.loginFailedText}
-                                >
-                                    {locales('titles.signUpDoneSuccessfully')}
-                                </Text>
-                            </View >
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                        {index < stepsArray.length - 1 && <View
+                                            style={{
+                                                height: 4,
+                                                flex: 1,
+                                                alignSelf: 'center',
+                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                            }}>
+                                        </View>
+                                        }
+                                    </Fragment>
+                                )
                             }
-                            {this.renderSteps()}
+                            )}
                         </View>
+                    </View>}
 
 
 
-                    </ScrollView>
-                </Spin>
+
+
+                    <View style={styles.stepsContainer}>
+                        {successfullAlert && <View style={styles.loginFailedContainer}>
+                            <Text
+                                style={styles.loginFailedText}
+                            >
+                                {locales('titles.signUpDoneSuccessfully')}
+                            </Text>
+                        </View >
+                        }
+                        {this.renderSteps()}
+                    </View>
+
+
+
+                </ScrollView>
 
             </View >
         )

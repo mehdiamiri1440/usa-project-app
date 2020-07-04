@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, Share, FlatList, Modal } from 'react-native';
+import {
+    Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, RefreshControl, ActivityIndicator,
+    Share, FlatList, Modal
+} from 'react-native';
 import { Button, CardItem, Card, Body } from 'native-base';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -14,7 +17,6 @@ import * as productsListActions from '../../redux/productsList/actions';
 import ChatModal from '../Messages/ChatModal';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
-import Spin from '../../components/loading/loading';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 class Profile extends Component {
@@ -30,14 +32,16 @@ class Profile extends Component {
     }
 
     componentDidMount() {
+        this.initProfileContent()
+    }
+
+    initProfileContent = _ => {
         if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
             this.props.fetchProfileStatistics(this.props.route.params.user_name);
             this.props.fetchProfileByUserName(this.props.route.params.user_name);
             this.props.fetchProductsListByUserName(this.props.route.params.user_name);
         }
-    }
-
-
+    };
 
     fetchAllProducts = () => {
         const { from_record_number = 0, to_record_number = 15, sort_by = 'BM' } = this.state;
@@ -298,302 +302,329 @@ class Profile extends Component {
                     </View>
                 </View>
 
-
-                <Spin spinning={userProfileLoading || profileStatisticsLoading
-                    || profileByUserNameLoading || productsListByUserNameLoading}
-                >
-
-                    <ScrollView style={{ backgroundColor: 'white', padding: 5 }}>
-                        <View style={{ padding: 20, width: deviceWidth, flexDirection: 'row-reverse' }}>
-                            <Image
-                                style={{ width: deviceWidth * 0.22, height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11 }}
-                                source={
-                                    profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
-                                        : require('../../../assets/icons/user.png')}
-                            />
-                            <View style={{ width: deviceWidth * 0.7 }}>
-                                <View style={{
-                                    flexDirection: 'row-reverse', justifyContent: 'space-around',
-                                    alignItems: 'center', marginVertical: 3,
-                                }}>
-                                    <View>
-                                        <Text
-                                            style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count}</Text>
-                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score}</Text>
-                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
-                                    </View>
-                                </View>
-                                {userIdFromByUserName != userId ?
-                                    <Button
-                                        small
-                                        onPress={() => this.setState({ modalFlag: true })}
-                                        style={[styles.loginButton]}
-                                    >
-                                        <Text style={[styles.buttonText, { paddingRight: 30, paddingBottom: 5 }]}>
-                                            {locales('titles.sendMessage')}</Text>
-                                        <FontAwesome name='envelope' size={20} color='white'
-                                            style={{ position: 'absolute', right: 85, paddingBottom: 5 }} />
-                                    </Button>
-                                    : <Button
-                                        small
-                                        onPress={() => this.props.navigation.navigate('EditProfile')}
-                                        style={[styles.loginButton]}
-                                    >
-                                        <Text style={[styles.buttonText, { paddingRight: 30, fontSize: 16, paddingBottom: 5 }]}>
-                                            {locales('labels.editProfile')}</Text>
-                                        <EvilIcons name='pencil' size={25} color='white'
-                                            style={{ position: 'absolute', right: 73, paddingBottom: 5 }} />
-                                    </Button>}
-                            </View>
-                        </View>
-
-                        <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
-                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                                <Text
-                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
-                                    {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                                </Text>
-                                {is_verified ? <ValidatedUserIcon /> : null}
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => this.shareProfileLink()}
-                                style={{
-                                    borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5, marginBottom: 5,
-                                    width: '30%', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                <FontAwesome name='share-alt' size={14} color='#777777' />
-                                <Text style={{
-                                    color: '#777777', fontSize: 14, paddingHorizontal: 5
-                                }}>
-                                    {locales('labels.share')}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
-                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                            </Text>
-                        </View> : null}
-
-                        {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
-                            width: deviceWidth * 0.6,
-                            alignSelf: 'center', justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
-                        }}>
-                            <View style={{
-                                borderRadius: 4, borderWidth: 0.8, borderColor: '#777777', backgroundColor: '#FAFAFA',
-                                padding: 5, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
-                                marginVertical: 10,
-                                justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
-                            }}>
-                                <Text style={{ marginHorizontal: 15, fontSize: 20, color: '#777777' }}>{rating_info.avg_score}</Text>
-                                <StarRating
-                                    starsCount={5}
-                                    defaultRate={rating_info.avg_score}
-                                    disable={true}
-                                    color='#FFBB00'
-                                    size={25}
-                                />
-                            </View>
-                            <View style={{
-                                borderRadius: 4, borderWidth: 0.8, borderRightWidth: 0, borderColor: '#777777',
-                                padding: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0,
-                                marginVertical: 10,
-                                justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                {(userProfileLoading || profileStatisticsLoading
+                    || profileByUserNameLoading || productsListByUserNameLoading) ?
+                    <View style={{
+                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                        position: 'absolute',
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                    }}>
+                        <ActivityIndicator size="large"
+                            style={{
+                                position: 'absolute', left: '44%', top: '40%',
+                                shadowOffset: { width: 20, height: 20 },
+                                shadowColor: 'black',
+                                shadowOpacity: 1.0,
+                                elevation: 5,
+                                borderColor: 'black',
+                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                             }}
-                            >
-                                <Text style={{ fontSize: 20, color: '#777777', width: '43%' }}>
-                                    {locales('labels.comment')} {rating_info.total_count}
-                                </Text>
+                            color="#00C569"
+
+                        />
+                    </View> : null}
+
+
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={
+                            userProfileLoading || profileStatisticsLoading
+                            || profileByUserNameLoading || productsListByUserNameLoading
+                        } onRefresh={() => this.initProfileContent()} />
+                    }
+                    style={{ backgroundColor: 'white', padding: 5 }}>
+                    <View style={{ padding: 20, width: deviceWidth, flexDirection: 'row-reverse' }}>
+                        <Image
+                            style={{ width: deviceWidth * 0.22, height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11 }}
+                            source={
+                                profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
+                                    : require('../../../assets/icons/user.png')}
+                        />
+                        <View style={{ width: deviceWidth * 0.7 }}>
+                            <View style={{
+                                flexDirection: 'row-reverse', justifyContent: 'space-around',
+                                alignItems: 'center', marginVertical: 3,
+                            }}>
+                                <View>
+                                    <Text
+                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count}</Text>
+                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
+                                </View>
+                                <View>
+                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score}</Text>
+                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
+                                </View>
                             </View>
+                            {userIdFromByUserName != userId ?
+                                <Button
+                                    small
+                                    onPress={() => this.setState({ modalFlag: true })}
+                                    style={[styles.loginButton]}
+                                >
+                                    <Text style={[styles.buttonText, { paddingRight: 30, paddingBottom: 5 }]}>
+                                        {locales('titles.sendMessage')}</Text>
+                                    <FontAwesome name='envelope' size={20} color='white'
+                                        style={{ position: 'absolute', right: 85, paddingBottom: 5 }} />
+                                </Button>
+                                : <Button
+                                    small
+                                    onPress={() => this.props.navigation.navigate('EditProfile')}
+                                    style={[styles.loginButton]}
+                                >
+                                    <Text style={[styles.buttonText, { paddingRight: 30, fontSize: 16, paddingBottom: 5 }]}>
+                                        {locales('labels.editProfile')}</Text>
+                                    <EvilIcons name='pencil' size={25} color='white'
+                                        style={{ position: 'absolute', right: 73, paddingBottom: 5 }} />
+                                </Button>}
+                        </View>
+                    </View>
+
+                    <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                            <Text
+                                style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
+                            </Text>
+                            {is_verified ? <ValidatedUserIcon /> : null}
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => this.shareProfileLink()}
+                            style={{
+                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5, marginBottom: 5,
+                                width: '30%', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                            }}>
+                            <FontAwesome name='share-alt' size={14} color='#777777' />
+                            <Text style={{
+                                color: '#777777', fontSize: 14, paddingHorizontal: 5
+                            }}>
+                                {locales('labels.share')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
+                        <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                            {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                        </Text>
+                    </View> : null}
+
+                    {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
+                        width: deviceWidth * 0.6,
+                        alignSelf: 'center', justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                    }}>
+                        <View style={{
+                            borderRadius: 4, borderWidth: 0.8, borderColor: '#777777', backgroundColor: '#FAFAFA',
+                            padding: 5, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
+                            marginVertical: 10,
+                            justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                        }}>
+                            <Text style={{ marginHorizontal: 15, fontSize: 20, color: '#777777' }}>{rating_info.avg_score}</Text>
+                            <StarRating
+                                starsCount={5}
+                                defaultRate={rating_info.avg_score}
+                                disable={true}
+                                color='#FFBB00'
+                                size={25}
+                            />
+                        </View>
+                        <View style={{
+                            borderRadius: 4, borderWidth: 0.8, borderRightWidth: 0, borderColor: '#777777',
+                            padding: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0,
+                            marginVertical: 10,
+                            justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
+                        }}
+                        >
+                            <Text style={{ fontSize: 20, color: '#777777', width: '43%' }}>
+                                {locales('labels.comment')} {rating_info.total_count}
+                            </Text>
+                        </View>
+                    </View> : null}
+
+                    <View style={{
+                        borderRadius: 1, borderColor: '#FAFAFA',
+                        borderWidth: 0.8, width: deviceWidth * 0.93, alignSelf: 'center'
+                    }}>
+
+                        <View style={{
+                            flexDirection: 'row-reverse', justifyContent: 'space-between', borderColor: '#FAFAFA',
+                            borderWidth: 0.7, backgroundColor: '#FAFAFA', padding: 10
+                        }}>
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                <FontAwesome5 name='tasks' size={25} color='#7E7E7E' />
+                                <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.activityZone')}</Text>
+                            </View>
+                            <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{activityDomainFromByUserName}</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                <Entypo name='location-pin' size={25} color='#7E7E7E' />
+                                <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
+                            </View>
+                            <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
+                        </View>
+
+                        {companyNameFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                <FontAwesome name='building' size={25} color='#7E7E7E' />
+                                <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.companyName')}</Text>
+                            </View>
+                            <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
                         </View> : null}
 
+                        {companyRegisterCodeFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
+                                <FontAwesome name='file-text' size={25} color='#7E7E7E' />
+                                <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.registrationNumber')}</Text>
+                            </View>
+                            <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
+                        </View> : null}
+
+                    </View>
+
+                    <View style={{
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
+                    }}>
+
                         <View style={{
-                            borderRadius: 1, borderColor: '#FAFAFA',
-                            borderWidth: 0.8, width: deviceWidth * 0.93, alignSelf: 'center'
+                            flexDirection: 'row-reverse', alignContent: 'center', borderBottomColor: '#00C569',
+                            borderBottomWidth: 3, width: '95%',
+                            padding: 10, justifyContent: 'center', alignItems: 'center'
                         }}>
-
-                            <View style={{
-                                flexDirection: 'row-reverse', justifyContent: 'space-between', borderColor: '#FAFAFA',
-                                borderWidth: 0.7, backgroundColor: '#FAFAFA', padding: 10
-                            }}>
-                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
-                                    <FontAwesome5 name='tasks' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.activityZone')}</Text>
-                                </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{activityDomainFromByUserName}</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
-                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
-                                    <Entypo name='location-pin' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
-                                </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
-                            </View>
-
-                            {companyNameFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
-                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
-                                    <FontAwesome name='building' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.companyName')}</Text>
-                                </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
-                            </View> : null}
-
-                            {companyRegisterCodeFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
-                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
-                                    <FontAwesome name='file-text' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.registrationNumber')}</Text>
-                                </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
-                            </View> : null}
-
+                            <Image source={require('../../../assets/icons/incobac-medium.png')}
+                                style={{ marginHorizontal: 5 }}
+                            />
+                            <Text style={{ color: '#556080', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('titles.basicInfo')}
+                            </Text>
                         </View>
 
-                        <View style={{
-                            width: deviceWidth, alignSelf: 'center', alignItems: 'center',
-                            justifyContent: 'center', marginVertical: 10, padding: 5,
-                        }}>
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                                {locales('titles.headerDescription')}
+                            </Text>
+                            <Text style={{ color: '#777777', marginVertical: 10 }}>
+                                {descriptionFromByUserName}
+                            </Text>
+                        </View>
 
-                            <View style={{
-                                flexDirection: 'row-reverse', alignContent: 'center', borderBottomColor: '#00C569',
-                                borderBottomWidth: 3, width: '95%',
-                                padding: 10, justifyContent: 'center', alignItems: 'center'
-                            }}>
-                                <Image source={require('../../../assets/icons/incobac-medium.png')}
-                                    style={{ marginHorizontal: 5 }}
+                    </View>
+                    <View style={{
+                        alignSelf: 'center', alignItems: 'flex-end',
+                        justifyContent: 'center', marginVertical: 10
+                    }}>
+                        <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
+                        {productsListByUserName && productsListByUserName.products && productsListByUserName.products.length ?
+                            productsListByUserName.products.map((item, index) => (
+                                <Product
+                                    key={index}
+                                    productItem={item}
+                                    fetchAllProducts={this.fetchAllProducts}
+                                    {...this.props}
+                                    width={deviceWidth * 0.93}
                                 />
-                                <Text style={{ color: '#556080', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                    {locales('titles.basicInfo')}
-                                </Text>
+                            ))
+                            : <View style={{
+                                alignSelf: 'center', justifyContent: 'flex-start',
+                                alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                            }}>
+                                <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
+                                <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>
+                                    {locales('titles.noProductFound')}</Text>
                             </View>
+                        }
+                    </View>
 
-                            <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
-                                <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
-                                    {locales('titles.headerDescription')}
-                                </Text>
-                                <Text style={{ color: '#777777', marginVertical: 10 }}>
-                                    {descriptionFromByUserName}
-                                </Text>
-                            </View>
-
-                        </View>
-                        <View style={{
-                            alignSelf: 'center', alignItems: 'flex-end',
-                            justifyContent: 'center', marginVertical: 10
-                        }}>
-                            <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
-                            {productsListByUserName && productsListByUserName.products && productsListByUserName.products.length ?
-                                productsListByUserName.products.map((item, index) => (
-                                    <Product
-                                        key={index}
-                                        productItem={item}
-                                        fetchAllProducts={this.fetchAllProducts}
-                                        {...this.props}
-                                        width={deviceWidth * 0.93}
-                                    />
-                                ))
-                                : <View style={{
+                    <View style={{
+                        width: deviceWidth * 0.93,
+                        alignSelf: 'center', alignItems: 'flex-end',
+                        justifyContent: 'center', marginVertical: 10
+                    }}>
+                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.relatedPhotos')}</Text>
+                        <FlatList
+                            data={relatedsFromByUserName}
+                            horizontal
+                            ListEmptyComponent={() => (
+                                <View style={{
                                     alignSelf: 'center', justifyContent: 'flex-start',
                                     alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                 }}>
-                                    <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>
-                                        {locales('titles.noProductFound')}</Text>
+                                    <Entypo name='image' size={30} color='#BEBEBE' />
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
+                                        {locales('labels.noImageFound')}</Text>
                                 </View>
-                            }
-                        </View>
+                            )}
+                            keyExtractor={((_, index) => index.toString())}
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity
+                                    onPress={() => this.setState({ selectedImageModal: true, selectedImageIndex: index })}
+                                >
+                                    <Image
+                                        style={{
+                                            width: deviceWidth * 0.4,
+                                            borderWidth: 0.7,
+                                            borderColor: '#BEBEBE',
+                                            borderRadius: 4, marginHorizontal: 5, height: deviceWidth * 0.4
+                                        }}
+                                        source={{
+                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
 
-                        <View style={{
-                            width: deviceWidth * 0.93,
-                            alignSelf: 'center', alignItems: 'flex-end',
-                            justifyContent: 'center', marginVertical: 10
-                        }}>
-                            <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.relatedPhotos')}</Text>
-                            <FlatList
-                                data={relatedsFromByUserName}
-                                horizontal
-                                ListEmptyComponent={() => (
-                                    <View style={{
-                                        alignSelf: 'center', justifyContent: 'flex-start',
-                                        alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
-                                    }}>
-                                        <Entypo name='image' size={30} color='#BEBEBE' />
-                                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
-                                            {locales('labels.noImageFound')}</Text>
-                                    </View>
-                                )}
-                                keyExtractor={((_, index) => index.toString())}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={({ item, index }) => (
-                                    <TouchableOpacity
-                                        onPress={() => this.setState({ selectedImageModal: true, selectedImageIndex: index })}
-                                    >
-                                        <Image
-                                            style={{
-                                                width: deviceWidth * 0.4,
-                                                borderWidth: 0.7,
-                                                borderColor: '#BEBEBE',
-                                                borderRadius: 4, marginHorizontal: 5, height: deviceWidth * 0.4
-                                            }}
-                                            source={{
-                                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </View>
+                    <View style={{
+                        width: deviceWidth * 0.93,
+                        alignSelf: 'center', alignItems: 'flex-end',
+                        justifyContent: 'center', marginVertical: 10
+                    }}>
+                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.myEvidences')}</Text>
+                        <FlatList
+                            showsHorizontalScrollIndicator={false}
+                            data={certificatesFromByUserName}
+                            horizontal
+                            ListEmptyComponent={() => (
+                                <View style={{
+                                    alignSelf: 'center', justifyContent: 'flex-start',
+                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                                }}>
+                                    <FontAwesome5 name='tasks' size={30} color='#BEBEBE' />
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
+                                        {locales('labels.noevidenceFound')}</Text>
+                                </View>
+                            )}
+                            keyExtractor={((_, index) => index.toString())}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity
+                                    onPress={() => this.setState({ selectedEvidenceModal: true, selectedEvidenceIndex: index })}
+                                >
+                                    <Image
+                                        style={{
+                                            borderWidth: 0.7,
+                                            borderColor: '#BEBEBE',
+                                            borderRadius: 4,
+                                            width: deviceWidth * 0.4, borderRadius: 4,
+                                            marginHorizontal: 5, height: deviceWidth * 0.4
+                                        }}
+                                        source={{
+                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
 
-                        <View style={{
-                            width: deviceWidth * 0.93,
-                            alignSelf: 'center', alignItems: 'flex-end',
-                            justifyContent: 'center', marginVertical: 10
-                        }}>
-                            <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.myEvidences')}</Text>
-                            <FlatList
-                                showsHorizontalScrollIndicator={false}
-                                data={certificatesFromByUserName}
-                                horizontal
-                                ListEmptyComponent={() => (
-                                    <View style={{
-                                        alignSelf: 'center', justifyContent: 'flex-start',
-                                        alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
-                                    }}>
-                                        <FontAwesome5 name='tasks' size={30} color='#BEBEBE' />
-                                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
-                                            {locales('labels.noevidenceFound')}</Text>
-                                    </View>
-                                )}
-                                keyExtractor={((_, index) => index.toString())}
-                                renderItem={({ item, index }) => (
-                                    <TouchableOpacity
-                                        onPress={() => this.setState({ selectedEvidenceModal: true, selectedEvidenceIndex: index })}
-                                    >
-                                        <Image
-                                            style={{
-                                                borderWidth: 0.7,
-                                                borderColor: '#BEBEBE',
-                                                borderRadius: 4,
-                                                width: deviceWidth * 0.4, borderRadius: 4,
-                                                marginHorizontal: 5, height: deviceWidth * 0.4
-                                            }}
-                                            source={{
-                                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </View>
-
-                    </ScrollView >
-
-
-                </Spin>
+                </ScrollView >
 
 
             </ >

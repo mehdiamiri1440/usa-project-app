@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, I18nManager, ActivityIndicator } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
@@ -10,7 +10,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
 import * as authActions from '../../../redux/auth/actions'
 import * as locationActions from '../../../redux/locations/actions'
-import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 import RNRestart from 'react-native-restart';
 
@@ -126,7 +125,7 @@ class ChooseCity extends React.Component {
         }
 
         return (
-            <Spin spinning={loading || fetchCitiesLoading} >
+            <>
                 <View>
                     <Text style={styles.userText}>
                         {locales('titles.chooseCityAndProvince')}
@@ -146,6 +145,13 @@ class ChooseCity extends React.Component {
                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.province')}
                         </Label>
+                        {(!!this.props.loading) ?
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    position: 'absolute', right: '15%', top: '2%',
+                                    width: 50, height: 50, borderRadius: 25
+                                }}
+                            /> : null}
                         <Item regular
                             style={{
                                 width: deviceWidth * 0.9,
@@ -184,6 +190,13 @@ class ChooseCity extends React.Component {
                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.city')}
                         </Label>
+                        {(!!this.props.fetchCitiesLoading) ?
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    position: 'absolute', right: '15%', top: '2%',
+                                    width: 50, height: 50, borderRadius: 25
+                                }}
+                            /> : null}
                         <Item regular
                             style={{
                                 width: deviceWidth * 0.9,
@@ -235,7 +248,7 @@ class ChooseCity extends React.Component {
                         </Button>
                     </View>
                 </View>
-            </Spin>
+            </>
         )
     }
 }

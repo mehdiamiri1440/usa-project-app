@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator } from 'react-native'
 import {
     CodeField,
     Cursor,
@@ -15,7 +15,6 @@ import Timer from '../../../components/timer';
 import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import * as profileActions from '../../../redux/profile/actions'
-import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 
 
@@ -76,7 +75,9 @@ const EnterActivisionCode = (props) => {
 
 
     return (
-        <Spin spinning={loading || getAgainLoading} >
+        <>
+            <Text style={styles.buttonText}>{locales('titles.login')}</Text>
+
             <Text style={[styles.userText, { marginTop: 12 }]}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
             </Text>
@@ -122,8 +123,8 @@ const EnterActivisionCode = (props) => {
             </SafeAreaView>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 10 }}>
                 <Timer
-                    min={2}
-                    sec={0}
+                    min={0}
+                    sec={5}
                     isCountDownTimer={true}
                     containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
@@ -142,6 +143,13 @@ const EnterActivisionCode = (props) => {
                     rounded
                 >
                     <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
+                    <ActivityIndicator size="small"
+                        animating={loading} color="white"
+                        style={{
+                            position: 'absolute', left: '20%', top: '28%',
+                            width: 25, height: 25, borderRadius: 15
+                        }}
+                    />
                 </Button>
                 <Button
                     onPress={() => props.changeStep(1)}
@@ -152,7 +160,7 @@ const EnterActivisionCode = (props) => {
                     <AntDesign name='arrowright' size={25} color='#7E7E7E' />
                 </Button>
             </View>
-        </Spin >
+        </>
     )
 }
 const styles = StyleSheet.create({

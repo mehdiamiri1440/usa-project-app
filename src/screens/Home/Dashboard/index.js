@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Card, CardItem, Body } from 'native-base';
 import { connect } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../../utils';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import * as homeActions from '../../../redux/home/actions';
-import Spin from '../../../components/loading/loading';
 import ENUMS from '../../../enums';
 
 const Dashboard = props => {
@@ -36,7 +35,20 @@ const Dashboard = props => {
     } = dashboard;
 
     return (
-        <Spin spinning={dashboardLoading}>
+        <>
+
+
+            {dashboardLoading ? <ActivityIndicator size="large" color="#00C569"
+                style={{
+                    position: 'absolute', left: '44%', top: '40%',
+                    shadowOffset: { width: 20, height: 20 },
+                    shadowColor: 'black',
+                    shadowOpacity: 1.0,
+                    elevation: 5,
+                    borderColor: 'black',
+                    backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                }}
+            /> : null}
             {dashboardError &&
                 <View style={styles.loginFailedContainer}>
                     <Text style={styles.loginFailedText}>
@@ -204,7 +216,7 @@ const Dashboard = props => {
                 </Card>
 
             </ScrollView>
-        </Spin>
+        </>
 
     )
 }

@@ -1,5 +1,5 @@
 import React, { Component, createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -97,7 +97,7 @@ class ProductsList extends PureComponent {
 
     handleSearch = (text) => {
         clearTimeout(myTimeout)
-        const { sort_by } = this.state;
+        const { sort_by, province, city } = this.state;
 
         this.setState({ searchText: text });
         let item = {
@@ -267,101 +267,108 @@ class ProductsList extends PureComponent {
                             </Text>
                         </View>
                     </View>
-                    <Spin spinning={this.props.provinceLoading || this.props.fetchCitiesLoading || productsListLoading}>
-                        <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
-                            <Card>
-                                <CardItem>
-                                    <Body>
-                                        <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
 
-                                            <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                    {locales('labels.province')}
-                                                </Label>
-                                                <Item regular
-                                                    style={{
-                                                        width: deviceWidth * 0.9,
-                                                        borderRadius: 5,
-                                                        alignSelf: 'center',
-                                                        borderColor: '#a8a8a8'
+
+                    <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
+                        <Card>
+                            <CardItem>
+                                <Body>
+                                    <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+
+                                        <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                {locales('labels.province')}
+                                            </Label>
+                                            <Item regular
+                                                style={{
+                                                    width: deviceWidth * 0.9,
+                                                    borderRadius: 5,
+                                                    alignSelf: 'center',
+                                                    borderColor: '#a8a8a8'
+                                                }}
+                                            >
+                                                <RNPickerSelect
+                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    useNativeAndroidPickerStyle={false}
+                                                    onValueChange={this.setProvince}
+                                                    style={styles}
+                                                    value={province}
+                                                    placeholder={{
+                                                        label: locales('labels.selectProvince'),
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     }}
-                                                >
-                                                    <RNPickerSelect
-                                                        Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                                        useNativeAndroidPickerStyle={false}
-                                                        onValueChange={this.setProvince}
-                                                        style={styles}
-                                                        value={province}
-                                                        placeholder={{
-                                                            label: locales('labels.selectProvince'),
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        }}
-                                                        items={[...provinces.map(item => ({
-                                                            label: item.province_name, value: item.id
-                                                        }))]}
-                                                    />
-                                                </Item>
-                                            </View>
-
-                                            <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                    {locales('labels.city')}
-                                                </Label>
-                                                <Item regular
-                                                    style={{
-                                                        width: deviceWidth * 0.9,
-                                                        borderRadius: 5,
-                                                        alignSelf: 'center',
-                                                        borderColor: '#a8a8a8'
-                                                    }}
-                                                >
-                                                    <RNPickerSelect
-                                                        Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                                        useNativeAndroidPickerStyle={false}
-                                                        onValueChange={this.setCity}
-                                                        style={styles}
-                                                        value={city}
-                                                        placeholder={{
-                                                            label: locales('labels.selectCity'),
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        }}
-                                                        items={[...cities.map(item => ({
-                                                            label: item.city_name, value: item.id
-                                                        }))]}
-                                                    />
-                                                </Item>
-                                            </View>
-
-                                            <View style={{
-                                                flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
-                                                alignItems: 'center'
-                                            }}>
-                                                <Button
-                                                    style={[styles.loginButton, { width: '50%' }]}
-                                                    onPress={this.searchLocation}>
-                                                    <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                        {locales('labels.search')}
-                                                    </Text>
-                                                </Button>
-                                                <Button
-                                                    style={[styles.loginButton, { width: '50%', backgroundColor: '#556080', }]}
-                                                    onPress={this.deleteFilter}>
-                                                    <Text style={[styles.buttonText, {
-                                                        alignSelf: 'center',
-                                                        fontSize: 16
-                                                    }]}>
-                                                        {locales('labels.deleteFilter')}
-                                                    </Text>
-                                                </Button>
-                                            </View>
-
+                                                    items={[...provinces.map(item => ({
+                                                        label: item.province_name, value: item.id
+                                                    }))]}
+                                                />
+                                            </Item>
                                         </View>
-                                    </Body>
-                                </CardItem>
-                            </Card>
 
-                        </View>
-                    </Spin>
+                                        <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
+                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                {locales('labels.city')}
+                                            </Label>
+                                            {(this.props.provinceLoading || this.props.fetchCitiesLoading || productsListLoading) ?
+                                                <ActivityIndicator size="small" color="#00C569"
+                                                    style={{
+                                                        position: 'absolute', right: '15%', top: '2%',
+                                                        width: 50, height: 50, borderRadius: 25
+                                                    }}
+                                                /> : null}
+                                            <Item regular
+                                                style={{
+                                                    width: deviceWidth * 0.9,
+                                                    borderRadius: 5,
+                                                    alignSelf: 'center',
+                                                    borderColor: '#a8a8a8'
+                                                }}
+                                            >
+                                                <RNPickerSelect
+                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    useNativeAndroidPickerStyle={false}
+                                                    onValueChange={this.setCity}
+                                                    style={styles}
+                                                    value={city}
+                                                    placeholder={{
+                                                        label: locales('labels.selectCity'),
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    }}
+                                                    items={[...cities.map(item => ({
+                                                        label: item.city_name, value: item.id
+                                                    }))]}
+                                                />
+                                            </Item>
+                                        </View>
+
+                                        <View style={{
+                                            flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
+                                            alignItems: 'center'
+                                        }}>
+                                            <Button
+                                                style={[styles.loginButton, { width: '50%' }]}
+                                                onPress={this.searchLocation}>
+                                                <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
+                                                    {locales('labels.search')}
+                                                </Text>
+                                            </Button>
+                                            <Button
+                                                style={[styles.loginButton, { width: '50%', backgroundColor: '#556080', }]}
+                                                onPress={this.deleteFilter}>
+                                                <Text style={[styles.buttonText, {
+                                                    alignSelf: 'center',
+                                                    fontSize: 16
+                                                }]}>
+                                                    {locales('labels.deleteFilter')}
+                                                </Text>
+                                            </Button>
+                                        </View>
+
+                                    </View>
+                                </Body>
+                            </CardItem>
+                        </Card>
+
+                    </View>
 
                 </Modal>
 
@@ -371,7 +378,12 @@ class ProductsList extends PureComponent {
                     onRequestClose={() => this.setState({ sortModalFlag: false })}>
                     <FlatList
                         refreshing={productsListLoading || categoriesLoading}
-                        onRefresh={() => <Spin spininng={productsListLoading} />}
+                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                position: 'absolute', right: '15%', top: '2%',
+                                width: 50, height: 50, borderRadius: 25
+                            }}
+                        />}
                         data={ENUMS.SORT_LIST.list}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
@@ -424,7 +436,12 @@ class ProductsList extends PureComponent {
                         data={subCategoriesList}
                         keyExtractor={(item, index) => index.toString()}
                         refreshing={subCategoriesLoading || productsListLoading}
-                        onRefresh={() => <Spin spininng={subCategoriesLoading || productsListLoading} />}
+                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                position: 'absolute', right: '15%', top: '2%',
+                                width: 50, height: 50, borderRadius: 25
+                            }}
+                        />}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}

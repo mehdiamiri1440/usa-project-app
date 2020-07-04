@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 import { connect } from 'react-redux'
@@ -11,7 +11,6 @@ import { validator, formatter } from '../../utils'
 import OutlinedTextField from '../../components/floatingInput';
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions'
-import Spin from '../../components/loading/loading'
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -74,10 +73,12 @@ class Login extends React.Component {
     };
 
     render() {
-        let { message, loading, error } = this.props
-        let { mobileNumber, password, mobileNumberError } = this.state
+        let { message, loading, error } = this.props;
+        let { mobileNumber, password, mobileNumberError } = this.state;
+
+        console.log('sfadf', loading)
         return (
-            <Spin spinning={loading} >
+            <>
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                 >
@@ -173,6 +174,14 @@ class Login extends React.Component {
                             rounded
                         >
                             <Text style={styles.buttonText}>{locales('titles.login')}</Text>
+                            <ActivityIndicator size="small"
+                                animating={!!loading} color="white"
+                                style={{
+                                    position: 'absolute', left: '37%', top: '28%',
+                                    width: 25, height: 25, borderRadius: 15
+                                }}
+                            />
+
                         </Button>
                         {/* <Button
                         onPress={() => this.onLogin()}
@@ -192,7 +201,7 @@ class Login extends React.Component {
                     </Button> */}
                     </View>
                 </ScrollView>
-            </Spin>
+            </>
         )
     }
 }
@@ -275,9 +284,9 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => {
     return {
-        loading: state.authReducer.loginLoading,
-        error: state.authReducer.loginError,
-        message: state.authReducer.loginMessage,
+        loading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
+        error: state.authReducer.checkAlreadySignedUpMobileNumberError,
+        message: state.authReducer.checkAlreadySignedUpMobileNumberMessage,
     }
 }
 const mapDispatchToProps = (dispatch) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, I18nManager } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { Dropdown } from 'react-native-material-dropdown';
 import RNPickerSelect from 'react-native-picker-select';
@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import * as locationActions from '../../../redux/locations/actions'
-import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 
 class ChooseCity extends React.Component {
@@ -121,47 +120,54 @@ class ChooseCity extends React.Component {
 
         return (
             <View style={{ backgroundColor: 'white' }}>
-                <Spin spinning={loading || fetchCitiesLoading} >
-                    <Text style={styles.userText}>
-                        {locales('titles.selectOrigin')}
-                    </Text>
-                    {!error && message && message.length &&
-                        <View style={styles.loginFailedContainer}>
-                            <Text style={styles.loginFailedText}>
-                                {ENUMS.VERIFICATION_MESSAGES.list.filter(item => item.value === message)[0].title}
-                            </Text>
-                        </View>
-                    }
-                    <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.province')}
-                        </Label>
-                        <Item regular
-                            style={{
-                                width: deviceWidth * 0.9,
-                                borderRadius: 5,
-                                alignSelf: 'center',
-                                borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
-                            }}
-                        >
-                            <RNPickerSelect
-                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                useNativeAndroidPickerStyle={false}
-                                onValueChange={this.setProvince}
-                                style={styles}
-                                value={province}
-                                placeholder={{
-                                    label: locales('labels.selectProvince'),
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                }}
-                                items={[...provinces.map(item => ({
-                                    label: item.province_name, value: item.id
-                                }))]}
-                            />
-                        </Item>
-                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+
+                <Text style={styles.userText}>
+                    {locales('titles.selectOrigin')}
+                </Text>
+                {!error && message && message.length &&
+                    <View style={styles.loginFailedContainer}>
+                        <Text style={styles.loginFailedText}>
+                            {ENUMS.VERIFICATION_MESSAGES.list.filter(item => item.value === message)[0].title}
+                        </Text>
                     </View>
-                    {/* <Dropdown
+                }
+                <View style={styles.labelInputPadding}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        {locales('labels.province')}
+                    </Label>
+                    {(!!this.props.loading) ?
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                position: 'absolute', right: '15%', top: '2%',
+                                width: 50, height: 50, borderRadius: 25
+                            }}
+                        /> : null}
+                    <Item regular
+                        style={{
+                            width: deviceWidth * 0.9,
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
+                        }}
+                    >
+                        <RNPickerSelect
+                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={this.setProvince}
+                            style={styles}
+                            value={province}
+                            placeholder={{
+                                label: locales('labels.selectProvince'),
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
+                            items={[...provinces.map(item => ({
+                                label: item.province_name, value: item.id
+                            }))]}
+                        />
+                    </Item>
+                    {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+                </View>
+                {/* <Dropdown
                         onChangeText={(value, index) => this.setProvince(value, index)}
                         label={locales('labels.selectProvince')}
                         data={provinces}
@@ -173,36 +179,43 @@ class ChooseCity extends React.Component {
                         }}
                     /> */}
 
-                    <View style={styles.labelInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.city')}
-                        </Label>
-                        <Item regular
+                <View style={styles.labelInputPadding}>
+                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        {locales('labels.city')}
+                    </Label>
+                    {(!!this.props.fetchCitiesLoading) ?
+                        <ActivityIndicator size="small" color="#00C569"
                             style={{
-                                width: deviceWidth * 0.9,
-                                borderRadius: 5,
-                                alignSelf: 'center',
-                                borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
+                                position: 'absolute', right: '15%', top: '2%',
+                                width: 50, height: 50, borderRadius: 25
                             }}
-                        >
-                            <RNPickerSelect
-                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                useNativeAndroidPickerStyle={false}
-                                onValueChange={this.setCity}
-                                style={styles}
-                                value={city}
-                                placeholder={{
-                                    label: locales('labels.selectCity'),
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                }}
-                                items={[...cities.map(item => ({
-                                    label: item.city_name, value: item.id
-                                }))]}
-                            />
-                        </Item>
-                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{cityError}</Label>}
-                    </View>
-                    {/* <Dropdown
+                        /> : null}
+                    <Item regular
+                        style={{
+                            width: deviceWidth * 0.9,
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
+                        }}
+                    >
+                        <RNPickerSelect
+                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={this.setCity}
+                            style={styles}
+                            value={city}
+                            placeholder={{
+                                label: locales('labels.selectCity'),
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
+                            items={[...cities.map(item => ({
+                                label: item.city_name, value: item.id
+                            }))]}
+                        />
+                    </Item>
+                    {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{cityError}</Label>}
+                </View>
+                {/* <Dropdown
                         value={city}
                         error={cityError}
                         onChangeText={(value) => this.setCity(value)}
@@ -212,25 +225,24 @@ class ChooseCity extends React.Component {
                             paddingHorizontal: 20
                         }}
                     /> */}
-                    <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={!city || !province ? styles.disableLoginButton : styles.loginButton}
-                            rounded
-                        >
-                            <AntDesign name='arrowleft' size={25} color='white' />
-                            <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(2)}
-                            style={styles.backButtonContainer}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
-                    </View>
-                </Spin >
+                <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!city || !province ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                    >
+                        <AntDesign name='arrowleft' size={25} color='white' />
+                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                    </Button>
+                    <Button
+                        onPress={() => this.props.changeStep(2)}
+                        style={styles.backButtonContainer}
+                        rounded
+                    >
+                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    </Button>
+                </View>
             </View>
         )
     }

@@ -7,7 +7,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils'
 import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
-import Spin from '../../../components/loading/loading'
 import ENUMS from '../../../enums';
 class GetMobileNumberStep extends React.Component {
     constructor(props) {
@@ -41,7 +40,7 @@ class GetMobileNumberStep extends React.Component {
         let { message, loading, error } = this.props
         let { mobileNumber } = this.state
         return (
-            <Spin spinning={loading} >
+            <>
                 <Text style={styles.userText}>
                     {locales('messages.enterPhoneNumberToGetCode')}
                 </Text>
@@ -79,6 +78,14 @@ class GetMobileNumberStep extends React.Component {
                     disabled={!mobileNumber.length}
                 >
                     <Text style={styles.buttonText}>{locales('titles.submitNumber')}</Text>
+                    <ActivityIndicator
+                        animating={!!this.props.loading}
+                        size="small" color="white"
+                        style={{
+                            position: 'absolute', left: 0, top: '25%',
+                            width: 30, height: 30, borderRadius: 15
+                        }}
+                    />
                 </Button>
                 <Text
                     style={styles.forgotPassword}>
@@ -92,7 +99,7 @@ class GetMobileNumberStep extends React.Component {
                         {locales('titles.enterToBuskool')}
                     </Text>
                 </TouchableOpacity>
-            </Spin>
+            </>
         )
     }
 }

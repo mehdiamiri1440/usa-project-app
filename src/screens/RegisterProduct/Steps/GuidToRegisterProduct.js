@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import { Button, Spinner } from 'native-base';
+import { Button } from 'native-base';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -182,9 +182,15 @@ class GuidToRegisterProduct extends React.Component {
                             rounded
                         >
                             <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
+                            <ActivityIndicator size="small" color="white"
+                                animating={!!userPermissionToRegisterProductLoading}
+                                style={{
+                                    position: 'absolute', left: 0, top: '20%',
+                                    width: 30, height: 30, borderRadius: 15
+                                }}
+                            />
                         </Button>
                     </View>
-                    <Spinner animating={userPermissionToRegisterProductLoading} />
 
                 </View>
             </>
