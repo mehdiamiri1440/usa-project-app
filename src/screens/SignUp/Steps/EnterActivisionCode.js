@@ -123,8 +123,8 @@ const EnterActivisionCode = (props) => {
             </SafeAreaView>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 10 }}>
                 <Timer
-                    min={0}
-                    sec={5}
+                    min={2}
+                    sec={0}
                     isCountDownTimer={true}
                     containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
