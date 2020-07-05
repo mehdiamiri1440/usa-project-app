@@ -11,9 +11,12 @@ export const fetchAllProductsList = item => {
                 withAuth: false,
             })
             .then(result => {
+                console.warn('product success', result)
+
                 resolve(result);
             })
             .catch(err => {
+                console.warn('products err', err)
                 return reject(err.response);
             });
     });

@@ -14,6 +14,7 @@ export const login = (mobileNumber, password) => {
                 }
             })
             .then(result => {
+                console.log('login success', result)
                 storeData = async () => {
                     if (result.token)
                         await AsyncStorage.setItem('@Authorization', result.token)
@@ -24,6 +25,7 @@ export const login = (mobileNumber, password) => {
                 storeData()
             })
             .catch(err => {
+                console.log('login err', err)
                 return reject(err);
             });
     });
@@ -54,7 +56,7 @@ export const logOut = () => {
             })
             .then(async (result) => {
                 result = await AsyncStorage.removeItem('@Authorization')
-                console.warn('result', result)
+                console.log('result', result)
                 resolve(result);
             })
             .catch(err => {

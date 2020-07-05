@@ -41,6 +41,9 @@ class Profile extends Component {
             this.props.fetchProfileByUserName(this.props.route.params.user_name);
             this.props.fetchProductsListByUserName(this.props.route.params.user_name);
         }
+        else {
+            this.props.navigation.goBack();
+        }
     };
 
     fetchAllProducts = () => {
@@ -212,7 +215,32 @@ class Profile extends Component {
 
         return (
             <>
+                {(userProfileLoading || profileStatisticsLoading
+                    || profileByUserNameLoading || productsListByUserNameLoading) ?
+                    <View style={{
+                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                        position: 'absolute',
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                    }}>
+                        <ActivityIndicator size="large"
+                            style={{
+                                position: 'absolute', left: '44%', top: '40%',
+                                shadowOffset: { width: 20, height: 20 },
+                                shadowColor: 'black',
+                                shadowOpacity: 1.0,
+                                elevation: 5,
+                                borderColor: 'black',
+                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                            }}
+                            color="#00C569"
 
+                        />
+                    </View> : null}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -267,6 +295,7 @@ class Profile extends Component {
                     transparent={false}
                     visible={modalFlag}
                     {...this.props}
+                    profile_photo={profilePhotoFromByUserName}
                     contact={{ ...selectedContact }}
                     onRequestClose={() => this.setState({ modalFlag: false })}
                 />}

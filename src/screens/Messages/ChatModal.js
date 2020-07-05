@@ -36,7 +36,7 @@ class ChatModal extends React.Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserProfilePhoto(this.props.contact.contact_id);
+        // this.props.fetchUserProfilePhoto(this.props.contact.contact_id);
         this.props.fetchTotalUnreadMessages();
         // Keyboard.addListener('keyboardDidShow', event => {
         //     this.setState({ keyboardHeight: event.endCoordinates.height }, () => setTimeout(() => {
@@ -203,8 +203,8 @@ class ChatModal extends React.Component {
                                 borderRadius: 23,
                                 width: 46, height: 46
                             }}
-                            source={contact.profile_photo || profile_photo ?
-                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${contact.profile_photo || profile_photo}` }
+                            source={profile_photo || contact.profile_photo ?
+                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo || contact.profile_photo}` }
                                 : require('../../../assets/icons/user.png')}
                         />
                     </TouchableOpacity>
@@ -449,7 +449,7 @@ const mapStateToProps = (state) => {
         loggedInUserId: state.authReducer.loggedInUserId,
 
         contactsList: state.messagesReducer.contactsList,
-        profile_photo: state.messagesReducer.profile_photo,
+        // profile_photo: state.messagesReducer.profile_photo,
 
         message: state.messagesReducer.message
     }

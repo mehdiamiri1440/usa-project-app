@@ -22,6 +22,7 @@ class ProductsList extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
+            selectedButton: null,
             city: '',
             province: '',
             sortModalFlag: false,
@@ -88,6 +89,7 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
         };
+        console.log('item', item)
         this.props.fetchAllProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef.current)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
@@ -151,7 +153,7 @@ class ProductsList extends PureComponent {
 
     searchLocation = () => {
         const { searchText, province, city, sort_by } = this.state;
-
+        this.setState({ selectedButton: 1 });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -180,7 +182,7 @@ class ProductsList extends PureComponent {
 
     deleteFilter = () => {
         const { searchText, province, city, sort_by } = this.state;
-
+        this.setState({ selectedButton: 2 });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -218,7 +220,8 @@ class ProductsList extends PureComponent {
             allCitiesObject
         } = this.props;
 
-        const { searchText, loaded, productsListArray, categoryModalFlag, sortModalFlag, locationsFlag, province, city } = this.state;
+        const { searchText, loaded, productsListArray, selectedButton,
+            categoryModalFlag, sortModalFlag, locationsFlag, province, city } = this.state;
 
         let { provinces = [] } = allProvincesObject;
 
@@ -308,7 +311,7 @@ class ProductsList extends PureComponent {
                                             <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('labels.city')}
                                             </Label>
-                                            {(this.props.provinceLoading || this.props.fetchCitiesLoading || productsListLoading) ?
+                                            {(this.props.provinceLoading || this.props.fetchCitiesLoading) ?
                                                 <ActivityIndicator size="small" color="#00C569"
                                                     style={{
                                                         position: 'absolute', right: '15%', top: '2%',
@@ -350,6 +353,13 @@ class ProductsList extends PureComponent {
                                                 <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
                                                     {locales('labels.search')}
                                                 </Text>
+                                                <ActivityIndicator size="small" color="white"
+                                                    animating={selectedButton == 1 && !!productsListLoading}
+                                                    style={{
+                                                        position: 'absolute', left: '15%', top: '25%',
+                                                        width: 30, height: 30, borderRadius: 15
+                                                    }}
+                                                />
                                             </Button>
                                             <Button
                                                 style={[styles.loginButton, { width: '50%', backgroundColor: '#556080', }]}
@@ -360,6 +370,13 @@ class ProductsList extends PureComponent {
                                                 }]}>
                                                     {locales('labels.deleteFilter')}
                                                 </Text>
+                                                <ActivityIndicator size="small" color="white"
+                                                    animating={selectedButton == 2 && !!productsListLoading}
+                                                    style={{
+                                                        position: 'absolute', left: '15%', top: '25%',
+                                                        width: 30, height: 30, borderRadius: 15
+                                                    }}
+                                                />
                                             </Button>
                                         </View>
 

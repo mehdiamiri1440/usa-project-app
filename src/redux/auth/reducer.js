@@ -65,6 +65,7 @@ export default (state = INITIAL_STATE, action) => {
             const { msg } = action.payload;
             return {
                 ...state,
+                checkAlreadySignedUpMobileNumberLoading: false,
                 loginLoading: false,
                 loginFailed: true,
                 loginError: false,
@@ -77,6 +78,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 loginLoading: false,
                 loginFailed: false,
+                checkAlreadySignedUpMobileNumberLoading: false,
                 loggedInUserId: '',
                 loginError: true,
                 loginMessage: null

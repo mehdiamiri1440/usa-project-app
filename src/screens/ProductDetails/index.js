@@ -392,6 +392,7 @@ class ProductDetails extends Component {
                     transparent={false}
                     visible={modalFlag}
                     {...this.props}
+                    profile_photo={profile_photo}
                     contact={{ ...selectedContact }}
                     onRequestClose={() => this.setState({ modalFlag: false })}
                 /> : null}

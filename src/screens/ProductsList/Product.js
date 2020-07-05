@@ -669,6 +669,7 @@ class Product extends PureComponent {
                 {modalFlag && <ChatModal
                     transparent={false}
                     visible={modalFlag}
+                    profile_photo={profile_photo}
                     {...this.props}
                     contact={{ ...selectedContact }}
                     onRequestClose={() => this.setState({ modalFlag: false })}

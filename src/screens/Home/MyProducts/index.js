@@ -64,7 +64,8 @@ class MyProducts extends Component {
     }
 
     fetchAllProducts = () => {
-        this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name);
+        if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
+            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name);
     };
 
 
@@ -139,20 +140,22 @@ class MyProducts extends Component {
                                 from_record_number: this.state.from_record_number + 15,
                                 to_record_number: this.state.to_record_number + 15,
                             }, () => {
-                                this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
-                                    this.setState({ loaded: false })
-                                })
+                                if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
+                                    this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
+                                        this.setState({ loaded: false })
+                                    })
                             })
                     }}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
                     onRefresh={() => {
-                        this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
-                            this.setState({
-                                searchText: '', sort_by: 'BM'
-                                , refreshed: true, from_record_number: 0, to_record_number: 15
+                        if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
+                            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
+                                this.setState({
+                                    searchText: '', sort_by: 'BM'
+                                    , refreshed: true, from_record_number: 0, to_record_number: 15
+                                })
                             })
-                        })
                     }
                     }
                     onEndReachedThreshold={0.2}
