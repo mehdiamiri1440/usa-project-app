@@ -153,19 +153,6 @@ class ContactsList extends React.Component {
                     </InputGroup>
                 </View>
 
-
-
-                {(contactsListLoading && !loaded) ? <ActivityIndicator size="large" color="#00C569"
-                    style={{
-                        position: 'absolute', left: '44%', top: '40%',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                    }}
-                /> : null}
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
