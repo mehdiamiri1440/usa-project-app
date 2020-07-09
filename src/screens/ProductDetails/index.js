@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, ScrollView, TouchableOpacity, Linking, Share, FlatList, ActivityIndicator } from 'react-native';
+import { Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler, TouchableOpacity, Linking, Share, FlatList, ActivityIndicator } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ import { validator, dataGenerator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import { NavigationActions } from 'react-navigation';
 
 
 class ProductDetails extends Component {
@@ -50,29 +51,11 @@ class ProductDetails extends Component {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
+    componentWillUnmount() {
+    }
 
-    componentDidMount() {
-        if (this.props.route && this.props.route.params && this.props.route.params.productId) {
-            this.props.fetchAllRelatedProducts(this.props.route.params.productId);
-            this.props.fetchProductDetails(this.props.route.params.productId).then(_ => {
-                if (this.props.productDetails && this.props.productDetails.main) {
-                    const {
-                        max_sale_price,
-                        min_sale_price,
-                        stock,
-                        min_sale_amount
-                    } = this.props.productDetails.main;
-
-                    this.setState({
-                        minimumOrder: min_sale_amount.toString(),
-                        maximumPrice: max_sale_price.toString(),
-                        minimumPrice: min_sale_price.toString(),
-                        amount: stock.toString(),
-                        loaded: true
-                    });
-                }
-            })
-        }
+    componentDidMount(param) {
+        this.callApi()
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -94,6 +77,30 @@ class ProductDetails extends Component {
         }
     }
 
+    callApi = param => {
+        let code = param || this.props.route.params.productId;
+        if (code) {
+            this.props.fetchAllRelatedProducts(code);
+            this.props.fetchProductDetails(code).then(_ => {
+                if (this.props.productDetails && this.props.productDetails.main) {
+                    const {
+                        max_sale_price,
+                        min_sale_price,
+                        stock,
+                        min_sale_amount
+                    } = this.props.productDetails.main;
+
+                    this.setState({
+                        minimumOrder: min_sale_amount.toString(),
+                        maximumPrice: max_sale_price.toString(),
+                        minimumPrice: min_sale_price.toString(),
+                        amount: stock.toString(),
+                        loaded: true
+                    });
+                }
+            })
+        }
+    }
 
     showFullSizeImage = index => {
         this.setState({ showFullSizeImageModal: true, selectedImage: index })
@@ -626,7 +633,16 @@ class ProductDetails extends Component {
                 }}>
                     <TouchableOpacity
                         style={{ width: deviceWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: -5 }}
-                        onPress={() => this.props.navigation.goBack()}
+                        onPress={() => {
+                            if (routes.length > 1) {
+                                this.callApi(routes[routes.length - 2])
+                                routes.pop();
+                            }
+                            else {
+                                routes = []
+                                this.props.navigation.navigate('ProductsList');
+                            }
+                        }}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
@@ -877,7 +893,9 @@ class ProductDetails extends Component {
                                         </Text> : null}
                                     </View>
                                     <Button
-                                        onPress={() => this.props.navigation.navigate('Profile', { user_name })}
+                                        onPress={() => {
+                                            ; this.props.navigation.navigate('Profile', { user_name })
+                                        }}
                                         style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
                                     >
                                         <Text style={[styles.buttonText, { fontSize: 16 }]}>
@@ -948,10 +966,9 @@ class ProductDetails extends Component {
                                     <TouchableOpacity
                                         activeOpacity={1}
                                         onPress={() => {
-                                            this.props.setProductDetailsId(item.id)
-                                            setTimeout(() => {
-                                                return this.props.navigation.push(`ProductDetails${item.id}`, { productId: item.id })
-                                            }, 100);
+                                            this.props.navigation.setParams({ productId: item.id, key: item.id })
+                                            routes.push(item.id);
+                                            this.props.navigation.navigate({ name: 'ProductDetails', key: item.id, params: { productId: item.id } })
                                         }}>
                                         <Image
                                             resizeMode='cover'

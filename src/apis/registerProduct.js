@@ -10,11 +10,9 @@ export const fetchAllCategories = () => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('category success', result)
                 resolve(result);
             })
             .catch(err => {
-                console.warn('category failed', err)
                 return reject(err.response);
             });
     });

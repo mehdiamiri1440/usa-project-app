@@ -76,7 +76,6 @@ class Login extends React.Component {
         let { message, loading, error } = this.props;
         let { mobileNumber, password, mobileNumberError } = this.state;
 
-        console.log('sfadf', loading)
         return (
             <>
                 <ScrollView

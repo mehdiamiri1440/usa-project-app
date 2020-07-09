@@ -89,7 +89,6 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
         };
-        console.log('item', item)
         this.props.fetchAllProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef.current)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });

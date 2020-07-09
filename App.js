@@ -15,6 +15,8 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { Root, Toast } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 const store = configureStore()
+
+
 const customTextProps = {
   style: {
     fontFamily: "IRANSansWeb(FaNum)_Light",
@@ -25,6 +27,7 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
+global.routes = [];
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +38,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
     messaging().setBackgroundMessageHandler(async _ => {
       store.dispatch(messageActions.isFromOutSide(true))
     });

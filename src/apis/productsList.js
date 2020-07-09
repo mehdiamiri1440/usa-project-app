@@ -11,12 +11,9 @@ export const fetchAllProductsList = item => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('product success', result)
-
                 resolve(result);
             })
             .catch(err => {
-                console.warn('products err', err)
                 return reject(err.response);
             });
     });
@@ -117,6 +114,19 @@ export const fetchProductDetails = id => {
             .catch(err => {
                 return reject(err.response);
             });
+    });
+};
+
+
+
+export const setProductDetailsId = id => {
+    return new Promise((resolve, reject) => {
+        if (id) {
+            resolve(id)
+        }
+        else {
+            reject(false)
+        }
     });
 };
 

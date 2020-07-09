@@ -40,6 +40,9 @@ const INITIAL_STATE = {
     productDetailsFailed: false,
     productDetailsError: false,
     productDetailsMessage: null,
+
+    productDetailsId: null
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -323,12 +326,32 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
 
-        case actionTypes.SET_PRODUCT_DETAILS_ID: {
+
+        case actionTypes.SET_PRODUCT_DETAILS_ID_LOADING: {
+            return {
+                ...state,
+                productDetailsId: null
+            };
+        };
+        case actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY: {
             return {
                 ...state,
                 productDetailsId: action.payload
-            }
-        }
+            };
+        };
+        case actionTypes.SET_PRODUCT_DETAILS_ID_FAILED: {
+            return {
+                ...state,
+                productDetailsId: null
+            };
+        };
+        case actionTypes.SET_PRODUCT_DETAILS_ID_REJECT: {
+            return {
+                ...state,
+                productDetailsId: null
+            };
+        };
+
 
         default:
             return state

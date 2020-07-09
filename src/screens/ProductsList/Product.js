@@ -679,7 +679,9 @@ class Product extends PureComponent {
                     <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
                         <Body >
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Profile', { user_name })}
+                                onPress={() => {
+                                    this.props.navigation.navigate('Profile', { user_name })
+                                }}
                                 activeOpacity={1}
                                 style={{
                                     flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
@@ -740,10 +742,9 @@ class Product extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
-                                    this.props.setProductDetailsId(productId)
-                                    setTimeout(() => {
-                                        return this.props.navigation.push(`ProductDetails${productId}`, { productId, key: productId })
-                                    }, 100);
+                                    this.props.navigation.setParams({ productId, key: productId })
+                                    routes.push(productId);
+                                    this.props.navigation.navigate({ name: 'ProductDetails', key: productId, params: { productId } })
                                 }}
                                 style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
                                 <Image

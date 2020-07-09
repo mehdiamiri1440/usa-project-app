@@ -43,23 +43,6 @@ class Requests extends React.Component {
 
 
     checkForSendingMessage = (item) => {
-        this.setState({ selectedButton: item.id })
-        this.props.isUserAllowedToSendMessage(item.id).then(() => {
-            if (this.props.isUserAllowedToSendMessage) {
-                this.setState({
-                    modalFlag: true,
-                    selectedBuyAdId: item.id,
-                    selectedContact: {
-                        contact_id: item.myuser_id,
-                        first_name: item.first_name,
-                        last_name: item.last_name,
-                    }
-                });
-            }
-            else {
-                this.setState({ showDialog: true })
-            }
-        });
 
     };
 
@@ -298,7 +281,26 @@ class Requests extends React.Component {
                                 <View style={{ marginVertical: 5 }}>
                                     <Button
                                         small
-                                        onPress={() => this.checkForSendingMessage(item)}
+                                        onPress={() => {
+                                            this.setState({ selectedButton: item.id })
+                                            this.props.isUserAllowedToSendMessage(item.id).then(() => {
+                                                if (this.props.isUserAllowedToSendMessage) {
+                                                    this.setState({
+                                                        modalFlag: true,
+                                                        selectedBuyAdId: item.id,
+                                                        selectedContact: {
+                                                            contact_id: item.myuser_id,
+                                                            first_name: item.first_name,
+                                                            last_name: item.last_name,
+                                                        }
+                                                    });
+                                                }
+                                                else {
+                                                    this.setState({ showDialog: true })
+                                                }
+                                            });
+
+                                        }}
                                         style={{
                                             backgroundColor: '#00C569',
                                             borderRadius: 6,

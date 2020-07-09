@@ -12,11 +12,9 @@ export const fetchAllProvinces = provinceId => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('province success', result)
                 resolve(result)
             })
             .catch(err => {
-                console.warn('province err', err)
                 return reject(err);
             });
     });

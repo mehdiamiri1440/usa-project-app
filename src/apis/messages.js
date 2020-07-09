@@ -207,11 +207,9 @@ export const fetchTotalUnreadMessages = () => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('unread message success', result)
                 resolve(result);
             })
             .catch(err => {
-                console.warn('unread message error', err)
                 return reject(err.response);
             });
     });
