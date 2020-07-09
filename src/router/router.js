@@ -5,14 +5,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { connect } from 'react-redux';
 import RNRestart from 'react-native-restart';
-import * as messagesActions from '../redux/messages/actions';
-import { NavigationContainer } from '@react-navigation/native';
-import routes from './tabs';
-import Router from './routs';
 import firebase from '@react-native-firebase/app';
-import SignUp from '../screens/SignUp'
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationContainer } from '@react-navigation/native';
+
+import Router from './routes';
+import SignUp from '../screens/SignUp'
+import * as messagesActions from '../redux/messages/actions';
 
 const navigationRef = React.createRef();
 
@@ -23,7 +22,6 @@ const registerAppWithFCM = async () => {
 
 
 const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
 
 
 const App = props => {
