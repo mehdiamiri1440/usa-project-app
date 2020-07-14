@@ -680,7 +680,9 @@ class ProductDetails extends Component {
                                 flexDirection: 'row-reverse', alignItems: 'center',
                                 marginVertical: 30, width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
                             }}>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
+                            <Text
+                                numberOfLines={1}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
                                 {product_name ? product_name : '---'}
                             </Text>
                             <View style={{ marginLeft: 4 }}>
@@ -976,7 +978,9 @@ class ProductDetails extends Component {
                                             source={{
                                                 uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
                                             }} />
-                                        <Text style={{ paddingHorizontal: 10, alignSelf: 'center', }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{ paddingHorizontal: 10, alignSelf: 'center', }}>
                                             {item.product_name}</Text>
                                         <Text style={{ paddingHorizontal: 10, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }}>
                                             {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>

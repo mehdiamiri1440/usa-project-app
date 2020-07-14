@@ -390,6 +390,7 @@ class Profile extends Component {
                     <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
                         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
                             <Text
+                                numberOfLines={1}
                                 style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
                                 {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
                             </Text>
@@ -470,7 +471,8 @@ class Profile extends Component {
                                 <Entypo name='location-pin' size={25} color='#7E7E7E' />
                                 <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
                             </View>
-                            <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
+                            <Text
+                                style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
                         </View>
 
                         {companyNameFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
