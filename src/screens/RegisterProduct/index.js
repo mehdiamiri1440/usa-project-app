@@ -45,7 +45,6 @@ class RegisterProduct extends React.Component {
                 "category_id",
                 "city_id"
             ],
-            stepNumber: 0,
             productType: '',
             category: '',
             detailsArray: [],
@@ -57,18 +56,26 @@ class RegisterProduct extends React.Component {
             amount: '',
             city: '',
             description: '',
-            province: ''
+            province: '',
+
+            stepNumber: 0,
         }
     }
 
     mainContainer = React.createRef();
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         if (this.mainContainer && this.mainContainer.current)
             this.mainContainer.current.scrollTo({ y: 0 });
+
     }
 
     componentDidMount() {
+        global.resetRegisterProduct = data => {
+            if (data) {
+                this.changeStep(0);
+            }
+        }
         if (this.mainContainer && this.mainContainer.current)
             this.mainContainer.current.scrollTo({ y: 0 });
         BackHandler.addEventListener('hardwareBackPress', () => {
@@ -77,6 +84,11 @@ class RegisterProduct extends React.Component {
                 return true;
             }
         })
+        console.log('in pupdate', this.props)
+        if (this.props.resetTab) {
+            this.changeStep(0);
+            this.props.resetRegisterProduct(false);
+        }
     }
 
 
@@ -274,7 +286,6 @@ class RegisterProduct extends React.Component {
     };
 
     render() {
-
         let { stepNumber, successfullAlert } = this.state;
 
         return (
@@ -424,13 +435,15 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        addNewProductLoading: state.registerProductReducer.addNewProductLoading
+        addNewProductLoading: state.registerProductReducer.addNewProductLoading,
+        resetTab: state.registerProductReducer.resetTab
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject))
+        addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
+        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab))
     }
 };
 

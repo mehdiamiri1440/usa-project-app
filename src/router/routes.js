@@ -318,6 +318,12 @@ const router = props => {
 
             <Tab.Screen
                 key='RegisterProduct'
+                listeners={{
+                    tabPress: e => {
+                        if (!!global.resetRegisterProduct)
+                            global.resetRegisterProduct(true)
+                    },
+                }}
                 options={{
                     tabBarBadge: false,
                     tabBarLabel: locales('labels.registerProduct'),
