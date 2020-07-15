@@ -8,6 +8,10 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import Feather from 'react-native-vector-icons/dist/Feather';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import * as productListActions from '../../redux/productsList/actions'
@@ -15,10 +19,6 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ChatModal from '../Messages/ChatModal';
 import { formatter, validator, dataGenerator } from '../../utils';
 import Spin from '../../components/loading/loading';
-import Feather from 'react-native-vector-icons/dist/Feather';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-
 
 class Product extends PureComponent {
     constructor(props) {
@@ -318,10 +318,6 @@ class Product extends PureComponent {
                 {(deleteProductLoading || editProductLoading) ? <ActivityIndicator size="large" color="#00C569"
                     style={{
                         position: 'absolute', left: '44%', top: '40%',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                     }}
@@ -675,8 +671,8 @@ class Product extends PureComponent {
                     onRequestClose={() => this.setState({ modalFlag: false })}
                 />}
 
-                <Card style={{ width: width, alignSelf: 'center' }}>
-                    <CardItem style={{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 1.3 : 0 }}>
+                <Card transparent style={styles.cardWrapper}>
+                    <CardItem style={[{ borderColor: '#00C569', borderWidth: active_pakage_type > 1 ? 2 : 0 }, styles.cardItemStyle]}>
                         <Body >
                             <TouchableOpacity
                                 onPress={() => {
@@ -685,7 +681,7 @@ class Product extends PureComponent {
                                 activeOpacity={1}
                                 style={{
                                     flexDirection: 'row-reverse', marginTop: -9, paddingVertical: 3,
-                                    width: '100%', borderBottomWidth: 1, borderBottomColor: '#7E7E7E'
+                                    width: '100%', borderBottomWidth: 2, borderBottomColor: '#eee'
                                 }}>
                                 <Image
                                     style={{
@@ -746,13 +742,17 @@ class Product extends PureComponent {
                                     // routes.push(productId);
                                     this.props.navigation.navigate({ name: 'ProductDetails', params: { productId }, key: productId, index: productId })
                                 }}
-                                style={{ flexDirection: 'row-reverse', width: '100%', paddingVertical: 5 }}>
+                                style={{ flexDirection: 'row-reverse', width: '100%', paddingTop: 10 }}>
+
                                 <Image
                                     style={{
                                         borderRadius: 10,
                                         width: deviceWidth * 0.25,
                                         height: deviceWidth * 0.25,
-                                        marginHorizontal: 5
+                                        marginHorizontal: 0,
+                                        backgroundColor: "#f0f3f6",
+                                        marginLeft: 10
+                                        // paddingLeft: 10
                                     }}
                                     source={photos.length ?
                                         { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
@@ -803,27 +803,33 @@ class Product extends PureComponent {
 
                             </TouchableOpacity>
 
-                            <View style={{
-                                flexDirection: 'row-reverse',
-                                alignItems: 'center', padding: 5,
-                                width: '100%', justifyContent: 'center'
-                            }}>
+                            <View style={styles.actionsWrapper}>
                                 {loggedInUserId != myuser_id ?
                                     <Button
                                         onPress={() => this.setState({ modalFlag: true })}
-                                        style={[styles.loginButton, {
-                                            width: !!is_elevated ? '92%' : '88%'
-                                        }]}
+                                        style={styles.loginButton}
                                     >
-                                        <Text style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                            {locales('titles.achiveSaleStatus')}</Text>
-                                        <FontAwesome name='envelope' size={20} color='white'
-                                            style={{ position: 'absolute', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} />
+                                        {/* <View style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}> */}
+                                        <View style={[styles.textCenterView, styles.buttonText]}>
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                                <FontAwesome name='envelope' size={23} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
+                                                {locales('titles.achiveSaleStatus')}
+                                            </Text>
+                                        </View>
+                                        {/* </View> */}
+                                        {/* <FontAwesome name='envelope' size={20} color='white'
+                                            style={{ position: 'relative', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} /> */}
+
                                     </Button>
                                     :
                                     <View style={{
-                                        flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 10,
-                                        width: !this.props.width ? (!!is_elevated ? deviceWidth * 0.88 : deviceWidth) : (!!is_elevated ? deviceWidth * 0.82 : deviceWidth * 0.94)
+                                        flexWrap: 'wrap',
+                                        flexDirection: 'row',
+                                        justifyContent: !!is_elevated ? 'flex-end' : 'center',
+                                        width: '100%',
+                                        marginTop: 10
                                     }}>
                                         <Button
                                             style={{
@@ -831,16 +837,21 @@ class Product extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: !!is_elevated ? '45%' : '55%',
-                                                paddingRight: 40,
+                                                maxWidth: 130,
+                                                marginRight: 15,
                                                 backgroundColor: '#E41C38'
                                             }}
                                         >
-                                            <Text
-                                                onPress={() => this.setState({ elevatorFlag: true })}
-                                                style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                                {locales('titles.elevateProduct')}</Text>
-                                            <FontAwesome5 name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+
+                                            <View onPress={() => this.setState({ elevatorFlag: true })}
+                                                style={[styles.textCenterView, styles.buttonText]}>
+                                                <Text style={[styles.textWhite, , styles.margin5]}>
+                                                    <FontAwesome5 name='chart-line' size={30} color='white' />
+                                                </Text>
+                                                <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
+                                                    {locales('titles.elevateProduct')}
+                                                </Text>
+                                            </View>
                                         </Button>
                                         <Button
                                             style={{
@@ -848,13 +859,21 @@ class Product extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: '40%',
-                                                paddingRight: 15,
+                                                maxWidth: 130,
                                                 backgroundColor: '#000546'
                                             }}
                                         >
-                                            <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                            <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                            <View onPress={() => this.setState({ editionFlag: true })}
+                                                style={[styles.textCenterView, styles.buttonText]}>
+                                                <Text style={[styles.textWhite, styles.margin5]}>
+                                                    <EvilIcons name='pencil' size={30} color='white' />
+                                                </Text>
+                                                <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
+                                                    {locales('titles.edit')}
+                                                </Text>
+                                            </View>
+
+
                                         </Button>
                                     </View>
                                 }
@@ -866,10 +885,7 @@ class Product extends PureComponent {
                                         textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
                                         duration: 3000
                                     })}
-                                    name='chart-line' size={30} color='white' style={{
-                                        backgroundColor: '#7E7E7E',
-                                        padding: 7, right: loggedInUserId == myuser_id ? 10 : 0, borderRadius: 4
-                                    }}
+                                    name='chart-line' size={23} color='white' style={[styles.elevatorIcon]}
                                 />}
                             </View>
 
@@ -882,6 +898,21 @@ class Product extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+    cardWrapper: {
+        width: deviceWidth,
+        alignSelf: 'center',
+        paddingHorizontal: 15,
+        paddingVertical: 7,
+        backgroundColor: 'transparent',
+        borderWidth: 10
+    },
+    cardItemStyle: {
+        shadowOffset: { width: 20, height: 20 },
+        shadowColor: 'black',
+        shadowOpacity: 0.3,
+        elevation: 6,
+        borderRadius: 5
+    },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
         padding: 10,
@@ -907,7 +938,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -959,6 +990,43 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'center',
         color: '#7E7E7E'
+    },
+    fontAwesomeEnvelope: {
+        color: "#fff",
+        // top: '15px',
+        margin: '15px'
+    },
+    textWhite: {
+        color: "#fff"
+    },
+    textCenterView: {
+        justifyContent: 'center',
+        flexDirection: "row-reverse",
+    },
+    textBold: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
+    actionsWrapper: {
+        flexDirection: 'row-reverse',
+        width: '100%',
+        justifyContent: 'center',
+        paddingHorizontal: 15
+    },
+    elevatorIcon: {
+        backgroundColor: '#7E7E7E',
+        padding: 10,
+        borderRadius: 4,
+        height: 45,
+        marginTop: 10
+    },
+    margin5: {
+        margin: 5
+    },
+    margin10: {
+        margin: 10
+    },
+    textSize20: {
+        fontSize: 20
     }
 });
 

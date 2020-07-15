@@ -126,11 +126,13 @@ class GuidToRegisterProduct extends React.Component {
                         }}
                     >
                         <Text
+
                             style={{
                                 textAlignVertical: 'center',
                                 color: 'red',
                                 fontSize: 18,
-                                paddingHorizontal: 5,
+                                // paddingHorizontal: 5,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
                             }}
                         >
@@ -186,7 +188,10 @@ class GuidToRegisterProduct extends React.Component {
                                 animating={!!userPermissionToRegisterProductLoading}
                                 style={{
                                     position: 'absolute', left: 0, top: '20%',
-                                    width: 30, height: 30, borderRadius: 15
+                                    width: 30, height: 30, borderRadius: 15,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 20
+
                                 }}
                             />
                         </Button>
@@ -212,8 +217,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        width: '80%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        fontSize: 20,
     },
     backButtonText: {
         color: '#7E7E7E',
@@ -237,18 +243,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
         alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     loginButton: {
         textAlign: 'center',
         margin: 10,
         backgroundColor: '#00C569',
-        width: deviceWidth * 0.5,
+        width: deviceWidth * 0.7,
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
         alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+
     },
     forgotContainer: {
         flexDirection: 'row',
