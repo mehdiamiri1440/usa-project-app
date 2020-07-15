@@ -624,7 +624,7 @@ class ProductDetails extends Component {
 
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
@@ -632,7 +632,7 @@ class ProductDetails extends Component {
                     justifyContent: 'center'
                 }}>
                     <TouchableOpacity
-                        style={{ width: deviceWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: -5 }}
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             if (routes.length > 1) {
                                 this.callApi(routes[routes.length - 2])
@@ -646,10 +646,7 @@ class ProductDetails extends Component {
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
-                    <View style={{
-                        width: deviceWidth * 0.6,
-                        alignItems: 'flex-end'
-                    }}>
+                    <View >
                         <Text
                             style={{ fontSize: 18 }}
                         >

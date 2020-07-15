@@ -178,12 +178,13 @@ class ContactsList extends React.Component {
 
                 <MessagesContext.Provider
                     value={this.setNewContactsList}
+                    style={{ paddingBottom: 200, marginBottom: 200 }}
                 >
                     {contactsList.length ?
                         <>
-                            <Card >
-                                <CardItem>
-                                    <Body>
+                            <Card s>
+                                <CardItem >
+                                    <Body >
                                         <FlatList
                                             ref={this.props.contactsListRef}
                                             refreshing={contactsListLoading && !loaded}
@@ -199,7 +200,8 @@ class ContactsList extends React.Component {
                                             // )}
                                             // onEndReachedThreshold={0.3}
                                             // onEndReached={this.fetchMoreContacts}
-                                            style={{ width: '100%', height: deviceHeight * 0.74 }}
+                                            style={{ width: '100%', height: deviceHeight * 1 }}
+                                            contentContainerStyle={{ paddingBottom: 200 }}
                                             data={contactsList}
                                             renderItem={({ item, index, separators }) => (
                                                 <TouchableOpacity
