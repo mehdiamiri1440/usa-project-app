@@ -6,9 +6,6 @@ export const fetchAllBuyAdRequests = provinceId => {
             .fetchAPI({
                 route: `get_related_buyAds_list_to_the_seller`,
                 method: 'POST',
-                data: {
-                    province_id: provinceId
-                },
                 withAuth: false,
             })
             .then(result => {

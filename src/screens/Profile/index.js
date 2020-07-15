@@ -36,6 +36,7 @@ class Profile extends Component {
     }
 
     initProfileContent = _ => {
+        console.log('re render', this.props)
         if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
             this.props.fetchProfileStatistics(this.props.route.params.user_name);
             this.props.fetchProfileByUserName(this.props.route.params.user_name);

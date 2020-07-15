@@ -90,7 +90,7 @@ class ProductsList extends PureComponent {
             };
         };
         this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         });
     };
@@ -113,7 +113,7 @@ class ProductsList extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
             if (province) {
                 item = { ...item, province_id: province }
@@ -174,7 +174,7 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
         });
@@ -410,7 +410,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                                         this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
                                     const { searchText } = this.state;
                                     let searchItem = {
@@ -466,7 +466,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                                         this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
 
                                     const { sort_by } = this.state;

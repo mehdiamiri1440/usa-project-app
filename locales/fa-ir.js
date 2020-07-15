@@ -230,6 +230,7 @@ export default {
     'titles.submitSignUp': 'ثبت‌نام',
     'titles.selectOne': 'یک مورد راانتخاب کنید',
     'titles.cityAndProvinceRequired': 'انتخاب استان و شهر الزامی می‌باشد',
+    'titles.noBuyAdFound': 'هیچ درخواست خریدی ثبت نشده‌است',
     "titles.nextStep": "مرحله بعد",
     "titles.previousStep": "مرحله قبل",
     'titles.submitNumber': 'ثبت شماره',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent, Component } from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, Modal } from 'react-native';
 import { Dialog, Portal, Paragraph, Snackbar, ActivityIndicator } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -12,15 +12,20 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as profileActions from '../../redux/profile/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
 import ChatModal from '../Messages/ChatModal';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
+
+import BuyAdList from './BuyAdList';
 
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
-class Requests extends React.Component {
+class Requests extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             selectedButton: null,
+            from: 0,
+            to: 15,
 
             showToast: false,
             modalFlag: false,
@@ -41,6 +46,12 @@ class Requests extends React.Component {
         this.updateFlag.current.close()
     }
 
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log('this.props', this.props, 'nextprops', nextProps, 'this.state', this.state, 'nexststate', nextState)
+    //     if (this.props.isUserAllowedToSendMessageLoading || (this.props.buyAdRequestLoading && this.props.buyAdRequestsList.length) || this.props.buyAdRequestsList.length)
+    //         return false;
+    //     return true
+    // }
 
     checkForSendingMessage = (item) => {
 
@@ -48,15 +59,64 @@ class Requests extends React.Component {
 
     hideDialog = () => this.setState({ showDialog: false });
 
+    openChat = (event, item) => {
+        event.preventDefault();
+        const { isUserAllowedToSendMessage } = this.props;
+        this.setState({ selectedButton: item.id })
+        isUserAllowedToSendMessage(item.id).then(() => {
+            if (this.props.isUserAllowedToSendMessage) {
+                this.setState({
+                    modalFlag: true,
+                    selectedBuyAdId: item.id,
+                    selectedContact: {
+                        contact_id: item.myuser_id,
+                        first_name: item.first_name,
+                        last_name: item.last_name,
+                    }
+                });
+            }
+            else {
+                this.setState({ showDialog: true })
+            }
+        });
+    };
+
+    renderItem = ({ item, index, separators }) => {
+
+        const { selectedButton } = this.state;
+        const { isUserAllowedToSendMessageLoading, buyAdRequestsList } = this.props;
+
+        return (
+            <BuyAdList
+                item={item}
+                openChat={this.openChat}
+                selectedButton={selectedButton}
+                isUserAllowedToSendMessageLoading={isUserAllowedToSendMessageLoading}
+                index={index}
+                buyAdRequestsList={buyAdRequestsList}
+                separators={separators}
+            />
+        )
+    }
+
 
     render() {
 
         let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
             isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
-        let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId } = this.state;
+        let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId, from, to } = this.state;
         return (
             <>
+
+                {modalFlag && <ChatModal
+                    transparent={false}
+                    {...this.props}
+                    visible={modalFlag}
+                    buyAdId={selectedBuyAdId}
+                    contact={{ ...selectedContact }}
+                    onRequestClose={() => this.setState({ modalFlag: false })}
+                />}
 
                 <RBSheet
                     ref={this.updateFlag}
@@ -178,6 +238,8 @@ class Requests extends React.Component {
                     </View>
                 </View>
 
+
+
                 {userInfo.active_pakage_type == 0 && <View style={{
                     shadowOffset: { width: 20, height: 20 },
                     shadowColor: 'black',
@@ -203,264 +265,25 @@ class Requests extends React.Component {
                     style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                 >
 
-
-
-
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}
                         onRefresh={() => this.props.fetchAllBuyAdRequests()}
+                        keyboardDismissMode='on-drag'
+                        keyboardShouldPersistTaps='handled'
+                        ListEmptyComponent={() => <View style={{
+                            alignSelf: 'center', justifyContent: 'center',
+                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                        }}>
+                            <Entypo name='list' size={30} color='#BEBEBE' />
+                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noBuyAdFound')}</Text>
+                        </View>
+                        }
                         data={buyAdRequestsList}
+                        extraData={this.state}
+                        onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item, index, separators }) => (
-                            <View
-                                style={{
-                                    padding: 10, backgroundColor: '#FFFFFF', marginVertical: 5,
-                                    width: '100%', borderBottomColor: '#DDDDDD',
-                                    borderBottomWidth: index < buyAdRequestsList.length - 1 ? 0.7 : 0
-                                }}
-                                key={item.id}
-                            >
-
-                                <View>
-                                    <Text
-                                        numberOfLines={1}
-                                        style={{
-                                            marginVertical: 5,
-                                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                                        }}
-                                    >{`${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
-                                </View>
-
-
-                                <View>
-                                    <Text
-                                        numberOfLines={1}
-                                        style={{
-                                            marginVertical: 5,
-                                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                                        }}
-                                    >{`${locales('titles.requirementQuantity')} : ${item.requirement_amount} ${locales('labels.kiloGram')}`}
-                                    </Text>
-                                </View>
-
-                                <View>
-                                    <Text
-                                        numberOfLines={1}
-                                        style={{
-                                            marginVertical: 5,
-                                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                                        }}
-                                    >
-                                        {Jmoment(item.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
-                                    </Text>
-                                </View>
-
-
-
-                                <View style={{
-                                    marginVertical: 5,
-                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-                                }}>
-                                    <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
-                                    <MaterialCommunityIcons
-                                        onPress={() => Toast.show({
-                                            text: locales('titles.remianedCapacityToSendMessageToBuyer'),
-                                            position: "bottom",
-                                            style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
-                                            duration: 3000
-                                        })}
-                                        name='comment-alert' size={25} color={'#777777'} />
-                                </View>
-
-
-                                <View style={{ marginVertical: 5 }}>
-                                    <Button
-                                        small
-                                        onPress={() => {
-                                            this.setState({ selectedButton: item.id })
-                                            this.props.isUserAllowedToSendMessage(item.id).then(() => {
-                                                if (this.props.isUserAllowedToSendMessage) {
-                                                    this.setState({
-                                                        modalFlag: true,
-                                                        selectedBuyAdId: item.id,
-                                                        selectedContact: {
-                                                            contact_id: item.myuser_id,
-                                                            first_name: item.first_name,
-                                                            last_name: item.last_name,
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                    this.setState({ showDialog: true })
-                                                }
-                                            });
-
-                                        }}
-                                        style={{
-                                            backgroundColor: '#00C569',
-                                            borderRadius: 6,
-                                            alignItems: 'center',
-                                            width: "80%",
-                                            position: 'relative',
-                                            alignSelf: 'center',
-                                            justifyContent: 'center',
-                                            height: 35,
-                                            paddingHorizontal: 10,
-                                            flexDirection: 'row-reverse'
-                                        }}
-                                    >
-                                        <ActivityIndicator size={20} color="white"
-                                            animating={selectedButton == item.id &&
-                                                !!isUserAllowedToSendMessageLoading}
-                                            style={{
-                                                position: 'absolute', right: '30%', top: '40%',
-                                                width: 10, height: 10, borderRadius: 5
-                                            }}
-                                        />
-                                        <MaterialCommunityIcons name='message' color='white' size={14} />
-                                        <Text style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14,
-                                            color: 'white', paddingHorizontal: 3
-                                        }}>
-                                            {locales('labels.messageToBuyer')}
-
-
-                                        </Text>
-                                    </Button>
-                                </View>
-                            </View>
-
-                        )} />
-
-
-
-                    {modalFlag && <ChatModal
-                        transparent={false}
-                        {...this.props}
-                        visible={modalFlag}
-                        buyAdId={selectedBuyAdId}
-                        contact={{ ...selectedContact }}
-                        onRequestClose={() => this.setState({ modalFlag: false })}
-                    />}
-
-
-
-
-
-
-                    {/* 
-
-
-
-
-                            <ScrollView
-                            >
-
-                                {modalFlag && <ChatModal
-                                    transparent={false}
-                                    visible={modalFlag}
-                                    contact={{ ...selectedContact }}
-                                    onRequestClose={() => this.setState({ modalFlag: false })}
-                                />}
-
-
-                                <Card
-                                >
-                                    <CardItem>
-                                        <Body>
-                                            {buyAdRequestsList.map((buyAd, index, self) => (
-                                                <View
-                                                    style={{
-                                                        padding: 10,
-                                                        width: '100%', borderBottomColor: '#DDDDDD',
-                                                        borderBottomWidth: index < self.length - 1 ? 0.7 : 0
-                                                    }}
-                                                    key={buyAd.id}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            flexDirection: 'row-reverse',
-                                                            alignItems: 'flex-start',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={{
-                                                                flexWrap: 'wrap', width: '75%',
-                                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#666666'
-                                                            }}
-                                                        >{`${buyAd.category_name} | ${buyAd.subcategory_name} | ${buyAd.name}`}</Text>
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={{ color: '#666666', width: '40%', flexWrap: 'wrap' }}
-                                                        >
-                                                            {Jmoment(buyAd.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
-                                                        </Text>
-                                                    </View>
-
-
-                                                    <View
-                                                        style={{
-                                                            alignItems: 'center',
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between'
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={{ color: '#666666', width: '70%' }}
-                                                        >{`${locales('titles.requirementQuantity')} : ${buyAd.requirement_amount} ${locales('labels.kiloGram')}`}
-                                                        </Text>
-                                                        <Button
-                                                            onPress={() => this.setState({
-                                                                modalFlag: true,
-                                                                selectedContact: {
-                                                                    contact_id: buyAd.myuser_id,
-                                                                    first_name: buyAd.first_name,
-                                                                    last_name: buyAd.last_name
-                                                                }
-                                                            })}
-                                                            small
-                                                            style={{
-                                                                backgroundColor: '#00C569',
-                                                                borderRadius: 6,
-                                                                paddingHorizontal: 10,
-                                                                flexDirection: 'row-reverse'
-                                                            }}
-                                                        >
-                                                            <MaterialCommunityIcons name='message' color='white' size={18} />
-                                                            <Text style={{
-                                                                color: 'white', paddingHorizontal: 3
-                                                            }}>
-                                                                {locales('labels.messageToBuyer')}
-                                                            </Text>
-                                                        </Button>
-                                                    </View>
-                                                </View>
-                                         
-                                         ))}
-
-                                            {userInfo.active_pakage_type !== 3 && <View style={{ paddingTop: 5 }}>
-                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
-                                                    {locales('titles.maxBuyAdRequestsShownToYou')}<Text style={{ color: 'red', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}> {userInfo.active_pakage_type < 3 ? ((userInfo.active_pakage_type + 1) * 5) : locales('titles.unlimited')} </Text>{locales('titles.is')}.
-                            </Text>
-                                                <Button
-                                                    onPress={() => this.props.navigation.navigate('PromoteRegistration')}
-                                                    style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
-                                                >
-                                                    <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
-                                                </Button>
-                                            </View>}
-                                        </Body>
-                                    </CardItem>
-                                </Card>
-                            </ScrollView> */}
+                        renderItem={this.renderItem} />
 
                 </SafeAreaView>
             </>

@@ -17,7 +17,7 @@ import { validator, dataGenerator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 
 class ProductDetails extends Component {
@@ -75,6 +75,13 @@ class ProductDetails extends Component {
                 loaded: true
             });
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.route.params.productId == nextProps.route.params.productId) {
+            return true;
+        }
+        return true
     }
 
     callApi = param => {
@@ -634,14 +641,7 @@ class ProductDetails extends Component {
                     <TouchableOpacity
                         style={{ width: deviceWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: -5 }}
                         onPress={() => {
-                            if (routes.length > 1) {
-                                this.callApi(routes[routes.length - 2])
-                                routes.pop();
-                            }
-                            else {
-                                routes = []
-                                this.props.navigation.navigate('ProductsList');
-                            }
+                            this.props.navigation.goBack()
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
@@ -896,7 +896,7 @@ class ProductDetails extends Component {
                                     </View>
                                     <Button
                                         onPress={() => {
-                                            ; this.props.navigation.navigate('Profile', { user_name })
+                                            this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })
                                         }}
                                         style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
                                     >
@@ -968,9 +968,9 @@ class ProductDetails extends Component {
                                     <TouchableOpacity
                                         activeOpacity={1}
                                         onPress={() => {
-                                            this.props.navigation.setParams({ productId: item.id, key: item.id })
-                                            routes.push(item.id);
-                                            this.props.navigation.navigate({ name: 'ProductDetails', key: item.id, params: { productId: item.id } })
+                                            // this.props.navigation.setParams({ productId: item.id, key: item.id })
+                                            // routes.push(item.id);
+                                            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: item.id }, key: item.id, index: item.id })
                                         }}>
                                         <Image
                                             resizeMode='cover'
