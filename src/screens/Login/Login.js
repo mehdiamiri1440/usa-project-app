@@ -10,7 +10,8 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator, formatter } from '../../utils'
 import OutlinedTextField from '../../components/floatingInput';
 import * as authActions from '../../redux/auth/actions'
-import * as profileActions from '../../redux/profile/actions'
+import * as profileActions from '../../redux/profile/actions';
+import NoConnection from '../../components/noConnectionError';
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -18,7 +19,8 @@ class Login extends React.Component {
             mobileNumber: '',
             mobileNumberError: '',
             password: '',
-            mobileNumberStatus: ''
+            mobileNumberStatus: '',
+            showModal: false
         }
     }
     mobileNumberRef = React.createRef();
@@ -65,12 +67,19 @@ class Login extends React.Component {
         if (isMobileNumberValid) {
             this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
                 this.props.setMobileNumber(mobileNumber);
-            });
+            }).catch(_ => { ; this.setState({ showModal: true }) });
         }
         else {
             this.setState({ mobileNumberError })
         }
     };
+
+    closeModal = _ => {
+        this.setState({ showModal: false });
+        this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber).then(_ => {
+            this.props.setMobileNumber(this.state.mobileNumber);
+        }).catch(_ => { ; this.setState({ showModal: true }) });
+    }
 
     render() {
         let { message, loading, error } = this.props;
@@ -78,6 +87,10 @@ class Login extends React.Component {
 
         return (
             <>
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                 >

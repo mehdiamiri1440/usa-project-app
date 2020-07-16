@@ -4,6 +4,7 @@ export default {
   strings: {
     "errors.mobileOrPasswordIncorrect": " شماره همراه یا کلمه عبور اشتباه است . ",
     "errors.invalidUserName": "نام کاربری نا‌معتبر است",
+    'errors.error': 'خطا',
     'errors.fieldNeeded': '{fieldName} الزامی است',
     'errors.invalidFormat': 'فرمت {fieldName} اشتباه است',
     'errors.imageSizeError': 'حجم تصویر نباید از 5مگابایت بیشتر و از 20 کیلوبایت کمتر باشد',

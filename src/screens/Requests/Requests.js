@@ -15,6 +15,7 @@ import ChatModal from '../Messages/ChatModal';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
+import NoConnection from '../../components/noConnectionError';
 
 
 Jmoment.locale('fa')
@@ -31,7 +32,8 @@ class Requests extends PureComponent {
             modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
-            selectedContact: {}
+            selectedContact: {},
+            showModal: false
         }
     }
 
@@ -39,8 +41,7 @@ class Requests extends PureComponent {
     updateFlag = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserProfile();
-        this.props.fetchAllBuyAdRequests();
+        this.initialCalls().catch(_ => this.setState({ showModal: true }))
     }
     componentWillUnmount() {
         this.updateFlag.current.close()
@@ -52,6 +53,14 @@ class Requests extends PureComponent {
     //         return false;
     //     return true
     // }
+
+    initialCalls = _ => {
+        return new Promise((resolve, reject) => {
+            this.props.fetchUserProfile().catch(error => reject(error));
+            this.props.fetchAllBuyAdRequests().catch(error => reject(error));
+        })
+
+    }
 
     checkForSendingMessage = (item) => {
 
@@ -78,7 +87,7 @@ class Requests extends PureComponent {
             else {
                 this.setState({ showDialog: true })
             }
-        });
+        }).catch(_ => this.setState({ showModal: true }));
     };
 
     renderItem = ({ item, index, separators }) => {
@@ -99,6 +108,11 @@ class Requests extends PureComponent {
         )
     }
 
+    closeModal = _ => {
+        this.setState({ showModal: false });
+        this.componentDidMount()
+    }
+
 
     render() {
 
@@ -108,6 +122,10 @@ class Requests extends PureComponent {
         let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId, from, to } = this.state;
         return (
             <>
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
 
                 {modalFlag && <ChatModal
                     transparent={false}

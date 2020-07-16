@@ -18,6 +18,7 @@ import ChatModal from '../Messages/ChatModal';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import NoConnection from '../../components/noConnectionError';
 
 class Profile extends Component {
     constructor(props) {
@@ -27,24 +28,27 @@ class Profile extends Component {
             selectedEvidenceModal: false,
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
-            selectedImageIndex: -1
+            selectedImageIndex: -1,
+            showModal: false
         }
     }
 
     componentDidMount() {
-        this.initProfileContent()
+        this.initProfileContent().catch(_ => this.setState({ showModal: false }))
     }
 
     initProfileContent = _ => {
-        console.log('re render', this.props)
-        if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
-            this.props.fetchProfileStatistics(this.props.route.params.user_name);
-            this.props.fetchProfileByUserName(this.props.route.params.user_name);
-            this.props.fetchProductsListByUserName(this.props.route.params.user_name);
-        }
-        else {
-            this.props.navigation.goBack();
-        }
+        return new Promise((resolve, reject) => {
+            if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
+                this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
+                this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
+                this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
+            }
+            else {
+                resolve(true)
+                this.props.navigation.goBack();
+            }
+        })
     };
 
     fetchAllProducts = () => {
@@ -55,7 +59,7 @@ class Profile extends Component {
             sort_by,
             to_record_number,
         };
-        this.props.fetchAllProductsList(item);
+        this.props.fetchAllProductsList(item).catch(_ => this.setState({ showModal: false }));
     };
 
     shareProfileLink = async () => {
@@ -78,6 +82,10 @@ class Profile extends Component {
         }
     };
 
+    closeModal = _ => {
+        this.setState({ showModal: false });
+        this.componentDidMount();
+    };
 
     render() {
 
@@ -157,9 +165,9 @@ class Profile extends Component {
         } = user_info
 
         const {
-            product_count,
+            product_count = 0,
             rating_info = {},
-            reputation_score,
+            reputation_score = 0,
             response_rate,
             transaction_count,
             validated_seller,
@@ -216,6 +224,11 @@ class Profile extends Component {
 
         return (
             <>
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
+
                 {(userProfileLoading || profileStatisticsLoading
                     || profileByUserNameLoading || productsListByUserNameLoading) ?
                     <View style={{
@@ -356,11 +369,11 @@ class Profile extends Component {
                             }}>
                                 <View>
                                     <Text
-                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count}</Text>
+                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
                                     <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
                                 </View>
                                 <View>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score}</Text>
+                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
                                     <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
                                 </View>
                             </View>

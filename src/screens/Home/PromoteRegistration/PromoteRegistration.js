@@ -1,21 +1,25 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { Card, Body, CardItem, Button } from 'native-base';
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import * as homeActions from '../../../redux/home/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
+import NoConnection from '../../../components/noConnectionError';
+import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+import * as homeActions from '../../../redux/home/actions';
+
 class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            showModal: false
+        }
     }
 
-    componentWillUnmount() { }
+
 
     pay = () => {
         return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
@@ -24,6 +28,13 @@ class PromoteRegistration extends React.Component {
             }
         })
     };
+
+    closeModal = _ => {
+        this.setState({ showModal: false });
+        this.props.fetchAllDashboardData()
+    };
+
+
     render() {
 
         let {
@@ -36,6 +47,12 @@ class PromoteRegistration extends React.Component {
 
         return (
             <>
+
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
+
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -65,7 +82,14 @@ class PromoteRegistration extends React.Component {
                         </Text>
                     </View>
                 </View>
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.props.dashboardLoading}
+                            onRefresh={() => this.props.fetchAllDashboardData().catch(_ => this.setState({ showModal: true }))}
+                        />
+                    }
+                >
                     <Card>
                         <CardItem>
                             <Body>

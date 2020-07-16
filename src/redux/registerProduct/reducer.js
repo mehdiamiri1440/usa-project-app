@@ -43,7 +43,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_CATEGORIES_SUCCESSFULLY: {
-            let { msg, status } = action.payload
+            let { msg = '', status = true } = action.payload
             return {
                 ...state,
                 categoriesList: [...action.payload.categories],
@@ -55,7 +55,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_CATEGORIES_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 categoriesList: [],
@@ -91,7 +91,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_SUB_CATEGORIES_SUCCESSFULLY: {
-            let { msg, status } = action.payload
+            let { msg = '', status = true } = action.payload
             return {
                 ...state,
                 subCategoriesList: [...action.payload.categories],
@@ -103,7 +103,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_SUB_CATEGORIES_FAILED: {
-            const { msg } = action.payload;
+            let { msg = '' } = action.payload
             return {
                 ...state,
                 subCategoriesList: [],
@@ -139,7 +139,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_SUCCESSFULLY: {
-            let { msg, status } = action.payload
+            let { msg = '', status = true } = action.payload
             return {
                 ...state,
                 addNewProductLoading: false,
@@ -149,7 +149,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_FAILED: {
-            const { msg } = action.payload;
+            let { msg = '' } = action.payload
             return {
                 ...state,
                 addNewProductLoading: false,
@@ -182,7 +182,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_SUCCESSFULLY: {
-            let { msg, status, is_limit } = action.payload
+            let { msg = '', status = true, is_limit = true } = action.payload
             return {
                 ...state,
                 userPermissionToRegisterProductLoading: false,
@@ -194,7 +194,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_FAILED: {
-            const { msg } = action.payload;
+            let { msg = '' } = action.payload
             return {
                 ...state,
                 userPermissionToRegisterProductLoading: false,

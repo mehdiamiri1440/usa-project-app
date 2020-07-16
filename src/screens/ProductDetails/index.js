@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler, TouchableOpacity, Linking, Share, FlatList, ActivityIndicator } from 'react-native';
+import { Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler, TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
@@ -18,7 +18,7 @@ import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
-import { NavigationActions, StackActions } from 'react-navigation';
+import NoConnection from '../../components/noConnectionError';
 
 let fromHardwareBack = false;
 class ProductDetails extends Component {
@@ -43,6 +43,7 @@ class ProductDetails extends Component {
             maximumPriceError: '',
             minimumPriceError: '',
             amountError: '',
+            showModal: false,
         }
     }
 
@@ -96,7 +97,7 @@ class ProductDetails extends Component {
         let code = param || global.productIds[global.productIds.length - 1];
         if (!global.productIds.length) return this.props.navigation.goBack();
         if (code) {
-            this.props.fetchAllRelatedProducts(code);
+            this.props.fetchAllRelatedProducts(code).catch(_ => this.setState({ showModal: true }));
             this.props.fetchProductDetails(code).then(_ => {
                 if (this.props.productDetails && this.props.productDetails.main) {
                     const {
@@ -114,7 +115,13 @@ class ProductDetails extends Component {
                         loaded: true
                     });
                 }
-            })
+                else {
+                    this.setState({ showModal: true })
+                }
+            }).catch(_ => this.setState({ showModal: true }))
+        }
+        else {
+            this.setState({ showModal: true })
         }
     }
 
@@ -222,7 +229,7 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId);
+                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -233,7 +240,7 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId);
+                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -282,6 +289,11 @@ class ProductDetails extends Component {
             }
         })
     };
+
+    closeModal = _ => {
+        this.setState({ showModal: false })
+        this.componentDidMount();
+    }
 
     render() {
         const {
@@ -384,6 +396,11 @@ class ProductDetails extends Component {
 
         return (
             <>
+
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
 
                 {(productDetailsLoading || editProductLoading || relatedProductsLoading) ?
                     <View style={{
@@ -507,7 +524,7 @@ class ProductDetails extends Component {
 
                                             />
                                         </Item>
-                                        {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
+                                        {!!amountError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
                                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
@@ -529,7 +546,7 @@ class ProductDetails extends Component {
 
                                             />
                                         </Item>
-                                        {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
+                                        {!!minimumOrderError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
                                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
@@ -551,8 +568,8 @@ class ProductDetails extends Component {
 
                                             />
                                         </Item>
-                                        {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>
-                                            {minimumPriceError}</Label>}
+                                        {!!minimumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                            {minimumPriceError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
                                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
@@ -576,9 +593,9 @@ class ProductDetails extends Component {
 
                                             />
                                         </Item>
-                                        {!!maximumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                        {!!maximumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
                                             {maximumPriceError}
-                                        </Label>}
+                                        </Label> : null}
                                     </View>
                                 </Dialog.ScrollArea>
                                 <Dialog.Actions style={{
@@ -668,14 +685,20 @@ class ProductDetails extends Component {
                 </View>
 
 
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={!!this.props.productDetailsLoading}
+                            onRefresh={() => this.componentDidMount()}
+                        />
+                    }>
                     <View style={{
                         backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
                         shadowColor: 'black',
                         shadowOpacity: 1.0,
                         elevation: 5,
                     }}>
-                        {photosWithCompletePath && photosWithCompletePath.length ? <SliderBox
+                        {(photosWithCompletePath && photosWithCompletePath.length) ? <SliderBox
                             dotColor='#0095F6'
                             inactiveDotColor='#A8A8A8'
                             sliderBoxHeight={400}

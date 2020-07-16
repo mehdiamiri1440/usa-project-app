@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { Icon, InputGroup, Input } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
+
+import NoConnection from '../../../components/noConnectionError';
 import Product from '../../ProductsList/Product';
-import Spin from '../../../components/loading/loading';
 import * as productsListActions from '../../../redux/productsList/actions';
-import * as registerProductActions from '../../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../../enums';
 
 let myTimeout;
@@ -28,7 +24,8 @@ class MyProducts extends Component {
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
-            searchFlag: false
+            searchFlag: false,
+            showModal: false
         }
     }
 
@@ -65,9 +62,13 @@ class MyProducts extends Component {
 
     fetchAllProducts = () => {
         if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name);
+            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).catch(_ => this.setState({ showModal: true }));
     };
 
+    closeModal = _ => {
+        this.setState({ showModal: false })
+        this.props.fetchAllMyProducts();
+    }
 
     render() {
         const {
@@ -86,7 +87,10 @@ class MyProducts extends Component {
 
         return (
             <>
-
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -143,7 +147,7 @@ class MyProducts extends Component {
                                 if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
                                     this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
                                         this.setState({ loaded: false })
-                                    })
+                                    }).catch(_ => this.setState({ showModal: true }));
                             })
                     }}
                     // initialNumToRender={2}
@@ -155,7 +159,7 @@ class MyProducts extends Component {
                                     searchText: '', sort_by: 'BM'
                                     , refreshed: true, from_record_number: 0, to_record_number: 15
                                 })
-                            })
+                            }).catch(_ => this.setState({ showModal: true }));
                     }
                     }
                     onEndReachedThreshold={0.2}

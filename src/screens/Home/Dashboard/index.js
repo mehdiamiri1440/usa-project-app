@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Card, CardItem, Body } from 'native-base';
 import { connect } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { deviceWidth, deviceHeight } from '../../../utils';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import NoConnection from '../../../components/noConnectionError';
+import { deviceWidth, deviceHeight } from '../../../utils';
 import * as homeActions from '../../../redux/home/actions';
 import ENUMS from '../../../enums';
 
@@ -12,10 +14,11 @@ const Dashboard = props => {
 
 
     useEffect(() => {
-        props.fetchAllDashboardData();
+        props.fetchAllDashboardData().catch(_ => setShowModal(true));
     },
         [])
 
+    let [showModal, setShowModal] = useState(false);
 
     let {
         dashboardLoading,
@@ -34,21 +37,17 @@ const Dashboard = props => {
         confirmed_products_count: confirmedProductsCount
     } = dashboard;
 
+    const closeModal = _ => {
+        setShowModal(false);
+        props.fetchAllDashboardData();
+    };
+
     return (
         <>
-
-
-            {dashboardLoading ? <ActivityIndicator size="large" color="#00C569"
-                style={{
-                    position: 'absolute', left: '44%', top: '40%',
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
-                    elevation: 5,
-                    borderColor: 'black',
-                    backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                }}
-            /> : null}
+            <NoConnection
+                closeModal={closeModal}
+                showModal={showModal}
+            />
             {dashboardError &&
                 <View style={styles.loginFailedContainer}>
                     <Text style={styles.loginFailedText}>
@@ -92,7 +91,14 @@ const Dashboard = props => {
                     </Text>
                 </View>
             </View>
-            <ScrollView style={{ height: deviceHeight * 0.77 }}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={props.dashboardLoading}
+                        onRefresh={() => props.fetchAllDashboardData()}
+                    />
+                }
+                style={{ height: deviceHeight * 0.77 }}>
 
                 <Card style={{ alignSelf: 'center' }}>
                     <CardItem style={{ width: deviceWidth * 0.85 }} >

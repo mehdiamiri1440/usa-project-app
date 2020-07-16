@@ -16,6 +16,7 @@ import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import * as profileActions from '../../../redux/profile/actions'
 import ENUMS from '../../../enums';
+import NoConnection from '../../../components/noConnectionError';
 
 
 
@@ -32,6 +33,7 @@ const EnterActivisionCode = (props) => {
         value,
         setValue,
     });
+    let [showModal, setShowModal] = useState(false);
     let [timerFlag, setTimerFlag] = useState(false)
     let [flag, setFlag] = useState(false)
     let [activisionCode, setActivisionCode] = useState('');
@@ -58,24 +60,35 @@ const EnterActivisionCode = (props) => {
                 setValueError('');
                 if (res.payload.redirected) {
                     props.fastLogin(res.payload).then(_ => {
-                        props.fetchUserProfile();
-                    })
+                        props.fetchUserProfile().catch(_ => setShowModal(true));;
+                    }).catch(_ => setShowModal(true));
                 }
                 else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
                     setValueError(locales('labels.invalidCode'));
                 }
             }).catch(err => {
-                setValueError(err.data.errors.phone[0])
+                if (err && err.data)
+                    setValueError(err.data.errors.phone[0])
+                else
+                    setShowModal(true)
             })
         }
 
     };
 
+    const closeModal = _ => {
+        setShowModal(false);
+        props.checkActivisionCode(value, mobileNumber);
+    }
 
 
     return (
         <>
+            <NoConnection
+                showModal={showModal}
+                closeModal={closeModal}
+            />
             <Text style={styles.buttonText}>{locales('titles.login')}</Text>
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
@@ -129,7 +142,7 @@ const EnterActivisionCode = (props) => {
                     containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
                     timerStyle={{ color: '#1CC625', fontSize: 18 }}
-                    onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber)}
+                    onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber).catch(_ => setShowModal(true))}
                     substitutionText={locales('titles.sendVerificationCodeAgain')}
                 />
             </View>

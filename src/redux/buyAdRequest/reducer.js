@@ -24,7 +24,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_BUYAD_REQUEST_SUCCESSFULLY: {
-            let { msg } = action.payload
+            let { msg = '' } = action.payload
             return {
                 ...state,
                 buyAdRequestList: [...action.payload.buyAds],
@@ -36,7 +36,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_BUYAD_REQUEST_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 buyAdRequestList: [],

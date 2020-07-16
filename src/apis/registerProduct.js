@@ -13,7 +13,10 @@ export const fetchAllCategories = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -33,7 +36,10 @@ export const fetchAllSubCategories = id => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -51,7 +57,10 @@ export const addNewProduct = productObject => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -68,7 +77,10 @@ export const checkUserPermissionToRegisterProduct = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };

@@ -13,6 +13,7 @@ import ProductImages from './Steps/ProductImages';
 import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
+import NoConnection from '../../components/noConnectionError';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -59,6 +60,7 @@ class RegisterProduct extends React.Component {
             province: '',
 
             stepNumber: 0,
+            showModal: false
         }
     }
 
@@ -84,7 +86,6 @@ class RegisterProduct extends React.Component {
                 return true;
             }
         })
-        console.log('in pupdate', this.props)
         if (this.props.resetTab) {
             this.changeStep(0);
             this.props.resetRegisterProduct(false);
@@ -227,10 +228,14 @@ class RegisterProduct extends React.Component {
             formData.append("images_count", this.state.productFiles.length);
             return this.props.addNewProduct(formData).then(_ => {
                 this.changeStep(7);
-            })
+            }).catch(_ => this.setState({ showModal: true }))
         })
 
     }
+
+    setShowModal = _ => {
+        this.setState({ showModal: true })
+    };
 
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
@@ -238,6 +243,7 @@ class RegisterProduct extends React.Component {
         switch (stepNumber) {
             case 0: {
                 return <GuidToRegisterProduct
+                    setShowModal={this.setShowModal}
                     setProductType={this.setProductType}
                     changeStep={this.changeStep} {...this.props}
                 />
@@ -285,12 +291,20 @@ class RegisterProduct extends React.Component {
 
     };
 
+    closeModal = _ => {
+        this.setState({ showModal: false })
+        this.componentDidMount();
+    }
+
     render() {
         let { stepNumber, successfullAlert } = this.state;
 
         return (
             <View style={{ flex: 1, backgroundColor: 'white' }}>
-
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
 
                 <View style={{
                     backgroundColor: 'white',

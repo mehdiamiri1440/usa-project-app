@@ -13,7 +13,10 @@ export const fetchAllDashboardData = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };

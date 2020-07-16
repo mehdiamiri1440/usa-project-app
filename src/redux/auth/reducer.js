@@ -106,7 +106,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 checkAlreadySignedUpMobileNumberLoading: false,
@@ -116,7 +116,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_ALREADY_SIGNEDUP_MOBILE_NUMBER_REJECT: {
-            let { phone } = action.payload.data.errors
+            let { phone = '' } = action.payload
             return {
                 ...state,
                 checkAlreadySignedUpMobileNumberLoading: false,
@@ -137,7 +137,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_ACTIVISION_CODE_SUCCESSFULLY: {
-            let { msg, status } = action.payload
+            let { msg = '', status = true } = action.payload
             return {
                 ...state,
                 checkActivisionCodeLoading: false,
@@ -147,7 +147,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_ACTIVISION_CODE_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 checkActivisionCodeLoading: false,
@@ -157,7 +157,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.CHECK_ACTIVISION_CODE_REJECT: {
-            let { phone } = action.payload.data.errors
+            let { phone = '' } = action.payload
             return {
                 ...state,
                 checkActivisionCodeLoading: false,
@@ -236,7 +236,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.SUBMIT_REGISTER_REJECT: {
-            let { phone } = action.payload.data.errors
+            let { phone = '' } = action.payload
             return {
                 ...state,
                 submitRegisterLoading: false,

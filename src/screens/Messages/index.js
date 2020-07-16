@@ -13,6 +13,7 @@ import Jmoment from 'moment-jalaali';
 import ChatModal from './ChatModal';
 import MessagesContext from './MessagesContext';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import NoConnection from '../../components/noConnectionError';
 
 
 class ContactsList extends React.Component {
@@ -30,7 +31,8 @@ class ContactsList extends React.Component {
                 first_name: '',
                 last_name: '',
                 id: null
-            }
+            },
+            showModal: false
         }
     }
 
@@ -40,7 +42,7 @@ class ContactsList extends React.Component {
 
     componentDidMount() {
         this.props.isFromOutSide(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to);
+        this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }));
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -49,13 +51,14 @@ class ContactsList extends React.Component {
             this.setState({ contactsList: this.props.contactsList, loaded: true })
         }
 
+
         if (this.props.message) {
             this.props.newMessageReceived(false)
             setTimeout(() => {
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
                     this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
                     })
-                })
+                }).catch(_ => this.setState({ showModal: true }))
             }, 10);
         }
     }
@@ -70,7 +73,7 @@ class ContactsList extends React.Component {
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to)
+            this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }))
         });
     }
 
@@ -80,7 +83,7 @@ class ContactsList extends React.Component {
         this.setState({ from: this.state.to, to: this.state.to + 10 }, () => {
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(result => {
                 this.setState({ contactsList: [...this.state.contactsList, ...this.props.contactsList] });
-            });
+            }).catch(_ => this.setState({ showModal: true }));
         })
     };
 
@@ -101,6 +104,10 @@ class ContactsList extends React.Component {
         })
     }
 
+    closeModal = _ => {
+        this.setState({ showModal: false, });
+        this.props.fetchAllContactsList(this.state.from, this.state.to);
+    }
 
     render() {
 
@@ -109,7 +116,10 @@ class ContactsList extends React.Component {
 
         return (
             <View>
-
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse',
@@ -155,7 +165,7 @@ class ContactsList extends React.Component {
 
 
 
-                {(contactsListLoading && !contactsList.length) ? <ActivityIndicator size="large" color="#00C569"
+                {/* {() ? <ActivityIndicator size="large" color="#00C569"
                     style={{
                         position: 'absolute', left: '44%', top: '40%',
                         shadowOffset: { width: 20, height: 20 },
@@ -165,7 +175,7 @@ class ContactsList extends React.Component {
                         borderColor: 'black',
                         backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                     }}
-                /> : null}
+                /> : null} */}
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
@@ -180,107 +190,111 @@ class ContactsList extends React.Component {
                     value={this.setNewContactsList}
                     style={{ paddingBottom: 200, marginBottom: 200 }}
                 >
-                    {contactsList.length ?
-                        <>
-                            <Card s>
-                                <CardItem >
-                                    <Body >
-                                        <FlatList
-                                            ref={this.props.contactsListRef}
-                                            refreshing={contactsListLoading && !loaded}
-                                            onRefresh={() => this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
-                                                this.setState({ loaded: false });
-                                            })}
-                                            keyExtractor={item => item.contact_id.toString()}
-                                            keyboardShouldPersistTaps='handled'
-                                            keyboardDismissMode='on-drag'
-                                            showsVerticalScrollIndicator={false}
-                                            // getItemLayout={(data, index) => (
-                                            //     { length: 100, offset: 100 * index, index }
-                                            // )}
-                                            // onEndReachedThreshold={0.3}
-                                            // onEndReached={this.fetchMoreContacts}
-                                            style={{ width: '100%', height: deviceHeight * 1 }}
-                                            contentContainerStyle={{ paddingBottom: 200 }}
-                                            data={contactsList}
-                                            renderItem={({ item, index, separators }) => (
-                                                <TouchableOpacity
-                                                    onPress={() => this.setState({ modalFlag: true, selectedContact: item, searchText: '' })}
-                                                    key={item.contact_id}
+                    <>
+                        <Card>
+                            <CardItem >
+                                <Body >
+                                    <FlatList
+                                        ListEmptyComponent={() => searchText ?
+                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                                                <AntDesign size={135} name='contacts' color='#BEBEBE' />
+                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
+                                            </View> :
+                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Entypo size={135} name='message' color='#BEBEBE' />
+                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
+                                            </View>
+                                        }
+                                        ref={this.props.contactsListRef}
+                                        refreshing={((!!contactsListLoading))}
+                                        onRefresh={() => {
+                                            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
+                                                this.setState({ loaded: false })
+                                            }).catch(_ => this.setState({ showModal: true }))
+                                        }
+                                        }
+                                        keyExtractor={item => item.contact_id.toString()}
+                                        keyboardShouldPersistTaps='handled'
+                                        keyboardDismissMode='on-drag'
+                                        showsVerticalScrollIndicator={false}
+                                        // getItemLayout={(data, index) => (
+                                        //     { length: 100, offset: 100 * index, index }
+                                        // )}
+                                        // onEndReachedThreshold={0.3}
+                                        // onEndReached={this.fetchMoreContacts}
+                                        style={{ width: '100%', height: deviceHeight * 1 }}
+                                        contentContainerStyle={{ paddingBottom: 200 }}
+                                        data={contactsList}
+                                        renderItem={({ item, index, separators }) => (
+                                            <TouchableOpacity
+                                                onPress={() => this.setState({ modalFlag: true, selectedContact: item, searchText: '' })}
+                                                key={item.contact_id}
+                                                style={{
+                                                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
+                                                    flexDirection: 'row-reverse', width: '100%',
+                                                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
+                                                }}
+                                            >
+
+                                                <Image
                                                     style={{
-                                                        borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                                                        flexDirection: 'row-reverse', width: '100%',
-                                                        borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
+                                                        borderRadius: deviceWidth * 0.06,
+                                                        width: deviceWidth * 0.12, height: deviceWidth * 0.12
                                                     }}
-                                                >
+                                                    source={item.profile_photo ?
+                                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.profile_photo}` }
+                                                        : require('../../../assets/icons/user.png')}
+                                                />
 
-                                                    <Image
+                                                <View>
+                                                    <View
                                                         style={{
-                                                            borderRadius: deviceWidth * 0.06,
-                                                            width: deviceWidth * 0.12, height: deviceWidth * 0.12
+                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                            flexDirection: 'row-reverse',
+                                                            justifyContent: 'space-between',
                                                         }}
-                                                        source={item.profile_photo ?
-                                                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.profile_photo}` }
-                                                            : require('../../../assets/icons/user.png')}
-                                                    />
-
-                                                    <View>
-                                                        <View
-                                                            style={{
-                                                                width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                                flexDirection: 'row-reverse',
-                                                                justifyContent: 'space-between',
-                                                            }}
-                                                        >
-                                                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                                                                <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
-                                                                    {`${item.first_name} ${item.last_name}`}
-                                                                </Text>
-                                                                {item.is_verified ? <ValidatedUserIcon /> : null}
-                                                            </View>
-                                                            <Text style={{ color: '#666666' }}>
-                                                                {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
+                                                    >
+                                                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                                                            <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                                                {`${item.first_name} ${item.last_name}`}
                                                             </Text>
+                                                            {item.is_verified ? <ValidatedUserIcon /> : null}
                                                         </View>
-
-
-                                                        <View
-                                                            style={{
-                                                                width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                                flexDirection: 'row-reverse',
-                                                                justifyContent: 'space-between',
-                                                            }}
-                                                        >
-                                                            <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
-                                                                {item.last_msg.last_msg_text}
-                                                            </Text>
-                                                            {item.unread_msgs_count > 0 && <Text style={{
-                                                                color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
-                                                                borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
-                                                            }}>
-                                                                {item.unread_msgs_count}
-                                                            </Text>}
-                                                        </View>
-
+                                                        <Text style={{ color: '#666666' }}>
+                                                            {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
+                                                        </Text>
                                                     </View>
 
 
-                                                </TouchableOpacity>
+                                                    <View
+                                                        style={{
+                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                                                            flexDirection: 'row-reverse',
+                                                            justifyContent: 'space-between',
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
+                                                            {item.last_msg.last_msg_text}
+                                                        </Text>
+                                                        {item.unread_msgs_count > 0 && <Text style={{
+                                                            color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
+                                                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
+                                                        }}>
+                                                            {item.unread_msgs_count}
+                                                        </Text>}
+                                                    </View>
 
-                                            )}
-                                        />
-                                    </Body>
-                                </CardItem>
-                            </Card>
-                        </> : searchText ?
-                            <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                                <AntDesign size={135} name='contacts' color='#BEBEBE' />
-                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
-                            </View> :
-                            <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                                <Entypo size={135} name='message' color='#BEBEBE' />
-                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
-                            </View>}
+                                                </View>
+
+
+                                            </TouchableOpacity>
+
+                                        )}
+                                    />
+                                </Body>
+                            </CardItem>
+                        </Card>
+                    </>
                     {/* <ScrollView
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='on-drag'

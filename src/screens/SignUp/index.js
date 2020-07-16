@@ -14,6 +14,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
+import NoConnection from '../../components/noConnectionError';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
@@ -33,7 +34,8 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 1
+            stepNumber: 1,
+            showModal: false
         }
     }
 
@@ -111,13 +113,15 @@ class SignUp extends React.Component {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
-                        this.props.fetchUserProfile();
+                        this.props.fetchUserProfile().catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
-                    }, 100);
+                    }, 100).catch(_ => this.setState({ showModal: true }));
                 })
             })
         }).catch(err => {
-            this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+            if (err && err.data)
+                this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+            this.setState({ showModal: true })
         });
     };
 
@@ -166,94 +170,107 @@ class SignUp extends React.Component {
                 break;
         }
 
-    }
+    };
+
+    closeModal = _ => {
+        this.setState({ showModal: false });
+        this.componentDidMount();
+    };
+
     render() {
         let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
         let { successfullAlert, stepNumber, signUpError } = this.state;
         return (
-            <ScrollView
-                keyboardShouldPersistTaps='handled'
-            >
+            <>
+                <NoConnection
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                />
+                <ScrollView
 
-                <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
-                    colors={['#00C569', '#21AD93']}
+                    keyboardShouldPersistTaps='handled'
                 >
-                    <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: -5 }]}>
-                        <Text
-                            style={[styles.headerTextStyle]}
-                        >
-                            {locales('titles.enterToBuskool')}
-                        </Text>
-                    </View >
-                </LinearGradient>
-                <View style={{
-                    width: deviceWidth,
-                    flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
-                }}>
+
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['#00C569', '#21AD93']}
+                    >
+                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: -5 }]}>
+                            <Text
+                                style={[styles.headerTextStyle]}
+                            >
+                                {locales('titles.enterToBuskool')}
+                            </Text>
+                        </View >
+                    </LinearGradient>
                     <View style={{
-                        marginTop: 20,
-                        flexDirection: 'row-reverse',
-                        alignItems: 'stretch',
-                        alignContent: 'center', alignSelf: 'center',
-                        width: deviceWidth - 80,
-
+                        width: deviceWidth,
+                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
                     }}>
-                        {stepsArray.map((item, index) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center', color: 'white', alignItems: 'center',
-                                            justifyContent: 'center',
-                                            alignSelf: 'center', alignContent: 'center',
-                                            shadowOffset: { width: 10, height: 10 },
-                                            shadowColor: 'black',
-                                            shadowOpacity: 1.0,
-                                            elevation: 5,
-                                            textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                            backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                            width: 26, height: 26, borderRadius: 13
+                        <View style={{
+                            marginTop: 20,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'stretch',
+                            alignContent: 'center', alignSelf: 'center',
+                            width: deviceWidth - 80,
 
-                                        }}
-                                    >
-                                        {item}
-                                    </Text>
-                                    {index < stepsArray.length - 1 && <View
-                                        style={{
-                                            height: 8,
-                                            flex: 1,
-                                            alignSelf: 'center',
-                                            backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                        }}>
-                                    </View>
-                                    }
-                                </React.Fragment>
-                            )
-                        }
-                        )}
+                        }}>
+                            {stepsArray.map((item, index) => {
+                                return (
+                                    <React.Fragment key={index}>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center', color: 'white', alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center', alignContent: 'center',
+                                                shadowOffset: { width: 10, height: 10 },
+                                                shadowColor: 'black',
+                                                shadowOpacity: 1.0,
+                                                elevation: 5,
+                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                width: 26, height: 26, borderRadius: 13
+
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                        {index < stepsArray.length - 1 && <View
+                                            style={{
+                                                height: 8,
+                                                flex: 1,
+                                                alignSelf: 'center',
+                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                            }}>
+                                        </View>
+                                        }
+                                    </React.Fragment>
+                                )
+                            }
+                            )}
+                        </View>
                     </View>
-                </View>
 
-                {signUpError ? <Text style={{
-                    color: 'white', backgroundColor: '#DC3545',
-                    padding: 10, textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    fontSize: 16,
-                    marginVertical: 10
-                }}>{signUpError}</Text> : null}
-                <View style={styles.stepsContainer}>
-                    {successfullAlert && <View style={[styles.loginFailedContainer, { marginVertical: 10 }]}>
-                        <Text
-                            style={styles.loginFailedText}
-                        >
-                            {locales('titles.signUpDoneSuccessfully')}
-                        </Text>
-                    </View >
-                    }
-                    {this.renderSteps()}
-                </View>
-            </ScrollView >
+                    {signUpError ? <Text style={{
+                        color: 'white', backgroundColor: '#DC3545',
+                        padding: 10, textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 16,
+                        marginVertical: 10
+                    }}>{signUpError}</Text> : null}
+                    <View style={styles.stepsContainer}>
+                        {successfullAlert && <View style={[styles.loginFailedContainer, { marginVertical: 10 }]}>
+                            <Text
+                                style={styles.loginFailedText}
+                            >
+                                {locales('titles.signUpDoneSuccessfully')}
+                            </Text>
+                        </View >
+                        }
+                        {this.renderSteps()}
+                    </View>
+                </ScrollView >
+            </>
         )
     }
 }

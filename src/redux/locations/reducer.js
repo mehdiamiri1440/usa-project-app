@@ -40,7 +40,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_PROVINCES_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 fetchAllProvincesLoading: false,
@@ -79,7 +79,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_CITIES_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 fetchAllCitiesLoading: false,

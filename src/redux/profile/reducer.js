@@ -46,7 +46,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_USER_PROFILE_SUCCESSFULLY: {
-            let { msg, user_info } = action.payload
+            let { msg = '', user_info = {} } = action.payload
             return {
                 ...state,
                 userProfile: { ...action.payload },
@@ -57,7 +57,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_USER_PROFILE_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 userProfile: {},
@@ -68,7 +68,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_USER_PROFILE_REJECT: {
-            let { phone } = action.payload.data.errors;
+            let { phone = '' } = action.payload;
             return {
                 ...state,
                 userProfile: {},
@@ -112,7 +112,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_REJECT: {
-            let { phone } = action.payload.data.errors;
+            let { phone = '' } = action.payload;
             return {
                 ...state,
                 isUserAllowedToSendMessage: {},
@@ -156,7 +156,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_PROFILE_STATISTICS_REJECT: {
-            let { phone } = action.payload.data.errors;
+            let { phone = '' } = action.payload;
             return {
                 ...state,
                 profileStatistics: {},
@@ -241,7 +241,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_PRODUCTS_LIST_BY_USERNAME_REJECT: {
-            let { phone } = action.payload.data.errors;
+            let { phone = '' } = action.payload;
             return {
                 ...state,
                 productsListByUserName: {},

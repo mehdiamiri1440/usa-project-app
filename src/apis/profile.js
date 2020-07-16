@@ -12,7 +12,10 @@ export const fetchUserProfile = _ => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -33,7 +36,10 @@ export const isUserAllowedToSendMessage = id => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -53,7 +59,10 @@ export const fetchProfileStatistics = user_name => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -73,7 +82,10 @@ export const fetchProfileByUserName = user_name => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -93,7 +105,10 @@ export const fetchProductsListByUserName = user_name => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };

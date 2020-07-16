@@ -1,5 +1,5 @@
 import React, { Component, createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -8,7 +8,8 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Product from './Product';
-import Spin from '../../components/loading/loading';
+
+import NoConnection from '../../components/noConnectionError';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
@@ -35,7 +36,8 @@ class ProductsList extends PureComponent {
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
-            searchFlag: false
+            searchFlag: false,
+            showModal: false
         }
 
     }
@@ -46,8 +48,9 @@ class ProductsList extends PureComponent {
     componentDidMount() {
 
         this.fetchAllProducts();
-        this.props.fetchAllProvinces();
-        this.props.fetchAllCategories();
+        this.initialCalls().catch(error => {
+            this.setState({ showModal: true })
+        });
         if (this.props.productDetailsId) {
             this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
         }
@@ -73,6 +76,20 @@ class ProductsList extends PureComponent {
         }
     }
 
+    initialCalls = _ => {
+        return new Promise((resolve, reject) => {
+            this.props.fetchAllProvinces().catch(error => reject(error));
+            this.props.fetchAllCategories().catch(error => reject(error));
+        })
+
+    }
+
+    setShowModal = _ => {
+        this.setState({ showModal: false }, () => {
+            this.componentDidMount();
+        });
+    }
+
     fetchAllProducts = () => {
         const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
@@ -92,6 +109,8 @@ class ProductsList extends PureComponent {
         this.props.fetchAllProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+        }).catch(error => {
+            this.setState({ showModal: true })
         });
     };
 
@@ -124,6 +143,8 @@ class ProductsList extends PureComponent {
 
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
+            }).catch(error => {
+                this.setState({ showModal: true })
             });
         }, 1500);
 
@@ -131,7 +152,9 @@ class ProductsList extends PureComponent {
 
     sortProducts = id => {
         this.setState({ categoryModalFlag: true }, () => {
-            this.props.fetchAllSubCategories(id)
+            this.props.fetchAllSubCategories(id).catch(error => {
+                this.setState({ showModal: true, categoryModalFlag: false })
+            });
         })
     };
 
@@ -141,7 +164,9 @@ class ProductsList extends PureComponent {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
             this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(value)
+            this.props.fetchAllProvinces(value).catch(error => {
+                this.setState({ showModal: true })
+            });
         }
     };
 
@@ -177,7 +202,9 @@ class ProductsList extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
-        });
+        }).catch(error => {
+            this.setState({ showModal: true })
+        });;
 
     };
 
@@ -200,7 +227,9 @@ class ProductsList extends PureComponent {
 
         this.props.fetchAllProductsList(searchItem).then(result => {
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
-        });
+        }).catch(error => {
+            this.setState({ showModal: true })
+        });;
 
     };
 
@@ -235,6 +264,11 @@ class ProductsList extends PureComponent {
 
         return (
             <>
+                <NoConnection
+                    closeModal={this.setShowModal}
+                    showModal={this.state.showModal}
+                />
+
                 <Modal
                     animationType="slide"
                     visible={locationsFlag}
@@ -435,6 +469,8 @@ class ProductsList extends PureComponent {
 
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
+                                    }).catch(error => {
+                                        this.setState({ showModal: true, sortModalFlag: false })
                                     });
                                 })}
                                 style={{
@@ -485,6 +521,8 @@ class ProductsList extends PureComponent {
 
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
+                                    }).catch(error => {
+                                        this.setState({ showModal: true, categoryModalFlag: false })
                                     });
                                 })}
                                 style={{
@@ -637,7 +675,9 @@ class ProductsList extends PureComponent {
 
                                 this.props.fetchAllProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
-                                })
+                                }).catch(error => {
+                                    this.setState({ showModal: true })
+                                });
                             })
                     }}
                     // initialNumToRender={2}
@@ -664,7 +704,9 @@ class ProductsList extends PureComponent {
                             item = { ...item, city_id: city }
                         }
 
-                        this.props.fetchAllProductsList(item)
+                        this.props.fetchAllProductsList(item).catch(error => {
+                            this.setState({ showModal: true })
+                        });
                     }
                     }
                     onEndReachedThreshold={0.2}

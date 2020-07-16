@@ -24,7 +24,10 @@ export const login = (mobileNumber, password) => {
                 storeData()
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -57,7 +60,10 @@ export const logOut = () => {
                 resolve(result);
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };
@@ -78,7 +84,10 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -100,7 +109,10 @@ export const checkActivisionCode = (code, mobileNumber) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -118,7 +130,10 @@ export const fetchAllActivityZones = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -161,7 +176,10 @@ export const submitRegister = ({
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };

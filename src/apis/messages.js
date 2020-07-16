@@ -17,7 +17,10 @@ export const fetchAllContactsList = (from, to) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -36,7 +39,10 @@ export const fetchAllGroupList = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -58,7 +64,10 @@ export const fetchUserChatHistory = (userId, msgCount = 10) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -81,7 +90,10 @@ export const fetchGroupChats = (groupId, messageCount) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -106,7 +118,10 @@ export const sendMessage = (msgObject, buyAdId) => {
                     resolve(result);
                 })
                 .catch(err => {
-                    return reject(err.response);
+                    if (err && err.response)
+                        return reject(err.response);
+                    return reject(err);
+
                 });
         }
         else {
@@ -121,7 +136,10 @@ export const sendMessage = (msgObject, buyAdId) => {
                     resolve(result);
                 })
                 .catch(err => {
-                    return reject(err.response);
+                    if (err && err.response)
+                        return reject(err.response);
+                    return reject(err);
+
                 });
         }
 
@@ -146,7 +164,10 @@ export const groupSendMessage = (msgObject) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -168,7 +189,10 @@ export const subscribeGroupForUser = (groupId) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -190,7 +214,10 @@ export const fetchUserProfilePhoto = (userId) => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };
@@ -210,7 +237,10 @@ export const fetchTotalUnreadMessages = () => {
                 resolve(result);
             })
             .catch(err => {
-                return reject(err.response);
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
             });
     });
 };

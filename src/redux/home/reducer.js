@@ -31,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_DASHBOARD_DATA_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 dashboard: {},

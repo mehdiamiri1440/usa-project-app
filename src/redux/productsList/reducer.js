@@ -71,7 +71,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_PRODUCTS_LIST_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 productsListObject: {},
@@ -120,7 +120,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_RELATED_PRODUCTS_LIST_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 relatedProductsObject: {},
@@ -168,7 +168,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_ALL_MY_PRODUCTS_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 myProductsObject: {},
@@ -213,7 +213,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.EDIT_PRODUCT_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 editProductLoading: false,
@@ -257,7 +257,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.DELETE_PRODUCT_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 deleteProductLoading: false,
@@ -303,7 +303,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_PRODUCT_DETAILS_FAILED: {
-            const { msg } = action.payload;
+            const { msg = '' } = action.payload;
             return {
                 ...state,
                 productDetailsLoading: false,

@@ -25,7 +25,7 @@ class GuidToRegisterProduct extends React.Component {
             else {
                 this.setState({ showModal: true })
             }
-        })
+        }).catch(_ => this.props.setShowModal())
     };
 
 
@@ -86,12 +86,7 @@ class GuidToRegisterProduct extends React.Component {
                     </Text>
                 </View>
                 <View style={{ backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
-                    {userPermissionToRegisterProductError && <View style={styles.loginFailedContainer}>
-                        <Text style={styles.loginFailedText}>
-                            {message}
-                        </Text>
-                    </View>
-                    }
+
 
 
                     <View

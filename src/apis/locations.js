@@ -15,7 +15,10 @@ export const fetchAllProvinces = provinceId => {
                 resolve(result)
             })
             .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
                 return reject(err);
+
             });
     });
 };

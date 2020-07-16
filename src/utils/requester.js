@@ -42,7 +42,8 @@ export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, pa
                 method,
                 headers: getRequestHeaders(withAuth),
                 data,
-                params
+                params,
+                timeout: 5000,
             })
             .then(result => {
                 resolve(result.data ? result.data : result);
