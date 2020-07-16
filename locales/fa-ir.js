@@ -210,6 +210,7 @@ export default {
     'titles.registerProductSuccessfullyMessage': 'در صورت استفاده از طرح عضویت رایگان محصول شما پس از تایید کارشناسان در لیست محصولات قرار می گیرد ',
     'titles.edit': 'ویرایش',
     'titles.productType': 'نوع محصول',
+    'titles.lostConectivity': 'اتصال شما به اینترنت دچار ایراد شده است. لطفا مجددا تلاش بفرمایید.',
     'titles.stockAndPrice': 'موجودی و قیمت محصول',
     'titles.finalSubmit': 'ثبت نهایی',
     'titles.whoWantsWhat': 'چه خریدارنی به دنبال محصول شما هستند؟',

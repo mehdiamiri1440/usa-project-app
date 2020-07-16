@@ -27,7 +27,7 @@ const NoConnection = props => {
                     width: '100%',
                 }}>
                     <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center', fontSize: 16 }}>
-                        {locales('titles.noInternetConnection')}
+                        {locales('titles.lostConectivity')}
                     </Text>
 
                 </Dialog.Actions>
