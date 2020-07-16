@@ -220,9 +220,6 @@ class Profile extends Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
                         elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
@@ -230,9 +227,6 @@ class Profile extends Component {
                         <ActivityIndicator size="large"
                             style={{
                                 position: 'absolute', left: '44%', top: '40%',
-                                shadowOffset: { width: 20, height: 20 },
-                                shadowColor: 'black',
-                                shadowOpacity: 1.0,
                                 elevation: 5,
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
@@ -301,27 +295,27 @@ class Profile extends Component {
                 />}
 
 
+
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
                     elevation: 5,
+
                     justifyContent: 'center'
                 }}>
                     <TouchableOpacity
-                        style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => this.props.navigation.goBack()}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
+
                     <View style={{
-                        width: deviceWidth * 0.55,
-                        alignItems: 'flex-end'
+                        width: '100%',
+                        alignItems: 'center'
                     }}>
                         <Text
                             style={{ fontSize: 18 }}
@@ -330,7 +324,6 @@ class Profile extends Component {
                         </Text>
                     </View>
                 </View>
-
 
 
                 <ScrollView

@@ -72,7 +72,8 @@ class PromoteRegistration extends React.Component {
                                 <View style={{ flexDirection: 'row-reverse', width: '100%' }}>
                                     <View style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
                                         <FontAwesome5 color='#FFBB00' name='award' size={130} />
-                                        <Entypo color='#FFBB00' name='check' size={45} style={{ position: 'absolute', left: 32, top: 26 }} />
+                                        <FontAwesome5 color='#FFBB00' name='check' size={35} style={{ position: 'absolute', left: 32, top: 26 }} />
+
                                     </View>
                                     <View style={{ width: '70%', alignItems: 'center', justifyContent: 'center' }}>
                                         <Text style={{

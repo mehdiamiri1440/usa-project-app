@@ -35,7 +35,8 @@ class ProductsList extends PureComponent {
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
-            searchFlag: false
+            searchFlag: false,
+            selectedCategoryModal: ''
         }
 
     }
@@ -129,8 +130,8 @@ class ProductsList extends PureComponent {
 
     };
 
-    sortProducts = id => {
-        this.setState({ categoryModalFlag: true }, () => {
+    sortProducts = (id, name) => {
+        this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id)
         })
     };
@@ -220,7 +221,7 @@ class ProductsList extends PureComponent {
         } = this.props;
 
         const { searchText, loaded, productsListArray, selectedButton,
-            categoryModalFlag, sortModalFlag, locationsFlag, province, city } = this.state;
+            categoryModalFlag, sortModalFlag, locationsFlag, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
 
@@ -230,7 +231,6 @@ class ProductsList extends PureComponent {
         if (Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
-
         return (
             <>
                 <Modal
@@ -247,8 +247,8 @@ class ProductsList extends PureComponent {
                         height: 57,
                         shadowOffset: { width: 20, height: 20 },
                         shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
+                        shadowOpacity: 0.3,
+                        elevation: 6,
                         justifyContent: 'center'
                     }}>
                         <TouchableOpacity
@@ -392,6 +392,37 @@ class ProductsList extends PureComponent {
                     animationType="slide"
                     visible={sortModalFlag}
                     onRequestClose={() => this.setState({ sortModalFlag: false })}>
+
+                    <View style={{
+                        backgroundColor: 'white',
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        height: 57,
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 0.3,
+                        elevation: 6,
+                        justifyContent: 'center'
+                    }}>
+                        <TouchableOpacity
+                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                            onPress={() => this.setState({ sortModalFlag: false })}
+                        >
+                            <AntDesign name='arrowright' size={25} />
+                        </TouchableOpacity>
+
+                        <View style={{
+                            width: '100%',
+                            alignItems: 'center'
+                        }}>
+                            <Text
+                                style={{ fontSize: 18 }}
+                            >
+                                {locales('labels.sort')}
+                            </Text>
+                        </View>
+                    </View>
                     <FlatList
                         refreshing={productsListLoading || categoriesLoading}
                         onRefresh={() => <ActivityIndicator size="small" color="#00C569"
@@ -448,6 +479,37 @@ class ProductsList extends PureComponent {
                     animationType="slide"
                     visible={categoryModalFlag}
                     onRequestClose={() => this.setState({ categoryModalFlag: false })}>
+
+                    <View style={{
+                        backgroundColor: 'white',
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        height: 57,
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 0.3,
+                        elevation: 6,
+                        justifyContent: 'center'
+                    }}>
+                        <TouchableOpacity
+                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                            onPress={() => this.setState({ categoryModalFlag: false })}
+                        >
+                            <AntDesign name='arrowright' size={25} />
+                        </TouchableOpacity>
+
+                        <View style={{
+                            width: '100%',
+                            alignItems: 'center'
+                        }}>
+                            <Text
+                                style={{ fontSize: 18 }}
+                            >
+                                {selectedCategoryModal}
+                            </Text>
+                        </View>
+                    </View>
                     <FlatList
                         data={subCategoriesList}
                         keyExtractor={(item, index) => index.toString()}
@@ -493,27 +555,26 @@ class ProductsList extends PureComponent {
                         )}
                     />
                 </Modal>
+
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
                     <TouchableOpacity
-                        style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => this.props.navigation.goBack()}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
+
                     <View style={{
-                        width: deviceWidth * 0.55,
-                        alignItems: 'flex-end'
+                        width: '100%',
+                        alignItems: 'center'
                     }}>
                         <Text
                             style={{ fontSize: 18 }}
@@ -522,6 +583,7 @@ class ProductsList extends PureComponent {
                         </Text>
                     </View>
                 </View>
+
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
@@ -569,7 +631,7 @@ class ProductsList extends PureComponent {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        onPress={() => this.sortProducts(item.id)}
+                                        onPress={() => this.sortProducts(item.id, item.category_name)}
                                         style={{
                                             borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',

@@ -372,9 +372,7 @@ class ProductDetails extends Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
+
                         elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
@@ -382,9 +380,7 @@ class ProductDetails extends Component {
                         <ActivityIndicator size="large"
                             style={{
                                 position: 'absolute', left: '44%', top: '40%',
-                                shadowOffset: { width: 20, height: 20 },
-                                shadowColor: 'black',
-                                shadowOpacity: 1.0,
+
                                 elevation: 5,
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
@@ -659,8 +655,6 @@ class ProductDetails extends Component {
                 <ScrollView>
                     <View style={{
                         backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
                         elevation: 5,
                     }}>
                         {photosWithCompletePath && photosWithCompletePath.length ? <SliderBox
@@ -912,7 +906,7 @@ class ProductDetails extends Component {
                             </CardItem>
                         </Card>
 
-                        <View style={{ marginVertical: 30 }}>
+                        <View style={{ marginTop: 15 }}>
                             <Card>
                                 <CardItem>
                                     <Body>
@@ -933,7 +927,7 @@ class ProductDetails extends Component {
                         </View>
 
                     </View>
-                    <View style={{ paddingVertical: 10 }}>
+                    <View >
                         <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                             <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                             <View
@@ -954,13 +948,21 @@ class ProductDetails extends Component {
                             </View>
                         </View>
                         <FlatList
+
                             horizontal={true}
                             ListEmptyComponent={() => <Text style={{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.noRelatedProductFound')}</Text>}
                             keyExtractor={(_, index) => index.toString()}
                             data={relatedProductsArray}
                             renderItem={({ item }) => (
-                                <Card>
+                                <Card
+                                    transparent
+                                >
                                     <TouchableOpacity
+                                        style={{
+                                            borderRadius: 4, overflow: 'hidden', backgroundColor: '#fff', marginBottom: 20, marginHorizontal: 7
+                                            ,
+                                            elevation: 6,
+                                        }}
                                         activeOpacity={1}
                                         onPress={() => {
                                             this.props.navigation.setParams({ productId: item.id, key: item.id })
@@ -969,7 +971,9 @@ class ProductDetails extends Component {
                                         }}>
                                         <Image
                                             resizeMode='cover'
-                                            style={{ width: deviceWidth * 0.46, height: deviceWidth * 0.4, borderRadius: 4 }}
+                                            style={{
+                                                width: '100%', height: deviceWidth * 0.4, backgroundColor: "#f0f3f6",
+                                            }}
                                             source={{
                                                 uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
                                             }} />
