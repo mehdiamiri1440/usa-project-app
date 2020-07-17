@@ -12,6 +12,11 @@ const RelatedProductsList = props => {
 
     return (
         <FlatList
+            style={{
+                borderRadius: 4, overflow: 'hidden', backgroundColor: '#fff', marginBottom: 20, marginHorizontal: 7
+                ,
+                elevation: 6,
+            }}
             horizontal={true}
             ListEmptyComponent={() => <Text style={{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.noRelatedProductFound')}</Text>}
             keyExtractor={(_, index) => index.toString()}

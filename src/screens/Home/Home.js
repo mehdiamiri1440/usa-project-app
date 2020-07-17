@@ -52,25 +52,23 @@ class Home extends React.Component {
             <>
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
                     <TouchableOpacity
-                        style={{ width: deviceWidth * 0.48, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10, }}
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => this.props.navigation.goBack()}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
+
                     <View style={{
-                        width: deviceWidth * 0.5,
-                        alignItems: 'flex-end'
+                        width: '100%',
+                        alignItems: 'center'
                     }}>
                         <Text
                             style={{ fontSize: 18 }}
@@ -81,9 +79,10 @@ class Home extends React.Component {
                 </View>
 
 
+
                 <ScrollView
                     ref={this.props.homeRef}
-                    style={{ padding: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
+                    style={{ marginVertical: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
                     {homeRoutes.map((route, index) => {
                         return (
                             <TouchableOpacity
@@ -95,8 +94,11 @@ class Home extends React.Component {
                                     marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
                                     borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
                                     borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
-                                    padding: 20,
+                                    paddingVertical: 10,
+                                    elevation: 2,
+                                    paddingHorizontal: 20,
                                     marginVertical: 10,
+                                    marginHorizontal: 20,
                                     flexDirection: 'row-reverse',
                                 }}
                                 key={index}>

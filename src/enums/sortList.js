@@ -18,6 +18,12 @@ export default {
             key: 2,
             id: 2
         },
+        {
+            value: 'BM',
+            title: 'پیش فرض',
+            key: 3,
+            id: 3
+        },
     ],
     values: {
         BM: 'BM',

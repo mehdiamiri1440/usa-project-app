@@ -406,9 +406,7 @@ class ProductDetails extends Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
+
                         elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
@@ -416,9 +414,7 @@ class ProductDetails extends Component {
                         <ActivityIndicator size="large"
                             style={{
                                 position: 'absolute', left: '44%', top: '40%',
-                                shadowOffset: { width: 20, height: 20 },
-                                shadowColor: 'black',
-                                shadowOpacity: 1.0,
+
                                 elevation: 5,
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
@@ -694,8 +690,6 @@ class ProductDetails extends Component {
                     }>
                     <View style={{
                         backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
                         elevation: 5,
                     }}>
                         {(photosWithCompletePath && photosWithCompletePath.length) ? <SliderBox
@@ -949,7 +943,7 @@ class ProductDetails extends Component {
                             </CardItem>
                         </Card>
 
-                        <View style={{ marginVertical: 30 }}>
+                        <View style={{ marginTop: 15 }}>
                             <Card>
                                 <CardItem>
                                     <Body>
@@ -970,7 +964,7 @@ class ProductDetails extends Component {
                         </View>
 
                     </View>
-                    <View style={{ paddingVertical: 10 }}>
+                    <View >
                         <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                             <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                             <View

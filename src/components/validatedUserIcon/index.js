@@ -20,7 +20,8 @@ const ValidatedUserIcon = _ => {
                 }}
                 style={{ marginTop: 3, alignItems: 'center', justifyContent: 'center' }}>
                 <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                <Entypo color='white' name='check' size={15} style={{ position: 'absolute' }} />
+                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+
             </TouchableOpacity>
 
             <RBSheet
@@ -30,9 +31,6 @@ const ValidatedUserIcon = _ => {
                 height={300}
                 animationType='slide'
                 customStyles={{
-                    wrapper: {
-                        backgroundColor: "transparent"
-                    },
                     draggableIcon: {
                         backgroundColor: "#000"
                     },
@@ -59,7 +57,7 @@ const ValidatedUserIcon = _ => {
                         }}
                         style={{ width: '100%', justifyContent: 'center', marginTop: 8, alignItems: 'center' }}>
                         <FontAwesome5 name='certificate' color='#1DA1F2' size={75} />
-                        <Entypo color='white' name='check' size={65} style={{ position: 'absolute' }} />
+                        <FontAwesome5 color='white' name='check' size={45} style={{ position: 'absolute' }} />
                     </TouchableOpacity>
                     <Text style={{
                         width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold',

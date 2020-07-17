@@ -695,7 +695,7 @@ class Product extends PureComponent {
                                         require('../../../assets/icons/user.png')
                                     } />
                                 <View
-                                    style={{ width: '62%', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
+                                    style={{ flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
                                 >
                                     <View>
                                         <View style={{ flexDirection: 'row-reverse' }}>
@@ -727,13 +727,13 @@ class Product extends PureComponent {
                                     </Text>
                                     :
                                     <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
-                                        width: '30%', textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
+                                        textAlign: 'center', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
                                     }}>
                                         {locales('labels.seeProfile')}
                                     </Text>}
                             </TouchableOpacity>
                             {active_pakage_type > 1 && <Image
-                                style={{ position: 'absolute', left: 0, top: 48 }}
+                                style={{ position: 'absolute', left: 0, top: 48, zIndex: 1 }}
                                 source={require('../../../assets/icons/special-label.png')} />}
                             <TouchableOpacity
                                 activeOpacity={1}
@@ -808,9 +808,8 @@ class Product extends PureComponent {
                                 {loggedInUserId != myuser_id ?
                                     <Button
                                         onPress={() => this.setState({ modalFlag: true })}
-                                        style={styles.loginButton}
+                                        style={[styles.loginButton, { flex: 1 }]}
                                     >
-                                        {/* <View style={[styles.buttonText, { paddingRight: 30, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}> */}
                                         <View style={[styles.textCenterView, styles.buttonText]}>
                                             <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
                                                 <FontAwesome name='envelope' size={23} />
@@ -819,9 +818,6 @@ class Product extends PureComponent {
                                                 {locales('titles.achiveSaleStatus')}
                                             </Text>
                                         </View>
-                                        {/* </View> */}
-                                        {/* <FontAwesome name='envelope' size={20} color='white'
-                                            style={{ position: 'relative', right: !is_elevated ? (this.props.width ? 94 : 101) : (this.props.width ? 99 : 108) }} /> */}
 
                                     </Button>
                                     :
@@ -829,8 +825,11 @@ class Product extends PureComponent {
                                         flexWrap: 'wrap',
                                         flexDirection: 'row',
                                         justifyContent: !!is_elevated ? 'flex-end' : 'center',
-                                        width: '100%',
-                                        marginTop: 10
+                                        flex: 1,
+                                        alignItems: !!is_elevated ? 'center' : 'flex-start',
+                                        justifyContent: 'center',
+                                        marginTop: 10,
+
                                     }}>
                                         <Button
                                             style={{
@@ -838,16 +837,18 @@ class Product extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                maxWidth: 130,
+                                                // maxWidth: 130,
+                                                flex: 1,
                                                 marginRight: 15,
                                                 backgroundColor: '#E41C38'
                                             }}
+                                            onPress={() => this.setState({ elevatorFlag: true })}
                                         >
 
-                                            <View onPress={() => this.setState({ elevatorFlag: true })}
+                                            <View
                                                 style={[styles.textCenterView, styles.buttonText]}>
-                                                <Text style={[styles.textWhite, , styles.margin5]}>
-                                                    <FontAwesome5 name='chart-line' size={30} color='white' />
+                                                <Text style={[styles.textWhite, , styles.marginTop10]}>
+                                                    <FontAwesome5 name='chart-line' size={20} color='white' />
                                                 </Text>
                                                 <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
                                                     {locales('titles.elevateProduct')}
@@ -860,13 +861,15 @@ class Product extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                maxWidth: 130,
+                                                // maxWidth: 130,
+                                                flex: 1,
                                                 backgroundColor: '#000546'
                                             }}
+                                            onPress={() => this.setState({ editionFlag: true })}
                                         >
-                                            <View onPress={() => this.setState({ editionFlag: true })}
+                                            <View
                                                 style={[styles.textCenterView, styles.buttonText]}>
-                                                <Text style={[styles.textWhite, styles.margin5]}>
+                                                <Text style={[styles.textWhite, styles.marginTop5]}>
                                                     <EvilIcons name='pencil' size={30} color='white' />
                                                 </Text>
                                                 <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
@@ -912,7 +915,8 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         shadowOpacity: 0.3,
         elevation: 6,
-        borderRadius: 5
+        borderRadius: 5,
+        width: '100%',
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
@@ -994,7 +998,6 @@ const styles = StyleSheet.create({
     },
     fontAwesomeEnvelope: {
         color: "#fff",
-        // top: '15px',
         margin: '15px'
     },
     textWhite: {
@@ -1009,15 +1012,22 @@ const styles = StyleSheet.create({
     },
     actionsWrapper: {
         flexDirection: 'row-reverse',
-        width: '100%',
+        flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 15
+
     },
     elevatorIcon: {
         backgroundColor: '#7E7E7E',
         padding: 10,
         borderRadius: 4,
         height: 45,
+        marginTop: 10,
+        marginRight: 15
+    },
+    marginTop5: {
+        marginTop: 5
+    },
+    marginTop10: {
         marginTop: 10
     },
     margin5: {

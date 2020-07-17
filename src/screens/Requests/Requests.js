@@ -224,29 +224,28 @@ class Requests extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
+
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
                     <TouchableOpacity
-                        style={{ width: deviceWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10, }}
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             this.updateFlag.current.close(); this.props.navigation.goBack()
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
                     </TouchableOpacity>
+
                     <View style={{
-                        width: deviceWidth * 0.69,
-                        alignItems: 'flex-end'
+                        width: '100%',
+                        alignItems: 'center'
                     }}>
                         <Text
                             style={{ fontSize: 18 }}
@@ -280,7 +279,8 @@ class Requests extends PureComponent {
 
 
                 <SafeAreaView
-                    style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
+                    // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
+                    style={{ height: '100%', paddingBottom: 60 }}
                 >
 
                     <FlatList
