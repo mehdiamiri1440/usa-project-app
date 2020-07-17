@@ -17,9 +17,10 @@ import { validator, dataGenerator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
-import { NavigationActions } from 'react-navigation';
+import RelatedProductsList from './RelatedProductsList';
+import { NavigationActions, StackActions } from 'react-navigation';
 
-
+let fromHardwareBack = false;
 class ProductDetails extends Component {
     constructor(props) {
         super(props);
@@ -52,9 +53,16 @@ class ProductDetails extends Component {
     minimumPriceRef = React.createRef();
 
     componentWillUnmount() {
+        BackHandler.removeEventListener();
     }
 
     componentDidMount(param) {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            global.productIds.pop();
+            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
+            this.callApi();
+            return true;
+        })
         this.callApi()
     }
 
@@ -77,8 +85,16 @@ class ProductDetails extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if ((this.props.route.params.productId == nextProps.route.params.productId)) {
+            return true;
+        }
+        return true
+    }
+
     callApi = param => {
-        let code = param || this.props.route.params.productId;
+        let code = param || global.productIds[global.productIds.length - 1];
+        if (!global.productIds.length) return this.props.navigation.goBack();
         if (code) {
             this.props.fetchAllRelatedProducts(code);
             this.props.fetchProductDetails(code).then(_ => {
@@ -101,6 +117,7 @@ class ProductDetails extends Component {
             })
         }
     }
+
 
     showFullSizeImage = index => {
         this.setState({ showFullSizeImageModal: true, selectedImage: index })
@@ -630,14 +647,9 @@ class ProductDetails extends Component {
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
-                            if (routes.length > 1) {
-                                this.callApi(routes[routes.length - 2])
-                                routes.pop();
-                            }
-                            else {
-                                routes = []
-                                this.props.navigation.navigate('ProductsList');
-                            }
+                            global.productIds.pop();
+                            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
+                            this.callApi();
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
@@ -671,7 +683,9 @@ class ProductDetails extends Component {
                                 flexDirection: 'row-reverse', alignItems: 'center',
                                 marginVertical: 30, width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
                             }}>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
+                            <Text
+                                numberOfLines={1}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
                                 {product_name ? product_name : '---'}
                             </Text>
                             <View style={{ marginLeft: 4 }}>
@@ -885,7 +899,7 @@ class ProductDetails extends Component {
                                     </View>
                                     <Button
                                         onPress={() => {
-                                            ; this.props.navigation.navigate('Profile', { user_name })
+                                            this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })
                                         }}
                                         style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
                                     >
@@ -947,43 +961,9 @@ class ProductDetails extends Component {
                                     }}></View>
                             </View>
                         </View>
-                        <FlatList
-
-                            horizontal={true}
-                            ListEmptyComponent={() => <Text style={{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.noRelatedProductFound')}</Text>}
-                            keyExtractor={(_, index) => index.toString()}
-                            data={relatedProductsArray}
-                            renderItem={({ item }) => (
-                                <Card
-                                    transparent
-                                >
-                                    <TouchableOpacity
-                                        style={{
-                                            borderRadius: 4, overflow: 'hidden', backgroundColor: '#fff', marginBottom: 20, marginHorizontal: 7
-                                            ,
-                                            elevation: 6,
-                                        }}
-                                        activeOpacity={1}
-                                        onPress={() => {
-                                            this.props.navigation.setParams({ productId: item.id, key: item.id })
-                                            routes.push(item.id);
-                                            this.props.navigation.navigate({ name: 'ProductDetails', key: item.id, params: { productId: item.id } })
-                                        }}>
-                                        <Image
-                                            resizeMode='cover'
-                                            style={{
-                                                width: '100%', height: deviceWidth * 0.4, backgroundColor: "#f0f3f6",
-                                            }}
-                                            source={{
-                                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
-                                            }} />
-                                        <Text style={{ paddingHorizontal: 10, alignSelf: 'center', }}>
-                                            {item.product_name}</Text>
-                                        <Text style={{ paddingHorizontal: 10, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }}>
-                                            {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
-                                    </TouchableOpacity>
-                                </Card>
-                            )}
+                        <RelatedProductsList
+                            {...this.props}
+                            relatedProductsArray={relatedProductsArray}
                         />
                     </View>
 

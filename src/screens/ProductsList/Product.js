@@ -738,9 +738,10 @@ class Product extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
-                                    this.props.navigation.setParams({ productId, key: productId })
-                                    routes.push(productId);
-                                    this.props.navigation.navigate({ name: 'ProductDetails', key: productId, params: { productId } })
+                                    // this.props.navigation.setParams({ productId, key: productId })
+                                    // routes.push(productId);
+                                    global.productIds.push(productId);
+                                    this.props.navigation.navigate({ name: 'ProductDetails', params: { productId }, key: productId, index: productId })
                                 }}
                                 style={{ flexDirection: 'row-reverse', width: '100%', paddingTop: 10 }}>
 

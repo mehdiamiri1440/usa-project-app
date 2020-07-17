@@ -10,6 +10,7 @@ import configureStore, { persistor } from './src/redux/configureStore';
 import messaging from '@react-native-firebase/messaging';
 
 import * as messageActions from './src/redux/messages/actions';
+import ErrorBoundary from './ErrorBoundary';
 import locales from './locales/index';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Root, Toast } from 'native-base';
@@ -28,6 +29,7 @@ setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
 global.routes = [];
+global.productIds = [];
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -73,7 +75,9 @@ class App extends React.Component {
           <PersistGate loading={null} persistor={persistor}>
             <PaperProvider>
               <Root>
-                <Router />
+                <ErrorBoundary>
+                  <Router />
+                </ErrorBoundary>
               </Root>
             </PaperProvider>
           </PersistGate>

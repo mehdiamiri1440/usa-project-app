@@ -318,6 +318,12 @@ const router = props => {
 
             <Tab.Screen
                 key='RegisterProduct'
+                listeners={{
+                    tabPress: e => {
+                        if (!!global.resetRegisterProduct)
+                            global.resetRegisterProduct(true)
+                    },
+                }}
                 options={{
                     tabBarBadge: false,
                     tabBarLabel: locales('labels.registerProduct'),
@@ -331,6 +337,7 @@ const router = props => {
                 key='Messages'
                 options={{
                     tabBarBadge: false,
+                    // tabBarBadge:  props.totalUnreadMessages > 0 ? true : false,
                     tabBarLabel: locales('labels.messages'),
                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                 }}
@@ -372,6 +379,9 @@ const mapStateToProps = (state) => {
         userProfile: state.profileReducer.userProfile,
 
         productDetailsId: state.productsListReducer.productDetailsId,
+
+        // totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
+        // totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
     }
 };
 

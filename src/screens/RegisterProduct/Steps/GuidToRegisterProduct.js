@@ -50,16 +50,18 @@ class GuidToRegisterProduct extends React.Component {
                         visible={showModal}
                         onDismiss={this.hideDialog}>
                         <Dialog.Content>
-                            <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
+                            <Paragraph style={{ minHeight: 100, fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
                                 {locales('titles.maximumProductRegisteration')}</Paragraph>
                         </Dialog.Content>
                         <Dialog.Actions style={{
                             width: '100%',
+                            flexDirection: 'row-reverse',
                             justifyContent: 'space-between',
-                            alignItems: 'space-between'
+                            alignItems: 'space-between',
+                            flex: 1
                         }}>
                             <Button
-                                style={[styles.loginButton, { width: '30%' }]}
+                                style={[styles.loginButton, { flex: 1 }]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('PromoteRegistration');
@@ -69,7 +71,7 @@ class GuidToRegisterProduct extends React.Component {
                                 </Text>
                             </Button>
                             <Button
-                                style={[styles.loginButton, { width: '30%' }]}
+                                style={[styles.loginButton, { flex: 1, backgroundColor: '#556080' }]}
                                 onPress={this.hideDialog}>
                                 <Text style={styles.buttonText}>{locales('titles.gotIt')}
                                 </Text>
@@ -174,26 +176,28 @@ class GuidToRegisterProduct extends React.Component {
 
 
                     <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        alignItems: 'flex-end',
-                        width: deviceWidth, justifyContent: 'center'
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        flex: 1,
+                        justifyContent: 'center'
                     }}>
                         <Button
                             onPress={() => this.onSubmit()}
                             style={styles.loginButton}
-                            rounded
                         >
+
                             <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
                             <ActivityIndicator size="small" color="white"
                                 animating={!!userPermissionToRegisterProductLoading}
                                 style={{
-                                    position: 'absolute', left: 0, top: '20%',
-                                    width: 30, height: 30, borderRadius: 15,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 20
-
+                                    width: 30,
+                                    height: 30,
+                                    borderRadius: 15,
+                                    fontSize: 20,
+                                    marginLeft: -30
                                 }}
                             />
+
                         </Button>
                     </View>
 
@@ -253,7 +257,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-start',
+        flexDirection: 'row-reverse',
         justifyContent: 'center',
 
     },
