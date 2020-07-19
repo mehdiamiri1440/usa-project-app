@@ -115,7 +115,7 @@ class MyProducts extends Component {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.myProducts')}
                         </Text>
@@ -131,8 +131,8 @@ class MyProducts extends Component {
                         alignSelf: 'center', justifyContent: 'center',
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.78
                     }}>
-                        <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
+                        <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     // getItemLayout={(data, index) => (

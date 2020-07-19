@@ -281,10 +281,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         height: 57,
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 0.3,
-                        elevation: 6,
+                        elevation: 5,
                         justifyContent: 'center'
                     }}>
                         <TouchableOpacity
@@ -301,7 +298,7 @@ class ProductsList extends PureComponent {
                             alignItems: 'flex-end'
                         }}>
                             <Text
-                                style={{ fontSize: 18 }}
+                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
                                 {locales('labels.locationsFilter')}
                             </Text>
@@ -387,33 +384,39 @@ class ProductsList extends PureComponent {
                                             <Button
                                                 style={[styles.loginButton, { width: '50%' }]}
                                                 onPress={this.searchLocation}>
-                                                <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                    {locales('labels.search')}
-                                                </Text>
                                                 <ActivityIndicator size="small" color="white"
                                                     animating={selectedButton == 1 && !!productsListLoading}
                                                     style={{
-                                                        position: 'absolute', left: '15%', top: '25%',
+                                                        marginLeft: -15,
+                                                        justifyContent: 'center',
+
                                                         width: 30, height: 30, borderRadius: 15
                                                     }}
                                                 />
+                                                <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
+                                                    {locales('labels.search')}
+                                                </Text>
+
                                             </Button>
                                             <Button
-                                                style={[styles.loginButton, { width: '50%', backgroundColor: '#556080', }]}
+                                                style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                 onPress={this.deleteFilter}>
+                                                <ActivityIndicator size="small" color="white"
+                                                    animating={selectedButton == 2 && !!productsListLoading}
+                                                    style={{
+                                                        marginLeft: -15,
+                                                        justifyContent: 'center',
+
+                                                        width: 30, height: 30, borderRadius: 15
+                                                    }}
+                                                />
                                                 <Text style={[styles.buttonText, {
                                                     alignSelf: 'center',
                                                     fontSize: 16
                                                 }]}>
                                                     {locales('labels.deleteFilter')}
                                                 </Text>
-                                                <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 2 && !!productsListLoading}
-                                                    style={{
-                                                        position: 'absolute', left: '15%', top: '25%',
-                                                        width: 30, height: 30, borderRadius: 15
-                                                    }}
-                                                />
+
                                             </Button>
                                         </View>
 
@@ -437,10 +440,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         height: 57,
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 0.3,
-                        elevation: 6,
+                        elevation: 5,
                         justifyContent: 'center'
                     }}>
                         <TouchableOpacity
@@ -455,7 +455,7 @@ class ProductsList extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Text
-                                style={{ fontSize: 18 }}
+                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
                                 {locales('labels.sort')}
                             </Text>
@@ -526,10 +526,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         height: 57,
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 0.3,
-                        elevation: 6,
+                        elevation: 5,
                         justifyContent: 'center'
                     }}>
                         <TouchableOpacity
@@ -544,7 +541,7 @@ class ProductsList extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Text
-                                style={{ fontSize: 18 }}
+                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
                                 {selectedCategoryModal}
                             </Text>
@@ -619,7 +616,7 @@ class ProductsList extends PureComponent {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.products')}
                         </Text>
@@ -629,7 +626,7 @@ class ProductsList extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5 }}>
+                        <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5, textAlignVertical: 'center' }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
@@ -647,7 +644,7 @@ class ProductsList extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', height: 42, textAlignVertical: 'center' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlignVertical: 'bottom' }}
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
@@ -657,12 +654,12 @@ class ProductsList extends PureComponent {
                                 onPress={() => this.setState({ sortModalFlag: true })}
                                 style={{
                                     borderRadius: 18, marginVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: deviceWidth * 0.25, borderWidth: 0.8, borderColor: '#060446'
+                                    minWidth: 110, backgroundColor: '#556080', minHeight: 35
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#060446' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                     {locales('labels.sort')}
                                 </Text>
-                                <FontAwesome name='sort-amount-desc' size={20} color='#060446' />
+                                <FontAwesome name='sort-amount-desc' size={16} color='#fff' />
                             </TouchableOpacity>
                             <FlatList
                                 data={categoriesList}
@@ -677,9 +674,9 @@ class ProductsList extends PureComponent {
                                         style={{
                                             borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',
-                                            minWidth: deviceWidth * 0.25, borderWidth: 0.8, borderColor: '#7E7E7E'
+                                            minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee'
                                         }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E' }}>
+                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                             {item.category_name}
                                         </Text>
                                     </TouchableOpacity>
@@ -698,8 +695,8 @@ class ProductsList extends PureComponent {
                         alignSelf: 'center', justifyContent: 'center',
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
                     }}>
-                        <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noProductFound')}</Text>
+                        <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
                     </View>
                     }
                     // getItemLayout={(data, index) => (

@@ -142,16 +142,20 @@ class ChooseCity extends React.Component {
                 </View>} */}
                     {/* <View style={{ flexDirection: 'column', width: deviceWidth * 0.4 }}> */}
                     <View style={[styles.labelInputPadding, { marginVertical: -30 }]}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.province')}
-                        </Label>
-                        {(!!this.props.loading) ?
-                            <ActivityIndicator size="small" color="#00C569"
-                                style={{
-                                    position: 'absolute', right: '15%', top: '2%',
-                                    width: 50, height: 50, borderRadius: 25
-                                }}
-                            /> : null}
+                        <View style={{
+                            flexDirection: 'row-reverse'
+                        }}>
+                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                {locales('labels.province')}
+                            </Label>
+                            {(!!this.props.loading) ?
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        position: 'relative',
+                                        width: 30, height: 30, borderRadius: 25
+                                    }}
+                                /> : null}
+                        </View>
                         <Item regular
                             style={{
                                 width: deviceWidth * 0.9,
@@ -187,16 +191,20 @@ class ChooseCity extends React.Component {
                     }}
                 /> */}
                     <View style={[styles.labelInputPadding, { marginTop: 30 }]}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.city')}
-                        </Label>
-                        {(!!this.props.fetchCitiesLoading) ?
-                            <ActivityIndicator size="small" color="#00C569"
-                                style={{
-                                    position: 'absolute', right: '15%', top: '2%',
-                                    width: 50, height: 50, borderRadius: 25
-                                }}
-                            /> : null}
+                        <View style={{
+                            flexDirection: 'row-reverse'
+                        }}>
+                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                {locales('labels.city')}
+                            </Label>
+                            {(!!this.props.fetchCitiesLoading) ?
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        position: 'relative',
+                                        width: 30, height: 30, borderRadius: 25
+                                    }}
+                                /> : null}
+                        </View>
                         <Item regular
                             style={{
                                 width: deviceWidth * 0.9,
@@ -230,7 +238,7 @@ class ChooseCity extends React.Component {
                         paddingHorizontal: 20
                     }}
                 /> */}
-                    <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                         <Button
                             onPress={() => this.onSubmit()}
                             style={!city || !province ? styles.disableLoginButton : styles.loginButton}
@@ -385,7 +393,8 @@ const styles = StyleSheet.create({
     iconContainer: {
         left: 30,
         top: 17,
-    }
+    },
+
 });
 const mapStateToProps = state => {
     return {

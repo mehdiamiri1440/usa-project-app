@@ -122,7 +122,7 @@ class SelectCategory extends Component {
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#666666',
                         fontSize: 20,
-                        paddingHorizontal: 10
+                        paddingHorizontal: 15
                     }}
                 >
                     {locales('labels.selectProductType')}
@@ -130,12 +130,15 @@ class SelectCategory extends Component {
 
 
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ position: 'relative', color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('labels.category')}
-                    </Label>
-                    {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                        style={{ position: 'absolute', left: '63%', top: '15%' }}
-                    /> : null}
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Label style={{ position: 'relative', color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.category')}
+                        </Label>
+                        {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
+                        /> : null}
+                    </View>
                     <Item regular
                         style={{
                             width: deviceWidth * 0.9,
@@ -199,15 +202,18 @@ class SelectCategory extends Component {
                     }}
                 /> */}
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('labels.subCategory')}
-                    </Label>
-                    {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                        style={{
-                            position: 'absolute', left: '72%', top: '10%',
-                            width: 30, height: 30, borderRadius: 15
-                        }}
-                    /> : null}
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.subCategory')}
+                        </Label>
+                        {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                width: 30, height: 30, borderRadius: 15
+                            }}
+                        /> : null}
+                    </View>
                     <Item regular
                         style={{
                             width: deviceWidth * 0.9,
@@ -276,16 +282,19 @@ class SelectCategory extends Component {
                             locales('titles.productTypeWithExample')}
                     /> */}
                 </View>
-                <Button
-                    onPress={() => this.onSubmit()}
-                    style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)
-                        ? styles.disableLoginButton : styles.loginButton}
-                    rounded
-                >
-                    <AntDesign name='arrowleft' size={25} color='white' />
-                    <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                </Button>
+                <View style={styles.labelInputPadding}>
 
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)
+                            ? styles.disableLoginButton : styles.loginButton}
+                        rounded
+                    >
+                        <AntDesign name='arrowleft' size={25} color='white' />
+                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                    </Button>
+
+                </View>
             </View >
         );
     }
@@ -303,7 +312,7 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        margin: 10,
+        marginVertical: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
         width: '40%',
@@ -315,7 +324,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         borderRadius: 5,
-        margin: 10,
+        marginVertical: 10,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
         color: 'white',

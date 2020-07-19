@@ -68,7 +68,7 @@ const BuyAdList = props => {
                             text: locales('titles.remianedCapacityToSendMessageToBuyer'),
                             position: "bottom",
                             style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
+                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                             duration: 10
                         })
                     }

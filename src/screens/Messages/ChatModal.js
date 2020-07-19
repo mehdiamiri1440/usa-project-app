@@ -167,6 +167,8 @@ class ChatModal extends React.Component {
                     flex: 1,
                     position: 'absolute',
                     resizeMode: 'cover',
+                    width: '100%',
+                    height: '100%',
                 }} />
 
 
@@ -256,7 +258,7 @@ class ChatModal extends React.Component {
                     )}
                     inverted
                     ref={this.scrollViewRef}
-                    style={{ marginBottom: 50, marginTop: 10 }}
+                    style={{ marginBottom: 60, paddingBottom: 40 }}
                     extraData={this.state}
                     onEndReached={() => {
                         if (loaded && userChatHistory.length >= 9)
@@ -272,7 +274,9 @@ class ChatModal extends React.Component {
                             style={{
                                 width: deviceWidth,
                                 paddingHorizontal: 10,
-                                marginBottom: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 10),
+                                paddingVertical: 0,
+
+                                marginBottom: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
                                 flex: 1,
                                 alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
                             }}
@@ -280,11 +284,9 @@ class ChatModal extends React.Component {
                         >
                             <View
                                 style={{
-                                    shadowOffset: { width: 20, height: 20 },
-                                    shadowColor: 'black',
-                                    shadowOpacity: 1.0,
-                                    elevation: 5,
-                                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
+
+                                    elevation: 1,
+                                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9, paddingVertical: 3,
                                     backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                                 }}
                             >
@@ -295,7 +297,7 @@ class ChatModal extends React.Component {
                                 }}>
                                     {item.text}
                                 </Text>
-                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
+                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
                                     {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
                                         style={{ textAlign: 'right', paddingHorizontal: 3 }}
                                         name={item.is_read ? 'check-all' : 'check'} size={14}
@@ -403,7 +405,9 @@ class ChatModal extends React.Component {
                         style={{
                             position: 'absolute',
                             width: deviceWidth,
-                            resizeMode: 'cover'
+                            resizeMode: 'cover',
+                            width: '100%',
+                            height: '100%'
                         }} />
 
                     <Button

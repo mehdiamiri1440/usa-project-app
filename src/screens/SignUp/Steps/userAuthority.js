@@ -37,14 +37,6 @@ class UserAuthority extends React.Component {
     onSubmit = () => {
         let { userName, password, repeatPassword } = this.state;
 
-        // let errors = []
-        // if (!validator.isValidInstagramUserName(userName))
-        //     errors.push({ errorName: 'invalidUserName', errorText: locales('errors.invalidUserName') })
-        // if (password !== repeatPassword)
-        //     errors.push({ errorName: 'passwordsNotSame', errorText: locales('errors.notSamePasswords') })
-        // if (password === repeatPassword && password.length < 8)
-        //     errors.push({ errorName: 'passwordLength', errorText: locales('errors.passwordLength') })
-        // if (errors.length) this.setState({ errors: [...errors], errorFlag: true });
         let isPasswordValid, passwordError;
         if (!password) {
             passwordError = locales('errors.fieldNeeded', { fieldName: locales('titles.password') });
@@ -200,7 +192,7 @@ class UserAuthority extends React.Component {
                         label={locales('titles.repeatPassword')}
                     />
                 </View> */}
-                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!password || password.length < 8
