@@ -234,7 +234,7 @@ class UserBasicInfo extends React.Component {
                             label={locales('titles.lastName')}
                         />
                     </View> */}
-                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
@@ -355,6 +355,10 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'center',
         color: '#7E7E7E'
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
     }
 });
 const mapStateToProps = state => {

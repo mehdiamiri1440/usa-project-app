@@ -155,7 +155,7 @@ class GuidToRegisterProduct extends React.Component {
 
                     <View
                         style={{
-                            marginTop: 70,
+                            marginTop: 30,
                             width: deviceWidth,
                             justifyContent: 'center',
                             alignItems: 'center'
@@ -175,31 +175,25 @@ class GuidToRegisterProduct extends React.Component {
                     </View>
 
 
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 1,
-                        justifyContent: 'center'
-                    }}>
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={styles.loginButton}
-                        >
 
-                            <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
-                            <ActivityIndicator size="small" color="white"
-                                animating={!!userPermissionToRegisterProductLoading}
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: 15,
-                                    fontSize: 20,
-                                    marginLeft: -30
-                                }}
-                            />
+                    <Button
+                        onPress={() => this.onSubmit()}
+                        style={styles.loginButton}
+                    >
 
-                        </Button>
-                    </View>
+                        <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
+                        <ActivityIndicator size="small" color="white"
+                            animating={!!userPermissionToRegisterProductLoading}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 15,
+                                fontSize: 20,
+                                marginLeft: -30
+                            }}
+                        />
+
+                    </Button>
 
                 </View>
             </>

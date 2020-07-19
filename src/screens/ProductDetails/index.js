@@ -477,7 +477,7 @@ class ProductDetails extends Component {
                                 textAlign: 'center', width: '100%',
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
                             }}>
-                                {locales('labels.edition', { fieldName: `${category_name || '---'} | ${sub_category_name || '---'}` })}
+                                {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
                             </Text>
                         </View>
                         {!showEditionMessage ?
@@ -641,6 +641,7 @@ class ProductDetails extends Component {
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 57,
+                    elevation: 5,
                     shadowOffset: { width: 20, height: 20 },
                     justifyContent: 'center'
                 }}>
@@ -656,9 +657,12 @@ class ProductDetails extends Component {
                     </TouchableOpacity>
                     <View >
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{
+                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
                         >
-                            {(`${category_name} | ${sub_category_name}`) || '---'}
+                            {(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
                         </Text>
                     </View>
                 </View>
@@ -681,37 +685,40 @@ class ProductDetails extends Component {
                         <View
                             style={{
                                 flexDirection: 'row-reverse', alignItems: 'center',
-                                marginVertical: 30, width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
+                                marginVertical: 30, width: deviceWidth, justifyContent: 'space-between',
+                                paddingHorizontal: 15
                             }}>
                             <Text
-                                numberOfLines={1}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20, paddingHorizontal: 20 }}>
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
                                 {product_name ? product_name : '---'}
                             </Text>
-                            <View style={{ marginLeft: 4 }}>
+                            <View>
                                 <TouchableOpacity
                                     onPress={() => this.shareProductLink(url)}
                                     style={{
                                         borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
                                         flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
                                     }}>
-                                    <FontAwesome name='share-alt' size={14} color='#777777' />
+                                    <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
                                     <Text style={{
-                                        color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                        color: '#777777', fontSize: 14, marginLeft: 5
                                     }}>
                                         {locales('labels.share')}
                                     </Text>
+
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                         <View style={{
                             flexDirection: 'row-reverse', alignItems: 'center',
-                            width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 5
+                            width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
+
                         }}>
                             {userId == loggedInUserId ? <View style={{
-                                flexDirection: 'row', justifyContent: 'space-around', marginLeft: -10,
-                                width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
+                                flexDirection: 'row', justifyContent: 'space-around',
+                                flex: 1
+                                // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
                             }}>
                                 <Button
                                     style={{
@@ -744,20 +751,28 @@ class ProductDetails extends Component {
                                     }}
                                 >
                                     <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                    <EvilIcons name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    <FontAwesome5 name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
                                 </Button>
                             </View> :
+
                                 <Button
                                     onPress={() => this.setState({ modalFlag: true })}
                                     style={[styles.loginButton, {
-                                        height: '70%', paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
-                                        width: !!is_elevated ? '50%' : '46%'
+                                        paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
+                                        maxWidth: 160,
+                                        margin: 0
+                                        // width: !!is_elevated ? '50%' : '46%'
                                     }]}
                                 >
-                                    <Text style={[styles.buttonText, { fontSize: 16, right: 10 }]}>
-                                        {locales('titles.achiveSaleStatus')}</Text>
-                                    <FontAwesome name='envelope' size={20} color='white'
-                                        style={{ position: 'absolute', right: !!is_elevated ? 45 : 40 }} />
+                                    <View style={[styles.textCenterView, styles.buttonText]}>
+                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                            <FontAwesome name='envelope' size={20} />
+                                        </Text>
+                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                            {locales('titles.achiveSaleStatus')}
+                                        </Text>
+                                    </View>
+
                                 </Button>
                             }
                             {is_elevated ? <FontAwesome5
@@ -765,10 +780,10 @@ class ProductDetails extends Component {
                                     text: locales('titles.elevatorHasAdded'),
                                     position: "bottom",
                                     style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
+                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                                     duration: 3000
-                                })} name='chart-line' size={30} color='white'
-                                style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 7, paddingLeft: 5, marginLeft: 4 }} />
+                                })} name='chart-line' size={25} color='white'
+                                style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 10, elevation: 1 }} />
                                 : null
                             }
                         </View>
@@ -901,19 +916,22 @@ class ProductDetails extends Component {
                                         onPress={() => {
                                             this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })
                                         }}
-                                        style={[styles.loginButton, { width: '90%', alignSelf: 'center' }]}
-                                    >
-                                        <Text style={[styles.buttonText, { fontSize: 16 }]}>
-                                            {locales('titles.seeProfile')}</Text>
-                                    </Button>
-                                    <Button
-                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('EditProfile') : this.setState({ modalFlag: true })}
                                         style={[styles.loginButton, {
                                             borderWidth: 1, borderColor: '#00C569',
                                             width: '90%', backgroundColor: 'white', alignSelf: 'center'
                                         }]}
                                     >
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#00C569' }]}>
+                                            {locales('titles.seeProfile')}</Text>
+                                    </Button>
+                                    <Button
+                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('EditProfile') : this.setState({ modalFlag: true })}
+                                        style={[styles.loginButton, {
+                                            alignSelf: 'center'
+                                        }]}
+                                    >
+
+                                        <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
                                             {loggedInUserId == userId ? locales('labels.editProfile') : locales('titles.sendMessage')}</Text>
                                     </Button>
                                 </Body>
@@ -1012,6 +1030,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center'
     },
+    fontAwesomeEnvelope: {
+        color: "#fff",
+        margin: '15px'
+    },
+    textWhite: {
+        color: "#fff"
+    },
+    textCenterView: {
+        justifyContent: 'center',
+        flexDirection: "row-reverse",
+    },
+    textBold: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
     loginButton: {
         textAlign: 'center',
         margin: 10,
@@ -1052,7 +1084,28 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'center',
         color: '#7E7E7E'
-    }
+    },
+    marginTop5: {
+        marginTop: 5
+    },
+    marginTop10: {
+        marginTop: 10
+    },
+    margin5: {
+        margin: 5
+    },
+    margin10: {
+        margin: 10
+    },
+    textSize15: {
+        fontSize: 15
+    },
+    textSize18: {
+        fontSize: 18
+    },
+    textSize20: {
+        fontSize: 20
+    },
 });
 
 const mapStateToProps = (state) => {

@@ -119,7 +119,7 @@ class ChooseCity extends React.Component {
         }
 
         return (
-            <View style={{ backgroundColor: 'white' }}>
+            <View style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
 
                 <Text style={styles.userText}>
                     {locales('titles.selectOrigin')}
@@ -131,17 +131,21 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
-                <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('labels.province')}
-                    </Label>
-                    {(!!this.props.loading) ?
-                        <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
-                            }}
-                        /> : null}
+                <View>
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.province')}
+                        </Label>
+                        {(!!this.props.loading) ?
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    position: 'relative',
+                                    width: 30, height: 30, borderRadius: 25
+                                }}
+                            /> : null}
+                    </View>
                     <Item regular
                         style={{
                             width: deviceWidth * 0.9,
@@ -179,17 +183,21 @@ class ChooseCity extends React.Component {
                         }}
                     /> */}
 
-                <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('labels.city')}
-                    </Label>
-                    {(!!this.props.fetchCitiesLoading) ?
-                        <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
-                            }}
-                        /> : null}
+                <View >
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.city')}
+                        </Label>
+                        {(!!this.props.fetchCitiesLoading) ?
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    position: 'relative',
+                                    width: 30, height: 30, borderRadius: 25
+                                }}
+                            /> : null}
+                    </View>
                     <Item regular
                         style={{
                             width: deviceWidth * 0.9,
@@ -225,7 +233,7 @@ class ChooseCity extends React.Component {
                             paddingHorizontal: 20
                         }}
                     /> */}
-                <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', marginVertical: 20, width: deviceWidth, justifyContent: 'space-between', width: '100%' }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!city || !province ? styles.disableLoginButton : styles.loginButton}
@@ -243,7 +251,7 @@ class ChooseCity extends React.Component {
                         <AntDesign name='arrowright' size={25} color='#7E7E7E' />
                     </Button>
                 </View>
-            </View>
+            </View >
         )
     }
 }
@@ -280,7 +288,7 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        margin: 10,
+        marginVertical: 10,
         width: deviceWidth * 0.4,
         borderRadius: 5,
         color: 'white',
@@ -291,7 +299,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        margin: 10,
+        marginVertical: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
         width: deviceWidth * 0.4,

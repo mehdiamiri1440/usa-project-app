@@ -231,7 +231,7 @@ class ProductMoreDetails extends Component {
                         <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
                     </View>}
                 <View
-                    style={{ backgroundColor: 'white' }}>
+                    style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                     <Text
                         style={{
                             marginVertical: 10,
@@ -299,39 +299,42 @@ class ProductMoreDetails extends Component {
                                     style={{
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        height: 80
+                                        height: 80,
+                                        width: 30
                                     }}>
                                     <FontAwesome name='trash' color='red' size={25} />
                                 </TouchableOpacity>
 
-                                <View style={styles.labelInputPadding}>
-                                    <Item regular
-                                        style={{
-                                            width: deviceWidth * 0.45,
-                                            height: 55,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
-                                        }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
-                                            style={styles}
-                                            ref={this.pickerRef}
-                                            placeholder={{
-                                                label: locales('titles.selectOne'),
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                value: detail.itemKey
+                                <View style={{ flex: 1, flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+                                    <View >
+                                        <Item regular
+                                            style={{
+                                                flex: 2,
+
+                                                height: 55,
+                                                borderRadius: 5,
+                                                alignSelf: 'center',
+                                                borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
                                             }}
-                                            items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
-                                                label: item.name, value: item.name
-                                            }))}
-                                        />
-                                    </Item>
-                                </View>
-                                {/* <Dropdown
+                                        >
+                                            <RNPickerSelect
+                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                useNativeAndroidPickerStyle={false}
+                                                onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
+                                                style={styles}
+                                                ref={this.pickerRef}
+                                                placeholder={{
+                                                    label: locales('titles.selectOne'),
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    value: detail.itemKey
+                                                }}
+                                                items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
+                                                    label: item.name, value: item.name
+                                                }))}
+                                            />
+                                        </Item>
+                                    </View>
+                                    {/* <Dropdown
                                 error={detail.error}
                                 onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
                                 label={locales('titles.selectOne')}
@@ -342,26 +345,27 @@ class ProductMoreDetails extends Component {
                                     width: 195
                                 }}
                             /> */}
-                                <View style={{
-                                    width: 170,
+                                    <View style={{
+                                        flex: 2,
 
-                                }}>
-                                    <Item error={detail.error} regular style={{
-                                        height: 55,
-                                        borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                     }}>
-                                        <Input
-                                            disabled={!detail.itemKey}
-                                            autoCapitalize='none'
-                                            autoCorrect={false}
-                                            autoCompleteType='off'
-                                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
-                                            onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                            placeholder={locales('titles.writeDescription')}
+                                        <Item error={detail.error} regular style={{
+                                            height: 55,
+                                            borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                disabled={!detail.itemKey}
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                                placeholder={locales('titles.writeDescription')}
 
 
-                                        />
-                                    </Item>
+                                            />
+                                        </Item>
+                                    </View>
                                 </View>
                                 {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
@@ -383,11 +387,15 @@ class ProductMoreDetails extends Component {
 
                     <View style={{
                         marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
+                        width: deviceWidth, justifyContent: 'space-between',
+
                     }}>
                         <Button
                             onPress={() => this.addMoreRow()}
-                            style={styles.addMoreButton}
+                            style={[styles.addMoreButton, {
+                                borderWidth: 1,
+                                borderColor: '#00C569'
+                            }]}
                             rounded
                         >
                             <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
@@ -404,14 +412,18 @@ class ProductMoreDetails extends Component {
                             style={styles.loginButton}
                             rounded
                         >
-                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
                             <ActivityIndicator size="small" color="white"
                                 animating={!!this.props.addNewProductLoading}
                                 style={{
-                                    position: 'absolute', left: 0, top: '25%',
-                                    width: 30, height: 30, borderRadius: 15
+                                    width: 30,
+                                    height: 30,
+                                    borderRadius: 15,
+                                    fontSize: 20,
+                                    marginLeft: -30
                                 }}
                             />
+                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
+
                         </Button>
                         <Button
                             onPress={() => this.props.changeStep(5)}
@@ -575,6 +587,10 @@ const styles = StyleSheet.create({
     iconContainer: {
         left: 30,
         top: 17,
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 5
     }
 });
 

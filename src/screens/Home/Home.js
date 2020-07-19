@@ -71,7 +71,7 @@ class Home extends React.Component {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.home')}
                         </Text>

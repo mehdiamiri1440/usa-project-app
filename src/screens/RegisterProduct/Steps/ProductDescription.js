@@ -44,7 +44,7 @@ class ProductDecription extends Component {
         return (
             <ScrollView>
                 <View
-                    style={{ backgroundColor: 'white' }}>
+                    style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                     <Text
                         style={{
                             marginVertical: 10,
@@ -100,7 +100,7 @@ class ProductDecription extends Component {
 
                     <View style={{
                         marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
+                        width: '100%', justifyContent: 'space-between'
                     }}>
                         <Button
                             onPress={() => this.onSubmit()}
@@ -223,6 +223,10 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'right',
         color: '#7E7E7E'
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
     }
 });
 

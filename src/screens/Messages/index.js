@@ -132,7 +132,7 @@ class ContactsList extends React.Component {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.messages')}
                         </Text>
@@ -140,12 +140,12 @@ class ContactsList extends React.Component {
                 </View>
 
 
-                <View style={{ marginTop: 5, padding: 4 }}>
-                    <InputGroup rounded style={{ backgroundColor: 'white' }}>
+                <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
+                    <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', height: 42, textAlignVertical: 'center' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light' }}
                             placeholder={locales('labels.searchContacts')} />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
@@ -199,7 +199,7 @@ class ContactsList extends React.Component {
                                             // onEndReachedThreshold={0.3}
                                             // onEndReached={this.fetchMoreContacts}
                                             style={{ width: '100%', height: deviceHeight * 1 }}
-                                            contentContainerStyle={{ paddingBottom: 200 }}
+                                            contentContainerStyle={{ paddingBottom: 220 }}
                                             data={contactsList}
                                             renderItem={({ item, index, separators }) => (
                                                 <TouchableOpacity
@@ -253,7 +253,7 @@ class ContactsList extends React.Component {
                                                                 {item.last_msg.last_msg_text}
                                                             </Text>
                                                             {item.unread_msgs_count > 0 && <Text style={{
-                                                                color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
+                                                                color: 'white', backgroundColor: '#00C569', width: 20, height: 20,
                                                                 borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
                                                             }}>
                                                                 {item.unread_msgs_count}

@@ -319,7 +319,7 @@ class Profile extends Component {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.seeProfile')}
                         </Text>
@@ -359,24 +359,34 @@ class Profile extends Component {
                             </View>
                             {userIdFromByUserName != userId ?
                                 <Button
-                                    small
+
                                     onPress={() => this.setState({ modalFlag: true })}
-                                    style={[styles.loginButton]}
+                                    style={[styles.loginButton, { flex: 1 }]}
                                 >
-                                    <Text style={[styles.buttonText, { paddingRight: 30, paddingBottom: 5 }]}>
-                                        {locales('titles.sendMessage')}</Text>
-                                    <FontAwesome name='envelope' size={20} color='white'
-                                        style={{ position: 'absolute', right: 85, paddingBottom: 5 }} />
+                                    <View style={[styles.textCenterView, styles.buttonText]}>
+                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                            <FontAwesome name='envelope' size={23} />
+                                        </Text>
+                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
+                                            {locales('titles.sendMessage')}
+                                        </Text>
+                                    </View>
+
                                 </Button>
                                 : <Button
                                     small
                                     onPress={() => this.props.navigation.navigate('EditProfile')}
-                                    style={[styles.loginButton]}
+                                    style={[styles.loginButton, { flex: 1 }]}
                                 >
-                                    <Text style={[styles.buttonText, { paddingRight: 30, fontSize: 16, paddingBottom: 5 }]}>
-                                        {locales('labels.editProfile')}</Text>
-                                    <EvilIcons name='pencil' size={25} color='white'
-                                        style={{ position: 'absolute', right: 73, paddingBottom: 5 }} />
+                                    <View style={[styles.textCenterView, styles.buttonText]}>
+                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                            <FontAwesome name='pencil' size={23} />
+                                        </Text>
+                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
+                                            {locales('labels.editProfile')}
+                                        </Text>
+                                    </View>
+
                                 </Button>}
                         </View>
                     </View>
@@ -393,15 +403,21 @@ class Profile extends Component {
                         <TouchableOpacity
                             onPress={() => this.shareProfileLink()}
                             style={{
-                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5, marginBottom: 5,
-                                width: '30%', flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
+                                width: 120, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
                             }}>
-                            <FontAwesome name='share-alt' size={14} color='#777777' />
-                            <Text style={{
-                                color: '#777777', fontSize: 14, paddingHorizontal: 5
-                            }}>
-                                {locales('labels.share')}
-                            </Text>
+
+                            <View style={[styles.textCenterView, styles.buttonText]}>
+                                <Text style={{ marginTop: 5 }}>
+                                    <FontAwesome name='share-alt' size={14} color='#777777' />
+                                </Text>
+                                <Text style={{
+                                    color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                }}>
+                                    {locales('labels.share')}
+                                </Text>
+                            </View>
+
                         </TouchableOpacity>
                     </View>
 
@@ -412,16 +428,18 @@ class Profile extends Component {
                     </View> : null}
 
                     {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
-                        width: deviceWidth * 0.6,
+                        flex: 1,
+                        marginVertical: 10,
+                        borderRadius: 4, borderWidth: 0.8, borderColor: '#777777',
+                        overflow: 'hidden',
                         alignSelf: 'center', justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                     }}>
                         <View style={{
-                            borderRadius: 4, borderWidth: 0.8, borderColor: '#777777', backgroundColor: '#FAFAFA',
-                            padding: 5, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
-                            marginVertical: 10,
+                            backgroundColor: '#FAFAFA',
+                            padding: 5,
                             justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                         }}>
-                            <Text style={{ marginHorizontal: 15, fontSize: 20, color: '#777777' }}>{rating_info.avg_score}</Text>
+                            <Text style={{ fontSize: 20, color: '#777777', paddingHorizontal: 5 }}>{rating_info.avg_score}</Text>
                             <StarRating
                                 starsCount={5}
                                 defaultRate={rating_info.avg_score}
@@ -431,15 +449,13 @@ class Profile extends Component {
                             />
                         </View>
                         <View style={{
-                            width: '50%',
-                            borderRadius: 4, borderWidth: 0.8, borderRightWidth: 0, borderColor: '#777777',
-                            padding: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0,
-                            marginVertical: 10,
+                            width: 120,
+
                             justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                         }}
                         >
-                            <Text style={{ fontSize: 20, color: '#777777', width: '43%' }}>
-                                {locales('labels.comment')} {rating_info.total_count}
+                            <Text style={{ fontSize: 16, color: '#777777', paddingVertical: 2 }}>
+                                {rating_info.total_count} {locales('labels.comment')}
                             </Text>
                         </View>
                     </View> : null}
@@ -534,9 +550,9 @@ class Profile extends Component {
                                 alignSelf: 'center', justifyContent: 'flex-start',
                                 alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                             }}>
-                                <FontAwesome5 name='box-open' size={30} color='#BEBEBE' />
-                                <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>
-                                    {locales('titles.noProductFound')}</Text>
+                                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                                <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
+
                             </View>
                         }
                     </View>
@@ -555,8 +571,8 @@ class Profile extends Component {
                                     alignSelf: 'center', justifyContent: 'flex-start',
                                     alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                                 }}>
-                                    <Entypo name='image' size={30} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
+                                    <FontAwesome5 name='images' size={80} color='#BEBEBE' solid />
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
                                         {locales('labels.noImageFound')}</Text>
                                 </View>
                             )}
@@ -595,10 +611,11 @@ class Profile extends Component {
                             ListEmptyComponent={() => (
                                 <View style={{
                                     alignSelf: 'center', justifyContent: 'flex-start',
-                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
+                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93,
+
                                 }}>
-                                    <FontAwesome5 name='tasks' size={30} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
+                                    <FontAwesome5 name='tasks' size={80} color='#BEBEBE' />
+                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
                                         {locales('labels.noevidenceFound')}</Text>
                                 </View>
                             )}
@@ -671,6 +688,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center'
     },
+    fontAwesomeEnvelope: {
+        color: "#fff",
+        margin: '15px'
+    },
+    textWhite: {
+        color: "#fff"
+    },
+    textCenterView: {
+        justifyContent: 'center',
+        flexDirection: "row-reverse",
+    },
+    textBold: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
     loginButton: {
         textAlign: 'center',
         alignItems: 'center',
@@ -714,6 +745,21 @@ const styles = StyleSheet.create({
         padding: 20,
         textAlign: 'center',
         color: '#7E7E7E'
+    },
+    marginTop5: {
+        marginTop: 5
+    },
+    marginTop10: {
+        marginTop: 10
+    },
+    margin5: {
+        margin: 5
+    },
+    margin10: {
+        margin: 10
+    },
+    textSize20: {
+        fontSize: 20
     }
 });
 

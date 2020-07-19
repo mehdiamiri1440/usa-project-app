@@ -885,8 +885,8 @@ class Product extends PureComponent {
                                     onPress={() => Toast.show({
                                         text: locales('titles.elevatorHasAdded'),
                                         position: "bottom",
-                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light' },
+                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
+                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                                         duration: 3000
                                     })}
                                     name='chart-line' size={23} color='white' style={[styles.elevatorIcon]}

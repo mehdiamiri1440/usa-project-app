@@ -125,9 +125,6 @@ class Requests extends PureComponent {
                     height={300}
                     animationType='slide'
                     customStyles={{
-                        wrapper: {
-                            backgroundColor: "transparent"
-                        },
                         draggableIcon: {
                             backgroundColor: "#000"
                         },
@@ -230,7 +227,7 @@ class Requests extends PureComponent {
                         alignItems: 'center'
                     }}>
                         <Text
-                            style={{ fontSize: 18 }}
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
                             {locales('labels.buyRequests')}
                         </Text>
@@ -275,8 +272,8 @@ class Requests extends PureComponent {
                             alignSelf: 'center', justifyContent: 'center',
                             alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
                         }}>
-                            <Entypo name='list' size={30} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22 }}>{locales('titles.noBuyAdFound')}</Text>
+                            <Entypo name='list' size={80} color='#BEBEBE' />
+                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
                         </View>
                         }
                         data={buyAdRequestsList}

@@ -152,17 +152,21 @@ class UserActivity extends React.Component {
                     {activityTypeError}</Label>}
 
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('labels.selectActivityZone')}
-                    </Label>
-                    <ActivityIndicator
-                        animating={!!loading}
-                        size="small" color="#00C569"
-                        style={{
-                            position: 'absolute', left: '45%', top: '9%',
-                            width: 30, height: 30, borderRadius: 15
-                        }}
-                    />
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                            {locales('labels.selectActivityZone')}
+                        </Label>
+                        <ActivityIndicator
+                            animating={!!loading}
+                            size="small" color="#00C569"
+                            style={{
+                                position: 'relative',
+                                width: 30, height: 30, borderRadius: 15
+                            }}
+                        />
+                    </View>
                     <Item regular
                         style={{
                             width: deviceWidth * 0.9,
@@ -200,21 +204,25 @@ class UserActivity extends React.Component {
                         }}
                     />
                 </View> */}
-                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!selectedCategoryId || !activityType.length ? styles.disableLoginButton : styles.loginButton}
                         rounded
                     >
-                        <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
                         <ActivityIndicator
                             animating={!!this.props.submitLoading}
                             size="small" color="white"
                             style={{
-                                position: 'absolute', left: 0, top: '25%',
-                                width: 30, height: 30, borderRadius: 15
+                                width: 30,
+                                height: 30,
+                                borderRadius: 15,
+                                fontSize: 20,
+                                marginLeft: -30
                             }}
                         />
+                        <Text style={styles.buttonText}>{locales('titles.submitSignUp')}</Text>
+
                     </Button>
                     <Button
                         onPress={() => {
