@@ -48,6 +48,7 @@ class Home extends React.Component {
 
 
     render() {
+        console.warn(this.props.userProfile)
         return (
             <>
                 <View style={{
@@ -84,8 +85,10 @@ class Home extends React.Component {
                     ref={this.props.homeRef}
                     style={{ marginVertical: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
                     {homeRoutes.map((route, index) => {
+
                         return (
-                            <TouchableOpacity
+
+                            this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' && this.props.userProfile.user_info.active_pakage_type == 3 ? null : <TouchableOpacity
                                 onPress={() => this.handleRouteChange(route.name)}
                                 style={{
                                     alignContent: 'center',
@@ -131,6 +134,7 @@ class Home extends React.Component {
                                     }
                                 </View>
                             </TouchableOpacity>
+
                         )
                     })}
                 </ScrollView>

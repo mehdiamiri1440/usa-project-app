@@ -98,7 +98,8 @@ const Dashboard = props => {
                         onRefresh={() => props.fetchAllDashboardData()}
                     />
                 }
-                style={{ height: deviceHeight * 0.77 }}>
+                style={{ paddingHorizontal: 30, paddingTop: 30 }}
+            >
 
                 <Card transparent  >
                     <View

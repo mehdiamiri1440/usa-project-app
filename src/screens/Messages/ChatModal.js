@@ -258,7 +258,7 @@ class ChatModal extends React.Component {
                     )}
                     inverted
                     ref={this.scrollViewRef}
-                    style={{ marginBottom: 60, paddingBottom: 40 }}
+                    style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
                     extraData={this.state}
                     onEndReached={() => {
                         if (loaded && userChatHistory.length >= 9)
@@ -275,8 +275,7 @@ class ChatModal extends React.Component {
                                 width: deviceWidth,
                                 paddingHorizontal: 10,
                                 paddingVertical: 0,
-
-                                marginBottom: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
+                                marginTop: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
                                 flex: 1,
                                 alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
                             }}
