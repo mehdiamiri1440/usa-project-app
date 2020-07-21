@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as authReducer from '../../redux/auth/actions';
-import { Text, TouchableOpacity, View } from 'react-native';
+import * as authActions from '../../redux/auth/actions';
+import { Radio, Button } from 'native-base';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Text, TouchableOpacity, View, StyleSheet, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { useScrollToTop } from '@react-navigation/native';
@@ -11,7 +13,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { deviceWidth } from '../../utils/deviceDimenssions';
+import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 
 let homeRoutes = [
@@ -27,10 +29,19 @@ let homeRoutes = [
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            activityType: null,
+            showChangeRollModal: false
+        }
     }
 
     homeRef = React.createRef();
+
+    componentDidMount() {
+        if (this.props.userProfile && this.props.userProfile.user_info) {
+            this.setState({ activityType: this.props.userProfile.user_info.is_seller ? 'seller' : 'buyer' })
+        }
+    }
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
@@ -46,11 +57,63 @@ class Home extends React.Component {
 
     };
 
+    changeRoll = rollName => {
+        this.setState({ activityType: rollName });
+        this.props.changeRoll(rollName).then(_ => {
+            this.setState({ showChangeRollModal: true });
+        });
+    };
 
+
+    closeModal = () => {
+
+        this.setState({ showChangeRollModal: false });
+        this.props.navigation.navigate(this.state.activityType == 'buyer' ? 'Messages' : 'Requests')
+    }
     render() {
-        console.warn(this.props.userProfile)
+
+        const { userProfile = {} } = this.props;
+        const { user_info = {} } = userProfile;
+        const { is_seller = null } = user_info;
+
+        const { activityType, showChangeRollModal } = this.state;
+
         return (
             <>
+
+
+                < Portal >
+                    <Dialog
+                        visible={showChangeRollModal}
+                    >
+                        <Dialog.Actions style={{ justifyContent: 'center', borderBottomWidth: 0.7, borderBottomColor: '#777777' }}>
+                            <Paragraph style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                paddingTop: 30, textAlign: 'center', fontSize: 24,
+                                color: 'red'
+                            }}>
+                                {locales('errors.error')}</Paragraph>
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            width: '100%',
+                        }}>
+                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center', fontSize: 16 }}>
+                                {locales('titles.lostConectivity')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                            <Button
+                                style={[styles.loginButton, { width: '90%' }]}
+                                onPress={() => this.closeModal()}>
+                                <Text style={styles.buttonText}>{locales('titles.retry')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
+
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row',
@@ -137,6 +200,72 @@ class Home extends React.Component {
 
                         )
                     })}
+
+
+
+
+                    <View style={[styles.textInputPadding, {
+                        marginTop: -20,
+                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                    }]}>
+                        <TouchableOpacity
+                            onPress={() => this.changeRoll('buyer')}
+                            style={{
+                                width: deviceWidth * 0.4,
+                                borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
+                                padding: 20, borderRadius: 5,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 10,
+                            }}>
+                            <Radio
+                                onPress={() => this.changeRoll('buyer')}
+                                color={"#BEBEBE"}
+                                selected={activityType == 'buyer'}
+                                style={{ marginHorizontal: 10 }}
+                                selectedColor={"#00C569"}
+                            />
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Image
+                                    source={require('../../../assets/icons/buyer.png')}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                width: deviceWidth * 0.4,
+                                borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
+                                padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
+                                , justifyContent: 'space-between'
+                            }}
+                            onPress={() => this.changeRoll('seller')}
+                        >
+                            <Radio
+                                onPress={() => this.changeRoll('seller')}
+                                selected={activityType == 'seller'}
+                                color={"#BEBEBE"}
+                                style={{ marginHorizontal: 10 }}
+                                selectedColor={"#00C569"}
+                            />
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Image
+                                    source={require('../../../assets/icons/seller.png')}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+
                 </ScrollView>
             </>
         )
@@ -144,9 +273,146 @@ class Home extends React.Component {
 }
 
 
+const styles = StyleSheet.create({
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderRadius: 5,
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
+    loginFailedContainer: {
+        backgroundColor: '#D4EDDA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#155724'
+    },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+    },
+    scrollContentContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
+    },
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        paddingVertical: 8,
+        height: 60,
+        width: deviceWidth * 0.9,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    iconContainer: {
+        left: 30,
+        top: 17,
+    },
+    buttonText: {
+        color: 'white',
+        width: '100%',
+        textAlign: 'center'
+    },
+    labelInputPadding: {
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        borderRadius: 5,
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
+    },
+    enterText: {
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#00C569',
+        fontSize: 20,
+        padding: 10,
+    },
+    linearGradient: {
+        height: deviceHeight * 0.15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTextStyle: {
+        color: 'white',
+        position: 'absolute',
+        textAlign: 'center',
+        fontSize: 26,
+        bottom: 40
+    },
+    textInputPadding: {
+        padding: 20,
+    },
+    userText: {
+        flexWrap: 'wrap',
+        paddingTop: '3%',
+        fontSize: 20,
+        padding: 20,
+        textAlign: 'center',
+        color: '#7E7E7E'
+    }
+});
+
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        logOut: () => dispatch(authReducer.logOut())
+        logOut: () => dispatch(authActions.logOut()),
+        changeRoll: rollName => dispatch(authActions.changeRoll(rollName))
     }
 }
 const mapStateToProps = (state, ownProps) => {

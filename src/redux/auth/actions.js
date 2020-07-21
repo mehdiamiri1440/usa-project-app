@@ -138,6 +138,29 @@ export const submitRegister = registerObject => {
 };
 
 
+export const changeRoll = rollName => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .changeRoll(rollName)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.CHANGE_ROLL,
+                        reject: actionTypes.CHANGE_ROLL_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.CHANGE_ROLL_LOADING);
+    const success = res => action(actionTypes.CHANGE_ROLL_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
 export const logOut = () => {
     const request = () => {
         return dispatch => {

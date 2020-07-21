@@ -24,6 +24,11 @@ const INITIAL_STATE = {
     submitRegisterError: false,
     submitRegisterMessage: null,
 
+    changeRollLoading: false,
+    changeRollFailed: false,
+    changeRollError: false,
+    changeRollMessage: null,
+
     logOutLoading: false,
     logOutFailed: false,
     logOutError: false,
@@ -243,6 +248,46 @@ export default (state = INITIAL_STATE, action) => {
                 submitRegisterFailed: false,
                 submitRegisterError: true,
                 submitRegisterMessage: phone
+            };
+        };
+
+
+        case actionTypes.CHANGE_ROLL_LOADING: {
+            return {
+                ...state,
+                changeRollLoading: true,
+                changeRollFailed: false,
+                changeRollError: false,
+                changeRollMessage: null
+            };
+        };
+        case actionTypes.CHANGE_ROLL_SUCCESSFULLY: {
+            return {
+                ...state,
+                changeRollLoading: false,
+                changeRollFailed: false,
+                changeRollError: false,
+                changeRollMessage: null,
+            };
+        };
+        case actionTypes.CHANGE_ROLL_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                changeRollLoading: false,
+                changeRollFailed: true,
+                changeRollError: false,
+                changeRollMessage: msg
+            };
+        };
+        case actionTypes.CHANGE_ROLL_REJECT: {
+            let { phone = '' } = action.payload
+            return {
+                ...state,
+                changeRollLoading: false,
+                changeRollFailed: false,
+                changeRollError: true,
+                changeRollMessage: phone
             };
         };
 

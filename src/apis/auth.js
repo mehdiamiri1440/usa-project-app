@@ -139,6 +139,28 @@ export const fetchAllActivityZones = () => {
 };
 
 
+export const changeRoll = (rollName) => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_category_list`,
+                method: 'POST',
+                // data:{rollName},
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
+            });
+    });
+};
+
+
 export const submitRegister = ({
     phone,
     first_name,

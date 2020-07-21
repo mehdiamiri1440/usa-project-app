@@ -242,6 +242,7 @@ class UserActivity extends React.Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
