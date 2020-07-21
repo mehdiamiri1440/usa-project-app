@@ -90,15 +90,21 @@ class Home extends React.Component {
                             <Paragraph style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 paddingTop: 30, textAlign: 'center', fontSize: 24,
-                                color: 'red'
+                                color: '#00C569'
                             }}>
-                                {locales('errors.error')}</Paragraph>
+                                {locales('titles.changeRoll')}</Paragraph>
                         </Dialog.Actions>
                         <Dialog.Actions style={{
                             width: '100%',
+                            paddingVertical: 10,
+                            justifyContent: 'center'
                         }}>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center', fontSize: 16 }}>
-                                {locales('titles.lostConectivity')}
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center',
+                                paddingVertical: 10,
+                                fontSize: 16
+                            }}>
+                                {locales('titles.rollChangedSuccessfully', { fieldName: activityType == 'buyer' ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
@@ -106,7 +112,7 @@ class Home extends React.Component {
                             <Button
                                 style={[styles.loginButton, { width: '90%' }]}
                                 onPress={() => this.closeModal()}>
-                                <Text style={styles.buttonText}>{locales('titles.retry')}
+                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
@@ -151,7 +157,7 @@ class Home extends React.Component {
 
                         return (
 
-                            this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' && this.props.userProfile.user_info.active_pakage_type == 3 ? null : <TouchableOpacity
+                            this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' && this.props.userProfile.user_info.is_seller && this.props.userProfile.user_info.active_pakage_type == 3 ? null : <TouchableOpacity
                                 onPress={() => this.handleRouteChange(route.name)}
                                 style={{
                                     alignContent: 'center',

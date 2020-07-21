@@ -36,7 +36,11 @@ const Tab = createMaterialBottomTabNavigator();
 
 const router = props => {
 
-    const { userProfile } = props;
+    const { userProfile = {} } = props;
+
+    const { user_info = {} } = userProfile;
+
+    const { is_seller = null } = user_info;
 
     const MyBuskoolStack = (props) => {
         return (
@@ -317,7 +321,7 @@ const router = props => {
             />
 
             <Tab.Screen
-                key='RegisterProduct'
+                key={'RegisterProduct'}
                 listeners={{
                     tabPress: e => {
                         if (!!global.resetRegisterProduct)
