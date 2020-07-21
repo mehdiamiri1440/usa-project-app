@@ -121,6 +121,7 @@ export default {
     'labels.deleteFilter': 'حذف فیلتر',
     'labels.productsList': 'لیست محصولات',
     "labels.ProductDetails": 'جزییات محصول',
+    "labels.switchRoll": 'کاربری {fieldName} فعال است',
 
 
     "titles.enterToBuskool": "ورود به باسکول",
@@ -199,9 +200,9 @@ export default {
     'titles.productTypeInvalid': 'فرمت وارد شده برای نوع محصول معتبر نمی‌باشد',
     'titles.enterYourProductType': 'نوع محصول خود را وارد کنید',
     'titles.selectOrigin': 'انتخاب مبدا',
-    'titles.changeRoll': 'تغییر نقش',
+    'titles.changeRoll': 'تغییر کاربری',
     'titles.toman': 'تومان',
-    'titles.rollChangedSuccessfully': 'تغییر نقش شما به {fieldName} با موفقیت اعمال گردید.',
+    'titles.rollChangedSuccessfully': 'تغییر کاربری شما به {fieldName} با موفقیت اعمال گردید.',
     'titles.minimumPriceWithExample': 'مثلا : 260000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',
     'titles.viewableBuyRequests': 'سقف روزانه تعداد پاسخ ها به درخواست های خرید',

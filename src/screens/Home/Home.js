@@ -14,6 +14,8 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { color } from 'react-native-reanimated';
+
 
 
 let homeRoutes = [
@@ -152,82 +154,8 @@ class Home extends React.Component {
 
                 <ScrollView
                     ref={this.props.homeRef}
-                    style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
+                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
 
-                    {/* <Text>
-                        پنل فروشنده فعال است
-                    </Text> */}
-                    <View style={[styles.textInputPadding, {
-                        // marginTop: -20,
-                        flex: 1,
-                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
-                    }]}>
-                        <TouchableOpacity
-                            onPress={() => this.changeRoll('buyer')}
-                            style={{
-                                backgroundColor: '#fff',
-                                elevation: 1,
-                                borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
-                                maxHeight: 60,
-                                padding: 15,
-                                borderRadius: 5,
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-between',
-                                // marginHorizontal: 10,
-                                minWidth: 140
-                            }}>
-                            <Radio
-                                onPress={() => this.changeRoll('buyer')}
-                                color={"#BEBEBE"}
-                                selected={activityType == 'buyer'}
-                                style={{ marginHorizontal: 5 }}
-                                selectedColor={"#00C569"}
-                            />
-                            <View style={{ flexDirection: 'row-reverse' }}>
-                                <Image
-                                    source={require('../../../assets/icons/buyer.png')}
-                                    style={{
-                                        marginHorizontal: 5,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: '#fff',
-                                elevation: 1,
-                                borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
-                                maxHeight: 60,
-                                padding: 15,
-                                borderRadius: 5,
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-between',
-                                minWidth: 140
-
-                            }}
-                            onPress={() => this.changeRoll('seller')}
-                        >
-                            <Radio
-                                onPress={() => this.changeRoll('seller')}
-                                selected={activityType == 'seller'}
-                                color={"#BEBEBE"}
-                                style={{ marginHorizontal: 5 }}
-                                selectedColor={"#00C569"}
-                            />
-                            <View style={{ flexDirection: 'row-reverse' }}>
-                                <Image
-                                    source={require('../../../assets/icons/seller.png')}
-                                    style={{
-                                        marginHorizontal: 5,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
 
                     {homeRoutes.map((route, index) => {
 
@@ -284,7 +212,86 @@ class Home extends React.Component {
                     })}
 
 
+                    <Text style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        textAlign: 'center',
+                        color: '#00C569'
+                    }}>
+                        {/* {activityType == 'seller' ? locales('labels.switchToSeller') : locales('labels.switchToBuyer')} */}
+                        {locales('labels.switchRoll', { fieldName: activityType == 'seller' ? locales('labels.seller') : locales('labels.buyer') })}
+                    </Text>
 
+
+                    <View style={[styles.textInputPadding, {
+                        marginBottom: 50,
+                        flex: 1,
+                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
+                    }]}>
+                        <TouchableOpacity
+                            onPress={() => this.changeRoll('buyer')}
+                            style={{
+                                backgroundColor: '#fff',
+                                elevation: 1,
+                                borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
+                                maxHeight: 60,
+                                padding: 15,
+                                borderRadius: 5,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                minWidth: 140
+                            }}>
+                            <Radio
+                                onPress={() => this.changeRoll('buyer')}
+                                color={"#BEBEBE"}
+                                selected={activityType == 'buyer'}
+                                style={{ marginHorizontal: 5 }}
+                                selectedColor={"#00C569"}
+                            />
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Image
+                                    source={require('../../../assets/icons/buyer.png')}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#fff',
+                                elevation: 1,
+                                borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
+                                maxHeight: 60,
+                                padding: 15,
+                                borderRadius: 5,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                minWidth: 140
+
+                            }}
+                            onPress={() => this.changeRoll('seller')}
+                        >
+                            <Radio
+                                onPress={() => this.changeRoll('seller')}
+                                selected={activityType == 'seller'}
+                                color={"#BEBEBE"}
+                                style={{ marginHorizontal: 5 }}
+                                selectedColor={"#00C569"}
+                            />
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Image
+                                    source={require('../../../assets/icons/seller.png')}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        alignSelf: "center",
+                                    }}
+                                />
+                                <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
 
 
