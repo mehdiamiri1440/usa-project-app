@@ -397,6 +397,11 @@ class ProductDetails extends Component {
         return (
             <>
 
+
+
+
+
+
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
@@ -686,6 +691,7 @@ class ProductDetails extends Component {
 
 
                 <ScrollView
+
                     refreshControl={
                         <RefreshControl
                             refreshing={!!this.props.productDetailsLoading}
@@ -760,7 +766,7 @@ class ProductDetails extends Component {
                                         style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
                                         {locales('titles.elevateProduct')}</Text>
                                     <FontAwesome5
-                                        name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                        name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
                                 </Button>
                                 <Button
                                     style={{
@@ -774,7 +780,7 @@ class ProductDetails extends Component {
                                     }}
                                 >
                                     <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                    <FontAwesome5 name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
                                 </Button>
                             </View> :
 
@@ -1009,6 +1015,38 @@ class ProductDetails extends Component {
                     </View>
 
                 </ScrollView>
+
+                {!this.props.productDetailsLoading && userId != loggedInUserId ? <View style={{
+                    backgroundColor: '#fff',
+                    width: '100%',
+                    height: 65,
+                    elevation: 5,
+                }} >
+                    <Button
+                        onPress={() => this.setState({ modalFlag: true })}
+                        style={[styles.loginButton, {
+                            position: 'absolute',
+                            left: 15,
+                            right: 15,
+                            bottom: 10,
+                            zIndex: 1,
+                            marginHorizontal: 10,
+                            margin: 0
+                        }]}
+                    >
+                        <View style={[styles.textCenterView, styles.buttonText]}>
+                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                <FontAwesome name='envelope' size={20} />
+                            </Text>
+                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                {locales('titles.achiveSaleStatus')}
+                            </Text>
+                        </View>
+
+                    </Button>
+
+                </View>
+                    : null}
             </>
         )
     }
