@@ -39,7 +39,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         if (this.props.userProfile && this.props.userProfile.user_info) {
-            this.setState({ activityType: this.props.userProfile.user_info.is_seller ? 'seller' : 'buyer' })
+            this.setState({ activityType: this.props.userProfile.user_info.is_seller != 0 ? 'seller' : 'buyer' })
         }
     }
 
@@ -157,52 +157,54 @@ class Home extends React.Component {
 
                         return (
 
-                            this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' && this.props.userProfile.user_info.is_seller && this.props.userProfile.user_info.active_pakage_type == 3 ? null : <TouchableOpacity
-                                onPress={() => this.handleRouteChange(route.name)}
-                                style={{
-                                    alignContent: 'center',
-                                    backgroundColor: 'white',
-                                    borderRadius: 5,
-                                    marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                    borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
-                                    borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
-                                    paddingVertical: 10,
-                                    elevation: 2,
-                                    paddingHorizontal: 20,
-                                    marginVertical: 10,
-                                    marginHorizontal: 20,
-                                    flexDirection: 'row-reverse',
-                                }}
-                                key={index}>
-                                <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                    <View style={{
+                            (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
+                                this.props.userProfile.user_info.active_pakage_type == 3) ? null :
+                                (is_seller == 0 && route.name == 'PromoteRegistration') ? null : < TouchableOpacity
+                                    onPress={() => this.handleRouteChange(route.name)}
+                                    style={{
+                                        alignContent: 'center',
+                                        backgroundColor: 'white',
                                         borderRadius: 5,
-                                        backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
-                                        padding: 5
-                                    }}>
-                                        {route.icon}
-                                    </View>
-                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                        {locales(route.label)}
-                                    </Text>
-                                </View>
-                                <View style={{ width: '55%', flexDirection: 'row' }}>
-                                    <Text style={{ textAlignVertical: 'center' }}>
-                                        <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
-                                    </Text>
-                                    {route.name == 'PromoteRegistration' ?
-                                        <Text style={{
-                                            fontSize: 18,
-                                            backgroundColor: '#E41C38', color: 'white',
-                                            borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
-                                            textAlignVertical: 'center', width: 60
+                                        marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
+                                        borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
+                                        borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
+                                        paddingVertical: 10,
+                                        elevation: 2,
+                                        paddingHorizontal: 20,
+                                        marginVertical: 10,
+                                        marginHorizontal: 20,
+                                        flexDirection: 'row-reverse',
+                                    }}
+                                    key={index}>
+                                    <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                        <View style={{
+                                            borderRadius: 5,
+                                            backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
+                                            padding: 5
                                         }}>
-                                            {locales('labels.special')}
+                                            {route.icon}
+                                        </View>
+                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                            {locales(route.label)}
                                         </Text>
-                                        : null
-                                    }
-                                </View>
-                            </TouchableOpacity>
+                                    </View>
+                                    <View style={{ width: '55%', flexDirection: 'row' }}>
+                                        <Text style={{ textAlignVertical: 'center' }}>
+                                            <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
+                                        </Text>
+                                        {route.name == 'PromoteRegistration' ?
+                                            <Text style={{
+                                                fontSize: 18,
+                                                backgroundColor: '#E41C38', color: 'white',
+                                                borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
+                                                textAlignVertical: 'center', width: 60
+                                            }}>
+                                                {locales('labels.special')}
+                                            </Text>
+                                            : null
+                                        }
+                                    </View>
+                                </TouchableOpacity>
 
                         )
                     })}

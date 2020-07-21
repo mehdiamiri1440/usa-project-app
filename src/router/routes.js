@@ -21,6 +21,8 @@ import Settings from '../screens/Settings/Settings';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
 import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
+import SpecialProducts from '../screens/SpecialProducts';
+import RegisterRequest from '../screens/RegisterRequest';
 import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
 
@@ -310,18 +312,18 @@ const router = props => {
             />
 
             <Tab.Screen
-                key='Requests'
+                key={is_seller ? 'Requests' : 'SpecialProducts'}
                 options={{
                     tabBarBadge: false,
-                    tabBarLabel: locales('labels.requests'),
+                    tabBarLabel: is_seller ? locales('labels.requests') : locales('labels.specialProducts'),
                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                 }}
-                name='Requests'
-                component={Requests}
+                name={is_seller ? 'Requests' : 'SpecialProducts'}
+                component={is_seller ? Requests : SpecialProducts}
             />
 
             <Tab.Screen
-                key={'RegisterProduct'}
+                key={is_seller ? 'RegisterProduct' : 'RegisterRequest'}
                 listeners={{
                     tabPress: e => {
                         if (!!global.resetRegisterProduct)
@@ -330,11 +332,11 @@ const router = props => {
                 }}
                 options={{
                     tabBarBadge: false,
-                    tabBarLabel: locales('labels.registerProduct'),
+                    tabBarLabel: is_seller ? locales('labels.registerProduct') : locales('labels.registerRequest'),
                     tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
                 }}
-                name='RegisterProductStack'
-                component={RegisterProductStack}
+                name={is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
+                component={is_seller ? RegisterProductStack : RegisterRequest}
             />
 
             <Tab.Screen

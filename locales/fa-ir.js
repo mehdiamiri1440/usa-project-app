@@ -61,6 +61,8 @@ export default {
     'labels.completeCase': 'این مورد را تکمیل کنید',
     'labels.incorrectFormat': 'فرمت نادرست است',
     'labels.relatedProducts': 'محصولات مرتبط',
+    'labels.specialProducts': 'محصولات ویژه',
+    'labels.registerRequest': 'ثبت درخواست',
     'labels.somethingWentWrong': 'متاسفانه به مشکلی برخورده‌ایم',
     'labels.pleaseRetry': 'لطفا مجددا تلاش بفرمایید',
     'labels.myProducts': 'محصولات من',
