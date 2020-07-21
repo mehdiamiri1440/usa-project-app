@@ -25,6 +25,8 @@ import SpecialProducts from '../screens/SpecialProducts';
 import RegisterRequest from '../screens/RegisterRequest';
 import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
+import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
+import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCapacity';
 
 import { deviceWidth } from '../utils';
 import ProductsList from '../screens/ProductsList';
@@ -145,6 +147,27 @@ const router = props => {
                     key='Payment'
                     name='Payment'
                     component={Payment}
+                />
+
+
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ExtraBuyAdCapacity'
+                    name='ExtraBuyAdCapacity'
+                    component={ExtraBuyAdCapacity}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ExtraProductCapacity'
+                    name='ExtraProductCapacity'
+                    component={ExtraProductCapacity}
                 />
             </Stack.Navigator >
         )
