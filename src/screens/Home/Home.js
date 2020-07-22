@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as authActions from '../../redux/auth/actions';
+import * as profileActions from '../../redux/profile/actions';
 import { Radio, Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Text, TouchableOpacity, View, StyleSheet, Image } from 'react-native';
@@ -59,8 +60,11 @@ class Home extends React.Component {
 
     changeRoll = rollName => {
         this.setState({ activityType: rollName });
-        this.props.changeRoll(rollName).then(_ => {
-            this.setState({ showChangeRollModal: true });
+        this.props.changeRoll().then(result => {
+            this.props.fetchUserProfile().then(result => {
+                console.log('resu;t', result)
+                this.setState({ showChangeRollModal: true });
+            });
         });
     };
 
@@ -436,7 +440,8 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         logOut: () => dispatch(authActions.logOut()),
-        changeRoll: rollName => dispatch(authActions.changeRoll(rollName))
+        changeRoll: _ => dispatch(authActions.changeRoll()),
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
     }
 }
 const mapStateToProps = (state, ownProps) => {

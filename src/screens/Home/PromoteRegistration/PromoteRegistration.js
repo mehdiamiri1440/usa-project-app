@@ -22,9 +22,9 @@ class PromoteRegistration extends React.Component {
 
 
     pay = () => {
-        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+        return Linking.canOpenURL('http://192.168.1.46:3030/app/payment/1/3').then(supported => {
             if (supported) {
-                Linking.openURL('https://www.buskool.com/payment/3');
+                Linking.openURL('http://192.168.1.46:3030/app/payment/1/3');
             }
         })
     };

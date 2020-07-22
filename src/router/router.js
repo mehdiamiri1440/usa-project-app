@@ -32,7 +32,7 @@ const App = props => {
 
     useEffect(() => {
         props.fetchTotalUnreadMessages();
-
+        Linking.addEventListener('url', handleIncomingEvent)
         if (I18nManager.isRTL) {
             I18nManager.forceRTL(false);
             I18nManager.allowRTL(false);
@@ -96,7 +96,23 @@ const App = props => {
     const linking = {
         prefixes: ['buskool://Home'],
     };
+    const handleIncomingEvent = event => {
+        switch ((event.url).split('://')[1]) {
+            case 'pricing':
+                return navigationRef.current.navigate('MyBuskool', { Screen: 'PromoteRegistration' });
 
+            case 'product-list':
+                return navigationRef.current.navigate('Home');
+
+            case 'register-product':
+                return navigationRef.current.navigate('RegisterProduct');
+
+            case 'buyAd-requests':
+                return navigationRef.current.navigate('Requests');
+            default:
+                break;
+        }
+    };
 
     return (
         <NavigationContainer

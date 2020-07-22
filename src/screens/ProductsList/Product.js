@@ -215,18 +215,18 @@ class Product extends PureComponent {
 
 
     pay = () => {
-        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+        return Linking.canOpenURL('https://www.buskool.com/app/payment/3/1').then(supported => {
             if (supported) {
-                Linking.openURL('https://www.buskool.com/payment/3');
+                Linking.openURL('https://www.buskool.com/app/payment/3/1');
             }
         })
     };
 
 
     elevatorPay = () => {
-        return Linking.canOpenURL(`https://www.buskool.com/payment/elevator/${this.props.productItem.main.id}`).then(supported => {
+        return Linking.canOpenURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productItem.main.id}`).then(supported => {
             if (supported) {
-                Linking.openURL(`https://www.buskool.com/payment/elevator/${this.props.productItem.main.id}`);
+                Linking.openURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productItem.main.id}`);
             }
         })
     };

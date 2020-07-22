@@ -138,12 +138,12 @@ export const submitRegister = registerObject => {
 };
 
 
-export const changeRoll = rollName => {
+export const changeRoll = _ => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.auth
-                .changeRoll(rollName)
+                .changeRoll()
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

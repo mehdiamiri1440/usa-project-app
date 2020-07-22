@@ -324,6 +324,8 @@ const router = props => {
             }
         >
 
+
+
             <Tab.Screen
                 options={{
                     tabBarBadge: false,
@@ -334,19 +336,32 @@ const router = props => {
                 component={HomeStack}
             />
 
-            <Tab.Screen
-                key={is_seller ? 'Requests' : 'SpecialProducts'}
+            {is_seller == 1 ? <Tab.Screen
+                key={'Requests'}
                 options={{
                     tabBarBadge: false,
-                    tabBarLabel: is_seller ? locales('labels.requests') : locales('labels.specialProducts'),
+                    tabBarLabel: locales('labels.requests'),
                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                 }}
-                name={is_seller ? 'Requests' : 'SpecialProducts'}
-                component={is_seller ? Requests : SpecialProducts}
+                name={'Requests'}
+                component={Requests}
             />
+                :
+                <Tab.Screen
+                    key={'SpecialProducts'}
+                    options={{
+                        tabBarBadge: false,
+                        tabBarLabel: locales('labels.specialProducts'),
+                        tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
+                    }}
+                    name={'SpecialProducts'}
+                    component={SpecialProducts}
+                />}
 
-            <Tab.Screen
-                key={is_seller ? 'RegisterProduct' : 'RegisterRequest'}
+
+
+            {is_seller == 1 ? <Tab.Screen
+                key={'RegisterProduct'}
                 listeners={{
                     tabPress: e => {
                         if (!!global.resetRegisterProduct)
@@ -355,12 +370,30 @@ const router = props => {
                 }}
                 options={{
                     tabBarBadge: false,
-                    tabBarLabel: is_seller ? locales('labels.registerProduct') : locales('labels.registerRequest'),
+                    tabBarLabel: locales('labels.registerProduct'),
                     tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
                 }}
-                name={is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
-                component={is_seller ? RegisterProductStack : RegisterRequest}
+                name={'RegisterProductStack'}
+                component={RegisterProductStack}
             />
+                :
+                <Tab.Screen
+                    key={'RegisterRequest'}
+                    listeners={{
+                        tabPress: e => {
+                            if (!!global.resetRegisterProduct)
+                                global.resetRegisterProduct(true)
+                        },
+                    }}
+                    options={{
+                        tabBarBadge: false,
+                        tabBarLabel: locales('labels.registerRequest'),
+                        tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
+                    }}
+                    name={'RegisterRequest'}
+                    component={RegisterRequest}
+                />}
+
 
             <Tab.Screen
                 key='Messages'

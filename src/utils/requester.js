@@ -8,9 +8,10 @@ const getUrl = route => {
     // if (__DEV__) {
     //     if (!RNEmulatorCheck.isEmulator())
     //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
-    //     return `${REACT_APP_API_ENDPOINT}/${route}`;
     // }
-    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
+    return `http://192.168.1.46:3030/${route}`;
+
+    // return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
     // return `https://www.buskool.com/${route}`
 
 };

@@ -139,11 +139,11 @@ export const fetchAllActivityZones = () => {
 };
 
 
-export const changeRoll = (rollName) => {
+export const changeRoll = () => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `get_category_list`,
+                route: `switch-role`,
                 method: 'POST',
                 // data:{rollName},
                 withAuth: false,
