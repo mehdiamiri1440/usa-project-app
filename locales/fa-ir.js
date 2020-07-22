@@ -203,7 +203,7 @@ export default {
     'titles.productTypeInvalid': 'فرمت وارد شده برای نوع محصول معتبر نمی‌باشد',
     'titles.enterYourProductType': 'نوع محصول خود را وارد کنید',
     'titles.selectOrigin': 'انتخاب مبدا',
-    'titles.changeRoll': 'تغییر کاربری',
+    'titles.changeRole': 'تغییر کاربری',
     'titles.toman': 'تومان',
     'titles.rollChangedSuccessfully': 'تغییر کاربری شما به {fieldName} با موفقیت اعمال گردید.',
     'titles.minimumPriceWithExample': 'مثلا : 260000',

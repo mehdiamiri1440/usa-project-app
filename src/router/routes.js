@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image } from 'react-native';
+import React, { useEffect, forwardRef } from 'react';
+import { Image, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -28,7 +28,7 @@ import RegisterProduct from '../screens/RegisterProduct';
 import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
 import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCapacity';
 
-import { deviceWidth } from '../utils';
+import { deviceWidth, deviceHeight } from '../utils';
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
@@ -38,13 +38,11 @@ import Messages from '../screens/Messages';
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-const router = props => {
+const router = (props, ref) => {
+    console.log('refffffffff', ref)
+    const { changeRoleObject = {}, userProfile } = props;
 
-    const { userProfile = {} } = props;
-
-    const { user_info = {} } = userProfile;
-
-    const { is_seller = null } = user_info;
+    const { is_seller = null } = changeRoleObject;
 
     const MyBuskoolStack = (props) => {
         return (
@@ -312,73 +310,87 @@ const router = props => {
     // }
     // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
-
+    useEffect(() => {
+        if (props.routeRef && props.routeRef.current) {
+            if (props.changeRoleObject && props.changeRoleObject.is_seller) {
+                props.routeRef.current.navigate('Requests')
+            }
+            else {
+                props.routeRef.current.navigate('Home')
+            }
+        }
+    }, [props.changeRoleObject.is_seller])
     return (
-        <Tab.Navigator
-            initialRouteName={props.isFromOutSide ? 'Messages' : 'Home'
-            }
-            shifting={false}
-            activeColor="#00C569"
-            inactiveColor="#FFFFFF"
-            barStyle={{ backgroundColor: '#313A43' }
-            }
-        >
+
+        props.changeRoleLoading ?
+            <View style={{
+                backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                position: 'absolute',
+
+                elevation: 5,
+                borderColor: 'black',
+                backgroundColor: 'white',
+            }}>
+                <ActivityIndicator size="large"
+                    style={{
+                        position: 'absolute', left: '44%', top: '40%',
+
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                    }}
+                    color="#00C569"
+
+                />
+            </View> :
+            <Tab.Navigator
+                initialRouteName={props.isFromOutSide ? 'Messages' : 'Home'
+                }
+                shifting={false}
+                activeColor="#00C569"
+                inactiveColor="#FFFFFF"
+                barStyle={{ backgroundColor: '#313A43' }
+                }
+            >
 
 
 
-            <Tab.Screen
-                options={{
-                    tabBarBadge: false,
-                    tabBarLabel: locales('labels.home'),
-                    tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
-                }}
-                name='Home'
-                component={HomeStack}
-            />
-
-            {is_seller == 1 ? <Tab.Screen
-                key={'Requests'}
-                options={{
-                    tabBarBadge: false,
-                    tabBarLabel: locales('labels.requests'),
-                    tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
-                }}
-                name={'Requests'}
-                component={Requests}
-            />
-                :
                 <Tab.Screen
-                    key={'SpecialProducts'}
                     options={{
                         tabBarBadge: false,
-                        tabBarLabel: locales('labels.specialProducts'),
+                        tabBarLabel: locales('labels.home'),
+                        tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+                    }}
+                    name='Home'
+                    component={HomeStack}
+                />
+
+                {is_seller ? <Tab.Screen
+                    key={'Requests'}
+                    options={{
+                        tabBarBadge: false,
+                        tabBarLabel: locales('labels.requests'),
                         tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                     }}
-                    name={'SpecialProducts'}
-                    component={SpecialProducts}
-                />}
+                    name={'Requests'}
+                    component={Requests}
+                />
+                    :
+                    <Tab.Screen
+                        key={'SpecialProducts'}
+                        options={{
+                            tabBarBadge: false,
+                            tabBarLabel: locales('labels.specialProducts'),
+                            tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
+                        }}
+                        name={'SpecialProducts'}
+                        component={SpecialProducts}
+                    />}
 
 
 
-            {is_seller == 1 ? <Tab.Screen
-                key={'RegisterProduct'}
-                listeners={{
-                    tabPress: e => {
-                        if (!!global.resetRegisterProduct)
-                            global.resetRegisterProduct(true)
-                    },
-                }}
-                options={{
-                    tabBarBadge: false,
-                    tabBarLabel: locales('labels.registerProduct'),
-                    tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
-                }}
-                name={'RegisterProductStack'}
-                component={RegisterProductStack}
-            />
-                :
-                <Tab.Screen
-                    key={'RegisterRequest'}
+                {is_seller ? <Tab.Screen
+                    key={'RegisterProduct'}
                     listeners={{
                         tabPress: e => {
                             if (!!global.resetRegisterProduct)
@@ -387,49 +399,66 @@ const router = props => {
                     }}
                     options={{
                         tabBarBadge: false,
-                        tabBarLabel: locales('labels.registerRequest'),
+                        tabBarLabel: locales('labels.registerProduct'),
                         tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
                     }}
-                    name={'RegisterRequest'}
-                    component={RegisterRequest}
-                />}
+                    name={'RegisterProductStack'}
+                    component={RegisterProductStack}
+                />
+                    :
+                    <Tab.Screen
+                        key={'RegisterRequest'}
+                        listeners={{
+                            tabPress: e => {
+                                if (!!global.resetRegisterProduct)
+                                    global.resetRegisterProduct(true)
+                            },
+                        }}
+                        options={{
+                            tabBarBadge: false,
+                            tabBarLabel: locales('labels.registerRequest'),
+                            tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
+                        }}
+                        name={'RegisterRequest'}
+                        component={RegisterRequest}
+                    />}
 
 
-            <Tab.Screen
-                key='Messages'
-                options={{
-                    tabBarBadge: false,
-                    // tabBarBadge:  props.totalUnreadMessages > 0 ? true : false,
-                    tabBarLabel: locales('labels.messages'),
-                    tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
-                }}
-                name='Messages'
-                component={MessagesStack}
-            />
+                <Tab.Screen
+                    key='Messages'
+                    options={{
+                        tabBarBadge: false,
+                        // tabBarBadge:  props.totalUnreadMessages > 0 ? true : false,
+                        tabBarLabel: locales('labels.messages'),
+                        tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
+                    }}
+                    name='Messages'
+                    component={MessagesStack}
+                />
 
-            <Tab.Screen
-                key={'MyBuskool'}
-                options={{
-                    tabBarBadge: false,
-                    tabBarLabel: locales('labels.myBuskool'),
-                    tabBarIcon: ({ focused, color }) => (
-                        <Image
-                            style={{
-                                borderRadius: deviceWidth * 0.032,
-                                width: deviceWidth * 0.064, height: deviceWidth * 0.064
-                            }}
-                            source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
-                                userProfile.profile.profile_photo.length ?
-                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
-                                : require('../../assets/icons/user.png')
-                            }
-                        />
-                    ),
-                }}
-                name='MyBuskool'
-                component={MyBuskoolStack}
-            />
-        </Tab.Navigator>
+                <Tab.Screen
+                    key={'MyBuskool'}
+                    options={{
+                        tabBarBadge: false,
+                        tabBarLabel: locales('labels.myBuskool'),
+                        tabBarIcon: ({ focused, color }) => (
+                            <Image
+                                style={{
+                                    borderRadius: deviceWidth * 0.032,
+                                    width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                                }}
+                                source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
+                                    userProfile.profile.profile_photo.length ?
+                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
+                                    : require('../../assets/icons/user.png')
+                                }
+                            />
+                        ),
+                    }}
+                    name='MyBuskool'
+                    component={MyBuskoolStack}
+                />
+            </Tab.Navigator>
 
     )
 }
@@ -437,9 +466,15 @@ const router = props => {
 
 
 const mapStateToProps = (state) => {
+    const {
+        changeRoleObject,
+        changeRoleLoading
+    } = state.authReducer;
+
     return {
         userProfile: state.profileReducer.userProfile,
-
+        changeRoleObject,
+        changeRoleLoading,
         productDetailsId: state.productsListReducer.productDetailsId,
 
         // totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
@@ -447,4 +482,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(router)
+export default connect(mapStateToProps)(forwardRef(router))

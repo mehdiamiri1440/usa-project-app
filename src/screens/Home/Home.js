@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
 import { Radio, Button } from 'native-base';
+import RnRestart from 'react-native-restart';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Text, TouchableOpacity, View, StyleSheet, Image } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { useScrollToTop } from '@react-navigation/native';
@@ -15,7 +16,6 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import { color } from 'react-native-reanimated';
 
 
 
@@ -36,7 +36,7 @@ class Home extends React.Component {
         super(props);
         this.state = {
             activityType: null,
-            showChangeRollModal: false
+            showchangeRoleModal: false
         }
     }
 
@@ -44,7 +44,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         if (this.props.userProfile && this.props.userProfile.user_info) {
-            this.setState({ activityType: this.props.userProfile.user_info.is_seller != 0 ? 'seller' : 'buyer' })
+            this.setState({ activityType: this.props.changeRoleObject.is_seller ? 'seller' : 'buyer' })
         }
     }
 
@@ -62,37 +62,39 @@ class Home extends React.Component {
 
     };
 
-    changeRoll = rollName => {
+    changeRole = rollName => {
         this.setState({ activityType: rollName });
-        this.props.changeRoll().then(result => {
-            this.props.fetchUserProfile().then(result => {
-                console.log('resu;t', result)
-                this.setState({ showChangeRollModal: true });
-            });
-        });
+        this.setState({ showchangeRoleModal: true });
+        this.props.changeRole().then(res => {
+            // if (res.payload.is_seller)
+            //     this.props.navigation.navigate('Requests')
+            // else
+            this.props.navigation.navigate('Home')
+        })
     };
 
 
     closeModal = () => {
 
-        this.setState({ showChangeRollModal: false });
+        this.setState({ showchangeRoleModal: false });
         this.props.navigation.navigate(this.state.activityType == 'buyer' ? 'Messages' : 'Requests')
     }
     render() {
 
-        const { userProfile = {} } = this.props;
+        const { userProfile = {}, changeRoleLoading, changeRoleObject } = this.props;
         const { user_info = {} } = userProfile;
-        const { is_seller = null } = user_info;
+        const { is_seller = null } = changeRoleObject;
 
-        const { activityType, showChangeRollModal } = this.state;
+        const { activityType, showchangeRoleModal } = this.state;
 
         return (
             <>
 
 
+
                 < Portal >
                     <Dialog
-                        visible={showChangeRollModal}
+                        visible={showchangeRoleModal}
                     >
                         <Dialog.Actions style={{ justifyContent: 'center', borderBottomWidth: 0.7, borderBottomColor: '#777777' }}>
                             <Paragraph style={{
@@ -100,7 +102,7 @@ class Home extends React.Component {
                                 paddingTop: 30, textAlign: 'center', fontSize: 24,
                                 color: '#00C569'
                             }}>
-                                {locales('titles.changeRoll')}</Paragraph>
+                                {locales('titles.changeRole')}</Paragraph>
                         </Dialog.Actions>
                         <Dialog.Actions style={{
                             width: '100%',
@@ -169,7 +171,7 @@ class Home extends React.Component {
 
                             (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
                                 this.props.userProfile.user_info.active_pakage_type == 3) ? null :
-                                (is_seller == 0 && route.name == 'PromoteRegistration') ? null : <TouchableOpacity
+                                (!is_seller && route.name == 'PromoteRegistration') ? null : <TouchableOpacity
                                     onPress={() => this.handleRouteChange(route.name)}
                                     style={{
                                         alignContent: 'center',
@@ -236,7 +238,7 @@ class Home extends React.Component {
                         alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
                     }]}>
                         <TouchableOpacity
-                            onPress={() => this.changeRoll('buyer')}
+                            onPress={() => this.changeRole('buyer')}
                             style={{
                                 backgroundColor: '#fff',
                                 elevation: 1,
@@ -249,7 +251,7 @@ class Home extends React.Component {
                                 minWidth: 140
                             }}>
                             <Radio
-                                onPress={() => this.changeRoll('buyer')}
+                                onPress={() => this.changeRole('buyer')}
                                 color={"#BEBEBE"}
                                 selected={activityType == 'buyer'}
                                 style={{ marginHorizontal: 5 }}
@@ -279,10 +281,10 @@ class Home extends React.Component {
                                 minWidth: 140
 
                             }}
-                            onPress={() => this.changeRoll('seller')}
+                            onPress={() => this.changeRole('seller')}
                         >
                             <Radio
-                                onPress={() => this.changeRoll('seller')}
+                                onPress={() => this.changeRole('seller')}
                                 selected={activityType == 'seller'}
                                 color={"#BEBEBE"}
                                 style={{ marginHorizontal: 5 }}
@@ -449,13 +451,21 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         logOut: () => dispatch(authActions.logOut()),
-        changeRoll: _ => dispatch(authActions.changeRoll()),
+        changeRole: _ => dispatch(authActions.changeRole()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
     }
 }
 const mapStateToProps = (state, ownProps) => {
+
+    const {
+        changeRoleObject,
+        changeRoleLoading
+    } = state.authReducer;
+
     return {
         userProfile: state.profileReducer.userProfile,
+        changeRoleObject,
+        changeRoleLoading
     }
 }
 

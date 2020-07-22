@@ -138,24 +138,24 @@ export const submitRegister = registerObject => {
 };
 
 
-export const changeRoll = _ => {
+export const changeRole = _ => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.auth
-                .changeRoll()
+                .changeRole()
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
-                        failure: actionTypes.CHANGE_ROLL,
-                        reject: actionTypes.CHANGE_ROLL_REJECT
+                        failure: actionTypes.CHANGE_ROLE,
+                        reject: actionTypes.CHANGE_ROLE_REJECT
                     }));
                     throw err;
                 });
         };
     };
-    const loading = () => action(actionTypes.CHANGE_ROLL_LOADING);
-    const success = res => action(actionTypes.CHANGE_ROLL_SUCCESSFULLY, res);
+    const loading = () => action(actionTypes.CHANGE_ROLE_LOADING);
+    const success = res => action(actionTypes.CHANGE_ROLE_SUCCESSFULLY, res);
 
     return request();
 };

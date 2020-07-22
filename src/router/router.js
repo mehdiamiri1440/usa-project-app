@@ -126,7 +126,7 @@ const App = props => {
                     </Stack.Navigator>
                 )
                 : (
-                    <Router />
+                    <Router {...props} ref={navigationRef} />
                 )
             }
 

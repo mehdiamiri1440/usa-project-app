@@ -24,10 +24,11 @@ const INITIAL_STATE = {
     submitRegisterError: false,
     submitRegisterMessage: null,
 
-    changeRollLoading: false,
-    changeRollFailed: false,
-    changeRollError: false,
-    changeRollMessage: null,
+    changeRoleLoading: false,
+    changeRoleFailed: false,
+    changeRoleError: false,
+    changeRoleMessage: null,
+    changeRoleObject: {},
 
     logOutLoading: false,
     logOutFailed: false,
@@ -252,42 +253,47 @@ export default (state = INITIAL_STATE, action) => {
         };
 
 
-        case actionTypes.CHANGE_ROLL_LOADING: {
+        case actionTypes.CHANGE_ROLE_LOADING: {
             return {
                 ...state,
-                changeRollLoading: true,
-                changeRollFailed: false,
-                changeRollError: false,
-                changeRollMessage: null
+                changeRoleLoading: true,
+                changeRoleFailed: false,
+                changeRoleError: false,
+                changeRoleObject: {},
+                changeRoleMessage: null
             };
         };
-        case actionTypes.CHANGE_ROLL_SUCCESSFULLY: {
+        case actionTypes.CHANGE_ROLE_SUCCESSFULLY: {
             return {
                 ...state,
-                changeRollLoading: false,
-                changeRollFailed: false,
-                changeRollError: false,
-                changeRollMessage: null,
+                changeRoleLoading: false,
+                changeRoleFailed: false,
+                changeRoleError: false,
+                changeRoleMessage: null,
+                changeRoleObject: { ...action.payload },
+
             };
         };
-        case actionTypes.CHANGE_ROLL_FAILED: {
+        case actionTypes.CHANGE_ROLE_FAILED: {
             const { msg } = action.payload;
             return {
                 ...state,
-                changeRollLoading: false,
-                changeRollFailed: true,
-                changeRollError: false,
-                changeRollMessage: msg
+                changeRoleLoading: false,
+                changeRoleFailed: true,
+                changeRoleError: false,
+                changeRoleMessage: msg,
+                changeRoleObject: {},
             };
         };
-        case actionTypes.CHANGE_ROLL_REJECT: {
+        case actionTypes.CHANGE_ROLE_REJECT: {
             let { phone = '' } = action.payload
             return {
                 ...state,
-                changeRollLoading: false,
-                changeRollFailed: false,
-                changeRollError: true,
-                changeRollMessage: phone
+                changeRoleLoading: false,
+                changeRoleFailed: false,
+                changeRoleError: true,
+                changeRoleMessage: phone,
+                changeRoleObject: {},
             };
         };
 

@@ -139,7 +139,7 @@ export const fetchAllActivityZones = () => {
 };
 
 
-export const changeRoll = () => {
+export const changeRole = () => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
