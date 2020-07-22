@@ -15,6 +15,8 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { color } from 'react-native-reanimated';
+
 
 
 let homeRoutes = [
@@ -26,6 +28,8 @@ let homeRoutes = [
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
+    { label: 'labels.settings', icon: <AntDesign size={25} name='ExtraBuyAdCapacity' color='white' />, name: 'ExtraBuyAdCapacity' },
+    { label: 'labels.settings', icon: <AntDesign size={25} name='ExtraProductCapacity' color='white' />, name: 'ExtraProductCapacity' },
 ];
 class Home extends React.Component {
     constructor(props) {
@@ -156,13 +160,78 @@ class Home extends React.Component {
 
                 <ScrollView
                     ref={this.props.homeRef}
-                    style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
+                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
 
-                    {/* <Text>
-                        پنل فروشنده فعال است
-                    </Text> */}
+
+                    {homeRoutes.map((route, index) => {
+
+                        return (
+
+                            (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
+                                this.props.userProfile.user_info.active_pakage_type == 3) ? null :
+                                (is_seller == 0 && route.name == 'PromoteRegistration') ? null : <TouchableOpacity
+                                    onPress={() => this.handleRouteChange(route.name)}
+                                    style={{
+                                        alignContent: 'center',
+                                        backgroundColor: 'white',
+                                        borderRadius: 5,
+                                        marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
+                                        borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
+                                        borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
+                                        paddingVertical: 10,
+                                        elevation: 2,
+                                        paddingHorizontal: 20,
+                                        marginVertical: 10,
+                                        marginHorizontal: 20,
+                                        flexDirection: 'row-reverse',
+                                    }}
+                                    key={index}>
+                                    <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                        <View style={{
+                                            borderRadius: 5,
+                                            backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
+                                            padding: 5
+                                        }}>
+                                            {route.icon}
+                                        </View>
+                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                            {locales(route.label)}
+                                        </Text>
+                                    </View>
+                                    <View style={{ width: '55%', flexDirection: 'row' }}>
+                                        <Text style={{ textAlignVertical: 'center' }}>
+                                            <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
+                                        </Text>
+                                        {route.name == 'PromoteRegistration' ?
+                                            <Text style={{
+                                                fontSize: 18,
+                                                backgroundColor: '#E41C38', color: 'white',
+                                                borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
+                                                textAlignVertical: 'center', width: 60
+                                            }}>
+                                                {locales('labels.special')}
+                                            </Text>
+                                            : null
+                                        }
+                                    </View>
+                                </TouchableOpacity>
+
+                        )
+                    })}
+
+
+                    <Text style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        textAlign: 'center',
+                        color: '#00C569'
+                    }}>
+                        {/* {activityType == 'seller' ? locales('labels.switchToSeller') : locales('labels.switchToBuyer')} */}
+                        {locales('labels.switchRoll', { fieldName: activityType == 'seller' ? locales('labels.seller') : locales('labels.buyer') })}
+                    </Text>
+
+
                     <View style={[styles.textInputPadding, {
-                        // marginTop: -20,
+                        marginBottom: 50,
                         flex: 1,
                         alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
                     }]}>
@@ -177,7 +246,6 @@ class Home extends React.Component {
                                 borderRadius: 5,
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-between',
-                                // marginHorizontal: 10,
                                 minWidth: 140
                             }}>
                             <Radio
@@ -232,65 +300,6 @@ class Home extends React.Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-
-                    {homeRoutes.map((route, index) => {
-
-                        return (
-
-                            (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
-                                this.props.userProfile.user_info.active_pakage_type == 3) ? null :
-                                (is_seller == 0 && route.name == 'PromoteRegistration') ? null : < TouchableOpacity
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        borderRadius: 5,
-                                        marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                        borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
-                                        borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
-                                        paddingVertical: 10,
-                                        elevation: 2,
-                                        paddingHorizontal: 20,
-                                        marginVertical: 10,
-                                        marginHorizontal: 20,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-                                    <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                        <View style={{
-                                            borderRadius: 5,
-                                            backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
-                                            padding: 5
-                                        }}>
-                                            {route.icon}
-                                        </View>
-                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                            {locales(route.label)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '55%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
-                                        </Text>
-                                        {route.name == 'PromoteRegistration' ?
-                                            <Text style={{
-                                                fontSize: 18,
-                                                backgroundColor: '#E41C38', color: 'white',
-                                                borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
-                                                textAlignVertical: 'center', width: 60
-                                            }}>
-                                                {locales('labels.special')}
-                                            </Text>
-                                            : null
-                                        }
-                                    </View>
-                                </TouchableOpacity>
-
-                        )
-                    })}
-
-
-
 
 
 

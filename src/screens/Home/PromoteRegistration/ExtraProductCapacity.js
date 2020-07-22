@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { Card, Body, CardItem, Button } from 'native-base';
+import { Card, Body, InputGroup, CardItem, Input, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -10,12 +10,17 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
+import { color } from 'react-native-reanimated';
+import { formatter } from '../../../utils'
 
 class ExtraProductCapacity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false
+            showModal: false,
+            productCount: 1,
+            productUnitPice: 25000,
+            productTotalCount: 25000
         }
     }
 
@@ -34,6 +39,16 @@ class ExtraProductCapacity extends React.Component {
         this.props.fetchAllDashboardData()
     };
 
+    changeCount = type => {
+        this.setState({
+            productCount: type == 'asc' ? this.state.productCount + 1 : this.state.productCount <= 1 ? 1 : this.state.productCount - 1,
+        }, () => {
+            this.setState({
+                productTotalCount: this.state.productCount * this.state.productUnitPice
+
+            })
+        })
+    }
 
     render() {
 
@@ -44,7 +59,10 @@ class ExtraProductCapacity extends React.Component {
         let {
             active_package_type: activePackageType = 0,
         } = dashboard;
-
+        const {
+            productCount,
+            productTotalCount
+        } = this.state;
         return (
             <>
 
@@ -77,7 +95,7 @@ class ExtraProductCapacity extends React.Component {
                         <Text
                             style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
-                            {locales('labels.promoteRegistration')}
+                            {locales('titles.extraProduct')}
                         </Text>
                     </View>
                 </View>
@@ -90,134 +108,349 @@ class ExtraProductCapacity extends React.Component {
                     }
                     style={{
                         paddingVertical: 30,
-                        paddingHorizontal: 15
+                        paddingHorizontal: 15,
                     }}
                 >
 
+                    <View style={{
+                        paddingBottom: 60
 
-                    <Card >
-                        <CardItem>
-                            <Body>
-                                <View style={{ borderBottomWidth: 3, paddingVertical: 5, borderBottomColor: '#00C569', flexDirection: 'row-reverse', justifyContent: 'space-between', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
+                    }}>
+
+
+                        <Card transparent>
+                            <View style={{
+                                borderRadius: 4,
+                                elevation: 3,
+                                overflow: 'hidden',
+                                backgroundColor: '#fff',
+                                paddingHorizontal: 5,
+                                paddingVertical: 15,
+                                marginBottom: 30
+                            }}>
+
+                                {/* header contents */}
+                                <View >
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        color: '#00C569',
+                                        fontSize: 16
+                                    }}>
+                                        {locales('titles.extraProduct')}
+
+                                    </Text>
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        color: '#777',
+                                        paddingTop: 5,
+                                        fontSize: 14
+                                    }}>
+                                        {locales('labels.extraProductDescription')}
+
+                                    </Text>
+                                </View>
+                                {/* end header contents */}
+
+                                <View style={{
+                                    paddingHorizontal: 15,
+                                    marginVertical: 10
+                                }}>
+                                    <View style={{
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 5,
+                                        flex: 1,
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'space-between',
+                                        backgroundColor: '#E41C38',
+                                        borderRadius: 4,
+                                    }}>
                                         <Text style={{
-                                            color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
-                                            textAlignVertical: 'center'
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 14,
+                                            color: '#fff'
+
                                         }}>
-                                            {locales('titles.annualSpecialRegistration')}
+                                            {locales('titles.extraProductCount')}
+
                                         </Text>
                                         <Text style={{
-                                            fontSize: 16,
-                                            backgroundColor: '#E41C38', color: 'white', paddingBottom: 4,
-                                            borderRadius: 20, marginHorizontal: 6, textAlign: 'center',
-                                            textAlignVertical: 'center', width: 40
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 14,
+                                            color: '#fff'
+
                                         }}>
-                                            {locales('labels.special')}
+                                            {productCount + ' ' + locales('titles.number')}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <View>
+                                    <Text style={{
+                                        fontSize: 17,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        textAlign: 'center',
+                                        marginBottom: 5
+                                    }}>
+                                        {locales('titles.count')}
+                                    </Text>
+                                    {/* #region counter  */}
+                                    <View style={{
+                                        paddingHorizontal: 15
+                                    }}>
+                                        <InputGroup
+                                            regular
+                                            style={{
+                                                backgroundColor: 'red',
+                                                flexDirection: 'row-reverse',
+                                                justifyContent: "space-between",
+                                                paddingLeft: 0,
+                                                borderRadius: 4,
+                                                overflow: "hidden",
+                                                borderWidth: 2,
+                                                borderColor: '#707070'
+                                            }}
+                                        >
+
+                                            <Button
+                                                onPress={() => this.changeCount('asc')}
+                                                style={{
+                                                    paddingHorizontal: 20,
+                                                    height: '100%',
+                                                    color: '#333',
+                                                    backgroundColor: '#f0f0f0'
+                                                }}>
+                                                <FontAwesome5 name="plus" solid size={18} />
+                                            </Button>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
+                                                value={productCount.toString()}
+                                                onChangeText={(value) => {
+                                                    this.setState({
+                                                        productCount: value
+                                                    })
+                                                }}
+                                                style={{
+                                                    backgroundColor: '#fcfcfc',
+                                                    textAlign: "center"
+                                                }}>
+
+                                            </Input>
+                                            <Button
+                                                onPress={() => this.changeCount('desc')}
+
+                                                style={{
+                                                    paddingHorizontal: 20,
+                                                    height: '100%',
+                                                    color: '#333',
+                                                    backgroundColor: '#f0f0f0'
+                                                }}>
+                                                <FontAwesome5 name="minus" solid size={18} />
+
+                                            </Button>
+                                        </InputGroup>
+                                    </View>
+                                    {/* #endregion */}
+                                </View>
+
+
+                                <View style={{
+                                    padding: 15
+                                }}>
+
+                                    <View>
+                                        <Text style={{
+                                            fontSize: 17,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            textAlign: 'center',
+                                            marginBottom: 5
+                                        }}>
+                                            {locales('titles.price')}
                                         </Text>
                                     </View>
 
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text style={{
-                                            color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
-                                            textAlignVertical: 'center'
-                                        }}>
-                                            689,000
-                                    </Text>
-                                        <Text style={{
-                                            color: '#666666', fontSize: 16,
-                                            textAlign: 'center', marginHorizontal: 5,
-                                            textAlignVertical: 'center'
-                                        }}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row-reverse',
+                                        borderRadius: 4,
+                                        backgroundColor: '#efefef',
+                                        justifyContent: 'center',
+                                        paddingVertical: 5
+                                    }}>
+                                        <Text
+                                            style={{
+                                                color: "#00c569",
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 23,
+                                                paddingHorizontal: 5
+                                            }}>
+                                            {formatter.numberWithCommas(productTotalCount)}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: "#777",
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 18,
+                                                paddingTop: 4
+                                            }}>
                                             {locales('titles.toman')}
+
                                         </Text>
+                                        <Text
+                                            style={{
+                                                color: "#333",
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 15,
+                                                paddingHorizontal: 5,
+                                                paddingTop: 8
+
+                                            }}>
+                                            ({locales('titles.annuan')})
+                                    </Text>
+                                    </View>
+                                    <View style={{
+                                        marginTop: 20
+                                    }}>
+                                        <Button
+                                            style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
+                                            onPress={() => this.pay()}>
+                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                            </Text>
+                                        </Button>
                                     </View>
 
                                 </View>
+                            </View>
+                        </Card>
 
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text style={{
-                                            fontSize: 16,
-                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            textAlignVertical: 'center', paddingBottom: 5
-                                        }}>
-                                            {locales('labels.buyAdCount')}
-                                        </Text>
+
+                        <Card >
+                            <CardItem>
+                                <Body>
+                                    <View style={{ borderBottomWidth: 3, paddingVertical: 5, borderBottomColor: '#00C569', flexDirection: 'row-reverse', justifyContent: 'space-between', width: '100%' }}>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text style={{
+                                                color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
+                                                textAlignVertical: 'center'
+                                            }}>
+                                                {locales('titles.annualSpecialRegistration')}
+                                            </Text>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                backgroundColor: '#E41C38', color: 'white', paddingBottom: 4,
+                                                borderRadius: 20, marginHorizontal: 6, textAlign: 'center',
+                                                textAlignVertical: 'center', width: 40
+                                            }}>
+                                                {locales('labels.special')}
+                                            </Text>
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text style={{
+                                                color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
+                                                textAlignVertical: 'center'
+                                            }}>
+                                                689,000
+                                    </Text>
+                                            <Text style={{
+                                                color: '#666666', fontSize: 16,
+                                                textAlign: 'center', marginHorizontal: 5,
+                                                textAlignVertical: 'center'
+                                            }}>
+                                                {locales('titles.toman')}
+                                            </Text>
+                                        </View>
+
                                     </View>
 
-                                    <Text style={{
-                                        color: '#666666', fontSize: 20, textAlign: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        textAlignVertical: 'center'
-                                    }}>
-                                        7
+                                    <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                textAlignVertical: 'center', paddingBottom: 5
+                                            }}>
+                                                {locales('labels.buyAdCount')}
+                                            </Text>
+                                        </View>
+
+                                        <Text style={{
+                                            color: '#666666', fontSize: 20, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            textAlignVertical: 'center'
+                                        }}>
+                                            7
                                     </Text>
 
-                                </View>
-
-
-
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text style={{
-                                            fontSize: 16,
-                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                                            textAlignVertical: 'center', paddingBottom: 5
-                                        }}>
-                                            {locales('labels.countOfBuyAdRequests')}
-                                        </Text>
                                     </View>
 
-                                    <Text style={{
-                                        color: '#666666', fontSize: 20, textAlign: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
-                                        textAlignVertical: 'center'
-                                    }}>
-                                        30
-                                    </Text>
 
-                                </View>
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                    <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                                textAlignVertical: 'center', paddingBottom: 5
+                                            }}>
+                                                {locales('labels.countOfBuyAdRequests')}
+                                            </Text>
+                                        </View>
+
                                         <Text style={{
-                                            fontSize: 16,
-                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            color: '#666666', fontSize: 20, textAlign: 'center',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
-                                            textAlignVertical: 'center', paddingBottom: 5
+                                            textAlignVertical: 'center'
                                         }}>
-                                            {locales('labels.validatedSellerSign')}
-                                        </Text>
-                                    </View>
-
-                                    <Text style={{
-                                        color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
-                                    }}>
-                                        <Ionicons name='ios-checkmark-circle' size={30} color='#00C569' />
+                                            30
                                     </Text>
 
-                                </View>
-                                {activePackageType == 3 ? <Text style={{
-                                    color: '#00C569', fontSize: 20,
-                                    width: '100%', textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>{locales('labels.inUse')}</Text>
-                                    :
-                                    <Button
-                                        style={[styles.loginButton, { width: '50%', alignSelf: 'center' }]}
-                                        onPress={() => this.pay()}>
-                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                    </View>
+                                    <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                                textAlignVertical: 'center', paddingBottom: 5
+                                            }}>
+                                                {locales('labels.validatedSellerSign')}
+                                            </Text>
+                                        </View>
+
+                                        <Text style={{
+                                            color: '#666666', fontSize: 20, textAlign: 'center',
+                                            textAlignVertical: 'center'
+                                        }}>
+                                            <Ionicons name='ios-checkmark-circle' size={30} color='#00C569' />
                                         </Text>
-                                    </Button>
-                                }
-                            </Body>
-                        </CardItem>
-                    </Card>
+
+                                    </View>
+                                    {activePackageType == 3 ? <Text style={{
+                                        color: '#00C569', fontSize: 20,
+                                        width: '100%', textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }}>{locales('labels.inUse')}</Text>
+                                        :
+                                        <Button
+                                            style={[styles.loginButton, { width: '50%', alignSelf: 'center' }]}
+                                            onPress={() => this.pay()}>
+                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                            </Text>
+                                        </Button>
+                                    }
+                                </Body>
+                            </CardItem>
+                        </Card>
+                    </View>
                 </ScrollView>
             </>
         )
@@ -268,7 +501,6 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 4,
         backgroundColor: '#00C569',
-        width: '92%',
         color: 'white',
     },
     forgotContainer: {
