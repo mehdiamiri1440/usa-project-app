@@ -20,6 +20,11 @@ const INITIAL_STATE = {
     isUserLimitedToRegisterProduct: false,
     userPermissionToRegisterProductStatus: false,
 
+    registerBuyAdRequestLoading: false,
+    registerBuyAdRequestFailed: false,
+    registerBuyAdRequestError: false,
+    registerBuyAdRequestMessage: null,
+
     subCategoriesLoading: false,
     subCategoriesFailed: false,
     subCategoriesError: false,
@@ -214,6 +219,51 @@ export default (state = INITIAL_STATE, action) => {
                 userPermissionToRegisterProductMessage: '',
                 isUserLimitedToRegisterProduct: false,
                 userPermissionToRegisterProductStatus: false
+            };
+        };
+
+
+
+        case actionTypes.REGISTER_BUYAD_REQUEST_LOADING: {
+            return {
+                ...state,
+                registerBuyAdRequestLoading: true,
+                registerBuyAdRequestFailed: false,
+                registerBuyAdRequestError: false,
+                registerBuyAdRequestMessage: null,
+                registerBuyAdRequest: {}
+            };
+        };
+        case actionTypes.REGISTER_BUYAD_REQUEST_SUCCESSFULLY: {
+            let { msg = '', } = action.payload
+            return {
+                ...state,
+                registerBuyAdRequestLoading: false,
+                registerBuyAdRequestFailed: false,
+                registerBuyAdRequestError: false,
+                registerBuyAdRequestMessage: msg,
+                registerBuyAdRequest: { ...action.payload }
+            };
+        };
+        case actionTypes.REGISTER_BUYAD_REQUEST_FAILED: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                registerBuyAdRequestLoading: false,
+                registerBuyAdRequestFailed: true,
+                registerBuyAdRequestError: false,
+                registerBuyAdRequestMessage: msg,
+                registerBuyAdRequest: {}
+            };
+        };
+        case actionTypes.REGISTER_BUYAD_REQUEST_REJECT: {
+            return {
+                ...state,
+                registerBuyAdRequestLoading: false,
+                registerBuyAdRequestFailed: false,
+                registerBuyAdRequestError: true,
+                registerBuyAdRequestMessage: '',
+                registerBuyAdRequest: {}
             };
         };
 

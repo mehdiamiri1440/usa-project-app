@@ -93,3 +93,25 @@ export const checkUserPermissionToRegisterProduct = () => {
 
     return request();
 };
+
+export const registerBuyAdRequest = requestObj => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.registerProduct
+                .registerBuyAdRequest(requestObj)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.REGISTER_BUYAD_REQUEST_FAILED,
+                        reject: actionTypes.REGISTER_BUYAD_REQUEST_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.REGISTER_BUYAD_REQUEST_LOADING);
+    const success = res => action(actionTypes.REGISTER_BUYAD_REQUEST_SUCCESSFULLY, res);
+
+    return request();
+};

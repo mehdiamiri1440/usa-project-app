@@ -181,15 +181,7 @@ class ChooseCity extends React.Component {
                         </Item>
                         {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
                     </View>
-                    {/* <Dropdown
-                    onChangeText={(value, index) => this.setProvince(value, index)}
-                    label={locales('labels.selectProvince')}
-                    data={provinces}
-                    containerStyle={{
-                        marginVertical: 20,
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                     <View style={[styles.labelInputPadding, { marginTop: 30 }]}>
                         <View style={{
                             flexDirection: 'row-reverse'
@@ -230,14 +222,7 @@ class ChooseCity extends React.Component {
                         </Item>
                         {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{cityError}</Label>}
                     </View>
-                    {/* <Dropdown
-                    onChangeText={(value) => this.setCity(value)}
-                    label={locales('labels.selectCity')}
-                    data={cities}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                     <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                         <Button
                             onPress={() => this.onSubmit()}

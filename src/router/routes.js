@@ -23,6 +23,7 @@ import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
 import SpecialProducts from '../screens/SpecialProducts';
 import RegisterRequest from '../screens/RegisterRequest';
+import RegisterRequestSuccessfully from '../screens/RegisterRequest/RegisterRequestSuccessfully';
 import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
 import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
@@ -213,6 +214,33 @@ const router = forwardRef((props, innerRef) => {
                 name='RegisterProductSuccessfully'
                 component={RegisterProductSuccessfully}
             />
+
+        </Stack.Navigator>
+    )
+
+    const RegisterRequestStack = () => (
+        <Stack.Navigator>
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='RegisterRequest'
+                name='RegisterRequest'
+                component={RegisterRequest}
+            />
+
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`RegisterRequestSuccessfully`}
+                component={RegisterRequestSuccessfully}
+            />
+
 
         </Stack.Navigator>
     )
@@ -417,8 +445,8 @@ const router = forwardRef((props, innerRef) => {
                         key={'RegisterRequest'}
                         listeners={{
                             tabPress: e => {
-                                if (!!global.resetRegisterProduct)
-                                    global.resetRegisterProduct(true)
+                                if (!!global.resetRegisterRequest)
+                                    global.resetRegisterRequest(true)
                             },
                         }}
                         options={{
@@ -427,7 +455,7 @@ const router = forwardRef((props, innerRef) => {
                             tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
                         }}
                         name={'RegisterRequest'}
-                        component={RegisterRequest}
+                        component={RegisterRequestStack}
                     />}
 
 

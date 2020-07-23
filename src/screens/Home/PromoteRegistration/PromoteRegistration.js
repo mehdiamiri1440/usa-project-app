@@ -84,6 +84,7 @@ class PromoteRegistration extends React.Component {
                         </Text>
                     </View>
                 </View>
+
                 <ScrollView
                     refreshControl={
                         <RefreshControl
