@@ -20,11 +20,14 @@ class PromoteRegistration extends React.Component {
     }
 
 
-
     pay = () => {
-        return Linking.canOpenURL('http://192.168.1.46:3030/app/payment/1/3').then(supported => {
+        let userId = '';
+        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
+            userId = this.props.userProfile.user_info.id;
+
+        return Linking.canOpenURL(`https://www.buskool.com/app-payment/payment/${userId}/3`).then(supported => {
             if (supported) {
-                Linking.openURL('http://192.168.1.46:3030/app/payment/1/3');
+                Linking.openURL(`https://www.buskool.com/app-payment/payment/${userId}/3`);
             }
         })
     };
@@ -314,6 +317,8 @@ const mapStateToProps = (state) => {
         dashboardMessage: state.homeReducer.dashboardMessage,
         dashboardFailed: state.homeReducer.dashboardFailed,
         dashboard: state.homeReducer.dashboard,
+
+        userProfile: state.profileReducer.userProfile
     }
 };
 

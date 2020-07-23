@@ -89,7 +89,7 @@ class ProductDecription extends Component {
                     >
                         با کلیک روی دکمه ثبت نهایی موافقت خود را  با <Text
                             onPress={() => {
-                                return Linking.canOpenURL('z').then(supported => {
+                                return Linking.canOpenURL('https://www.buskool.com/privacy-and-policy').then(supported => {
                                     if (supported) {
                                         Linking.openURL('https://www.buskool.com/privacy-and-policy');
                                     }

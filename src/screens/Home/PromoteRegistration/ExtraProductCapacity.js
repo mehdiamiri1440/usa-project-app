@@ -27,9 +27,14 @@ class ExtraProductCapacity extends React.Component {
 
 
     pay = () => {
-        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+        let userId = '';
+        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
+            userId = this.props.userProfile.user_info.id;
+
+        console.log('user', userId)
+        return Linking.canOpenURL(`https://www.buskool.com/app-payment/product-capacity/${userId}/${this.state.productCount}`).then(supported => {
             if (supported) {
-                Linking.openURL('https://www.buskool.com/payment/3');
+                Linking.openURL(`https://www.buskool.com/app-payment/product-capacity/${userId}/${this.state.productCount}`);
             }
         })
     };
@@ -323,7 +328,8 @@ class ExtraProductCapacity extends React.Component {
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
                                             onPress={() => this.pay()}>
-                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
+                                                {locales('titles.moreCapacity')}
                                             </Text>
                                         </Button>
                                     </View>
@@ -429,6 +435,8 @@ const mapStateToProps = (state) => {
         dashboardMessage: state.homeReducer.dashboardMessage,
         dashboardFailed: state.homeReducer.dashboardFailed,
         dashboard: state.homeReducer.dashboard,
+
+        userProfile: state.profileReducer.userProfile,
     }
 };
 

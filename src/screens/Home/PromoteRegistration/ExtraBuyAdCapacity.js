@@ -25,10 +25,16 @@ class ExtraBuyAdCapacity extends React.Component {
 
 
 
+
     pay = () => {
-        return Linking.canOpenURL('https://www.buskool.com/payment/3').then(supported => {
+        let userId = '';
+        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
+            userId = this.props.userProfile.user_info.id;
+
+        console.log('user', userId)
+        return Linking.canOpenURL(`https://www.buskool.com/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`).then(supported => {
             if (supported) {
-                Linking.openURL('https://www.buskool.com/payment/3');
+                Linking.openURL(`https://www.buskool.com/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`);
             }
         })
     };
@@ -434,6 +440,8 @@ const mapStateToProps = (state) => {
         dashboardMessage: state.homeReducer.dashboardMessage,
         dashboardFailed: state.homeReducer.dashboardFailed,
         dashboard: state.homeReducer.dashboard,
+
+        userProfile: state.profileReducer.userProfile,
     }
 };
 

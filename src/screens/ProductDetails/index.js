@@ -283,9 +283,9 @@ class ProductDetails extends Component {
 
 
     elevatorPay = () => {
-        return Linking.canOpenURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
+        return Linking.canOpenURL(`http://192.168.1.46:3030/app-payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
             if (supported) {
-                Linking.openURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productDetails.main.id}`);
+                Linking.openURL(`http://192.168.1.46:3030/app-payment/elevator/${this.props.productDetails.main.id}`);
             }
         })
     };
