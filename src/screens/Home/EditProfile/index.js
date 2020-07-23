@@ -66,7 +66,8 @@ class EditProfile extends React.Component {
                     }
                     style={{
                         paddingVertical: 30,
-                        paddingHorizontal: 15
+                        paddingHorizontal: 15,
+                        backgroundColor: '#fff'
                     }}
                 >
 
@@ -78,54 +79,86 @@ class EditProfile extends React.Component {
 
                         <View
                         >
-                            <Image
-                                style={{
-                                    alignSelf: 'center',
-                                    width: 130,
-                                    height: 130,
-                                    borderRadius: 130,
-                                    overflow: "hidden",
-                                    elevation: 6
-                                }}
-                                source={
-                                    require('../../../../assets/icons/user.png')
-                                } />
+                            <View style={{
+                                width: 130,
+                                height: 130,
+                                borderRadius: 130,
+                                alignSelf: 'center',
+                                overflow: "hidden",
+                                elevation: 6,
+
+                            }}>
+                                <Button
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        zIndex: 1,
+                                        backgroundColor: 'rgba(0,0,0,0.5)',
+                                        justifyContent: 'center',
+
+                                    }}>
+
+                                    <FontAwesome5 name="camera" solid size={35} color="#fff"
+                                    />
+                                </Button>
+                                <Image
+                                    style={{
+                                        justifyContent: 'center',
+                                        height: '100%',
+                                    }}
+                                    source={
+                                        require('../../../../assets/icons/user.png')
+                                    } />
+
+                            </View>
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     fontSize: 20,
                                     textAlign: 'center',
-                                    marginVertical: 10
+                                    marginVertical: 10,
+                                    color: '#333'
+
                                 }}>
                                 محمد امین دلداری
                                 </Text>
                         </View>
 
                         <Card transparent>
-                            <View >
+                            <View style={{
+                                paddingHorizontal: 10
+                            }}>
+
+                                <Text style={{
+                                    marginTop: 20,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: '#333'
+                                }}>
+                                    درباره کسب و کارتان بنویسید
+                                    </Text>
 
                                 <Textarea
                                     style={{
                                         borderRadius: 4,
-                                        elevation: 3,
                                         overflow: 'hidden',
                                         backgroundColor: '#fff',
-                                        paddingHorizontal: 5,
-                                        paddingVertical: 15,
-                                        marginBottom: 30
+                                        padding: 15,
+                                        borderWidth: 1,
+                                        borderColor: '#777'
                                     }}
-                                    rowSpan={5} bordered placeholder="توضیخات" />
-                                <View style={{
-                                    marginTop: 20
-                                }}>
-                                    <Button
-                                        style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                        onPress={() => this.pay()}>
-                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.submitChanges')}
-                                        </Text>
-                                    </Button>
-                                </View>
+                                    rowSpan={4} bordered placeholder="توضیخات" />
 
+                            </View>
+                            <View style={{
+                                marginTop: 20
+                            }}>
+                                <Button
+                                    style={[styles.loginButton, { alignSelf: 'center' }]}
+                                    onPress={() => this.pay()}>
+                                    <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>{locales('titles.submitChanges')}
+                                    </Text>
+                                </Button>
                             </View>
                         </Card>
 
