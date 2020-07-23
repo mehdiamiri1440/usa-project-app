@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef } from 'react';
+import React, { useEffect, forwardRef, useRef, useState } from 'react';
 import { Image, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -34,15 +34,23 @@ import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProd
 import Messages from '../screens/Messages';
 
 
+import { navigationRef, isReadyRef } from './rootNavigation';
+import * as RootNavigation from './rootNavigation';
+
+
+
+
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-const router = (props, ref) => {
-    console.log('refffffffff', ref)
+const router = forwardRef((props, innerRef) => {
+
     const { changeRoleObject = {}, userProfile } = props;
 
     const { is_seller = null } = changeRoleObject;
+
+    let [initialRoute, setInitialRoute] = useState();
 
     const MyBuskoolStack = (props) => {
         return (
@@ -311,15 +319,14 @@ const router = (props, ref) => {
     // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
     useEffect(() => {
-        if (props.routeRef && props.routeRef.current) {
-            if (props.changeRoleObject && props.changeRoleObject.is_seller) {
-                props.routeRef.current.navigate('Requests')
-            }
-            else {
-                props.routeRef.current.navigate('Home')
-            }
+
+        if (!is_seller) {
+            setInitialRoute('Requests')
         }
-    }, [props.changeRoleObject.is_seller])
+        else {
+            setInitialRoute('Home')
+        }
+    }, [initialRoute, is_seller])
     return (
 
         props.changeRoleLoading ?
@@ -344,7 +351,7 @@ const router = (props, ref) => {
                 />
             </View> :
             <Tab.Navigator
-                initialRouteName={props.isFromOutSide ? 'Messages' : 'Home'
+                initialRouteName={props.isFromOutSide ? 'Messages' : initialRoute
                 }
                 shifting={false}
                 activeColor="#00C569"
@@ -462,6 +469,8 @@ const router = (props, ref) => {
 
     )
 }
+)
+
 
 
 
@@ -482,4 +491,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(forwardRef(router))
+export default connect(mapStateToProps)(router)

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Alert, Linking, Text, I18nManager } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -13,7 +13,8 @@ import Router from './routes';
 import SignUp from '../screens/SignUp'
 import * as messagesActions from '../redux/messages/actions';
 
-const navigationRef = React.createRef();
+import { navigationRef, isReadyRef } from './rootNavigation';
+import * as RootNavigation from './rootNavigation';
 
 
 const registerAppWithFCM = async () => {
@@ -24,20 +25,23 @@ const registerAppWithFCM = async () => {
 const Stack = createStackNavigator();
 
 
-const App = props => {
+const App = (props) => {
+
     const [initialRoute, setInitialRoute] = useState('Home');
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
-
     useEffect(() => {
         props.fetchTotalUnreadMessages();
+
+
         Linking.addEventListener('url', handleIncomingEvent)
         if (I18nManager.isRTL) {
             I18nManager.forceRTL(false);
             I18nManager.allowRTL(false);
             RNRestart.Restart();
         }
+
 
         if (isRegistered) {
             firebase.messaging().getToken()
@@ -87,9 +91,11 @@ const App = props => {
                 })
         }
 
-        Linking.addEventListener(url => {
-        })
-        return unsubscribe
+
+        return () => {
+            isReadyRef.current = false
+            return unsubscribe
+        }
     }, [initialRoute]);
 
 
@@ -99,16 +105,16 @@ const App = props => {
     const handleIncomingEvent = event => {
         switch ((event.url).split('://')[1]) {
             case 'pricing':
-                return navigationRef.current.navigate('MyBuskool', { Screen: 'PromoteRegistration' });
+                return RootNavigation.navigate('MyBuskool', { Screen: 'PromoteRegistration' });
 
             case 'product-list':
-                return navigationRef.current.navigate('Home');
+                return RootNavigation.navigate('Home');
 
             case 'register-product':
-                return navigationRef.current.navigate('RegisterProduct');
+                return RootNavigation.navigate('RegisterProduct');
 
             case 'buyAd-requests':
-                return navigationRef.current.navigate('Requests');
+                return RootNavigation.navigate('Requests');
             default:
                 break;
         }
@@ -118,6 +124,9 @@ const App = props => {
         <NavigationContainer
             linking={linking} fallback={<Text>Loading...</Text>}
             ref={navigationRef}
+            onReady={() => {
+                isReadyRef.current = true;
+            }}
         >
             {(!props.loggedInUserId) ?
                 (
@@ -126,7 +135,7 @@ const App = props => {
                     </Stack.Navigator>
                 )
                 : (
-                    <Router {...props} ref={navigationRef} />
+                    <Router innerRef={navigationRef} />
                 )
             }
 
@@ -135,6 +144,7 @@ const App = props => {
 }
 
 const mapStateToProps = (state) => {
+
     return {
         loginError: state.authReducer.loginError,
         loggedInUserId: state.authReducer.loggedInUserId,

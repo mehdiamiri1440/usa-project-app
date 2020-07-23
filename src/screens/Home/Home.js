@@ -17,6 +17,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
+import * as RootNavigation from '../../router/rootNavigation';
+
+
+
 
 
 let homeRoutes = [
@@ -65,12 +69,7 @@ class Home extends React.Component {
     changeRole = rollName => {
         this.setState({ activityType: rollName });
         this.setState({ showchangeRoleModal: true });
-        this.props.changeRole().then(res => {
-            // if (res.payload.is_seller)
-            //     this.props.navigation.navigate('Requests')
-            // else
-            this.props.navigation.navigate('Home')
-        })
+        this.props.changeRole()
     };
 
 
@@ -238,7 +237,7 @@ class Home extends React.Component {
                         alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
                     }]}>
                         <TouchableOpacity
-                            onPress={() => this.changeRole('buyer')}
+                            onPress={() => is_seller && this.changeRole('buyer')}
                             style={{
                                 backgroundColor: '#fff',
                                 elevation: 1,
@@ -251,7 +250,7 @@ class Home extends React.Component {
                                 minWidth: 140
                             }}>
                             <Radio
-                                onPress={() => this.changeRole('buyer')}
+                                onPress={() => is_seller && this.changeRole('buyer')}
                                 color={"#BEBEBE"}
                                 selected={activityType == 'buyer'}
                                 style={{ marginHorizontal: 5 }}
@@ -281,10 +280,10 @@ class Home extends React.Component {
                                 minWidth: 140
 
                             }}
-                            onPress={() => this.changeRole('seller')}
+                            onPress={() => !is_seller && this.changeRole('seller')}
                         >
                             <Radio
-                                onPress={() => this.changeRole('seller')}
+                                onPress={() => !is_seller && this.changeRole('seller')}
                                 selected={activityType == 'seller'}
                                 color={"#BEBEBE"}
                                 style={{ marginHorizontal: 5 }}
