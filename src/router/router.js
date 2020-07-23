@@ -94,6 +94,7 @@ const App = (props) => {
 
         return () => {
             isReadyRef.current = false
+            Linking.removeEventListener('url', handleIncomingEvent)
             return unsubscribe
         }
     }, [initialRoute]);
