@@ -67,7 +67,6 @@ export default {
     'labels.pleaseRetry': 'لطفا مجددا تلاش بفرمایید',
     'labels.myProducts': 'محصولات من',
     'labels.guid': 'راهنما',
-    'labels.editProfile': 'ویرایش پروفایل',
     'labels.special': 'ویژه',
     'labels.sort': 'مرتب سازی',
     'labels.camera': 'دوربین',
@@ -125,6 +124,7 @@ export default {
     "labels.ProductDetails": 'جزییات محصول',
     "labels.switchRoll": 'کاربری {fieldName} فعال است',
     "labels.extraProductDescription": 'تعداد ظرفیت اضافی برای ثبت محصول را انتخاب کنید سپس دکمه افزایش ظرفیت را بزنید.',
+    "labels.extraBuyAdDescription": 'تعداد اضافی ظرفیت پاسخ های روزانه به درخواست های خرید را انتخاب کنید و دکمه افزایش ظرفیت را بزنید.',
 
 
     "titles.enterToBuskool": "ورود به باسکول",
@@ -255,10 +255,13 @@ export default {
     'titles.8CharLeast': 'حداقل 8 کارکتر',
     'titles.extraProduct': 'افزایش ظرفیت ثبت محصول',
     'titles.extraProductCount': 'تعداد محصولات اضافی',
+    'titles.extra‌BuyAd': 'سقف روزانه پاسخ به درخواست ها',
+    'titles.extra‌BuyAdCount': 'افزایش سقف روزانه پاسخ به درخواست ها',
     'titles.moreCapacity': 'افزایش ظرفیت',
     'titles.count': 'تعداد',
     'titles.number': 'عدد',
     'titles.annuan': 'سالانه',
+    'titles.editProfile': 'ویرایش پروفایل',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید . ",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
