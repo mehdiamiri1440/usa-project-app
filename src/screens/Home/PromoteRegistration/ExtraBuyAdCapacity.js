@@ -19,7 +19,7 @@ class ExtraBuyAdCapacity extends React.Component {
             showModal: false,
             buyAdCount: 1,
             buyAdUnitPice: 25000,
-            buyAdTotalCount: 25000
+            buyAdTotalCount: 25000,
         }
     }
 
@@ -33,21 +33,35 @@ class ExtraBuyAdCapacity extends React.Component {
         })
     };
 
+
     closeModal = _ => {
         this.setState({ showModal: false });
         this.props.fetchAllDashboardData()
     };
 
+
     changeCount = type => {
         this.setState({
-            buyAdCount: type == 'asc' ? this.state.buyAdCount + 1 : this.state.buyAdCount <= 1 ? 1 : this.state.buyAdCount - 1,
+            buyAdCount: type == 'asc' ? JSON.parse(this.state.buyAdCount) + 1 :
+                JSON.parse(this.state.buyAdCount) <= 1 ? 1 : JSON.parse(this.state.buyAdCount) - 1,
         }, () => {
             this.setState({
-                buyAdTotalCount: this.state.buyAdCount * this.state.buyAdUnitPice
+                disableInputFlag: this.state.buyAdCount * this.state.buyAdUnitPice > 50000000,
+                buyAdTotalCount: this.state.buyAdCount * this.state.buyAdUnitPice,
 
             })
         })
-    }
+    };
+
+    handleInputChange = value => {
+        this.setState({ buyAdCount: value <= 1 ? 1 : value }, () => {
+            this.setState({
+                disableInputFlag: this.state.buyAdCount * this.state.buyAdUnitPice > 50000000,
+                buyAdTotalCount: this.state.buyAdCount * this.state.buyAdUnitPice,
+            })
+        });
+    };
+
     render() {
 
         let {
@@ -59,7 +73,8 @@ class ExtraBuyAdCapacity extends React.Component {
         } = dashboard;
         const {
             buyAdCount,
-            buyAdTotalCount
+            buyAdTotalCount,
+            disableInputFlag
         } = this.state;
         return (
             <>
@@ -179,7 +194,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                             color: '#fff'
 
                                         }}>
-                                            {buyAdCount + ' ' + locales('titles.number')}
+                                            {`${buyAdCount} ${locales('titles.number')}`}
                                         </Text>
                                     </View>
                                 </View>
@@ -227,11 +242,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
                                                 value={buyAdCount.toString()}
-                                                onChangeText={(value) => {
-                                                    this.setState({
-                                                        buyAdCount: value
-                                                    })
-                                                }}
+                                                onChangeText={this.handleInputChange}
                                                 style={{
                                                     backgroundColor: '#fcfcfc',
                                                     textAlign: "center"

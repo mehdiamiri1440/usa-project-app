@@ -38,17 +38,27 @@ class ExtraProductCapacity extends React.Component {
         this.setState({ showModal: false });
         this.props.fetchAllDashboardData()
     };
-
     changeCount = type => {
         this.setState({
-            productCount: type == 'asc' ? this.state.productCount + 1 : this.state.productCount <= 1 ? 1 : this.state.productCount - 1,
+            productCount: type == 'asc' ? JSON.parse(this.state.productCount) + 1 :
+                JSON.parse(this.state.productCount) <= 1 ? 1 : JSON.parse(this.state.productCount) - 1,
         }, () => {
             this.setState({
-                productTotalCount: this.state.productCount * this.state.productUnitPice
+                disableInputFlag: this.state.productCount * this.state.productUnitPice > 50000000,
+                productTotalCount: this.state.productCount * this.state.productUnitPice,
 
             })
         })
-    }
+    };
+    handleInputChange = value => {
+        this.setState({ productCount: value <= 1 ? 1 : value }, () => {
+            this.setState({
+                disableInputFlag: this.state.productCount * this.state.productUnitPice > 50000000,
+                productTotalCount: this.state.productCount * this.state.productUnitPice,
+            })
+        });
+    };
+
 
     render() {
 
@@ -228,11 +238,7 @@ class ExtraProductCapacity extends React.Component {
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
                                                 value={productCount.toString()}
-                                                onChangeText={(value) => {
-                                                    this.setState({
-                                                        productCount: value
-                                                    })
-                                                }}
+                                                onChangeText={this.handleInputChange}
                                                 style={{
                                                     backgroundColor: '#fcfcfc',
                                                     textAlign: "center"
