@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { Card, Body, InputGroup, CardItem, Input, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -32,9 +33,9 @@ class ExtraProductCapacity extends React.Component {
             userId = this.props.userProfile.user_info.id;
 
         console.log('user', userId)
-        return Linking.canOpenURL(`https://www.buskool.com/app-payment/product-capacity/${userId}/${this.state.productCount}`).then(supported => {
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`).then(supported => {
             if (supported) {
-                Linking.openURL(`https://www.buskool.com/app-payment/product-capacity/${userId}/${this.state.productCount}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`);
             }
         })
     };

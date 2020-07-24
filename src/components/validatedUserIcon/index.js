@@ -5,6 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 
 const ValidatedUserIcon = _ => {
 
@@ -49,9 +50,9 @@ const ValidatedUserIcon = _ => {
                 <View style={{ paddingVertical: 10, marginVertical: 15 }}>
                     <TouchableOpacity
                         onPress={() => {
-                            return Linking.canOpenURL('https://www.buskool.com/verification').then(supported => {
+                            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`).then(supported => {
                                 if (supported) {
-                                    Linking.openURL('https://www.buskool.com/verification');
+                                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`);
                                 }
                             })
                         }}
@@ -67,9 +68,9 @@ const ValidatedUserIcon = _ => {
                     </Text>
                     <TouchableOpacity
                         onPress={() => {
-                            return Linking.canOpenURL('https://www.buskool.com/verification').then(supported => {
+                            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`).then(supported => {
                                 if (supported) {
-                                    Linking.openURL('https://www.buskool.com/verification');
+                                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`);
                                 }
                             })
                         }}

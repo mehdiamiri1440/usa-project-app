@@ -66,7 +66,7 @@ class Profile extends Component {
         try {
             const result = await Share.share({
                 message:
-                    `https://www.buskool.com/profile/${this.props.profileByUserName.user_info.user_name}`,
+                    `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.profileByUserName.user_info.user_name}`,
             });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
