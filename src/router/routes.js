@@ -321,16 +321,6 @@ const router = forwardRef((props, innerRef) => {
                         headerShown: false,
                         title: null,
                     })}
-                    key='EditProfile'
-                    name='EditProfile'
-                    component={EditProfile}
-                />
-
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerShown: false,
-                        title: null,
-                    })}
                     key='Profile'
                     name='Profile'
                     component={Profile}

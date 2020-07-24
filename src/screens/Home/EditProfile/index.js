@@ -1,33 +1,248 @@
 import React from 'react';
-import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
-import { Card, Body, InputGroup, CardItem, Input, Button, Textarea, Form, } from 'native-base';
+import { Card, Button, Textarea, ActionSheet } from 'native-base';
+
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import * as homeActions from '../../../redux/home/actions';
-import { formatter } from '../../../utils'
+import * as profileActions from '../../../redux/profile/actions';
 
 class EditProfile extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             showModal: false,
-
+            profile_photo: {},
+            description: '',
+            is_company: false,
+            public_phone: '',
+            company_name: '',
+            company_register_code: '',
+            imageSizeError: false,
+            editErrors: [],
+            showSubmitEditionModal: false
         }
     }
 
+    componentDidMount() {
+
+        if (Object.entries(this.props.userProfile).length &&
+            Object.entries(this.props.userProfile.profile).length) {
+            const {
+                profile_photo,
+                is_company,
+                company_name,
+                company_register_code,
+                public_phone,
+                description
+            } = this.props.userProfile.profile;
+
+            let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
+
+            this.setState({
+                profile_photo: stateProfilePhoto,
+                is_company,
+                company_name,
+                company_register_code,
+                public_phone,
+                description
+            });
+        }
+
+    }
+
+    editProfile = _ => {
+
+        this.setState({ editErrors: [] });
+
+        let formData = new FormData();
+
+        const {
+            profile_photo,
+            is_company,
+            company_name,
+            company_register_code,
+            public_phone,
+            description
+        } = this.state;
+
+        formData.append('description', description);
+        formData.append('public_phone', public_phone);
+        formData.append('is_company', is_company);
+        formData.append('company_register_code', company_register_code);
+        formData.append('company_name', company_name);
+        if (!!profile_photo)
+            formData.append('profile_photo', profile_photo);
+
+        this.props.editProfile(formData).then(_ => {
+            this.props.fetchUserProfile();
+            this.setState({ showSubmitEditionModal: true });
+        }).catch(err => {
+            this.setState({ editErrors: Object.values(err.data.errors) });
+        });
+    };
+
+
+
+    openActionSheet = _ => ActionSheet.show(
+        {
+            options: [locales('labels.camera'), locales('labels.gallery')],
+        },
+        buttonIndex => this.onActionSheetClicked(buttonIndex)
+    );
+
+    handleDescriptionChange = description => this.setState({ description });
+
+    onActionSheetClicked = (buttonIndex) => {
+        const options = {
+            width: 300,
+            height: 400,
+            maxWidth: 1024,
+            maxHeight: 1024,
+            quality: 1,
+            title: 'عکس را انتخاب کنید',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        const prevImagePickerLibraryOptions = {
+            width: 300,
+            height: 400,
+            cropping: true,
+            mediaType: 'photo',
+        };
+
+        switch (buttonIndex) {
+            case 0: {
+                this.setState({ errorFlag: false });
+                ImagePicker.launchCamera(options, image => {
+                    if (image.didCancel)
+                        return;
+                    else if (image.error)
+                        return;
+
+                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
+                        return this.setState({ imageSizeError: true })
+                    }
+                    const source = { uri: image.uri };
+                    this.setState(state => {
+                        state.avatarSource = source;
+                        let resultObj = {
+                            uri: image.uri,
+                            type: image.type,
+                            size: image.fileSize,
+                            name: image.fileName
+                        }
+
+                        state.profile_photo = resultObj;
+
+                        return '';
+                    }
+                    )
+                });
+                break;
+            }
+            case 1: {
+                this.setState({ errorFlag: false });
+                ImagePicker.launchImageLibrary(options, image => {
+                    if (image.didCancel)
+                        return;
+                    else if (image.error)
+                        return;
+
+                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
+                        return this.setState({ imageSizeError: true })
+                    }
+                    const source = { uri: image.uri };
+                    this.setState(state => {
+                        state.avatarSource = source;
+                        let resultObj = {
+                            uri: image.uri,
+                            type: image.type,
+                            size: image.fileSize,
+                            name: image.fileName
+                        }
+
+                        state.profile_photo = resultObj;
+
+                        return '';
+                    }
+                    )
+                });
+                break;
+            }
+            default:
+                break;
+        }
+
+    };
+
+
+
+
 
     render() {
+        const { userProfile = {}, editProfileLoading } = this.props;
+        const { user_info = {} } = userProfile;
+        const { first_name = '', last_name = '' } = user_info;
+
+        const {
+            profile_photo,
+            is_company,
+            company_name,
+            company_register_code,
+            public_phone,
+            description,
+            imageSizeError,
+
+            editErrors,
+            showSubmitEditionModal
+        } = this.state;
 
 
         return (
             <>
+                < Portal >
+                    <Dialog
+                        visible={showSubmitEditionModal}
+                    >
+                        <Dialog.Actions style={{ justifyContent: 'center', borderBottomWidth: 0.7, borderBottomColor: '#777777' }}>
+                            <Paragraph style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                paddingTop: 30, textAlign: 'center', fontSize: 24,
+                                color: 'red'
+                            }}>
+                                <MaterialCommunityIcons
+                                    name='checkbox-marked-circle-outline' color='#00C569' size={40}
+                                />
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            width: '100%',
+                        }}>
+                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '100%', paddingTop: 10, textAlign: 'center', fontSize: 16 }}>
+                                {locales('titles.editionsDone')}
+                            </Text>
 
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                            <Button
+                                style={[styles.loginButton, { width: '90%' }]}
+                                onPress={() => this.setState({ showSubmitEditionModal: false })}>
+                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
 
 
                 <View style={{
@@ -57,13 +272,9 @@ class EditProfile extends React.Component {
                         </Text>
                     </View>
                 </View>
+
+
                 <ScrollView
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.props.dashboardLoading}
-                            onRefresh={() => this.props.fetchAllDashboardData().catch(_ => this.setState({ showModal: true }))}
-                        />
-                    }
                     style={{
                         paddingVertical: 30,
                         paddingHorizontal: 15,
@@ -89,6 +300,7 @@ class EditProfile extends React.Component {
 
                             }}>
                                 <Button
+                                    onPress={this.openActionSheet}
                                     style={{
                                         position: 'absolute',
                                         width: '100%',
@@ -108,7 +320,10 @@ class EditProfile extends React.Component {
                                         height: '100%',
                                     }}
                                     source={
-                                        require('../../../../assets/icons/user.png')
+                                        !!profile_photo && profile_photo.uri ? {
+                                            uri: profile_photo.uri
+                                        } :
+                                            require('../../../../assets/icons/user.png')
                                     } />
 
                             </View>
@@ -121,8 +336,8 @@ class EditProfile extends React.Component {
                                     color: '#333'
 
                                 }}>
-                                محمد امین دلداری
-                                </Text>
+                                {`${first_name} ${last_name}`}
+                            </Text>
                         </View>
 
                         <Card transparent>
@@ -135,10 +350,12 @@ class EditProfile extends React.Component {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#333'
                                 }}>
-                                    درباره کسب و کارتان بنویسید
-                                    </Text>
+                                    {locales('labels.writeAboutYourActivity')}
+                                </Text>
 
                                 <Textarea
+                                    onChangeText={this.handleDescriptionChange}
+                                    value={description}
                                     style={{
                                         borderRadius: 4,
                                         overflow: 'hidden',
@@ -147,7 +364,7 @@ class EditProfile extends React.Component {
                                         borderWidth: 1,
                                         borderColor: '#777'
                                     }}
-                                    rowSpan={4} bordered placeholder="توضیخات" />
+                                    rowSpan={4} bordered placeholder={locales('titles.headerDescription')} />
 
                             </View>
                             <View style={{
@@ -155,10 +372,43 @@ class EditProfile extends React.Component {
                             }}>
                                 <Button
                                     style={[styles.loginButton, { alignSelf: 'center' }]}
-                                    onPress={() => this.pay()}>
-                                    <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>{locales('titles.submitChanges')}
+                                    onPress={this.editProfile}>
+                                    <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
+                                        {locales('titles.submitChanges')}
                                     </Text>
+                                    <ActivityIndicator size="small"
+                                        animating={!!editProfileLoading} color="white"
+                                        style={{
+                                            position: 'absolute', left: '28%', top: '28%',
+                                            width: 25, height: 25, borderRadius: 15
+                                        }}
+                                    />
                                 </Button>
+                                {imageSizeError ?
+                                    <Text style={{
+                                        width: '100%',
+                                        color: 'black',
+                                        marginVertical: 10,
+                                        paddingHorizontal: 15,
+                                        backgroundColor: '#E41C38',
+                                        paddingVertical: 5,
+                                        borderRadius: 4
+                                    }}
+                                    >too big</Text>
+                                    : null}
+
+                                {editErrors.length ?
+                                    <Text style={{
+                                        width: '100%',
+                                        color: 'white',
+                                        marginVertical: 10,
+                                        paddingHorizontal: 15,
+                                        backgroundColor: '#E41C38',
+                                        paddingVertical: 5,
+                                        borderRadius: 4
+                                    }}
+                                    >{editErrors[0][0]}</Text>
+                                    : null}
                             </View>
                         </Card>
 
@@ -254,18 +504,27 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+    const {
+        userProfile,
+        userProfileLoading,
+
+        editProfile,
+        editProfileLoading
+    } = state.profileReducer;
+
     return {
-        dashboardLoading: state.homeReducer.dashboardLoading,
-        dashboardError: state.homeReducer.dashboardError,
-        dashboardMessage: state.homeReducer.dashboardMessage,
-        dashboardFailed: state.homeReducer.dashboardFailed,
-        dashboard: state.homeReducer.dashboard,
+        userProfile,
+        userProfileLoading,
+
+        editProfile,
+        editProfileLoading
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData())
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        editProfile: item => dispatch(profileActions.editProfile(item))
     }
 };
 

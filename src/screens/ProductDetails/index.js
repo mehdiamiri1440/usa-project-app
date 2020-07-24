@@ -961,7 +961,7 @@ class ProductDetails extends Component {
                                     >
 
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
-                                            {loggedInUserId == userId ? locales('labels.editProfile') : locales('titles.sendMessage')}</Text>
+                                            {loggedInUserId == userId ? locales('titles.editProfile') : locales('titles.sendMessage')}</Text>
                                     </Button>
                                 </Body>
                             </CardItem>
