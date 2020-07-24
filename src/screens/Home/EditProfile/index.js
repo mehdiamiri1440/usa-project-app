@@ -394,7 +394,7 @@ class EditProfile extends React.Component {
                                         paddingVertical: 5,
                                         borderRadius: 4
                                     }}
-                                    >too big</Text>
+                                    >{locales('errors.imageSizeError')}</Text>
                                     : null}
 
                                 {editErrors.length ?
