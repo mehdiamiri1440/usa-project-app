@@ -64,10 +64,10 @@ class GuidToRegisterProduct extends React.Component {
                                 style={[styles.loginButton, { flex: 1 }]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('PromoteRegistration');
+                                    this.props.navigation.navigate('ExtraProductCapacity');
                                 }}>
                                 <Text style={styles.buttonText}>
-                                    {locales('titles.promoteRegistration')}
+                                    {locales('titles.increaseCapacity')}
                                 </Text>
                             </Button>
                             <Button

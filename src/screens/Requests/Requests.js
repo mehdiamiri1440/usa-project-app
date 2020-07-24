@@ -17,7 +17,6 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
 
-
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
 class Requests extends PureComponent {
@@ -165,7 +164,8 @@ class Requests extends PureComponent {
                         </Text>
                         <Button
                             onPress={() => {
-                                this.updateFlag.current.close(); this.props.navigation.navigate('PromoteRegistration')
+                                this.updateFlag.current.close();
+                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
                             }}
                             style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
                         >
@@ -174,14 +174,6 @@ class Requests extends PureComponent {
                     </View>
                 </RBSheet>
 
-                {/* <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={updateFlag}
-                    onRequestClose={() => this.setState({ updateFlag: false })}
-                >
-
-                </Modal> */}
 
                 < Portal >
                     <Dialog
@@ -193,7 +185,7 @@ class Requests extends PureComponent {
                             </Paragraph>
                             <Paragraph
                                 style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red' }}>
-                                {locales('titles.promoteForBuyAd')}
+                                {locales('titles.icreaseYouRegisterRequstCapacity')}
                             </Paragraph>
                         </Dialog.Content>
                         <Dialog.Actions style={{
@@ -211,10 +203,10 @@ class Requests extends PureComponent {
                                 style={[styles.loginButton, { width: '30%' }]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('PromoteRegistration');
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
                                 }}>
                                 <Text style={styles.buttonText}>
-                                    {locales('titles.promoteRegistration')}
+                                    {locales('titles.increaseCapacity')}
                                 </Text>
                             </Button>
 

@@ -128,7 +128,9 @@ export default {
 
 
     "titles.enterToBuskool": "ورود به باسکول",
+    'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت ثبت درخواست خرید خود را افزایش دهید.',
     'titles.minOrder': 'حداقل سفارش',
+    'titles.increaseCapacity': 'افزایش ظرفیت',
     'titles.enterPhoneNumber': 'شماره موبایل خود را وارد نمایید',
     'titles.forMoreDetails': 'برای مشاهده اطلاعات بیشتر',
     'titles.here': 'اینجا',

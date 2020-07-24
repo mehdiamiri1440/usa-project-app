@@ -32,8 +32,6 @@ let homeRoutes = [
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
-    { label: 'labels.settings', icon: <AntDesign size={25} name='ExtraBuyAdCapacity' color='white' />, name: 'ExtraBuyAdCapacity' },
-    { label: 'labels.settings', icon: <AntDesign size={25} name='ExtraProductCapacity' color='white' />, name: 'ExtraProductCapacity' },
 ];
 class Home extends React.Component {
     constructor(props) {

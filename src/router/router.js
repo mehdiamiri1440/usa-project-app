@@ -106,7 +106,7 @@ const App = (props) => {
     const handleIncomingEvent = event => {
         switch ((event.url).split('://')[1]) {
             case 'pricing':
-                return RootNavigation.navigate('MyBuskool', { Screen: 'PromoteRegistration' });
+                return RootNavigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
 
             case 'product-list':
                 return RootNavigation.navigate('Home');
