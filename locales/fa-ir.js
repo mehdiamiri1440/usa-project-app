@@ -203,6 +203,7 @@ export default {
     'titles.subCategoryError': 'انتخاب زیر دسته‌بندی الزامی است',
     'titles.categoryError': 'انتخاب دسته‌بندی الزامی است',
     'titles.category': 'دسته‌بندی',
+    'titles.categories': 'دسته‌بندی‌ها',
     'titles.province/city': 'استان/شهر',
     'titles.productTypeInvalid': 'فرمت وارد شده برای نوع محصول معتبر نمی‌باشد',
     'titles.enterYourProductType': 'نوع محصول خود را وارد کنید',

@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllCategories = () => {
+export const fetchAllCategories = (cascade_list) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.registerProduct
-                .fetchAllCategories()
+                .fetchAllCategories(cascade_list)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

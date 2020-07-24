@@ -967,7 +967,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
         fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, true)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),

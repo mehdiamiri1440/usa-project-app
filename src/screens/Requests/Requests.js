@@ -16,6 +16,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
+import Filters from './Filters';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -26,12 +27,14 @@ class Requests extends PureComponent {
             selectedButton: null,
             from: 0,
             to: 15,
+            loaded: false,
 
             showToast: false,
             modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
             selectedContact: {},
+            showFilters: false,
             showModal: false
         }
     }
@@ -46,6 +49,12 @@ class Requests extends PureComponent {
         this.updateFlag.current.close()
     }
 
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
+            this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
+        }
+    }
     // shouldComponentUpdate(nextProps, nextState) {
     //     console.log('this.props', this.props, 'nextprops', nextProps, 'this.state', this.state, 'nexststate', nextState)
     //     if (this.props.isUserAllowedToSendMessageLoading || (this.props.buyAdRequestLoading && this.props.buyAdRequestsList.length) || this.props.buyAdRequestsList.length)
@@ -91,8 +100,9 @@ class Requests extends PureComponent {
 
     renderItem = ({ item, index, separators }) => {
 
-        const { selectedButton } = this.state;
-        const { isUserAllowedToSendMessageLoading, buyAdRequestsList } = this.props;
+        const { selectedButton, buyAdRequestsList } = this.state;
+        const { isUserAllowedToSendMessageLoading } = this.props;
+
 
         return (
             <BuyAdList
@@ -112,13 +122,25 @@ class Requests extends PureComponent {
         this.componentDidMount()
     }
 
+    closeFilters = _ => {
+        this.setState({ showFilters: false })
+    };
+
+    selectedFilter = id => {
+        this.setState({
+            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id)
+        })
+    };
 
     render() {
 
-        let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
+        let { userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
             isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
-        let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId, from, to } = this.state;
+        let { modalFlag, selectedContact,
+            buyAdRequestsList,
+            selectedButton, showDialog, selectedBuyAdId, from, to,
+            showFilters } = this.state;
         return (
             <>
                 <NoConnection
@@ -292,6 +314,27 @@ class Requests extends PureComponent {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem} />
 
+                    <Button
+                        style={{ position: 'absolute', bottom: 105, width: deviceWidth }}
+                        onPress={() => this.setState({ showFilters: true })}>
+                        <Text>
+                            {locales('titles.categories')}
+                        </Text>
+                    </Button>
+
+                    <Button
+                        style={{ position: 'absolute', bottom: 175, width: deviceWidth }}
+                        onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
+                        <Text>
+                            {locales('labels.deleteFilter')}
+                        </Text>
+                    </Button>
+
+                    <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
+                    />
                 </SafeAreaView>
             </>
         )

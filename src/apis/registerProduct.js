@@ -1,12 +1,13 @@
 import { requester } from '../utils';
 
 
-export const fetchAllCategories = () => {
+export const fetchAllCategories = (cascade_list) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `get_category_list`,
                 method: 'POST',
+                data: { cascade_list },
                 withAuth: false,
             })
             .then(result => {

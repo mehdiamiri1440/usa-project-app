@@ -488,7 +488,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         registerBuyAdRequest: requestObj => dispatch(registerProductActions.registerBuyAdRequest(requestObj)),
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab))
 
