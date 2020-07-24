@@ -739,6 +739,7 @@ class ProductsList extends PureComponent {
                                 });
                             })
                     }}
+                    onEndReachedThreshold={3.5}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
                     refreshing={productsListLoading || categoriesLoading}
@@ -768,7 +769,6 @@ class ProductsList extends PureComponent {
                         });
                     }
                     }
-                    onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product
