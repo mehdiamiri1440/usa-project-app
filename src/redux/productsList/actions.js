@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllProductsList = item => {
+export const fetchAllProductsList = (item, isSpecial) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.productsList
-                .fetchAllProductsList(item)
+                .fetchAllProductsList(item, isSpecial)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

@@ -840,7 +840,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
         fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
         fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
     }
 }
