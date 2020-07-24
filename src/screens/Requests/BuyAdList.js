@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
 import Jmoment from 'moment-jalaali';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -57,24 +57,26 @@ const BuyAdList = props => {
 
 
 
-            <View style={{
-                marginVertical: 5,
-                flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-            }}>
+            <TouchableOpacity
+                onPress={() => {
+                    return Toast.show({
+                        text: locales('titles.remianedCapacityToSendMessageToBuyer'),
+                        position: "bottom",
+                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                        duration: 2000
+                    })
+                }
+                }
+                activeOpacity={1}
+                style={{
+                    marginVertical: 5,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+                }}>
                 <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
                 <MaterialCommunityIcons
-                    onPress={() => {
-                        return Toast.show({
-                            text: locales('titles.remianedCapacityToSendMessageToBuyer'),
-                            position: "bottom",
-                            style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                            duration: 10
-                        })
-                    }
-                    }
                     name='comment-alert' size={25} color={'#777777'} />
-            </View>
+            </TouchableOpacity>
 
 
             <View style={{ marginVertical: 5 }}>
@@ -121,7 +123,9 @@ const BuyAdList = props => {
 
 const arePropsEqual = (prevProps, nextProps) => {
     // console.log('prevprops', prevProps, 'nextPRops', nextProps)
-    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList || prevProps.item == nextProps.item || !nextProps.buyAdRequestsList || !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length || !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading || prevProps.isUserAllowedToSendMessageLoading)
+    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList || prevProps.item == nextProps.item ||
+        !nextProps.buyAdRequestsList || !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||
+        !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading || prevProps.isUserAllowedToSendMessageLoading)
         return false
     return true;
 }
