@@ -78,14 +78,18 @@ class EditProfile extends React.Component {
         formData.append('is_company', is_company);
         formData.append('company_register_code', company_register_code);
         formData.append('company_name', company_name);
-        if (!!profile_photo)
+        if (!!profile_photo && profile_photo.type)
             formData.append('profile_photo', profile_photo);
 
         this.props.editProfile(formData).then(_ => {
-            this.props.fetchUserProfile();
-            this.setState({ showSubmitEditionModal: true });
+            this.setState({ showSubmitEditionModal: true }, () => {
+                setTimeout(() => {
+                    this.props.fetchUserProfile();
+                }, 2000);
+            });
         }).catch(err => {
-            this.setState({ editErrors: Object.values(err.data.errors) });
+            if (err.data && err.data.errors)
+                this.setState({ editErrors: Object.values(err.data.errors) });
         });
     };
 
@@ -190,7 +194,7 @@ class EditProfile extends React.Component {
 
 
     render() {
-        const { userProfile = {}, editProfileLoading } = this.props;
+        const { userProfile = {}, editProfileLoading, userProfileLoading } = this.props;
         const { user_info = {} } = userProfile;
         const { first_name = '', last_name = '' } = user_info;
 
@@ -210,6 +214,26 @@ class EditProfile extends React.Component {
 
         return (
             <>
+                {userProfileLoading ?
+                    <View style={{
+                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                        position: 'absolute',
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                    }}>
+                        <ActivityIndicator size="large"
+                            style={{
+                                position: 'absolute', left: '44%', top: '40%',
+                                elevation: 5,
+                                borderColor: 'black',
+                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                            }}
+                            color="#00C569"
+
+                        />
+                    </View> : null}
+
                 < Portal >
                     <Dialog
                         visible={showSubmitEditionModal}
@@ -233,14 +257,14 @@ class EditProfile extends React.Component {
                             </Text>
 
                         </Dialog.Actions>
-                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                        {/* <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
                             <Button
                                 style={[styles.loginButton, { width: '90%' }]}
                                 onPress={() => this.setState({ showSubmitEditionModal: false })}>
                                 <Text style={styles.buttonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
-                        </Dialog.Actions>
+                        </Dialog.Actions> */}
                     </Dialog>
                 </Portal >
 
@@ -275,6 +299,7 @@ class EditProfile extends React.Component {
 
 
                 <ScrollView
+                    keyboardShouldPersistTaps='handled'
                     style={{
                         paddingVertical: 30,
                         paddingHorizontal: 15,
