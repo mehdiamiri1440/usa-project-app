@@ -388,7 +388,7 @@ class Profile extends Component {
                                 </Button>
                                 : <Button
                                     small
-                                    onPress={() => this.props.navigation.navigate('EditProfile')}
+                                    onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
                                     style={[styles.loginButton, { flex: 1 }]}
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
@@ -396,7 +396,7 @@ class Profile extends Component {
                                             <FontAwesome name='pencil' size={23} />
                                         </Text>
                                         <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
-                                            {locales('labels.editProfile')}
+                                            {locales('titles.editProfile')}
                                         </Text>
                                     </View>
 

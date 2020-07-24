@@ -954,7 +954,7 @@ class ProductDetails extends Component {
                                             {locales('titles.seeProfile')}</Text>
                                     </Button>
                                     <Button
-                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('EditProfile') : this.setState({ modalFlag: true })}
+                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' }) : this.setState({ modalFlag: true })}
                                         style={[styles.loginButton, {
                                             alignSelf: 'center'
                                         }]}
