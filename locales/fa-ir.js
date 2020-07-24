@@ -123,7 +123,7 @@ export default {
     'labels.deleteFilter': 'حذف فیلتر',
     'labels.productsList': 'لیست محصولات',
     "labels.ProductDetails": 'جزییات محصول',
-    "labels.switchRoll": 'کاربری {fieldName} فعال است',
+    "labels.switchRoll": 'نوع کاربری {fieldName} فعال است',
     "labels.extraProductDescription": 'تعداد ظرفیت اضافی برای ثبت محصول را انتخاب کنید سپس دکمه افزایش ظرفیت را بزنید.',
     "labels.extraBuyAdDescription": 'تعداد اضافی ظرفیت پاسخ های روزانه به درخواست های خرید را انتخاب کنید و دکمه افزایش ظرفیت را بزنید.',
 

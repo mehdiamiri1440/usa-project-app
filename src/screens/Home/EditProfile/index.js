@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -14,7 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as profileActions from '../../../redux/profile/actions';
 
-class EditProfile extends React.Component {
+class EditProfile extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -32,7 +32,6 @@ class EditProfile extends React.Component {
     }
 
     componentDidMount() {
-
         if (Object.entries(this.props.userProfile).length &&
             Object.entries(this.props.userProfile.profile).length) {
             const {
@@ -57,6 +56,7 @@ class EditProfile extends React.Component {
         }
 
     }
+
 
     editProfile = _ => {
 
@@ -83,9 +83,8 @@ class EditProfile extends React.Component {
 
         this.props.editProfile(formData).then(_ => {
             this.setState({ showSubmitEditionModal: true }, () => {
-                setTimeout(() => {
-                    this.props.fetchUserProfile();
-                }, 2000);
+                global.initialProfileRoute = 'EditProfile'
+                this.props.fetchUserProfile();
             });
         }).catch(err => {
             if (err.data && err.data.errors)
@@ -257,14 +256,14 @@ class EditProfile extends React.Component {
                             </Text>
 
                         </Dialog.Actions>
-                        {/* <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
                             <Button
                                 style={[styles.loginButton, { width: '90%' }]}
                                 onPress={() => this.setState({ showSubmitEditionModal: false })}>
                                 <Text style={styles.buttonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
-                        </Dialog.Actions> */}
+                        </Dialog.Actions>
                     </Dialog>
                 </Portal >
 

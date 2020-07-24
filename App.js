@@ -28,6 +28,7 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
+global.initialProfileRoute = 'HomeIndex';
 global.routes = [];
 global.productIds = [];
 class App extends React.Component {

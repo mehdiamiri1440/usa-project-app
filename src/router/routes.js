@@ -55,7 +55,9 @@ const router = forwardRef((props, innerRef) => {
 
     const MyBuskoolStack = (props) => {
         return (
-            <Stack.Navigator>
+            <Stack.Navigator
+                initialRouteName={global.initialProfileRoute}
+            >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -337,7 +339,6 @@ const router = forwardRef((props, innerRef) => {
     // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
     useEffect(() => {
-
         if (!is_seller) {
             setInitialRoute('Requests')
         }
@@ -509,5 +510,13 @@ const mapStateToProps = (state) => {
     }
 };
 
+const areEqual = () => {
+    if (
+        global.initialProfileRoute == 'EditProfile'
+    )
+        global.initialProfileRoute = 'HomeIndex';
+    return true;
 
-export default connect(mapStateToProps)(router)
+}
+
+export default connect(mapStateToProps)(React.memo(router, areEqual))
