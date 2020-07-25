@@ -16,7 +16,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
-
+import Filters from './Filters';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -27,12 +27,14 @@ class Requests extends PureComponent {
             selectedButton: null,
             from: 0,
             to: 15,
+            loaded: false,
 
             showToast: false,
             modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
             selectedContact: {},
+            showFilters: false,
             showModal: false
         }
     }
@@ -47,6 +49,12 @@ class Requests extends PureComponent {
         this.updateFlag.current.close()
     }
 
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
+            this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
+        }
+    }
     // shouldComponentUpdate(nextProps, nextState) {
     //     console.log('this.props', this.props, 'nextprops', nextProps, 'this.state', this.state, 'nexststate', nextState)
     //     if (this.props.isUserAllowedToSendMessageLoading || (this.props.buyAdRequestLoading && this.props.buyAdRequestsList.length) || this.props.buyAdRequestsList.length)
@@ -92,8 +100,9 @@ class Requests extends PureComponent {
 
     renderItem = ({ item, index, separators }) => {
 
-        const { selectedButton } = this.state;
-        const { isUserAllowedToSendMessageLoading, buyAdRequestsList } = this.props;
+        const { selectedButton, buyAdRequestsList } = this.state;
+        const { isUserAllowedToSendMessageLoading } = this.props;
+
 
         return (
             <BuyAdList
@@ -113,13 +122,25 @@ class Requests extends PureComponent {
         this.componentDidMount()
     }
 
+    closeFilters = _ => {
+        this.setState({ showFilters: false })
+    };
+
+    selectedFilter = id => {
+        this.setState({
+            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id)
+        })
+    };
 
     render() {
 
-        let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
+        let { userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
             isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
         let { user_info: userInfo = {} } = info;
-        let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId, from, to } = this.state;
+        let { modalFlag, selectedContact,
+            buyAdRequestsList,
+            selectedButton, showDialog, selectedBuyAdId, from, to,
+            showFilters } = this.state;
         return (
             <>
                 <NoConnection
@@ -165,7 +186,8 @@ class Requests extends PureComponent {
                         </Text>
                         <Button
                             onPress={() => {
-                                this.updateFlag.current.close(); this.props.navigation.navigate('PromoteRegistration')
+                                this.updateFlag.current.close();
+                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
                             }}
                             style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
                         >
@@ -174,14 +196,6 @@ class Requests extends PureComponent {
                     </View>
                 </RBSheet>
 
-                {/* <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={updateFlag}
-                    onRequestClose={() => this.setState({ updateFlag: false })}
-                >
-
-                </Modal> */}
 
                 < Portal >
                     <Dialog
@@ -193,7 +207,7 @@ class Requests extends PureComponent {
                             </Paragraph>
                             <Paragraph
                                 style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red' }}>
-                                {locales('titles.promoteForBuyAd')}
+                                {locales('titles.icreaseYouRegisterRequstCapacity')}
                             </Paragraph>
                         </Dialog.Content>
                         <Dialog.Actions style={{
@@ -211,10 +225,10 @@ class Requests extends PureComponent {
                                 style={[styles.loginButton, { width: '30%' }]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('PromoteRegistration');
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
                                 }}>
                                 <Text style={styles.buttonText}>
-                                    {locales('titles.promoteRegistration')}
+                                    {locales('titles.increaseCapacity')}
                                 </Text>
                             </Button>
 
@@ -303,6 +317,27 @@ class Requests extends PureComponent {
                             paddingHorizontal: 15
                         }} />
 
+                    <Button
+                        style={{ position: 'absolute', bottom: 105, width: deviceWidth }}
+                        onPress={() => this.setState({ showFilters: true })}>
+                        <Text>
+                            {locales('titles.categories')}
+                        </Text>
+                    </Button>
+
+                    <Button
+                        style={{ position: 'absolute', bottom: 175, width: deviceWidth }}
+                        onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
+                        <Text>
+                            {locales('labels.deleteFilter')}
+                        </Text>
+                    </Button>
+
+                    <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
+                    />
                 </SafeAreaView>
             </>
         )

@@ -283,9 +283,9 @@ class ProductDetails extends Component {
 
 
     elevatorPay = () => {
-        return Linking.canOpenURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
             if (supported) {
-                Linking.openURL(`http://192.168.1.46:3030/app/payment/elevator/${this.props.productDetails.main.id}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetails.main.id}`);
             }
         })
     };
@@ -392,7 +392,7 @@ class ProductDetails extends Component {
 
 
 
-        var url = "https://buskool.com" + this.getProductUrl();
+        var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
 
         return (
             <>
@@ -954,14 +954,14 @@ class ProductDetails extends Component {
                                             {locales('titles.seeProfile')}</Text>
                                     </Button>
                                     <Button
-                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('EditProfile') : this.setState({ modalFlag: true })}
+                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' }) : this.setState({ modalFlag: true })}
                                         style={[styles.loginButton, {
                                             alignSelf: 'center'
                                         }]}
                                     >
 
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
-                                            {loggedInUserId == userId ? locales('labels.editProfile') : locales('titles.sendMessage')}</Text>
+                                            {loggedInUserId == userId ? locales('titles.editProfile') : locales('titles.sendMessage')}</Text>
                                     </Button>
                                 </Body>
                             </CardItem>
@@ -973,9 +973,9 @@ class ProductDetails extends Component {
                                     <Body>
                                         <Text
                                             onPress={() => {
-                                                return Linking.canOpenURL('https://blog.buskool.com/راهنمای-خرید-امن').then(supported => {
+                                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/راهنمای-خرید-امن`).then(supported => {
                                                     if (supported) {
-                                                        Linking.openURL('https://blog.buskool.com/راهنمای-خرید-امن');
+                                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/راهنمای-خرید-امن`);
                                                     }
                                                 });
                                             }}

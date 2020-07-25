@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
 import { Card, Body, CardItem, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -20,11 +21,14 @@ class PromoteRegistration extends React.Component {
     }
 
 
-
     pay = () => {
-        return Linking.canOpenURL('http://192.168.1.46:3030/app/payment/1/3').then(supported => {
+        let userId = '';
+        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
+            userId = this.props.userProfile.user_info.id;
+
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/3`).then(supported => {
             if (supported) {
-                Linking.openURL('http://192.168.1.46:3030/app/payment/1/3');
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/3`);
             }
         })
     };
@@ -81,6 +85,7 @@ class PromoteRegistration extends React.Component {
                         </Text>
                     </View>
                 </View>
+
                 <ScrollView
                     refreshControl={
                         <RefreshControl
@@ -314,6 +319,8 @@ const mapStateToProps = (state) => {
         dashboardMessage: state.homeReducer.dashboardMessage,
         dashboardFailed: state.homeReducer.dashboardFailed,
         dashboard: state.homeReducer.dashboard,
+
+        userProfile: state.profileReducer.userProfile
     }
 };
 

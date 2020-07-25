@@ -22,17 +22,8 @@ const BuyAdList = props => {
         >
 
             <View style={{
- height: 3,
- width: 70,
- shadowOpacity: 1,
- shadowColor: '#000',
- shadowOffset: { width: 10, height: 10 },
- shadowRadius: 5,
- elevation: 5,
- borderWidth: 0.5,
- borderColor: "white",
- backgroundColor: "rgba(255, 255, 255, 1)"
-             }}>
+                backgroundColor: 'rgba(0,0,0,0.9)'
+            }}>
 
                 <View>
                     <Text
@@ -93,7 +84,26 @@ const BuyAdList = props => {
                 </View>
 
             </View>
-
+            {/* <TouchableOpacity
+                onPress={() => {
+                    return Toast.show({
+                        text: locales('titles.remianedCapacityToSendMessageToBuyer'),
+                        position: "bottom",
+                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                        duration: 2000
+                    })
+                }
+                }
+                activeOpacity={1}
+                style={{
+                    marginVertical: 5,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+                }}>
+                <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
+                <MaterialCommunityIcons
+                    name='comment-alert' size={25} color={'#777777'} />
+            </TouchableOpacity> */}
             <View style={{ marginVertical: 5 }}>
 
                 <Button

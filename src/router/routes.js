@@ -23,6 +23,7 @@ import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
 import SpecialProducts from '../screens/SpecialProducts';
 import RegisterRequest from '../screens/RegisterRequest';
+import RegisterRequestSuccessfully from '../screens/RegisterRequest/RegisterRequestSuccessfully';
 import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
 import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
@@ -54,7 +55,9 @@ const router = forwardRef((props, innerRef) => {
 
     const MyBuskoolStack = (props) => {
         return (
-            <Stack.Navigator>
+            <Stack.Navigator
+                initialRouteName={global.initialProfileRoute}
+            >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -217,6 +220,33 @@ const router = forwardRef((props, innerRef) => {
         </Stack.Navigator>
     )
 
+    const RegisterRequestStack = () => (
+        <Stack.Navigator>
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='RegisterRequest'
+                name='RegisterRequest'
+                component={RegisterRequest}
+            />
+
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`RegisterRequestSuccessfully`}
+                component={RegisterRequestSuccessfully}
+            />
+
+
+        </Stack.Navigator>
+    )
+
     const MessagesStack = () => (
         <Stack.Navigator>
 
@@ -293,16 +323,6 @@ const router = forwardRef((props, innerRef) => {
                         headerShown: false,
                         title: null,
                     })}
-                    key='EditProfile'
-                    name='EditProfile'
-                    component={EditProfile}
-                />
-
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerShown: false,
-                        title: null,
-                    })}
                     key='Profile'
                     name='Profile'
                     component={Profile}
@@ -319,7 +339,6 @@ const router = forwardRef((props, innerRef) => {
     // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
     useEffect(() => {
-
         if (!is_seller) {
             setInitialRoute('Requests')
         }
@@ -417,8 +436,8 @@ const router = forwardRef((props, innerRef) => {
                         key={'RegisterRequest'}
                         listeners={{
                             tabPress: e => {
-                                if (!!global.resetRegisterProduct)
-                                    global.resetRegisterProduct(true)
+                                if (!!global.resetRegisterRequest)
+                                    global.resetRegisterRequest(true)
                             },
                         }}
                         options={{
@@ -427,7 +446,7 @@ const router = forwardRef((props, innerRef) => {
                             tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
                         }}
                         name={'RegisterRequest'}
-                        component={RegisterRequest}
+                        component={RegisterRequestStack}
                     />}
 
 
@@ -491,4 +510,13 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(router)
+const areEqual = () => {
+    if (
+        global.initialProfileRoute == 'EditProfile'
+    )
+        global.initialProfileRoute = 'HomeIndex';
+    return true;
+
+}
+
+export default connect(mapStateToProps)(React.memo(router, areEqual))

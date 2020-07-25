@@ -6,6 +6,7 @@ import OutlinedTextField from '../../../components/floatingInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 
 class ProductDecription extends Component {
     constructor(props) {
@@ -89,9 +90,9 @@ class ProductDecription extends Component {
                     >
                         با کلیک روی دکمه ثبت نهایی موافقت خود را  با <Text
                             onPress={() => {
-                                return Linking.canOpenURL('z').then(supported => {
+                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/privacy-and-policy`).then(supported => {
                                     if (supported) {
-                                        Linking.openURL('https://www.buskool.com/privacy-and-policy');
+                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/privacy-and-policy`);
                                     }
                                 });
                             }}

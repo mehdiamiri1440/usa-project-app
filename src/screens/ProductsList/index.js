@@ -739,6 +739,7 @@ class ProductsList extends PureComponent {
                                 });
                             })
                     }}
+                    onEndReachedThreshold={3.5}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
                     refreshing={productsListLoading || categoriesLoading}
@@ -768,7 +769,6 @@ class ProductsList extends PureComponent {
                         });
                     }
                     }
-                    onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product
@@ -965,8 +965,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),

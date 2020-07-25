@@ -112,3 +112,24 @@ export const fetchProductsListByUserName = user_name => {
             });
     });
 };
+
+export const editProfile = item => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `user/profile_modification`,
+                method: 'POST',
+                data: item,
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                if (err && err.response)
+                    return reject(err.response);
+                return reject(err);
+
+            });
+    });
+};

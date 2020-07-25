@@ -164,43 +164,7 @@ class SelectCategory extends Component {
                     </Item>
                     {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
                 </View>
-                {/* <Item regular
-                    style={styles}
-                    useNativeAndroidPickerStyle={false}
-                >
-                    <Picker
-                        useNativeAndroidPickerStyle={false}
-                        style={styles}
-                        mode="dialog"
-                        iosIcon={<AntDesign name='plus' size={25} color='#00C569' />}
-                        selectedValue={category}
-                        onValueChange={this.setCategory}
 
-                    >
-                        <Picker.Item
-                            useNativeAndroidPickerStyle={false}
-                            style={styles} label={locales('labels.selectCategory')} value='' />
-                        {categoriesList.map((item, index) => {
-                            return (
-                                <Picker.Item
-                                    label={item.category_name}
-                                    value={item.id}
-                                    key={index}
-                                />
-                            )
-                        })}
-                    </Picker>
-                </Item> */}
-                {/* <Dropdown
-                    error={categoryError}
-                    onChangeText={(value, index) => this.setCategory(value, index)}
-                    label={locales('labels.selectCategory')}
-                    data={categoriesList}
-                    value={category}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
                 <View style={styles.labelInputPadding}>
                     <View style={{
                         flexDirection: 'row-reverse'
@@ -239,16 +203,7 @@ class SelectCategory extends Component {
                     </Item>
                     {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
                 </View>
-                {/* <Dropdown
-                    error={subCategoryError}
-                    onChangeText={(value) => this.setSubCategory(value)}
-                    label={locales('labels.selectSubCategory')}
-                    data={subCategoriesList}
-                    value={subCategory}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                 <View style={styles.labelInputPadding}>
                     <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
@@ -268,20 +223,9 @@ class SelectCategory extends Component {
                         />
                     </Item>
                     {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-                    {/* <OutlinedTextField
-                        baseColor={productType.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onProductTypeSubmit}
-                        ref={this.productTypeRef}
-                        isRtl={true}
-                        placeholder={(this.state.isFocused || productType.length) ? locales('titles.productTypeWithExample') : ''}
-                        onFocus={() => this.setState({ isFocused: true })}
-                        onBlur={() => this.setState({ isFocused: false })}
-                        labelTextStyle={{ paddingTop: 5, fontFamily: 'IRANSansWeb(FaNum)_Light' }}
-                        label={this.state.isFocused || productType.length
-                            ? locales('titles.productType') :
-                            locales('titles.productTypeWithExample')}
-                    /> */}
+
                 </View>
+
                 <View style={styles.labelInputPadding}>
 
                     <Button
@@ -394,7 +338,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id))
     }
 };

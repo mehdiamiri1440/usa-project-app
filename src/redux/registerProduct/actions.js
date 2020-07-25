@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllCategories = () => {
+export const fetchAllCategories = (cascade_list) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.registerProduct
-                .fetchAllCategories()
+                .fetchAllCategories(cascade_list)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -90,6 +90,28 @@ export const checkUserPermissionToRegisterProduct = () => {
     };
     const loading = () => action(actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_LOADING);
     const success = res => action(actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const registerBuyAdRequest = requestObj => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.registerProduct
+                .registerBuyAdRequest(requestObj)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.REGISTER_BUYAD_REQUEST_FAILED,
+                        reject: actionTypes.REGISTER_BUYAD_REQUEST_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.REGISTER_BUYAD_REQUEST_LOADING);
+    const success = res => action(actionTypes.REGISTER_BUYAD_REQUEST_SUCCESSFULLY, res);
 
     return request();
 };
