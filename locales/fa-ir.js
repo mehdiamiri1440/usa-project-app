@@ -233,7 +233,7 @@ export default {
     'titles.amountWithExample': 'مثلا : 1000',
     'titles.yourActiveRegistration': 'نوع عضویت فعال شما',
     'titles.seeBuyAds': 'مشاهده درخواست‌های خرید',
-    'titles.requestSubmittedSuccessfully': 'درخواست شما با موفقیت ثبت شد.',
+    'titles.requestSubmittedSuccessfully': 'درخواست شما با موفقیت ثبت شد',
     'titles.registerRequestDescription': 'درخواست خرید شما پس از تایید کارشناسان باسکول برای کشاورزان و تامین کنندگان مرتبط ارسال میشود. ',
     'titles.countOfRegisterableProducts': 'تعداد محصولات قابل ثبت',
     'titles.amount': 'میزان موجودی (کیلوگرم)',

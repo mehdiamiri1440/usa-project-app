@@ -50,7 +50,21 @@ class RegisterRequest extends Component {
         this.props.fetchAllCategories();
     }
 
-
+    emptyState = () => {
+        this.setState({
+            amountError: '',
+            amount: '',
+            category: '',
+            subCategory: '',
+            productTypeError: '',
+            categoryError: '',
+            subCategoryError: '',
+            productType: '',
+            isFocused: false,
+            loaded: false,
+            showModal: false
+        })
+    }
 
 
     setCategory = (value) => {
@@ -102,15 +116,15 @@ class RegisterRequest extends Component {
         }
 
 
-        if (!productType) {
-            productTypeError = locales('titles.productTypeEmpty');
-        }
-        else if (!validator.isPersianNameWithDigits(productType)) {
-            productTypeError = locales('titles.productTypeInvalid');
-        }
-        else {
-            productTypeError = '';
-        }
+        // if (!productType) {
+        //     productTypeError = locales('titles.productTypeEmpty');
+        // }
+        // else if (!validator.isPersianNameWithDigits(productType)) {
+        //     productTypeError = locales('titles.productTypeInvalid');
+        // }
+        // else {
+        //     productTypeError = '';
+        // }
 
         if (!category) {
             categoryError = locales('titles.categoryError');
@@ -126,15 +140,15 @@ class RegisterRequest extends Component {
             subCategoryError = '';
         }
         this.setState({ productTypeError, subCategoryError, categoryError, amountError })
-        if (!productTypeError && !categoryError && !subCategoryError && !amountError) {
+        if (!categoryError && !subCategoryError && !amountError) {
             let requestObj = {
                 name: productType,
                 requirement_amount: amount,
                 category_id: subCategory
             };
             this.props.registerBuyAdRequest(requestObj).then(result => {
-                this.setState({ category: '', subCategory: '', productType: '', amount: '' })
-                this.props.navigation.navigate('RegisterRequestSuccessfully');
+                this.setState({ category: '', subCategory: '', amount: '' })
+                this.props.navigation.navigate('RegisterRequestSuccessfully', { emptyState: this.emptyState });
             }).catch(_ => this.setState({ showModal: true }));
         }
     }
@@ -199,189 +213,218 @@ class RegisterRequest extends Component {
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                 >
-                    <Card>
-                        <CardItem>
-                            <Body style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{ color: '#E51C38', paddingVertical: 10, fontSize: 18 }}>
-                                    {locales('titles.doYouWishToBuy')}
-                                </Text>
-                                <Text style={{ fontSize: 18 }}>
-                                    {locales('titles.registerRequestNow')}
-                                </Text>
-                            </Body>
-                        </CardItem>
-                    </Card>
+                    <View style={{
+                        paddingVertical: 15,
+                        paddingHorizontal: 7
+                    }} >
+                        <Card style={{ marginBottom: 20, elevation: 2, borderRadius: 6 }} transparent>
+                            <CardItem>
+                                <Body style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 7 }}>
+                                    <Text style={{ color: '#E51C38', fontSize: 18 }}>
+                                        {locales('titles.doYouWishToBuy')}
+                                    </Text>
+                                    <Text style={{ fontSize: 18 }}>
+                                        {locales('titles.registerRequestNow')}
+                                    </Text>
+                                </Body>
+                            </CardItem>
+                        </Card>
 
 
-                    <Card style={{ marginTop: 30 }}>
-                        <CardItem>
-                            <Body style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <Card >
+                            <View style={{ alignItems: 'center', justifyContent: 'center', padding: 0 }}>
                                 <Text style={{
-                                    borderBottomColor: '#00C569', borderBottomWidth: 3,
-                                    width: '100%', textAlign: 'center', paddingVertical: 20,
-                                    fontSize: 24, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    borderBottomColor: '#00C569', borderBottomWidth: 2,
+                                    paddingVertical: 5,
+                                    width: '100%', textAlign: 'center',
+                                    fontSize: 20, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                 }}>
                                     {locales('titles.registerBuyAdRequest')}
                                 </Text>
-
                                 <Text style={{
-                                    width: '100%', paddingVertical: 20,
-                                    fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    width: '100%', paddingTop: 20,
+                                    paddingHorizontal: 15,
+                                    color: '#333',
+                                    fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                 }}>
                                     {locales('titles.whatAndQuantity')}
                                 </Text>
+                                <View style={{
+                                    paddingTop: 20,
+                                    width: '100%'
+                                }}>
 
-                                <View style={styles.labelInputPadding}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse'
-                                    }}>
-                                        <Label style={{ position: 'relative', color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('labels.category')}
-                                        </Label>
-                                        {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                                        /> : null}
-                                    </View>
-                                    <Item regular
-                                        style={{
-                                            width: deviceWidth * 0.9,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: category ? '#00C569' : categoryError ? '#D50000' : '#a8a8a8'
-                                        }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={this.setCategory}
-                                            style={styles}
-                                            value={category}
-                                            placeholder={{
-                                                label: locales('labels.selectCategory'),
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            }}
-                                            items={[...categoriesList.map(item => ({
-                                                label: item.category_name, value: item.id
-                                            }))]}
-                                        />
-                                    </Item>
-                                    {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
-                                </View>
+                                    <View style={styles.labelInputPadding}>
+                                        <View style={{
+                                            flexDirection: 'row-reverse',
 
-                                <View style={styles.labelInputPadding}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse'
-                                    }}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.productName')}
-                                        </Label>
-                                        {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
+                                        }}>
+                                            <Label style={{ position: 'relative', color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                {locales('labels.category')}
+                                            </Label>
+                                            {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
+                                            /> : null}
+                                        </View>
+                                        <Item regular
                                             style={{
-                                                width: 30, height: 30, borderRadius: 15
+                                                width: '100%',
+                                                borderRadius: 5,
+                                                alignSelf: 'center',
+                                                borderColor: category ? '#00C569' : categoryError ? '#D50000' : '#a8a8a8'
                                             }}
-                                        /> : null}
+                                        >
+                                            <RNPickerSelect
+                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                useNativeAndroidPickerStyle={false}
+                                                onValueChange={this.setCategory}
+                                                style={styles}
+                                                value={category}
+                                                placeholder={{
+                                                    label: locales('labels.selectCategory'),
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                }}
+                                                items={[...categoriesList.map(item => ({
+                                                    label: item.category_name, value: item.id
+                                                }))]}
+                                            />
+                                        </Item>
+                                        {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
                                     </View>
-                                    <Item regular
-                                        style={{
-                                            width: deviceWidth * 0.9,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
-                                        }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={this.setSubCategory}
-                                            style={styles}
-                                            value={subCategory}
-                                            placeholder={{
-                                                label: locales('titles.selectProductName'),
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            }}
-                                            items={[...subCategoriesList.map(item => ({
-                                                label: item.category_name, value: item.id
-                                            }))]}
-                                        />
-                                    </Item>
-                                    {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
-                                </View>
 
-
-                                <View style={[styles.labelInputPadding, { width: deviceWidth }]}>
-                                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                        {locales('titles.enterYourProductType')}
-                                    </Label>
-                                    <Item regular style={{
-                                        borderColor: (productTypeError ? '#D50000' :
-                                            (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'),
-                                        borderRadius: 5, padding: 3
-                                    }}>
-                                        <Input
-                                            autoCapitalize='none'
-                                            autoCorrect={false}
-                                            autoCompleteType='off'
-                                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
-                                            onChangeText={this.onProductTypeSubmit}
-                                            value={productType}
-                                            placeholder={locales('titles.productTypeWithExample')}
-                                            ref={this.productTypeRef}
-                                        />
-                                    </Item>
-                                    {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-
-                                </View>
-
-
-
-                                <View style={[styles.textInputPadding, { width: deviceWidth }]}>
-                                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                        {locales('titles.requestQuantity')}
-                                    </Label>
-                                    <Item regular style={{
-                                        borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                    }}>
-                                        <Input
-                                            autoCapitalize='none'
-                                            autoCorrect={false}
-                                            keyboardType='number-pad'
-                                            autoCompleteType='off'
-                                            style={{ fontFamily: 'IRANSansWeb(FaNum)', flexDirection: 'row', textDecorationLine: 'none' }}
-                                            onChangeText={this.onAmountSubmit}
-                                            value={amount}
-                                            placeholder={locales('titles.maximumPriceWithExample')}
-                                            ref={this.amountRef}
-
-                                        />
-                                    </Item>
-                                    {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
-                                </View>
-
-
-
-                                <View style={[styles.labelInputPadding]}>
-
-                                    <Button
-                                        onPress={() => this.onSubmit()}
-                                        style={!this.state.category || !this.state.subCategory || !productType ||
-                                            !validator.isPersianNameWithDigits(productType)
-                                            ? styles.disableLoginButton : styles.loginButton}
-                                        rounded
-                                    >
-                                        <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
-                                        <ActivityIndicator size="small"
-                                            animating={!!this.props.registerBuyAdRequestLoading} color="white"
+                                    <View style={styles.labelInputPadding}>
+                                        <View style={{
+                                            flexDirection: 'row-reverse'
+                                        }}>
+                                            <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                {locales('titles.productName')}
+                                            </Label>
+                                            {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
+                                                style={{
+                                                    width: 30, height: 30, borderRadius: 15
+                                                }}
+                                            /> : null}
+                                        </View>
+                                        <Item regular
                                             style={{
-                                                position: 'absolute', left: '17%', top: '28%',
-                                                width: 25, height: 25, borderRadius: 15
+                                                width: '100%',
+                                                borderRadius: 5,
+                                                alignSelf: 'center',
+                                                borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
                                             }}
-                                        />
+                                        >
+                                            <RNPickerSelect
+                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                useNativeAndroidPickerStyle={false}
+                                                onValueChange={this.setSubCategory}
+                                                style={styles}
+                                                value={subCategory}
+                                                placeholder={{
+                                                    label: locales('titles.selectProductName'),
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                }}
+                                                items={[...subCategoriesList.map(item => ({
+                                                    label: item.category_name, value: item.id
+                                                }))]}
+                                            />
+                                        </Item>
+                                        {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
+                                    </View>
 
-                                    </Button>
 
+                                    <View style={styles.labelInputPadding}>
+                                        <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.enterYourProductType')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: (productTypeError ? '#D50000' :
+                                                (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'),
+                                            borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                style={{
+                                                    width: '100%',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    textDecorationLine: 'none'
+                                                }}
+                                                onChangeText={this.onProductTypeSubmit}
+                                                value={productType}
+                                                placeholder={locales('titles.productTypeWithExample')}
+                                                ref={this.productTypeRef}
+                                            />
+                                        </Item>
+                                        {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
+
+                                    </View>
+
+
+
+                                    <View style={styles.labelInputPadding}>
+                                        <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.requestQuantity')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                style={{
+                                                    width: '100%',
+                                                    fontFamily: 'IRANSansWeb(FaNum)',
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none'
+                                                }}
+                                                onChangeText={this.onAmountSubmit}
+                                                value={amount}
+                                                placeholder={locales('titles.maximumPriceWithExample')}
+                                                ref={this.amountRef}
+
+                                            />
+                                        </Item>
+                                        {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
+                                    </View>
+
+
+
+                                    <View style={[styles.labelInputPadding], {
+
+                                        alignItems: 'center',
+
+                                    }}>
+
+                                        <Button
+                                            onPress={() => this.onSubmit()}
+                                            style={!this.state.category || !this.state.subCategory || !amount
+
+                                                ? styles.disableLoginButton : styles.loginButton}
+
+                                        >
+                                            <ActivityIndicator size="small"
+                                                animating={!!this.props.registerBuyAdRequestLoading} color="white"
+                                                style={{
+                                                    position: 'relative',
+                                                    marginLeft: -25,
+                                                    marginRight: 5,
+                                                    width: 25, height: 25, borderRadius: 15
+                                                }}
+                                            />
+                                            <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
+
+
+                                        </Button>
+
+                                    </View>
                                 </View>
-                            </Body>
-                        </CardItem>
-                    </Card>
+                            </View>
+
+                        </Card>
+                    </View>
+
                 </ScrollView>
 
 
@@ -406,26 +449,26 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: '70%',
+        width: '100%',
+        maxWidth: 150,
         color: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     loginButton: {
         textAlign: 'center',
         borderRadius: 5,
         marginVertical: 10,
         backgroundColor: '#00C569',
-        width: '70%',
+        width: '100%',
+        maxWidth: 150,
         color: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     labelInputPadding: {
         paddingVertical: 5,
-        paddingHorizontal: 20
+        paddingHorizontal: 15
     },
     container: {
         flex: 1,
