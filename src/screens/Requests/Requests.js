@@ -254,7 +254,7 @@ class Requests extends PureComponent {
 
 
 
-                {userInfo.active_pakage_type == 0 && <View style={{
+                {/* {userInfo.active_pakage_type == 0 && <View style={{
                     shadowOffset: { width: 20, height: 20 },
                     shadowColor: 'black',
                     shadowOpacity: 1.0,
@@ -271,7 +271,7 @@ class Requests extends PureComponent {
                     >
                         <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
                     </Button>
-                </View>}
+                </View>} */}
 
 
 
@@ -298,7 +298,10 @@ class Requests extends PureComponent {
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        renderItem={this.renderItem} />
+                        renderItem={this.renderItem}
+                        style={{
+                            paddingHorizontal: 15
+                        }} />
 
                 </SafeAreaView>
             </>
