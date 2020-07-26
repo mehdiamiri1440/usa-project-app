@@ -291,7 +291,23 @@ class Requests extends PureComponent {
 
 
                 <View>
-
+                    {/* 
+                <Button
+                            style={{
+                                flex: 2,
+                                justifyContent: 'center',
+                                backgroundColor: '#e51c38',
+                                marginRight: 15,
+                                borderRadius: 4
+                            }}
+                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: '#fff',
+                            }}>
+                                {locales('labels.deleteFilter')}
+                            </Text>
+                        </Button> */}
                 </View>
                 <SafeAreaView
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
