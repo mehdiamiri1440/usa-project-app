@@ -290,7 +290,9 @@ class Requests extends PureComponent {
                 </View>} */}
 
 
+                <View>
 
+                </View>
                 <SafeAreaView
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60 }}
@@ -342,7 +344,6 @@ class Requests extends PureComponent {
                                 flex: 3,
                                 justifyContent: 'center',
                                 backgroundColor: '#556080',
-                                marginRight: 15,
                                 borderRadius: 4
                             }}
                             onPress={() => this.setState({ showFilters: true })}>
@@ -359,22 +360,6 @@ class Requests extends PureComponent {
 
                         </Button>
 
-                        <Button
-                            style={{
-                                flex: 2,
-                                justifyContent: 'center',
-                                backgroundColor: '#e51c38',
-                                marginRight: 15,
-                                borderRadius: 4
-                            }}
-                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
-                            <Text style={{
-                                textAlign: 'center',
-                                color: '#fff',
-                            }}>
-                                {locales('labels.deleteFilter')}
-                            </Text>
-                        </Button>
                     </View>
 
 
