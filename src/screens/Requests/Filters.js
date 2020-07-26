@@ -89,7 +89,7 @@ class Filters extends Component {
                                 onPress={() => {
                                     this.setState({ subCategoriesModal: false }, () => {
                                         this.props.closeFilters()
-                                        this.props.selectedFilter(item.id)
+                                        this.props.selectedFilter(item.id, item.category_name)
                                     })
                                 }}
                                 style={{

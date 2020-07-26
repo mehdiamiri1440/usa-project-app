@@ -11,32 +11,52 @@ const BuyAdList = props => {
     const { item, index, selectedButton, buyAdRequestsList, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
-    console.warn(active_pakage_type);
     return (
         <View
             style={{
-                padding: 10, backgroundColor: '#FFFFFF', marginVertical: 5,
+                padding: 10,
+                backgroundColor: '#FFFFFF',
                 width: '100%',
                 borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
                 borderWidth: 1,
-                borderRadius: 4
+                borderColor: '#ddd'
             }}
             key={item.id}
         >
 
             <View >
                 {/* blur items */}
-                {item.is_golden && active_pakage_type != 3 ? <Image source={require('../../../assets/images/blur-items.jpg')}
-                    style={{
+                {item.is_golden && active_pakage_type != 3 ?
+
+                    <View style={{
                         position: 'absolute',
-                        resizeMode: 'cover',
                         width: '100%',
                         height: '100%',
                         left: 0,
                         top: 0,
                         zIndex: 1
-                    }}
-                /> : null}
+                    }}>
+                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                            style={{
+                                width: '100%',
+                                height: '100%'
+                            }}
+                        />
+                        <Text style={{
+                            position: 'absolute',
+                            width: '100%',
+                            top: 50,
+                            fontSize: 23,
+                            textAlign: 'center',
+                            // backgroundColor: 'red',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            zIndex: 2
+                        }}>
+                            {item.subcategory_name}
+                        </Text>
+                    </View>
+
+                    : null}
                 <View>
                     <Text
                         numberOfLines={1}

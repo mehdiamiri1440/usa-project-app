@@ -37,7 +37,8 @@ class Requests extends PureComponent {
             selectedBuyAdId: -1,
             selectedContact: {},
             showFilters: false,
-            showModal: false
+            showModal: false,
+            selectedFilterName: ''
         }
     }
 
@@ -128,11 +129,14 @@ class Requests extends PureComponent {
         this.setState({ showFilters: false })
     };
 
-    selectedFilter = id => {
+    selectedFilter = (id, name) => {
         this.setState({
-            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id)
+            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id),
+            selectedFilterName: name,
         })
     };
+
+
 
     render() {
 
@@ -142,7 +146,7 @@ class Requests extends PureComponent {
         let { modalFlag, selectedContact,
             buyAdRequestsList,
             selectedButton, showDialog, selectedBuyAdId, from, to,
-            showFilters } = this.state;
+            showFilters, selectedFilterName } = this.state;
         return (
             <>
                 <NoConnection
@@ -290,6 +294,50 @@ class Requests extends PureComponent {
                 </View>} */}
 
 
+                {selectedFilterName ? <View style={{
+                    backgroundColor: '#f6f6f6',
+                    borderRadius: 6,
+                    paddingVertical: 6,
+                    paddingHorizontal: 15,
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-around',
+                    position: 'relative'
+                }}
+                >
+                    <Button
+                        small
+                        onPress={() => this.setState({
+                            buyAdRequestsList: this.props.buyAdRequestsList,
+                            selectedFilterName: ''
+                        })}
+                        style={{
+                            borderWidth: 1,
+                            borderColor: '#E41C38',
+                            borderRadius: 50,
+                            maxWidth: 250,
+                            backgroundColor: '#fff',
+                            height: 35,
+                        }}
+                    >
+                        <Text style={{
+                            textAlign: 'center',
+                            width: '100%',
+                            color: '#777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17
+                        }}>
+                            {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
+                            {/* {selectedFilterName} */}
+                        </Text>
+                        <FontAwesome5 color="#E41C38" name="times" solid style={{
+                            fontSize: 18,
+                            position: 'absolute',
+                            right: 20,
+                        }} />
+
+                    </Button>
+                </View> : null}
                 <View>
                     {/* 
                 <Button
@@ -336,16 +384,34 @@ class Requests extends PureComponent {
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
+                        ListHeaderComponent={() => <View style={{
+
+                            elevation: 10,
+                            marginHorizontal: 10,
+                            backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
+                            flexDirection: 'row-reverse', justifyContent: 'space-around', marginVertical: 5
+                        }}
+                        >
+                            <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
+                            <Button
+                                small
+                                onPress={() => this.updateFlag.current.open()}
+                                style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
+                            >
+                                <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
+                            </Button>
+                        </View>
+                        }
                         renderItem={this.renderItem}
                         style={{
-                            paddingHorizontal: 15,
-                            marginBottom: 57
+                            // paddingHorizontal: 15,
+                            marginBottom: selectedFilterName ? 105 : 57
                         }} />
 
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: 57,
+                        bottom: selectedFilterName ? 105 : 57,
                         width: '100%',
                         righ: 0,
                         left: 0,

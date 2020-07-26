@@ -277,6 +277,7 @@ export default {
     'titles.number': 'عدد',
     'titles.annuan': 'سالانه',
     'titles.editProfile': 'ویرایش پروفایل',
+    'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید . ",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
