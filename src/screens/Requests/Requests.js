@@ -17,6 +17,8 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
+import { borderRadius } from '../../components/floatingInput/src/components/outline/styles';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -293,7 +295,11 @@ class Requests extends PureComponent {
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60 }}
                 >
-
+                    <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
+                    />
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}
@@ -314,30 +320,64 @@ class Requests extends PureComponent {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                         style={{
-                            paddingHorizontal: 15
+                            paddingHorizontal: 15,
+                            marginBottom: 57
                         }} />
 
-                    <Button
-                        style={{ position: 'absolute', bottom: 105, width: deviceWidth }}
-                        onPress={() => this.setState({ showFilters: true })}>
-                        <Text>
-                            {locales('titles.categories')}
-                        </Text>
-                    </Button>
+                    <View style={{
+                        position: 'absolute',
+                        zIndex: 1,
+                        bottom: 57,
+                        width: '100%',
+                        righ: 0,
+                        left: 0,
+                        backgroundColor: '#fff',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        padding: 7,
+                        elevation: 5
+                    }}>
+                        <Button
+                            style={{
+                                flex: 3,
+                                justifyContent: 'center',
+                                backgroundColor: '#556080',
+                                marginRight: 15,
+                                borderRadius: 4
+                            }}
+                            onPress={() => this.setState({ showFilters: true })}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: '#fff',
+                                flexDirection: 'row'
+                            }}>
+                                {locales('titles.categories')}
+                            </Text>
+                            <FontAwesome5 name="filter" solid color="#fff" style={{
+                                marginHorizontal: 5
+                            }} />
 
-                    <Button
-                        style={{ position: 'absolute', bottom: 175, width: deviceWidth }}
-                        onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
-                        <Text>
-                            {locales('labels.deleteFilter')}
-                        </Text>
-                    </Button>
+                        </Button>
 
-                    <Filters
-                        selectedFilter={this.selectedFilter}
-                        closeFilters={this.closeFilters}
-                        showFilters={showFilters}
-                    />
+                        <Button
+                            style={{
+                                flex: 2,
+                                justifyContent: 'center',
+                                backgroundColor: '#e51c38',
+                                marginRight: 15,
+                                borderRadius: 4
+                            }}
+                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: '#fff',
+                            }}>
+                                {locales('labels.deleteFilter')}
+                            </Text>
+                        </Button>
+                    </View>
+
+
                 </SafeAreaView>
             </>
         )

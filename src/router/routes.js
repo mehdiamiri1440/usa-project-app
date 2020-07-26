@@ -391,7 +391,7 @@ const router = forwardRef((props, innerRef) => {
                     component={HomeStack}
                 />
 
-                {is_seller ? <Tab.Screen
+                {!is_seller ? <Tab.Screen
                     key={'Requests'}
                     options={{
                         tabBarBadge: false,
@@ -415,7 +415,7 @@ const router = forwardRef((props, innerRef) => {
 
 
 
-                {is_seller ? <Tab.Screen
+                {!is_seller ? <Tab.Screen
                     key={'RegisterProduct'}
                     listeners={{
                         tabPress: e => {
