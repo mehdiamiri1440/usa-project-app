@@ -29,17 +29,27 @@ class Profile extends Component {
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
             selectedImageIndex: -1,
-            showModal: false
+            showModal: false,
+            prevUserName: ''
         }
     }
 
     componentDidMount() {
+        console.log('came into mounted')
         this.initProfileContent().catch(_ => this.setState({ showModal: false }))
     }
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     console.log('state', prevState.prevUserName, this.state.prevUserName, 'props', prevProps.route.params.user_name, this.props.route.params.user_name)
+    //     if (this.props.route.params.user_name != prevState.prevUserName) {
+    //         this.initProfileContent();
+    //     }
+    // }
 
     initProfileContent = _ => {
         return new Promise((resolve, reject) => {
             if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
+                this.setState({ prevUserName: this.props.route.params.user_name })
                 this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
                 this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
                 this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
@@ -224,6 +234,7 @@ class Profile extends Component {
 
         return (
             <>
+                <Text>{this.props.route.params.user_name}</Text>
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
@@ -845,3 +856,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+
+
+// promise all
