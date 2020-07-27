@@ -237,7 +237,7 @@ export default {
     'titles.registerRequestDescription': 'درخواست خرید شما پس از تایید کارشناسان باسکول برای کشاورزان و تامین کنندگان مرتبط ارسال میشود. ',
     'titles.countOfRegisterableProducts': 'تعداد محصولات قابل ثبت',
     'titles.amount': 'میزان موجودی (کیلوگرم)',
-    'titles.stockQuantity': 'میزان موجودی',
+    'titles.stockQuantity': ' موجودی',
     'titles.minimumOrderWithExample': 'مثلا : 20',
     'titles.minimumOrder': 'حداقل سفارش (کیلوگرم)',
     "titles.repeatPassword": "تکرار کلمه عبور",
@@ -277,6 +277,7 @@ export default {
     'titles.number': 'عدد',
     'titles.annuan': 'سالانه',
     'titles.editProfile': 'ویرایش پروفایل',
+    'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید . ",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",

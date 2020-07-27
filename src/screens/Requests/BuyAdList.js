@@ -1,5 +1,6 @@
+import { connect } from 'react-redux';
 import React, { memo } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Image, Text, ActivityIndicator } from 'react-native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
 import Jmoment from 'moment-jalaali';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -7,24 +8,55 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, buyAdRequestsList, isUserAllowedToSendMessageLoading } = props;
-
+    const { item, index, selectedButton, buyAdRequestsList, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
+    const { user_info = {} } = userProfile;
+    const { active_pakage_type } = user_info;
     return (
         <View
             style={{
-                padding: 10, backgroundColor: '#FFFFFF', marginVertical: 5,
+                padding: 10,
+                backgroundColor: '#FFFFFF',
                 width: '100%',
                 borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
                 borderWidth: 1,
-                borderRadius: 4
+                borderColor: '#ddd'
             }}
             key={item.id}
         >
 
-            <View style={{
-                backgroundColor: 'rgba(0,0,0,0.9)'
-            }}>
+            <View >
+                {/* blur items */}
+                {item.is_golden && active_pakage_type != 3 ?
 
+                    <View style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        left: 0,
+                        top: 0,
+                        zIndex: 1
+                    }}>
+                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                            style={{
+                                width: '100%',
+                                height: '100%'
+                            }}
+                        />
+                        <Text style={{
+                            position: 'absolute',
+                            width: '100%',
+                            top: 50,
+                            fontSize: 23,
+                            textAlign: 'center',
+                            // backgroundColor: 'red',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            zIndex: 2
+                        }}>
+                            {item.subcategory_name}
+                        </Text>
+                    </View>
+
+                    : null}
                 <View>
                     <Text
                         numberOfLines={1}
@@ -84,26 +116,7 @@ const BuyAdList = props => {
                 </View>
 
             </View>
-            {/* <TouchableOpacity
-                onPress={() => {
-                    return Toast.show({
-                        text: locales('titles.remianedCapacityToSendMessageToBuyer'),
-                        position: "bottom",
-                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                        duration: 2000
-                    })
-                }
-                }
-                activeOpacity={1}
-                style={{
-                    marginVertical: 5,
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-                }}>
-                <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
-                <MaterialCommunityIcons
-                    name='comment-alert' size={25} color={'#777777'} />
-            </TouchableOpacity> */}
+
             <View style={{ marginVertical: 5 }}>
 
                 <Button
@@ -172,4 +185,9 @@ const arePropsEqual = (prevProps, nextProps) => {
     return true;
 }
 
-export default memo(BuyAdList, arePropsEqual)
+const mapStateToProps = state => {
+    return {
+        userProfile: state.profileReducer.userProfile
+    }
+}
+export default connect(mapStateToProps)(memo(BuyAdList, arePropsEqual))

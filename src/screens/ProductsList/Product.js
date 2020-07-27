@@ -9,6 +9,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -392,6 +393,186 @@ class Product extends PureComponent {
 
  */}
 
+                {editionFlag ? < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={editionFlag}
+                        onDismiss={() => this.setState({ editionFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ editionFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+                        {!showEditionMessage ?
+                            <>
+                                <Dialog.ScrollArea>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.amount')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                onChangeText={this.onAmountSubmit}
+                                                value={amount}
+                                                placeholder={locales('titles.amountWithExample')}
+                                                ref={this.amountRef}
+
+                                            />
+                                        </Item>
+                                        {!!amountError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label> : null}
+                                    </View>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.minimumOrder')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMinimumOrderSubmit}
+                                                value={minimumOrder}
+                                                placeholder={locales('titles.minimumOrderWithExample')}
+                                                ref={this.minimumOrderRef}
+
+                                            />
+                                        </Item>
+                                        {!!minimumOrderError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label> : null}
+                                    </View>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.minimumPrice')}
+                                        </Label>
+                                        <Item regular style={{
+                                            borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                        }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMinimumPriceSubmit}
+                                                value={minimumPrice}
+                                                placeholder={locales('titles.minimumPriceWithExample')}
+                                                ref={this.minimumPriceRef}
+
+                                            />
+                                        </Item>
+                                        {!!minimumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                            {minimumPriceError}</Label> : null}
+                                    </View>
+                                    <View style={styles.textInputPadding}>
+                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            {locales('titles.maximumPrice')}
+                                        </Label>
+                                        <Item regular
+                                            style={{
+                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5, padding: 3
+                                            }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
+                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMaximumPriceSubmit}
+                                                value={maximumPrice}
+                                                placeholder={locales('titles.maximumPriceWithExample')}
+                                                ref={this.maximumPriceRef}
+
+                                            />
+                                        </Item>
+                                        {!!maximumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                            {maximumPriceError}
+                                        </Label> : null}
+                                    </View>
+                                </Dialog.ScrollArea>
+                                <Dialog.Actions style={{
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Button
+                                        style={[styles.loginButton, { width: '50%' }]}
+                                        onPress={() => this.onSubmit()}>
+                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
+                                            {locales('titles.submitChanges')}
+                                        </Text>
+                                    </Button>
+                                </Dialog.Actions>
+                            </> :
+                            <>
+
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    {editProductStatus ? <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#f27474',
+                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#edf8e6',
+                                    }]} />}
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {editionMessageText}
+                                    </Text>
+
+                                </Dialog.Actions>
+                            </>}
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal > : null}
+
+                {/*                 
                 {editionFlag ? <Portal>
                     <Dialog
                         visible={editionFlag}
@@ -539,117 +720,185 @@ class Product extends PureComponent {
                         }
                     </Dialog>
                 </Portal>
-                    : null}
+                    : null} */}
 
 
 
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
 
-                <Portal>
+                    }}>
                     <Dialog
                         visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Paragraph style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
-                            }}>
+                        onDismiss={() => this.setState({ elevatorFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.doElevation')}
                             </Paragraph>
-                        </View>
-                        <Dialog.Content>
-                            <Text
-                                style={{ width: '100%', textAlign: 'center', fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569' }}
-                            >
-                                {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Dialog.Actions>
+
+                        <Text style={{
+                            width: '100%', textAlign: 'center',
+                            marginTop: 15,
+                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                        }}>
+                            {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Text>
+
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.elevationText')}
                             </Text>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                {locales('titles.elevationText')}</Text>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
+
+                        </Dialog.Actions>
+                        <View style={{
                             width: '100%',
-                            justifyContent: 'center',
+                            textAlign: 'center',
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.loginButton, { width: '50%' }]}
+                                style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => this.setState({ elevatorFlag: false }, () => {
                                     return this.elevatorPay()
-                                })}>
-                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                })}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.pay')}
+                                </Text>
+                            </Button>
+                        </View>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
 
 
 
-                <Portal>
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={deleteProductFlag}
-                        onDismiss={() => this.setState({ deleteProductFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Paragraph style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
-                            }}>
+                        onDismiss={() => this.setState({ deleteProductFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ deleteProductFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.deleteProduct')}
                             </Paragraph>
-                        </View>
+                        </Dialog.Actions>
+
+
                         {!showDeletationMessage ? <>
-                            <Dialog.Content>
-                                <Feather
-                                    style={{ alignSelf: 'center', width: '100%', padding: 5, textAlign: 'center' }}
-                                    name='alert-circle' size={40} color='#FFE484' />
-                                <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                    {locales('titles.doYouWishToDeleteProduct')} ؟ </Paragraph>
-                            </Dialog.Content>
-                            <Dialog.Actions style={{
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.doYouWishToDeleteProduct')}
+                                </Text>
+
+                            </Dialog.Actions>
+                            <View style={{
                                 width: '100%',
-                                justifyContent: 'space-between',
-                                alignItems: 'space-between'
+                                textAlign: 'center',
+                                alignItems: 'center'
                             }}>
                                 <Button
-                                    style={[styles.loginButton, { width: '40%' }]}
-                                    onPress={() => this.setState({ deleteProductFlag: false })}>
-                                    <Text style={styles.buttonText}>{locales('titles.cancel')}
+                                    style={[styles.modalButton, styles.redButton]}
+                                    onPress={() => this.deleteProduct(productId)}
+                                >
+
+                                    <Text style={styles.buttonText}>{locales('titles.deleteIt')}
                                     </Text>
                                 </Button>
-                                <Button
-                                    style={[styles.loginButton, { backgroundColor: '#E41C39', width: '40%' }]}
-                                    onPress={() => this.deleteProduct(productId)}>
-                                    <Text style={styles.buttonText}>
-                                        {locales('titles.deleteIt')}
-                                    </Text>
-                                </Button>
-                            </Dialog.Actions>
-                        </> :
-                            <Dialog.Content style={{ padding: 50 }}>
-                                <View style={[{ justifyContent: 'center', alignItems: 'center' },
-                                deleteProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
-                                    {!deleteProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
-                                        name='checkbox-marked-circle-outline' color='white' size={40}
-                                    />}
-                                    <Paragraph
-                                        style={[deleteProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText, { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
-                                    >
-                                        {deleteMessageText}
-                                    </Paragraph>
+                            </View>
+                        </>
+                            : <>
+
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    {!deleteProductStatus ? <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#f27474',
+                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#edf8e6',
+                                    }]} />}
+
                                 </View>
-                            </Dialog.Content>
-                        }
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {deleteMessageText}
+                                    </Text>
+
+                                </Dialog.Actions>
+                            </>}
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ deleteProductFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
+
 
 
                 {modalFlag && <ChatModal
@@ -951,6 +1200,94 @@ const styles = StyleSheet.create({
         backgroundColor: '#00C569',
         width: '92%',
         color: 'white',
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        // alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
     },
     forgotContainer: {
         flexDirection: 'row',

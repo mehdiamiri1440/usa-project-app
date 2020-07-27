@@ -8,6 +8,7 @@ import { Card, Button, Textarea, ActionSheet } from 'native-base';
 
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -233,34 +234,56 @@ class EditProfile extends Component {
                         />
                     </View> : null}
 
-                < Portal >
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={showSubmitEditionModal}
+                        style={styles.dialogWrapper}
                     >
-                        <Dialog.Actions style={{ justifyContent: 'center', borderBottomWidth: 0.7, borderBottomColor: '#777777' }}>
-                            <Paragraph style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                paddingTop: 30, textAlign: 'center', fontSize: 24,
-                                color: 'red'
-                            }}>
-                                <MaterialCommunityIcons
-                                    name='checkbox-marked-circle-outline' color='#00C569' size={40}
-                                />
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ showSubmitEditionModal: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.editProfile')}
                             </Paragraph>
                         </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            width: '100%',
-                        }}>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '100%', paddingTop: 10, textAlign: 'center', fontSize: 16 }}>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
                                 {locales('titles.editionsDone')}
                             </Text>
 
                         </Dialog.Actions>
-                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
                             <Button
-                                style={[styles.loginButton, { width: '90%' }]}
+                                style={styles.modalCloseButton}
                                 onPress={() => this.setState({ showSubmitEditionModal: false })}>
-                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
@@ -490,6 +513,94 @@ const styles = StyleSheet.create({
         backgroundColor: '#00C569',
         width: '92%',
         color: 'white',
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd'
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     forgotContainer: {
         flexDirection: 'row',

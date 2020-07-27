@@ -4,6 +4,8 @@ import { Button } from 'native-base';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
@@ -45,41 +47,92 @@ class GuidToRegisterProduct extends React.Component {
 
 
 
-                <Portal>
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={showModal}
-                        onDismiss={this.hideDialog}>
-                        <Dialog.Content>
-                            <Paragraph style={{ minHeight: 100, fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
-                                {locales('titles.maximumProductRegisteration')}</Paragraph>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
+                        onDismiss={this.hideDialog}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={this.hideDialog}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.registerProduct')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.maximumProductRegisteration')}
+                            </Text>
+
+                        </Dialog.Actions>
+
+                        <View style={{
                             width: '100%',
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            alignItems: 'space-between',
-                            flex: 1
+                            textAlign: 'center',
+                            alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.loginButton, { flex: 1 }]}
+                                style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('ExtraProductCapacity');
-                                }}>
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.increaseCapacity')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.loginButton, { flex: 1, backgroundColor: '#556080' }]}
-                                onPress={this.hideDialog}>
-                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
-                                </Text>
-                            </Button>
+                                }}
+                            >
 
+                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={this.hideDialog}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
+
+
+
 
 
                 <View style={{ width: deviceWidth, paddingVertical: 40, justifyContent: 'center', alignItems: 'center' }}>
@@ -249,6 +302,94 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
         justifyContent: 'center',
 
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        // alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
     },
     forgotContainer: {
         flexDirection: 'row',

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native'
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -88,21 +89,19 @@ class Filters extends Component {
                                 onPress={() => {
                                     this.setState({ subCategoriesModal: false }, () => {
                                         this.props.closeFilters()
-                                        this.props.selectedFilter(item.id)
+                                        this.props.selectedFilter(item.id, item.category_name)
                                     })
                                 }}
                                 style={{
-                                    borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
-                                    alignItems: 'center', justifyContent: 'center',
-                                    minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E',
-                                    backgroundColor: '#eee'
-                                }}>
-                                <Text style={{
-                                    textAlign: 'center', textAlignVertical: 'center',
-                                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>
+                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                }}
+                            >
+                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
+                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>
                                     {item.category_name}
                                 </Text>
+
                             </TouchableOpacity>
                         )}
                     />
@@ -154,15 +153,12 @@ class Filters extends Component {
                             <TouchableOpacity
                                 onPress={() => this.sortProducts(item.id, item.category_name)}
                                 style={{
-                                    borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
-                                    alignItems: 'center', justifyContent: 'center',
-                                    minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E',
-                                    backgroundColor: '#eee'
-                                }}>
-                                <Text style={{
-                                    textAlign: 'center', textAlignVertical: 'center',
-                                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>
+                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                }}
+                            >
+                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
+                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>
                                     {item.category_name}
                                 </Text>
                             </TouchableOpacity>

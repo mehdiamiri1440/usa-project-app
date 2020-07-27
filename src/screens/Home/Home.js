@@ -15,6 +15,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 import * as RootNavigation from '../../router/rootNavigation';
@@ -87,44 +88,62 @@ class Home extends React.Component {
         return (
             <>
 
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
 
-
-                < Portal >
+                    }}>
                     <Dialog
                         visible={showchangeRoleModal}
+                        style={styles.dialogWrapper}
                     >
-                        <Dialog.Actions style={{ justifyContent: 'center', borderBottomWidth: 0.7, borderBottomColor: '#777777' }}>
-                            <Paragraph style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                paddingTop: 30, textAlign: 'center', fontSize: 24,
-                                color: '#00C569'
-                            }}>
-                                {locales('titles.changeRole')}</Paragraph>
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.closeModal()}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.changeRole')}
+                            </Paragraph>
                         </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            width: '100%',
-                            paddingVertical: 10,
-                            justifyContent: 'center'
-                        }}>
-                            <Text style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', textAlign: 'center',
-                                paddingVertical: 10,
-                                fontSize: 16
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
                             }}>
+
+                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
                                 {locales('titles.rollChangedSuccessfully', { fieldName: activityType == 'buyer' ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
-                        <Dialog.Actions style={{ justifyContent: 'center', width: '100%' }}>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
                             <Button
-                                style={[styles.loginButton, { width: '90%' }]}
+                                style={[styles.modalCloseButton,]}
                                 onPress={() => this.closeModal()}>
-                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal >
+
 
 
                 <View style={{
@@ -400,6 +419,89 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center'
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd'
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
     },
     forgotContainer: {
         flexDirection: 'row',
