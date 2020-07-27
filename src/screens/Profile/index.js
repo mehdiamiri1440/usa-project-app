@@ -30,29 +30,121 @@ class Profile extends Component {
             selectedEvidenceIndex: -1,
             selectedImageIndex: -1,
             showModal: false,
-            prevUserName: ''
+            prevUserName: '',
+            loaded: false,
+
+            firstNameFromByUserName: '',
+            lastNameFromByUserName: '',
+            userIdFromByUserName: '',
+            is_verified: false,
+            relatedsFromByUserName: [],
+            certificatesFromByUserName: [],
+            profilePhotoFromByUserName: '',
+            product_count: null,
+            reputation_score: 0,
+            response_rate: 0,
+            transaction_count: 0,
+            validated_seller: false,
+            avg_score: 0,
+            total_count: 0,
+            rating_info: {},
+            provinceFromByUserName: '',
+            cityFromByUserName: '',
+            companyRegisterCodeFromByUserName: '',
+            companyNameFromByUserName: '',
+            descriptionFromByUserName: '',
+            productsListByUserName: []
         }
     }
 
     componentDidMount() {
-        console.log('came into mounted')
         this.initProfileContent().catch(_ => this.setState({ showModal: false }))
     }
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     console.log('state', prevState.prevUserName, this.state.prevUserName, 'props', prevProps.route.params.user_name, this.props.route.params.user_name)
-    //     if (this.props.route.params.user_name != prevState.prevUserName) {
-    //         this.initProfileContent();
-    //     }
-    // }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.profileInfo.length) {
+
+            const {
+                product_count,
+                rating_info,
+                reputation_score,
+                response_rate,
+                transaction_count,
+                validated_seller
+            } = this.props.profileInfo[0].statistics;
+
+            const {
+                avg_score,
+                total_count
+            } = rating_info;
+
+            const {
+                profile,
+                user_info,
+                certificates: certificatesFromByUserName,
+                activity_domain: activityDomainFromByUserName,
+                profile_photo: profilePhotoFromByUserName,
+                relateds: relatedsFromByUserName,
+            } = this.props.profileInfo[1];
+
+            const {
+                products: productsListByUserName
+            } = this.props.profileInfo[2];
+
+            const {
+                address,
+                company_name: companyNameFromByUserName,
+                company_register_code: companyRegisterCodeFromByUserName,
+                confirmed,
+                description: descriptionFromByUserName
+            } = profile;
+
+            const {
+                first_name: firstNameFromByUserName,
+                last_name: lastNameFromByUserName,
+                id: userIdFromByUserName,
+                is_verified,
+                province: provinceFromByUserName,
+                city: cityFromByUserName,
+            } = user_info;
+
+            this.setState({
+                loaded: true,
+
+                activityDomainFromByUserName,
+                firstNameFromByUserName,
+                lastNameFromByUserName,
+                userIdFromByUserName,
+                is_verified,
+                relatedsFromByUserName,
+                certificatesFromByUserName,
+                profilePhotoFromByUserName,
+                product_count,
+
+                reputation_score,
+                response_rate,
+                transaction_count,
+                validated_seller,
+                avg_score,
+                total_count,
+                rating_info,
+                provinceFromByUserName,
+                cityFromByUserName,
+                companyRegisterCodeFromByUserName,
+                companyNameFromByUserName,
+                descriptionFromByUserName,
+                productsListByUserName
+            })
+        }
+    }
 
     initProfileContent = _ => {
         return new Promise((resolve, reject) => {
             if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
-                this.setState({ prevUserName: this.props.route.params.user_name })
-                this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
-                this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
-                this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
+                this.props.fetchAllProfileInfo(this.props.route.params.user_name)
+                // this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
+                // this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
+                // this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
             }
             else {
                 resolve(true)
@@ -98,132 +190,46 @@ class Profile extends Component {
     };
 
     render() {
-
         const {
-            userProfileLoading,
-            userProfileFailed,
-            userProfileError,
-            userProfileMessage,
-            userProfile = {},
-
-
-            profileStatistics,
-            profileStatisticsLoading,
-            profileStatisticsFailed,
-            profileStatisticsError,
-            profileStatisticsMessage,
-
-
-            profileByUserName,
-            profileByUserNameLoading,
-            profileByUserNameFailed,
-            profileByUserNameError,
-            profileByUserNameMessage,
-
-
-            productsListByUserName = {},
-            productsListByUserNameLoading,
-            productsListByUserNameFailed,
-            productsListByUserNameError,
-            productsListByUserNameMessage,
-
+            profileInfo,
+            profileInfoLoading
         } = this.props;
 
-        const {
-            profile = {},
-            user_info = {},
-            certificates,
-            relateds
-        } = userProfile;
+        let {
+            modalFlag,
+            selectedEvidenceModal,
+            selectedImageModal,
+            selectedEvidenceIndex,
+            selectedImageIndex,
 
-        const {
-            activity_domain = '',
-            address,
-            company_name,
-            company_register_code,
-            confirmed,
-            created_at,
-            description,
-            human_resource_count,
-            id: profileId,
-            is_company,
-            myuser_id,
-            postal_code,
-            profile_photo,
-            public_phone,
-            related_activity_history = '',
-            shaba_code,
-            updated_at
-        } = profile;
 
-        const {
-            active_pakage_type,
-            activity_type = '',
-            category_id,
-            city,
-            contract_confirmed,
-            first_name,
-            id: userId = '',
-            is_blocked,
-            is_buyer,
-            is_seller,
-            last_name,
-            profile_visit,
-            province,
-            sex,
-            user_name,
-        } = user_info
+            firstNameFromByUserName,
+            lastNameFromByUserName,
+            userIdFromByUserName,
+            is_verified,
+            relatedsFromByUserName,
+            certificatesFromByUserName,
+            profilePhotoFromByUserName,
 
-        const {
-            product_count = 0,
-            rating_info = {},
-            reputation_score = 0,
+            product_count,
+            reputation_score,
             response_rate,
             transaction_count,
             validated_seller,
-        } = profileStatistics;
+            avg_score,
+            total_count,
+            rating_info,
 
-        const {
-            profile: profileFromByUserName = {},
-            user_info: userInfoFromByUserName = {},
-            certificates: certificatesFromByUserName = [],
-            relateds: relatedsFromByUserName = [],
-            activity_domain: activityDomainFromByUserName = ''
-        } = profileByUserName
+            activityDomainFromByUserName,
 
-        const {
-            id: profileIdFromByUserName,
-            description: descriptionFromByUserName,
-            profile_photo: profilePhotoFromByUserName,
-            address: addressFromByUserName,
-            postal_code: postalCodeFromByUserName,
-            is_company: isCompanyFromByUserName,
-            company_name: companyNameFromByUserName,
-            company_register_code: companyRegisterCodeFromByUserName,
-            confirmed: confirmedFromByUserName,
-            myuser_id: myUserIdFromByUserName,
-        } = profileFromByUserName;
+            provinceFromByUserName,
+            cityFromByUserName,
+            companyRegisterCodeFromByUserName,
+            companyNameFromByUserName,
+            descriptionFromByUserName,
 
-        const {
-            id: userIdFromByUserName,
-            user_name: userNameFromByUserName,
-            first_name: firstNameFromByUserName,
-            last_name: lastNameFromByUserName,
-            sex: sexFromByUserName,
-            province: provinceFromByUserName,
-            city: cityFromByUserName,
-            activity_type: activityTypeFromByUserName = '',
-            contract_confirmed: contractConfirmedFromByUserName,
-            is_buyer: isBuyerFromByUserName,
-            is_seller: isSellerFromByUserName,
-            is_blocked: isBlockedFromByUserName,
-            category_id: categoryIdFromByUserName,
-            profile_visit: profileVisitFromByUserName,
-            active_pakage_type: activePackageTypeFromByUserName,
-            is_verified
-        } = userInfoFromByUserName;
-
-        let { modalFlag, selectedEvidenceModal, selectedImageModal, selectedEvidenceIndex, selectedImageIndex } = this.state;
+            productsListByUserName
+        } = this.state;
 
         const selectedContact = {
             first_name: firstNameFromByUserName,
@@ -240,8 +246,7 @@ class Profile extends Component {
                     closeModal={this.closeModal}
                 />
 
-                {(userProfileLoading || profileStatisticsLoading
-                    || profileByUserNameLoading || productsListByUserNameLoading) ?
+                {(profileInfoLoading) ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
@@ -354,8 +359,7 @@ class Profile extends Component {
                 <ScrollView
                     refreshControl={
                         <RefreshControl refreshing={
-                            userProfileLoading || profileStatisticsLoading
-                            || profileByUserNameLoading || productsListByUserNameLoading
+                            profileInfoLoading
                         } onRefresh={() => this.initProfileContent()} />
                     }
                     style={{ backgroundColor: 'white', padding: 5 }}>
@@ -381,7 +385,7 @@ class Profile extends Component {
                                     <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
                                 </View>
                             </View>
-                            {userIdFromByUserName != userId ?
+                            {userIdFromByUserName != this.props.userProfile.user_info.id ?
                                 <Button
 
                                     onPress={() => this.setState({ modalFlag: true })}
@@ -815,6 +819,9 @@ const mapStateToProps = (state) => {
         productsListByUserNameError,
         productsListByUserNameMessage,
 
+        profileInfo,
+        profileInfoLoading
+
     } = state.profileReducer;
 
     return {
@@ -844,15 +851,19 @@ const mapStateToProps = (state) => {
         productsListByUserNameFailed,
         productsListByUserNameError,
         productsListByUserNameMessage,
+
+        profileInfo,
+        profileInfoLoading
     }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
-        fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
+        fetchAllProfileInfo: user_name => dispatch(profileActions.fetchAllProfileInfo(user_name)),
         fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
-        fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
+        // fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
+        // fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
+        // fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

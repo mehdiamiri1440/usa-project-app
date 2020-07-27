@@ -36,6 +36,12 @@ const INITIAL_STATE = {
     editProfileMessage: null,
     editProfile: {},
 
+    profileInfoLoading: false,
+    profileInfoFailed: false,
+    profileInfoError: false,
+    profileInfoMessage: null,
+    profileInfo: [],
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -296,6 +302,47 @@ export default (state = INITIAL_STATE, action) => {
                 editProfileFailed: false,
                 editProfileError: true,
                 editProfileMessage: ''
+            };
+        };
+
+        case actionTypes.FETCH_ALL_PROFILE_INFO_LOADING: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: true,
+                profileInfoFailed: false,
+                profileInfoError: false,
+                profileInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_SUCCESSFULLY: {
+            return {
+                ...state,
+                profileInfo: [...action.payload],
+                profileInfoLoading: false,
+                profileInfoFailed: false,
+                profileInfoError: false,
+                profileInfoMessage: false,
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_FAILED: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: false,
+                profileInfoFailed: true,
+                profileInfoError: false,
+                profileInfoMessage: ''
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_REJECT: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: false,
+                profileInfoFailed: false,
+                profileInfoError: true,
+                profileInfoMessage: ''
             };
         };
 
