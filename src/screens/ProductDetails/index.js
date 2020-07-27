@@ -1016,7 +1016,7 @@ class ProductDetails extends Component {
                                         }}
                                         style={[styles.loginButton, {
                                             borderWidth: 1, borderColor: '#00C569',
-                                            width: '90%', backgroundColor: 'white', alignSelf: 'center'
+                                            backgroundColor: 'white', alignSelf: 'center'
                                         }]}
                                     >
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#00C569' }]}>

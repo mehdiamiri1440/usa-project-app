@@ -31,6 +31,7 @@ const RelatedProductsList = props => {
                             margin: 10,
                             backgroundColor: '#fff',
                             overflow: 'hidden',
+                            maxWidth: 220,
                             minWidth: 220,
                         }}
                         activeOpacity={1}
@@ -48,8 +49,15 @@ const RelatedProductsList = props => {
                             }} />
                         <Text
                             numberOfLines={1}
-                            style={[{ paddingTop: 5, alignSelf: 'center' }, styles.textBold]}>
-                            {item.product_name}</Text>
+                            style={[{
+                                width: '100%',
+                                paddingTop: 5,
+                                alignSelf: 'center',
+                                textAlign: 'center',
+                                paddingHorizontal: 10
+                            }, styles.textBold]}>
+                            {item.product_name}
+                        </Text>
                         <Text style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
                             {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
                     </TouchableOpacity>
