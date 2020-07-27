@@ -440,49 +440,84 @@ class ProductDetails extends Component {
                 /> : null}
 
 
-                <Portal>
+
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Paragraph style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
-                            }}>
+                        onDismiss={() => this.setState({ elevatorFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.doElevation')}
                             </Paragraph>
-                        </View>
-                        <Dialog.Content>
-                            <Text style={{
-                                width: '100%', textAlign: 'center',
-                                fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
-                            }}>
-                                {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Dialog.Actions>
+
+                        <Text style={{
+                            width: '100%', textAlign: 'center',
+                            marginTop: 15,
+                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                        }}>
+                            {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Text>
+
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.elevationText')}
                             </Text>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                {locales('titles.elevationText')}</Text>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
+
+                        </Dialog.Actions>
+                        <View style={{
                             width: '100%',
-                            justifyContent: 'center',
+                            textAlign: 'center',
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.loginButton, { width: '50%' }]}
+                                style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => this.setState({ elevatorFlag: false }, () => {
                                     return this.elevatorPay();
-                                })}>
-                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                })}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.pay')}
+                                </Text>
+                            </Button>
+                        </View>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
+
+
+
 
 
                 {editionFlag ? <Portal>
@@ -706,7 +741,7 @@ class ProductDetails extends Component {
                             dotColor='#0095F6'
                             inactiveDotColor='#A8A8A8'
                             sliderBoxHeight={400}
-                            dotStyle={{ bottom: -30, backgroundColor: 'red', width: 10, height: 10, borderRadius: 5 }}
+                            dotStyle={{ bottom: -30, width: 10, height: 10, borderRadius: 5 }}
                             images={photosWithCompletePath}
                             onCurrentImagePressed={this.showFullSizeImage}
                         // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
@@ -1111,6 +1146,91 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#00C569',
         color: 'white',
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        // alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
     },
     forgotContainer: {
         flexDirection: 'row',
