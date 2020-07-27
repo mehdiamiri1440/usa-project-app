@@ -45,7 +45,7 @@ class Home extends React.Component {
     homeRef = React.createRef();
 
     componentDidMount() {
-        if (this.props.userProfile && this.props.userProfile.user_info) {
+        if (this.props.userProfile && this.props.userProfile.user_info && !!this.props.changeRoleObject) {
             this.setState({ activityType: this.props.changeRoleObject.is_seller ? 'seller' : 'buyer' })
         }
     }
@@ -78,7 +78,7 @@ class Home extends React.Component {
     }
     render() {
 
-        const { userProfile = {}, changeRoleLoading, changeRoleObject } = this.props;
+        const { userProfile = {}, changeRoleLoading, changeRoleObject = {} } = this.props;
         const { user_info = {} } = userProfile;
         const { is_seller = null } = changeRoleObject;
 

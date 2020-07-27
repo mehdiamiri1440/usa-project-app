@@ -42,7 +42,11 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    messaging().setBackgroundMessageHandler(async _ => {
+    messaging().getInitialNotification(async remoteMessage => {
+      store.dispatch(messageActions.isFromOutSide(true))
+    });
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
       store.dispatch(messageActions.isFromOutSide(true))
     });
     if (I18nManager.isRTL) {

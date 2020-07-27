@@ -510,13 +510,17 @@ const mapStateToProps = (state) => {
     }
 };
 
-const areEqual = () => {
+const areEqual = (prevProps, nextProps) => {
     if (
         global.initialProfileRoute == 'EditProfile'
-    )
+    ) {
         global.initialProfileRoute = 'HomeIndex';
-    return true;
-
+        return true;
+    }
+    if (!!prevProps.changeRoleObject && !!nextProps.changeRoleObject &&
+        nextProps.changeRoleObject.is_seller == prevProps.changeRoleObject.is_seller) {
+        return true;
+    }
 }
 
 export default connect(mapStateToProps)(React.memo(router, areEqual))

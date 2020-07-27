@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Router from './routes';
 import SignUp from '../screens/SignUp'
 import * as messagesActions from '../redux/messages/actions';
+import * as authActions from '../redux/auth/actions';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
@@ -31,6 +32,46 @@ const App = (props) => {
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
+
+    const routeToScreensFromNotifications = remoteMessage => {
+        console.log('000', typeof ((remoteMessage.data.BTarget)))
+        if (typeof (remoteMessage.data.BTarget) == "") {
+            switch (remoteMessage.data.BTarget) {
+                case 'message': {
+                    return navigationRef.current.navigate('Messages');
+                }
+                case 'buyAds': {
+                    console.log('11111', props.changeRoleObject)
+                    if (!!props.changeRoleObject && props.changeRoleObject.is_seller) {
+                        console.log('333')
+                        return navigationRef.current.navigate('Requests');
+                    }
+                    else {
+                        console.log('2222')
+                        Alert.alert(
+                            'Alert Title',
+                            'My Alert Msg',
+                            [
+
+                                { text: 'OK', onPress: props.changeRole() }
+                            ],
+                            { cancelable: false }
+                        );
+                    }
+                }
+                default:
+                    return navigationRef.current.navigate('Home');
+            }
+        }
+        else {
+            console.log('here')
+            return Linking.canOpenURL('https://www.buskool.com').then(supported => {
+                if (supported) {
+                    Linking.openURL('https://www.buskool.com');
+                }
+            });
+        }
+    }
     useEffect(() => {
         props.fetchTotalUnreadMessages();
 
@@ -50,6 +91,12 @@ const App = (props) => {
                         firebase.messaging().hasPermission()
                             .then(enabled => {
                                 if (enabled) {
+                                    messaging().getInitialNotification(async remoteMessage => {
+                                        routeToScreensFromNotifications(remoteMessage);
+                                    });
+                                    messaging().setBackgroundMessageHandler(async remoteMessage => {
+                                        routeToScreensFromNotifications(remoteMessage);
+                                    });
                                     messaging()
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
@@ -68,7 +115,7 @@ const App = (props) => {
 
                                             unsubscribe = messaging().onMessage(async remoteMessage => {
                                                 if (remoteMessage)
-                                                    console.warn('datea', remoteMessage)
+                                                    console.log('datea', remoteMessage)
                                                 props.fetchTotalUnreadMessages();
                                                 props.newMessageReceived(true)
                                             });
@@ -123,7 +170,9 @@ const App = (props) => {
 
     return (
         <NavigationContainer
-            linking={linking} fallback={<Text>Loading...</Text>}
+
+            linking={linking}
+            fallback={<Text>Loading...</Text>}
             ref={navigationRef}
             onReady={() => {
                 isReadyRef.current = true;
@@ -145,6 +194,10 @@ const App = (props) => {
 }
 
 const mapStateToProps = (state) => {
+    const {
+        changeRoleObject,
+        changeRoleLoading
+    } = state.authReducer;
 
     return {
         loginError: state.authReducer.loginError,
@@ -159,13 +212,17 @@ const mapStateToProps = (state) => {
         totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
         isFromOutSide: state.messagesReducer.isFromOutSide,
+
+        changeRoleObject,
+        changeRoleLoading,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
-        newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message))
+        newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
+        changeRole: _ => dispatch(authActions.changeRole()),
     }
 }
 
