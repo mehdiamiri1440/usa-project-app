@@ -45,43 +45,7 @@ class GuidToRegisterProduct extends React.Component {
         return (
             <>
 
-                {/* 
 
-                <Portal>
-                    <Dialog
-                        visible={!showModal}
-                        onDismiss={this.hideDialog}>
-                        <Dialog.Content>
-                            <Paragraph style={{ minHeight: 100, fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
-                                {locales('titles.maximumProductRegisteration')}</Paragraph>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
-                            width: '100%',
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            alignItems: 'space-between',
-                            flex: 1
-                        }}>
-                            <Button
-                                style={[styles.loginButton, { flex: 1 }]}
-                                onPress={() => {
-                                    this.hideDialog();
-                                    this.props.navigation.navigate('ExtraProductCapacity');
-                                }}>
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.increaseCapacity')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.loginButton, { flex: 1, backgroundColor: '#556080' }]}
-                                onPress={this.hideDialog}>
-                                <Text style={styles.buttonText}>{locales('titles.gotIt')}
-                                </Text>
-                            </Button>
-
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal> */}
 
 
                 < Portal

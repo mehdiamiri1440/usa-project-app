@@ -10,6 +10,7 @@ import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -519,14 +520,14 @@ class ProductDetails extends Component {
 
 
 
-                {!editionFlag ? < Portal
+                {editionFlag ? < Portal
                     style={{
                         padding: 0,
                         margin: 0
 
                     }}>
                     <Dialog
-                        visible={!editionFlag}
+                        visible={editionFlag}
                         onDismiss={() => this.setState({ editionFlag: false })}
                         style={styles.dialogWrapper}
                     >
@@ -699,153 +700,7 @@ class ProductDetails extends Component {
                 </Portal > : null}
 
 
-                {/* {!editionFlag ? <Portal>
-                    <Dialog
-                        visible={!editionFlag}
-                        onDismiss={() => this.setState({ editionFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Text style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
-                            }}>
-                                {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
-                            </Text>
-                        </View>
-                        {!showEditionMessage ?
-                            <>
-                                <Dialog.ScrollArea>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.amount')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
-                                                onChangeText={this.onAmountSubmit}
-                                                value={amount}
-                                                placeholder={locales('titles.amountWithExample')}
-                                                ref={this.amountRef}
 
-                                            />
-                                        </Item>
-                                        {!!amountError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label> : null}
-                                    </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.minimumOrder')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                onChangeText={this.onMinimumOrderSubmit}
-                                                value={minimumOrder}
-                                                placeholder={locales('titles.minimumOrderWithExample')}
-                                                ref={this.minimumOrderRef}
-
-                                            />
-                                        </Item>
-                                        {!!minimumOrderError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label> : null}
-                                    </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.minimumPrice')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                onChangeText={this.onMinimumPriceSubmit}
-                                                value={minimumPrice}
-                                                placeholder={locales('titles.minimumPriceWithExample')}
-                                                ref={this.minimumPriceRef}
-
-                                            />
-                                        </Item>
-                                        {!!minimumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
-                                            {minimumPriceError}</Label> : null}
-                                    </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.maximumPrice')}
-                                        </Label>
-                                        <Item regular
-                                            style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
-                                                borderRadius: 5, padding: 3
-                                            }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                onChangeText={this.onMaximumPriceSubmit}
-                                                value={maximumPrice}
-                                                placeholder={locales('titles.maximumPriceWithExample')}
-                                                ref={this.maximumPriceRef}
-
-                                            />
-                                        </Item>
-                                        {!!maximumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
-                                            {maximumPriceError}
-                                        </Label> : null}
-                                    </View>
-                                </Dialog.ScrollArea>
-                                <Dialog.Actions style={{
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Button
-                                        style={[styles.loginButton, { width: '50%' }]}
-                                        onPress={() => this.onSubmit()}>
-                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
-                                            {locales('titles.submitChanges')}
-                                        </Text>
-                                    </Button>
-                                </Dialog.Actions>
-                            </>
-                            :
-                            <Dialog.Content style={{ padding: 50 }}>
-                                <View style={[{ justifyContent: 'center', alignItems: 'center' },
-                                editProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
-                                    {!editProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
-                                        name='checkbox-marked-circle-outline' color='white' size={40}
-                                    />}
-                                    <Paragraph
-                                        style={[editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText,
-                                        { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
-                                    >
-                                        {editionMessageText}
-                                    </Paragraph>
-                                </View>
-                            </Dialog.Content>
-                        }
-                    </Dialog>
-                </Portal>
-                    : null} */}
 
                 <Modal
                     animationType="slide"
