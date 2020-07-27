@@ -36,44 +36,11 @@ class ChatModal extends React.Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        // this.props.fetchUserProfilePhoto(this.props.contact.contact_id);
-        this.props.fetchTotalUnreadMessages();
-        // Keyboard.addListener('keyboardDidShow', event => {
-        //     this.setState({ keyboardHeight: event.endCoordinates.height }, () => setTimeout(() => {
-        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-        //     }, 200)
-        //     )
-        // messaging().onMesonmesage(message => {
-        //     console.warn('dfsfd-->>', this.state.userChatHistory)
-        //     this.props.fetchUserChatHistory(this.props.contact.contact_id).then(() => {
-        //         this.setState({ userChatHistory: this.props.userChatHistory }, () => {
-        //         })
-        //         this.props.fetchAllContactsList().then(_ => {
-        //         })
-        //     })
-        // })
-        // });
-
-
-        // Keyboard.addListener('keyboardDidHide', () => {
-        //     this.setState({ keyboardHeight: 0 }, () => setTimeout(() => {
-        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-        //     }, 200)
-        //     )
-        // });
-
-
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-            // if (this.state.isFirstLoad)
-            //     setTimeout(() => {
-            //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-            //     }, 1000)
-        })
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            this.props.fetchTotalUnreadMessages();
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
                 //     setTimeout(() => {
@@ -82,7 +49,6 @@ class ChatModal extends React.Component {
             })
         }
         if (this.props.message || this.props.contactsListUpdated) {
-            this.props.fetchTotalUnreadMessages();
             this.props.newMessageReceived(false)
             this.props.setcontactsListUpdated(false);
             setTimeout(() => {
@@ -157,7 +123,6 @@ class ChatModal extends React.Component {
                 visible={visible}
                 onRequestClose={() => {
                     Jmoment.locale('fa')
-                    this.props.fetchTotalUnreadMessages();
                     onRequestClose()
                 }}
             >

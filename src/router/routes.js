@@ -28,11 +28,11 @@ import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
 import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
 import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCapacity';
-
-import { deviceWidth, deviceHeight } from '../utils';
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
+
+import { deviceWidth, deviceHeight } from '../utils';
 
 
 import { navigationRef, isReadyRef } from './rootNavigation';
@@ -339,13 +339,7 @@ const router = forwardRef((props, innerRef) => {
     // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
 
     useEffect(() => {
-        if (!is_seller) {
-            setInitialRoute('Requests')
-        }
-        else {
-            setInitialRoute('Home')
-        }
-    }, [initialRoute, is_seller])
+    }, [initialRoute])
     return (
 
         props.changeRoleLoading ?
