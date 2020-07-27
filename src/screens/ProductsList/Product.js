@@ -685,7 +685,9 @@ class Product extends PureComponent {
                                         alignItems: 'center'
                                     }}>
 
-                                    <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                    <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#f27474',
+                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
                                         borderColor: '#edf8e6',
                                     }]} />
 
