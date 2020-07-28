@@ -83,7 +83,6 @@ class Profile extends Component {
                 user_info,
                 certificates: certificatesFromByUserName,
                 activity_domain: activityDomainFromByUserName,
-                profile_photo: profilePhotoFromByUserName,
                 relateds: relatedsFromByUserName,
             } = this.props.profileInfo[1];
 
@@ -93,6 +92,7 @@ class Profile extends Component {
 
             const {
                 address,
+                profile_photo: profilePhotoFromByUserName,
                 company_name: companyNameFromByUserName,
                 company_register_code: companyRegisterCodeFromByUserName,
                 confirmed,
@@ -168,7 +168,7 @@ class Profile extends Component {
         try {
             const result = await Share.share({
                 message:
-                    `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.profileByUserName.user_info.user_name}`,
+                    `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
             });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
@@ -240,7 +240,6 @@ class Profile extends Component {
 
         return (
             <>
-                <Text>{this.props.route.params.user_name}</Text>
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
@@ -564,8 +563,8 @@ class Profile extends Component {
                         justifyContent: 'center', marginVertical: 10
                     }}>
                         <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
-                        {productsListByUserName && productsListByUserName.products && productsListByUserName.products.length ?
-                            productsListByUserName.products.map((item, index) => (
+                        {productsListByUserName && productsListByUserName.length ?
+                            productsListByUserName.map((item, index) => (
                                 <Product
                                     key={index}
                                     productItem={item}
