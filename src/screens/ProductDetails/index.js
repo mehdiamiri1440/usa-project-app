@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler, TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator } from 'react-native';
+import {
+    Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
+    TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
+} from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
 import { SliderBox } from "react-native-image-slider-box";
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
@@ -45,6 +48,45 @@ class ProductDetails extends Component {
             minimumPriceError: '',
             amountError: '',
             showModal: false,
+
+            related_products: [],
+            avg_score: 0,
+            total_count: 0,
+
+            active_pakage_type: 0,
+            created_at: '',
+            first_name: '',
+            userId: '',
+            is_verified: false,
+            last_name: '',
+            response_rate: 0,
+            user_name: '',
+
+            photos: [],
+            description: '',
+
+            myuser_id: '',
+            product_name: '',
+            province_id: null,
+            province_name: '',
+            sub_category_id: '',
+            sub_category_name: '',
+            updated_at: '',
+
+            address: '',
+            category_id: null,
+            category_name: '',
+            city_id: null,
+            city_name: '',
+            confirmed: false,
+            is_elevated: false,
+            stock: 0,
+
+            max_sale_price: 0,
+            min_sale_amount: 0,
+            min_sale_price: 0,
+
+            profile_photo: ''
         }
     }
 
@@ -59,40 +101,123 @@ class ProductDetails extends Component {
     }
 
     componentDidMount(param) {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            global.productIds.pop();
-            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
-            this.callApi();
-            return true;
-        })
-        this.callApi()
+        // BackHandler.addEventListener('hardwareBackPress', () => {
+        //     global.productIds.pop();
+        //     this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
+        //     this.callApi();
+        //     return true;
+        // })
+        // this.callApi()
+        if (this.props.route.params.productId) {
+            this.props.fetchAllProductInfo(this.props.route.params.productId);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.productDetails).length && this.props.productDetails.main) {
+        if (prevState.loaded == false && this.props.productDetailsInfo.length) {
+            console.log('heree', this.props.productDetailsInfo)
             const {
+                main,
+                photos,
+                profile_info,
+                user_info
+            } = this.props.productDetailsInfo[0].product;
+
+            const {
+                profile_photo
+            } = profile_info;
+
+            const {
+                address,
+                category_id,
+                category_name,
+                city_id,
+                city_name,
+                confirmed,
+                description,
+                is_elevated,
                 max_sale_price,
+                min_sale_amount,
                 min_sale_price,
+                myuser_id,
+                product_name,
+                province_id,
+                province_name,
                 stock,
-                min_sale_amount
-            } = this.props.productDetails.main;
+                sub_category_id,
+                sub_category_name,
+                updated_at
+            } = main;
+
+            const {
+                active_pakage_type,
+                created_at,
+                first_name,
+                id,
+                is_verified,
+                last_name,
+                response_rate,
+                review_info = {},
+                user_name
+            } = user_info;
+
+            const {
+                avg_score,
+                total_count
+            } = review_info;
+
+            const {
+                related_products
+            } = this.props.productDetailsInfo[1];
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
                 maximumPrice: max_sale_price.toString(),
                 minimumPrice: min_sale_price.toString(),
                 amount: stock.toString(),
-                loaded: true
+                loaded: true,
+
+                related_products,
+                avg_score,
+                total_count,
+
+                active_pakage_type,
+                created_at,
+                first_name,
+                userId: id,
+                is_verified,
+                last_name,
+                response_rate,
+                user_name,
+
+                photos,
+                description,
+
+                myuser_id,
+                product_name,
+                province_id,
+                province_name,
+                sub_category_id,
+                sub_category_name,
+                updated_at,
+
+                address,
+                category_id,
+                category_name,
+                city_id,
+                city_name,
+                confirmed,
+                is_elevated,
+                stock,
+                max_sale_price,
+                min_sale_amount,
+                min_sale_price,
+
+                profile_photo
             });
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if ((this.props.route.params.productId == nextProps.route.params.productId)) {
-            return true;
-        }
-        return true
-    }
 
     callApi = param => {
         let code = param || global.productIds[global.productIds.length - 1];
@@ -100,13 +225,13 @@ class ProductDetails extends Component {
         if (code) {
             this.props.fetchAllRelatedProducts(code).catch(_ => this.setState({ showModal: true }));
             this.props.fetchProductDetails(code).then(_ => {
-                if (this.props.productDetails && this.props.productDetails.main) {
+                if (this.props.productDetailsInfo.length) {
                     const {
                         max_sale_price,
                         min_sale_price,
                         stock,
                         min_sale_amount
-                    } = this.props.productDetails.main;
+                    } = this.props.productDetailsInfo[0].product.main;
 
                     this.setState({
                         minimumOrder: min_sale_amount.toString(),
@@ -218,7 +343,7 @@ class ProductDetails extends Component {
         this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             let productObject = {
-                product_id: this.props.productDetails.main.id,
+                product_id: this.props.productDetailsInfo[0].product.main.id,
                 stock: amount,
                 min_sale_amount: minimumOrder,
                 max_sale_price: maximumPrice,
@@ -230,7 +355,7 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -241,7 +366,7 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -252,14 +377,14 @@ class ProductDetails extends Component {
 
 
     getProductUrl = _ => {
-        if (!!this.props.productDetails && !!this.props.productDetails.main)
+        if (this.props.productDetailsInfo.length)
             return (
                 "/product-view/خرید-عمده-" +
-                this.props.productDetails.main.sub_category_name.replace(" ", "-") +
+                this.props.productDetailsInfo[0].product.main.sub_category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetails.main.category_name.replace(" ", "-") +
+                this.props.productDetailsInfo[0].product.main.category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetails.main.id
+                this.props.productDetailsInfo[0].product.main.id
             );
     };
 
@@ -284,11 +409,12 @@ class ProductDetails extends Component {
 
 
     elevatorPay = () => {
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetails.main.id}`);
-            }
-        })
+        if (this.props.productDetailsInfo.length)
+            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`).then(supported => {
+                if (supported) {
+                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`);
+                }
+            })
     };
 
     closeModal = _ => {
@@ -298,22 +424,13 @@ class ProductDetails extends Component {
 
     render() {
         const {
-            relatedProductsArray,
-            relatedProductsLoading,
             editProductLoading,
             editProductStatus,
-            productDetailsLoading,
             loggedInUserId,
-            is_seller
+            is_seller,
+            productDetailsInfoLoading,
         } = this.props;
 
-
-        const {
-            main = {},
-            photos = [],
-            profile_info = {},
-            user_info = {},
-        } = this.props.productDetails;
 
         let {
             showFullSizeImageModal,
@@ -325,7 +442,6 @@ class ProductDetails extends Component {
 
             minimumOrder,
             amount,
-            loaded,
             maximumPrice,
             minimumPrice,
             minimumOrderError,
@@ -333,49 +449,48 @@ class ProductDetails extends Component {
             maximumPriceError,
             minimumPriceError,
             amountError,
-        } = this.state;
 
-        const { profile_photo } = profile_info;
+            related_products,
+            avg_score,
+            total_count,
 
-        const {
-            active_pakage_type = '',
+            active_pakage_type,
             created_at,
-            first_name = '',
-            id: userId = '',
-            last_name = '',
-            response_rate = '',
-            review_info = {},
+            first_name,
+            id,
+            is_verified,
+            last_name,
+            response_rate,
             user_name,
-            is_verified
-        } = user_info;
+            userId,
 
-        const {
+            photos,
+
+            description,
+
+            myuser_id,
+            product_name,
+            province_id,
+            province_name,
+            sub_category_id,
+            sub_category_name,
+            updated_at,
+
             address,
             category_id,
-            category_name = '',
+            category_name,
             city_id,
-            city_name = '',
+            city_name,
             confirmed,
-            description = '',
-            id: productId,
-            is_elevated = '',
-            max_sale_price,
-            min_sale_amount = '',
-            min_sale_price,
-            myuser_id,
-            product_name = '',
-            province_id,
-            province_name = '',
-            stock = '',
-            sub_category_id,
-            sub_category_name = '',
-            updated_at
-        } = main;
+            is_elevated,
+            stock,
 
-        const {
-            avg_score,
-            total_count
-        } = review_info
+            max_sale_price,
+            min_sale_amount,
+            min_sale_price,
+
+            profile_photo
+        } = this.state;
 
 
         const selectedContact = {
@@ -408,7 +523,7 @@ class ProductDetails extends Component {
                     closeModal={this.closeModal}
                 />
 
-                {(productDetailsLoading || editProductLoading || relatedProductsLoading) ?
+                {(productDetailsInfoLoading || editProductLoading) ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
@@ -739,9 +854,9 @@ class ProductDetails extends Component {
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
-                            global.productIds.pop();
-                            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
-                            this.callApi();
+                            // global.productIds.pop();
+                            this.props.navigation.navigate('ProductDetails', { productId: item.id })
+                            // this.callApi();
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
@@ -763,7 +878,7 @@ class ProductDetails extends Component {
 
                     refreshControl={
                         <RefreshControl
-                            refreshing={!!this.props.productDetailsLoading}
+                            refreshing={!!this.props.productDetailsInfoLoading}
                             onRefresh={() => this.componentDidMount()}
                         />
                     }>
@@ -1042,9 +1157,9 @@ class ProductDetails extends Component {
                                     <Body>
                                         <Text
                                             onPress={() => {
-                                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/راهنمای-خرید-امن`).then(supported => {
+                                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
                                                     if (supported) {
-                                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/راهنمای-خرید-امن`);
+                                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`);
                                                     }
                                                 });
                                             }}
@@ -1079,13 +1194,13 @@ class ProductDetails extends Component {
                         </View>
                         <RelatedProductsList
                             {...this.props}
-                            relatedProductsArray={relatedProductsArray}
+                            relatedProductsArray={related_products}
                         />
                     </View>
 
                 </ScrollView>
 
-                {!this.props.productDetailsLoading && userId != loggedInUserId ? <View style={{
+                {!this.props.productDetailsInfoLoading && userId != loggedInUserId ? <View style={{
                     backgroundColor: '#fff',
                     width: '100%',
                     height: 65,
@@ -1340,6 +1455,9 @@ const mapStateToProps = (state) => {
         relatedProductsObject,
         relatedProductsArray,
 
+        productDetailsInfo,
+        productDetailsInfoLoading
+
     } = state.productsListReducer
     return {
         productDetails,
@@ -1356,6 +1474,10 @@ const mapStateToProps = (state) => {
         relatedProductsObject,
         relatedProductsArray,
 
+
+        productDetailsInfo,
+        productDetailsInfoLoading,
+
         editProductStatus: state.productsListReducer.editProductStatus,
         editProductMessage: state.productsListReducer.editProductMessage,
         editProductLoading: state.productsListReducer.editProductLoading,
@@ -1370,7 +1492,9 @@ const mapDispatchToProps = (dispatch) => {
         setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
-        editProduct: product => dispatch(productListActions.editProduct(product))
+        editProduct: product => dispatch(productListActions.editProduct(product)),
+
+        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id))
     }
 };
 

@@ -160,3 +160,28 @@ export const setProductDetailsId = id => {
 
     return request();
 };
+
+export const fetchAllProductInfo = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return Promise.all([
+                API.productsList.fetchProductDetails(id),
+                API.productsList.fetchAllRelatedProducts(id)
+            ]).then(res => {
+                dispatch(success(res))
+            })
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_FAILED,
+                        reject: actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_SUCCESSFULLY, res);
+
+    return request();
+};

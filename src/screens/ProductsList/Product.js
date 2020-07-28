@@ -979,8 +979,8 @@ class Product extends PureComponent {
                                 onPress={() => {
                                     // this.props.navigation.setParams({ productId, key: productId })
                                     // routes.push(productId);
-                                    global.productIds.push(productId);
-                                    this.props.navigation.navigate({ name: 'ProductDetails', params: { productId }, key: productId, index: productId })
+                                    // global.productIds.push(productId);
+                                    this.props.navigation.navigate('ProductDetails', { productId })
                                 }}
                                 style={{ flexDirection: 'row-reverse', width: '100%', paddingTop: 10 }}>
 

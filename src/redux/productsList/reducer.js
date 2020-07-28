@@ -41,7 +41,13 @@ const INITIAL_STATE = {
     productDetailsError: false,
     productDetailsMessage: null,
 
-    productDetailsId: null
+    productDetailsId: null,
+
+    productDetailsInfoLoading: false,
+    productDetailsInfo: [],
+    productDetailsInfoFailed: false,
+    productDetailsInfoError: false,
+    productDetailsInfoMessage: null
 
 };
 export default (state = INITIAL_STATE, action) => {
@@ -349,6 +355,49 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 productDetailsId: null
+            };
+        };
+
+
+
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING: {
+            return {
+                ...state,
+                productDetailsInfoLoading: true,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_SUCCESSFULLY: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [...action.payload],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_FAILED: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: true,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_REJECT: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: true,
+                productDetailsInfoMessage: null
             };
         };
 
