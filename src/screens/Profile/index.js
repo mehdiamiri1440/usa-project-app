@@ -563,17 +563,20 @@ class Profile extends Component {
                         justifyContent: 'center', marginVertical: 10
                     }}>
                         <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
-                        {productsListByUserName && productsListByUserName.length ?
-                            productsListByUserName.map((item, index) => (
-                                <Product
-                                    key={index}
-                                    productItem={item}
-                                    fetchAllProducts={this.fetchAllProducts}
-                                    {...this.props}
-                                    width={deviceWidth * 0.93}
-                                />
-                            ))
-                            : <View style={{
+                        <FlatList
+                            horizontal={true}
+                            data={productsListByUserName}
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item, index }) => <Product
+                                key={item.main.id}
+                                productItem={{ ...item }}
+                                fetchAllProducts={this.fetchAllProducts}
+                                {...this.props}
+                                width={deviceWidth * 0.93}
+                            />}
+                            keyExtractor={(item, index) => JSON.stringify(item.main.id)}
+                            extraData={this.state}
+                            ListEmptyComponent={() => <View style={{
                                 alignSelf: 'center', justifyContent: 'flex-start',
                                 alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                             }}>
@@ -581,7 +584,8 @@ class Profile extends Component {
                                 <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
 
                             </View>
-                        }
+                            }
+                        />
                     </View>
 
                     <View style={{

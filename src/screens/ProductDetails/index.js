@@ -114,8 +114,11 @@ class ProductDetails extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.productDetailsInfo.length) {
-            console.log('heree', this.props.productDetailsInfo)
+        if (prevProps.route.params.productId != this.props.route.params.productId) {
+            this.setState({ loaded: false });
+            this.props.fetchAllProductInfo(this.props.route.params.productId);
+        }
+        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo.length) {
             const {
                 main,
                 photos,
@@ -512,11 +515,7 @@ class ProductDetails extends Component {
 
         return (
             <>
-
-
-
-
-
+                <Text>{this.props.route.params.productId}</Text>
 
                 <NoConnection
                     showModal={this.state.showModal}
@@ -855,7 +854,7 @@ class ProductDetails extends Component {
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             // global.productIds.pop();
-                            this.props.navigation.navigate('ProductDetails', { productId: item.id })
+                            this.props.navigation.goBack()
                             // this.callApi();
                         }}
                     >
