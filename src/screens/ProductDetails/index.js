@@ -515,8 +515,6 @@ class ProductDetails extends Component {
 
         return (
             <>
-                <Text>{this.props.route.params.productId}</Text>
-
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
