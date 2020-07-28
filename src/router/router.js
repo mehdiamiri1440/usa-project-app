@@ -627,7 +627,11 @@ const App = (props) => {
                                             borderRadius: deviceWidth * 0.032,
                                             width: deviceWidth * 0.064, height: deviceWidth * 0.064
                                         }}
-                                        source={require('../../assets/icons/user.png')}
+                                        source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
+                                            userProfile.profile.profile_photo.length ?
+                                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
+                                            : require('../../assets/icons/user.png')
+                                        }
                                     />
                                 ),
                             }}

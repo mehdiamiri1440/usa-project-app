@@ -100,6 +100,7 @@ class ProductDetails extends Component {
         BackHandler.removeEventListener();
     }
 
+    wrapper = React.createRef();
     componentDidMount(param) {
         // BackHandler.addEventListener('hardwareBackPress', () => {
         //     global.productIds.pop();
@@ -108,12 +109,20 @@ class ProductDetails extends Component {
         //     return true;
         // })
         // this.callApi()
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
+        }
+
         if (this.props.route.params.productId) {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
+        }
+
         if (prevProps.route.params.productId != this.props.route.params.productId) {
             this.setState({ loaded: false });
             this.props.fetchAllProductInfo(this.props.route.params.productId);
@@ -872,7 +881,7 @@ class ProductDetails extends Component {
 
 
                 <ScrollView
-
+                    ref={this.wrapper}
                     refreshControl={
                         <RefreshControl
                             refreshing={!!this.props.productDetailsInfoLoading}
