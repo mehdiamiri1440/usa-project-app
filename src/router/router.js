@@ -66,16 +66,22 @@ const Tab = createMaterialBottomTabNavigator();
 
 const App = (props) => {
 
-    const [initialRoute, setInitialRoute] = useState('Home');
+
+
+    const { userProfile = {} } = props;
+    const { user_info = {} } = userProfile;
+    let { is_seller } = user_info;
+    is_seller = is_seller == 0 ? false : true;
+
+
+    const [changed, setChanged] = useState(false);
+    const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
 
+
     const routeToScreensFromNotifications = remoteMessage => {
-        const { userProfile = {} } = props;
-        const { user_info = {} } = userProfile;
-        let { is_seller } = user_info;
-        is_seller = is_seller == 0 ? false : true;
 
         switch (remoteMessage.data.BTarget) {
             case 'message': {
@@ -98,12 +104,7 @@ const App = (props) => {
     useEffect(() => {
         props.fetchTotalUnreadMessages();
 
-        messaging().getInitialNotification(async remoteMessage => {
-            routeToScreensFromNotifications(remoteMessage);
-        });
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-            routeToScreensFromNotifications(remoteMessage);
-        });
+
         Linking.addEventListener('url', handleIncomingEvent)
         if (I18nManager.isRTL) {
             I18nManager.forceRTL(false);
@@ -120,9 +121,11 @@ const App = (props) => {
                             .then(enabled => {
                                 if (enabled) {
                                     messaging().getInitialNotification(async remoteMessage => {
+                                        setInitialRoute('Messages')
                                         routeToScreensFromNotifications(remoteMessage);
                                     });
                                     messaging().setBackgroundMessageHandler(async remoteMessage => {
+                                        setInitialRoute('Messages')
                                         routeToScreensFromNotifications(remoteMessage);
                                     });
                                     messaging()
@@ -144,6 +147,7 @@ const App = (props) => {
                                             unsubscribe = messaging().onMessage(async remoteMessage => {
                                                 if (remoteMessage)
                                                     console.log('datea', remoteMessage)
+                                                setInitialRoute('Messages')
                                                 props.fetchTotalUnreadMessages();
                                                 props.newMessageReceived(true)
                                             });
@@ -172,6 +176,7 @@ const App = (props) => {
             Linking.removeEventListener('url', handleIncomingEvent)
             return unsubscribe
         }
+
     }, [initialRoute]);
 
 
@@ -482,17 +487,8 @@ const App = (props) => {
 
 
 
-
-
-    const { userProfile = {} } = props;
-    const { user_info = {} } = userProfile;
-    const { is_seller } = user_info;
-
-
-
     return (
         <>
-
 
             <NavigationContainer
 
@@ -503,9 +499,9 @@ const App = (props) => {
                     isReadyRef.current = true;
                 }}
             >
-                {(props.loggedInUserId) ?
+                {(!props.loggedInUserId) ?
                     (
-                        <Stack.Navigator initialRouteName='Intro' headerMode='none'>
+                        <Stack.Navigator headerMode='none'>
                             <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
                             <Stack.Screen key='Intro' name='Intro' component={Intro} />
                         </Stack.Navigator>
@@ -644,6 +640,7 @@ const mapStateToProps = (state) => {
         logOutFailed: state.authReducer.logOutFailed,
         logOutError: state.authReducer.logOutError,
         logOutMessage: state.authReducer.logOutMessage,
+
 
         userProfile: state.profileReducer.userProfile,
 

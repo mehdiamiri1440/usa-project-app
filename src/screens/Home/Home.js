@@ -38,18 +38,14 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activityType: null,
-            showchangeRoleModal: false
+            showchangeRoleModal: false,
+            loaded: false
         }
     }
 
     homeRef = React.createRef();
 
-    componentDidMount() {
-        if (this.props.userProfile && this.props.userProfile.user_info && !!this.props.changeRoleObject) {
-            this.setState({ activityType: this.props.changeRoleObject.is_seller ? 'seller' : 'buyer' })
-        }
-    }
+
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
@@ -65,28 +61,74 @@ class Home extends React.Component {
 
     };
 
-    changeRole = rollName => {
-        this.setState({ activityType: rollName });
-        this.setState({ showchangeRoleModal: true });
-        this.props.changeRole()
-    };
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevState.loaded == false && Object.entries(this.props.changeRoleObject.is_seller).length) {
+    //         this.setState({ loaded: true, activityType: this.props.changeRoleObject.is_seller ? 'seller' : 'buyer' })
+    //     }
+    // }
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     const { userProfile = {} } = this.props;
+    //     const { user_info = {} } = userProfile;
+    //     const { is_seller } = user_info;
+    //     const { userProfile: PrevProfile = {} } = prevProps;
+    //     const { user_info: PrevUser = {} } = PrevProfile;
+    //     const { is_seller: prevSeller } = PrevUser;
+
+    //     prevSeller = prevSeller == 0 ? false : true;
+    //     is_seller = is_seller == 0 ? false : true;
+
+    //     if (prevSeller != is_seller) {
+    //         this.setState({ loaded: true, showchangeRoleModal: true })
+    //     }
+    // }
+
+    changeRole = _ => {
+        global.changed = true;
+        this.props.changeRole().then(_ => {
+            this.props.fetchUserProfile();
+        })
+    }
 
 
     closeModal = () => {
-
+        global.changed = false;
         this.setState({ showchangeRoleModal: false });
-        this.props.navigation.navigate(this.state.activityType == 'buyer' ? 'Messages' : 'Requests')
+        this.props.navigation.navigate(this.props.userProfile.user_info.is_seller == 0 ? 'Home' : 'Requests')
     }
     render() {
 
-        const { userProfile = {}, changeRoleLoading, changeRoleObject = {} } = this.props;
+        const { userProfile = {} } = this.props;
         const { user_info = {} } = userProfile;
-        const { is_seller = null } = changeRoleObject;
+        let { is_seller = null } = user_info;
 
-        const { activityType, showchangeRoleModal } = this.state;
+        is_seller = is_seller == 0 ? false : true;
+
+        const { showchangeRoleModal } = this.state;
 
         return (
             <>
+                {/* {(this.props.userProfileLoading || this.props.changeRoleLoading) ?
+                    <View style={{
+                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                        position: 'absolute',
+
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                    }}>
+                        <ActivityIndicator size="large"
+                            style={{
+                                position: 'absolute', left: '44%', top: '40%',
+
+                                elevation: 5,
+                                borderColor: 'black',
+                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                            }}
+                            color="#00C569"
+
+                        />
+                    </View> : null} */}
 
                 < Portal
                     style={{
@@ -95,7 +137,7 @@ class Home extends React.Component {
 
                     }}>
                     <Dialog
-                        visible={showchangeRoleModal}
+                        visible={global.changed}
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
@@ -124,7 +166,7 @@ class Home extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: activityType == 'buyer' ? locales('labels.buyer') : locales('labels.seller') })}
+                                {locales('titles.rollChangedSuccessfully', { fieldName: !is_seller ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
@@ -245,7 +287,7 @@ class Home extends React.Component {
                         color: '#00C569'
                     }}>
                         {/* {activityType == 'seller' ? locales('labels.switchToSeller') : locales('labels.switchToBuyer')} */}
-                        {locales('labels.switchRoll', { fieldName: activityType == 'seller' ? locales('labels.seller') : locales('labels.buyer') })}
+                        {locales('labels.switchRoll', { fieldName: is_seller ? locales('labels.seller') : locales('labels.buyer') })}
                     </Text>
 
 
@@ -255,11 +297,11 @@ class Home extends React.Component {
                         alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
                     }]}>
                         <TouchableOpacity
-                            onPress={() => is_seller && this.changeRole('buyer')}
+                            onPress={() => is_seller && this.changeRole()}
                             style={{
                                 backgroundColor: '#fff',
                                 elevation: 1,
-                                borderWidth: 1, borderColor: activityType == 'buyer' ? '#00C569' : '#BDC4CC',
+                                borderWidth: 1, borderColor: !is_seller ? '#00C569' : '#BDC4CC',
                                 maxHeight: 60,
                                 padding: 15,
                                 borderRadius: 5,
@@ -268,9 +310,9 @@ class Home extends React.Component {
                                 minWidth: 140
                             }}>
                             <Radio
-                                onPress={() => is_seller && this.changeRole('buyer')}
+                                onPress={() => is_seller && this.changeRole()}
                                 color={"#BEBEBE"}
-                                selected={activityType == 'buyer'}
+                                selected={!is_seller}
                                 style={{ marginHorizontal: 5 }}
                                 selectedColor={"#00C569"}
                             />
@@ -289,7 +331,7 @@ class Home extends React.Component {
                             style={{
                                 backgroundColor: '#fff',
                                 elevation: 1,
-                                borderWidth: 1, borderColor: activityType == 'seller' ? '#00C569' : '#BDC4CC',
+                                borderWidth: 1, borderColor: user_info.is_seller ? '#00C569' : '#BDC4CC',
                                 maxHeight: 60,
                                 padding: 15,
                                 borderRadius: 5,
@@ -298,11 +340,11 @@ class Home extends React.Component {
                                 minWidth: 140
 
                             }}
-                            onPress={() => !is_seller && this.changeRole('seller')}
+                            onPress={() => !is_seller && this.changeRole()}
                         >
                             <Radio
-                                onPress={() => !is_seller && this.changeRole('seller')}
-                                selected={activityType == 'seller'}
+                                onPress={() => !is_seller && this.changeRole()}
+                                selected={is_seller}
                                 color={"#BEBEBE"}
                                 style={{ marginHorizontal: 5 }}
                                 selectedColor={"#00C569"}
@@ -557,15 +599,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 const mapStateToProps = (state, ownProps) => {
 
-    const {
-        changeRoleObject,
-        changeRoleLoading
-    } = state.authReducer;
-
     return {
         userProfile: state.profileReducer.userProfile,
-        changeRoleObject,
-        changeRoleLoading
+        changeRoleLoading: state.authReducer.changeRoleLoading,
+        userProfileLoading: state.profileReducer.userProfileLoading,
     }
 }
 
