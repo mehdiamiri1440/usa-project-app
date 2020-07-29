@@ -21,7 +21,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as RootNavigation from '../../router/rootNavigation';
 
 
-
+let role = false
 
 
 let homeRoutes = [
@@ -84,17 +84,19 @@ class Home extends React.Component {
     // }
 
     changeRole = _ => {
-        global.changed = true;
-        this.props.changeRole().then(_ => {
-            this.props.fetchUserProfile();
+        this.props.changeRole().then(res => {
+            role = res.payload.is_seller
+            this.setState({ showchangeRoleModal: true })
         })
     }
 
 
     closeModal = () => {
-        global.changed = false;
-        this.setState({ showchangeRoleModal: false });
-        this.props.navigation.navigate(this.props.userProfile.user_info.is_seller == 0 ? 'Home' : 'Requests')
+        this.setState({ showchangeRoleModal: false }, () => {
+            this.props.fetchUserProfile().then(_ => {
+                this.props.navigation.navigate(!role ? 'Home' : 'Requests')
+            });
+        });
     }
     render() {
 
@@ -108,7 +110,7 @@ class Home extends React.Component {
 
         return (
             <>
-                {/* {(this.props.userProfileLoading || this.props.changeRoleLoading) ?
+                {(this.props.changeRoleLoading) ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
@@ -128,7 +130,7 @@ class Home extends React.Component {
                             color="#00C569"
 
                         />
-                    </View> : null} */}
+                    </View> : null}
 
                 < Portal
                     style={{
@@ -137,7 +139,7 @@ class Home extends React.Component {
 
                     }}>
                     <Dialog
-                        visible={global.changed}
+                        visible={showchangeRoleModal}
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
@@ -166,7 +168,7 @@ class Home extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !is_seller ? locales('labels.buyer') : locales('labels.seller') })}
+                                {locales('titles.rollChangedSuccessfully', { fieldName: !role ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>

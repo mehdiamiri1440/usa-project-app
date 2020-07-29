@@ -490,6 +490,28 @@ const App = (props) => {
     return (
         <>
 
+            {(props.userProfileLoading) ?
+                <View style={{
+                    backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                    position: 'absolute',
+
+                    elevation: 5,
+                    borderColor: 'black',
+                    backgroundColor: 'white',
+                }}>
+                    <ActivityIndicator size="large"
+                        style={{
+                            position: 'absolute', left: '44%', top: '40%',
+
+                            elevation: 5,
+                            borderColor: 'black',
+                            backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                        }}
+                        color="#00C569"
+
+                    />
+                </View> : null}
+
             <NavigationContainer
 
                 linking={linking}
@@ -643,6 +665,7 @@ const mapStateToProps = (state) => {
 
 
         userProfile: state.profileReducer.userProfile,
+        userProfileLoading: state.profileReducer.userProfileLoading,
 
         totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
