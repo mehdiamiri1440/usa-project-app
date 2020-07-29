@@ -214,7 +214,7 @@ class Home extends React.Component {
                         <Text
                             style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                         >
-                            {locales('labels.home')}
+                            {locales('labels.myBuskool')}
                         </Text>
                     </View>
                 </View>

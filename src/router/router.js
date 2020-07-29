@@ -35,6 +35,7 @@ import SignUp from '../screens/SignUp'
 import Home from '../screens/Home/Home';
 import Requests from '../screens/Requests/Requests';
 import Dashboard from '../screens/Home/Dashboard';
+import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
 import Terms from '../screens/Home/Terms/Terms';
@@ -76,45 +77,64 @@ const App = (props) => {
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
     is_seller = is_seller == 0 ? false : true;
-    let role = is_seller;
 
-    const [changed, setChanged] = useState(false);
-    const [showchangeRoleModal, setShowchangeRoleModal] = useState(false);
     const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
 
-    const closeModal = () => {
-        props.fetchUserProfile().then(_ => {
-            navigationRef.current.navigate('Requests')
-        });
-        setShowchangeRoleModal(false);
-    }
 
-
-    const changeRole = _ => {
-        props.changeRole().then(res => {
-            role = res.payload.is_seller
-            setShowchangeRoleModal(true)
-        })
-    }
 
     const routeToScreensFromNotifications = remoteMessage => {
 
         switch (remoteMessage.data.BTarget) {
-            case 'message': {
+            case 'messages': {
                 return navigationRef.current.navigate('Messages');
             }
-            case 'buyAds': {
-                console.log('in here')
+            case 'dashboard': {
                 if (is_seller) {
-                    console.log('in seller', role)
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
+            }
+            case 'registerProduct': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('RegisterProductStack');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
+            }
+            case 'registerBuyAd': {
+                if (!is_seller) {
+                    return navigationRef.current.navigate('RegisterRequest');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
+            }
+            case 'specialProducts': {
+                if (!is_seller) {
+                    return navigationRef.current.navigate('SpecialProducts');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
+            }
+            case 'productList': {
+                return navigationRef.current.navigate('Home');
+            }
+            case 'myBuskool': {
+                return navigationRef.current.navigate('MyBuskool');
+            }
+            case 'buyAds': {
+                if (is_seller) {
                     return navigationRef.current.navigate('Requests');
                 }
                 else {
-                    console.log('in buyer', role)
-                    changeRole()
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
                 }
             }
             default:
@@ -337,6 +357,15 @@ const App = (props) => {
                     name='Payment'
                     component={Payment}
                 />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ChangeRole'
+                    name='ChangeRole'
+                    component={ChangeRole}
+                />
 
 
 
@@ -516,7 +545,7 @@ const App = (props) => {
 
     return (
         <>
-            < Portal
+            {/* < Portal
                 style={{
                     padding: 0,
                     margin: 0
@@ -570,7 +599,7 @@ const App = (props) => {
                         </Button>
                     </Dialog.Actions>
                 </Dialog>
-            </Portal >
+            </Portal > */}
 
             {(props.userProfileLoading) ?
                 <View style={{
