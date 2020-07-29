@@ -98,6 +98,7 @@ class Home extends React.Component {
             });
         });
     }
+
     render() {
 
         const { userProfile = {} } = this.props;
