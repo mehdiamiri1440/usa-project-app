@@ -91,6 +91,14 @@ const App = (props) => {
             case 'messages': {
                 return navigationRef.current.navigate('Messages');
             }
+            case 'myProducts': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
+            }
             case 'dashboard': {
                 if (is_seller) {
                     return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
@@ -152,14 +160,7 @@ const App = (props) => {
             RNRestart.Restart();
         }
 
-        messaging().getInitialNotification(async remoteMessage => {
-            setInitialRoute('Messages')
-            routeToScreensFromNotifications(remoteMessage);
-        });
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-            setInitialRoute('Messages')
-            routeToScreensFromNotifications(remoteMessage);
-        });
+
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -256,7 +257,8 @@ const App = (props) => {
     const MyBuskoolStack = (props) => {
         return (
             <Stack.Navigator
-                initialRouteName={global.initialProfileRoute}
+                // initialRouteName={global.initialProfileRoute}
+                initialRouteName={'ChangeRole'}
             >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
@@ -652,6 +654,7 @@ const App = (props) => {
 
 
                             <Tab.Screen
+
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: locales('labels.home'),
@@ -733,6 +736,11 @@ const App = (props) => {
                             />
 
                             <Tab.Screen
+                                listeners={{
+                                    tabPress: e => {
+                                        navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
+                                    },
+                                }}
                                 key={'MyBuskool'}
                                 options={{
                                     tabBarBadge: false,
