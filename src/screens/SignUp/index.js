@@ -39,17 +39,23 @@ class SignUp extends React.Component {
         }
     }
 
+    _isMounted = true;
+
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.state.stepNumber > 1) {
-                this.setState({ stepNumber: this.state.stepNumber - 1 })
-                return true;
-            }
-        })
+        this._isMounted = true;
+        if (this._isMounted) {
+            BackHandler.addEventListener('hardwareBackPress', () => {
+                if (this.state.stepNumber > 1) {
+                    this.setState({ stepNumber: this.state.stepNumber - 1 })
+                    return true;
+                }
+            })
+        }
     }
 
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.setState({ successfullAlert: false })
         BackHandler.removeEventListener();
     }
@@ -106,14 +112,15 @@ class SignUp extends React.Component {
             sex: gender,
             province,
             city,
-            activity_type: activityType,
+            activity_type: activityType == 'buyer' ? '1' : '0',
             category_id: activityZone
         };
         this.props.submitRegister(registerObject).then(() => {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
-                        this.props.fetchUserProfile().catch(_ => this.setState({ showModal: true }));
+                        this.props.fetchUserProfile().then(_ => {
+                        }).catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
                     }, 100).catch(_ => this.setState({ showModal: true }));
                 })

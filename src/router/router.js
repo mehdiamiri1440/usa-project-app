@@ -265,8 +265,8 @@ const App = (props) => {
     const MyBuskoolStack = (props) => {
         return (
             <Stack.Navigator
-                // initialRouteName={global.initialProfileRoute}
-                initialRouteName={'ChangeRole'}
+                initialRouteName={global.initialProfileRoute}
+            // initialRouteName={'ChangeRole'}
             >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
@@ -611,7 +611,7 @@ const App = (props) => {
                 </Dialog>
             </Portal > */}
 
-            {(props.userProfileLoading) ?
+            {(props.userProfileLoading || props.logOutLoading) ?
                 <View style={{
                     backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                     position: 'absolute',
@@ -1003,13 +1003,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
 
     return {
-        loginError: state.authReducer.loginError,
         loggedInUserId: state.authReducer.loggedInUserId,
         logOutLoading: state.authReducer.logOutLoading,
-        logOutFailed: state.authReducer.logOutFailed,
-        logOutError: state.authReducer.logOutError,
-        logOutMessage: state.authReducer.logOutMessage,
-
 
         userProfile: state.profileReducer.userProfile,
         userProfileLoading: state.profileReducer.userProfileLoading,
@@ -1026,4 +1021,15 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const areEqual = (prevProps, nextProps) => {
+    // if (
+    //     global.initialProfileRoute == 'EditProfile'
+    // ) {
+    //     global.initialProfileRoute = 'HomeIndex';
+    //     return false;
+    // }
+    // if (prevProps.userProfile != nextProps.userProfile)
+    //     return true
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(App, areEqual))
