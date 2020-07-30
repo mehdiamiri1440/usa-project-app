@@ -672,7 +672,7 @@ const App = (props) => {
                                 component={HomeStack}
                             />
 
-                            {!is_seller ? <Tab.Screen
+                            {is_seller ? <Tab.Screen
                                 key={'Requests'}
                                 options={{
                                     tabBarBadge: false,
@@ -696,7 +696,7 @@ const App = (props) => {
 
 
 
-                            {!is_seller ? <Tab.Screen
+                            {is_seller ? <Tab.Screen
                                 key={'RegisterProduct'}
                                 listeners={{
                                     tabPress: e => {

@@ -26,7 +26,8 @@ class Filters extends Component {
         this.setState({
             subCategoriesModal: true,
             selectedCategoryName: name,
-            subCategoriesList: Object.values(this.props.categoriesList.find(item => item.id == id).subcategories)
+            subCategoriesList: this.props.categoriesList.some(item => item.id == id) ?
+                Object.values(this.props.categoriesList.find(item => item.id == id).subcategories) : []
         })
     };
 
