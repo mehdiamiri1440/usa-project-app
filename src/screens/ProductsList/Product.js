@@ -562,7 +562,7 @@ class Product extends PureComponent {
                         }}>
                             <Button
                                 style={styles.modalCloseButton}
-                                onPress={() => this.setState({ elevatorFlag: false })}
+                                onPress={() => this.setState({ editionFlag: false })}
                             >
 
                                 <Text style={styles.closeButtonText}>{locales('titles.close')}
