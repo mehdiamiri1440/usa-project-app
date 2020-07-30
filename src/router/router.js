@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import { Button } from 'native-base';
 import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -73,7 +73,7 @@ const App = (props) => {
 
 
 
-    const { userProfile = {} } = props;
+    const { userProfile = {}, message } = props;
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
     is_seller = is_seller == 0 ? false : true;
@@ -150,7 +150,6 @@ const App = (props) => {
         }
     }
     useEffect(() => {
-        props.fetchTotalUnreadMessages();
 
 
         Linking.addEventListener('url', handleIncomingEvent)
@@ -193,11 +192,11 @@ const App = (props) => {
 
 
                                             unsubscribe = messaging().onMessage(async remoteMessage => {
-                                                if (remoteMessage)
+                                                if (remoteMessage) {
                                                     console.log('datea', remoteMessage)
-                                                setInitialRoute('Messages')
-                                                props.fetchTotalUnreadMessages();
-                                                props.newMessageReceived(true)
+                                                    props.newMessageReceived(true)
+                                                    setInitialRoute('Messages')
+                                                }
                                             });
                                         })
 
@@ -664,7 +663,7 @@ const App = (props) => {
                                 component={HomeStack}
                             />
 
-                            {is_seller ? <Tab.Screen
+                            {!is_seller ? <Tab.Screen
                                 key={'Requests'}
                                 options={{
                                     tabBarBadge: false,
@@ -688,7 +687,7 @@ const App = (props) => {
 
 
 
-                            {is_seller ? <Tab.Screen
+                            {!is_seller ? <Tab.Screen
                                 key={'RegisterProduct'}
                                 listeners={{
                                     tabPress: e => {
@@ -726,8 +725,7 @@ const App = (props) => {
                             <Tab.Screen
                                 key='Messages'
                                 options={{
-                                    tabBarBadge: false,
-                                    tabBarBadge: props.totalUnreadMessages > 0 ? true : false,
+                                    tabBarBadge: message,
                                     tabBarLabel: locales('labels.messages'),
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                                 }}
@@ -1006,10 +1004,8 @@ const mapStateToProps = (state) => {
 
         userProfile: state.profileReducer.userProfile,
         userProfileLoading: state.profileReducer.userProfileLoading,
-
-        totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
-        isFromOutSide: state.messagesReducer.isFromOutSide,
+        message: state.messagesReducer.message,
 
         productDetailsId: state.productsListReducer.productDetailsId,
     }
@@ -1018,7 +1014,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-        fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
         changeRole: _ => dispatch(authActions.changeRole()),
     }
