@@ -167,19 +167,28 @@ const App = (props) => {
                         firebase.messaging().hasPermission()
                             .then(enabled => {
                                 if (enabled) {
+                                    messaging().onNotificationOpenedApp(async remoteMessage => {
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
+                                    })
                                     messaging().getInitialNotification(async remoteMessage => {
-                                        setInitialRoute('Messages')
-                                        routeToScreensFromNotifications(remoteMessage);
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
                                     });
                                     messaging().setBackgroundMessageHandler(async remoteMessage => {
-                                        setInitialRoute('Messages')
-                                        routeToScreensFromNotifications(remoteMessage);
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
                                     });
                                     messaging()
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
-                                            messaging().onNotificationOpenedApp(async remoteMessage => {
-                                            })
+
                                             messaging().getInitialNotification(() => {
                                                 messaging().setBackgroundMessageHandler(async remoteMessage => {
                                                     try {
@@ -725,7 +734,7 @@ const App = (props) => {
                             <Tab.Screen
                                 key='Messages'
                                 options={{
-                                    tabBarBadge: message,
+                                    tabBarBadge: false,
                                     tabBarLabel: locales('labels.messages'),
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                                 }}
@@ -1004,8 +1013,6 @@ const mapStateToProps = (state) => {
 
         userProfile: state.profileReducer.userProfile,
         userProfileLoading: state.profileReducer.userProfileLoading,
-        totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
-        message: state.messagesReducer.message,
 
         productDetailsId: state.productsListReducer.productDetailsId,
     }
