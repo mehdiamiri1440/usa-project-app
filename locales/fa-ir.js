@@ -254,6 +254,8 @@ export default {
     'titles.cityAndProvinceRequired': 'انتخاب استان و شهر الزامی می‌باشد',
     'titles.noBuyAdFound': 'درخواست های خرید',
     "titles.nextStep": "مرحله بعد",
+    "titles.next": "بعدی",
+    "titles.skip": "رد کردن",
     "titles.previousStep": "مرحله قبل",
     'titles.submitNumber': 'ثبت شماره',
     'titles.enterLastName': 'نام‌خانوادگی را وارد نمایید',
