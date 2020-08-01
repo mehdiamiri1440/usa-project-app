@@ -46,6 +46,9 @@ class App extends React.Component {
     messaging().getInitialNotification(async remoteMessage => {
       store.dispatch(messageActions.isFromOutSide(true))
     });
+    messaging().onNotificationOpenedApp(async remoteMessage => {
+      store.dispatch(messageActions.isFromOutSide(true))
+    });
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       store.dispatch(messageActions.isFromOutSide(true))

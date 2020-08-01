@@ -7,6 +7,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { sub } from 'react-native-reanimated';
 
 class Filters extends Component {
     constructor(props) {
@@ -23,10 +24,16 @@ class Filters extends Component {
     }
 
     sortProducts = (id, name) => {
+
+        let subCategory = this.props.categoriesList.some(item => item.id == id) ?
+            this.props.categoriesList.find(item => item.id == id).subcategories : {};
+
+        subCategory = Object.values(subCategory);
+
         this.setState({
             subCategoriesModal: true,
             selectedCategoryName: name,
-            subCategoriesList: Object.values(this.props.categoriesList.find(item => item.id == id).subcategories)
+            subCategoriesList: subCategory
         })
     };
 

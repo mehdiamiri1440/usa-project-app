@@ -19,6 +19,7 @@ class EditProfile extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            loaded: false,
             showModal: false,
             profile_photo: {},
             description: '',
@@ -27,38 +28,43 @@ class EditProfile extends Component {
             company_name: '',
             company_register_code: '',
             imageSizeError: false,
+            first_name: '',
+            last_name: '',
             editErrors: [],
             showSubmitEditionModal: false
         }
     }
 
+    componentWillUnmount() {
+        this.props.fetchUserProfile();
+    }
+
     componentDidMount() {
-        if (Object.entries(this.props.userProfile).length &&
-            Object.entries(this.props.userProfile.profile).length) {
+        if (Object.entries(this.props.userProfile).length) {
             const {
                 profile_photo,
                 is_company,
                 company_name,
                 company_register_code,
                 public_phone,
-                description
-            } = this.props.userProfile.profile;
+                description } = this.props.userProfile.profile;
 
+            const { first_name, last_name } = this.props.userProfile.user_info;
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
+                loaded: true,
                 profile_photo: stateProfilePhoto,
                 is_company,
                 company_name,
                 company_register_code,
                 public_phone,
+                first_name,
+                last_name,
                 description
             });
         }
-
     }
-
-
     editProfile = _ => {
 
         this.setState({ editErrors: [] });
@@ -85,7 +91,6 @@ class EditProfile extends Component {
         this.props.editProfile(formData).then(_ => {
             this.setState({ showSubmitEditionModal: true }, () => {
                 global.initialProfileRoute = 'EditProfile'
-                this.props.fetchUserProfile();
             });
         }).catch(err => {
             if (err.data && err.data.errors)
@@ -194,9 +199,8 @@ class EditProfile extends Component {
 
 
     render() {
-        const { userProfile = {}, editProfileLoading, userProfileLoading } = this.props;
-        const { user_info = {} } = userProfile;
-        const { first_name = '', last_name = '' } = user_info;
+        const { editProfileLoading, userProfileLoading } = this.props;
+
 
         const {
             profile_photo,
@@ -206,6 +210,8 @@ class EditProfile extends Component {
             public_phone,
             description,
             imageSizeError,
+            first_name,
+            last_name,
 
             editErrors,
             showSubmitEditionModal

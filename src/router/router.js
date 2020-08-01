@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import { Button } from 'native-base';
 import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -73,7 +73,7 @@ const App = (props) => {
 
 
 
-    const { userProfile = {} } = props;
+    const { userProfile = {}, message } = props;
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
     is_seller = is_seller == 0 ? false : true;
@@ -90,6 +90,14 @@ const App = (props) => {
         switch (remoteMessage.data.BTarget) {
             case 'messages': {
                 return navigationRef.current.navigate('Messages');
+            }
+            case 'myProducts': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+                }
             }
             case 'dashboard': {
                 if (is_seller) {
@@ -142,7 +150,6 @@ const App = (props) => {
         }
     }
     useEffect(() => {
-        props.fetchTotalUnreadMessages();
 
 
         Linking.addEventListener('url', handleIncomingEvent)
@@ -152,14 +159,7 @@ const App = (props) => {
             RNRestart.Restart();
         }
 
-        messaging().getInitialNotification(async remoteMessage => {
-            setInitialRoute('Messages')
-            routeToScreensFromNotifications(remoteMessage);
-        });
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-            setInitialRoute('Messages')
-            routeToScreensFromNotifications(remoteMessage);
-        });
+
         if (isRegistered) {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -167,19 +167,28 @@ const App = (props) => {
                         firebase.messaging().hasPermission()
                             .then(enabled => {
                                 if (enabled) {
+                                    messaging().onNotificationOpenedApp(async remoteMessage => {
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
+                                    })
                                     messaging().getInitialNotification(async remoteMessage => {
-                                        setInitialRoute('Messages')
-                                        routeToScreensFromNotifications(remoteMessage);
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
                                     });
                                     messaging().setBackgroundMessageHandler(async remoteMessage => {
-                                        setInitialRoute('Messages')
-                                        routeToScreensFromNotifications(remoteMessage);
+                                        if (remoteMessage.data.BTarget)
+                                            routeToScreensFromNotifications(remoteMessage);
+                                        else
+                                            setInitialRoute('Messages')
                                     });
                                     messaging()
                                         .subscribeToTopic(`FCM${props.loggedInUserId}`)
                                         .then(() => {
-                                            messaging().onNotificationOpenedApp(async remoteMessage => {
-                                            })
+
                                             messaging().getInitialNotification(() => {
                                                 messaging().setBackgroundMessageHandler(async remoteMessage => {
                                                     try {
@@ -192,11 +201,11 @@ const App = (props) => {
 
 
                                             unsubscribe = messaging().onMessage(async remoteMessage => {
-                                                if (remoteMessage)
+                                                if (remoteMessage) {
                                                     console.log('datea', remoteMessage)
-                                                setInitialRoute('Messages')
-                                                props.fetchTotalUnreadMessages();
-                                                props.newMessageReceived(true)
+                                                    props.newMessageReceived(true)
+                                                    setInitialRoute('Messages')
+                                                }
                                             });
                                         })
 
@@ -257,6 +266,7 @@ const App = (props) => {
         return (
             <Stack.Navigator
                 initialRouteName={global.initialProfileRoute}
+            // initialRouteName={'ChangeRole'}
             >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
@@ -601,7 +611,7 @@ const App = (props) => {
                 </Dialog>
             </Portal > */}
 
-            {(props.userProfileLoading) ?
+            {(props.userProfileLoading || props.logOutLoading) ?
                 <View style={{
                     backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                     position: 'absolute',
@@ -652,6 +662,7 @@ const App = (props) => {
 
 
                             <Tab.Screen
+
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: locales('labels.home'),
@@ -724,7 +735,6 @@ const App = (props) => {
                                 key='Messages'
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarBadge: props.totalUnreadMessages > 0 ? true : false,
                                     tabBarLabel: locales('labels.messages'),
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                                 }}
@@ -733,6 +743,11 @@ const App = (props) => {
                             />
 
                             <Tab.Screen
+                                listeners={{
+                                    tabPress: e => {
+                                        navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
+                                    },
+                                }}
                                 key={'MyBuskool'}
                                 options={{
                                     tabBarBadge: false,
@@ -988,20 +1003,11 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
 
     return {
-        loginError: state.authReducer.loginError,
         loggedInUserId: state.authReducer.loggedInUserId,
         logOutLoading: state.authReducer.logOutLoading,
-        logOutFailed: state.authReducer.logOutFailed,
-        logOutError: state.authReducer.logOutError,
-        logOutMessage: state.authReducer.logOutMessage,
-
 
         userProfile: state.profileReducer.userProfile,
         userProfileLoading: state.profileReducer.userProfileLoading,
-
-        totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
-        totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
-        isFromOutSide: state.messagesReducer.isFromOutSide,
 
         productDetailsId: state.productsListReducer.productDetailsId,
     }
@@ -1010,10 +1016,20 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-        fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
         changeRole: _ => dispatch(authActions.changeRole()),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const areEqual = (prevProps, nextProps) => {
+    // if (
+    //     global.initialProfileRoute == 'EditProfile'
+    // ) {
+    //     global.initialProfileRoute = 'HomeIndex';
+    //     return false;
+    // }
+    // if (prevProps.userProfile != nextProps.userProfile)
+    //     return true
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(App, areEqual))

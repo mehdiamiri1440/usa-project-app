@@ -68,7 +68,6 @@ class Requests extends PureComponent {
 
     initialCalls = _ => {
         return new Promise((resolve, reject) => {
-            this.props.fetchUserProfile().catch(error => reject(error));
             this.props.fetchAllBuyAdRequests().catch(error => reject(error));
         })
 
@@ -141,9 +140,13 @@ class Requests extends PureComponent {
 
     render() {
 
-        let { userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
-            isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
-        let { user_info: userInfo = {} } = info;
+        let {
+            buyAdRequestLoading,
+            userProfile = {} } = this.props;
+
+        const { user_info = {} } = userProfile;
+        const { active_pakage_type } = user_info;
+
         let { modalFlag, selectedContact,
             buyAdRequestsList,
             selectedButton, showDialog, selectedBuyAdId, from, to,
@@ -437,7 +440,7 @@ class Requests extends PureComponent {
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        ListHeaderComponent={() => <View style={{
+                        ListHeaderComponent={() => active_pakage_type != 3 ? <View style={{
 
                             elevation: 10,
                             marginHorizontal: 10,
@@ -453,7 +456,7 @@ class Requests extends PureComponent {
                             >
                                 <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
                             </Button>
-                        </View>
+                        </View> : null
                         }
                         renderItem={this.renderItem}
                         style={{
@@ -708,11 +711,7 @@ const mapStateToProps = (state) => {
         buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
         buyAdRequestsList: state.buyAdRequestReducer.buyAdRequestList,
         buyAdRequests: state.buyAdRequestReducer.buyAdRequest,
-
-
-        userProfileLoading: state.profileReducer.userProfileLoading,
         userProfile: state.profileReducer.userProfile,
-
         isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
         isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
     }
@@ -721,7 +720,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
-        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
     }
 }
