@@ -252,7 +252,7 @@ class ProductsList extends PureComponent {
         } = this.props;
 
         const { searchText, loaded, productsListArray, selectedButton,
-            categoryModalFlag, sortModalFlag, locationsFlag, province, city, selectedCategoryModal } = this.state;
+            categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
 
@@ -506,10 +506,11 @@ class ProductsList extends PureComponent {
                                 })}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                                    color: 'red'
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.title}</Text>
+                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <Ionicons name='ios-arrow-back' size={30} color='#777' />}
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
                     />
@@ -626,13 +627,22 @@ class ProductsList extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5 }}>
+                        <InputGroup style={{ backgroundColor: '#red', borderRadius: 5 }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
-                                <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                <Entypo name='location-pin' size={25} style={{
+                                    color: (city && cities.find(item => item.id == city).city_name) ||
+                                        (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                }} />
                                 <Text
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', color: '#BEBEBE', fontSize: 16 }}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', fontSize: 16,
+                                        color: (city && cities.find(item => item.id == city).city_name) ||
+                                            (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                    }}
                                 >
                                     {
                                         (city && cities.find(item => item.id == city).city_name) ||

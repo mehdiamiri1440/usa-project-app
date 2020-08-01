@@ -392,9 +392,9 @@ class Profile extends Component {
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
                                         <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='envelope' size={23} />
+                                            <FontAwesome name='envelope' size={20} />
                                         </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
+                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
                                             {locales('titles.sendMessage')}
                                         </Text>
                                     </View>
@@ -407,9 +407,9 @@ class Profile extends Component {
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
                                         <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='pencil' size={23} />
+                                            <FontAwesome name='pencil' size={20} />
                                         </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
+                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
                                             {locales('titles.editProfile')}
                                         </Text>
                                     </View>
@@ -418,42 +418,48 @@ class Profile extends Component {
                         </View>
                     </View>
 
-                    <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
-                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                            <Text
-                                numberOfLines={1}
-                                style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
-                                {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                            </Text>
-                            {is_verified ? <ValidatedUserIcon /> : null}
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => this.shareProfileLink()}
-                            style={{
-                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
-                                width: 120, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
-                            }}>
+                    <View style={{
+                        marginBottom: 10,
+                    }}>
 
-                            <View style={[styles.textCenterView, styles.buttonText]}>
-                                <Text style={{ marginTop: 5 }}>
-                                    <FontAwesome name='share-alt' size={14} color='#777777' />
+                        <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
+                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                    {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
                                 </Text>
-                                <Text style={{
-                                    color: '#777777', fontSize: 14, paddingHorizontal: 5
-                                }}>
-                                    {locales('labels.share')}
-                                </Text>
+                                {is_verified ? <ValidatedUserIcon /> : null}
                             </View>
+                            <TouchableOpacity
+                                onPress={() => this.shareProfileLink()}
+                                style={{
+                                    borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
 
-                        </TouchableOpacity>
+                                    width: 120, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                }}>
+
+                                <View style={[styles.textCenterView, styles.buttonText]}>
+                                    <Text style={{ marginTop: 5 }}>
+                                        <FontAwesome name='share-alt' size={14} color='#777777' />
+                                    </Text>
+                                    <Text style={{
+                                        color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                    }}>
+                                        {locales('labels.share')}
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                        </View>
+
+                        {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
+                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                            </Text>
+                        </View> : null}
+
                     </View>
-
-                    {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
-                        <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                            {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                        </Text>
-                    </View> : null}
-
                     {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
                         flex: 1,
                         marginVertical: 10,
@@ -785,8 +791,8 @@ const styles = StyleSheet.create({
     margin10: {
         margin: 10
     },
-    textSize20: {
-        fontSize: 20
+    textSize18: {
+        fontSize: 18
     }
 });
 
