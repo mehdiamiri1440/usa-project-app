@@ -221,8 +221,7 @@ class ProductMoreDetails extends Component {
         let { description, detailsArray, defaultFieldsOptions } = this.state;
 
         return (
-            <ScrollView style={{ height: deviceHeight * 0.5 }}>
-
+            <>
 
                 {!!this.props.addNewProductMessage &&
                     this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
@@ -283,56 +282,56 @@ class ProductMoreDetails extends Component {
 
 
                     </View>
-
-                    {detailsArray.map((detail, index) => (
-                        <>
-                            {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
-                                key={detail.keyId}
-                                style={{
-                                    flexDirection: 'row-reverse', paddingBottom: 0,
-                                    justifyContent: 'space-between', alignItems: 'center', padding: 5
-                                }}>
-                                <TouchableOpacity
-                                    onPress={() => this.deleteRow(index)}
+                    <ScrollView style={{ height: deviceHeight * 0.5 }}>
+                        {detailsArray.map((detail, index) => (
+                            <>
+                                {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
+                                    key={detail.keyId}
                                     style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        height: 80,
-                                        width: 30
+                                        flexDirection: 'row-reverse', paddingBottom: 0,
+                                        justifyContent: 'space-between', alignItems: 'center', padding: 5
                                     }}>
-                                    <FontAwesome name='trash' color='red' size={25} />
-                                </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.deleteRow(index)}
+                                        style={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: 80,
+                                            width: 30
+                                        }}>
+                                        <FontAwesome name='trash' color='red' size={25} />
+                                    </TouchableOpacity>
 
-                                <View style={{ flex: 1, flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
-                                    <View >
-                                        <Item regular
-                                            style={{
-                                                flex: 2,
+                                    <View style={{ flex: 1, flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+                                        <View >
+                                            <Item regular
+                                                style={{
+                                                    flex: 2,
 
-                                                height: 55,
-                                                borderRadius: 5,
-                                                alignSelf: 'center',
-                                                borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
-                                            }}
-                                        >
-                                            <RNPickerSelect
-                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
-                                                useNativeAndroidPickerStyle={false}
-                                                onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
-                                                style={styles}
-                                                ref={this.pickerRef}
-                                                placeholder={{
-                                                    label: locales('titles.selectOne'),
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    value: detail.itemKey
+                                                    height: 55,
+                                                    borderRadius: 5,
+                                                    alignSelf: 'center',
+                                                    borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
                                                 }}
-                                                items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
-                                                    label: item.name, value: item.name
-                                                }))}
-                                            />
-                                        </Item>
-                                    </View>
-                                    {/* <Dropdown
+                                            >
+                                                <RNPickerSelect
+                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    useNativeAndroidPickerStyle={false}
+                                                    onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
+                                                    style={styles}
+                                                    ref={this.pickerRef}
+                                                    placeholder={{
+                                                        label: locales('titles.selectOne'),
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                        value: detail.itemKey
+                                                    }}
+                                                    items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
+                                                        label: item.name, value: item.name
+                                                    }))}
+                                                />
+                                            </Item>
+                                        </View>
+                                        {/* <Dropdown
                                 error={detail.error}
                                 onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
                                 label={locales('titles.selectOne')}
@@ -343,29 +342,29 @@ class ProductMoreDetails extends Component {
                                     width: 195
                                 }}
                             /> */}
-                                    <View style={{
-                                        flex: 2,
+                                        <View style={{
+                                            flex: 2,
 
-                                    }}>
-                                        <Item error={detail.error} regular style={{
-                                            height: 55,
-                                            borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
                                         }}>
-                                            <Input
-                                                disabled={!detail.itemKey}
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
-                                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                                placeholder={locales('titles.writeDescription')}
+                                            <Item error={detail.error} regular style={{
+                                                height: 55,
+                                                borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                            }}>
+                                                <Input
+                                                    disabled={!detail.itemKey}
+                                                    autoCapitalize='none'
+                                                    autoCorrect={false}
+                                                    autoCompleteType='off'
+                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                                                    onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                                    placeholder={locales('titles.writeDescription')}
 
 
-                                            />
-                                        </Item>
+                                                />
+                                            </Item>
+                                        </View>
                                     </View>
-                                </View>
-                                {/* <TextField
+                                    {/* <TextField
                                 baseColor={description.length ? '#00C569' : '#a8a8a8'}
                                 onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                 error={detail.error}
@@ -376,30 +375,31 @@ class ProductMoreDetails extends Component {
                                 labelTextStyle={{ padding: 5 }}
                                 label={locales('titles.writeDescription')}
                             /> */}
-                            </View>}
-                            {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
-                        </>
-                    )
-                    )}
+                                </View>}
+                                {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                            </>
+                        )
+                        )}
 
 
-                    <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between',
+                        <View style={{
+                            marginVertical: 20, flexDirection: 'row',
+                            width: deviceWidth, justifyContent: 'space-between',
 
-                    }}>
-                        <Button
-                            onPress={() => this.addMoreRow()}
-                            style={[styles.addMoreButton, {
-                                borderWidth: 1,
-                                borderColor: '#00C569'
-                            }]}
-                            rounded
-                        >
-                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                            <AntDesign name='plus' size={25} color='#00C569' />
-                        </Button>
-                    </View>
+                        }}>
+                            <Button
+                                onPress={() => this.addMoreRow()}
+                                style={[styles.addMoreButton, {
+                                    borderWidth: 1,
+                                    borderColor: '#00C569'
+                                }]}
+                                rounded
+                            >
+                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                                <AntDesign name='plus' size={25} color='#00C569' />
+                            </Button>
+                        </View>
+                    </ScrollView>
 
                     <View style={{
                         marginVertical: 20, flexDirection: 'row',
@@ -434,7 +434,7 @@ class ProductMoreDetails extends Component {
                     </View>
 
                 </View>
-            </ScrollView >
+            </>
         )
     }
 }
