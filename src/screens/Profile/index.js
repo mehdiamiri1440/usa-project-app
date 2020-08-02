@@ -361,15 +361,15 @@ class Profile extends Component {
                             profileInfoLoading
                         } onRefresh={() => this.initProfileContent()} />
                     }
-                    style={{ backgroundColor: 'white', padding: 5 }}>
-                    <View style={{ padding: 20, width: deviceWidth, flexDirection: 'row-reverse' }}>
+                    style={{ backgroundColor: 'white' }}>
+                    <View style={{ paddingVertical: 20, paddingHorizontal: 10, width: deviceWidth, flexDirection: 'row-reverse' }}>
                         <Image
                             style={{ width: deviceWidth * 0.22, height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11 }}
                             source={
                                 profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
                                     : require('../../../assets/icons/user.png')}
                         />
-                        <View style={{ width: deviceWidth * 0.7 }}>
+                        <View style={{ width: '100%', paddingLeft: 65 }}>
                             <View style={{
                                 flexDirection: 'row-reverse', justifyContent: 'space-around',
                                 alignItems: 'center', marginVertical: 3,
@@ -404,7 +404,7 @@ class Profile extends Component {
                                 : <Button
                                     small
                                     onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
-                                    style={[styles.loginButton, { flex: 1 }]}
+                                    style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
                                         <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
@@ -556,7 +556,7 @@ class Profile extends Component {
                         </View>
 
                         <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
-                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
                                 {locales('titles.headerDescription')}
                             </Text>
                             <Text style={{ color: '#777777', marginVertical: 10 }}>
@@ -566,10 +566,15 @@ class Profile extends Component {
 
                     </View>
                     <View style={{
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.myProducts')}
+                            </Text>
+
+                        </View>
                         {productsListByUserName && productsListByUserName.length ?
                             productsListByUserName.map((item, index) => (
                                 <Product
@@ -592,11 +597,16 @@ class Profile extends Component {
                     </View>
 
                     <View style={{
-                        width: deviceWidth * 0.93,
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.relatedPhotos')}</Text>
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.relatedPhotos')}
+                            </Text>
+
+                        </View>
+
                         <FlatList
                             data={relatedsFromByUserName}
                             horizontal
@@ -633,11 +643,16 @@ class Profile extends Component {
                     </View>
 
                     <View style={{
-                        width: deviceWidth * 0.93,
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.myEvidences')}</Text>
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.myEvidences')}
+                            </Text>
+
+                        </View>
+
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             data={certificatesFromByUserName}
