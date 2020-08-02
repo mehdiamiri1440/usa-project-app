@@ -384,7 +384,8 @@ class Profile extends Component {
                                     <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
                                 </View>
                             </View>
-                            {userIdFromByUserName != this.props.userProfile.user_info.id ?
+                            {userIdFromByUserName != (this.props.userProfile &&
+                                this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
                                 <Button
 
                                     onPress={() => this.setState({ modalFlag: true })}

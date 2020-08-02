@@ -59,7 +59,7 @@ class RegisterProduct extends React.Component {
             description: '',
             province: '',
 
-            stepNumber: 6,
+            stepNumber: 0,
             showModal: false
         }
     }
