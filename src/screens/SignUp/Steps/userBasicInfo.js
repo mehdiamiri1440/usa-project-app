@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { validator } from '../../../utils';
-import OutlinedTextField from '../../../components/floatingInput';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as authActions from '../../../redux/auth/actions'
 import ENUMS from '../../../enums';

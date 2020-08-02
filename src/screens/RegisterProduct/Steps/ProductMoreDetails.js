@@ -3,14 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label, Picker } from 'native-base';
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Dropdown } from 'react-native-material-dropdown';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import { TextField } from '../../../components/floatingInput';
 import { dataGenerator, validator } from '../../../utils';
 
 let tempDefaults = [

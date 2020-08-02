@@ -1,6 +1,5 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, I18nManager, ActivityIndicator } from 'react-native'
-import { Dropdown } from 'react-native-material-dropdown';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';

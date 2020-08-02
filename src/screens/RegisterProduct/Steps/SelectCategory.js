@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
-import { Dropdown } from 'react-native-material-dropdown';
-import OutlinedTextField from '../../../components/floatingInput';
+
 import { deviceWidth, validator, formatter } from '../../../utils';
 import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { sub } from 'react-native-reanimated';
 
 class SelectCategory extends Component {
     constructor(props) {
@@ -21,7 +21,9 @@ class SelectCategory extends Component {
             subCategoryError: '',
             productType: '',
             isFocused: false,
-            loaded: false
+            loaded: false,
+            subCategoriesList: [],
+            categoriesList: [],
         }
     }
 
@@ -29,35 +31,45 @@ class SelectCategory extends Component {
 
 
     componentDidMount() {
-        this.props.fetchAllCategories();
-    }
-
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.subCategoriesList && this.props.subCategoriesList.length && this.props.subCategory) {
-            const { category, subCategory, productType } = this.props;
+        this.props.fetchAllCategories().then(_ => {
+            const { category, subCategory, productType, categoriesList } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory, productType, loaded: true }, () => {
+            this.setState({ category, subCategory, productType, categoriesList, loaded: true }, () => {
             })
-        }
+        });
+
     }
 
-    setCategory = (value) => {
-        let { categoriesList = [] } = this.props;
-        if (categoriesList.length && value) {
-            this.setState({ category: value, categoryError: '' })
-            this.props.fetchAllSubCategories(categoriesList.find(item => item.id == value).id)
+
+
+    setCategory = (id) => {
+        if (id >= 0) {
+
+            let subCategory = this.props.categoriesList.some(item => item.id == id) ?
+                this.props.categoriesList.find(item => item.id == id).subcategories : {};
+            subCategory = Object.values(subCategory);
+
+            this.setState({
+                categoriesError: '',
+                category: id,
+                subCategoriesList: subCategory,
+            })
         }
     };
 
-    setSubCategory = (value) => {
-        if (!!value)
-            this.setState({
-                subCategoryError: '', subCategory: value
-            }, () => {
-            })
-    };
+    setSubCategory = (id) => {
+        console.log('item', this.state.subCategoriesList)
+        if (id >= 0) {
+            let subCategory = this.state.subCategoriesList.some(item => item.id == id) ?
+                this.state.subCategoriesList.find(item => item.id == id).id : {};
 
+
+            this.setState({
+                subCategoryError: '',
+                subCategory
+            })
+        }
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
@@ -104,9 +116,10 @@ class SelectCategory extends Component {
 
     render() {
 
-        let { categoriesList, subCategoriesList, subCategoriesLoading, categoriesLoading } = this.props;
-        let { productType, category, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
+        let { subCategoriesLoading, categoriesLoading } = this.props;
+        let { productType, category, subCategoriesList, categoriesList, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
 
+        categoriesList = categoriesList || this.props.categoriesList;
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
 
@@ -346,7 +359,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id))
     }
 };

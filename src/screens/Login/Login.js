@@ -8,7 +8,6 @@ import { deviceHeight, deviceWidth } from '../../utils/index'
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator, formatter } from '../../utils'
-import OutlinedTextField from '../../components/floatingInput';
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions';
 import NoConnection from '../../components/noConnectionError';
