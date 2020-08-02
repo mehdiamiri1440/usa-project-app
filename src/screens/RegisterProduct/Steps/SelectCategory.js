@@ -31,36 +31,15 @@ class SelectCategory extends Component {
 
 
     componentDidMount() {
-        console.log('in mounted')
-        this.props.fetchAllCategories();
-    }
-
-
-    componentDidUpdate(prevProps, prevState) {
-        console.log('rev', prevState.loaded, this.props.subCategory)
-        if (prevState.loaded == false && (this.props.subCategory || this.props.categoriesList.length)) {
+        this.props.fetchAllCategories().then(_ => {
             const { category, subCategory, productType, categoriesList } = this.props;
             this.productTypeRef.current.value = productType;
             this.setState({ category, subCategory, productType, categoriesList, loaded: true }, () => {
             })
-        }
+        });
+
     }
 
-    // setCategory = (value) => {
-    //     let { categoriesList = [] } = this.props;
-    //     if (categoriesList.length && value) {
-    //         this.setState({ category: value, categoryError: '' })
-    //         this.props.fetchAllSubCategories(categoriesList.find(item => item.id == value).id)
-    //     }
-    // };
-
-    // setSubCategory = (value) => {
-    //     if (!!value)
-    //         this.setState({
-    //             subCategoryError: '', subCategory: value
-    //         }, () => {
-    //         })
-    // };
 
 
     setCategory = (id) => {
