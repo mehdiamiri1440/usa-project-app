@@ -36,7 +36,6 @@ class EditProfile extends Component {
     }
 
     componentWillUnmount() {
-        this.props.fetchUserProfile();
     }
 
     componentDidMount() {
@@ -90,7 +89,10 @@ class EditProfile extends Component {
 
         this.props.editProfile(formData).then(_ => {
             this.setState({ showSubmitEditionModal: true }, () => {
-                global.initialProfileRoute = 'EditProfile'
+                setTimeout(() => {
+                    this.props.fetchUserProfile();
+                }, 1000);
+                // global.initialProfileRoute = 'EditProfile'
             });
         }).catch(err => {
             if (err.data && err.data.errors)
