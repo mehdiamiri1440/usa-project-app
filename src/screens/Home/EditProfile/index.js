@@ -413,11 +413,18 @@ class EditProfile extends Component {
                                         borderRadius: 4,
                                         overflow: 'hidden',
                                         backgroundColor: '#fff',
-                                        padding: 15,
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 2,
                                         borderWidth: 1,
-                                        borderColor: '#777'
+                                        borderColor: '#777',
+                                        color: '#333',
+                                        fontSize: 13,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+
                                     }}
-                                    rowSpan={4} bordered placeholder={locales('titles.headerDescription')} />
+                                    rowSpan={4} bordered
+                                    placeholderTextColor="#BEBEBE"
+                                    placeholder={locales('titles.headerDescription')} />
 
                             </View>
                             <View style={{

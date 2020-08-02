@@ -166,8 +166,11 @@ class ContactsList extends React.Component {
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light' }}
-                            placeholder={locales('labels.searchContacts')} />
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium' }}
+                            placeholder={locales('labels.searchContacts')}
+                            placeholderTextColor="#BEBEBE"
+
+                        />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
                 </View>

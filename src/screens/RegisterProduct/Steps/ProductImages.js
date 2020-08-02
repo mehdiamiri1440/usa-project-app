@@ -191,17 +191,22 @@ class ProductImages extends Component {
                         <Text style={styles.loginFailedText}>{locales('errors.fieldNeeded', { fieldName: locales('titles.chooseImage') })}</Text>
                     </View>}
                     <View style={{
-                        width: deviceWidth, flexDirection: 'row-reverse',
-                        flexWrap: 'wrap'
+                        width: deviceWidth,
+                        flexDirection: 'row-reverse',
+                        flexWrap: 'wrap',
+                        paddingHorizontal: 10,
+                        paddingVertical: 20
                     }}>
                         {images.length ? images.map((image, index) => <TouchableOpacity
                             key={index}
                             onPress={() => this.chooseProductImage(index)}
                             style={{
-                                width: 150,
-                                padding: 20,
-                                height: 150,
-                                margin: 20,
+                                flex: 2,
+                                height: 130,
+                                minWidth: 120,
+                                maxWidth: 180,
+                                marginHorizontal: 10,
+                                marginBottom: 20,
                                 borderWidth: 1,
                                 position: 'relative',
                                 borderRadius: 5,
@@ -216,8 +221,8 @@ class ProductImages extends Component {
                                 style={{
                                     position: 'absolute',
                                     opacity: 0.5,
-                                    width: 150,
-                                    zIndex: 999,
+                                    width: '100%',
+                                    zIndex: 10,
                                     top: 0,
                                     justifyContent: 'flex-end',
                                     alignItems: 'center',
@@ -229,7 +234,7 @@ class ProductImages extends Component {
                             <Image
                                 resizeMode="cover"
                                 style={{
-                                    width: 150, height: 150,
+                                    width: '100%', height: '100%',
                                     borderRadius: 5, alignContent: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
@@ -239,8 +244,8 @@ class ProductImages extends Component {
                                 style={{
                                     position: 'absolute',
                                     opacity: 0.5,
-                                    width: 150,
-                                    zIndex: 999,
+                                    width: '100%',
+                                    zIndex: 10,
                                     bottom: 0,
                                     justifyContent: 'flex-end',
                                     alignItems: 'center',
@@ -251,47 +256,44 @@ class ProductImages extends Component {
                             </TouchableOpacity>
                         </TouchableOpacity>
                         ) : null}
-                        <View style={{
-                            flexDirection: 'row-reverse',
-                            padding: 20
-                        }}>
-                            <TouchableOpacity
-                                onPress={() => this.chooseProductImage()}
-                                style={{
-                                    width: 150,
-                                    padding: 20,
-                                    height: 150,
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    borderStyle: 'dashed',
-                                    borderColor: '#707070',
-                                    zIndex: 999999,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                <Entypo name='plus' size={25} color='#00C569' />
-                                <Text>{locales('labels.addImage')}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
 
-                    <View style={{ marginVertical: 20, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={!images.length ? styles.disableLoginButton : styles.loginButton}
-                            rounded
-                        >
-                            <AntDesign name='arrowleft' size={25} color='white' />
-                            <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(3)}
-                            style={styles.backButtonContainer}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
+                        <TouchableOpacity
+                            onPress={() => this.chooseProductImage()}
+                            style={{
+                                flex: 2,
+                                marginHorizontal: 10,
+                                height: 130,
+                                minWidth: 120,
+                                maxWidth: 150,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                borderStyle: 'dashed',
+                                borderColor: '#707070',
+                                zIndex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                            <Entypo name='plus' size={25} color='#00C569' />
+                            <Text>{locales('labels.addImage')}</Text>
+                        </TouchableOpacity>
+                        <View style={{ marginVertical: 20, paddingHorizontal: 10, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                            <Button
+                                onPress={() => this.onSubmit()}
+                                style={!images.length ? styles.disableLoginButton : styles.loginButton}
+                                rounded
+                            >
+                                <AntDesign name='arrowleft' size={25} color='white' />
+                                <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                            </Button>
+                            <Button
+                                onPress={() => this.props.changeStep(3)}
+                                style={styles.backButtonContainer}
+                                rounded
+                            >
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            </Button>
+                        </View>
                     </View>
 
                 </View>

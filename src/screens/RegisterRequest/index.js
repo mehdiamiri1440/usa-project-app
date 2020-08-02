@@ -220,10 +220,10 @@ class RegisterRequest extends Component {
                         <Card style={{ marginBottom: 20, elevation: 2, borderRadius: 6 }} transparent>
                             <CardItem>
                                 <Body style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 7 }}>
-                                    <Text style={{ color: '#E51C38', fontSize: 18 }}>
+                                    <Text style={{ color: '#E51C38', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                         {locales('titles.doYouWishToBuy')}
                                     </Text>
-                                    <Text style={{ fontSize: 18 }}>
+                                    <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                         {locales('titles.registerRequestNow')}
                                     </Text>
                                 </Body>
@@ -250,7 +250,7 @@ class RegisterRequest extends Component {
                                     {locales('titles.whatAndQuantity')}
                                 </Text>
                                 <View style={{
-                                    paddingTop: 20,
+
                                     width: '100%'
                                 }}>
 
@@ -259,7 +259,7 @@ class RegisterRequest extends Component {
                                             flexDirection: 'row-reverse',
 
                                         }}>
-                                            <Label style={{ position: 'relative', color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            <Label style={{ position: 'relative', color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                 {locales('labels.category')}
                                             </Label>
                                             {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -295,7 +295,7 @@ class RegisterRequest extends Component {
                                         <View style={{
                                             flexDirection: 'row-reverse'
                                         }}>
-                                            <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                            <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 15, padding: 5 }}>
                                                 {locales('titles.productName')}
                                             </Label>
                                             {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -332,7 +332,7 @@ class RegisterRequest extends Component {
 
 
                                     <View style={styles.labelInputPadding}>
-                                        <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                             {locales('titles.enterYourProductType')}
                                         </Label>
                                         <Item regular style={{
@@ -346,11 +346,14 @@ class RegisterRequest extends Component {
                                                 autoCompleteType='off'
                                                 style={{
                                                     width: '100%',
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                    textDecorationLine: 'none'
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    textDecorationLine: 'none',
+                                                    fontSize: 14,
+                                                    height: 45
                                                 }}
                                                 onChangeText={this.onProductTypeSubmit}
                                                 value={productType}
+                                                placeholderTextColor="#BEBEBE"
                                                 placeholder={locales('titles.productTypeWithExample')}
                                                 ref={this.productTypeRef}
                                             />
@@ -362,7 +365,7 @@ class RegisterRequest extends Component {
 
 
                                     <View style={styles.labelInputPadding}>
-                                        <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                             {locales('titles.requestQuantity')}
                                         </Label>
                                         <Item regular style={{
@@ -377,10 +380,14 @@ class RegisterRequest extends Component {
                                                     width: '100%',
                                                     fontFamily: 'IRANSansWeb(FaNum)',
                                                     flexDirection: 'row',
-                                                    textDecorationLine: 'none'
+                                                    textDecorationLine: 'none',
+                                                    fontSize: 14,
+                                                    height: 45
                                                 }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}
+                                                placeholderTextColor="#BEBEBE"
+
                                                 placeholder={locales('titles.maximumPriceWithExample')}
                                                 ref={this.amountRef}
 
@@ -399,9 +406,12 @@ class RegisterRequest extends Component {
 
                                         <Button
                                             onPress={() => this.onSubmit()}
-                                            style={!this.state.category || !this.state.subCategory || !amount
+                                            style={[!this.state.category || !this.state.subCategory || !amount
 
-                                                ? styles.disableLoginButton : styles.loginButton}
+                                                ? styles.disableLoginButton : styles.loginButton, {
+                                                marginBottom: 25,
+                                                marginTop: 25
+                                            }]}
 
                                         >
                                             <ActivityIndicator size="small"
@@ -483,7 +493,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     inputIOS: {
-        fontSize: 16,
+        fontSize: 14,
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderWidth: 1,
@@ -493,9 +503,9 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
+        fontSize: 14,
         paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 60,
         width: deviceWidth * 0.9,

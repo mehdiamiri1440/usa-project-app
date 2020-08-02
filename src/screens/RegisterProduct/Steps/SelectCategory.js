@@ -133,7 +133,7 @@ class SelectCategory extends Component {
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
-                        <Label style={{ position: 'relative', color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        <Label style={{ position: 'relative', color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.category')}
                         </Label>
                         {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -155,7 +155,8 @@ class SelectCategory extends Component {
                             value={category}
                             placeholder={{
                                 label: locales('labels.selectCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
                             }}
                             items={[...categoriesList.map(item => ({
                                 label: item.category_name, value: item.id
@@ -169,7 +170,7 @@ class SelectCategory extends Component {
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.subCategory')}
                         </Label>
                         {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -194,7 +195,7 @@ class SelectCategory extends Component {
                             value={subCategory}
                             placeholder={{
                                 label: locales('labels.selectSubCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}
                             items={[...subCategoriesList.map(item => ({
                                 label: item.category_name, value: item.id
@@ -205,7 +206,7 @@ class SelectCategory extends Component {
                 </View>
 
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
                     <Item regular style={{
@@ -215,9 +216,15 @@ class SelectCategory extends Component {
                             autoCapitalize='none'
                             autoCorrect={false}
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                            style={{
+                                textDecorationLine: 'none',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45
+                            }}
                             onChangeText={this.onProductTypeSubmit}
                             value={productType}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.productTypeWithExample')}
                             ref={this.productTypeRef}
                         />
@@ -293,17 +300,17 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     inputIOS: {
-        fontSize: 16,
+        fontSize: 13,
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 4,
-        color: 'black',
+        color: '#333',
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
+        fontSize: 13,
         paddingHorizontal: 10,
         fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingVertical: 8,
