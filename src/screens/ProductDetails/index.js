@@ -439,7 +439,6 @@ class ProductDetails extends Component {
             editProductLoading,
             editProductStatus,
             loggedInUserId,
-            is_seller,
             productDetailsInfoLoading,
         } = this.props;
 
@@ -1105,7 +1104,7 @@ class ProductDetails extends Component {
                                             color: '#777777', textAlign: 'center', width: '100%',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16
                                         }}>
-                                            {is_seller ? locales('labels.seller') : locales('labels.buyer')}
+                                            {locales('labels.seller')}
                                         </Text>
 
                                         <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
@@ -1489,7 +1488,6 @@ const mapStateToProps = (state) => {
         editProductLoading: state.productsListReducer.editProductLoading,
 
         loggedInUserId: state.authReducer.loggedInUserId,
-        is_seller: state.authReducer.is_seller
     }
 };
 

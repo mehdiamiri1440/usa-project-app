@@ -627,7 +627,7 @@ class ProductsList extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ backgroundColor: '#red', borderRadius: 5 }}>
+                        <InputGroup style={{ borderRadius: 5 }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
