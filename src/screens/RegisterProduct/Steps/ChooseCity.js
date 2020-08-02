@@ -1,7 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { Dropdown } from 'react-native-material-dropdown';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Item, Label } from 'native-base';
 import { connect } from 'react-redux'

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Button, Textarea, Label } from 'native-base';
 import { View, Text, StyleSheet, Linking } from "react-native";
-import OutlinedTextField from '../../../components/floatingInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

@@ -4,12 +4,10 @@ import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { Button, Item, Label, Radio } from 'native-base';
 import { connect } from 'react-redux'
-import { Dropdown } from 'react-native-material-dropdown';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
-import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import ENUMS from '../../../enums';
 

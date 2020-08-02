@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, Input, Label, Item } from 'native-base';
-import OutlinedTextField from '../../../components/floatingInput';
 import { deviceWidth, validator, formatter } from '../../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 

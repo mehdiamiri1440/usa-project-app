@@ -19,7 +19,6 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
-import { borderRadius } from '../../components/floatingInput/src/components/outline/styles';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });

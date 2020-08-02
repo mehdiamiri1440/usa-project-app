@@ -3,7 +3,6 @@ import { Text, View, TouchableOpacity, StyleSheet, I18nManager } from 'react-nat
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
-import OutlinedTextField from '../../../components/floatingInput';
 import Spin from '../../../components/loading/loading';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import { validator } from '../../../utils';
