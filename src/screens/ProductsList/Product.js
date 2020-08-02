@@ -925,7 +925,7 @@ class Product extends PureComponent {
                                     flex: 1,
                                     alignItems: !!is_elevated ? 'center' : 'flex-start',
                                     justifyContent: 'center',
-                                    marginTop: 10,
+                                    marginVertical: 10,
 
                                 }}>
                                     <Button
@@ -937,14 +937,15 @@ class Product extends PureComponent {
                                             // maxWidth: 130,
                                             flex: 1,
                                             marginRight: 15,
-                                            backgroundColor: '#E41C38'
+                                            backgroundColor: '#E41C38',
+                                            height: 40
                                         }}
                                         onPress={() => this.setState({ elevatorFlag: true })}
                                     >
 
                                         <View
                                             style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, , styles.marginTop10]}>
+                                            <Text style={[styles.textWhite, styles.marginTop10]}>
                                                 <FontAwesome5 name='chart-line' size={20} color='white' />
                                             </Text>
                                             <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
@@ -960,7 +961,8 @@ class Product extends PureComponent {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             // maxWidth: 130,
                                             flex: 1,
-                                            backgroundColor: '#000546'
+                                            backgroundColor: '#000546',
+                                            height: 40
                                         }}
                                         onPress={() => this.setState({ editionFlag: true })}
                                     >
@@ -986,7 +988,7 @@ class Product extends PureComponent {
                                     textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                                     duration: 3000
                                 })}
-                                name='chart-line' size={23} color='white' style={[styles.elevatorIcon]}
+                                name='chart-line' size={20} color='white' style={[styles.elevatorIcon]}
                             />}
                         </View>
 
@@ -1204,7 +1206,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#7E7E7E',
         padding: 10,
         borderRadius: 4,
-        height: 45,
+        height: 40,
         marginTop: 10,
         marginRight: 15
     },
