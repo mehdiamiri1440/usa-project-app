@@ -862,7 +862,7 @@ class Product extends PureComponent {
                                 style={{
                                     flexDirection: 'row-reverse',
                                     backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
-                                    left: 10, bottom: 5, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
+                                    left: 10, bottom: 0, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
                                 }}>
                                 <Entypo name='images' size={20} color='white' />
                                 <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
@@ -938,7 +938,8 @@ class Product extends PureComponent {
                                             flex: 1,
                                             marginRight: 15,
                                             backgroundColor: '#E41C38',
-                                            height: 40
+                                            height: 40,
+                                            elevation: 0
                                         }}
                                         onPress={() => this.setState({ elevatorFlag: true })}
                                     >
@@ -962,7 +963,8 @@ class Product extends PureComponent {
                                             // maxWidth: 130,
                                             flex: 1,
                                             backgroundColor: '#000546',
-                                            height: 40
+                                            height: 40,
+                                            elevation: 0
                                         }}
                                         onPress={() => this.setState({ editionFlag: true })}
                                     >
