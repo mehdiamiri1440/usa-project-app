@@ -46,12 +46,19 @@ class Filters extends Component {
                 subCategoriesModal: true,
                 selectedCategoryName: name,
                 subCategoriesList: subCategory
+            }, () => {
+                if (!this.state.subCategoriesList.length) {
+                    this.setState({ subCategoriesModal: false })
+                    this.props.closeFilters()
+                    this.props.fetchAllCategories()
+                }
             })
         }
         else {
             this.setState({ subCategoriesModal: false }, () => {
                 this.props.closeFilters()
             })
+            this.props.fetchAllCategories()
         }
     };
 
