@@ -32,6 +32,7 @@ export default {
     'labels.address': 'آدرس',
     'labels.confirmedUser': 'کاربر تایید شده',
     'labels.activityZone': 'حوزه فعالیت',
+    'labels.emptyList': 'لیست خالی می‌باشد',
     'labels.comment': 'نظر',
     "labels.seller": "فروشنده",
     'labels.safeShop': 'خرید امن',

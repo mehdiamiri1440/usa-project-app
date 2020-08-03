@@ -93,6 +93,12 @@ class Filters extends Component {
 
 
                     <FlatList
+                        ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text
+                                style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.emptyList')}
+                            </Text>
+                        </View>)}
                         data={subCategoriesList}
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
@@ -159,6 +165,12 @@ class Filters extends Component {
 
                     <FlatList
                         data={categoriesList}
+                        ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text
+                                style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.emptyList')}
+                            </Text>
+                        </View>)}
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (

@@ -124,12 +124,12 @@ class RegisterRequest extends Component {
         // if (!productType) {
         //     productTypeError = locales('titles.productTypeEmpty');
         // }
-        // else if (!validator.isPersianNameWithDigits(productType)) {
-        //     productTypeError = locales('titles.productTypeInvalid');
-        // }
-        // else {
-        //     productTypeError = '';
-        // }
+        if (productType && !validator.isPersianNameWithDigits(productType)) {
+            productTypeError = locales('titles.productTypeInvalid');
+        }
+        else {
+            productTypeError = '';
+        }
 
         if (!category) {
             categoryError = locales('titles.categoryError');
@@ -144,8 +144,8 @@ class RegisterRequest extends Component {
         else {
             subCategoryError = '';
         }
-        this.setState({ productTypeError, subCategoryError, categoryError, amountError })
-        if (!categoryError && !subCategoryError && !amountError) {
+        this.setState({ productTypeError, subCategoryError, categoryError, productTypeError, amountError })
+        if (!categoryError && !subCategoryError && !amountError && !productTypeError) {
             let requestObj = {
                 name: productType,
                 requirement_amount: amount,
