@@ -118,10 +118,10 @@ const EnterActivisionCode = (props) => {
                             key={index}
                             style={[styles.cell, isFocused && styles.focusCell,
                             {
-                                borderColor: value.length === 4 && !valueError ? "#155724"
+                                borderColor: value.length === 4 && !valueError ? "#00C569"
                                     : value.length === 4 && valueError
                                         ? '#de3545' :
-                                        "grey"
+                                        "#bebebe"
                             }]}
                             onLayout={getCellOnLayoutHandler(index)}>
                             {symbol || (isFocused ? <Cursor
@@ -176,16 +176,18 @@ const EnterActivisionCode = (props) => {
     )
 }
 const styles = StyleSheet.create({
-    root: { flex: 1, paddingHorizontal: 20 },
+    root: { flex: 1, paddingHorizontal: deviceWidth * 0.06 },
     title: { textAlign: 'center', fontSize: 30 },
-    codeFiledRoot: { marginTop: 10 },
+    codeFiledRoot: { marginTop: 20 },
     cell: {
         width: 70,
-        height: 70,
-        lineHeight: 70,
+        backgroundColor: '#fff',
+        elevation: 1,
+        height: 55,
+        lineHeight: 55,
         borderRadius: 5,
         fontSize: 24,
-        borderWidth: 2,
+        borderWidth: 1,
         alignContent: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -208,8 +210,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 70,
-        height: 70,
+
     },
     backButtonText: {
         color: '#7E7E7E',
@@ -239,7 +240,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -250,7 +252,8 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     loginButton: {
         textAlign: 'center',
@@ -261,7 +264,8 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     forgotContainer: {
         flexDirection: 'row',

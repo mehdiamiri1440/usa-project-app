@@ -164,6 +164,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -206,6 +208,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -219,6 +223,7 @@ class ChooseCity extends React.Component {
                                 placeholder={{
                                     label: locales('labels.selectCity'),
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
                                 }}
                                 items={[...cities.map(item => ({
                                     label: item.city_name, value: item.id
@@ -264,7 +269,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -372,18 +379,18 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
+        fontSize: 13,
         paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
+
     },
     iconContainer: {
-        left: 30,
-        top: 17,
-    },
+        left: 10,
+        top: 13,
+    }
 
 });
 const mapStateToProps = state => {

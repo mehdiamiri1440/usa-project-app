@@ -95,10 +95,12 @@ class UserActivity extends React.Component {
                         style={{
                             width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'buyer' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5,
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
                             flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 10,
+                            backgroundColor: '#fff',
+                            height: 55
                         }}>
                         <Radio
                             onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
@@ -122,8 +124,13 @@ class UserActivity extends React.Component {
                         style={{
                             width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
-                            , justifyContent: 'space-between'
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            backgroundColor: '#fff',
+                            height: 55
+
                         }}
                         onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
                     >
@@ -170,6 +177,8 @@ class UserActivity extends React.Component {
                             width: deviceWidth * 0.9,
                             borderRadius: 5,
                             alignSelf: 'center',
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
                             borderColor: selectedCategoryId ? '#00C569' : activityZoneError ? '#D50000' : '#a8a8a8'
                         }}
                     >
@@ -289,22 +298,23 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
+        fontSize: 13,
         paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
     },
     iconContainer: {
-        left: 30,
-        top: 17,
+        left: 10,
+        top: 13,
     },
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     labelInputPadding: {
         paddingVertical: 5,
