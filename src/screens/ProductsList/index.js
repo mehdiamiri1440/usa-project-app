@@ -635,7 +635,7 @@ class ProductsList extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ borderRadius: 5 }}>
+                        <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
@@ -662,7 +662,8 @@ class ProductsList extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlignVertical: 'bottom' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
+                                placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>

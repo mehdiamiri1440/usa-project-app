@@ -254,7 +254,7 @@ class SpecialProducts extends PureComponent {
         } = this.props;
 
         const { searchText, loaded, productsListArray, selectedButton,
-            categoryModalFlag, sortModalFlag, locationsFlag, province, city, selectedCategoryModal } = this.state;
+            categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
 
@@ -508,10 +508,11 @@ class SpecialProducts extends PureComponent {
                                 })}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                                    color: 'red'
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.title}</Text>
+                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <Ionicons name='ios-arrow-back' size={30} color='#777' />}
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
                     />
@@ -628,13 +629,22 @@ class SpecialProducts extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5 }}>
+                        <InputGroup style={{ backgroundColor: '#f2f2f2', borderRadius: 5 }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
-                                <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                <Entypo name='location-pin' size={25} style={{
+                                    color: (city && cities.find(item => item.id == city).city_name) ||
+                                        (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                }} />
                                 <Text
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', color: '#BEBEBE', fontSize: 16 }}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', fontSize: 16,
+                                        color: (city && cities.find(item => item.id == city).city_name) ||
+                                            (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                    }}
                                 >
                                     {
                                         (city && cities.find(item => item.id == city).city_name) ||
@@ -646,7 +656,8 @@ class SpecialProducts extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlignVertical: 'bottom' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
+                                placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
@@ -655,13 +666,13 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 onPress={() => this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 35
+                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {locales('labels.sort')}
                                 </Text>
-                                <FontAwesome name='sort-amount-desc' size={16} color='#fff' />
+                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
                             </TouchableOpacity>
                             <FlatList
                                 data={categoriesList}
@@ -674,11 +685,11 @@ class SpecialProducts extends PureComponent {
                                     <TouchableOpacity
                                         onPress={() => this.sortProducts(item.id, item.category_name)}
                                         style={{
-                                            borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
+                                            borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',
-                                            minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee'
+                                            minWidth: 85, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee', minHeight: 30
                                         }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                             {item.category_name}
                                         </Text>
                                     </TouchableOpacity>
@@ -919,7 +930,7 @@ const styles = StyleSheet.create({
     iconContainer: {
         left: 10,
         top: 13,
-    },
+    }
 });
 
 const mapStateToProps = (state) => {
