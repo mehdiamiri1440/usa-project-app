@@ -137,26 +137,27 @@ class Login extends React.Component {
                             </View>
                             <View style={[styles.labelInputPadding]}>
                                 <Button
-                                    onPress={() => this.onLogin()}
                                     style={[!mobileNumber || !validator.isMobileNumber(mobileNumber)
                                         ? styles.disableLoginButton : styles.loginButton,
                                     {
                                         alignSelf: 'center', marginTop: 30, width: '100%'
                                     }]}
-                                    rounded
+                                    onPress={() => this.onLogin()}
+
                                 >
+                                    <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
+                                        {locales('titles.login')}
+                                    </Text>
                                     <ActivityIndicator size="small"
-                                        animating={!!loading} color="white"
+                                        animating={!!loading}
+                                        color="white"
                                         style={{
-                                            position: 'relative',
-                                            marginLeft: -25,
+                                            position: 'absolute', left: '40%', top: '28%',
                                             width: 25, height: 25, borderRadius: 15
                                         }}
                                     />
-                                    <Text style={styles.buttonText}>{locales('titles.login')}</Text>
-
-
                                 </Button>
+
                             </View>
                         </View>
                     </View>
@@ -195,7 +196,8 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: '100%'
     },
     loginButton: {
         textAlign: 'center',
@@ -206,7 +208,9 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: '100%'
+
     },
     forgotContainer: {
         flexDirection: 'row',
