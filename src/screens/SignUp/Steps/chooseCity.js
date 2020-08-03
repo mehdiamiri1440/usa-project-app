@@ -20,6 +20,7 @@ class ChooseCity extends React.Component {
             provinceError: '',
             errorFlag: false,
             city: '',
+            disableCity: true,
             index: -1,
             loaded: false
         }
@@ -82,10 +83,13 @@ class ChooseCity extends React.Component {
     };
 
     setProvince = (value, index) => {
+        this.setState({ disableCity: true })
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
+            this.setState({ province: value, provinceError: '', city: '', cityError: '' })
+            this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
+                this.setState({ disableCity: false })
+            })
         }
     };
 
@@ -168,6 +172,7 @@ class ChooseCity extends React.Component {
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setProvince}
                                 style={styles}
+                                disabled={loading}
                                 value={province}
                                 placeholder={{
                                     label: locales('labels.selectProvince'),
@@ -209,6 +214,7 @@ class ChooseCity extends React.Component {
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setCity}
                                 style={styles}
+                                disabled={fetchCitiesLoading || loading || this.state.disableCity}
                                 value={city}
                                 placeholder={{
                                     label: locales('labels.selectCity'),
