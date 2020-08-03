@@ -762,241 +762,247 @@ class Product extends PureComponent {
                     onRequestClose={() => this.setState({ modalFlag: false })}
                 />}
 
-                <Card transparent style={styles.cardWrapper}>
-                    <View style={[{ borderColor: active_pakage_type > 1 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.navigate('Profile', { user_name })
-                            }}
-                            activeOpacity={1}
-                            style={{
-                                flexDirection: 'row-reverse',
-                                // marginTop: -9,
-                                paddingHorizontal: 10,
-                                paddingVertical: 3,
-                                width: '100%',
-                                borderBottomWidth: 2,
-                                borderBottomColor: '#dedede'
-                            }}>
-                            <Image
-                                style={{
-                                    alignSelf: 'center',
-                                    width: 45,
-                                    height: 45,
-                                    borderRadius: 45,
-                                    marginLeft: 5
+
+                <View style={{
+                    paddingVertical: 2,
+
+                }}>
+                    <Card transparent style={styles.cardWrapper}>
+                        <View style={[{ borderColor: active_pakage_type > 1 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('Profile', { user_name })
                                 }}
-                                source={!!profile_photo && profile_photo.length ?
-                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
-                                    :
-                                    require('../../../assets/icons/user.png')
-                                } />
-                            <View
-                                style={{ flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
-                            >
-                                <View>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                marginHorizontal: 5,
-                                                fontSize: 16,
-                                                color: '#333',
-                                                marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 9,
-                                            }}>
-                                            {`${first_name} ${last_name}`}
-                                        </Text>
-                                        {is_verified ? <ValidatedUserIcon /> : null}
-                                    </View>
-                                    {response_rate > 0 && loggedInUserId != myuser_id &&
-                                        <Text style={{ color: '#BEBEBE', fontSize: 12, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                            {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                                        </Text>}
-                                </View>
-
-                            </View>
-                            {loggedInUserId == myuser_id ?
-                                <Text
-                                    onPress={() => this.setState({ deleteProductFlag: true })}
-                                    style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 16, textAlignVertical: 'center' }}>
-                                    {locales('labels.deleteProduct')}
-                                </Text>
-                                :
-                                <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
-                                    textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
-                                }}>
-                                    {locales('labels.seeProfile')}
-                                </Text>}
-                        </TouchableOpacity>
-                        {active_pakage_type > 1 && <Image
-                            style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
-                            source={require('../../../assets/icons/special-label.png')} />}
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => {
-                                // this.props.navigation.setParams({ productId, key: productId })
-                                // routes.push(productId);
-                                // global.productIds.push(productId);
-                                this.props.navigation.navigate('ProductDetails', { productId })
-                            }}
-                            style={{ flexDirection: 'row-reverse', width: '100%', paddingTop: 10, paddingHorizontal: 10, overflow: "hidden" }}>
-
-                            <Image
-                                style={{
-                                    borderRadius: 4,
-                                    width: deviceWidth * 0.25,
-                                    height: deviceWidth * 0.25,
-                                    marginHorizontal: 0,
-                                    backgroundColor: "#f0f3f6",
-                                    marginLeft: 10
-                                    // paddingLeft: 10
-                                }}
-                                source={photos.length ?
-                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
-                                    :
-                                    require('../../../assets/icons/user.png')
-                                } />
-
-                            {photos.length > 0 && <View
+                                activeOpacity={1}
                                 style={{
                                     flexDirection: 'row-reverse',
-                                    backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
-                                    left: 10, bottom: 0, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
+                                    // marginTop: -9,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 3,
+                                    width: '100%',
+                                    borderBottomWidth: 2,
+                                    borderBottomColor: '#dedede'
                                 }}>
-                                <Entypo name='images' size={20} color='white' />
-                                <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
-                            </View>}
+                                <Image
+                                    style={{
+                                        alignSelf: 'center',
+                                        width: 45,
+                                        height: 45,
+                                        borderRadius: 45,
+                                        marginLeft: 5
+                                    }}
+                                    source={!!profile_photo && profile_photo.length ?
+                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                        :
+                                        require('../../../assets/icons/user.png')
+                                    } />
+                                <View
+                                    style={{ flex: 1, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row-reverse' }}
+                                >
+                                    <View>
+                                        <View style={{ flexDirection: 'row-reverse' }}>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    marginHorizontal: 5,
+                                                    fontSize: 16,
+                                                    color: '#333',
+                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 9,
+                                                }}>
+                                                {`${first_name} ${last_name}`}
+                                            </Text>
+                                            {is_verified ? <ValidatedUserIcon /> : null}
+                                        </View>
+                                        {response_rate > 0 && loggedInUserId != myuser_id &&
+                                            <Text style={{ color: '#BEBEBE', fontSize: 12, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                            </Text>}
+                                    </View>
 
-                            <View style={{ width: '60%', justifyContent: 'space-between' }}>
-                                <Text
-                                    numberOfLines={1}
-                                    style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
-                                    {category_name} | {sub_category_name} <Text
-                                        style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14 }}>
-                                        {product_name}
+                                </View>
+                                {loggedInUserId == myuser_id ?
+                                    <Text
+                                        onPress={() => this.setState({ deleteProductFlag: true })}
+                                        style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 16, textAlignVertical: 'center' }}>
+                                        {locales('labels.deleteProduct')}
                                     </Text>
-                                </Text>
-                                <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                    :
+                                    <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
+                                        textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
+                                    }}>
+                                        {locales('labels.seeProfile')}
+                                    </Text>}
+                            </TouchableOpacity>
+                            {active_pakage_type > 1 && <Image
+                                style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
+                                source={require('../../../assets/icons/special-label.png')} />}
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => {
+                                    // this.props.navigation.setParams({ productId, key: productId })
+                                    // routes.push(productId);
+                                    // global.productIds.push(productId);
+                                    this.props.navigation.navigate('ProductDetails', { productId })
+                                }}
+                                style={{ flexDirection: 'row-reverse', width: '100%', paddingTop: 10, paddingHorizontal: 10, overflow: "hidden" }}>
+
+                                <Image
+                                    style={{
+                                        borderRadius: 4,
+                                        width: deviceWidth * 0.25,
+                                        height: deviceWidth * 0.25,
+                                        marginHorizontal: 0,
+                                        backgroundColor: "#f0f3f6",
+                                        marginLeft: 10
+                                        // paddingLeft: 10
+                                    }}
+                                    source={photos.length ?
+                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
+                                        :
+                                        require('../../../assets/icons/user.png')
+                                    } />
+
+                                {photos.length > 0 && <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
+                                        left: 10, bottom: 0, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
+                                    }}>
+                                    <Entypo name='images' size={20} color='white' />
+                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
+                                </View>}
+
+                                <View style={{ width: '60%', justifyContent: 'space-between' }}>
                                     <Text
                                         numberOfLines={1}
-                                        style={{ textAlign: 'right', marginLeft: 5 }}>
-                                        <Entypo name='location-pin' size={25} color='#BEBEBE' />
-                                    </Text>
-                                    <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
-                                        {province_name} ، {city_name}
-                                    </Text>
-                                </View>
-
-                                <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
-                                    <Text style={{ textAlign: 'right', marginLeft: 5 }}>
-                                        <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
-                                    </Text>
-                                    <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
-                                        {formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}
-                                    </Text>
-                                </View>
-
-                            </View>
-
-                        </TouchableOpacity>
-
-                        <View style={[styles.actionsWrapper, { paddingHorizontal: 10 }]}>
-                            {loggedInUserId != myuser_id ?
-                                <Button
-                                    onPress={() => this.setState({ modalFlag: true })}
-                                    style={[styles.loginButton, { flex: 1 }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 4 }]}>
-                                            <FontAwesome name='envelope' size={23} />
+                                        style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                        {category_name} | {sub_category_name} <Text
+                                            style={{ color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14 }}>
+                                            {product_name}
                                         </Text>
-                                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
-                                            {locales('titles.achiveSaleStatus')}
+                                    </Text>
+                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{ textAlign: 'right', marginLeft: 5 }}>
+                                            <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                        </Text>
+                                        <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
+                                            {province_name} ، {city_name}
                                         </Text>
                                     </View>
 
-                                </Button>
-                                :
-                                <View style={{
-                                    flexWrap: 'wrap',
-                                    flexDirection: 'row',
-                                    justifyContent: !!is_elevated ? 'flex-end' : 'center',
-                                    flex: 1,
-                                    alignItems: !!is_elevated ? 'center' : 'flex-start',
-                                    justifyContent: 'center',
-                                    marginVertical: 10,
+                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                        <Text style={{ textAlign: 'right', marginLeft: 5 }}>
+                                            <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
+                                        </Text>
+                                        <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
+                                            {formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}
+                                        </Text>
+                                    </View>
 
-                                }}>
-                                    <Button
-                                        style={{
-                                            color: 'white',
-                                            fontSize: 18,
-                                            borderRadius: 5,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            // maxWidth: 130,
-                                            flex: 1,
-                                            marginRight: 15,
-                                            backgroundColor: '#E41C38',
-                                            height: 40,
-                                            elevation: 0
-                                        }}
-                                        onPress={() => this.setState({ elevatorFlag: true })}
-                                    >
-
-                                        <View
-                                            style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.marginTop10]}>
-                                                <FontAwesome5 name='chart-line' size={20} color='white' />
-                                            </Text>
-                                            <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
-                                                {locales('titles.elevateProduct')}
-                                            </Text>
-                                        </View>
-                                    </Button>
-                                    <Button
-                                        style={{
-                                            color: 'white',
-                                            fontSize: 18,
-                                            borderRadius: 5,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            // maxWidth: 130,
-                                            flex: 1,
-                                            backgroundColor: '#000546',
-                                            height: 40,
-                                            elevation: 0
-                                        }}
-                                        onPress={() => this.setState({ editionFlag: true })}
-                                    >
-                                        <View
-                                            style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.marginTop5]}>
-                                                <EvilIcons name='pencil' size={30} color='white' />
-                                            </Text>
-                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
-                                                {locales('titles.edit')}
-                                            </Text>
-                                        </View>
-
-
-                                    </Button>
                                 </View>
-                            }
-                            {!!is_elevated && <FontAwesome5
-                                onPress={() => Toast.show({
-                                    text: locales('titles.elevatorHasAdded'),
-                                    position: "bottom",
-                                    style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
-                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                                    duration: 3000
-                                })}
-                                name='chart-line' size={20} color='white' style={[styles.elevatorIcon]}
-                            />}
+
+                            </TouchableOpacity>
+
+                            <View style={[styles.actionsWrapper, { paddingHorizontal: 10 }]}>
+                                {loggedInUserId != myuser_id ?
+                                    <Button
+                                        onPress={() => this.setState({ modalFlag: true })}
+                                        style={[styles.loginButton, { flex: 1 }]}
+                                    >
+                                        <View style={[styles.textCenterView, styles.buttonText]}>
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 4 }]}>
+                                                <FontAwesome name='envelope' size={23} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
+                                                {locales('titles.achiveSaleStatus')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>
+                                    :
+                                    <View style={{
+                                        flexWrap: 'wrap',
+                                        flexDirection: 'row',
+                                        justifyContent: !!is_elevated ? 'flex-end' : 'center',
+                                        flex: 1,
+                                        alignItems: !!is_elevated ? 'center' : 'flex-start',
+                                        justifyContent: 'center',
+                                        marginVertical: 10,
+
+                                    }}>
+                                        <Button
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 18,
+                                                borderRadius: 5,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                // maxWidth: 130,
+                                                flex: 1,
+                                                marginRight: 15,
+                                                backgroundColor: '#E41C38',
+                                                height: 40,
+                                                elevation: 0
+                                            }}
+                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                        >
+
+                                            <View
+                                                style={[styles.textCenterView, styles.buttonText]}>
+                                                <Text style={[styles.textWhite, styles.marginTop10]}>
+                                                    <FontAwesome5 name='chart-line' size={20} color='white' />
+                                                </Text>
+                                                <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
+                                                    {locales('titles.elevateProduct')}
+                                                </Text>
+                                            </View>
+                                        </Button>
+                                        <Button
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 18,
+                                                borderRadius: 5,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                // maxWidth: 130,
+                                                flex: 1,
+                                                backgroundColor: '#000546',
+                                                height: 40,
+                                                elevation: 0
+                                            }}
+                                            onPress={() => this.setState({ editionFlag: true })}
+                                        >
+                                            <View
+                                                style={[styles.textCenterView, styles.buttonText]}>
+                                                <Text style={[styles.textWhite, styles.marginTop5]}>
+                                                    <EvilIcons name='pencil' size={30} color='white' />
+                                                </Text>
+                                                <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
+                                                    {locales('titles.edit')}
+                                                </Text>
+                                            </View>
+
+
+                                        </Button>
+                                    </View>
+                                }
+                                {!!is_elevated && <FontAwesome5
+                                    onPress={() => Toast.show({
+                                        text: locales('titles.elevatorHasAdded'),
+                                        position: "bottom",
+                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
+                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                                        duration: 3000
+                                    })}
+                                    name='chart-line' size={20} color='white' style={[styles.elevatorIcon]}
+                                />}
+                            </View>
+
+
                         </View>
-
-
-                    </View>
-                </Card>
+                    </Card>
+                </View>
             </SafeAreaView >
         )
     }
@@ -1005,16 +1011,15 @@ class Product extends PureComponent {
 const styles = StyleSheet.create({
     cardWrapper: {
         width: deviceWidth,
+        paddingHorizontal: deviceWidth * 0.025,
         alignSelf: 'center',
-        paddingHorizontal: 5,
-        paddingVertical: 3,
-        backgroundColor: 'transparent',
     },
     cardItemStyle: {
-        borderWidth: 1,
-        elevation: 1,
         borderRadius: 5,
         width: '100%',
+        backgroundColor: '#fff',
+        elevation: 2,
+        borderWidth: 1,
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',

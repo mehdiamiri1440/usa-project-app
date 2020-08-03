@@ -663,13 +663,13 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 onPress={() => this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 35
+                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {locales('labels.sort')}
                                 </Text>
-                                <FontAwesome name='sort-amount-desc' size={16} color='#fff' />
+                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
                             </TouchableOpacity>
                             <FlatList
                                 data={categoriesList}
@@ -682,11 +682,11 @@ class ProductsList extends PureComponent {
                                     <TouchableOpacity
                                         onPress={() => this.sortProducts(item.id, item.category_name)}
                                         style={{
-                                            borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
+                                            borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',
-                                            minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee'
+                                            minWidth: 85, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee', minHeight: 30
                                         }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                             {item.category_name}
                                         </Text>
                                     </TouchableOpacity>
