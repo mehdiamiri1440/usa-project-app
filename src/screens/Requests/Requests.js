@@ -439,24 +439,24 @@ class Requests extends PureComponent {
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        ListHeaderComponent={() => active_pakage_type != 3 ? <View style={{
+                        // ListHeaderComponent={() => active_pakage_type != 3 ? <View style={{
 
-                            elevation: 10,
-                            marginHorizontal: 10,
-                            backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
-                            flexDirection: 'row-reverse', justifyContent: 'space-around', marginVertical: 5
-                        }}
-                        >
-                            <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
-                            <Button
-                                small
-                                onPress={() => this.updateFlag.current.open()}
-                                style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
-                            >
-                                <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
-                            </Button>
-                        </View> : null
-                        }
+                        //     elevation: 10,
+                        //     marginHorizontal: 10,
+                        //     backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
+                        //     flexDirection: 'row-reverse', justifyContent: 'space-around', marginVertical: 5
+                        // }}
+                        // >
+                        //     <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
+                        //     <Button
+                        //         small
+                        //         onPress={() => this.updateFlag.current.open()}
+                        //         style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
+                        //     >
+                        //         <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
+                        //     </Button>
+                        // </View> : null
+                        // }
                         renderItem={this.renderItem}
                         style={{
                             // paddingHorizontal: 15,
