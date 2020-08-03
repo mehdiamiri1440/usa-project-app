@@ -23,18 +23,23 @@ class Filters extends Component {
         this.props.fetchAllCategories();
     }
 
-    sortProducts = (id, name) => {
+    sortProducts = (id = '', name = '') => {
+        if (!!id && !!name) {
+            let subCategory = this.props.categoriesList.some(item => item.id == id) ?
+                this.props.categoriesList.find(item => item.id == id).subcategories : {};
 
-        let subCategory = this.props.categoriesList.some(item => item.id == id) ?
-            this.props.categoriesList.find(item => item.id == id).subcategories : {};
+            if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
+                subCategory = {}
+            }
 
-        subCategory = Object.values(subCategory);
+            subCategory = Object.values(subCategory);
 
-        this.setState({
-            subCategoriesModal: true,
-            selectedCategoryName: name,
-            subCategoriesList: subCategory
-        })
+            this.setState({
+                subCategoriesModal: true,
+                selectedCategoryName: name,
+                subCategoriesList: subCategory
+            })
+        };
     };
 
     render() {
