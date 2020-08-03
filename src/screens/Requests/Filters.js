@@ -48,13 +48,17 @@ class Filters extends Component {
                 subCategoriesList: subCategory
             }, () => {
                 if (this.state.subCategoriesList.length <= 0) {
+                    this.props.fetchAllCategories()
+                    // console.warn('22222', id, 'name', name, 'categrory',
+                    //     this.state.categoriesList, 'category len', this.state.categoriesList.length,
+                    //     'sub', this.state.subCategoriesList, 'sub len', this.state.subCategoriesList.length)
                     this.setState({ subCategoriesModal: false })
                     this.props.closeFilters()
-                    this.props.fetchAllCategories()
                 }
             })
         }
         else {
+            // console.warn('1111', id, name, this.state.categoriesList, this.state.categoriesList.length)
             this.setState({ subCategoriesModal: false }, () => {
                 this.props.closeFilters()
             })

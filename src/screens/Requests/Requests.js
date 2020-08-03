@@ -12,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as profileActions from '../../redux/profile/actions';
+import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
 import ChatModal from '../Messages/ChatModal';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -76,6 +77,7 @@ class Requests extends PureComponent {
     initialCalls = _ => {
         return new Promise((resolve, reject) => {
             this.props.fetchAllBuyAdRequests().catch(error => reject(error));
+            this.props.fetchAllCategories()
         })
 
     }
@@ -531,7 +533,10 @@ class Requests extends PureComponent {
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}
-                        onRefresh={() => this.props.fetchAllBuyAdRequests()}
+                        onRefresh={() => {
+                            this.props.fetchAllBuyAdRequests();
+                            this.props.fetchAllCategories()
+                        }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={() => <View style={{
@@ -826,6 +831,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
     }
 }
