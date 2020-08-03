@@ -127,7 +127,9 @@ class UserAuthority extends React.Component {
                         {locales('titles.enterPassword')} <Text style={{ color: 'red' }}>({locales('titles.8CharLeast')})</Text>
                     </Label>
                     <Item regular style={{
-                        borderColor: (passwordError ? '#D50000' : (password.length && validator.hasMinLength(password, { minLength: 8 })) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
+                        borderRadius: 5,
+                        overflow: "hidden",
+                        borderColor: (passwordError ? '#D50000' : (password.length && validator.hasMinLength(password, { minLength: 8 })) ? '#00C569' : '#a8a8a8'), borderRadius: 5,
                     }}>
                         <Input
                             last
@@ -135,7 +137,14 @@ class UserAuthority extends React.Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             secureTextEntry={true}
-                            style={{ direction: 'rtl', textAlign: 'right', fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                textDecorationLine: 'none',
+                                fontSize: 16,
+                                height: 50,
+                                backgroundColor: '#fff',
+                                padding: 3
+                            }}
                             onChangeText={this.onPasswordSubmit}
                             value={password}
                             placeholder={locales('titles.password')}
@@ -245,7 +254,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     labelInputPadding: {
         paddingVertical: 5,

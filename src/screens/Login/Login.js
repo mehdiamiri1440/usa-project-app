@@ -94,122 +94,71 @@ class Login extends React.Component {
                     keyboardShouldPersistTaps='handled'
                 >
 
-                    <View style={{ alignSelf: 'flex-start' }}>
+                    <View >
                         <Text style={[styles.userText, { fontSize: 18 }]}>
                             {locales('messages.signedUpUser')}
                         </Text>
-                        {/* {!error && message && message.length &&
-                            <View style={styles.loginFailedContainer}>
-                                <Text style={styles.loginFailedText}>
-                                    {message}
-                                </Text>
+
+                        <View style={{
+                            width: '100%'
+                        }}>
+                            <View style={[styles.labelInputPadding]}>
+                                <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, marginBottom: 10 }}>
+                                    {locales('titles.enterPhoneNumber')}
+                                </Label>
+                                <Item regular style={{
+                                    borderRadius: 5,
+                                    overflow: "hidden",
+                                    borderColor: (mobileNumberError ? '#D50000' : (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ? '#00C569' : '#a8a8a8'),
+
+                                }} >
+                                    <Input
+                                        autoCapitalize='none'
+                                        autoCorrect={false}
+                                        autoCompleteType='off'
+                                        keyboardType='number-pad'
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            textDecorationLine: 'none',
+                                            fontSize: 16,
+                                            height: 50,
+                                            backgroundColor: '#fff',
+                                            padding: 3
+                                        }}
+                                        onChangeText={this.onMobileNumberSubmit}
+                                        value={mobileNumber}
+                                        placeholderTextColor="#bebebe"
+                                        placeholder={locales('titles.phoneNumber')}
+                                        ref={this.mobileNumberRef}
+
+                                    />
+                                </Item>
+                                {!!mobileNumberError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>{mobileNumberError}</Label>}
                             </View>
-                        } */}
-                        <View style={[styles.labelInputPadding,]}>
-                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                {locales('titles.enterPhoneNumber')}
-                            </Label>
-                            <Item regular style={{
-                                borderColor: (mobileNumberError ? '#D50000' : (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
-                            }}>
-                                <Input
-                                    autoCapitalize='none'
-                                    autoCorrect={false}
-                                    autoCompleteType='off'
-                                    keyboardType='number-pad'
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
-                                    onChangeText={this.onMobileNumberSubmit}
-                                    value={mobileNumber}
-                                    placeholder={locales('titles.phoneNumber')}
-                                    ref={this.mobileNumberRef}
+                            <View style={[styles.labelInputPadding]}>
+                                <Button
+                                    onPress={() => this.onLogin()}
+                                    style={[!mobileNumber || !validator.isMobileNumber(mobileNumber)
+                                        ? styles.disableLoginButton : styles.loginButton,
+                                    {
+                                        alignSelf: 'center', marginTop: 30, width: '100%'
+                                    }]}
+                                    rounded
+                                >
+                                    <ActivityIndicator size="small"
+                                        animating={!!loading} color="white"
+                                        style={{
+                                            position: 'relative',
+                                            marginLeft: -25,
+                                            width: 25, height: 25, borderRadius: 15
+                                        }}
+                                    />
+                                    <Text style={styles.buttonText}>{locales('titles.login')}</Text>
 
-                                />
-                            </Item>
-                            {!!mobileNumberError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>{mobileNumberError}</Label>}
+
+                                </Button>
+                            </View>
                         </View>
-                        {/* <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={mobileNumber.length ? '#00C569' : '#a8a8a8'}
-                            onChangeText={this.onMobileNumberSubmit}
-                            ref={this.mobileNumberRef}
-                            error=''
-                            labelTextStyle={{ paddingTop: 5 }}
-                            icon={
-                                <AntDesign
-                                    name="mobile1"
-                                    style={{
-                                        fontSize: 15,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                            }
-                            label={locales('titles.phoneNumber')}
-                            keyboardType='phone-pad'
-                        />
-                    </View> */}
-                        {/* <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={password.length >= 8 ? '#00C569' : '#a8a8a8'}
-                            labelTextStyle={{ paddingTop: 5 }}
-                            icon={
-                                <AntDesign
-                                    name="lock1"
-                                    style={{
-                                        fontSize: 15,
-                                        alignSelf: "center",
-                                    }}
-                                />
-                            }
-                            onChangeText={this.onPasswordSubmit}
-                            ref={this.passwordRef}
-                            password={true}
-                            label={locales('titles.password')}
-                        />
-                    </View> */}
-                        {/* <TouchableOpacity style={styles.forgotContainer}>
-                        <EvilIcons
-                            name="refresh"
-                            style={{
-                                fontSize: 30,
-                                alignSelf: "center",
-                                color: '#7E7E7E',
-                            }}
-                        />
-                        <Text style={styles.forgotPassword}>{locales('messages.forgotPassword')}</Text>
-                    </TouchableOpacity> */}
-                        <Button
-                            onPress={() => this.onLogin()}
-                            style={[!mobileNumber || !validator.isMobileNumber(mobileNumber)
-                                ? styles.disableLoginButton : styles.loginButton,
-                            { alignSelf: 'center', marginTop: 30, width: '80%' }]}
-                            rounded
-                        >
-                            <Text style={styles.buttonText}>{locales('titles.login')}</Text>
-                            <ActivityIndicator size="small"
-                                animating={!!loading} color="white"
-                                style={{
-                                    position: 'absolute', left: '37%', top: '28%',
-                                    width: 25, height: 25, borderRadius: 15
-                                }}
-                            />
-
-                        </Button>
-                        {/* <Button
-                        onPress={() => this.onLogin()}
-                        style={!mobileNumber.length || !password.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                        disabled={!mobileNumber.length || !password.length}
-                    >
-                        <Text style={styles.buttonText}>{locales('titles.login')}</Text>
-                    </Button> */}
-                        {/* <Text style={[{ fontFamily: 'IRANSansMobile' }, styles.forgotPassword]}>
-                        {locales('messages.startToSignUp')}
-                    </Text>
-                    <Button
-                        onPress={() => this.props.navigation.navigate('SignUp')}
-                        style={[styles.buttonText, styles.loginButton]} success rounded>
-                        <Text style={{ color: 'white' }}>{locales('titles.signUpInBuskool')}</Text>
-                    </Button> */}
                     </View>
                 </ScrollView>
             </>
@@ -229,8 +178,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     labelInputPadding: {
         paddingVertical: 5,

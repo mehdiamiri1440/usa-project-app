@@ -203,7 +203,7 @@ class SignUp extends React.Component {
                         end={{ x: 0.8, y: 0.2 }}
                         colors={['#00C569', '#21AD93']}
                     >
-                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: -5 }]}>
+                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center' }]}>
                             <Text
                                 style={[styles.headerTextStyle]}
                             >
@@ -260,8 +260,10 @@ class SignUp extends React.Component {
                     </View>
 
                     {signUpError ? <Text style={{
-                        color: 'white', backgroundColor: '#DC3545',
-                        padding: 10, textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                        backgroundColor: '#DC3545',
+                        padding: 10, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         fontSize: 16,
                         marginVertical: 10
                     }}>{signUpError}</Text> : null}
@@ -327,10 +329,9 @@ const styles = StyleSheet.create({
     },
     headerTextStyle: {
         color: 'white',
-        position: 'absolute',
         textAlign: 'center',
         fontSize: 26,
-        bottom: 40
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
 })
 

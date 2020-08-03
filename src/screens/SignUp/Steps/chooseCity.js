@@ -164,6 +164,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -206,6 +208,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -219,6 +223,7 @@ class ChooseCity extends React.Component {
                                 placeholder={{
                                     label: locales('labels.selectCity'),
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
                                 }}
                                 items={[...cities.map(item => ({
                                     label: item.city_name, value: item.id
@@ -264,7 +269,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -378,6 +385,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         height: 50,
         width: deviceWidth * 0.9,
+
     },
     iconContainer: {
         left: 10,
