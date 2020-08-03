@@ -37,6 +37,7 @@ class Requests extends PureComponent {
             selectedBuyAdId: -1,
             selectedContact: {},
             showFilters: false,
+            showGoldenModal: false,
             showModal: false,
             selectedFilterName: ''
         }
@@ -45,10 +46,17 @@ class Requests extends PureComponent {
     requestsRef = React.createRef();
     updateFlag = React.createRef();
 
+    is_mounted = false;
+
     componentDidMount() {
-        this.initialCalls().catch(_ => this.setState({ showModal: true }))
+        this.is_mounted = true;
+        if (this.is_mounted == true) {
+            this.initialCalls().catch(_ => this.setState({ showModal: true }));
+        }
     }
+
     componentWillUnmount() {
+        this.is_mounted = false;
         this.updateFlag.current.close()
     }
 
@@ -79,25 +87,34 @@ class Requests extends PureComponent {
     hideDialog = () => this.setState({ showDialog: false });
 
     openChat = (event, item) => {
+        let { userProfile = {} } = this.props;
+        const { user_info = {} } = userProfile;
+        const { active_pakage_type } = user_info;
+
         event.preventDefault();
-        const { isUserAllowedToSendMessage } = this.props;
-        this.setState({ selectedButton: item.id })
-        isUserAllowedToSendMessage(item.id).then(() => {
-            if (this.props.isUserAllowedToSendMessage) {
-                this.setState({
-                    modalFlag: true,
-                    selectedBuyAdId: item.id,
-                    selectedContact: {
-                        contact_id: item.myuser_id,
-                        first_name: item.first_name,
-                        last_name: item.last_name,
-                    }
-                });
-            }
-            else {
-                this.setState({ showDialog: true })
-            }
-        }).catch(_ => this.setState({ showModal: true }));
+        if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
+            const { isUserAllowedToSendMessage } = this.props;
+            this.setState({ selectedButton: item.id })
+            isUserAllowedToSendMessage(item.id).then(() => {
+                if (this.props.isUserAllowedToSendMessage) {
+                    this.setState({
+                        modalFlag: true,
+                        selectedBuyAdId: item.id,
+                        selectedContact: {
+                            contact_id: item.myuser_id,
+                            first_name: item.first_name,
+                            last_name: item.last_name,
+                        }
+                    });
+                }
+                else {
+                    this.setState({ showDialog: true })
+                }
+            }).catch(_ => this.setState({ showModal: true }));
+        }
+        else {
+            this.setState({ showGoldenModal: true });
+        }
     };
 
     renderItem = ({ item, index, separators }) => {
@@ -149,7 +166,7 @@ class Requests extends PureComponent {
         let { modalFlag, selectedContact,
             buyAdRequestsList,
             selectedButton, showDialog, selectedBuyAdId, from, to,
-            showFilters, selectedFilterName } = this.state;
+            showFilters, selectedFilterName, showGoldenModal } = this.state;
         return (
             <>
                 <NoConnection
@@ -286,6 +303,96 @@ class Requests extends PureComponent {
                             <Button
                                 style={styles.modalCloseButton}
                                 onPress={this.hideDialog}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
+
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showGoldenModal}
+                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.goldenRequests')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.accessToGoldensDeined')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('labels.icreaseToSeeGoldens')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.setState({ showGoldenModal: false })
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ showGoldenModal: false })}
                             >
 
                                 <Text style={styles.closeButtonText}>{locales('titles.close')}
