@@ -15,6 +15,8 @@ class Filters extends Component {
         this.state = {
             subCategoriesModal: false,
             subCategoriesList: [],
+            categoriesList: [],
+            loaded: false,
             selectedCategoryName: ''
         }
     }
@@ -23,10 +25,16 @@ class Filters extends Component {
         this.props.fetchAllCategories();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.categoriesList.length) {
+            this.setState({ categoriesList: this.props.categoriesList, loaded: true })
+        }
+    }
+
     sortProducts = (id = '', name = '') => {
-        if (!!id && !!name) {
-            let subCategory = this.props.categoriesList.some(item => item.id == id) ?
-                this.props.categoriesList.find(item => item.id == id).subcategories : {};
+        if (!!id && !!name && this.state.categoriesList.length) {
+            let subCategory = this.state.categoriesList.some(item => item.id == id) ?
+                this.state.categoriesList.find(item => item.id == id).subcategories : {};
 
             if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
                 subCategory = {}
@@ -39,7 +47,12 @@ class Filters extends Component {
                 selectedCategoryName: name,
                 subCategoriesList: subCategory
             })
-        };
+        }
+        else {
+            this.setState({ subCategoriesModal: false }, () => {
+                this.props.closeFilters()
+            })
+        }
     };
 
     render() {
@@ -54,7 +67,7 @@ class Filters extends Component {
             showFilters
         } = this.props;
 
-        const categoriesList = this.props.categoriesList.filter(item => item.parent_id == null);
+        const categoriesList = this.state.categoriesList.filter(item => item.parent_id == null);
 
         return (
             <>
@@ -99,6 +112,7 @@ class Filters extends Component {
                                 {locales('labels.emptyList')}
                             </Text>
                         </View>)}
+                        refreshing={this.props.categoriesLoading}
                         data={subCategoriesList}
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
@@ -165,6 +179,7 @@ class Filters extends Component {
 
                     <FlatList
                         data={categoriesList}
+                        refreshing={this.props.categoriesLoading}
                         ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text
                                 style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
