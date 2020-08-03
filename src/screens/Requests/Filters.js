@@ -47,7 +47,7 @@ class Filters extends Component {
                 selectedCategoryName: name,
                 subCategoriesList: subCategory
             }, () => {
-                if (!this.state.subCategoriesList.length) {
+                if (this.state.subCategoriesList.length <= 0) {
                     this.setState({ subCategoriesModal: false })
                     this.props.closeFilters()
                     this.props.fetchAllCategories()
