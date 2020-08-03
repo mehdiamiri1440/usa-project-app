@@ -94,6 +94,7 @@ export default {
     'labels.urgentApprove': 'تایید فوری',
     'labels.quantityOfPopularity': 'میزان افزایش خوشنامی',
     'labels.validatedSellerSign': 'بسته ی ویژه فروش',
+    'labels.goldenBuyAdRequests': 'دسترسی به درخواست های خرید طلایی',
     'labels.countOfBuyAdRequests': 'ظرفیت درخواستهای خرید روزانه',
     'labels.home': 'خانه',
     'labels.settings': 'تنظیمات',

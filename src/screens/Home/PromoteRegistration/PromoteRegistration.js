@@ -207,6 +207,27 @@ class PromoteRegistration extends React.Component {
                                     </Text>
 
                                 </View>
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.goldenBuyAdRequests')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <Ionicons name='ios-checkmark-circle' size={30} color='#00C569' />
+                                    </Text>
+
+                                </View>
                                 {activePackageType == 3 ? <Text style={{
                                     color: '#00C569', fontSize: 20,
                                     width: '100%', textAlign: 'center',

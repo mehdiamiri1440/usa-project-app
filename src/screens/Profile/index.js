@@ -362,60 +362,86 @@ class Profile extends Component {
                         } onRefresh={() => this.initProfileContent()} />
                     }
                     style={{ backgroundColor: 'white' }}>
-                    <View style={{ paddingVertical: 20, paddingHorizontal: 10, width: deviceWidth, flexDirection: 'row-reverse' }}>
-                        <Image
-                            style={{ width: deviceWidth * 0.22, height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11 }}
-                            source={
-                                profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
-                                    : require('../../../assets/icons/user.png')}
-                        />
-                        <View style={{ width: '100%', paddingLeft: 65 }}>
+                    <View style={{
+                        paddingVertical: 20, width: '100%',
+
+                    }}>
+                        <View
+                            style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <View style={{
-                                flexDirection: 'row-reverse', justifyContent: 'space-around',
-                                alignItems: 'center', marginVertical: 3,
+                                width: '30%',
+                                alignItems: 'center'
                             }}>
-                                <View>
-                                    <Text
-                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
-                                </View>
+                                <Image
+                                    style={{
+                                        width: deviceWidth * 0.22,
+                                        height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11
+                                    }}
+                                    source={
+                                        profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
+                                            : require('../../../assets/icons/user.png')}
+                                />
+
                             </View>
-                            {userIdFromByUserName != (this.props.userProfile &&
-                                this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
-                                <Button
 
-                                    onPress={() => this.setState({ modalFlag: true })}
-                                    style={[styles.loginButton, { flex: 1 }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='envelope' size={20} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                            {locales('titles.sendMessage')}
-                                        </Text>
+                            <View style={{
+                                width: '70%'
+                            }}>
+                                <View style={{
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-around',
+                                    alignItems: 'center',
+                                    marginVertical: 3,
+                                }}>
+                                    <View>
+                                        <Text
+                                            style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
+                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
                                     </View>
-
-                                </Button>
-                                : <Button
-                                    small
-                                    onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
-                                    style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='pencil' size={20} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                            {locales('titles.editProfile')}
-                                        </Text>
+                                    <View>
+                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
+                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
                                     </View>
+                                </View>
+                                {userIdFromByUserName != (this.props.userProfile &&
+                                    this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
+                                    <Button
 
-                                </Button>}
+                                        onPress={() => this.setState({ modalFlag: true })}
+                                        style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
+                                    >
+                                        <View
+                                            style={[styles.textCenterView,
+                                            styles.buttonText]}
+                                        >
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 8 }]}>
+                                                <FontAwesome name='envelope' size={20} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                {locales('titles.sendMessage')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>
+                                    : <Button
+                                        small
+                                        onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
+                                        style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
+                                    >
+                                        <View style={[styles.textCenterView, styles.buttonText]}>
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 9 }]}>
+                                                <FontAwesome name='pencil' size={20} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                {locales('titles.editProfile')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>}
+                            </View>
+
+
                         </View>
                     </View>
 
@@ -723,9 +749,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontSize: 18,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        width: '100%',
+        fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        // width: '100%',
         textAlign: 'center'
     },
     disableLoginButton: {

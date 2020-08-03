@@ -297,7 +297,7 @@ class Home extends React.Component {
                     <View style={[styles.textInputPadding, {
                         marginBottom: 50,
                         flex: 1,
-                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
+                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                     }]}>
                         <TouchableOpacity
                             onPress={() => is_seller && this.changeRole()}

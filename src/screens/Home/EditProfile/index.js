@@ -421,10 +421,10 @@ class EditProfile extends Component {
                                         borderColor: '#777',
                                         color: '#333',
                                         fontSize: 13,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
-
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        height: deviceHeight * 0.25,
                                     }}
-                                    rowSpan={4} bordered
+                                    bordered
                                     placeholderTextColor="#BEBEBE"
                                     placeholder={locales('titles.headerDescription')} />
 
