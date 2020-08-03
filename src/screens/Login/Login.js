@@ -179,7 +179,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         textAlign: 'center',
-        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        width: '100%'
     },
     labelInputPadding: {
         paddingVertical: 5,

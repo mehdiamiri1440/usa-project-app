@@ -234,7 +234,8 @@ class SelectCategory extends Component {
                                 textDecorationLine: 'none',
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
-                                height: 45
+                                height: 45,
+                                backgroundColor: '#fff'
                             }}
                             onChangeText={this.onProductTypeSubmit}
                             value={productType}
