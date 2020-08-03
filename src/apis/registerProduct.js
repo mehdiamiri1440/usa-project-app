@@ -2,6 +2,7 @@ import { requester } from '../utils';
 
 
 export const fetchAllCategories = (cascade_list) => {
+    console.warn('casesac', cascade_list)
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
