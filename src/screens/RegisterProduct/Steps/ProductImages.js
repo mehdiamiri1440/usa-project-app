@@ -198,6 +198,29 @@ class ProductImages extends Component {
                             paddingHorizontal: 10,
                             paddingVertical: 20
                         }}>
+
+
+                            <TouchableOpacity
+                                onPress={() => this.chooseProductImage()}
+                                style={{
+                                    flex: 2,
+                                    marginHorizontal: 10,
+                                    height: 130,
+                                    minWidth: 120,
+                                    maxWidth: 150,
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    borderStyle: 'dashed',
+                                    borderColor: '#707070',
+                                    zIndex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                <Entypo name='plus' size={25} color='#00C569' />
+                                <Text>{locales('labels.addImage')}</Text>
+                            </TouchableOpacity>
+
+
                             {images.length ? images.map((image, index) => <TouchableOpacity
                                 key={index}
                                 onPress={() => this.chooseProductImage(index)}
@@ -258,25 +281,6 @@ class ProductImages extends Component {
                             </TouchableOpacity>
                             ) : null}
 
-                            <TouchableOpacity
-                                onPress={() => this.chooseProductImage()}
-                                style={{
-                                    flex: 2,
-                                    marginHorizontal: 10,
-                                    height: 130,
-                                    minWidth: 120,
-                                    maxWidth: 150,
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    borderStyle: 'dashed',
-                                    borderColor: '#707070',
-                                    zIndex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                <Entypo name='plus' size={25} color='#00C569' />
-                                <Text>{locales('labels.addImage')}</Text>
-                            </TouchableOpacity>
                         </View>
                     </ScrollView>
                 </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
 import {
     CodeField,
     Cursor,
@@ -33,9 +33,7 @@ const EnterActivisionCode = (props) => {
         setValue,
     });
     let [showModal, setShowModal] = useState(false);
-    let [timerFlag, setTimerFlag] = useState(false)
     let [flag, setFlag] = useState(false)
-    let [activisionCode, setActivisionCode] = useState('');
 
     activisionCodeRef = React.createRef();
 
@@ -88,7 +86,6 @@ const EnterActivisionCode = (props) => {
                 showModal={showModal}
                 closeModal={closeModal}
             />
-            <Text style={styles.buttonText}>{locales('titles.login')}</Text>
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
@@ -112,7 +109,13 @@ const EnterActivisionCode = (props) => {
                     }}
                     cellCount={CELL_COUNT}
                     rootStyle={styles.codeFiledRoot}
+                    onSubmitEditing={event => {
+                        Keyboard.dismiss();
+                        onSubmit(event.nativeEvent.text);
+
+                    }}
                     keyboardType="number-pad"
+                    textContentType="oneTimeCode"
                     renderCell={({ index, symbol, isFocused }) => (
                         <Text
                             key={index}
