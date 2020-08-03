@@ -50,7 +50,7 @@ class SelectCategory extends Component {
             subCategory = Object.values(subCategory);
 
             this.setState({
-                categoriesError: '',
+                categoryError: '',
                 category: id,
                 subCategoriesList: subCategory,
             })

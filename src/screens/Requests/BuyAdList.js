@@ -1,10 +1,13 @@
 import { connect } from 'react-redux';
 import React, { memo } from 'react';
 import { View, Image, Text, ActivityIndicator } from 'react-native';
-import { Button, Card, CardItem, Body, Toast } from 'native-base';
+import { Button, Toast } from 'native-base';
 import Jmoment from 'moment-jalaali';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+
+import { formatter } from '../../utils';
+
 
 const BuyAdList = props => {
 
@@ -77,7 +80,7 @@ const BuyAdList = props => {
                             flexWrap: 'wrap', width: '100%', textAlign: 'center',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                         }}
-                    >{`${locales('titles.requirementQuantity')} : ${item.requirement_amount} ${locales('labels.kiloGram')}`}
+                    >{`${locales('titles.requirementQuantity')} : ${formatter.numberWithCommas(item.requirement_amount)} ${locales('labels.kiloGram')}`}
                     </Text>
                 </View>
 

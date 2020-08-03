@@ -16,6 +16,7 @@ class ChooseCity extends React.Component {
             province: '',
             errorFlag: false,
             city: '',
+            disableCity: true,
             index: -1,
             provinceError: '',
             cityError: '',
@@ -73,14 +74,17 @@ class ChooseCity extends React.Component {
             this.props.setCityAndProvice(city, province);
         }
     };
-
     setProvince = (value, index) => {
+        this.setState({ disableCity: true })
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
+            this.setState({ province: value, provinceError: '', city: '', cityError: '' })
+            this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
+                this.setState({ disableCity: false })
+            })
         }
     };
+
 
     setCity = (value) => {
         if (!!value)
@@ -159,6 +163,7 @@ class ChooseCity extends React.Component {
                             onValueChange={this.setProvince}
                             style={styles}
                             value={province}
+                            disabled={loading}
                             placeholder={{
                                 label: locales('labels.selectProvince'),
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -210,6 +215,7 @@ class ChooseCity extends React.Component {
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setCity}
                             style={styles}
+                            disabled={fetchCitiesLoading || loading || this.state.disableCity}
                             value={city}
                             placeholder={{
                                 label: locales('labels.selectCity'),
