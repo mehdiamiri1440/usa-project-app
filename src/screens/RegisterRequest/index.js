@@ -18,6 +18,7 @@ class RegisterRequest extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            disableSubCategory: true,
             amountError: '',
             amount: '',
             category: '',
@@ -68,12 +69,16 @@ class RegisterRequest extends Component {
 
 
     setCategory = (value) => {
+        this.setState({ disableSubCategory: true })
         let { categoriesList = [] } = this.props;
         if (categoriesList.length && value) {
-            this.setState({ category: value, categoryError: '' })
-            this.props.fetchAllSubCategories(categoriesList.find(item => item.id == value).id)
+            this.setState({ category: value, categoryError: '', subCategoryError: '', subCategory: '' })
+            this.props.fetchAllSubCategories(categoriesList.some(item => item.id == value) ? categoriesList.find(item => item.id == value).id : undefined).then(_ => {
+                this.setState({ disableSubCategory: false })
+            })
         }
     };
+
 
     setSubCategory = (value) => {
         if (!!value)
@@ -277,6 +282,7 @@ class RegisterRequest extends Component {
                                                 Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
                                                 useNativeAndroidPickerStyle={false}
                                                 onValueChange={this.setCategory}
+                                                disabled={categoriesLoading}
                                                 style={styles}
                                                 value={category}
                                                 placeholder={{
@@ -317,6 +323,7 @@ class RegisterRequest extends Component {
                                                 useNativeAndroidPickerStyle={false}
                                                 onValueChange={this.setSubCategory}
                                                 style={styles}
+                                                disabled={this.state.disableSubCategory || categoriesLoading || subCategoriesLoading}
                                                 value={subCategory}
                                                 placeholder={{
                                                     label: locales('titles.selectProductName'),
