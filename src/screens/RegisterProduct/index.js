@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Text, View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import * as productActions from '../../redux/registerProduct/actions';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -58,7 +58,6 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-
             stepNumber: 0,
             showModal: false
         }
@@ -314,119 +313,146 @@ class RegisterProduct extends React.Component {
         let { stepNumber, successfullAlert } = this.state;
 
         return (
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
+            <>
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 57,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => { stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) : this.props.navigation.goBack(); }}
+                {(!!this.props.addNewProductLoading) ?
+                    <View style={{
+                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+                        position: 'absolute',
 
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
+                        elevation: 5,
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                    }}>
+                        <ActivityIndicator size="large"
+                            style={{
+                                position: 'absolute', left: '44%', top: '40%',
+
+                                elevation: 5,
+                                borderColor: 'black',
+                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                            }}
+                            color="#00C569"
+
+                        />
+                    </View> : null}
+
+
+
+                <View style={{ flex: 1, backgroundColor: 'white' }}>
+                    <NoConnection
+                        showModal={this.state.showModal}
+                        closeModal={this.closeModal}
+                    />
 
                     <View style={{
-                        width: '100%',
-                        alignItems: 'center'
+                        backgroundColor: 'white',
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        height: 57,
+                        elevation: 5,
+                        justifyContent: 'center'
                     }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                        <TouchableOpacity
+                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                            onPress={() => { stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) : this.props.navigation.goBack(); }}
+
                         >
-                            {locales('labels.registerProduct')}
-                        </Text>
-                    </View>
-                </View>
+                            <AntDesign name='arrowright' size={25} />
+                        </TouchableOpacity>
 
-                <ScrollView
-                    ref={this.mainContainer}
-                    keyboardShouldPersistTaps='handled'
-                >
-
-
-                    {stepNumber > 0 && <View style={{
-                        borderBottomColor: '#00C569',
-                        borderBottomWidth: 2,
-                        paddingVertical: 10,
-                        width: deviceWidth, marginVertical: 5,
-                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
-                    }}>
                         <View style={{
-                            flexDirection: 'row-reverse',
-                            marginVertical: 5,
-
-                            alignItems: 'stretch',
-                            alignContent: 'center', alignSelf: 'center',
-                            width: deviceWidth - 80,
-
+                            width: '100%',
+                            alignItems: 'center'
                         }}>
-                            {stepsArray.map((item, index) => {
-                                return (
-                                    <Fragment key={index}>
-                                        <Text
-                                            style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
-                                                alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 10, height: 10 },
-                                                shadowColor: 'black',
-                                                shadowOpacity: 1.0,
-                                                elevation: 5,
-                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 26, height: 26, borderRadius: 13
-
-                                            }}
-                                        >
-                                            {item}
-                                        </Text>
-                                        {index < stepsArray.length - 1 && <View
-                                            style={{
-                                                height: 4,
-                                                flex: 1,
-                                                alignSelf: 'center',
-                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                            }}>
-                                        </View>
-                                        }
-                                    </Fragment>
-                                )
-                            }
-                            )}
-                        </View>
-                    </View>}
-
-
-
-
-
-                    <View style={styles.stepsContainer}>
-                        {successfullAlert && <View style={styles.loginFailedContainer}>
                             <Text
-                                style={styles.loginFailedText}
+                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
-                                {locales('titles.signUpDoneSuccessfully')}
+                                {locales('labels.registerProduct')}
                             </Text>
-                        </View >
-                        }
-                        {this.renderSteps()}
+                        </View>
                     </View>
 
+                    <ScrollView
+                        ref={this.mainContainer}
+                        keyboardShouldPersistTaps='handled'
+                    >
 
 
-                </ScrollView>
+                        {stepNumber > 0 && <View style={{
+                            borderBottomColor: '#00C569',
+                            borderBottomWidth: 2,
+                            paddingVertical: 10,
+                            width: deviceWidth, marginVertical: 5,
+                            flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
+                        }}>
+                            <View style={{
+                                flexDirection: 'row-reverse',
+                                marginVertical: 5,
 
-            </View >
+                                alignItems: 'stretch',
+                                alignContent: 'center', alignSelf: 'center',
+                                width: deviceWidth - 80,
+
+                            }}>
+                                {stepsArray.map((item, index) => {
+                                    return (
+                                        <Fragment key={index}>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                                    alignSelf: 'center', alignContent: 'center',
+                                                    shadowOffset: { width: 10, height: 10 },
+                                                    shadowColor: 'black',
+                                                    shadowOpacity: 1.0,
+                                                    elevation: 5,
+                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                    width: 26, height: 26, borderRadius: 13
+
+                                                }}
+                                            >
+                                                {item}
+                                            </Text>
+                                            {index < stepsArray.length - 1 && <View
+                                                style={{
+                                                    height: 4,
+                                                    flex: 1,
+                                                    alignSelf: 'center',
+                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                                }}>
+                                            </View>
+                                            }
+                                        </Fragment>
+                                    )
+                                }
+                                )}
+                            </View>
+                        </View>}
+
+
+
+
+
+                        <View style={styles.stepsContainer}>
+                            {successfullAlert && <View style={styles.loginFailedContainer}>
+                                <Text
+                                    style={styles.loginFailedText}
+                                >
+                                    {locales('titles.signUpDoneSuccessfully')}
+                                </Text>
+                            </View >
+                            }
+                            {this.renderSteps()}
+                        </View>
+
+
+
+                    </ScrollView>
+
+                </View >
+            </>
         )
     }
 }
