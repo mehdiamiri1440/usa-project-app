@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         fontSize: 13,
-        paddingHorizontal: 10,
+        paddingHorizontal: deviceWidth * 0.05,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,

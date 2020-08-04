@@ -34,7 +34,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 1,
+            stepNumber: 6,
             showModal: false
         }
     }

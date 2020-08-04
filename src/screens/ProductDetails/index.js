@@ -892,10 +892,10 @@ class ProductDetails extends Component {
                         elevation: 5,
                     }}>
                         {(photosWithCompletePath && photosWithCompletePath.length) ? <SliderBox
-                            dotColor='#0095F6'
+                            dotColor='#00C569'
                             inactiveDotColor='#A8A8A8'
                             sliderBoxHeight={400}
-                            dotStyle={{ bottom: -30, width: 10, height: 10, borderRadius: 5 }}
+                            dotStyle={{ bottom: -30, width: 9, height: 9, borderRadius: 5, marginHorizontal: -10 }}
                             images={photosWithCompletePath}
                             onCurrentImagePressed={this.showFullSizeImage}
                         // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
