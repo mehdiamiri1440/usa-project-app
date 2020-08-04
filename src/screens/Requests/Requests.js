@@ -531,7 +531,9 @@ class Requests extends PureComponent {
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}
-                        onRefresh={() => this.props.fetchAllBuyAdRequests()}
+                        onRefresh={() => {
+                            this.props.fetchAllBuyAdRequests();
+                        }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={() => <View style={{

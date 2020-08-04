@@ -35,26 +35,33 @@ class Filters extends Component {
         if (!!id && !!name && this.state.categoriesList.length) {
             let subCategory = this.state.categoriesList.some(item => item.id == id) ?
                 this.state.categoriesList.find(item => item.id == id).subcategories : {};
+            console.warn('333', subCategory, 'list', this.state.categoriesList, 'some', this.state.categoriesList.some(item => item.id == id),
+                'find', this.state.categoriesList.find(item => item.id == id))
 
             if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
                 subCategory = {}
             }
 
-            subCategory = Object.values(subCategory);
+            subCategory = Object.values(!!subCategory ? subCategory : {});
+            console.warn('444', subCategory)
 
             this.setState({
                 subCategoriesModal: true,
                 selectedCategoryName: name,
                 subCategoriesList: subCategory
             }, () => {
-                if (!this.state.subCategoriesList.length) {
+                if (this.state.subCategoriesList.length <= 0) {
+                    this.props.fetchAllCategories()
+                    console.warn('22222', id, 'name', name, 'categrory',
+                        this.state.categoriesList, 'category len', this.state.categoriesList.length,
+                        'sub', this.state.subCategoriesList, 'sub len', this.state.subCategoriesList.length)
                     this.setState({ subCategoriesModal: false })
                     this.props.closeFilters()
-                    this.props.fetchAllCategories()
                 }
             })
         }
         else {
+            console.warn('1111', id, name, this.state.categoriesList, this.state.categoriesList.length)
             this.setState({ subCategoriesModal: false }, () => {
                 this.props.closeFilters()
             })
