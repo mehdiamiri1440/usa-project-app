@@ -137,7 +137,7 @@ class ContactsList extends React.Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 5457,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>

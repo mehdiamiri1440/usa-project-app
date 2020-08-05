@@ -282,7 +282,7 @@ class SpecialProducts extends PureComponent {
                         flexDirection: 'row-reverse',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -441,7 +441,7 @@ class SpecialProducts extends PureComponent {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -528,7 +528,7 @@ class SpecialProducts extends PureComponent {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -603,7 +603,7 @@ class SpecialProducts extends PureComponent {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>

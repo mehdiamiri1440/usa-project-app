@@ -851,7 +851,7 @@ class ProductDetails extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     shadowOffset: { width: 20, height: 20 },
                     justifyContent: 'center'

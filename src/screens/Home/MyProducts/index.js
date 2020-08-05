@@ -96,10 +96,7 @@ class MyProducts extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 0.3,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
