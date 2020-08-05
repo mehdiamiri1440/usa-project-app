@@ -17,6 +17,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
+import { locale } from 'moment';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -662,7 +663,7 @@ class ProductsList extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
@@ -716,7 +717,16 @@ class ProductsList extends PureComponent {
                     }}>
                         <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
                         <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
+                        <View >
+                            <Button style={styles.loginButton}>
+                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                    {locales('titles.registerBuyAdRequest')}
+                                </Text>
+                            </Button>
+                        </View>
                     </View>
+
+
                     }
                     // getItemLayout={(data, index) => (
                     //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }

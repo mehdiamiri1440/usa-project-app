@@ -536,13 +536,19 @@ class Requests extends PureComponent {
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => <View style={{
+                        ListEmptyComponent={() => !!buyAdRequestLoading ? <View style={{
                             alignSelf: 'center', justifyContent: 'center',
                             alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
                         }}>
                             <Entypo name='list' size={80} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
-                        </View>
+                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
+                        </View> : <View style={{
+                            alignSelf: 'center', justifyContent: 'center',
+                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                        }}>
+                                <Entypo name='list' size={80} color='#BEBEBE' />
+                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
+                            </View>
                         }
                         data={buyAdRequestsList}
                         extraData={this.state}
