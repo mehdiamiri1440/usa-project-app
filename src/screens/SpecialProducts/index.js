@@ -591,8 +591,8 @@ class SpecialProducts extends PureComponent {
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.category_name}</Text>
+                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
                             </TouchableOpacity>
                         )}
                     />

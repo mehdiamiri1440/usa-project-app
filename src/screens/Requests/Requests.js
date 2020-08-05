@@ -575,13 +575,13 @@ class Requests extends PureComponent {
                         renderItem={this.renderItem}
                         style={{
                             // paddingHorizontal: 15,
-                            marginBottom: selectedFilterName ? 105 : 57
+                            marginBottom: selectedFilterName ? 92 : 45
                         }} />
 
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: selectedFilterName ? 105 : 57,
+                        bottom: selectedFilterName ? 92 : 45,
                         width: '100%',
                         righ: 0,
                         left: 0,
@@ -602,7 +602,8 @@ class Requests extends PureComponent {
                             <Text style={{
                                 textAlign: 'center',
                                 color: '#fff',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
                             }}>
                                 {locales('titles.categories')}
                             </Text>
