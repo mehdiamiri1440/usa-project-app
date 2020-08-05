@@ -707,7 +707,7 @@ const App = (props) => {
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: locales('labels.registerProduct'),
-                                    tabBarIcon: ({ focused, color }) => <View style={{ backgroundColor: color, height: 30, width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}><FontAwesome5 size={18} name='plus' solid color='#fff' /></View>,
+                                    tabBarIcon: ({ focused, color }) => <View style={{ backgroundColor: color, height: 30, width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}><FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} /></View>,
                                 }}
                                 name={'RegisterProductStack'}
                                 component={RegisterProductStack}
