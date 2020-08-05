@@ -288,7 +288,7 @@ export default {
     'titles.editProfile': 'ویرایش پروفایل',
     'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
 
-    "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید . ",
+    "messages.signedUpUser": ".لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",
     'messages.enterUserBasicInfo': 'ثبت مشخصات فردی شما',

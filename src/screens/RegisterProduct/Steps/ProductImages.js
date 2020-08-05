@@ -178,7 +178,8 @@ class ProductImages extends Component {
                         style={{
                             color: 'red',
                             fontSize: 14,
-                            paddingHorizontal: 10
+                            paddingHorizontal: 10,
+                            direction: 'rtl'
                         }}
                     >
                         {locales('labels.uploadProductImages')}
@@ -190,28 +191,33 @@ class ProductImages extends Component {
                     {this.state.errorFlag && <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>{locales('errors.fieldNeeded', { fieldName: locales('titles.chooseImage') })}</Text>
                     </View>}
-                    <ScrollView style={{ height: 300 }}>
+                    <ScrollView style={{
+                        height: deviceHeight * 0.4,
+                        paddingVertical: 10,
+                        backgroundColor: '#eee'
+                    }}>
                         <View style={{
                             width: deviceWidth,
                             flexDirection: 'row-reverse',
                             flexWrap: 'wrap',
-                            paddingHorizontal: 10,
-                            paddingVertical: 20
+                            paddingVertical: 10,
+
                         }}>
 
 
                             <TouchableOpacity
                                 onPress={() => this.chooseProductImage()}
                                 style={{
-                                    flex: 2,
+                                    flex: 3,
                                     marginHorizontal: 10,
-                                    height: 130,
-                                    minWidth: 120,
-                                    maxWidth: 150,
+                                    height: 100,
+                                    minWidth: 100,
+                                    maxWidth: 120,
                                     borderWidth: 1,
                                     borderRadius: 5,
                                     borderStyle: 'dashed',
                                     borderColor: '#707070',
+                                    backgroundColor: '#fff',
                                     zIndex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
@@ -225,10 +231,10 @@ class ProductImages extends Component {
                                 key={index}
                                 onPress={() => this.chooseProductImage(index)}
                                 style={{
-                                    flex: 2,
-                                    height: 130,
-                                    minWidth: 120,
-                                    maxWidth: 180,
+                                    flex: 3,
+                                    height: 100,
+                                    minWidth: 100,
+                                    maxWidth: 120,
                                     marginHorizontal: 10,
                                     marginBottom: 20,
                                     borderWidth: 1,
@@ -279,7 +285,10 @@ class ProductImages extends Component {
                                     <FontAwesome name='trash' size={25} color='white' />
                                 </TouchableOpacity>
                             </TouchableOpacity>
-                            ) : null}
+
+                            ) :
+                                null
+                            }
 
                         </View>
                     </ScrollView>
