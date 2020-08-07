@@ -207,7 +207,7 @@ class ContactsList extends React.Component {
                             <CardItem >
                                 <Body >
                                     <FlatList
-                                        ListEmptyComponent={() => searchText ?
+                                        ListEmptyComponent={() => contactsListLoading ? <View></View> : searchText ?
                                             <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
                                                 <AntDesign size={135} name='contacts' color='#BEBEBE' />
                                                 <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>

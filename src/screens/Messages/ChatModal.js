@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
 import { Button } from 'native-base';
 import {
-    View, Text, Modal, TouchableOpacity, Image, TextInput, KeyboardAvoidingView,
-    Keyboard, ScrollView, TouchableWithoutFeedback, FlatList, ActivityIndicator
+    View, Text, Modal, TouchableOpacity, Image, TextInput,
+    Keyboard, FlatList, ActivityIndicator
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

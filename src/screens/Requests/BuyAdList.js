@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import React, { memo } from 'react';
 import { View, Image, Text, ActivityIndicator } from 'react-native';
 import { Button, Toast } from 'native-base';
-import Jmoment from 'moment-jalaali';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -93,7 +92,7 @@ const BuyAdList = props => {
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                         }}
                     >
-                        {Jmoment(item.created_at.split(" ")[0]).format('jD jMMMM , jYYYY')}
+                        {item.register_date}
                     </Text>
                 </View>
 
