@@ -2,6 +2,7 @@ import { requester } from '../utils';
 
 
 export const fetchAllCategories = (cascade_list) => {
+    // console.warn('casesac', cascade_list)
     if (cascade_list == undefined || typeof cascade_list == 'undefined' || cascade_list == null) {
         cascade_list = true;
     }

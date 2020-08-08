@@ -95,7 +95,7 @@ class Filters extends Component {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -143,8 +143,8 @@ class Filters extends Component {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}
                             >
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>
+                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>
 
@@ -168,7 +168,7 @@ class Filters extends Component {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -210,8 +210,8 @@ class Filters extends Component {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}
                             >
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>
+                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>
                             </TouchableOpacity>

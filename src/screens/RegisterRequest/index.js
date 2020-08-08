@@ -192,7 +192,7 @@ class RegisterRequest extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         fontSize: 13,
-        paddingHorizontal: 10,
+        paddingHorizontal: deviceWidth * 0.062,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,

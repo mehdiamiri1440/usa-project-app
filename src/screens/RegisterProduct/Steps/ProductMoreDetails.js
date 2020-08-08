@@ -231,7 +231,7 @@ class ProductMoreDetails extends Component {
                     style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                     <Text
                         style={{
-                            marginVertical: 10,
+                            marginBottom: 10,
                             color: '#666666',
                             fontSize: 20,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -282,36 +282,51 @@ class ProductMoreDetails extends Component {
 
 
                     </View>
-                    <ScrollView style={{ height: deviceHeight * 0.5 }}>
+                    <ScrollView style={{
+                        height: deviceHeight * 0.35,
+                        marginVertical: 10,
+                        backgroundColor: '#eee',
+                        paddingBottom: 50,
+                        elevation: 2
+                    }}>
                         {detailsArray.map((detail, index) => (
                             <>
                                 {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
                                     key={detail.keyId}
                                     style={{
-                                        flexDirection: 'row-reverse', paddingBottom: 0,
-                                        justifyContent: 'space-between', alignItems: 'center', padding: 5
+                                        flexDirection: 'row-reverse',
+                                        paddingBottom: 0,
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        marginVertical: 7
                                     }}>
                                     <TouchableOpacity
                                         onPress={() => this.deleteRow(index)}
                                         style={{
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            height: 80,
+                                            height: 45,
                                             width: 30
                                         }}>
                                         <FontAwesome name='trash' color='red' size={25} />
                                     </TouchableOpacity>
 
-                                    <View style={{ flex: 1, flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'space-between',
+                                    }}>
                                         <View >
                                             <Item regular
                                                 style={{
-                                                    flex: 2,
-
-                                                    height: 55,
-                                                    borderRadius: 5,
+                                                    height: 45,
+                                                    backgroundColor: '#fff',
+                                                    overflow: "hidden",
                                                     alignSelf: 'center',
-                                                    borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8'
+                                                    borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8',
+                                                    borderRadius: 5,
+                                                    marginLeft: 5,
+
                                                 }}
                                             >
                                                 <RNPickerSelect
@@ -343,12 +358,16 @@ class ProductMoreDetails extends Component {
                                 }}
                             /> */}
                                         <View style={{
-                                            flex: 2,
+                                            flex: 1,
 
                                         }}>
                                             <Item error={detail.error} regular style={{
-                                                height: 55,
-                                                borderColor: description.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                                height: 45,
+                                                backgroundColor: '#fff',
+                                                overflow: "hidden",
+                                                borderColor: description.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
                                             }}>
                                                 <Input
                                                     disabled={!detail.itemKey}
@@ -383,32 +402,30 @@ class ProductMoreDetails extends Component {
                         )}
 
 
-                        <View style={{
-                            marginVertical: 20, flexDirection: 'row',
-                            width: deviceWidth, justifyContent: 'space-between',
 
-                        }}>
-                            <Button
-                                onPress={() => this.addMoreRow()}
-                                style={[styles.addMoreButton, {
-                                    borderWidth: 1,
-                                    borderColor: '#00C569'
-                                }]}
-                                rounded
-                            >
-                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                                <AntDesign name='plus' size={25} color='#00C569' />
-                            </Button>
-                        </View>
                     </ScrollView>
-
                     <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
+                        marginVertical: 0, flexDirection: 'row',
+                        width: deviceWidth, justifyContent: 'space-between',
+
                     }}>
                         <Button
+                            onPress={() => this.addMoreRow()}
+                            style={[styles.addMoreButton, {
+                                borderWidth: 1,
+                                borderColor: '#00C569'
+                            }]}
+                            rounded
+                        >
+                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                            <AntDesign name='plus' size={25} color='#00C569' />
+                        </Button>
+                    </View>
+                    <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                        <Button
                             onPress={() => this.onSubmit()}
-                            style={styles.loginButton}
+                            style={[styles.loginButton, { flex: 1 }]}
                             rounded
                         >
                             <ActivityIndicator size="small" color="white"
@@ -426,7 +443,7 @@ class ProductMoreDetails extends Component {
                         </Button>
                         <Button
                             onPress={() => this.props.changeStep(5)}
-                            style={styles.backButtonContainer}
+                            style={[styles.backButtonContainer, { flex: 1 }]}
                             rounded
                         >
                             <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -471,30 +488,28 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
         margin: 10,
-        width: deviceWidth * 0.45,
         backgroundColor: 'white',
         alignItems: 'center',
+        borderRadius: 5,
         alignSelf: 'flex-end',
         justifyContent: 'center'
     },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
-        width: deviceWidth * 0.45,
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
+        borderRadius: 5,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        borderRadius: 5,
         backgroundColor: '#00C569',
-        width: deviceWidth * 0.45,
+        borderRadius: 5,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',
@@ -577,12 +592,11 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         fontSize: 13,
-        paddingHorizontal: 10,
+        paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-        paddingVertical: 8,
+        // paddingVertical: 8,
         height: 50,
         width: deviceWidth * 0.45,
-
     },
     iconContainer: {
         left: 10,

@@ -6,8 +6,11 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 const RegisterRequestSuccessfully = props => {
 
     const handleBack = () => {
-        props.route.emptyState();
-        props.navigation.goBack();
+        if (props.route && props.route.params) {
+            props.route.params.emptyState();
+            props.navigation.goBack();
+        }
+
     }
 
 
@@ -20,7 +23,7 @@ const RegisterRequestSuccessfully = props => {
                 flexDirection: 'row',
                 alignContent: 'center',
                 alignItems: 'center',
-                height: 57,
+                height: 45,
                 elevation: 5,
                 justifyContent: 'center'
             }}>
@@ -85,7 +88,8 @@ const RegisterRequestSuccessfully = props => {
                             <Text style={{
                                 color: 'white',
                                 width: '100%',
-                                textAlign: 'center'
+                                textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
                             }}>{locales('labels.productsList')}</Text>
                         </Button>
                     </View>

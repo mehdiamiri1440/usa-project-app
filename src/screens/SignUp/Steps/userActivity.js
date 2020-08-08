@@ -100,13 +100,14 @@ class UserActivity extends React.Component {
                             borderRadius: 5,
                             flexDirection: 'row-reverse',
                             backgroundColor: '#fff',
-                            height: 55
+                            height: 55,
+                            alignItems: 'center'
                         }}>
                         <Radio
                             onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
                             selected={activityType === 'buyer'}
                             color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
+                            // style={{ marginHorizontal: 10 }}
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
@@ -117,7 +118,7 @@ class UserActivity extends React.Component {
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 5 }}>{locales('labels.buyer')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -129,6 +130,7 @@ class UserActivity extends React.Component {
                             borderRadius: 5,
                             flexDirection: 'row-reverse',
                             backgroundColor: '#fff',
+                            alignItems: 'center',
                             height: 55
 
                         }}
@@ -138,7 +140,7 @@ class UserActivity extends React.Component {
                             onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
                             selected={activityType === 'seller'}
                             color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
+                            // style={{ marginHorizontal: 10 }}
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
@@ -149,7 +151,7 @@ class UserActivity extends React.Component {
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 2 }}>{locales('labels.seller')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -299,7 +301,7 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         fontSize: 13,
-        paddingHorizontal: 10,
+        paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,

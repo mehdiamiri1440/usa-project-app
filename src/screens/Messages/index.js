@@ -137,7 +137,7 @@ class ContactsList extends React.Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -166,7 +166,7 @@ class ContactsList extends React.Component {
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium' }}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
                             placeholder={locales('labels.searchContacts')}
                             placeholderTextColor="#BEBEBE"
 

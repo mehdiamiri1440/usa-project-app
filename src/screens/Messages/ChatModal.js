@@ -397,7 +397,6 @@ class ChatModal extends React.Component {
                             width: deviceWidth * 0.8, paddingHorizontal: 20,
                             maxHeight: 100, height: 44,
                             overflow: 'scroll',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
                         }}
                         placeholder='پیامی بگذارید'
                         placeholderTextColor="#BEBEBE"

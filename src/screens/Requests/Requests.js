@@ -409,7 +409,7 @@ class Requests extends PureComponent {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -536,13 +536,19 @@ class Requests extends PureComponent {
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => <View style={{
+                        ListEmptyComponent={() => !!buyAdRequestLoading ? <View style={{
                             alignSelf: 'center', justifyContent: 'center',
                             alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
                         }}>
                             <Entypo name='list' size={80} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
-                        </View>
+                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
+                        </View> : <View style={{
+                            alignSelf: 'center', justifyContent: 'center',
+                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                        }}>
+                                <Entypo name='list' size={80} color='#BEBEBE' />
+                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
+                            </View>
                         }
                         data={buyAdRequestsList}
                         extraData={this.state}
@@ -569,13 +575,13 @@ class Requests extends PureComponent {
                         renderItem={this.renderItem}
                         style={{
                             // paddingHorizontal: 15,
-                            marginBottom: selectedFilterName ? 105 : 57
+                            marginBottom: selectedFilterName ? 92 : 45
                         }} />
 
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: selectedFilterName ? 105 : 57,
+                        bottom: selectedFilterName ? 92 : 45,
                         width: '100%',
                         righ: 0,
                         left: 0,
@@ -596,7 +602,8 @@ class Requests extends PureComponent {
                             <Text style={{
                                 textAlign: 'center',
                                 color: '#fff',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
                             }}>
                                 {locales('titles.categories')}
                             </Text>

@@ -19,6 +19,7 @@ import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
+import RelatedPhotos from './RelatedPhotos';
 
 class Profile extends Component {
     constructor(props) {
@@ -192,6 +193,10 @@ class Profile extends Component {
         this.componentDidMount();
     };
 
+    setSelectedImage = (selectedImageModal, selectedImageIndex) => {
+        this.setState({ selectedImageModal, selectedImageIndex })
+    }
+
     render() {
         const {
             profileInfo,
@@ -334,7 +339,7 @@ class Profile extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
 
                     justifyContent: 'center'
@@ -662,21 +667,7 @@ class Profile extends Component {
                             keyExtractor={((_, index) => index.toString())}
                             showsHorizontalScrollIndicator={false}
                             renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ selectedImageModal: true, selectedImageIndex: index })}
-                                >
-                                    <Image
-                                        style={{
-                                            width: deviceWidth * 0.4,
-                                            borderWidth: 0.7,
-                                            borderColor: '#BEBEBE',
-                                            borderRadius: 4, marginHorizontal: 5, height: deviceWidth * 0.4
-                                        }}
-                                        source={{
-                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                        }}
-                                    />
-                                </TouchableOpacity>
+                                <RelatedPhotos item={item} index={index} setSelectedImage={this.setSelectedImage} />
                             )}
                         />
                     </View>
