@@ -40,6 +40,7 @@ class Profile extends Component {
             relatedsFromByUserName: [],
             certificatesFromByUserName: [],
             profilePhotoFromByUserName: '',
+            buyAd_count: null,
             product_count: null,
             reputation_score: 0,
             response_rate: 0,
@@ -66,6 +67,7 @@ class Profile extends Component {
 
             const {
                 product_count,
+                buyAd_count,
                 rating_info,
                 reputation_score,
                 response_rate,
@@ -120,6 +122,7 @@ class Profile extends Component {
                 certificatesFromByUserName,
                 profilePhotoFromByUserName,
                 product_count,
+                buyAd_count,
 
                 reputation_score,
                 response_rate,
@@ -212,6 +215,7 @@ class Profile extends Component {
             profilePhotoFromByUserName,
 
             product_count,
+            buyAd_count,
             reputation_score,
             response_rate,
             transaction_count,
@@ -395,9 +399,18 @@ class Profile extends Component {
                                     marginVertical: 3,
                                 }}>
                                     <View>
-                                        <Text
-                                            style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
-                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
+                                        {product_count >= 0 ? <>
+                                            <Text
+                                                style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
+                                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
+                                        </>
+                                            :
+                                            <>
+                                                <Text
+                                                    style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{buyAd_count > 0 ? buyAd_count : 0}</Text>
+                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.requests')}</Text>
+                                            </>
+                                        }
                                     </View>
                                     <View>
                                         <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>

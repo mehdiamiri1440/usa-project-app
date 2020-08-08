@@ -58,24 +58,24 @@ class App extends React.Component {
       I18nManager.allowRTL(false);
       RNRestart.Restart();
     }
-    NetInfo.addEventListener(this.handleConnectivityChange);
+    // NetInfo.addEventListener(this.handleConnectivityChange);
   }
 
-  componentWillUnmount() {
-    NetInfo.removeEventListener(this.handleConnectivityChange);
-  }
+  // componentWillUnmount() {
+  //   NetInfo.removeEventListener(this.handleConnectivityChange);
+  // }
 
 
 
-  handleConnectivityChange = state => {
-    if (!state.isConnected) {
-      return ToastAndroid.showWithGravity(
-        'اتصال شما به اینترنت دچار مشکل شده‌است .',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }
-  };
+  // handleConnectivityChange = state => {
+  //   if (!state.isConnected) {
+  //     return ToastAndroid.showWithGravity(
+  //       'اتصال شما به اینترنت دچار مشکل شده‌است .',
+  //       ToastAndroid.LONG,
+  //       ToastAndroid.CENTER
+  //     );
+  //   }
+  // };
 
   render() {
     return (
