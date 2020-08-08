@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { Button } from 'native-base';
+import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import analytics from '@react-native-firebase/analytics';
+
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -17,8 +20,30 @@ class GuidToRegisterProduct extends React.Component {
         }
     }
 
+    componentDidMount() {
+
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            console.warn('erg', componentName, componentType)
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+    }
 
     onSubmit = () => {
+
+        analytics().logEvent('registerButton', {
+            item: "guid111"
+        })
+
+        analytics().logEvent('GuidToRegisterProductSubmitButton', {
+            item: "guid222"
+        })
+
+        analytics().logEvent('basket4', {
+            item: "guid333"
+        })
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {
