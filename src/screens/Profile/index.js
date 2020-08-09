@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import {
     Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, RefreshControl, ActivityIndicator,
     Share, FlatList, Modal
@@ -21,7 +21,7 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import RelatedPhotos from './RelatedPhotos';
 
-class Profile extends Component {
+class Profile extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -650,26 +650,7 @@ class Profile extends Component {
                             </Text>
 
                         </View>
-
-                        <FlatList
-                            data={relatedsFromByUserName}
-                            horizontal
-                            ListEmptyComponent={() => (
-                                <View style={{
-                                    alignSelf: 'center', justifyContent: 'flex-start',
-                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
-                                }}>
-                                    <FontAwesome5 name='images' size={80} color='#BEBEBE' solid />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
-                                        {locales('labels.noImageFound')}</Text>
-                                </View>
-                            )}
-                            keyExtractor={((_, index) => index.toString())}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => (
-                                <RelatedPhotos item={item} index={index} setSelectedImage={this.setSelectedImage} />
-                            )}
-                        />
+                        <RelatedPhotos relatedsFromByUserName={relatedsFromByUserName} setSelectedImage={this.setSelectedImage} />
                     </View>
 
                     <View style={{
