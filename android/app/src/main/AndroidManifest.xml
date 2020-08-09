@@ -5,6 +5,7 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-feature android:name="android.hardware.camera" android:required="false" />
   <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
@@ -36,6 +37,11 @@
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/buyAd-requests" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product" />
         <!-- note that the leading "/" is required for pathPrefix-->
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+        <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -18,57 +18,65 @@ const RelatedProductsList = props => {
                 marginBottom: 20,
                 marginHorizontal: 7,
             }}
+            initialNumToRender={2}
+            initialScrollIndex={0}
             horizontal={true}
             ListEmptyComponent={() => <Text style={[{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18 }, styles.textBold]}>{locales('titles.noRelatedProductFound')}</Text>}
             keyExtractor={(_, index) => index.toString()}
             data={relatedProductsArray}
             renderItem={({ item }) => (
-                <Card transparent>
-                    <TouchableOpacity
-                        style={{
-                            borderRadius: 6,
-                            elevation: 5,
-                            margin: 10,
-                            backgroundColor: '#fff',
-                            overflow: 'hidden',
-                            maxWidth: 220,
-                            minWidth: 220,
-                        }}
-                        activeOpacity={1}
-                        onPress={() => {
-                            // this.props.navigation.setParams({ productId: item.id, key: item.id })
-                            // routes.push(item.id);
-                            global.productIds.push(item.id)
-                            props.navigation.navigate({ name: 'ProductDetails', params: { productId: item.id }, key: item.id, index: item.id })
-                        }}>
-                        <Image
-                            resizeMode='cover'
-                            style={{ width: '100%', height: deviceWidth * 0.35 }}
-                            source={{
-                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
-                            }} />
-                        <Text
-                            numberOfLines={1}
-                            style={[{
-                                width: '100%',
-                                paddingTop: 5,
-                                alignSelf: 'center',
-                                textAlign: 'center',
-                                paddingHorizontal: 10
-                            }, styles.textBold]}>
-                            {item.product_name}
-                        </Text>
-                        <Text style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
-                            {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
-                    </TouchableOpacity>
-                </Card>
+                <TouchableOpacity
+                    style={{
+                        borderRadius: 6,
+                        elevation: 5,
+                        margin: 10,
+                        backgroundColor: '#fff',
+                        overflow: 'hidden',
+                        maxWidth: 180,
+                        minWidth: 180,
+                    }}
+                    activeOpacity={1}
+                    onPress={() => {
+                        // this.props.navigation.setParams({ productId: item.id, key: item.id })
+                        // routes.push(item.id);
+                        props.navigation.navigate({ name: 'ProductDetails', params: { productId: item.id }, key: item.id, index: item.id })
+                    }}>
+                    <Image
+                        resizeMode='cover'
+                        resizeMethod='resize'
+                        style={{ width: deviceWidth * 0.5, height: deviceWidth * 0.3 }}
+                        source={{
+                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`
+                        }} />
+                    <Text
+                        numberOfLines={1}
+                        style={[{
+                            width: '100%',
+                            paddingTop: 5,
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            paddingHorizontal: 10
+                        }, styles.textBold]}>
+                        {item.product_name}
+                    </Text>
+                    <Text style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
+                        {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
+                </TouchableOpacity>
+
             )
             }
         />
     )
 }
 
-export default RelatedProductsList;
+
+const areEqual = (prevProps, nextProps) => {
+    if (prevProps.relatedProductsArray != nextProps.relatedProductsArray)
+        return false;
+    return true;
+};
+
+export default memo(RelatedProductsList, areEqual);
 
 const styles = StyleSheet.create({
     textBold: {

@@ -28,7 +28,7 @@ const BuyAdList = props => {
 
             <View >
                 {/* blur items */}
-                {item.is_golden && active_pakage_type != 3 ?
+                {item.is_golden && active_pakage_type == 0 ?
 
                     <View style={{
                         position: 'absolute',

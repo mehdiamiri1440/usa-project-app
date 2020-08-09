@@ -105,7 +105,7 @@ export default (state = INITIAL_STATE, action) => {
         case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_SUCCESSFULLY: {
             return {
                 ...state,
-                isUserAllowedToSendMessage: { ...action.payload },
+                isUserAllowedToSendMessagePermission: { ...action.payload },
                 isUserAllowedToSendMessageLoading: false,
                 isUserAllowedToSendMessageFailed: false,
                 isUserAllowedToSendMessageError: false,

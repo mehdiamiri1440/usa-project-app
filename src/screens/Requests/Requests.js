@@ -93,10 +93,9 @@ class Requests extends PureComponent {
 
         event.preventDefault();
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
-            const { isUserAllowedToSendMessage } = this.props;
             this.setState({ selectedButton: item.id })
-            isUserAllowedToSendMessage(item.id).then(() => {
-                if (this.props.isUserAllowedToSendMessage) {
+            this.props.isUserAllowedToSendMessage(item.id).then(() => {
+                if (this.props.isUserAllowedToSendMessagePermission.permission) {
                     this.setState({
                         modalFlag: true,
                         selectedBuyAdId: item.id,
@@ -828,6 +827,7 @@ const mapStateToProps = (state) => {
         buyAdRequests: state.buyAdRequestReducer.buyAdRequest,
         userProfile: state.profileReducer.userProfile,
         isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission: state.profileReducer.isUserAllowedToSendMessagePermission,
         isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
     }
 }

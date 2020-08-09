@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
     TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
@@ -25,7 +25,7 @@ import RelatedProductsList from './RelatedProductsList';
 import NoConnection from '../../components/noConnectionError';
 
 let fromHardwareBack = false;
-class ProductDetails extends Component {
+class ProductDetails extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -897,6 +897,9 @@ class ProductDetails extends Component {
                             sliderBoxHeight={400}
                             dotStyle={{ bottom: -30, width: 9, height: 9, borderRadius: 5, marginHorizontal: -10 }}
                             images={photosWithCompletePath}
+                            imageLoadingColor='red'
+                            resizeMode='cover'
+                            resizeMethod='resize'
                             onCurrentImagePressed={this.showFullSizeImage}
                         // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
                         /> : null}
