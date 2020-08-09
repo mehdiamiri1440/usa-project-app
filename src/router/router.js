@@ -30,6 +30,7 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 
 
 
+import UpgradeApp from '../screens/UpgradeApp'
 import SplashScreen from '../screens/SplashScreen'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
@@ -645,11 +646,11 @@ const App = (props) => {
             >
                 {(!props.loggedInUserId) ?
                     (
-                        // <Stack.Navigator initialRouteName="SplashScreen" headerMode='none'>
                         <Stack.Navigator headerMode='none'>
                             <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
                             <Stack.Screen key='Intro' name='Intro' component={Intro} />
                             <Stack.Screen key='SplashScreen' name='SplashScreen' component={SplashScreen} />
+                            <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
                         </Stack.Navigator>
                     )
                     : (
