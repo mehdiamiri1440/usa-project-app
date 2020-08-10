@@ -134,6 +134,7 @@ export default {
     "labels.changeRole": 'برای مشاهده اطلاعات مربوط به این اعلان، نوع کابری خود را به {fieldName} تغییر دهید.',
 
 
+    "titles.buskool": "باسکول",
     "titles.enterToBuskool": "ورود به باسکول",
     'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت ثبت درخواست خرید خود را افزایش دهید.',
     'titles.minOrder': 'حداقل سفارش',
