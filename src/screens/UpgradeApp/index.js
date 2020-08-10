@@ -7,7 +7,7 @@ import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 import LinearGradient from "react-native-linear-gradient";
 
 
-class SplashScreen extends Component {
+class UpgradeApp extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -132,4 +132,4 @@ class SplashScreen extends Component {
 
 
 
-export default (SplashScreen)
+export default (UpgradeApp)

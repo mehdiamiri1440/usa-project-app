@@ -636,7 +636,6 @@ const App = (props) => {
                 </View> : null}
 
             <NavigationContainer
-
                 linking={linking}
                 fallback={<Text>Loading...</Text>}
                 ref={navigationRef}
@@ -644,12 +643,13 @@ const App = (props) => {
                     isReadyRef.current = true;
                 }}
             >
+
+
                 {(!props.loggedInUserId) ?
                     (
                         <Stack.Navigator headerMode='none'>
                             <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
                             <Stack.Screen key='Intro' name='Intro' component={Intro} />
-                            <Stack.Screen key='SplashScreen' name='SplashScreen' component={SplashScreen} />
                             <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
                         </Stack.Navigator>
                     )
