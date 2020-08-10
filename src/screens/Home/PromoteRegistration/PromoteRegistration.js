@@ -7,6 +7,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
 
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
@@ -100,46 +101,53 @@ class PromoteRegistration extends React.Component {
                 >
 
 
-                    <Card >
-                        <CardItem>
-                            <Body>
-                                <View style={{ borderBottomWidth: 3, paddingVertical: 5, borderBottomColor: '#00C569', flexDirection: 'row-reverse', justifyContent: 'space-between', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text style={{
-                                            color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
-                                            textAlignVertical: 'center'
-                                        }}>
-                                            {locales('titles.annualSpecialRegistration')}
-                                        </Text>
-                                        <Text style={{
-                                            fontSize: 16,
-                                            backgroundColor: '#E41C38', color: 'white', paddingBottom: 4,
-                                            borderRadius: 20, marginHorizontal: 6, textAlign: 'center',
-                                            textAlignVertical: 'center', width: 40
-                                        }}>
-                                            {locales('labels.special')}
-                                        </Text>
-                                    </View>
+                    <Card transparent>
+                        <View style={{
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
+                            borderRadius: 5,
+                            elevation: 2
+                        }}>
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                colors={['#00C569', '#21AD93']}
+                            >
+                                <Text style={{
+                                    fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    backgroundColor: '#E41C38',
+                                    color: 'white',
+                                    paddingBottom: 4,
+                                    transform: [{ rotate: '-45deg' }],
+                                    marginHorizontal: 6,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    width: 120,
+                                    position: 'absolute',
+                                    left: -45,
+                                    top: 7,
+                                    elevation: 4
+                                }}>
+                                    {locales('labels.special')}
+                                </Text>
+                                <Text style={{
+                                    color: '#fff',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7
+                                }}>
+                                    {locales('titles.annualSpecialRegistration')}
+                                </Text>
+                            </LinearGradient>
 
-                                    <View style={{ flexDirection: 'row-reverse' }}>
-                                        <Text style={{
-                                            color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
-                                            textAlignVertical: 'center'
-                                        }}>
-                                            689,000
-                                    </Text>
-                                        <Text style={{
-                                            color: '#666666', fontSize: 16,
-                                            textAlign: 'center', marginHorizontal: 5,
-                                            textAlignVertical: 'center'
-                                        }}>
-                                            {locales('titles.toman')}
-                                        </Text>
-                                    </View>
 
-                                </View>
-
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                            <View style={{
+                                paddingHorizontal: 10
+                            }}>
+                                <View style={{ flexDirection: 'row-reverse', borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
                                     <View style={{ flexDirection: 'row-reverse' }}>
                                         <Text style={{
                                             fontSize: 16,
@@ -163,7 +171,7 @@ class PromoteRegistration extends React.Component {
 
 
 
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', justifyContent: 'space-between', width: '100%' }}>
                                     <View style={{ flexDirection: 'row-reverse' }}>
                                         <Text style={{
                                             fontSize: 16,
@@ -186,7 +194,7 @@ class PromoteRegistration extends React.Component {
                                     </Text>
 
                                 </View>
-                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', justifyContent: 'space-between', width: '100%' }}>
                                     <View style={{ flexDirection: 'row-reverse' }}>
                                         <Text style={{
                                             fontSize: 16,
@@ -228,6 +236,33 @@ class PromoteRegistration extends React.Component {
                                     </Text>
 
                                 </View>
+
+
+
+                                <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
+                                    <Text style={{
+                                        color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        689,000
+                                    </Text>
+                                    <Text style={{
+                                        color: '#666666', fontSize: 16,
+                                        textAlign: 'center', marginHorizontal: 5,
+                                        textAlignVertical: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+
+                                    }}>
+                                        {locales('titles.toman')}
+                                    </Text>
+                                    <Text style={{
+                                        color: '#666666', fontSize: 16,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>/ {locales('titles.annuan')}</Text>
+                                </View>
+
+
                                 {activePackageType == 3 ? <Text style={{
                                     color: '#00C569', fontSize: 20,
                                     width: '100%', textAlign: 'center',
@@ -235,14 +270,14 @@ class PromoteRegistration extends React.Component {
                                 }}>{locales('labels.inUse')}</Text>
                                     :
                                     <Button
-                                        style={[styles.loginButton, { width: '50%', alignSelf: 'center' }]}
+                                        style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
                                         onPress={() => this.pay()}>
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                         </Text>
                                     </Button>
                                 }
-                            </Body>
-                        </CardItem>
+                            </View>
+                        </View>
                     </Card>
                 </ScrollView>
             </>
