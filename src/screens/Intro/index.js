@@ -1,16 +1,19 @@
 
 
 import React, { Component } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Text, View, StyleSheet, } from 'react-native';
 import { Button, } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import { SliderBox } from "react-native-image-slider-box";
 
 
+
 class Intro extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            selectedIndex: 0,
             images: [
                 require('../../../assets/images/intro-slide1.jpg'),
                 require('../../../assets/images/intro-slide2.jpg'),
@@ -21,14 +24,14 @@ class Intro extends Component {
     }
 
     componentDidMount() {
-
-
+        AsyncStorage.setItem('@isIntroductionSeen', JSON.stringify(true))
     }
 
     render() {
 
         const {
-            images
+            images,
+            selectedIndex
         } = this.state;
 
 
@@ -41,16 +44,28 @@ class Intro extends Component {
                     dotStyle={{
                         bottom: 30, width: 11, height: 11, borderRadius: 10, marginHorizontal: -5,
                     }}
+                    currentImageEmitter={index => this.setState({ selectedIndex: index })}
                     disableOnPress={true}
                     images={images}
                 />
                 <View style={styles.actionButtonWrapper}>
-                    <Button style={styles.actionButton}>
+                    <Button
+                        onPress={() => this.props.navigation.navigate('SignUp')}
+                        style={styles.actionButton}>
                         <Text style={styles.actionButtonText}>
                             {locales('titles.skip')}
                         </Text>
                     </Button>
-                    <Button style={styles.actionButton}>
+                    <Button
+                        onPress={() => {
+                            if (selectedIndex == images.length - 1) {
+                                return this.props.navigation.navigate('SignUp')
+                            }
+                            else {
+
+                            }
+                        }}
+                        style={styles.actionButton}>
                         <Text style={styles.actionButtonText}>
                             {locales('titles.next')}
                         </Text>

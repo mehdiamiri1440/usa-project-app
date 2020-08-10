@@ -56,6 +56,7 @@ import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCa
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 
@@ -153,6 +154,13 @@ const App = (props) => {
     }
     useEffect(() => {
 
+        if (!props.loggedInUserId)
+            AsyncStorage.getItem('@isIntroductionSeen').then(result => {
+                console.warn('sr', result)
+                if (JSON.parse(result))
+                    return navigationRef.current.navigate('SignUp')
+                return navigationRef.current.navigate('Intro')
+            })
 
         Linking.addEventListener('url', handleIncomingEvent)
         if (I18nManager.isRTL) {
@@ -236,7 +244,6 @@ const App = (props) => {
         }
 
     }, [initialRoute, is_seller]);
-
 
     const linking = {
         prefixes: ['buskool://Home'],
@@ -706,7 +713,8 @@ const App = (props) => {
 
                 {(!props.loggedInUserId) ?
                     (
-                        <Stack.Navigator headerMode='none'>
+                        <Stack.Navigator
+                            headerMode='none'>
                             <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
                             <Stack.Screen key='Intro' name='Intro' component={Intro} />
                             <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
