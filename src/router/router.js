@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { Button } from 'native-base';
+import SplashScreen from 'react-native-splash-screen'
 import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -31,7 +32,6 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 
 
 import UpgradeApp from '../screens/UpgradeApp'
-import SplashScreen from '../screens/SplashScreen'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
 import Home from '../screens/Home/Home';
@@ -228,7 +228,7 @@ const App = (props) => {
                 })
         }
 
-
+        SplashScreen.hide();
         return () => {
             isReadyRef.current = false
             Linking.removeEventListener('url', handleIncomingEvent)
