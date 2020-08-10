@@ -2,7 +2,6 @@ import React from 'react';
 import { I18nManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import NetInfo from "@react-native-community/netinfo";
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
 import RNRestart from 'react-native-restart';

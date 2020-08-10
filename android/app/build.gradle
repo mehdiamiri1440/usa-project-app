@@ -212,7 +212,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-fetch-blob')
     implementation project(':react-native-restart')
     implementation project(':@react-native-community_masked-view')
     implementation fileTree(dir: "libs", include: ["*.jar"])

@@ -4,27 +4,23 @@ import {
     TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
-import { SliderBox } from "react-native-image-slider-box";
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { validator, dataGenerator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
+import ProductImages from './ProductImages';
 import NoConnection from '../../components/noConnectionError';
 
-let fromHardwareBack = false;
 class ProductDetails extends PureComponent {
     constructor(props) {
         super(props);
@@ -891,18 +887,11 @@ class ProductDetails extends PureComponent {
                         backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
                         elevation: 5,
                     }}>
-                        {(photosWithCompletePath && photosWithCompletePath.length) ? <SliderBox
-                            dotColor='#00C569'
-                            inactiveDotColor='#A8A8A8'
-                            sliderBoxHeight={400}
-                            dotStyle={{ bottom: -30, width: 9, height: 9, borderRadius: 5, marginHorizontal: -10 }}
-                            images={photosWithCompletePath}
-                            imageLoadingColor='red'
-                            resizeMode='cover'
-                            resizeMethod='resize'
-                            onCurrentImagePressed={this.showFullSizeImage}
-                        // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
-                        /> : null}
+                        <ProductImages
+                            showFullSizeImage={this.showFullSizeImage}
+                            photosWithCompletePath={photosWithCompletePath}
+                        />
+
                         <View
                             style={{
                                 flexDirection: 'row-reverse', alignItems: 'center',
