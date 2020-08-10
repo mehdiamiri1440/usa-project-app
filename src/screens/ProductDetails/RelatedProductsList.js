@@ -63,7 +63,9 @@ const RelatedProductsList = props => {
                             }, styles.textBold]}>
                             {item.product_name}
                         </Text>
-                        <Text style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
+                        <Text
+                            numberOfLines={1}
+                            style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
                             {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
                     </TouchableOpacity>
                 </Card>

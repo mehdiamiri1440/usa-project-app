@@ -553,6 +553,65 @@ const App = (props) => {
         )
     };
 
+    const SpecialProductsStack = (props) => {
+        return (
+            <Stack.Navigator>
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='SpecialProducts'
+                    name='SpecialProducts'
+                    component={SpecialProducts}
+                />
+
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    name={`ProductDetails`}
+                    component={ProductDetails}
+                />
+
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Payment'
+                    name='Payment'
+                    component={Payment}
+                />
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='PromoteRegistration'
+                    name='PromoteRegistration'
+                    component={PromoteRegistration}
+                />
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Profile'
+                    name='Profile'
+                    component={Profile}
+                />
+
+            </Stack.Navigator>
+        )
+    };
+
 
 
     return (
@@ -695,7 +754,7 @@ const App = (props) => {
                                         tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                     }}
                                     name={'SpecialProducts'}
-                                    component={SpecialProducts}
+                                    component={SpecialProductsStack}
                                 />}
 
 
