@@ -6,7 +6,6 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, CardItem, Body, Toast, Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

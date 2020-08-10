@@ -31,6 +31,7 @@ global.initialProfileRoute = 'HomeIndex';
 global.routes = [];
 global.changed = false;
 global.productIds = [];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
