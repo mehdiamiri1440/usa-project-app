@@ -154,13 +154,22 @@ const App = (props) => {
     }
     useEffect(() => {
 
-        if (!props.loggedInUserId)
+        if (!props.loggedInUserId) {
             AsyncStorage.getItem('@isIntroductionSeen').then(result => {
                 console.warn('sr', result)
-                if (JSON.parse(result))
-                    return navigationRef.current.navigate('SignUp')
-                return navigationRef.current.navigate('Intro')
+                if (JSON.parse(result)) {
+                    navigationRef.current.navigate('SignUp')
+                }
+                else navigationRef.current.navigate('Intro')
+                setTimeout(() => {
+                    SplashScreen.hide();
+                }, 200);
+
             })
+        }
+        else {
+            SplashScreen.hide();
+        }
 
         Linking.addEventListener('url', handleIncomingEvent)
         if (I18nManager.isRTL) {
@@ -236,7 +245,6 @@ const App = (props) => {
                 })
         }
 
-        SplashScreen.hide();
         return () => {
             isReadyRef.current = false
             Linking.removeEventListener('url', handleIncomingEvent)

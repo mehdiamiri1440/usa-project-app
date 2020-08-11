@@ -13,6 +13,7 @@ class Intro extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            nextButton: false,
             selectedIndex: 0,
             images: [
                 require('../../../assets/images/intro-slide1.jpg'),
@@ -24,13 +25,14 @@ class Intro extends Component {
     }
 
     componentDidMount() {
-        AsyncStorage.setItem('@isIntroductionSeen', JSON.stringify(true))
+        // AsyncStorage.setItem('@isIntroductionSeen', JSON.stringify(true))
     }
 
     render() {
 
         const {
             images,
+            nextButton,
             selectedIndex
         } = this.state;
 
@@ -38,13 +40,16 @@ class Intro extends Component {
         return (
             <>
                 <SliderBox
+                    currentImageEmitter={(index) => this.setState({ selectedIndex: index })}
                     inactiveDotColor='#777777'
                     sliderBoxHeight={deviceHeight}
+                    nextButton={nextButton}
+                    currenImage={2}
                     dotColor="#00C569"
                     dotStyle={{
                         bottom: 30, width: 11, height: 11, borderRadius: 10, marginHorizontal: -5,
                     }}
-                    currentImageEmitter={index => this.setState({ selectedIndex: index })}
+                    // currentImageEmitter={index => this.setState({ selectedIndex: index })}
                     disableOnPress={true}
                     images={images}
                 />
@@ -62,7 +67,7 @@ class Intro extends Component {
                                 return this.props.navigation.navigate('SignUp')
                             }
                             else {
-
+                                this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
                             }
                         }}
                         style={styles.actionButton}>
