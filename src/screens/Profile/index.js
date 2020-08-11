@@ -20,7 +20,7 @@ import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import RelatedPhotos from './RelatedPhotos';
-
+import Certificates from './certificates';
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -195,6 +195,10 @@ class Profile extends PureComponent {
 
     setSelectedImage = (selectedImageModal, selectedImageIndex) => {
         this.setState({ selectedImageModal, selectedImageIndex })
+    }
+
+    setSelectedEvidence = (selectedEvidenceModal, selectedEvidenceIndex) => {
+        this.setState({ selectedEvidenceModal, selectedEvidenceIndex })
     }
 
     render() {
@@ -664,41 +668,7 @@ class Profile extends PureComponent {
 
                         </View>
 
-                        <FlatList
-                            showsHorizontalScrollIndicator={false}
-                            data={certificatesFromByUserName}
-                            horizontal
-                            ListEmptyComponent={() => (
-                                <View style={{
-                                    alignSelf: 'center', justifyContent: 'flex-start',
-                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93,
-
-                                }}>
-                                    <FontAwesome5 name='tasks' size={80} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
-                                        {locales('labels.noevidenceFound')}</Text>
-                                </View>
-                            )}
-                            keyExtractor={((_, index) => index.toString())}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ selectedEvidenceModal: true, selectedEvidenceIndex: index })}
-                                >
-                                    <Image
-                                        style={{
-                                            borderWidth: 0.7,
-                                            borderColor: '#BEBEBE',
-                                            borderRadius: 4,
-                                            width: deviceWidth * 0.4, borderRadius: 4,
-                                            marginHorizontal: 5, height: deviceWidth * 0.4
-                                        }}
-                                        source={{
-                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            )}
-                        />
+                        <Certificates setSelectedEvidence={this.setSelectedEvidence} certificatesFromByUserName={certificatesFromByUserName} />
                     </View>
 
                 </ScrollView >

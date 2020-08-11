@@ -13,6 +13,7 @@ const RelatedProductsList = props => {
 
     return (
         <FlatList
+            showsHorizontalScrollIndicator={false}
             style={{
                 borderRadius: 4,
                 overflow: 'hidden',
