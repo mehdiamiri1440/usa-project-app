@@ -14,9 +14,9 @@ export const fetchAllProductsList = (item, special_products) => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -37,9 +37,9 @@ export const fetchAllRelatedProducts = id => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -60,9 +60,9 @@ export const fetchAllMyProducts = user_name => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -83,9 +83,9 @@ export const editProduct = item => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -105,9 +105,9 @@ export const deleteProduct = id => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -127,9 +127,9 @@ export const fetchProductDetails = id => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
