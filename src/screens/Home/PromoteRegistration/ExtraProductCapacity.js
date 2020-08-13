@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -26,6 +26,7 @@ class ExtraProductCapacity extends React.Component {
     }
 
 
+    wrapperRef = createRef();
 
     pay = () => {
         let userId = '';
@@ -65,7 +66,11 @@ class ExtraProductCapacity extends React.Component {
         });
     };
 
-
+    handleScrollToTopButtonClick = () => {
+        if (this.wrapperRef && this.wrapperRef.current) {
+            this.wrapperRef.current.scrollTo({ x: 0, y: 0, animate: true })
+        }
+    }
     render() {
 
         let {
@@ -116,6 +121,7 @@ class ExtraProductCapacity extends React.Component {
                     </View>
                 </View>
                 <ScrollView
+                    ref={this.wrapperRef}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
@@ -344,8 +350,8 @@ class ExtraProductCapacity extends React.Component {
                                 backgroundColor: '#fff',
                                 overflow: 'hidden',
                                 borderRadius: 5,
-                                marginTop: 15,
-                                marginBottom: 50,
+                                paddingTop: 15,
+                                marginBottom: 30,
                                 elevation: 2
                             }}>
                                 <Text style={{
@@ -356,7 +362,7 @@ class ExtraProductCapacity extends React.Component {
                                     textAlignVertical: 'center',
                                     marginVertical: 7
                                 }}>
-                                    {locales('titles.monthlySpecialRegistration')}
+                                    {locales('titles.promoteDescriptionTitle')}
 
                                 </Text>
                                 <Text style={{
@@ -368,13 +374,13 @@ class ExtraProductCapacity extends React.Component {
                                     marginVertical: 7,
                                     paddingHorizontal: 15
                                 }}>
-                                    {locales('titles.promotionText')}
+                                    {locales('titles.promoteDescriptionText')}
 
                                 </Text>
                                 <Button
                                     style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
                                     onPress={() => this.handleScrollToTopButtonClick()}>
-                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
                                     </Text>
                                 </Button>
                             </View>

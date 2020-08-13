@@ -134,6 +134,8 @@ export default {
     "labels.extraProductDescription": 'تعداد ظرفیت اضافی برای ثبت محصول را انتخاب کنید سپس دکمه افزایش ظرفیت را بزنید.',
     "labels.extraBuyAdDescription": 'تعداد اضافی ظرفیت پاسخ های روزانه به درخواست های خرید را انتخاب کنید و دکمه افزایش ظرفیت را بزنید.',
     "labels.changeRole": 'برای مشاهده اطلاعات مربوط به این اعلان، نوع کابری خود را به {fieldName} تغییر دهید.',
+    "labels.changeRole": '',
+    "labels.changeRole": '',
 
 
     "titles.buskool": "باسکول",
@@ -293,6 +295,9 @@ export default {
     'titles.monthly': 'سه ماهه',
     'titles.editProfile': 'ویرایش پروفایل',
     'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
+    'titles.promoteDescriptionTitle': 'عنوان این سکشن',
+    'titles.promoteDescriptionText': 'یه متنی برای این سکشن ',
+    'titles.promoteDescriptionButton': 'برو به بالا ',
 
     "messages.signedUpUser": ".لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",

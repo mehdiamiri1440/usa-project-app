@@ -457,6 +457,7 @@ class PromoteRegistration extends React.Component {
                             overflow: 'hidden',
                             borderRadius: 5,
                             marginTop: 15,
+                            paddingTop: 15,
                             marginBottom: 50,
                             elevation: 2
                         }}>
@@ -468,7 +469,7 @@ class PromoteRegistration extends React.Component {
                                 textAlignVertical: 'center',
                                 marginVertical: 7
                             }}>
-                                {locales('titles.monthlySpecialRegistration')}
+                                {locales('titles.promoteDescriptionTitle')}
 
                             </Text>
                             <Text style={{
@@ -480,13 +481,13 @@ class PromoteRegistration extends React.Component {
                                 marginVertical: 7,
                                 paddingHorizontal: 15
                             }}>
-                                {locales('titles.promotionText')}
+                                {locales('titles.promoteDescriptionText')}
 
                             </Text>
                             <Button
                                 style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
                                 onPress={() => this.handleScrollToTopButtonClick()}>
-                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
                                 </Text>
                             </Button>
                         </View>
