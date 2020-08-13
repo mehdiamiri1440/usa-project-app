@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
-import { Button } from 'native-base';
+import { Button, Toast } from 'native-base';
 import {
+    ToastAndroid,
     View, Text, Modal, TouchableOpacity, Image, TextInput,
-    Keyboard, FlatList, ActivityIndicator
+    FlatList, ActivityIndicator
 } from 'react-native';
+import Clipboard from "@react-native-community/clipboard";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -254,11 +256,25 @@ class ChatModal extends React.Component {
                                     backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                                 }}
                             >
-                                <Text style={{
-                                    textAlign: 'right',
-                                    fontSize: 16,
-                                    color: '#333333'
-                                }}>
+                                <Text
+                                    selectionColor='gray'
+                                    suppressHighlighting
+                                    selectable
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString(item.text)
+                                    }}
+                                    style={{
+                                        zIndex: 999999,
+                                        textAlign: 'right',
+                                        fontSize: 16,
+                                        color: '#333333'
+                                    }}>
                                     {item.text}
                                 </Text>
                                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
