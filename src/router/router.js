@@ -264,11 +264,11 @@ const App = (props) => {
             case 'product-list':
                 return RootNavigation.navigate('Home');
 
-            case 'register-product':
-                return RootNavigation.navigate('RegisterProduct');
-
+            case 'register-product': {
+                return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+            }
             case 'buyAd-requests':
-                return RootNavigation.navigate('Requests');
+                return navigationRef.current.navigate('Requests');
             default:
                 break;
         }
