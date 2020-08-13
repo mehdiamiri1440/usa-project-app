@@ -15,15 +15,15 @@ export const fetchAllProductsList = (item, isSpecial) => {
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
-                        failure: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_FAILED,
-                        reject: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_REJECT
+                        failure: actionTypes.FETCH_ALL_PRODUCTS_LIST_FAILED,
+                        reject: actionTypes.FETCH_ALL_PRODUCTS_LIST_REJECT
                     }));
                     throw err;
                 });
         };
     };
-    const loading = () => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_LOADING);
-    const success = res => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_SUCCESSFULLY, res);
+    const loading = () => action(actionTypes.FETCH_ALL_PRODUCTS_LIST_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_PRODUCTS_LIST_SUCCESSFULLY, res);
 
     return request();
 };
