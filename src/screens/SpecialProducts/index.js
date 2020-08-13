@@ -774,7 +774,7 @@ class SpecialProducts extends PureComponent {
                     }}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
-                    refreshing={specialProductsListLoading || categoriesLoading}
+                    refreshing={(!loaded && specialProductsListLoading) || categoriesLoading}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
@@ -803,7 +803,7 @@ class SpecialProducts extends PureComponent {
                     }
                     onEndReachedThreshold={0.2}
                     ListFooterComponent={() => {
-                        return ((loaded && productsListLoading)) ?
+                        return ((loaded && specialProductsListLoading)) ?
                             <View style={{
                                 textAlign: 'center',
                                 alignItems: 'center',
