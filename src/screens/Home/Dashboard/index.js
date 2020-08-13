@@ -197,7 +197,24 @@ const Dashboard = props => {
                                     right: -15
                                 }} />
                         </View>
-
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('ExtraProductCapacity')}
+                            style={{
+                                backgroundColor: '#556080',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                bottom: 0,
+                                height: 40,
+                                position: 'absolute',
+                                width: '100%'
+                            }}>
+                            <AntDesign name='plus' color='white' size={25} />
+                            <Text
+                                style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('titles.moreCapacity')}</Text>
+                        </TouchableOpacity>
 
                     </View>
                 </Card>
@@ -226,6 +243,7 @@ const Dashboard = props => {
                         <View >
                             <Text style={{
                                 padding: 15,
+                                paddingVertical: 0,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26,
                             }}>
                                 {maxBuyAdsReply} {locales('labels.response')}
@@ -235,12 +253,29 @@ const Dashboard = props => {
                                     width: '100%',
                                     position: 'absolute',
                                     opacity: 0.14,
-                                    top: -10,
+                                    top: -15,
                                     right: -15
                                 }} />
                         </View>
 
-
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('ExtraBuyAdCapacity')}
+                            style={{
+                                backgroundColor: '#556080',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                bottom: 0,
+                                height: 40,
+                                position: 'absolute',
+                                width: '100%'
+                            }}>
+                            <AntDesign name='plus' color='white' size={25} />
+                            <Text
+                                style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('titles.moreCapacity')}</Text>
+                        </TouchableOpacity>
                     </View>
                 </Card>
 

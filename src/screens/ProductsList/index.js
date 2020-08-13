@@ -785,12 +785,23 @@ class ProductsList extends PureComponent {
                     // initialNumToRender={2}
                     ListFooterComponent={() => {
                         return ((loaded && productsListLoading)) ?
-                            <ActivityIndicator size="small" color="#00C569"
-                                style={{
-                                    zIndex: 999,
-                                    width: 50, height: 50, borderRadius: 25
-                                }}
-                            /> : null
+                            <View style={{
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                marginBottom: 15
+
+                            }}>
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        zIndex: 999,
+                                        width: 50, height: 50,
+                                        borderRadius: 50,
+                                        backgroundColor: '#fff',
+                                        elevation: 5,
+                                        padding: 0,
+                                    }}
+                                />
+                            </View> : null
                     }
                     }
                     // initialScrollIndex={0}

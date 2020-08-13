@@ -459,7 +459,7 @@ class SpecialProducts extends PureComponent {
                             <Text
                                 style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
-                                {locales('labels.sort')}
+                                {locales('labels.sortBy')}
                             </Text>
                         </View>
                     </View>
@@ -774,7 +774,7 @@ class SpecialProducts extends PureComponent {
                     }}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
-                    refreshing={specialProductsListLoading || categoriesLoading}
+                    refreshing={(!loaded && specialProductsListLoading) || categoriesLoading}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
@@ -802,6 +802,26 @@ class SpecialProducts extends PureComponent {
                     }
                     }
                     onEndReachedThreshold={0.2}
+                    ListFooterComponent={() => {
+                        return ((loaded && specialProductsListLoading)) ?
+                            <View style={{
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                marginBottom: 15
+
+                            }}>
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        zIndex: 999,
+                                        width: 50, height: 50,
+                                        borderRadius: 50,
+                                        backgroundColor: '#fff',
+                                        elevation: 5,
+                                        padding: 0,
+                                    }}
+                                />
+                            </View> : null
+                    }}
                     keyExtractor={(_, index) => index.toString()}
                     data={specialProductsListArray}
                     renderItem={({ item }) => <Product

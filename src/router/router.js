@@ -37,6 +37,7 @@ import SignUp from '../screens/SignUp'
 import Home from '../screens/Home/Home';
 import Requests from '../screens/Requests/Requests';
 import Dashboard from '../screens/Home/Dashboard';
+import ContactUs from '../screens/Home/ContactUs';
 import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
@@ -156,7 +157,6 @@ const App = (props) => {
 
         if (!props.loggedInUserId) {
             AsyncStorage.getItem('@isIntroductionSeen').then(result => {
-                console.warn('sr', result)
                 if (JSON.parse(result)) {
                     navigationRef.current.navigate('SignUp')
                 }
@@ -303,6 +303,7 @@ const App = (props) => {
                     name='Dashboard'
                     component={Dashboard}
                 />
+
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -393,9 +394,6 @@ const App = (props) => {
                     name='ChangeRole'
                     component={ChangeRole}
                 />
-
-
-
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -413,6 +411,15 @@ const App = (props) => {
                     key='ExtraProductCapacity'
                     name='ExtraProductCapacity'
                     component={ExtraProductCapacity}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ContactUs'
+                    name='ContactUs'
+                    component={ContactUs}
                 />
             </Stack.Navigator >
         )

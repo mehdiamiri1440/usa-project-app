@@ -26,12 +26,13 @@ let role = false
 
 let homeRoutes = [
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
-    { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' color='white' />, name: 'EditProfile' },
+    { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
+    { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
 ];
 class Home extends React.Component {

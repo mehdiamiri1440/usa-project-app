@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
@@ -21,6 +21,7 @@ class PromoteRegistration extends React.Component {
         }
     }
 
+    wrapperRef = createRef();
 
     pay = () => {
         let userId = '';
@@ -39,6 +40,11 @@ class PromoteRegistration extends React.Component {
         this.props.fetchAllDashboardData()
     };
 
+    handleScrollToTopButtonClick = () => {
+        if (this.wrapperRef && this.wrapperRef.current) {
+            this.wrapperRef.current.scrollTo({ x: 0, y: 0, animate: true })
+        }
+    }
 
     render() {
 
@@ -88,6 +94,7 @@ class PromoteRegistration extends React.Component {
                 </View>
 
                 <ScrollView
+                    ref={this.wrapperRef}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
@@ -277,6 +284,212 @@ class PromoteRegistration extends React.Component {
                                     </Button>
                                 }
                             </View>
+                        </View>
+                    </Card>
+
+                    <Card transparent>
+                        <View style={{
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
+                            borderRadius: 5,
+                            marginTop: 15,
+                            elevation: 2
+                        }}>
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                colors={['#556080', '#556080']}
+                            >
+
+                                <Text style={{
+                                    color: '#fff',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7
+                                }}>
+                                    {locales('titles.monthlySpecialRegistration')}
+                                </Text>
+                            </LinearGradient>
+
+
+                            <View style={{
+
+                                paddingHorizontal: 10
+                            }}>
+                                <View style={{ flexDirection: 'row-reverse', borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.buyAdCount')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        3
+                                    </Text>
+
+                                </View>
+
+
+
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', justifyContent: 'space-between', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.countOfBuyAdRequests')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        10
+                                    </Text>
+
+                                </View>
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, borderBottomWidth: deviceHeight * 0.002, borderBottomColor: '#bdc4cc', justifyContent: 'space-between', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.validatedSellerSign')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <Ionicons name='ios-close-circle' size={30} color='#e41c38' />
+                                    </Text>
+
+                                </View>
+                                <View style={{ flexDirection: 'row-reverse', marginTop: 10, padding: 10, justifyContent: 'space-between', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.goldenBuyAdRequests')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <Ionicons name='ios-checkmark-circle' size={30} color='#00C569' />
+                                    </Text>
+
+                                </View>
+
+
+
+                                <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
+                                    <Text style={{
+                                        color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        249,000
+                                    </Text>
+                                    <Text style={{
+                                        color: '#666666', fontSize: 16,
+                                        textAlign: 'center', marginHorizontal: 5,
+                                        textAlignVertical: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+
+                                    }}>
+                                        {locales('titles.toman')}
+                                    </Text>
+                                    <Text style={{
+                                        color: '#666666', fontSize: 16,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>/ {locales('titles.monthly')}</Text>
+                                </View>
+
+
+                                {activePackageType == 1 ? <Text style={{
+                                    color: '#00C569', fontSize: 20,
+                                    width: '100%', textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}>{locales('labels.inUse')}</Text>
+                                    :
+                                    <Button
+                                        style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                        onPress={() => this.pay()}>
+                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                        </Text>
+                                    </Button>
+                                }
+                            </View>
+                        </View>
+                    </Card>
+
+                    <Card transparent>
+                        <View style={{
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
+                            borderRadius: 5,
+                            marginTop: 15,
+                            paddingTop: 15,
+                            marginBottom: 50,
+                            elevation: 2
+                        }}>
+                            <Text style={{
+                                color: '#333',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7
+                            }}>
+                                {locales('titles.promoteDescriptionTitle')}
+
+                            </Text>
+                            <Text style={{
+                                color: '#777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7,
+                                paddingHorizontal: 15
+                            }}>
+                                {locales('titles.promoteDescriptionText')}
+
+                            </Text>
+                            <Button
+                                style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                onPress={() => this.handleScrollToTopButtonClick()}>
+                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
+                                </Text>
+                            </Button>
                         </View>
                     </Card>
                 </ScrollView>
