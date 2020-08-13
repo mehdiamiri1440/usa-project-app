@@ -783,8 +783,18 @@ class ProductsList extends PureComponent {
                     }}
                     onEndReachedThreshold={3.5}
                     // initialNumToRender={2}
+                    ListFooterComponent={() => {
+                        return ((loaded && productsListLoading)) ?
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    zIndex: 999,
+                                    width: 50, height: 50, borderRadius: 25
+                                }}
+                            /> : null
+                    }
+                    }
                     // initialScrollIndex={0}
-                    refreshing={productsListLoading || categoriesLoading}
+                    refreshing={(!loaded && productsListLoading) || categoriesLoading}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,

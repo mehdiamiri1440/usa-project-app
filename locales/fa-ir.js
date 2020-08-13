@@ -75,6 +75,7 @@ export default {
     'labels.special': 'ویژه',
     'labels.sortBy': 'مرتب سازی براساس',
     'labels.sort': 'مرتب سازی',
+    'labels.sortBy': 'مرتب سازی بر اساس',
     'labels.camera': 'دوربین',
     'labels.addProductImages': 'افزودن تصاویر محصول',
     'labels.gallery': 'گالری',
