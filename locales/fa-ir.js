@@ -74,6 +74,7 @@ export default {
     'labels.guid': 'راهنما',
     'labels.special': 'ویژه',
     'labels.sort': 'مرتب سازی',
+    'labels.sortBy': 'مرتب سازی بر اساس',
     'labels.camera': 'دوربین',
     'labels.addProductImages': 'افزودن تصاویر محصول',
     'labels.gallery': 'گالری',

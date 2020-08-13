@@ -141,7 +141,10 @@ class Requests extends PureComponent {
     }
 
     closeFilters = _ => {
-        this.setState({ showFilters: false })
+        this.setState({ showFilters: false }, () => {
+            if (this.props.requestsRef && this.props.requestsRef.current && this.props.buyAdRequestsList.length)
+                this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
+        })
     };
 
     selectedFilter = (id, name) => {

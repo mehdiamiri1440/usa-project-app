@@ -241,7 +241,8 @@ class RegisterProduct extends React.Component {
                     province: '',
                 })
                 this.changeStep(7);
-            }).catch(_ => this.setState({ showModal: true }))
+            })
+            // .catch(_ => this.setState({ showModal: true }))
         })
 
     }
