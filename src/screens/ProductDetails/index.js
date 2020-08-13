@@ -1169,7 +1169,7 @@ class ProductDetails extends PureComponent {
                         </View>
 
                     </View>
-                    <View >
+                    {/* <View >
                         <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                             <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                             <View
@@ -1193,7 +1193,7 @@ class ProductDetails extends PureComponent {
                             {...this.props}
                             relatedProductsArray={related_products}
                         />
-                    </View>
+                    </View> */}
 
                 </ScrollView>
 

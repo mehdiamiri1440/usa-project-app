@@ -18,9 +18,9 @@ export const fetchAllCategories = (cascade_list) => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -41,9 +41,9 @@ export const fetchAllSubCategories = id => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -62,9 +62,9 @@ export const addNewProduct = productObject => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -82,9 +82,9 @@ export const checkUserPermissionToRegisterProduct = () => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -104,9 +104,9 @@ export const registerBuyAdRequest = requestObj => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });

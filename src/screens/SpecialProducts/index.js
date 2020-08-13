@@ -459,7 +459,7 @@ class SpecialProducts extends PureComponent {
                             <Text
                                 style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
-                                {locales('labels.sort')}
+                                {locales('labels.sortBy')}
                             </Text>
                         </View>
                     </View>

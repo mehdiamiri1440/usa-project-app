@@ -5,7 +5,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Text, View, StyleSheet, } from 'react-native';
 import { Button, } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import { SliderBox } from "react-native-image-slider-box";
+import SliderBox from "../../components/SnapCarousel";
+
 
 
 
