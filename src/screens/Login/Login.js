@@ -152,7 +152,7 @@ class Login extends React.Component {
                                         animating={!!loading}
                                         color="white"
                                         style={{
-                                            position: 'absolute', left: '45%', top: '28%',
+                                            position: 'absolute', left: '35%', top: '28%',
                                             width: 25, height: 25, borderRadius: 15
                                         }}
                                     />

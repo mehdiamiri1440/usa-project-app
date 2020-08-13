@@ -299,6 +299,11 @@ export default {
     'titles.promoteDescriptionTitle': 'عنوان این سکشن',
     'titles.promoteDescriptionText': 'یه متنی برای این سکشن ',
     'titles.promoteDescriptionButton': 'برو به بالا ',
+    "titles.support": "پشتیبانی",
+    'titles.contactUs': 'ارتباط با ما',
+    'titles.phoneNumber': 'شماره تماس',
+    'titles.supportEmail': 'ایمیل پشتیبانی :‌support@buskool.com',
+    'titles.supportUserEmail': 'ایمیل شخصی مدیر فنی :‌ ali_delkhosh@ymail.com',
 
     "messages.signedUpUser": ".لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
