@@ -802,6 +802,26 @@ class SpecialProducts extends PureComponent {
                     }
                     }
                     onEndReachedThreshold={0.2}
+                    ListFooterComponent={() => {
+                        return ((loaded && productsListLoading)) ?
+                            <View style={{
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                marginBottom: 15
+
+                            }}>
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        zIndex: 999,
+                                        width: 50, height: 50,
+                                        borderRadius: 50,
+                                        backgroundColor: '#fff',
+                                        elevation: 5,
+                                        padding: 0,
+                                    }}
+                                />
+                            </View> : null
+                    }}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product
