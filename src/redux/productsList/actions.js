@@ -29,6 +29,29 @@ export const fetchAllProductsList = (item, isSpecial) => {
 };
 
 
+export const fetchAllSpecialProductsList = (item, isSpecial) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchAllProductsList(item, isSpecial)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_FAILED,
+                        reject: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
 export const fetchAllRelatedProducts = id => {
     const request = () => {
         return dispatch => {
