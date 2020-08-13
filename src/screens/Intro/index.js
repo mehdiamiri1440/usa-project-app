@@ -6,6 +6,7 @@ import { Text, View, StyleSheet, } from 'react-native';
 import { Button, } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import SliderBox from "../../components/SnapCarousel";
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 
 
@@ -44,24 +45,24 @@ class Intro extends Component {
                     currentImageEmitter={(index) => this.setState({ selectedIndex: index })}
                     inactiveDotColor='#777777'
                     sliderBoxHeight={deviceHeight}
+                    sliderBoxWidth={deviceWidth}
                     nextButton={nextButton}
                     currenImage={2}
                     dotColor="#00C569"
                     dotStyle={{
-                        bottom: 30, width: 11, height: 11, borderRadius: 10, marginHorizontal: -5,
+                        bottom: 30,
+                        width: selectedIndex == 2 ? 0 : 11,
+                        height: selectedIndex == 2 ? 0 : 11,
+                        borderRadius: 10, marginHorizontal: -5,
+
                     }}
                     // currentImageEmitter={index => this.setState({ selectedIndex: index })}
-                    disableOnPress={true}
+                    disableOnPress
+                    resizeMode={'stretch'}
                     images={images}
                 />
-                <View style={styles.actionButtonWrapper}>
-                    <Button
-                        onPress={() => this.props.navigation.navigate('SignUp')}
-                        style={styles.actionButton}>
-                        <Text style={styles.actionButtonText}>
-                            {locales('titles.skip')}
-                        </Text>
-                    </Button>
+                {selectedIndex == 2 ? <View style={[styles.actionButtonWrapper, { justifyContent: 'center', bottom: 70 }]}>
+
                     <Button
                         onPress={() => {
                             if (selectedIndex == images.length - 1) {
@@ -71,12 +72,62 @@ class Intro extends Component {
                                 this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
                             }
                         }}
-                        style={styles.actionButton}>
-                        <Text style={styles.actionButtonText}>
-                            {locales('titles.next')}
-                        </Text>
+                        style={{
+                            backgroundColor: 'none',
+                            elevation: 0,
+                        }}>
+                        <View style={{
+
+                            paddingVertical: 10,
+                            paddingHorizontal: 65,
+                            backgroundColor: '#00c569',
+                            borderRadius: 6,
+                            flexDirection: 'row',
+                            justifyContent: 'center'
+                        }}>
+                            <Text style={{
+                                color: '#fff',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 20,
+                            }}>
+                                {locales('titles.startIt')}
+                            </Text>
+                            <FontAwesome5 style={{
+                                color: '#fff',
+                                fontSize: 18,
+                                top: 4,
+                                left: 7
+                            }} name="arrow-right" solid />
+                        </View>
                     </Button>
-                </View>
+
+                </View> : <View style={styles.actionButtonWrapper}>
+                        <Button
+                            onPress={() => this.props.navigation.navigate('SignUp')}
+                            style={styles.actionButton}>
+                            <Text style={styles.actionButtonText}>
+                                {locales('titles.skip')}
+                            </Text>
+
+                        </Button>
+
+                        <Button
+                            onPress={() => {
+                                if (selectedIndex == images.length - 1) {
+                                    return this.props.navigation.navigate('SignUp')
+                                }
+                                else {
+                                    this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
+                                }
+                            }}
+                            style={styles.actionButton}>
+                            <Text style={styles.actionButtonText}>
+                                {locales('titles.next')}
+                            </Text>
+                        </Button>
+
+                    </View>
+                }
             </>
         )
     }

@@ -139,6 +139,7 @@ export default {
 
 
     "titles.buskool": "باسکول",
+    "titles.startIt": "شروع کنید",
     "titles.enterToBuskool": "ورود به باسکول",
     'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت ثبت درخواست خرید خود را افزایش دهید.',
     'titles.minOrder': 'حداقل سفارش',

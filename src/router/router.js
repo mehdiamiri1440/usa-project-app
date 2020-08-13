@@ -156,7 +156,6 @@ const App = (props) => {
 
         if (!props.loggedInUserId) {
             AsyncStorage.getItem('@isIntroductionSeen').then(result => {
-                console.warn('sr', result)
                 if (JSON.parse(result)) {
                     navigationRef.current.navigate('SignUp')
                 }
