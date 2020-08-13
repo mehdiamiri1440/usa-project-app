@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
-class Terms extends React.Component {
+class ContactUs extends React.Component {
 
     componentDidMount() {
         return {
@@ -156,4 +156,4 @@ class Terms extends React.Component {
         )
     }
 }
-export default Terms
+export default ContactUs
