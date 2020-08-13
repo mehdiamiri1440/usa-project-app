@@ -7,6 +7,13 @@ const INITIAL_STATE = {
     productsListObject: {},
     productsListArray: [],
 
+    specialProductsListLoading: false,
+    specialProductsListFailed: false,
+    specialProductsListError: false,
+    specialProductsListMessage: null,
+    specialProductsListObject: {},
+    specialProductsListArray: [],
+
 
     relatedProductsLoading: false,
     relatedProductsFailed: false,
@@ -97,6 +104,55 @@ export default (state = INITIAL_STATE, action) => {
                 productsListFailed: false,
                 productsListError: true,
                 productsListMessage: null
+            };
+        };
+
+
+
+
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_LOADING: {
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: true,
+                specialProductsListFailed: false,
+                specialProductsListError: false,
+                specialProductsListMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_SUCCESSFULLY: {
+            return {
+                ...state,
+                specialProductsListObject: { ...action.payload },
+                specialProductsListArray: [...action.payload.products],
+                specialProductsListLoading: false,
+                specialProductsListFailed: false,
+                specialProductsListError: false,
+                specialProductsListMessage: null,
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: false,
+                specialProductsListFailed: true,
+                specialProductsListError: false,
+                specialProductsListMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_REJECT: {
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: false,
+                specialProductsListFailed: false,
+                specialProductsListError: true,
+                specialProductsListMessage: null
             };
         };
 

@@ -33,7 +33,7 @@ class SpecialProducts extends PureComponent {
             refreshed: false,
             searchText: undefined,
             from_record_number: 0,
-            productsListArray: [],
+            specialProductsListArray: [],
             categoryModalFlag: false,
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
@@ -62,20 +62,20 @@ class SpecialProducts extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (this.state.loaded == false && this.props.productsListArray.length) {
+        if (this.state.loaded == false && this.props.specialProductsListArray.length) {
             this.setState({
                 loaded: true,
-                productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
+                specialProductsListArray: [...this.state.specialProductsListArray, ...this.props.specialProductsListArray],
             })
         }
 
         if (this.state.searchFlag) {
-            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
+            this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], searchFlag: false })
         }
 
 
         if (this.state.refreshed) {
-            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
+            this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], refreshed: false })
         }
     }
 
@@ -109,8 +109,8 @@ class SpecialProducts extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+        this.props.fetchAllSpecialProductsList(item).then(_ => {
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         }).catch(error => {
             this.setState({ showModal: true })
@@ -135,7 +135,7 @@ class SpecialProducts extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
             if (province) {
                 item = { ...item, province_id: province }
@@ -144,7 +144,7 @@ class SpecialProducts extends PureComponent {
                 item = { ...item, city_id: city }
             }
 
-            this.props.fetchAllProductsList(item).then(_ => {
+            this.props.fetchAllSpecialProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             }).catch(error => {
                 this.setState({ showModal: true })
@@ -201,10 +201,10 @@ class SpecialProducts extends PureComponent {
             searchItem = { ...searchItem, city_id: city }
         }
 
-        return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+        return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
+            if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({ showModal: true })
         });;
@@ -228,8 +228,8 @@ class SpecialProducts extends PureComponent {
             }
         }
 
-        this.props.fetchAllProductsList(searchItem).then(result => {
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
+        this.props.fetchAllSpecialProductsList(searchItem).then(result => {
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({ showModal: true })
         });;
@@ -239,11 +239,11 @@ class SpecialProducts extends PureComponent {
 
     render() {
         const {
-            productsListObject,
-            productsListLoading,
-            productsListFailed,
-            productsListMessage,
-            productsListError,
+            specialProductsListObject,
+            specialProductsListLoading,
+            specialProductsListFailed,
+            specialProductsListMessage,
+            specialProductsListError,
             subCategoriesList,
             categoriesList,
             categoriesLoading,
@@ -253,7 +253,7 @@ class SpecialProducts extends PureComponent {
             allCitiesObject
         } = this.props;
 
-        const { searchText, loaded, productsListArray, selectedButton,
+        const { searchText, loaded, specialProductsListArray, selectedButton,
             categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
@@ -387,7 +387,7 @@ class SpecialProducts extends PureComponent {
                                                 style={[styles.loginButton, { width: '50%' }]}
                                                 onPress={this.searchLocation}>
                                                 <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 1 && !!productsListLoading}
+                                                    animating={selectedButton == 1 && !!specialProductsListLoading}
                                                     style={{
                                                         marginLeft: -15,
                                                         justifyContent: 'center',
@@ -404,7 +404,7 @@ class SpecialProducts extends PureComponent {
                                                 style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                 onPress={this.deleteFilter}>
                                                 <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 2 && !!productsListLoading}
+                                                    animating={selectedButton == 2 && !!specialProductsListLoading}
                                                     style={{
                                                         marginLeft: -15,
                                                         justifyContent: 'center',
@@ -464,7 +464,7 @@ class SpecialProducts extends PureComponent {
                         </View>
                     </View>
                     <FlatList
-                        refreshing={productsListLoading || categoriesLoading}
+                        refreshing={specialProductsListLoading || categoriesLoading}
                         onRefresh={() => <ActivityIndicator size="small" color="#00C569"
                             style={{
                                 position: 'absolute', right: '15%', top: '2%',
@@ -477,7 +477,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                                         this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
                                     const { searchText } = this.state;
                                     let searchItem = {
@@ -500,7 +500,7 @@ class SpecialProducts extends PureComponent {
                                         searchItem = { ...searchItem, city_id: city }
                                     }
 
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
+                                    this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     }).catch(error => {
                                         this.setState({ showModal: true, sortModalFlag: false })
@@ -553,7 +553,7 @@ class SpecialProducts extends PureComponent {
                     <FlatList
                         data={subCategoriesList}
                         keyExtractor={(item, index) => index.toString()}
-                        refreshing={subCategoriesLoading || productsListLoading}
+                        refreshing={subCategoriesLoading || specialProductsListLoading}
                         onRefresh={() => <ActivityIndicator size="small" color="#00C569"
                             style={{
                                 position: 'absolute', right: '15%', top: '2%',
@@ -564,7 +564,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                                         this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
 
                                     const { sort_by } = this.state;
@@ -581,7 +581,7 @@ class SpecialProducts extends PureComponent {
                                         searchItem = { ...searchItem, city_id: city }
                                     }
 
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
+                                    this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     }).catch(error => {
                                         this.setState({ showModal: true, categoryModalFlag: false })
@@ -704,7 +704,7 @@ class SpecialProducts extends PureComponent {
                 <FlatList
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
-                    ListEmptyComponent={!productsListLoading && <View style={{
+                    ListEmptyComponent={!specialProductsListLoading && <View style={{
                         alignSelf: 'center', justifyContent: 'center',
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
                     }}>
@@ -738,7 +738,7 @@ class SpecialProducts extends PureComponent {
                     extraData={this.state}
                     ref={this.props.productsListRef}
                     onEndReached={() => {
-                        if (loaded && productsListArray.length >= this.state.to_record_number)
+                        if (loaded && specialProductsListArray.length >= this.state.to_record_number)
                             this.setState({
                                 from_record_number: this.state.from_record_number + 15,
                                 to_record_number: this.state.to_record_number + 15,
@@ -765,7 +765,7 @@ class SpecialProducts extends PureComponent {
                                     item = { ...item, city_id: city }
                                 }
 
-                                this.props.fetchAllProductsList(item).then(_ => {
+                                this.props.fetchAllSpecialProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
                                 }).catch(error => {
                                     this.setState({ showModal: true })
@@ -774,7 +774,7 @@ class SpecialProducts extends PureComponent {
                     }}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
-                    refreshing={productsListLoading || categoriesLoading}
+                    refreshing={specialProductsListLoading || categoriesLoading}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
@@ -796,14 +796,14 @@ class SpecialProducts extends PureComponent {
                             item = { ...item, city_id: city }
                         }
 
-                        this.props.fetchAllProductsList(item).catch(error => {
+                        this.props.fetchAllSpecialProductsList(item).catch(error => {
                             this.setState({ showModal: true })
                         });
                     }
                     }
                     onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
-                    data={productsListArray}
+                    data={specialProductsListArray}
                     renderItem={({ item }) => <Product
                         productItem={item}
                         fetchAllProducts={this.fetchAllProducts}
@@ -955,12 +955,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        productsListArray: state.productsListReducer.productsListArray,
-        productsListObject: state.productsListReducer.productsListObject,
-        productsListLoading: state.productsListReducer.productsListLoading,
-        productsListError: state.productsListReducer.productsListError,
-        productsListFailed: state.productsListReducer.productsListFailed,
-        productsListMessage: state.productsListReducer.productsListMessage,
+        specialProductsListArray: state.productsListReducer.specialProductsListArray,
+        specialProductsListObject: state.productsListReducer.specialProductsListObject,
+        specialProductsListLoading: state.productsListReducer.specialProductsListLoading,
+        specialProductsListError: state.productsListReducer.specialProductsListError,
+        specialProductsListFailed: state.productsListReducer.specialProductsListFailed,
+        specialProductsListMessage: state.productsListReducer.specialProductsListMessage,
 
         categoriesLoading: state.registerProductReducer.categoriesLoading,
         categoriesMessage: state.registerProductReducer.categoriesMessage,
@@ -998,7 +998,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, true)),
+        fetchAllSpecialProductsList: item => dispatch(productsListActions.fetchAllSpecialProductsList(item, true)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
