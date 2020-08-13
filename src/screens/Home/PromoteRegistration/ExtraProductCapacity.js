@@ -339,7 +339,46 @@ class ExtraProductCapacity extends React.Component {
                             </View>
                         </Card>
 
+                        <Card transparent>
+                            <View style={{
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
+                                borderRadius: 5,
+                                marginTop: 15,
+                                marginBottom: 50,
+                                elevation: 2
+                            }}>
+                                <Text style={{
+                                    color: '#333',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7
+                                }}>
+                                    {locales('titles.monthlySpecialRegistration')}
 
+                                </Text>
+                                <Text style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7,
+                                    paddingHorizontal: 15
+                                }}>
+                                    {locales('titles.promotionText')}
+
+                                </Text>
+                                <Button
+                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                    onPress={() => this.handleScrollToTopButtonClick()}>
+                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                    </Text>
+                                </Button>
+                            </View>
+                        </Card>
                     </View>
                 </ScrollView>
             </>

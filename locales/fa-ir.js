@@ -150,6 +150,7 @@ export default {
     'titles.promotionText': 'در صورت ارتقاء به عضویت ویژه اگر پس از سه ماه از نتیجه آن رضایت نداشته باشید ',
     'titles.promotionTextContinue': '100% مبلغ پرداختی به شما بازگردانده می شود',
     'titles.annualSpecialRegistration': 'عضویت ویژه سالانه',
+    'titles.monthlySpecialRegistration': 'عضویت پایه سه ماهه',
     'titles.moneyRetention': 'ضمانت بازگشت وجه',
     'titles.seeProfile': 'مشاهده پروفایل',
     'titles.submitChanges': 'ثبت تغییرات',
@@ -288,6 +289,7 @@ export default {
     'titles.count': 'تعداد',
     'titles.number': 'عدد',
     'titles.annuan': 'سالانه',
+    'titles.monthly': 'سه ماهه',
     'titles.editProfile': 'ویرایش پروفایل',
     'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
 
