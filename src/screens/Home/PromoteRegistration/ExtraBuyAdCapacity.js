@@ -71,7 +71,7 @@ class ExtraBuyAdCapacity extends React.Component {
     };
     handleScrollToTopButtonClick = () => {
         if (this.wrapperRef && this.wrapperRef.current) {
-            this.wrapperRef.current.scrollTo({ x: 0, y: 0, animate: true })
+            this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.5, animate: true })
         }
     }
 
@@ -138,6 +138,53 @@ class ExtraBuyAdCapacity extends React.Component {
                         paddingHorizontal: 15
                     }}
                 >
+
+                        <Card transparent>
+                            <View style={{
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
+                                borderRadius: 5,
+                                paddingTop: 15,
+                                marginBottom: 30,
+                                elevation: 2
+                            }}>
+                                <Text style={{
+                                    color: '#333',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7
+                                }}>
+                                    {locales('titles.extraBuyAdRequestDescriptionTitle')}
+
+                                </Text>
+                                <Text style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7,
+                                    paddingHorizontal: 15
+                                }}>
+                                    {locales('titles.extraBuyAdRequestDescriptionTextFirst')}
+                                    <Text style={{
+                                        color:'#00c569'
+                                    }}>
+                                        {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
+                                    </Text>
+                                    {locales('titles.extraBuyAdRequestDescriptionTextThird')}
+
+                                </Text>
+                                <Button
+                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                    onPress={() => this.handleScrollToTopButtonClick()}>
+                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                    </Text>
+                                </Button>
+                            </View>
+                        </Card>
 
 
                     <View style={{
@@ -341,7 +388,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
                                             onPress={() => this.pay()}>
-                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                             </Text>
                                         </Button>
                                     </View>
@@ -350,46 +397,7 @@ class ExtraBuyAdCapacity extends React.Component {
                             </View>
                         </Card>
 
-                        <Card transparent>
-                            <View style={{
-                                backgroundColor: '#fff',
-                                overflow: 'hidden',
-                                borderRadius: 5,
-                                paddingTop: 15,
-                                marginBottom: 30,
-                                elevation: 2
-                            }}>
-                                <Text style={{
-                                    color: '#333',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7
-                                }}>
-                                    {locales('titles.promoteDescriptionTitle')}
-
-                                </Text>
-                                <Text style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7,
-                                    paddingHorizontal: 15
-                                }}>
-                                    {locales('titles.promoteDescriptionText')}
-
-                                </Text>
-                                <Button
-                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
-                                    onPress={() => this.handleScrollToTopButtonClick()}>
-                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
-                                    </Text>
-                                </Button>
-                            </View>
-                        </Card>
+                        
                     </View>
                 </ScrollView>
             </>
