@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import { Body, Card, CardItem, Label, Item, Input, Button } from 'native-base';
@@ -38,6 +39,7 @@ class RegisterRequest extends Component {
 
 
     componentDidMount() {
+        analytics().logEvent('register-buyAd')
         global.resetRegisterProduct = data => {
             if (data) {
                 this.props.navigation.navigate('RegisterRequest')

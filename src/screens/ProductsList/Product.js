@@ -6,6 +6,8 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, CardItem, Body, Toast, Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -50,6 +52,15 @@ class Product extends PureComponent {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
+    componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("product", "product");
+
+    }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && Object.entries(this.props.productItem).length) {
@@ -839,6 +850,9 @@ class Product extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
+                                    analytics().logEvent('show-product-in-seperate-page', {
+                                        'product-id': productId
+                                    });
                                     // this.props.navigation.setParams({ productId, key: productId })
                                     // routes.push(productId);
                                     // global.productIds.push(productId);
@@ -908,7 +922,12 @@ class Product extends PureComponent {
                             <View style={[styles.actionsWrapper, { paddingHorizontal: 10 }]}>
                                 {loggedInUserId != myuser_id ?
                                     <Button
-                                        onPress={() => this.setState({ modalFlag: true })}
+                                        onPress={() => {
+                                            analytics().logEvent('open-chat', {
+                                                'product-id': productId
+                                            });
+                                            this.setState({ modalFlag: true })
+                                        }}
                                         style={[styles.loginButton, { flex: 1 }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>

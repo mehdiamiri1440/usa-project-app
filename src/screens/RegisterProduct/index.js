@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Text, View, StyleSheet, BackHandler, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import * as productActions from '../../redux/registerProduct/actions';
+import analytics from '@react-native-firebase/analytics';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -72,6 +73,7 @@ class RegisterProduct extends React.Component {
     }
 
     componentDidMount() {
+        analytics().logEvent('register-product');
         global.resetRegisterProduct = data => {
             if (data) {
                 this.changeStep(0);

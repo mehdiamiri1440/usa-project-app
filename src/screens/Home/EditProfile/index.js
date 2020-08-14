@@ -3,6 +3,7 @@ import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIn
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Card, Button, Textarea, ActionSheet } from 'native-base';
 
@@ -39,6 +40,7 @@ class EditProfile extends Component {
     }
 
     componentDidMount() {
+        analytics().logEvent('profile-edit');
         if (Object.entries(this.props.userProfile).length) {
             const {
                 profile_photo,

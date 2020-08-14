@@ -4,6 +4,8 @@ import {
     Share, FlatList, Modal
 } from 'react-native';
 import { Button, CardItem, Card, Body } from 'native-base';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
@@ -60,6 +62,13 @@ class Profile extends PureComponent {
     }
 
     componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("profile", "profile");
+
         this.initProfileContent().catch(_ => this.setState({ showModal: false }))
     }
 
@@ -169,6 +178,9 @@ class Profile extends PureComponent {
     };
 
     shareProfileLink = async () => {
+        analytics().logEvent('profile-share', {
+            'contact-id': this.state.userIdFromByUserName
+        });
         try {
             const result = await Share.share({
                 message:
@@ -430,7 +442,12 @@ class Profile extends PureComponent {
                                     this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
                                     <Button
 
-                                        onPress={() => this.setState({ modalFlag: true })}
+                                        onPress={() => {
+                                            analytics().logEvent('open-chat', {
+                                                'contact-id': userIdFromByUserName
+                                            });
+                                            this.setState({ modalFlag: true })
+                                        }}
                                         style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                     >
                                         <View

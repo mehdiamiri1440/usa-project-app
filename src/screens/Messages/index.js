@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import analytics from '@react-native-firebase/analytics';
 import { Card, CardItem, Body, Icon, InputGroup, Input } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
@@ -42,6 +43,7 @@ class ContactsList extends React.Component {
 
 
     componentDidMount() {
+        analytics().logEvent('messages')
         this.props.isFromOutSide(false)
         this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }));
     }

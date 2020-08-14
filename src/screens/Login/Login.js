@@ -1,5 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 import { connect } from 'react-redux'
@@ -26,6 +28,14 @@ class Login extends React.Component {
     passwordRef = React.createRef();
 
     componentDidMount() {
+
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("register", "register");
+
         if (!!this.props.mobileNumber) {
             this.setState({ mobileNumber: this.props.mobileNumber })
         }
@@ -48,8 +58,13 @@ class Login extends React.Component {
     };
 
     onLogin = () => {
+
         let { mobileNumber, password } = this.state;
         let mobileNumberError = '', isMobileNumberValid;
+
+        analytics().logEvent('send-verification-code', {
+            mobilenumber
+        })
 
         if (!mobileNumber) {
             mobileNumberError = locales('errors.fieldNeeded', { fieldName: locales('titles.phoneNumber') });

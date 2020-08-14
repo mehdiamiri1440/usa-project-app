@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, BackHandler } from 'react-native'
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
@@ -44,6 +46,14 @@ class SignUp extends React.Component {
     _isMounted = true;
 
     componentDidMount() {
+
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("register", "register");
+
         this._isMounted = true;
         if (this._isMounted) {
             BackHandler.addEventListener('hardwareBackPress', () => {
@@ -120,6 +130,10 @@ class SignUp extends React.Component {
             category_id: activityZone
         };
         this.props.submitRegister(registerObject).then(() => {
+
+            analytics().logEvent('successfull-register', {
+                mobilenumber
+            })
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {

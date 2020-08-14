@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -8,9 +9,7 @@ import { deviceHeight } from '../../../utils/deviceDimenssions';
 class ContactUs extends React.Component {
 
     componentDidMount() {
-        return {
-
-        }
+        analytics().logEvent('support');
     }
     render() {
         return (

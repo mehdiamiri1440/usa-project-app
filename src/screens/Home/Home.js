@@ -5,6 +5,8 @@ import * as profileActions from '../../redux/profile/actions';
 import { Radio, Button } from 'native-base';
 import RnRestart from 'react-native-restart';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -61,6 +63,15 @@ class Home extends React.Component {
         }
 
     };
+    componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("my-buskool", "my-buskool");
+
+    }
 
     // componentDidUpdate(prevProps, prevState) {
     //     if (prevState.loaded == false && Object.entries(this.props.changeRoleObject.is_seller).length) {

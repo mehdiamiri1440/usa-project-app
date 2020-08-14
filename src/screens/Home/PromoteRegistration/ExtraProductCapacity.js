@@ -5,6 +5,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { Card, Body, InputGroup, CardItem, Input, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import analytics from '@react-native-firebase/analytics';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
@@ -28,6 +29,10 @@ class ExtraProductCapacity extends React.Component {
 
     wrapperRef = createRef();
 
+    componentDidMount() {
+        analytics().logEvent('extra-product-capacity-payment');
+
+    }
     pay = () => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)

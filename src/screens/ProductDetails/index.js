@@ -4,12 +4,15 @@ import {
     TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -98,6 +101,13 @@ class ProductDetails extends PureComponent {
 
     wrapper = React.createRef();
     componentDidMount(param) {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("product-view", "product-view");
+
         // BackHandler.addEventListener('hardwareBackPress', () => {
         //     global.productIds.pop();
         //     this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
@@ -397,6 +407,9 @@ class ProductDetails extends PureComponent {
     };
 
     shareProductLink = async (url) => {
+        analytics().logEvent('product-share', {
+            'product-id': this.props.route.params.productId
+        });
         try {
             const result = await Share.share({
                 message: url,
@@ -966,7 +979,12 @@ class ProductDetails extends PureComponent {
                             </View> :
 
                                 <Button
-                                    onPress={() => this.setState({ modalFlag: true })}
+                                    onPress={() => {
+                                        analytics().logEvent('open-chat', {
+                                            'product-id': this.props.route.params.productId
+                                        });
+                                        this.setState({ modalFlag: true })
+                                    }}
                                     style={[styles.loginButton, {
                                         paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
                                         maxWidth: 160,
@@ -1135,7 +1153,18 @@ class ProductDetails extends PureComponent {
                                             {locales('titles.seeProfile')}</Text>
                                     </Button>
                                     <Button
-                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' }) : this.setState({ modalFlag: true })}
+                                        onPress={() => {
+                                            if (userId == loggedInUserId) {
+                                                this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
+                                            }
+                                            else {
+                                                analytics().logEvent('open-chat', {
+                                                    'product-id': this.props.route.params.productId
+                                                });
+                                                this.setState({ modalFlag: true })
+                                            }
+                                        }
+                                        }
                                         style={[styles.loginButton, {
                                             alignSelf: 'center'
                                         }]}
@@ -1204,7 +1233,12 @@ class ProductDetails extends PureComponent {
                     elevation: 5,
                 }} >
                     <Button
-                        onPress={() => this.setState({ modalFlag: true })}
+                        onPress={() => {
+                            analytics().logEvent('open-chat', {
+                                'product-id': this.props.route.params.productId
+                            });
+                            this.setState({ modalFlag: true })
+                        }}
                         style={[styles.loginButton, {
                             position: 'absolute',
                             left: 15,

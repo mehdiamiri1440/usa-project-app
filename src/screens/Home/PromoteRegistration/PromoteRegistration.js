@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Card, Body, CardItem, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import analytics from '@react-native-firebase/analytics';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,7 +23,9 @@ class PromoteRegistration extends React.Component {
     }
 
     wrapperRef = createRef();
-
+    componentDidMount() {
+        analytics().logEvent('package-payment');
+    }
     pay = (type = 3) => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)

@@ -23,7 +23,6 @@ class GuidToRegisterProduct extends React.Component {
     componentDidMount() {
 
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
-            console.warn('erg', componentName, componentType)
             if (componentType === 'Component') {
                 analytics().setCurrentScreen(componentName, componentName);
             }

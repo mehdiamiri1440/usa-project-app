@@ -2,6 +2,8 @@ import React, { PureComponent, Component } from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, Modal } from 'react-native';
 import { Dialog, Portal, Paragraph, Snackbar, ActivityIndicator } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
@@ -49,6 +51,13 @@ class Requests extends PureComponent {
     is_mounted = false;
 
     componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("buyAds", "buyAds");
+
         this.is_mounted = true;
         if (this.is_mounted == true) {
             this.initialCalls().catch(_ => this.setState({ showModal: true }));
@@ -96,6 +105,11 @@ class Requests extends PureComponent {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
                 if (this.props.isUserAllowedToSendMessagePermission.permission) {
+                    if (!item.is_golden) {
+                        analytics().logEvent('chat-opened', {
+                            'buyAd-id': item.id
+                        });
+                    }
                     this.setState({
                         modalFlag: true,
                         selectedBuyAdId: item.id,
@@ -107,11 +121,17 @@ class Requests extends PureComponent {
                     });
                 }
                 else {
+                    analytics().logEvent('permission-denied', {
+                        golden: false
+                    });
                     this.setState({ showDialog: true })
                 }
             }).catch(_ => this.setState({ showModal: true }));
         }
         else {
+            analytics().logEvent('permission-denied', {
+                golden: true
+            });
             this.setState({ showGoldenModal: true });
         }
     };
@@ -148,6 +168,9 @@ class Requests extends PureComponent {
     };
 
     selectedFilter = (id, name) => {
+        analytics().logEvent('buyAd-filter', {
+            categor: name
+        })
         this.setState({
             buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id),
             selectedFilterName: name,

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Card, CardItem, Body } from 'native-base';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -14,6 +15,7 @@ const Dashboard = props => {
 
 
     useEffect(() => {
+        analytics().logEvent('dashboard');
         props.fetchAllDashboardData().catch(_ => setShowModal(true));
     },
         [])

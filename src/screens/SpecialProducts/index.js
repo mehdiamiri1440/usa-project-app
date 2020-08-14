@@ -2,6 +2,8 @@ import React, { createRef, PureComponent } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
 
@@ -49,6 +51,12 @@ class SpecialProducts extends PureComponent {
     productsListRef = createRef();
 
     componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("special-products", "special-products");
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
@@ -119,6 +127,9 @@ class SpecialProducts extends PureComponent {
 
 
     handleSearch = (text) => {
+        analytics().logEvent('search-text', {
+            text
+        })
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
@@ -154,6 +165,9 @@ class SpecialProducts extends PureComponent {
     };
 
     sortProducts = (id, name) => {
+        analytics().logEvent('apply-sort', {
+            'sort-type': name
+        })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id).catch(error => {
                 this.setState({ showModal: true, categoryModalFlag: false })

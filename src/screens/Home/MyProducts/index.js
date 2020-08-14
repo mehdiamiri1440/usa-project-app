@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -40,6 +41,8 @@ class MyProducts extends Component {
 
     componentDidMount() {
         this.fetchAllProducts();
+        analytics().logEvent('my-product');
+
     }
 
     componentDidUpdate(prevProps, prevState) {
