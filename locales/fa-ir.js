@@ -283,6 +283,7 @@ export default {
     'titles.whatAndQuantity': 'چی و چه مقدار؟',
     'titles.chatHistoryIsEmpty': 'تاریخچه پیام‌ها خالی می‌باشد',
     'titles.8CharLeast': 'حداقل 8 کارکتر',
+    'titles.copiedToClipboard': 'کپی شد.',
     'titles.extraProduct': 'افزایش ظرفیت ثبت محصول',
     'titles.doYouWishToBuy': 'آیا قصد خرید عمده محصولی را دارید؟',
     'titles.registerRequestNow': 'همین حالا درخواست خرید ثبت کنید.',

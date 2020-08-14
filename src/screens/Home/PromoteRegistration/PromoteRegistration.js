@@ -23,14 +23,14 @@ class PromoteRegistration extends React.Component {
 
     wrapperRef = createRef();
 
-    pay = () => {
+    pay = (type = 3) => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)
             userId = this.props.userProfile.user_info.id;
 
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/3`).then(supported => {
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`).then(supported => {
             if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/3`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`);
             }
         })
     };
@@ -442,7 +442,7 @@ class PromoteRegistration extends React.Component {
                                     :
                                     <Button
                                         style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
-                                        onPress={() => this.pay()}>
+                                        onPress={() => this.pay(1)}>
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                         </Text>
                                     </Button>
