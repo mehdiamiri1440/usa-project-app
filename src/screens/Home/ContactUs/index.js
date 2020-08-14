@@ -1,7 +1,10 @@
 import React from 'react';
 import analytics from '@react-native-firebase/analytics';
-import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, Linking } from 'react-native';
+import {
+    Text, TouchableOpacity, View, StyleSheet, Image, ToastAndroid, Linking
+} from 'react-native';
 import { Button } from 'native-base';
+import Clipboard from "@react-native-community/clipboard";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -116,6 +119,15 @@ class ContactUs extends React.Component {
                                     color: '#00c569'
                                 }} />
                                 <Text
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString('09178928266')
+                                    }}
                                     style={{
                                         textAlign: 'center',
                                         marginVertical: 10,
@@ -137,6 +149,15 @@ class ContactUs extends React.Component {
                                     color: '#00c569'
                                 }} />
                                 <Text
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString('‌09118413054')
+                                    }}
                                     style={{
                                         textAlign: 'center',
                                         marginVertical: 10,
