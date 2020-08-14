@@ -131,7 +131,7 @@ class SignUp extends React.Component {
         };
         this.props.submitRegister(registerObject).then(() => {
 
-            analytics().logEvent('successfull-register', {
+            analytics().logEvent('successfull_register', {
                 mobilenumber
             })
             this.setState({ successfullAlert: true }, () => {

@@ -56,7 +56,7 @@ class SpecialProducts extends PureComponent {
                 analytics().setCurrentScreen(componentName, componentName);
             }
         });
-        analytics().setCurrentScreen("special-products", "special-products");
+        analytics().setCurrentScreen("special_products", "special_products");
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
@@ -127,7 +127,7 @@ class SpecialProducts extends PureComponent {
 
 
     handleSearch = (text) => {
-        analytics().logEvent('search-text', {
+        analytics().logEvent('search_text', {
             text
         })
         clearTimeout(myTimeout)
@@ -165,7 +165,7 @@ class SpecialProducts extends PureComponent {
     };
 
     sortProducts = (id, name) => {
-        analytics().logEvent('apply-sort', {
+        analytics().logEvent('apply_sort', {
             'sort-type': name
         })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {

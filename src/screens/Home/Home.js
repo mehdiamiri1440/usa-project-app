@@ -69,7 +69,7 @@ class Home extends React.Component {
                 analytics().setCurrentScreen(componentName, componentName);
             }
         });
-        analytics().setCurrentScreen("my-buskool", "my-buskool");
+        analytics().setCurrentScreen("my_buskool", "my_buskool");
 
     }
 

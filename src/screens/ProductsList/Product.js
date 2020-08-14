@@ -850,7 +850,7 @@ class Product extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
-                                    analytics().logEvent('show-product-in-seperate-page', {
+                                    analytics().logEvent('show_product_in_seperate_page', {
                                         'product-id': productId
                                     });
                                     // this.props.navigation.setParams({ productId, key: productId })
@@ -923,7 +923,7 @@ class Product extends PureComponent {
                                 {loggedInUserId != myuser_id ?
                                     <Button
                                         onPress={() => {
-                                            analytics().logEvent('open-chat', {
+                                            analytics().logEvent('open_chat', {
                                                 'product-id': productId
                                             });
                                             this.setState({ modalFlag: true })

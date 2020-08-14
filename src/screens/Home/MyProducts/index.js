@@ -41,7 +41,7 @@ class MyProducts extends Component {
 
     componentDidMount() {
         this.fetchAllProducts();
-        analytics().logEvent('my-product');
+        analytics().logEvent('my_product');
 
     }
 

@@ -39,7 +39,7 @@ class RegisterRequest extends Component {
 
 
     componentDidMount() {
-        analytics().logEvent('register-buyAd')
+        analytics().logEvent('register_buyAd')
         global.resetRegisterProduct = data => {
             if (data) {
                 this.props.navigation.navigate('RegisterRequest')

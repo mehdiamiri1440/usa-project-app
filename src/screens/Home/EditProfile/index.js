@@ -40,7 +40,7 @@ class EditProfile extends Component {
     }
 
     componentDidMount() {
-        analytics().logEvent('profile-edit');
+        analytics().logEvent('profile_edit');
         if (Object.entries(this.props.userProfile).length) {
             const {
                 profile_photo,

@@ -31,18 +31,6 @@ class GuidToRegisterProduct extends React.Component {
     }
 
     onSubmit = () => {
-
-        analytics().logEvent('registerButton', {
-            item: "guid111"
-        })
-
-        analytics().logEvent('GuidToRegisterProductSubmitButton', {
-            item: "guid222"
-        })
-
-        analytics().logEvent('basket4', {
-            item: "guid333"
-        })
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {

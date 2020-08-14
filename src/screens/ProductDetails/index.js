@@ -106,7 +106,7 @@ class ProductDetails extends PureComponent {
                 analytics().setCurrentScreen(componentName, componentName);
             }
         });
-        analytics().setCurrentScreen("product-view", "product-view");
+        analytics().setCurrentScreen("product_view", "product_view");
 
         // BackHandler.addEventListener('hardwareBackPress', () => {
         //     global.productIds.pop();
@@ -407,7 +407,7 @@ class ProductDetails extends PureComponent {
     };
 
     shareProductLink = async (url) => {
-        analytics().logEvent('product-share', {
+        analytics().logEvent('product_share', {
             'product-id': this.props.route.params.productId
         });
         try {
@@ -980,7 +980,7 @@ class ProductDetails extends PureComponent {
 
                                 <Button
                                     onPress={() => {
-                                        analytics().logEvent('open-chat', {
+                                        analytics().logEvent('open_chat', {
                                             'product-id': this.props.route.params.productId
                                         });
                                         this.setState({ modalFlag: true })
@@ -1158,7 +1158,7 @@ class ProductDetails extends PureComponent {
                                                 this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
                                             }
                                             else {
-                                                analytics().logEvent('open-chat', {
+                                                analytics().logEvent('open_chat', {
                                                     'product-id': this.props.route.params.productId
                                                 });
                                                 this.setState({ modalFlag: true })
@@ -1234,7 +1234,7 @@ class ProductDetails extends PureComponent {
                 }} >
                     <Button
                         onPress={() => {
-                            analytics().logEvent('open-chat', {
+                            analytics().logEvent('open_chat', {
                                 'product-id': this.props.route.params.productId
                             });
                             this.setState({ modalFlag: true })

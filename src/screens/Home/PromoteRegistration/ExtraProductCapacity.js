@@ -30,7 +30,7 @@ class ExtraProductCapacity extends React.Component {
     wrapperRef = createRef();
 
     componentDidMount() {
-        analytics().logEvent('extra-product-capacity-payment');
+        analytics().logEvent('extra_product_capacity_payment');
 
     }
     pay = () => {

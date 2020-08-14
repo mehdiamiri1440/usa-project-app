@@ -73,7 +73,7 @@ class RegisterProduct extends React.Component {
     }
 
     componentDidMount() {
-        analytics().logEvent('register-product');
+        analytics().logEvent('register_product');
         global.resetRegisterProduct = data => {
             if (data) {
                 this.changeStep(0);

@@ -106,7 +106,7 @@ class Requests extends PureComponent {
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
                 if (this.props.isUserAllowedToSendMessagePermission.permission) {
                     if (!item.is_golden) {
-                        analytics().logEvent('chat-opened', {
+                        analytics().logEvent('chat_opened', {
                             'buyAd-id': item.id
                         });
                     }
@@ -121,7 +121,7 @@ class Requests extends PureComponent {
                     });
                 }
                 else {
-                    analytics().logEvent('permission-denied', {
+                    analytics().logEvent('permission_denied', {
                         golden: false
                     });
                     this.setState({ showDialog: true })
@@ -129,7 +129,7 @@ class Requests extends PureComponent {
             }).catch(_ => this.setState({ showModal: true }));
         }
         else {
-            analytics().logEvent('permission-denied', {
+            analytics().logEvent('permission_denied', {
                 golden: true
             });
             this.setState({ showGoldenModal: true });
@@ -168,7 +168,7 @@ class Requests extends PureComponent {
     };
 
     selectedFilter = (id, name) => {
-        analytics().logEvent('buyAd-filter', {
+        analytics().logEvent('buyAd_filter', {
             categor: name
         })
         this.setState({

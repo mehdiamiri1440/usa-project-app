@@ -24,7 +24,7 @@ class PromoteRegistration extends React.Component {
 
     wrapperRef = createRef();
     componentDidMount() {
-        analytics().logEvent('package-payment');
+        analytics().logEvent('package_payment');
     }
     pay = (type = 3) => {
         let userId = '';

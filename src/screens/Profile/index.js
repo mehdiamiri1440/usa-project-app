@@ -178,7 +178,7 @@ class Profile extends PureComponent {
     };
 
     shareProfileLink = async () => {
-        analytics().logEvent('profile-share', {
+        analytics().logEvent('profile_share', {
             'contact-id': this.state.userIdFromByUserName
         });
         try {
@@ -443,7 +443,7 @@ class Profile extends PureComponent {
                                     <Button
 
                                         onPress={() => {
-                                            analytics().logEvent('open-chat', {
+                                            analytics().logEvent('open_chat', {
                                                 'contact-id': userIdFromByUserName
                                             });
                                             this.setState({ modalFlag: true })

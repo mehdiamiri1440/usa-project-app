@@ -28,7 +28,7 @@ class ExtraBuyAdCapacity extends React.Component {
     wrapperRef = createRef();
 
     componentDidMount() {
-        analytics().logEvent('extra-buyAd-capacity-payment');
+        analytics().logEvent('extra_buyAd_capacity_payment');
 
     }
 

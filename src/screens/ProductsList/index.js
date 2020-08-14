@@ -56,7 +56,7 @@ class ProductsList extends PureComponent {
                 analytics().setCurrentScreen(componentName, componentName);
             }
         });
-        analytics().setCurrentScreen("product-list", "product-list");
+        analytics().setCurrentScreen("product_list", "product_list");
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
@@ -128,7 +128,7 @@ class ProductsList extends PureComponent {
 
     handleSearch = (text) => {
 
-        analytics().logEvent('search-text', {
+        analytics().logEvent('search_text', {
             text
         })
         clearTimeout(myTimeout)
@@ -167,7 +167,7 @@ class ProductsList extends PureComponent {
 
     sortProducts = (id, name) => {
 
-        analytics().logEvent('apply-sort', {
+        analytics().logEvent('apply_sort', {
             'sort-type': name
         })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
