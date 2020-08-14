@@ -1,10 +1,13 @@
 import React from 'react';
-import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
+import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, Linking } from 'react-native';
+import { Button } from 'native-base';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
 class ContactUs extends React.Component {
 
@@ -101,12 +104,12 @@ class ContactUs extends React.Component {
                         <View style={{
                             flexDirection: 'row-reverse',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            paddingHorizontal: 20
                         }}>
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                paddingHorizontal: 25
                             }}>
                                 <FontAwesome5 name="phone" solid size={15} style={{
                                     paddingTop: 15,
@@ -128,7 +131,6 @@ class ContactUs extends React.Component {
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                paddingHorizontal: 25
                             }}>
                                 <FontAwesome5 name="phone" solid size={15} style={{
                                     paddingTop: 10,
@@ -148,6 +150,195 @@ class ContactUs extends React.Component {
                             </View>
                         </View>
 
+                        <Text style={{
+                            textAlign: 'center',
+                            fontSize: 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginVertical: 15
+
+                        }}>
+                            شبکه های اجتماعی
+                    </Text>
+                        <View style={{
+                            justifyContent: 'space-around',
+                            flexDirection: 'row',
+
+                        }}>
+                            <Button
+                                style={{
+                                    backgroundColor: 'none',
+                                    elevation: 0
+                                }}
+                                onPress={() => {
+                                    Linking.canOpenURL('instagram://user?username=buskool.ir').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('instagram://user?username=buskool.ir')
+                                        } else {
+                                            Linking.openURL('https://www.instagram.com/buskool.ir')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://www.instagram.com')
+                                        })
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 15,
+                                        width: 45,
+                                        height: 45,
+                                        alignItems: 'center',
+                                        elevation: 4,
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        paddingTop: 6,
+                                        backgroundColor: '#556080'
+                                    }}>
+                                    <FontAwesome5 size={30} name="instagram" solid color="#fff" />
+                                </Text>
+                            </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'none',
+                                    elevation: 0
+                                }}
+                                onPress={() => {
+                                    Linking.canOpenURL('fb://profile/buskool1').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('fb://profile/buskool1')
+                                        } else {
+                                            Linking.openURL('https://www.facebook.com/buskool1/')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://www.facebook.com/')
+                                        })
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 15,
+                                        width: 45,
+                                        height: 45,
+                                        alignItems: 'center',
+                                        elevation: 4,
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        paddingTop: 10,
+                                        backgroundColor: '#556080'
+
+                                    }}>
+                                    <FontAwesome5 size={23} name="facebook-f" color="#fff" />
+                                </Text>
+                            </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'none',
+                                    elevation: 0
+                                }}
+                                onPress={() => {
+                                    Linking.canOpenURL('twitter://buskool_BS').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('twitter://buskool_BS')
+                                        } else {
+                                            Linking.openURL('https://twitter.com/buskool_BS')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://twitter.com/')
+                                        })
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 15,
+                                        width: 45,
+                                        height: 45,
+                                        alignItems: 'center',
+                                        elevation: 4,
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        paddingTop: 10,
+                                        backgroundColor: '#556080'
+
+                                    }}>
+                                    <FontAwesome5 size={23} name="twitter" color="#fff" />
+                                </Text>
+                            </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'none',
+                                    elevation: 0
+                                }}
+                                onPress={() => {
+                                    Linking.canOpenURL('https://www.linkedin.com/company/27058131/').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('https://www.linkedin.com/company/27058131/')
+                                        } else {
+                                            Linking.openURL('https://www.linkedin.com/company/27058131/')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://www.linkedin.com/')
+                                        })
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 15,
+                                        width: 45,
+                                        height: 45,
+                                        alignItems: 'center',
+                                        elevation: 4,
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        paddingTop: 10,
+                                        backgroundColor: '#556080'
+
+                                    }}>
+                                    <FontAwesome size={23} name="linkedin" color="#fff" />
+                                </Text>
+                            </Button>
+                            <Button
+                                style={{
+                                    backgroundColor: 'none',
+                                    elevation: 0
+                                }}
+                                onPress={() => {
+                                    Linking.canOpenURL('tg://resolve?domain=buskool').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('tg://resolve?domain=buskool')
+                                        } else {
+                                            Linking.openURL('https://t.me/buskool')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://t.me/buskool')
+                                        })
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 15,
+                                        width: 45,
+                                        height: 45,
+                                        alignItems: 'center',
+                                        elevation: 4,
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        paddingTop: 10,
+                                        backgroundColor: '#556080'
+
+                                    }}>
+                                    <FontAwesome size={23} name="telegram" color="#fff" />
+                                </Text>
+                            </Button>
+                        </View>
 
                     </View>
 
