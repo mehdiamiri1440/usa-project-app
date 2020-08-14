@@ -45,7 +45,7 @@ class PromoteRegistration extends React.Component {
 
     handleScrollToTopButtonClick = () => {
         if (this.wrapperRef && this.wrapperRef.current) {
-            this.wrapperRef.current.scrollTo({ x: 0, y: 0, animate: true })
+            this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.55, animate: true })
         }
     }
 
@@ -110,7 +110,67 @@ class PromoteRegistration extends React.Component {
                     }}
                 >
 
+                    <Card transparent>
+                        <View style={{
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
+                            borderRadius: 5,
+                            // marginTop: 15,
+                            paddingTop: 15,
+                            marginBottom: 30,
+                            elevation: 2
+                        }}>
+                            <Text style={{
+                                color: '#333',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7
+                            }}>
+                                {locales('titles.promoteDescriptionTitle')}
 
+                            </Text>
+                            <Text style={{
+                                color: '#777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 15,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7,
+                                paddingHorizontal: 15
+                            }}>
+                                    <Text style={{
+                                        width:'100%',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
+                                    }}>
+                                    {locales('titles.promoteDescriptionTextFirst')}
+
+                                    </Text>
+                                <Text style={{
+                                    color:'red'
+                                }}>
+                                {locales('titles.promoteDescriptionTextSecend')}
+                                </Text>
+                                {locales('titles.promoteDescriptionTextThird')}
+                                <Text style={{
+                                    color:'#00c569'
+                                }}>
+                                {locales('titles.promoteDescriptionTextFourth')}
+
+                                </Text>
+                                {locales('titles.promoteDescriptionTextFifth')}
+                                
+                            </Text>
+                            <Button
+                                style={[styles.loginButton, { width: '70%', marginBottom: 30, alignSelf: 'center' }]}
+                                onPress={() => this.handleScrollToTopButtonClick()}>
+                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
+                                </Text>
+                            </Button>
+                        </View>
+                    </Card>
                     <Card transparent>
                         <View style={{
                             backgroundColor: '#fff',
@@ -296,7 +356,9 @@ class PromoteRegistration extends React.Component {
                             overflow: 'hidden',
                             borderRadius: 5,
                             marginTop: 15,
-                            elevation: 2
+                            elevation: 2,
+                            marginBottom: 50,
+
                         }}>
                             <LinearGradient
                                 start={{ x: 0, y: 1 }}
@@ -454,47 +516,7 @@ class PromoteRegistration extends React.Component {
                         </View>
                     </Card>
 
-                    <Card transparent>
-                        <View style={{
-                            backgroundColor: '#fff',
-                            overflow: 'hidden',
-                            borderRadius: 5,
-                            marginTop: 15,
-                            paddingTop: 15,
-                            marginBottom: 50,
-                            elevation: 2
-                        }}>
-                            <Text style={{
-                                color: '#333',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
-                                marginVertical: 7
-                            }}>
-                                {locales('titles.promoteDescriptionTitle')}
-
-                            </Text>
-                            <Text style={{
-                                color: '#777',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 14,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
-                                marginVertical: 7,
-                                paddingHorizontal: 15
-                            }}>
-                                {locales('titles.promoteDescriptionText')}
-
-                            </Text>
-                            <Button
-                                style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
-                                onPress={() => this.handleScrollToTopButtonClick()}>
-                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
-                                </Text>
-                            </Button>
-                        </View>
-                    </Card>
+                  
                 </ScrollView>
             </>
         )

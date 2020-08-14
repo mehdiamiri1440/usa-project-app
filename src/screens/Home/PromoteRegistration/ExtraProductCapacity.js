@@ -73,7 +73,7 @@ class ExtraProductCapacity extends React.Component {
 
     handleScrollToTopButtonClick = () => {
         if (this.wrapperRef && this.wrapperRef.current) {
-            this.wrapperRef.current.scrollTo({ x: 0, y: 0, animate: true })
+            this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.5, animate: true })
         }
     }
     render() {
@@ -144,7 +144,48 @@ class ExtraProductCapacity extends React.Component {
 
                     }}>
 
+    <Card transparent>
+                            <View style={{
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
+                                borderRadius: 5,
+                                // marginTop: 15,
+                                paddingTop: 15,
+                                marginBottom: 30,
+                                elevation: 2
+                            }}>
+                                <Text style={{
+                                    color: '#333',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7
+                                }}>
+                                    {locales('titles.extraCapacityDescriptionTitle')}
 
+                                </Text>
+                                <Text style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginVertical: 7,
+                                    paddingHorizontal: 15
+                                }}>
+                                    
+                                    {locales('titles.extraCapacityDescriptionText')}
+                                    
+                                </Text>
+                                <Button
+                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                    onPress={() => this.handleScrollToTopButtonClick()}>
+                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                    </Text>
+                                </Button>
+                            </View>
+                        </Card>
                         <Card transparent>
                             <View style={{
                                 borderRadius: 4,
@@ -341,7 +382,7 @@ class ExtraProductCapacity extends React.Component {
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
                                             onPress={() => this.pay()}>
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
-                                                {locales('titles.moreCapacity')}
+                                                {locales('titles.pay')}
                                             </Text>
                                         </Button>
                                     </View>
@@ -350,46 +391,7 @@ class ExtraProductCapacity extends React.Component {
                             </View>
                         </Card>
 
-                        <Card transparent>
-                            <View style={{
-                                backgroundColor: '#fff',
-                                overflow: 'hidden',
-                                borderRadius: 5,
-                                paddingTop: 15,
-                                marginBottom: 30,
-                                elevation: 2
-                            }}>
-                                <Text style={{
-                                    color: '#333',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7
-                                }}>
-                                    {locales('titles.promoteDescriptionTitle')}
-
-                                </Text>
-                                <Text style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7,
-                                    paddingHorizontal: 15
-                                }}>
-                                    {locales('titles.promoteDescriptionText')}
-
-                                </Text>
-                                <Button
-                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
-                                    onPress={() => this.handleScrollToTopButtonClick()}>
-                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
-                                    </Text>
-                                </Button>
-                            </View>
-                        </Card>
+                    
                     </View>
                 </ScrollView>
             </>
