@@ -24,6 +24,8 @@ class SignUp extends React.Component {
             verificationCode: '',
             mobileNumber: '',
             firstName: '',
+            provinceName: '',
+            cityName: '',
             lastName: '',
             successfullAlert: false,
             gender: '',
@@ -77,8 +79,8 @@ class SignUp extends React.Component {
     setFullNameAndGender = (firstName, lastName, gender) => {
         this.setState({ firstName, lastName, gender }, () => this.changeStep(4))
     };
-    setCityAndProvice = (city, province) => {
-        this.setState({ city, province }, () => this.changeStep(5))
+    setCityAndProvice = (city, province, provinceName, cityName) => {
+        this.setState({ city, province, provinceName, cityName }, () => this.changeStep(5))
     };
 
     setUserAuthorities = (userName, password) => {
@@ -101,6 +103,8 @@ class SignUp extends React.Component {
             activityType,
             city,
             province,
+            provinceName,
+            cityName
         } = this.state;
 
         let registerObject = {
@@ -110,8 +114,8 @@ class SignUp extends React.Component {
             password,
             user_name: '',
             sex: gender,
-            province,
-            city,
+            province: provinceName,
+            city: cityName,
             activity_type: activityType == 'buyer' ? '1' : '0',
             category_id: activityZone
         };

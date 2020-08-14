@@ -75,7 +75,9 @@ class ChooseCity extends React.Component {
         }
 
         if (isProvinceValid && isCityValid) {
-            this.props.setCityAndProvice(city, province);
+            const provinceName = this.props.allProvincesObject.provinces.find(item => item.id == province).province_name;
+            const cityName = this.props.allCitiesObject.cities.find(item => item.id == city).city_name;
+            this.props.setCityAndProvice(city, province, provinceName, cityName);
         }
         else {
             this.setState({ provinceError, cityError });
