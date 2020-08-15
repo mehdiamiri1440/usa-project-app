@@ -169,7 +169,7 @@ class Requests extends PureComponent {
 
     selectedFilter = (id, name) => {
         analytics().logEvent('buyAd_filter', {
-            categor: name
+            category: name
         })
         this.setState({
             buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id),
