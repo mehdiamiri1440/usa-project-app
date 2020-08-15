@@ -219,7 +219,7 @@ class ContactUs extends React.Component {
                                     <FontAwesome5 size={30} name="instagram" solid color="#fff" />
                                 </Text>
                             </Button>
-                            <Button
+                            {/* <Button
                                 style={{
                                     backgroundColor: 'none',
                                     elevation: 0
@@ -253,8 +253,8 @@ class ContactUs extends React.Component {
                                     }}>
                                     <FontAwesome5 size={23} name="facebook-f" color="#fff" />
                                 </Text>
-                            </Button>
-                            <Button
+                            </Button> */}
+                            {/* <Button
                                 style={{
                                     backgroundColor: 'none',
                                     elevation: 0
@@ -323,7 +323,7 @@ class ContactUs extends React.Component {
                                     }}>
                                     <FontAwesome size={23} name="linkedin" color="#fff" />
                                 </Text>
-                            </Button>
+                            </Button> */}
                             <Button
                                 style={{
                                     backgroundColor: 'none',

@@ -2,6 +2,8 @@
 
 import React, { Component } from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
+import RNApkInstallerN from 'react-native-apk-installer-n';
+import RNFS from 'react-native-fs';
 import { Button, } from "native-base";
 import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 import LinearGradient from "react-native-linear-gradient";
@@ -11,17 +13,48 @@ class UpgradeApp extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
-
+            appUpdateProgress: 0,
+            downloadingUpdate: false
         }
     }
 
     componentDidMount() {
-
-
+        this.appUpdate()
     }
 
+
+
+    appUpdate = () => {
+        const filePath =
+            RNFS.DocumentDirectoryPath + '/com.domain.example.apk';
+        const download = RNFS.downloadFile({
+            fromUrl:
+                'https://www.cheegel.com/content/mobilesoftware/chidaily.apk',
+            toFile: filePath,
+            progress: data => {
+                const percentage =
+                    ((100 * data.bytesWritten) / data.contentLength) | 0;
+                this.setState({ appUpdateProgress: percentage });
+            },
+            background: true,
+            progressDivider: 1,
+        });
+
+        download.promise
+            .then(result => {
+                if (result.statusCode == 200) {
+                    RNApkInstallerN.install(filePath);
+                    this.setState({ downloadingUpdate: false });
+                }
+            })
+            .catch(err => console.warn('errrrrrr', err));
+    };
+
+
     render() {
+        const {
+            appUpdateProgress
+        } = this.state;
 
         return (
 
@@ -76,7 +109,7 @@ class UpgradeApp extends Component {
                                 color: '#21AD93',
                                 textAlign: 'center'
                             }}>
-                            80%
+                            {appUpdateProgress}%
                         </Text>
                         <View style={{
                             width: '100%',
@@ -99,7 +132,7 @@ class UpgradeApp extends Component {
                                 style={{
                                     position: 'absolute',
                                     height: 7,
-                                    width: '80%',
+                                    width: `${appUpdateProgress}%`,
                                     right: 0,
                                     borderRadius: 10
                                 }}

@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { Button } from 'native-base';
 import SplashScreen from 'react-native-splash-screen'
-import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, NativeModules } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
@@ -74,7 +74,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 
 const App = (props) => {
-
+    const RNAppUpdate = NativeModules.RNAppUpdate;
 
 
     const { userProfile = {}, message } = props;
@@ -86,8 +86,6 @@ const App = (props) => {
     let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
     let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
     let unsubscribe;
-
-
 
     const routeToScreensFromNotifications = remoteMessage => {
 
@@ -154,6 +152,21 @@ const App = (props) => {
         }
     }
     useEffect(() => {
+
+        fetch('http://www.cheegel.com/content/mobilesoftware/mobileversion.json')
+            .then(res => {
+                res.text().then(result => {
+                    const resultOfVersion = JSON.parse(result);
+                    if (
+                        RNAppUpdate.versionName.toString() !==
+                        resultOfVersion.versionName.toString()
+                    ) {
+                        navigationRef.current.navigate('UpgradeApp')
+                    }
+                });
+            })
+            .catch(err => console.warn('catch'));
+
 
         if (!props.loggedInUserId) {
             AsyncStorage.getItem('@isIntroductionSeen').then(result => {
