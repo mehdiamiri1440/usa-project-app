@@ -17,6 +17,7 @@ import { deviceHeight, deviceWidth } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
+import { result } from 'lodash';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
@@ -129,10 +130,10 @@ class SignUp extends React.Component {
             activity_type: activityType == 'buyer' ? '1' : '0',
             category_id: activityZone
         };
-        this.props.submitRegister(registerObject).then(() => {
-
+        this.props.submitRegister(registerObject).then(result => {
+            console.log('in then', result)
             analytics().logEvent('successfull_register', {
-                mobilenumber
+                'mobile_number': mobileNumber
             })
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
@@ -146,6 +147,7 @@ class SignUp extends React.Component {
                 })
             })
         }).catch(err => {
+            console.log('in err', err, err.response, err.data)
             if (err && err.data)
                 this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
             // this.setState({ showModal: true })
