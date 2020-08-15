@@ -134,7 +134,9 @@ class ExtraBuyAdCapacity extends React.Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
-                            onRefresh={() => this.props.fetchAllDashboardData().catch(_ => this.setState({ showModal: true }))}
+                            onRefresh={() => this.props.fetchAllDashboardData()
+                                // .catch(_ => this.setState({ showModal: true }))
+                            }
                         />
                     }
                     style={{
@@ -143,52 +145,52 @@ class ExtraBuyAdCapacity extends React.Component {
                     }}
                 >
 
-                        <Card transparent>
-                            <View style={{
-                                backgroundColor: '#fff',
-                                overflow: 'hidden',
-                                borderRadius: 5,
-                                paddingTop: 15,
-                                marginBottom: 30,
-                                elevation: 2
+                    <Card transparent>
+                        <View style={{
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
+                            borderRadius: 5,
+                            paddingTop: 15,
+                            marginBottom: 30,
+                            elevation: 2
+                        }}>
+                            <Text style={{
+                                color: '#333',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7
                             }}>
-                                <Text style={{
-                                    color: '#333',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7
-                                }}>
-                                    {locales('titles.extraBuyAdRequestDescriptionTitle')}
+                                {locales('titles.extraBuyAdRequestDescriptionTitle')}
 
-                                </Text>
+                            </Text>
+                            <Text style={{
+                                color: '#777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7,
+                                paddingHorizontal: 15
+                            }}>
+                                {locales('titles.extraBuyAdRequestDescriptionTextFirst')}
                                 <Text style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7,
-                                    paddingHorizontal: 15
+                                    color: '#00c569'
                                 }}>
-                                    {locales('titles.extraBuyAdRequestDescriptionTextFirst')}
-                                    <Text style={{
-                                        color:'#00c569'
-                                    }}>
-                                        {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
-                                    </Text>
-                                    {locales('titles.extraBuyAdRequestDescriptionTextThird')}
-
+                                    {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
                                 </Text>
-                                <Button
-                                    style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
-                                    onPress={() => this.handleScrollToTopButtonClick()}>
-                                    <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
-                                    </Text>
-                                </Button>
-                            </View>
-                        </Card>
+                                {locales('titles.extraBuyAdRequestDescriptionTextThird')}
+
+                            </Text>
+                            <Button
+                                style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
+                                onPress={() => this.handleScrollToTopButtonClick()}>
+                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.moreCapacity')}
+                                </Text>
+                            </Button>
+                        </View>
+                    </Card>
 
 
                     <View style={{
@@ -401,7 +403,7 @@ class ExtraBuyAdCapacity extends React.Component {
                             </View>
                         </Card>
 
-                        
+
                     </View>
                 </ScrollView>
             </>

@@ -57,8 +57,10 @@ const EnterActivisionCode = (props) => {
                 setValueError('');
                 if (res.payload.redirected) {
                     props.fastLogin(res.payload).then(_ => {
-                        props.fetchUserProfile().catch(_ => setShowModal(true));;
-                    }).catch(_ => setShowModal(true));
+                        props.fetchUserProfile()
+                        // .catch(_ => setShowModal(true));;
+                    })
+                    // .catch(_ => setShowModal(true));
                 }
                 else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
@@ -67,8 +69,8 @@ const EnterActivisionCode = (props) => {
             }).catch(err => {
                 if (err && err.data)
                     setValueError(err.data.errors.phone[0])
-                else
-                    setShowModal(true)
+                // else
+                //     setShowModal(true)
             })
         }
 

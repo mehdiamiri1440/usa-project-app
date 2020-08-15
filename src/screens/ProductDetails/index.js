@@ -241,7 +241,8 @@ class ProductDetails extends PureComponent {
         let code = param || global.productIds[global.productIds.length - 1];
         if (!global.productIds.length) return this.props.navigation.goBack();
         if (code) {
-            this.props.fetchAllRelatedProducts(code).catch(_ => this.setState({ showModal: true }));
+            this.props.fetchAllRelatedProducts(code)
+            // .catch(_ => this.setState({ showModal: true }));
             this.props.fetchProductDetails(code).then(_ => {
                 if (this.props.productDetailsInfo.length) {
                     const {
@@ -262,7 +263,8 @@ class ProductDetails extends PureComponent {
                 else {
                     this.setState({ showModal: true })
                 }
-            }).catch(_ => this.setState({ showModal: true }))
+            })
+            // .catch(_ => this.setState({ showModal: true }))
         }
         else {
             this.setState({ showModal: true })
@@ -373,7 +375,8 @@ class ProductDetails extends PureComponent {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchAllProductInfo(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId)
+                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -384,7 +387,8 @@ class ProductDetails extends PureComponent {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchAllProductInfo(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId)
+                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);

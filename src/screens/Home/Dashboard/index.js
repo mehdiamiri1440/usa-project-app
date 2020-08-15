@@ -16,7 +16,8 @@ const Dashboard = props => {
 
     useEffect(() => {
         analytics().logEvent('dashboard');
-        props.fetchAllDashboardData().catch(_ => setShowModal(true));
+        props.fetchAllDashboardData()
+        // .catch(_ => setShowModal(true));
     },
         [])
 

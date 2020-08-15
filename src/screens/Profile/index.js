@@ -69,7 +69,8 @@ class Profile extends PureComponent {
         });
         analytics().setCurrentScreen("profile", "profile");
 
-        this.initProfileContent().catch(_ => this.setState({ showModal: false }))
+        this.initProfileContent()
+        // .catch(_ => this.setState({ showModal: false }))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -174,7 +175,8 @@ class Profile extends PureComponent {
             sort_by,
             to_record_number,
         };
-        this.props.fetchAllProductsList(item).catch(_ => this.setState({ showModal: false }));
+        this.props.fetchAllProductsList(item)
+        // .catch(_ => this.setState({ showModal: false }));
     };
 
     shareProfileLink = async () => {

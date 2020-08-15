@@ -81,7 +81,8 @@ class Login extends React.Component {
         if (isMobileNumberValid) {
             this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
                 this.props.setMobileNumber(mobileNumber);
-            }).catch(_ => { ; this.setState({ showModal: true }) });
+            })
+            // .catch(_ => { ; this.setState({ showModal: true }) });
         }
         else {
             this.setState({ mobileNumberError })
@@ -92,7 +93,8 @@ class Login extends React.Component {
         this.setState({ showModal: false });
         this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber).then(_ => {
             this.props.setMobileNumber(this.state.mobileNumber);
-        }).catch(_ => { ; this.setState({ showModal: true }) });
+        })
+        // .catch(_ => { ; this.setState({ showModal: true }) });
     }
 
     render() {

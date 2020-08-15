@@ -59,9 +59,10 @@ class SpecialProducts extends PureComponent {
         analytics().setCurrentScreen("special_products", "special_products");
 
         this.fetchAllProducts();
-        this.initialCalls().catch(error => {
-            this.setState({ showModal: true })
-        });
+        this.initialCalls()
+        // .catch(error => {
+        //     this.setState({ showModal: true })
+        // });
         if (this.props.productDetailsId) {
             this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
         }
@@ -120,9 +121,10 @@ class SpecialProducts extends PureComponent {
         this.props.fetchAllSpecialProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-        }).catch(error => {
-            this.setState({ showModal: true })
-        });
+        })
+        // .catch(error => {
+        //     this.setState({ showModal: true })
+        // });
     };
 
 
@@ -157,9 +159,10 @@ class SpecialProducts extends PureComponent {
 
             this.props.fetchAllSpecialProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
-            }).catch(error => {
-                this.setState({ showModal: true })
-            });
+            })
+            // .catch(error => {
+            //     this.setState({ showModal: true })
+            // });
         }, 1500);
 
     };
@@ -170,7 +173,10 @@ class SpecialProducts extends PureComponent {
         })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id).catch(error => {
-                this.setState({ showModal: true, categoryModalFlag: false })
+                this.setState({
+                    //  showModal: true,
+                    categoryModalFlag: false
+                })
             })
         })
     };
@@ -182,7 +188,7 @@ class SpecialProducts extends PureComponent {
         if (provinces.length) {
             this.setState({ province: value, provinceError: '' })
             this.props.fetchAllProvinces(value).catch(error => {
-                this.setState({ showModal: true })
+                // this.setState({ showModal: true })
             });
         }
     };
@@ -220,7 +226,7 @@ class SpecialProducts extends PureComponent {
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true })
+            // this.setState({ showModal: true })
         });;
 
     };
@@ -245,7 +251,7 @@ class SpecialProducts extends PureComponent {
         this.props.fetchAllSpecialProductsList(searchItem).then(result => {
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true })
+            // this.setState({ showModal: true })
         });;
 
     };
@@ -517,7 +523,10 @@ class SpecialProducts extends PureComponent {
                                     this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, sortModalFlag: false })
+                                        this.setState({
+                                            //  showModal: true, 
+                                            sortModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
@@ -598,7 +607,10 @@ class SpecialProducts extends PureComponent {
                                     this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, categoryModalFlag: false })
+                                        this.setState({
+                                            //  showModal: true, 
+                                            categoryModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
@@ -782,7 +794,7 @@ class SpecialProducts extends PureComponent {
                                 this.props.fetchAllSpecialProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
                                 }).catch(error => {
-                                    this.setState({ showModal: true })
+                                    // this.setState({ showModal: true })
                                 });
                             })
                     }}
@@ -811,7 +823,7 @@ class SpecialProducts extends PureComponent {
                         }
 
                         this.props.fetchAllSpecialProductsList(item).catch(error => {
-                            this.setState({ showModal: true })
+                            // this.setState({ showModal: true })
                         });
                     }
                     }

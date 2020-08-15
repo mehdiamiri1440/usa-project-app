@@ -60,7 +60,10 @@ class ProductsList extends PureComponent {
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
-            this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+            this.setState({
+                // showModal: true,
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });
         if (this.props.productDetailsId) {
             this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
@@ -121,7 +124,10 @@ class ProductsList extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         }).catch(error => {
-            this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+            this.setState({
+                //  showModal: true,
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });
     };
 
@@ -159,7 +165,10 @@ class ProductsList extends PureComponent {
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             }).catch(error => {
-                this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                this.setState({
+                    //  showModal: true, 
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             });
         }, 1500);
 
@@ -172,7 +181,10 @@ class ProductsList extends PureComponent {
         })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id).catch(error => {
-                this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                this.setState({
+                    // showModal: true,
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             })
         })
     };
@@ -185,7 +197,10 @@ class ProductsList extends PureComponent {
         if (provinces.length) {
             this.setState({ province: value, provinceError: '', cityError: '', city: '' })
             this.props.fetchAllProvinces(value).then(_ => { this.setState({ disableSubCategory: false }) }).catch(error => {
-                this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                this.setState({
+                    //  showModal: true,
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             });
         }
     };
@@ -223,7 +238,10 @@ class ProductsList extends PureComponent {
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+            this.setState({
+                //  showModal: true, 
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });;
 
     };
@@ -248,7 +266,10 @@ class ProductsList extends PureComponent {
         this.props.fetchAllProductsList(searchItem).then(result => {
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+            this.setState({
+                //  showModal: true, 
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });;
 
     };
@@ -526,7 +547,10 @@ class ProductsList extends PureComponent {
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                                        this.setState({
+                                            // showModal: true, 
+                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
@@ -607,7 +631,10 @@ class ProductsList extends PureComponent {
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                                        this.setState({
+                                            //  showModal: true, 
+                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
@@ -793,7 +820,10 @@ class ProductsList extends PureComponent {
                                 this.props.fetchAllProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
                                 }).catch(error => {
-                                    this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                                    this.setState({
+                                        // showModal: true,
+                                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                    })
                                 });
                             })
                     }}
@@ -844,7 +874,10 @@ class ProductsList extends PureComponent {
                         }
 
                         this.props.fetchAllProductsList(item).catch(error => {
-                            this.setState({ showModal: true, searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false })
+                            this.setState({
+                                //  showModal: true,
+                                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                            })
                         });
                     }
                     }

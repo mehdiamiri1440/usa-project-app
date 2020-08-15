@@ -130,7 +130,9 @@ class ExtraProductCapacity extends React.Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
-                            onRefresh={() => this.props.fetchAllDashboardData().catch(_ => this.setState({ showModal: true }))}
+                            onRefresh={() => this.props.fetchAllDashboardData()
+                                // .catch(_ => this.setState({ showModal: true }))
+                            }
                         />
                     }
                     style={{
@@ -144,7 +146,7 @@ class ExtraProductCapacity extends React.Component {
 
                     }}>
 
-    <Card transparent>
+                        <Card transparent>
                             <View style={{
                                 backgroundColor: '#fff',
                                 overflow: 'hidden',
@@ -174,9 +176,9 @@ class ExtraProductCapacity extends React.Component {
                                     marginVertical: 7,
                                     paddingHorizontal: 15
                                 }}>
-                                    
+
                                     {locales('titles.extraCapacityDescriptionText')}
-                                    
+
                                 </Text>
                                 <Button
                                     style={[styles.loginButton, { width: '50%', marginBottom: 30, alignSelf: 'center' }]}
@@ -391,7 +393,7 @@ class ExtraProductCapacity extends React.Component {
                             </View>
                         </Card>
 
-                    
+
                     </View>
                 </ScrollView>
             </>

@@ -101,7 +101,9 @@ class PromoteRegistration extends React.Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
-                            onRefresh={() => this.props.fetchAllDashboardData().catch(_ => this.setState({ showModal: true }))}
+                            onRefresh={() => this.props.fetchAllDashboardData()
+                                // .catch(_ => this.setState({ showModal: true }))
+                            }
                         />
                     }
                     style={{
@@ -140,28 +142,28 @@ class PromoteRegistration extends React.Component {
                                 marginVertical: 7,
                                 paddingHorizontal: 15
                             }}>
-                                    <Text style={{
-                                        width:'100%',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                <Text style={{
+                                    width: '100%',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
 
-                                    }}>
+                                }}>
                                     {locales('titles.promoteDescriptionTextFirst')}
 
-                                    </Text>
+                                </Text>
                                 <Text style={{
-                                    color:'red'
+                                    color: 'red'
                                 }}>
-                                {locales('titles.promoteDescriptionTextSecend')}
+                                    {locales('titles.promoteDescriptionTextSecend')}
                                 </Text>
                                 {locales('titles.promoteDescriptionTextThird')}
                                 <Text style={{
-                                    color:'#00c569'
+                                    color: '#00c569'
                                 }}>
-                                {locales('titles.promoteDescriptionTextFourth')}
+                                    {locales('titles.promoteDescriptionTextFourth')}
 
                                 </Text>
                                 {locales('titles.promoteDescriptionTextFifth')}
-                                
+
                             </Text>
                             <Button
                                 style={[styles.loginButton, { width: '70%', marginBottom: 30, alignSelf: 'center' }]}
@@ -516,7 +518,7 @@ class PromoteRegistration extends React.Component {
                         </View>
                     </Card>
 
-                  
+
                 </ScrollView>
             </>
         )

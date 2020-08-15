@@ -60,7 +60,8 @@ class Requests extends PureComponent {
 
         this.is_mounted = true;
         if (this.is_mounted == true) {
-            this.initialCalls().catch(_ => this.setState({ showModal: true }));
+            this.initialCalls()
+            // .catch(_ => this.setState({ showModal: true }));
         }
     }
 
@@ -126,7 +127,8 @@ class Requests extends PureComponent {
                     });
                     this.setState({ showDialog: true })
                 }
-            }).catch(_ => this.setState({ showModal: true }));
+            })
+            // .catch(_ => this.setState({ showModal: true }));
         }
         else {
             analytics().logEvent('permission_denied', {

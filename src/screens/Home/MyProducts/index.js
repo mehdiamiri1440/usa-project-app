@@ -65,7 +65,8 @@ class MyProducts extends Component {
 
     fetchAllProducts = () => {
         if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).catch(_ => this.setState({ showModal: true }));
+            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name)
+        // .catch(_ => this.setState({ showModal: true }));
     };
 
     closeModal = _ => {
@@ -148,7 +149,8 @@ class MyProducts extends Component {
                                 if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
                                     this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
                                         this.setState({ loaded: false })
-                                    }).catch(_ => this.setState({ showModal: true }));
+                                    })
+                                // .catch(_ => this.setState({ showModal: true }));
                             })
                     }}
                     // initialNumToRender={2}
@@ -160,7 +162,8 @@ class MyProducts extends Component {
                                     searchText: '', sort_by: 'BM'
                                     , refreshed: true, from_record_number: 0, to_record_number: 15
                                 })
-                            }).catch(_ => this.setState({ showModal: true }));
+                            })
+                        // .catch(_ => this.setState({ showModal: true }));
                     }
                     }
                     onEndReachedThreshold={0.2}

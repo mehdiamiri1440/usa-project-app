@@ -45,7 +45,8 @@ class ContactsList extends React.Component {
     componentDidMount() {
         analytics().logEvent('messages')
         this.props.isFromOutSide(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }));
+        this.props.fetchAllContactsList(this.state.from, this.state.to)
+        // .catch(_ => this.setState({ showModal: true }));
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -61,7 +62,8 @@ class ContactsList extends React.Component {
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
                     this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
                     })
-                }).catch(_ => this.setState({ showModal: true }))
+                })
+                // .catch(_ => this.setState({ showModal: true }))
             }, 10);
         }
     }
@@ -76,7 +78,8 @@ class ContactsList extends React.Component {
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }))
+            this.props.fetchAllContactsList(this.state.from, this.state.to)
+            // .catch(_ => this.setState({ showModal: true }))
         });
     }
 
@@ -86,7 +89,8 @@ class ContactsList extends React.Component {
         this.setState({ from: this.state.to, to: this.state.to + 10 }, () => {
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(result => {
                 this.setState({ contactsList: [...this.state.contactsList, ...this.props.contactsList] });
-            }).catch(_ => this.setState({ showModal: true }));
+            })
+            // .catch(_ => this.setState({ showModal: true }));
         })
     };
 
@@ -224,7 +228,8 @@ class ContactsList extends React.Component {
                                         onRefresh={() => {
                                             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                                                 this.setState({ loaded: false })
-                                            }).catch(_ => this.setState({ showModal: true }))
+                                            })
+                                            // .catch(_ => this.setState({ showModal: true }))
                                         }
                                         }
                                         keyExtractor={item => item.contact_id.toString()}

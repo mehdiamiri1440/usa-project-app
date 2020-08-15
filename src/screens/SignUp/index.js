@@ -138,15 +138,17 @@ class SignUp extends React.Component {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
                         this.props.fetchUserProfile().then(_ => {
-                        }).catch(_ => this.setState({ showModal: true }));
+                        })
+                        // .catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
-                    }, 100).catch(_ => this.setState({ showModal: true }));
+                    }, 100)
+                    // .catch(_ => this.setState({ showModal: true }));
                 })
             })
         }).catch(err => {
             if (err && err.data)
                 this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
-            this.setState({ showModal: true })
+            // this.setState({ showModal: true })
         });
     };
 
