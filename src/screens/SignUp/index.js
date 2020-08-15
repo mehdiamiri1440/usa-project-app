@@ -131,7 +131,6 @@ class SignUp extends React.Component {
             category_id: activityZone
         };
         this.props.submitRegister(registerObject).then(result => {
-            console.log('in then', result)
             analytics().logEvent('successfull_register', {
                 'mobile_number': mobileNumber
             })
@@ -147,7 +146,6 @@ class SignUp extends React.Component {
                 })
             })
         }).catch(err => {
-            console.log('in err', err, err.response, err.data)
             if (err && err.data)
                 this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
             // this.setState({ showModal: true })
