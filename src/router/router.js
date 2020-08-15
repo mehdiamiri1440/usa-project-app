@@ -153,19 +153,19 @@ const App = (props) => {
     }
     useEffect(() => {
 
-        fetch('http://www.cheegel.com/content/mobilesoftware/mobileversion.json')
-            .then(res => {
-                res.text().then(result => {
-                    const resultOfVersion = JSON.parse(result);
-                    if (
-                        RNAppUpdate.versionName.toString() !==
-                        resultOfVersion.versionName.toString()
-                    ) {
-                        navigationRef.current.navigate('UpgradeApp')
-                    }
-                });
-            })
-            .catch(err => console.warn('catch'));
+        // fetch('http://www.cheegel.com/content/mobilesoftware/mobileversion.json')
+        //     .then(res => {
+        //         res.text().then(result => {
+        //             const resultOfVersion = JSON.parse(result);
+        //             if (
+        //                 RNAppUpdate.versionName.toString() !==
+        //                 resultOfVersion.versionName.toString()
+        //             ) {
+        //                 navigationRef.current.navigate('UpgradeApp')
+        //             }
+        //         });
+        //     })
+        //     .catch(err => console.warn('catch'));
 
 
         if (!props.loggedInUserId) {
