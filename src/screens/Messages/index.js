@@ -56,8 +56,9 @@ class ContactsList extends React.Component {
         }
 
 
-        if (this.props.message) {
+        if (this.props.message || this.props.messageFromOutSide) {
             this.props.newMessageReceived(false)
+            this.props.isFromOutSide(false)
             setTimeout(() => {
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
                     this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
@@ -360,7 +361,8 @@ const mapStateToProps = (state) => {
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
 
-        message: state.messagesReducer.message
+        message: state.messagesReducer.message,
+        messageFromOutSide: state.messagesReducer.messageFromOutSide,
 
     }
 }
