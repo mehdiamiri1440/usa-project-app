@@ -30,9 +30,8 @@ const Dashboard = props => {
         dashboardMessage,
         dashboard
     } = props;
-
     let {
-        active_package_type: activePackageType = 0,
+        active_pakage_type: activePackageType = 0,
         reputation_score: reputationScore,
         max_buyAds_reply: maxBuyAdsReply,
         is_valid: isValid,
@@ -130,7 +129,7 @@ const Dashboard = props => {
                                 padding: 15,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26,
                             }}>
-                                {ENUMS.PACKAGES_TYPES.list.filter(item => item.value == activePackageType)[0].title}
+                                {ENUMS.PACKAGES_TYPES.list.find(item => item.value == activePackageType).title}
                             </Text>
                             <FontAwesome5 name='address-card' size={75} color='#19668E' solid
                                 style={{

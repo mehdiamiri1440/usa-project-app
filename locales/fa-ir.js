@@ -182,6 +182,8 @@ export default {
     'titles.yes': 'بله',
     'titles.noRelatedProductFound': 'محصول مشابهی یافت نشد',
     'titles.no': 'خیر',
+    'titles.newVersionUpdate': 'آیا مایل به نصب نسخه جدید باسکول هستید ؟',
+    'titles.installIt': 'نصب کن',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
     'titles.remianedCapacityToSendMessageToBuyer': 'ظرفیت باقی‌مانده برای ارسال پیام به خریدار این محصول',

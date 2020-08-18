@@ -1,6 +1,7 @@
 
 
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Text, View, Image, StyleSheet } from "react-native";
 import RNApkInstallerN from 'react-native-apk-installer-n';
 import RNFS from 'react-native-fs';
@@ -8,6 +9,7 @@ import { Button, } from "native-base";
 import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 import LinearGradient from "react-native-linear-gradient";
 
+import * as versionData from '../../../version.json';
 
 class UpgradeApp extends Component {
     constructor(props) {
@@ -25,11 +27,13 @@ class UpgradeApp extends Component {
 
 
     appUpdate = () => {
+        const { userProfile = {}, loggedInUserId } = this.props;
+        const { user_info = {} } = userProfile;
+        const { is_seller } = user_info;
         const filePath =
             RNFS.DocumentDirectoryPath + '/com.domain.example.apk';
         const download = RNFS.downloadFile({
-            fromUrl:
-                'https://www.cheegel.com/content/mobilesoftware/chidaily.apk',
+            fromUrl: versionData.apkUrl,
             toFile: filePath,
             progress: data => {
                 const percentage =
@@ -43,11 +47,36 @@ class UpgradeApp extends Component {
         download.promise
             .then(result => {
                 if (result.statusCode == 200) {
+                    console.warn('er', result)
                     RNApkInstallerN.install(filePath);
                     this.setState({ downloadingUpdate: false });
                 }
+                else {
+                    this.props.navigation.pop()
+                    if (loggedInUserId) {
+                        if (is_seller) {
+                            return this.props.navigation.navigate('RegisterProductStack');
+                        }
+                        else {
+                            this.props.navigation.navigate('RegisterRequestStack');
+                        }
+                    }
+                    else {
+                        this.props.navigation.navigate('SignUp');
+                    }
+                }
             })
-            .catch(err => console.warn('errrrrrr', err));
+            .catch(err => {
+                this.props.navigation.pop()
+                if (loggedInUserId) {
+                    if (is_seller)
+                        this.props.navigation.navigate('RegisterProductStack')
+                    else
+                        this.props.navigation.navigate('RegisterRequestStack')
+                }
+                else
+                    this.props.navigation.navigate('SignUp')
+            });
     };
 
 
@@ -163,6 +192,12 @@ class UpgradeApp extends Component {
 
 
 
+const mapStateToProps = (state) => {
 
+    return {
+        loggedInUserId: state.authReducer.loggedInUserId,
+        userProfile: state.profileReducer.userProfile,
+    }
+};
 
-export default (UpgradeApp)
+export default connect(mapStateToProps)(UpgradeApp)
