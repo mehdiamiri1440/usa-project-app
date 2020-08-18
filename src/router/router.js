@@ -162,7 +162,7 @@ const App = (props) => {
                         RNAppUpdate.versionName.toString() !==
                         resultOfVersion.versionName.toString()
                     ) {
-                        if (resultOfVersion.forceUpdate) {
+                        if (!resultOfVersion.forceUpdate) {
                             setUpdateModalFlag(true);
                             // Alert.alert(
                             //     'به روز رسانی',
