@@ -99,7 +99,9 @@ class ChatModal extends React.Component {
             this.props.sendMessage(msgObject).then(() => {
                 setTimeout(() => {
                     if (this.scrollViewRef && this.scrollViewRef.current)
-                        this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                        setTimeout(() => {
+                            this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                        }, 200);
                 }, 10);
                 this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
                     this.setState(state => {

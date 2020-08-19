@@ -120,7 +120,9 @@ class SpecialProducts extends PureComponent {
         };
         this.props.fetchAllSpecialProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
         })
         // .catch(error => {
         //     this.setState({ showModal: true })
@@ -149,7 +151,9 @@ class SpecialProducts extends PureComponent {
         myTimeout = setTimeout(() => {
 
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -223,7 +227,9 @@ class SpecialProducts extends PureComponent {
 
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
             if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
@@ -498,7 +504,9 @@ class SpecialProducts extends PureComponent {
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                                        setTimeout(() => {
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                        }, 300);
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -588,8 +596,9 @@ class SpecialProducts extends PureComponent {
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.props.specialProductsListArray.length)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
-
+                                        setTimeout(() => {
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                        }, 300);
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
