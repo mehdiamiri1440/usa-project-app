@@ -228,6 +228,7 @@ class RegisterProduct extends React.Component {
             }
             formData.append("images_count", this.state.productFiles.length);
             return this.props.addNewProduct(formData).then(_ => {
+                analytics().logEvent('register_product_successfully');
                 this.setState({
                     productType: '',
                     category: '',
