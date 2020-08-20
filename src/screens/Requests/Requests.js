@@ -106,7 +106,7 @@ class Requests extends PureComponent {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
                 if (this.props.isUserAllowedToSendMessagePermission.permission) {
-                    if (!item.is_golden) {
+                    if (!item.is_golden && item.id) {
                         analytics().logEvent('chat_opened', {
                             'buyAd-id': item.id
                         });

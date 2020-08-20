@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 import { Card, CardItem, Body, Button } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 class RegisterProductSuccessfully extends Component {
+    componentDidMount() {
+        analytics().logEvent('register_product_successfully');
+    }
     render() {
         return (
             <View style={{ height: deviceHeight * 0.75, justifyContent: 'center' }}>
