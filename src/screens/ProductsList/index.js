@@ -121,7 +121,7 @@ class ProductsList extends PureComponent {
             };
         };
         this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -155,7 +155,7 @@ class ProductsList extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -240,7 +240,7 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -529,7 +529,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -621,7 +621,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -718,7 +718,7 @@ class ProductsList extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', textAlignVertical: 'bottom' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', paddingBottom: 10, color: '#777', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />

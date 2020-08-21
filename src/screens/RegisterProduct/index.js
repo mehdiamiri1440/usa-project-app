@@ -67,7 +67,7 @@ class RegisterProduct extends React.Component {
     mainContainer = React.createRef();
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.mainContainer && this.mainContainer.current)
+        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
 
     }
@@ -79,7 +79,7 @@ class RegisterProduct extends React.Component {
                 this.changeStep(0);
             }
         }
-        if (this.mainContainer && this.mainContainer.current)
+        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.state.stepNumber > 1) {

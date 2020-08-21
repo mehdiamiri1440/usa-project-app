@@ -115,7 +115,7 @@ class ProductDetails extends PureComponent {
         //     return true;
         // })
         // this.callApi()
-        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
             this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
         }
 
@@ -125,7 +125,7 @@ class ProductDetails extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
             this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
         }
 

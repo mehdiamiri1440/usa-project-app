@@ -74,7 +74,7 @@ class SpecialProducts extends PureComponent {
         if (this.state.loaded == false && this.props.specialProductsListArray.length) {
             this.setState({
                 loaded: true,
-                specialProductsListArray: [...this.state.specialProductsListArray, ...this.stpropsate.specialProductsListArray],
+                specialProductsListArray: [...this.state.specialProductsListArray, ...this.props.specialProductsListArray],
             })
         }
 
@@ -119,7 +119,7 @@ class SpecialProducts extends PureComponent {
             };
         };
         this.props.fetchAllSpecialProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -150,7 +150,7 @@ class SpecialProducts extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -226,7 +226,7 @@ class SpecialProducts extends PureComponent {
         }
 
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -503,7 +503,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -595,7 +595,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -691,7 +691,7 @@ class SpecialProducts extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
+                                style={{ paddingBottom: 10, fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
@@ -745,26 +745,16 @@ class SpecialProducts extends PureComponent {
                     }}>
                         <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
                         <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
-                        {
-                            !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
-                                <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterProduct')}
+                        <View >
+                            <Button
+                                onPress={() => this.props.navigation.navigate('RegisterRequest')}
 
-                                    style={styles.loginButton}>
-                                    <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                        {locales('titles.registerNewProduct')}
-                                    </Text>
-                                </Button>
-                            </View> : <View >
-                                    <Button
-                                        onPress={() => this.props.navigation.navigate('RegisterRequest')}
-
-                                        style={styles.loginButton}>
-                                        <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                            {locales('titles.registerBuyAdRequest')}
-                                        </Text>
-                                    </Button>
-                                </View>}
+                                style={styles.loginButton}>
+                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                    {locales('titles.registerBuyAdRequest')}
+                                </Text>
+                            </Button>
+                        </View>
                     </View>
                     }
                     // getItemLayout={(data, index) => (

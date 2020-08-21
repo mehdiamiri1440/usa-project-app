@@ -164,7 +164,7 @@ class Requests extends PureComponent {
 
     closeFilters = _ => {
         this.setState({ showFilters: false }, () => {
-            if (this.props.requestsRef && this.props.requestsRef.current && this.state.buyAdRequestsList.length > 0)
+            if (this.props.requestsRef && this.props.requestsRef.current && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
                 setTimeout(() => {
                     this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
