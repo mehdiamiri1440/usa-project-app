@@ -393,6 +393,7 @@ class ChatModal extends React.Component {
                         }} />
 
                     <Button
+                        disabled={!!userChatHistoryLoading}
                         onPress={this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
