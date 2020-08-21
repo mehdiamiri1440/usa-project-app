@@ -308,6 +308,7 @@ class Product extends PureComponent {
         const selectedContact = {
             first_name,
             contact_id,
+            user_name,
             last_name,
             is_verified
         }
