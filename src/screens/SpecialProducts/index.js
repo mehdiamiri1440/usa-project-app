@@ -71,20 +71,20 @@ class SpecialProducts extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (this.state.loaded == false && this.state.specialProductsListArray.length) {
+        if (this.state.loaded == false && this.props.specialProductsListArray.length) {
             this.setState({
                 loaded: true,
-                specialProductsListArray: [...this.state.specialProductsListArray, ...this.state.specialProductsListArray],
+                specialProductsListArray: [...this.state.specialProductsListArray, ...this.stpropsate.specialProductsListArray],
             })
         }
 
         if (this.state.searchFlag) {
-            this.setState({ specialProductsListArray: [...this.state.specialProductsListArray], searchFlag: false })
+            this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], searchFlag: false })
         }
 
 
         if (this.state.refreshed) {
-            this.setState({ specialProductsListArray: [...this.state.specialProductsListArray], refreshed: false })
+            this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], refreshed: false })
         }
     }
 

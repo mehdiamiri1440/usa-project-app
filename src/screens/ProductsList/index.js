@@ -73,20 +73,20 @@ class ProductsList extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (this.state.loaded == false && this.state.productsListArray.length) {
+        if (this.state.loaded == false && this.props.productsListArray.length) {
             this.setState({
                 loaded: true,
-                productsListArray: [...this.state.productsListArray, ...this.state.productsListArray],
+                productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
             })
         }
 
         if (this.state.searchFlag) {
-            this.setState({ productsListArray: [...this.state.productsListArray], searchFlag: false })
+            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
         }
 
 
         if (this.state.refreshed) {
-            this.setState({ productsListArray: [...this.state.productsListArray], refreshed: false })
+            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
         }
     }
 
