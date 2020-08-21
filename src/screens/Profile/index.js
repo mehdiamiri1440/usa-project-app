@@ -181,7 +181,7 @@ class Profile extends PureComponent {
 
     shareProfileLink = async () => {
         analytics().logEvent('profile_share', {
-            'contact-id': this.state.userIdFromByUserName
+            contact_id: this.state.userIdFromByUserName
         });
         try {
             const result = await Share.share({
@@ -446,7 +446,7 @@ class Profile extends PureComponent {
 
                                         onPress={() => {
                                             analytics().logEvent('open_chat', {
-                                                'contact-id': userIdFromByUserName
+                                                contact_id: userIdFromByUserName
                                             });
                                             this.setState({ modalFlag: true })
                                         }}

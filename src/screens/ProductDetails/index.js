@@ -413,7 +413,7 @@ class ProductDetails extends PureComponent {
     shareProductLink = async (url) => {
         if (this.props.route.params.productId)
             analytics().logEvent('product_share', {
-                'product-id': this.props.route.params.productId
+                product_id: this.props.route.params.productId
             });
         try {
             const result = await Share.share({
@@ -522,6 +522,7 @@ class ProductDetails extends PureComponent {
             first_name,
             contact_id: userId,
             last_name,
+            user_name,
             is_verified
         }
 
@@ -987,7 +988,7 @@ class ProductDetails extends PureComponent {
                                     onPress={() => {
                                         if (this.props.route.params.productId)
                                             analytics().logEvent('open_chat', {
-                                                'product-id': this.props.route.params.productId
+                                                product_id: this.props.route.params.productId
                                             });
                                         this.setState({ modalFlag: true })
                                     }}
@@ -1166,7 +1167,7 @@ class ProductDetails extends PureComponent {
                                             else {
                                                 if (this.props.route.params.productId)
                                                     analytics().logEvent('open_chat', {
-                                                        'product-id': this.props.route.params.productId
+                                                        product_id: this.props.route.params.productId
                                                     });
                                                 this.setState({ modalFlag: true })
                                             }
@@ -1243,7 +1244,7 @@ class ProductDetails extends PureComponent {
                         onPress={() => {
                             if (this.props.route.params.productId)
                                 analytics().logEvent('open_chat', {
-                                    'product-id': this.props.route.params.productId
+                                    product_id: this.props.route.params.productId
                                 });
                             this.setState({ modalFlag: true })
                         }}

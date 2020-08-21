@@ -63,7 +63,7 @@ class Login extends React.Component {
         let mobileNumberError = '', isMobileNumberValid;
 
         analytics().logEvent('send_verification_code', {
-            mobileNumber
+            mobile_number: mobileNumber
         })
 
         if (!mobileNumber) {

@@ -108,7 +108,7 @@ class Requests extends PureComponent {
                 if (this.props.isUserAllowedToSendMessagePermission.permission) {
                     if (!item.is_golden && item.id) {
                         analytics().logEvent('chat_opened', {
-                            'buyAd-id': item.id
+                            buyAd_id: item.id
                         });
                     }
                     this.setState({

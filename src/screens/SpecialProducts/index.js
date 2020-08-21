@@ -173,7 +173,7 @@ class SpecialProducts extends PureComponent {
 
     sortProducts = (id, name) => {
         analytics().logEvent('apply_sort', {
-            'sort-type': name
+            sort_type: name
         })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id).catch(error => {
