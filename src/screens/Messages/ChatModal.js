@@ -96,9 +96,9 @@ class ChatModal extends React.Component {
                 isFirstLoad: false
             });
 
-            this.props.sendMessage(msgObject).then(() => {
+            this.props.sendMessage(msgObject).then((result) => {
                 setTimeout(() => {
-                    if (this.scrollViewRef && this.scrollViewRef.current && this.state.userChatHistory.length > 0 && !this.props.userChatHistoryLoading)
+                    if (this.scrollViewRef && this.scrollViewRef.current && result.payload.message && this.state.userChatHistory.length > 0 && !this.props.userChatHistoryLoading)
                         setTimeout(() => {
                             this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
                         }, 200);

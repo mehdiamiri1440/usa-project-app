@@ -120,8 +120,8 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
+        this.props.fetchAllProductsList(item).then(result => {
+            if (this.props.productsListRef && this.props.productsListRef.current && result.payload.products.length && !this.props.productsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -240,7 +240,7 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
+            if (this.props.productsListRef && this.props.productsListRef.current && result.payload.products.length && !this.props.productsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
