@@ -528,7 +528,7 @@ class ProductsList extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ sort_by: item.value }, () => {
+                                onPress={() => !productsListLoading && this.setState({ sort_by: item.value }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
@@ -620,7 +620,7 @@ class ProductsList extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ searchText: item.category_name }, () => {
+                                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length && !this.props.productsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
@@ -693,7 +693,7 @@ class ProductsList extends PureComponent {
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ locationsFlag: true })}
+                                onPress={() => !productsListLoading && this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
                                     color: (selectedCity) ||
@@ -717,6 +717,7 @@ class ProductsList extends PureComponent {
                             </TouchableOpacity>
                             <Input value={searchText}
                                 ref={this.serachInputRef}
+                                disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
                                 style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', paddingBottom: 10, color: '#777', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
@@ -726,7 +727,7 @@ class ProductsList extends PureComponent {
 
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ sortModalFlag: true })}
+                                onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
                                     borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: 110, backgroundColor: '#556080', minHeight: 30
@@ -745,7 +746,7 @@ class ProductsList extends PureComponent {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        onPress={() => this.sortProducts(item.id, item.category_name)}
+                                        onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
                                         style={{
                                             borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',

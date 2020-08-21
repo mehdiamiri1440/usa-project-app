@@ -502,7 +502,7 @@ class SpecialProducts extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ sort_by: item.value }, () => {
+                                onPress={() => !specialProductsListLoading && this.setState({ sort_by: item.value }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
@@ -594,7 +594,7 @@ class SpecialProducts extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ searchText: item.category_name }, () => {
+                                onPress={() => !specialProductsListLoading && this.setState({ searchText: item.category_name }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef.current && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
@@ -666,7 +666,7 @@ class SpecialProducts extends PureComponent {
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ backgroundColor: '#f2f2f2', borderRadius: 5 }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ locationsFlag: true })}
+                                onPress={() => !specialProductsListLoading && this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
                                     color: (city && cities.find(item => item.id == city).city_name) ||
@@ -690,6 +690,7 @@ class SpecialProducts extends PureComponent {
                             </TouchableOpacity>
                             <Input value={searchText}
                                 ref={this.serachInputRef}
+                                disabled={!!specialProductsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
                                 style={{ paddingBottom: 10, fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
@@ -699,7 +700,7 @@ class SpecialProducts extends PureComponent {
 
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ sortModalFlag: true })}
+                                onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
                                     borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: 110, backgroundColor: '#556080', minHeight: 30
@@ -718,7 +719,7 @@ class SpecialProducts extends PureComponent {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        onPress={() => this.sortProducts(item.id, item.category_name)}
+                                        onPress={() => !specialProductsListLoading && this.sortProducts(item.id, item.category_name)}
                                         style={{
                                             borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',
