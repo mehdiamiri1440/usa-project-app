@@ -411,9 +411,10 @@ class ProductDetails extends PureComponent {
     };
 
     shareProductLink = async (url) => {
-        analytics().logEvent('product_share', {
-            'product-id': this.props.route.params.productId
-        });
+        if (this.props.route.params.productId)
+            analytics().logEvent('product_share', {
+                'product-id': this.props.route.params.productId
+            });
         try {
             const result = await Share.share({
                 message: url,
@@ -984,9 +985,10 @@ class ProductDetails extends PureComponent {
 
                                 <Button
                                     onPress={() => {
-                                        analytics().logEvent('open_chat', {
-                                            'product-id': this.props.route.params.productId
-                                        });
+                                        if (this.props.route.params.productId)
+                                            analytics().logEvent('open_chat', {
+                                                'product-id': this.props.route.params.productId
+                                            });
                                         this.setState({ modalFlag: true })
                                     }}
                                     style={[styles.loginButton, {
@@ -1162,9 +1164,10 @@ class ProductDetails extends PureComponent {
                                                 this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
                                             }
                                             else {
-                                                analytics().logEvent('open_chat', {
-                                                    'product-id': this.props.route.params.productId
-                                                });
+                                                if (this.props.route.params.productId)
+                                                    analytics().logEvent('open_chat', {
+                                                        'product-id': this.props.route.params.productId
+                                                    });
                                                 this.setState({ modalFlag: true })
                                             }
                                         }
@@ -1238,9 +1241,10 @@ class ProductDetails extends PureComponent {
                 }} >
                     <Button
                         onPress={() => {
-                            analytics().logEvent('open_chat', {
-                                'product-id': this.props.route.params.productId
-                            });
+                            if (this.props.route.params.productId)
+                                analytics().logEvent('open_chat', {
+                                    'product-id': this.props.route.params.productId
+                                });
                             this.setState({ modalFlag: true })
                         }}
                         style={[styles.loginButton, {

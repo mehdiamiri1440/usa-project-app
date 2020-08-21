@@ -73,20 +73,20 @@ class ProductsList extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (this.state.loaded == false && this.props.productsListArray.length) {
+        if (this.state.loaded == false && this.state.productsListArray.length) {
             this.setState({
                 loaded: true,
-                productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
+                productsListArray: [...this.state.productsListArray, ...this.state.productsListArray],
             })
         }
 
         if (this.state.searchFlag) {
-            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
+            this.setState({ productsListArray: [...this.state.productsListArray], searchFlag: false })
         }
 
 
         if (this.state.refreshed) {
-            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
+            this.setState({ productsListArray: [...this.state.productsListArray], refreshed: false })
         }
     }
 
@@ -121,7 +121,7 @@ class ProductsList extends PureComponent {
             };
         };
         this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -155,7 +155,7 @@ class ProductsList extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -240,7 +240,7 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+            if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -529,7 +529,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -621,7 +621,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
+                                    if (this.props.productsListRef && this.props.productsListRef.current && this.state.productsListArray.length)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
