@@ -164,7 +164,7 @@ class Requests extends PureComponent {
 
     closeFilters = _ => {
         this.setState({ showFilters: false }, () => {
-            if (this.props.requestsRef && this.props.requestsRef.current && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
+            if (this.props.requestsRef && Object.entries(this.props.requestsRef.current).length && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
                 setTimeout(() => {
                     this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -552,11 +552,11 @@ class Requests extends PureComponent {
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60 }}
                 >
-                    <Filters
+                    {showFilters ? <Filters
                         selectedFilter={this.selectedFilter}
                         closeFilters={this.closeFilters}
                         showFilters={showFilters}
-                    />
+                    /> : null}
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}

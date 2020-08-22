@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, Modal } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
@@ -33,9 +33,11 @@ class Filters extends Component {
 
     sortProducts = (id = '', name = '') => {
         if (!!id && !!name && this.state.categoriesList.length) {
+
             let subCategory = this.state.categoriesList.some(item => item.id == id) ?
                 this.state.categoriesList.find(item => item.id == id).subcategories : {};
-            console.warn('333', subCategory, 'list', this.state.categoriesList, 'some', this.state.categoriesList.some(item => item.id == id),
+
+            console.log('333', subCategory, 'list', this.state.categoriesList, 'some', this.state.categoriesList.some(item => item.id == id),
                 'find', this.state.categoriesList.find(item => item.id == id))
 
             if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
@@ -43,7 +45,7 @@ class Filters extends Component {
             }
 
             subCategory = Object.values(!!subCategory ? subCategory : {});
-            console.warn('444', subCategory)
+            console.log('444', subCategory)
 
             this.setState({
                 subCategoriesModal: true,
@@ -52,7 +54,7 @@ class Filters extends Component {
             }, () => {
                 if (this.state.subCategoriesList.length <= 0) {
                     this.props.fetchAllCategories()
-                    console.warn('22222', id, 'name', name, 'categrory',
+                    console.log('22222', id, 'name', name, 'categrory',
                         this.state.categoriesList, 'category len', this.state.categoriesList.length,
                         'sub', this.state.subCategoriesList, 'sub len', this.state.subCategoriesList.length)
                     this.setState({ subCategoriesModal: false })
@@ -190,11 +192,25 @@ class Filters extends Component {
                             </Text>
                         </View>
                     </View>
-
+                    {this.props.categoriesLoading ? <View style={{
+                        width: deviceWidth,
+                        padding: 20,
+                        justifyContent: "center", alignItems: 'center'
+                    }}>
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                zIndex: 999,
+                                width: 50, height: 50,
+                                borderRadius: 50,
+                                backgroundColor: '#fff',
+                                elevation: 5,
+                                padding: 0,
+                            }}
+                        /></View> : null}
                     <FlatList
                         data={categoriesList}
                         refreshing={this.props.categoriesLoading}
-                        ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        ListEmptyComponent={() => !this.props.categoriesLoading && (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text
                                 style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.emptyList')}
@@ -239,7 +255,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true, true)),
     }
 };
 
