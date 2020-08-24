@@ -119,9 +119,9 @@ class SpecialProducts extends PureComponent {
             };
         };
         this.props.fetchAllSpecialProductsList(item).then(_ => {
-            if (this.productsListRef && this.productsListRef != null && this.productsListRef != undefined &&
-                this.productsListRef.current && this.productsListRef.current != null &&
-                this.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -152,9 +152,9 @@ class SpecialProducts extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.productsListRef && this.productsListRef != null && this.productsListRef != undefined &&
-                this.productsListRef.current && this.productsListRef.current != null &&
-                this.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -230,9 +230,9 @@ class SpecialProducts extends PureComponent {
         }
 
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
-            if (this.productsListRef && this.productsListRef != null && this.productsListRef != undefined &&
-                this.productsListRef.current && this.productsListRef.current != null &&
-                this.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -509,9 +509,9 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !specialProductsListLoading && this.setState({ sort_by: item.value }, () => {
-                                    if (this.productsListRef && this.productsListRef != null && this.productsListRef != undefined &&
-                                        this.productsListRef.current && this.productsListRef.current != null &&
-                                        this.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
+                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -603,9 +603,9 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !specialProductsListLoading && this.setState({ searchText: item.category_name }, () => {
-                                    if (this.productsListRef && this.productsListRef != null && this.productsListRef != undefined &&
-                                        this.productsListRef.current && this.productsListRef.current != null &&
-                                        this.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
+                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
