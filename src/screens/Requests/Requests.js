@@ -183,11 +183,6 @@ class Requests extends PureComponent {
         })
     };
 
-    getItemLayout = (data, index) => ({
-        length: 180,
-        offset: 180 * index,
-        index
-    });
 
     render() {
 
@@ -590,7 +585,6 @@ class Requests extends PureComponent {
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
-                        getItemLayout={this.getItemLayout}
                         windowSize={10}
                         initialNumToRender={3}
                         maxToRenderPerBatch={3}
