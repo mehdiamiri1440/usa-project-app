@@ -183,7 +183,11 @@ class Requests extends PureComponent {
         })
     };
 
-
+    getItemLayout = (data, index) => ({
+        length: 180,
+        offset: 180 * index,
+        index
+    });
 
     render() {
 
@@ -585,25 +589,11 @@ class Requests extends PureComponent {
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        // ListHeaderComponent={() => active_pakage_type != 3 ? <View style={{
-
-                        //     elevation: 10,
-                        //     marginHorizontal: 10,
-                        //     backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
-                        //     flexDirection: 'row-reverse', justifyContent: 'space-around', marginVertical: 5
-                        // }}
-                        // >
-                        //     <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
-                        //     <Button
-                        //         small
-                        //         onPress={() => this.updateFlag.current.open()}
-                        //         style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
-                        //     >
-                        //         <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
-                        //     </Button>
-                        // </View> : null
-                        // }
                         renderItem={this.renderItem}
+                        getItemLayout={this.getItemLayout}
+                        windowSize={10}
+                        initialNumToRender={3}
+                        maxToRenderPerBatch={3}
                         style={{
                             // paddingHorizontal: 15,
                             marginBottom: selectedFilterName ? 92 : 45
