@@ -130,6 +130,7 @@ class Login extends React.Component {
 
                                 }} >
                                     <Input
+                                        testID='mobileNumber'
                                         autoCapitalize='none'
                                         autoCorrect={false}
                                         autoCompleteType='off'
