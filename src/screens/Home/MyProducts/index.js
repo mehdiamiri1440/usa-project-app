@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -40,6 +41,8 @@ class MyProducts extends Component {
 
     componentDidMount() {
         this.fetchAllProducts();
+        analytics().logEvent('my_product');
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -62,7 +65,8 @@ class MyProducts extends Component {
 
     fetchAllProducts = () => {
         if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).catch(_ => this.setState({ showModal: true }));
+            this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name)
+        // .catch(_ => this.setState({ showModal: true }));
     };
 
     closeModal = _ => {
@@ -96,10 +100,7 @@ class MyProducts extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 0.3,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -132,7 +133,7 @@ class MyProducts extends Component {
                         alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.78
                     }}>
                         <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
+                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noUserProductFound')}</Text>
                     </View>
                     }
                     // getItemLayout={(data, index) => (
@@ -148,7 +149,8 @@ class MyProducts extends Component {
                                 if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
                                     this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
                                         this.setState({ loaded: false })
-                                    }).catch(_ => this.setState({ showModal: true }));
+                                    })
+                                // .catch(_ => this.setState({ showModal: true }));
                             })
                     }}
                     // initialNumToRender={2}
@@ -160,7 +162,8 @@ class MyProducts extends Component {
                                     searchText: '', sort_by: 'BM'
                                     , refreshed: true, from_record_number: 0, to_record_number: 15
                                 })
-                            }).catch(_ => this.setState({ showModal: true }));
+                            })
+                        // .catch(_ => this.setState({ showModal: true }));
                     }
                     }
                     onEndReachedThreshold={0.2}

@@ -1,7 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { Dropdown } from 'react-native-material-dropdown';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Item, Label } from 'native-base';
 import { connect } from 'react-redux'
@@ -17,6 +16,7 @@ class ChooseCity extends React.Component {
             province: '',
             errorFlag: false,
             city: '',
+            disableCity: true,
             index: -1,
             provinceError: '',
             cityError: '',
@@ -74,14 +74,17 @@ class ChooseCity extends React.Component {
             this.props.setCityAndProvice(city, province);
         }
     };
-
     setProvince = (value, index) => {
+        this.setState({ disableCity: true })
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
+            this.setState({ province: value, provinceError: '', city: '', cityError: '' })
+            this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
+                this.setState({ disableCity: false })
+            })
         }
     };
+
 
     setCity = (value) => {
         if (!!value)
@@ -160,6 +163,7 @@ class ChooseCity extends React.Component {
                             onValueChange={this.setProvince}
                             style={styles}
                             value={province}
+                            disabled={loading}
                             placeholder={{
                                 label: locales('labels.selectProvince'),
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -211,6 +215,7 @@ class ChooseCity extends React.Component {
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setCity}
                             style={styles}
+                            disabled={fetchCitiesLoading || loading || this.state.disableCity}
                             value={city}
                             placeholder={{
                                 label: locales('labels.selectCity'),
@@ -269,7 +274,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     backButtonText: {
         color: '#7E7E7E',
@@ -378,17 +384,16 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.04,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
     },
     iconContainer: {
-        left: 30,
-        top: 17,
+        left: 10,
+        top: 13,
     }
 });
 const mapStateToProps = state => {

@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
-import { Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler, TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator } from 'react-native';
+import React, { PureComponent } from 'react';
+import {
+    Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
+    TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
+} from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
-import { SliderBox } from "react-native-image-slider-box";
+import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { validator, dataGenerator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
+import ProductImages from './ProductImages';
 import NoConnection from '../../components/noConnectionError';
 
-let fromHardwareBack = false;
-class ProductDetails extends Component {
+class ProductDetails extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,6 +47,45 @@ class ProductDetails extends Component {
             minimumPriceError: '',
             amountError: '',
             showModal: false,
+
+            related_products: [],
+            avg_score: 0,
+            total_count: 0,
+
+            active_pakage_type: 0,
+            created_at: '',
+            first_name: '',
+            userId: '',
+            is_verified: false,
+            last_name: '',
+            response_rate: 0,
+            user_name: '',
+
+            photos: [],
+            description: '',
+
+            myuser_id: '',
+            product_name: '',
+            province_id: null,
+            province_name: '',
+            sub_category_id: '',
+            sub_category_name: '',
+            updated_at: '',
+
+            address: '',
+            category_id: null,
+            category_name: '',
+            city_id: null,
+            city_name: '',
+            confirmed: false,
+            is_elevated: false,
+            stock: 0,
+
+            max_sale_price: 0,
+            min_sale_amount: 0,
+            min_sale_price: 0,
+
+            profile_photo: ''
         }
     }
 
@@ -57,55 +99,158 @@ class ProductDetails extends Component {
         BackHandler.removeEventListener();
     }
 
+    wrapper = React.createRef();
     componentDidMount(param) {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            global.productIds.pop();
-            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
-            this.callApi();
-            return true;
-        })
-        this.callApi()
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("product_view", "product_view");
+
+        // BackHandler.addEventListener('hardwareBackPress', () => {
+        //     global.productIds.pop();
+        //     this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
+        //     this.callApi();
+        //     return true;
+        // })
+        // this.callApi()
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
+            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
+        }
+
+        if (this.props.route.params.productId) {
+            this.props.fetchAllProductInfo(this.props.route.params.productId);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.productDetails).length && this.props.productDetails.main) {
+        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
+            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
+        }
+
+        if (prevProps.route.params.productId != this.props.route.params.productId) {
+            this.setState({ loaded: false });
+            this.props.fetchAllProductInfo(this.props.route.params.productId);
+        }
+        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo.length) {
             const {
+                main,
+                photos,
+                profile_info,
+                user_info
+            } = this.props.productDetailsInfo[0].product;
+
+            const {
+                profile_photo
+            } = profile_info;
+
+            const {
+                address,
+                category_id,
+                category_name,
+                city_id,
+                city_name,
+                confirmed,
+                description,
+                is_elevated,
                 max_sale_price,
+                min_sale_amount,
                 min_sale_price,
+                myuser_id,
+                product_name,
+                province_id,
+                province_name,
                 stock,
-                min_sale_amount
-            } = this.props.productDetails.main;
+                sub_category_id,
+                sub_category_name,
+                updated_at
+            } = main;
+
+            const {
+                active_pakage_type,
+                created_at,
+                first_name,
+                id,
+                is_verified,
+                last_name,
+                response_rate,
+                review_info = {},
+                user_name
+            } = user_info;
+
+            const {
+                avg_score,
+                total_count
+            } = review_info;
+
+            const {
+                related_products
+            } = this.props.productDetailsInfo[1];
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
                 maximumPrice: max_sale_price.toString(),
                 minimumPrice: min_sale_price.toString(),
                 amount: stock.toString(),
-                loaded: true
+                loaded: true,
+
+                related_products,
+                avg_score,
+                total_count,
+
+                active_pakage_type,
+                created_at,
+                first_name,
+                userId: id,
+                is_verified,
+                last_name,
+                response_rate,
+                user_name,
+
+                photos,
+                description,
+
+                myuser_id,
+                product_name,
+                province_id,
+                province_name,
+                sub_category_id,
+                sub_category_name,
+                updated_at,
+
+                address,
+                category_id,
+                category_name,
+                city_id,
+                city_name,
+                confirmed,
+                is_elevated,
+                stock,
+                max_sale_price,
+                min_sale_amount,
+                min_sale_price,
+
+                profile_photo
             });
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if ((this.props.route.params.productId == nextProps.route.params.productId)) {
-            return true;
-        }
-        return true
-    }
 
     callApi = param => {
         let code = param || global.productIds[global.productIds.length - 1];
         if (!global.productIds.length) return this.props.navigation.goBack();
         if (code) {
-            this.props.fetchAllRelatedProducts(code).catch(_ => this.setState({ showModal: true }));
+            this.props.fetchAllRelatedProducts(code)
+            // .catch(_ => this.setState({ showModal: true }));
             this.props.fetchProductDetails(code).then(_ => {
-                if (this.props.productDetails && this.props.productDetails.main) {
+                if (this.props.productDetailsInfo.length) {
                     const {
                         max_sale_price,
                         min_sale_price,
                         stock,
                         min_sale_amount
-                    } = this.props.productDetails.main;
+                    } = this.props.productDetailsInfo[0].product.main;
 
                     this.setState({
                         minimumOrder: min_sale_amount.toString(),
@@ -118,7 +263,8 @@ class ProductDetails extends Component {
                 else {
                     this.setState({ showModal: true })
                 }
-            }).catch(_ => this.setState({ showModal: true }))
+            })
+            // .catch(_ => this.setState({ showModal: true }))
         }
         else {
             this.setState({ showModal: true })
@@ -217,7 +363,7 @@ class ProductDetails extends Component {
         this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             let productObject = {
-                product_id: this.props.productDetails.main.id,
+                product_id: this.props.productDetailsInfo[0].product.main.id,
                 stock: amount,
                 min_sale_amount: minimumOrder,
                 max_sale_price: maximumPrice,
@@ -229,7 +375,8 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId)
+                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -240,7 +387,8 @@ class ProductDetails extends Component {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchProductDetails(this.props.route.params.productId).catch(_ => this.setState({ showModal: true }));
+                    this.props.fetchAllProductInfo(this.props.route.params.productId)
+                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -251,18 +399,22 @@ class ProductDetails extends Component {
 
 
     getProductUrl = _ => {
-        if (!!this.props.productDetails && !!this.props.productDetails.main)
+        if (this.props.productDetailsInfo.length)
             return (
                 "/product-view/خرید-عمده-" +
-                this.props.productDetails.main.sub_category_name.replace(" ", "-") +
+                this.props.productDetailsInfo[0].product.main.sub_category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetails.main.category_name.replace(" ", "-") +
+                this.props.productDetailsInfo[0].product.main.category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetails.main.id
+                this.props.productDetailsInfo[0].product.main.id
             );
     };
 
     shareProductLink = async (url) => {
+        if (this.props.route.params.productId)
+            analytics().logEvent('product_share', {
+                product_id: this.props.route.params.productId
+            });
         try {
             const result = await Share.share({
                 message: url,
@@ -283,11 +435,12 @@ class ProductDetails extends Component {
 
 
     elevatorPay = () => {
-        return Linking.canOpenURL(`https://www.buskool.com/payment/elevator/${this.props.productDetails.main.id}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`https://www.buskool.com/payment/elevator/${this.props.productDetails.main.id}`);
-            }
-        })
+        if (this.props.productDetailsInfo.length)
+            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`).then(supported => {
+                if (supported) {
+                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`);
+                }
+            })
     };
 
     closeModal = _ => {
@@ -297,22 +450,12 @@ class ProductDetails extends Component {
 
     render() {
         const {
-            relatedProductsArray,
-            relatedProductsLoading,
             editProductLoading,
             editProductStatus,
-            productDetailsLoading,
             loggedInUserId,
-            is_seller
+            productDetailsInfoLoading,
         } = this.props;
 
-
-        const {
-            main = {},
-            photos = [],
-            profile_info = {},
-            user_info = {},
-        } = this.props.productDetails;
 
         let {
             showFullSizeImageModal,
@@ -324,7 +467,6 @@ class ProductDetails extends Component {
 
             minimumOrder,
             amount,
-            loaded,
             maximumPrice,
             minimumPrice,
             minimumOrderError,
@@ -332,55 +474,55 @@ class ProductDetails extends Component {
             maximumPriceError,
             minimumPriceError,
             amountError,
-        } = this.state;
 
-        const { profile_photo } = profile_info;
+            related_products,
+            avg_score,
+            total_count,
 
-        const {
-            active_pakage_type = '',
+            active_pakage_type,
             created_at,
-            first_name = '',
-            id: userId = '',
-            last_name = '',
-            response_rate = '',
-            review_info = {},
+            first_name,
+            id,
+            is_verified,
+            last_name,
+            response_rate,
             user_name,
-            is_verified
-        } = user_info;
+            userId,
 
-        const {
+            photos,
+
+            description,
+
+            myuser_id,
+            product_name,
+            province_id,
+            province_name,
+            sub_category_id,
+            sub_category_name,
+            updated_at,
+
             address,
             category_id,
-            category_name = '',
+            category_name,
             city_id,
-            city_name = '',
+            city_name,
             confirmed,
-            description = '',
-            id: productId,
-            is_elevated = '',
-            max_sale_price,
-            min_sale_amount = '',
-            min_sale_price,
-            myuser_id,
-            product_name = '',
-            province_id,
-            province_name = '',
-            stock = '',
-            sub_category_id,
-            sub_category_name = '',
-            updated_at
-        } = main;
+            is_elevated,
+            stock,
 
-        const {
-            avg_score,
-            total_count
-        } = review_info
+            max_sale_price,
+            min_sale_amount,
+            min_sale_price,
+
+            profile_photo
+        } = this.state;
 
 
         const selectedContact = {
             first_name,
             contact_id: userId,
             last_name,
+            user_name,
             is_verified
         }
 
@@ -392,17 +534,16 @@ class ProductDetails extends Component {
 
 
 
-        var url = "https://buskool.com" + this.getProductUrl();
+        var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
 
         return (
             <>
-
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
 
-                {(productDetailsLoading || editProductLoading || relatedProductsLoading) ?
+                {(productDetailsInfoLoading || editProductLoading) ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
@@ -435,68 +576,110 @@ class ProductDetails extends Component {
                 /> : null}
 
 
-                <Portal>
+
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Paragraph style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#7E7E7E'
-                            }}>
+                        onDismiss={() => this.setState({ elevatorFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.doElevation')}
                             </Paragraph>
-                        </View>
-                        <Dialog.Content>
-                            <Text style={{
-                                width: '100%', textAlign: 'center',
-                                fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
-                            }}>
-                                {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Dialog.Actions>
+
+                        <Text style={{
+                            width: '100%', textAlign: 'center',
+                            marginTop: 15,
+                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                        }}>
+                            {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        </Text>
+
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.elevationText')}
                             </Text>
-                            <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center', fontSize: 16, color: '#7E7E7E' }}>
-                                {locales('titles.elevationText')}</Text>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
+
+                        </Dialog.Actions>
+                        <View style={{
                             width: '100%',
-                            justifyContent: 'center',
+                            textAlign: 'center',
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.loginButton, { width: '50%' }]}
+                                style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => this.setState({ elevatorFlag: false }, () => {
                                     return this.elevatorPay();
-                                })}>
-                                <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
+                                })}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.pay')}
+                                </Text>
+                            </Button>
+                        </View>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
 
 
-                {editionFlag ? <Portal>
+
+
+                {editionFlag ? < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={editionFlag}
-                        onDismiss={() => this.setState({ editionFlag: false })}>
-                        <View style={{
-                            padding: 10, marginBottom: 5,
-                            borderBottomWidth: 0.7, width: '100%',
-                            justifyContent: 'center', alignItems: 'center',
-                            borderBottomColor: '#BEBEBE'
-                        }}>
-                            <Text style={{
-                                textAlign: 'center', width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#7E7E7E'
-                            }}>
+                        onDismiss={() => this.setState({ editionFlag: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ editionFlag: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
-                            </Text>
-                        </View>
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
                         {!showEditionMessage ?
                             <>
                                 <Dialog.ScrollArea>
@@ -607,26 +790,52 @@ class ProductDetails extends Component {
                                         </Text>
                                     </Button>
                                 </Dialog.Actions>
-                            </>
-                            :
-                            <Dialog.Content style={{ padding: 50 }}>
-                                <View style={[{ justifyContent: 'center', alignItems: 'center' },
-                                editProductStatus ? styles.deletationSuccessfullContainer : styles.loginFailedContainer]}>
-                                    {!editProductStatus ? <FontAwesome name='times-circle-o' size={40} color='#E41C39' /> : <MaterialCommunityIcons
-                                        name='checkbox-marked-circle-outline' color='white' size={40}
-                                    />}
-                                    <Paragraph
-                                        style={[editProductStatus ? styles.deletationSuccessfullText : styles.loginFailedText,
-                                        { width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Light' }]}
-                                    >
-                                        {editionMessageText}
-                                    </Paragraph>
+                            </> :
+                            <>
+
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    {!editProductStatus ? <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#f27474',
+                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#edf8e6',
+                                    }]} />}
+
                                 </View>
-                            </Dialog.Content>
-                        }
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {editionMessageText}
+                                    </Text>
+
+                                </Dialog.Actions>
+                            </>}
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ elevatorFlag: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
                     </Dialog>
-                </Portal>
-                    : null}
+                </Portal > : null}
+
+
+
 
                 <Modal
                     animationType="slide"
@@ -657,7 +866,7 @@ class ProductDetails extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     shadowOffset: { width: 20, height: 20 },
                     justifyContent: 'center'
@@ -665,9 +874,9 @@ class ProductDetails extends Component {
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
-                            global.productIds.pop();
-                            this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
-                            this.callApi();
+                            // global.productIds.pop();
+                            this.props.navigation.goBack()
+                            // this.callApi();
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
@@ -686,9 +895,10 @@ class ProductDetails extends Component {
 
 
                 <ScrollView
+                    ref={this.wrapper}
                     refreshControl={
                         <RefreshControl
-                            refreshing={!!this.props.productDetailsLoading}
+                            refreshing={!!this.props.productDetailsInfoLoading}
                             onRefresh={() => this.componentDidMount()}
                         />
                     }>
@@ -696,15 +906,11 @@ class ProductDetails extends Component {
                         backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
                         elevation: 5,
                     }}>
-                        {(photosWithCompletePath && photosWithCompletePath.length) ? <SliderBox
-                            dotColor='#0095F6'
-                            inactiveDotColor='#A8A8A8'
-                            sliderBoxHeight={400}
-                            dotStyle={{ bottom: -30, backgroundColor: 'red', width: 10, height: 10, borderRadius: 5 }}
-                            images={photosWithCompletePath}
-                            onCurrentImagePressed={this.showFullSizeImage}
-                        // currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
-                        /> : null}
+                        <ProductImages
+                            showFullSizeImage={this.showFullSizeImage}
+                            photosWithCompletePath={photosWithCompletePath}
+                        />
+
                         <View
                             style={{
                                 flexDirection: 'row-reverse', alignItems: 'center',
@@ -760,7 +966,7 @@ class ProductDetails extends Component {
                                         style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
                                         {locales('titles.elevateProduct')}</Text>
                                     <FontAwesome5
-                                        name='chart-line' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                        name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
                                 </Button>
                                 <Button
                                     style={{
@@ -774,12 +980,18 @@ class ProductDetails extends Component {
                                     }}
                                 >
                                     <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                    <FontAwesome5 name='pencil' size={30} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
                                 </Button>
                             </View> :
 
                                 <Button
-                                    onPress={() => this.setState({ modalFlag: true })}
+                                    onPress={() => {
+                                        if (this.props.route.params.productId)
+                                            analytics().logEvent('open_chat', {
+                                                product_id: this.props.route.params.productId
+                                            });
+                                        this.setState({ modalFlag: true })
+                                    }}
                                     style={[styles.loginButton, {
                                         paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
                                         maxWidth: 160,
@@ -909,7 +1121,7 @@ class ProductDetails extends Component {
                                             color: '#777777', textAlign: 'center', width: '100%',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16
                                         }}>
-                                            {is_seller ? locales('labels.seller') : locales('labels.buyer')}
+                                            {locales('labels.seller')}
                                         </Text>
 
                                         <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
@@ -941,21 +1153,33 @@ class ProductDetails extends Component {
                                         }}
                                         style={[styles.loginButton, {
                                             borderWidth: 1, borderColor: '#00C569',
-                                            width: '90%', backgroundColor: 'white', alignSelf: 'center'
+                                            backgroundColor: 'white', alignSelf: 'center'
                                         }]}
                                     >
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#00C569' }]}>
                                             {locales('titles.seeProfile')}</Text>
                                     </Button>
                                     <Button
-                                        onPress={() => userId == loggedInUserId ? this.props.navigation.navigate('EditProfile') : this.setState({ modalFlag: true })}
+                                        onPress={() => {
+                                            if (userId == loggedInUserId) {
+                                                this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
+                                            }
+                                            else {
+                                                if (this.props.route.params.productId)
+                                                    analytics().logEvent('open_chat', {
+                                                        product_id: this.props.route.params.productId
+                                                    });
+                                                this.setState({ modalFlag: true })
+                                            }
+                                        }
+                                        }
                                         style={[styles.loginButton, {
                                             alignSelf: 'center'
                                         }]}
                                     >
 
                                         <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
-                                            {loggedInUserId == userId ? locales('labels.editProfile') : locales('titles.sendMessage')}</Text>
+                                            {loggedInUserId == userId ? locales('titles.editProfile') : locales('titles.sendMessage')}</Text>
                                     </Button>
                                 </Body>
                             </CardItem>
@@ -967,9 +1191,9 @@ class ProductDetails extends Component {
                                     <Body>
                                         <Text
                                             onPress={() => {
-                                                return Linking.canOpenURL('https://blog.buskool.com/راهنمای-خرید-امن').then(supported => {
+                                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
                                                     if (supported) {
-                                                        Linking.openURL('https://blog.buskool.com/راهنمای-خرید-امن');
+                                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`);
                                                     }
                                                 });
                                             }}
@@ -982,7 +1206,7 @@ class ProductDetails extends Component {
                         </View>
 
                     </View>
-                    <View >
+                    {/* <View >
                         <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                             <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                             <View
@@ -1004,11 +1228,49 @@ class ProductDetails extends Component {
                         </View>
                         <RelatedProductsList
                             {...this.props}
-                            relatedProductsArray={relatedProductsArray}
+                            relatedProductsArray={related_products}
                         />
-                    </View>
+                    </View> */}
 
                 </ScrollView>
+
+                {!this.props.productDetailsInfoLoading && userId != loggedInUserId ? <View style={{
+                    backgroundColor: '#fff',
+                    width: '100%',
+                    height: 65,
+                    elevation: 5,
+                }} >
+                    <Button
+                        onPress={() => {
+                            if (this.props.route.params.productId)
+                                analytics().logEvent('open_chat', {
+                                    product_id: this.props.route.params.productId
+                                });
+                            this.setState({ modalFlag: true })
+                        }}
+                        style={[styles.loginButton, {
+                            position: 'absolute',
+                            left: 15,
+                            right: 15,
+                            bottom: 10,
+                            zIndex: 1,
+                            marginHorizontal: 10,
+                            margin: 0
+                        }]}
+                    >
+                        <View style={[styles.textCenterView, styles.buttonText]}>
+                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                <FontAwesome name='envelope' size={20} />
+                            </Text>
+                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                {locales('titles.achiveSaleStatus')}
+                            </Text>
+                        </View>
+
+                    </Button>
+
+                </View>
+                    : null}
             </>
         )
     }
@@ -1073,6 +1335,91 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#00C569',
         color: 'white',
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        // alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
     },
     forgotContainer: {
         flexDirection: 'row',
@@ -1148,6 +1495,9 @@ const mapStateToProps = (state) => {
         relatedProductsObject,
         relatedProductsArray,
 
+        productDetailsInfo,
+        productDetailsInfoLoading
+
     } = state.productsListReducer
     return {
         productDetails,
@@ -1164,12 +1514,15 @@ const mapStateToProps = (state) => {
         relatedProductsObject,
         relatedProductsArray,
 
+
+        productDetailsInfo,
+        productDetailsInfoLoading,
+
         editProductStatus: state.productsListReducer.editProductStatus,
         editProductMessage: state.productsListReducer.editProductMessage,
         editProductLoading: state.productsListReducer.editProductLoading,
 
         loggedInUserId: state.authReducer.loggedInUserId,
-        is_seller: state.authReducer.is_seller
     }
 };
 
@@ -1178,7 +1531,9 @@ const mapDispatchToProps = (dispatch) => {
         setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
-        editProduct: product => dispatch(productListActions.editProduct(product))
+        editProduct: product => dispatch(productListActions.editProduct(product)),
+
+        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id))
     }
 };
 

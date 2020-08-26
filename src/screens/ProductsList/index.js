@@ -1,6 +1,8 @@
 import React, { Component, createRef, PureComponent } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
@@ -17,6 +19,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
+import { locale } from 'moment';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -32,6 +35,7 @@ class ProductsList extends PureComponent {
             searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
+            disableSubCategory: false,
             categoryModalFlag: false,
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
@@ -47,10 +51,19 @@ class ProductsList extends PureComponent {
     productsListRef = createRef();
 
     componentDidMount() {
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("product_list", "product_list");
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
-            this.setState({ showModal: true })
+            this.setState({
+                // showModal: true,
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });
         if (this.props.productDetailsId) {
             this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
@@ -107,16 +120,27 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item).then(_ => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+        this.props.fetchAllProductsList(item).then(result => {
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.productsListLoading)
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
         }).catch(error => {
-            this.setState({ showModal: true })
+            this.setState({
+                //  showModal: true,
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });
     };
 
 
     handleSearch = (text) => {
+
+        analytics().logEvent('search_text', {
+            text
+        })
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
@@ -133,8 +157,12 @@ class ProductsList extends PureComponent {
             };
         myTimeout = setTimeout(() => {
 
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && this.state.productsListArray.length && !this.props.productsListLoading)
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -145,16 +173,26 @@ class ProductsList extends PureComponent {
             this.props.fetchAllProductsList(item).then(_ => {
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             }).catch(error => {
-                this.setState({ showModal: true })
+                this.setState({
+                    //  showModal: true, 
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             });
         }, 1500);
 
     };
 
     sortProducts = (id, name) => {
+
+        analytics().logEvent('apply_sort', {
+            sort_type: name
+        })
         this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
             this.props.fetchAllSubCategories(id).catch(error => {
-                this.setState({ showModal: true, categoryModalFlag: false })
+                this.setState({
+                    // showModal: true,
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             })
         })
     };
@@ -162,11 +200,17 @@ class ProductsList extends PureComponent {
 
 
     setProvince = (value, index) => {
+        this.setState({ disableSubCategory: true })
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(value).catch(error => {
-                this.setState({ showModal: true })
+            this.setState({ province: value, provinceError: '', cityError: '', city: '' })
+            this.props.fetchAllProvinces(value).then(result => {
+                this.setState({ disableSubCategory: false })
+            }).catch(error => {
+                this.setState({
+                    //  showModal: true,
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
             });
         }
     };
@@ -200,11 +244,18 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.productsListLoading)
+                setTimeout(() => {
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true })
+            this.setState({
+                //  showModal: true, 
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });;
 
     };
@@ -229,7 +280,10 @@ class ProductsList extends PureComponent {
         this.props.fetchAllProductsList(searchItem).then(result => {
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
         }).catch(error => {
-            this.setState({ showModal: true })
+            this.setState({
+                //  showModal: true, 
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
         });;
 
     };
@@ -252,7 +306,7 @@ class ProductsList extends PureComponent {
         } = this.props;
 
         const { searchText, loaded, productsListArray, selectedButton,
-            categoryModalFlag, sortModalFlag, locationsFlag, province, city, selectedCategoryModal } = this.state;
+            categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
 
@@ -262,6 +316,9 @@ class ProductsList extends PureComponent {
         if (Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
+
+        let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
+
         return (
             <>
                 <NoConnection
@@ -280,7 +337,7 @@ class ProductsList extends PureComponent {
                         flexDirection: 'row-reverse',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -328,8 +385,10 @@ class ProductsList extends PureComponent {
                                                     Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setProvince}
+                                                    onOpen={() => { this.setState({ disableSubCategory: true }) }}
                                                     style={styles}
                                                     value={province}
+                                                    disabled={categoriesLoading}
                                                     placeholder={{
                                                         label: locales('labels.selectProvince'),
                                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -364,6 +423,7 @@ class ProductsList extends PureComponent {
                                                     Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setCity}
+                                                    disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
                                                     style={styles}
                                                     value={city}
                                                     placeholder={{
@@ -439,7 +499,7 @@ class ProductsList extends PureComponent {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -457,7 +517,7 @@ class ProductsList extends PureComponent {
                             <Text
                                 style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                             >
-                                {locales('labels.sort')}
+                                {locales('labels.sortBy')}
                             </Text>
                         </View>
                     </View>
@@ -474,9 +534,13 @@ class ProductsList extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                                onPress={() => !productsListLoading && this.setState({ sort_by: item.value }, () => {
+                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length && !this.props.productsListLoading)
+                                        setTimeout(() => {
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                        }, 300);
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -501,15 +565,19 @@ class ProductsList extends PureComponent {
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, sortModalFlag: false })
+                                        this.setState({
+                                            // showModal: true, 
+                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                                    color: 'red'
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.title}</Text>
+                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <Ionicons name='ios-arrow-back' size={30} color='#777' />}
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
                     />
@@ -525,7 +593,7 @@ class ProductsList extends PureComponent {
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center',
-                        height: 57,
+                        height: 45,
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
@@ -560,9 +628,13 @@ class ProductsList extends PureComponent {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 activeOpacity={1}
-                                onPress={() => this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef.current && this.props.productsListArray.length)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
+                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length && !this.props.productsListLoading)
+                                        setTimeout(() => {
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                        }, 300);
 
                                     const { sort_by } = this.state;
                                     let searchItem = {
@@ -581,15 +653,18 @@ class ProductsList extends PureComponent {
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
                                         this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
                                     }).catch(error => {
-                                        this.setState({ showModal: true, categoryModalFlag: false })
+                                        this.setState({
+                                            //  showModal: true, 
+                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                        })
                                     });
                                 })}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#BEBEBE' />
-                                <Text style={{ fontSize: 18, color: '#7E7E7E' }}>{item.category_name}</Text>
+                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
                             </TouchableOpacity>
                         )}
                     />
@@ -600,7 +675,7 @@ class ProductsList extends PureComponent {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -626,16 +701,25 @@ class ProductsList extends PureComponent {
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ backgroundColor: '#F2F2F2', borderRadius: 5, textAlignVertical: 'center' }}>
+                        <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ locationsFlag: true })}
+                                onPress={() => !productsListLoading && this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
-                                <Entypo name='location-pin' size={25} color='#BEBEBE' />
+                                <Entypo name='location-pin' size={25} style={{
+                                    color: (selectedCity) ||
+                                        (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                }} />
                                 <Text
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', color: '#BEBEBE', fontSize: 16 }}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', fontSize: 16,
+                                        color: (selectedCity) ||
+                                            (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+
+                                    }}
                                 >
                                     {
-                                        (city && cities.find(item => item.id == city).city_name) ||
+                                        (selectedCity) ||
                                         (province && provinces.find(item => item.id == province).province_name) ||
                                         locales('titles.AllIran')
                                     }
@@ -643,23 +727,25 @@ class ProductsList extends PureComponent {
                             </TouchableOpacity>
                             <Input value={searchText}
                                 ref={this.serachInputRef}
+                                disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlignVertical: 'bottom' }}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', paddingBottom: 10, color: '#777', textAlignVertical: 'bottom' }}
+                                placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
 
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <TouchableOpacity
-                                onPress={() => this.setState({ sortModalFlag: true })}
+                                onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 35
+                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {locales('labels.sort')}
                                 </Text>
-                                <FontAwesome name='sort-amount-desc' size={16} color='#fff' />
+                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
                             </TouchableOpacity>
                             <FlatList
                                 data={categoriesList}
@@ -670,13 +756,13 @@ class ProductsList extends PureComponent {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
-                                        onPress={() => this.sortProducts(item.id, item.category_name)}
+                                        onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
                                         style={{
-                                            borderRadius: 18, padding: 5, marginHorizontal: 3, flexDirection: 'row',
+                                            borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
                                             alignItems: 'center', justifyContent: 'center',
-                                            minWidth: deviceWidth * 0.25, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee'
+                                            minWidth: 85, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee', minHeight: 30
                                         }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                             {item.category_name}
                                         </Text>
                                     </TouchableOpacity>
@@ -697,7 +783,29 @@ class ProductsList extends PureComponent {
                     }}>
                         <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
                         <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
+                        {
+                            !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterProduct')}
+
+                                    style={styles.loginButton}>
+                                    <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                        {locales('titles.registerNewProduct')}
+                                    </Text>
+                                </Button>
+                            </View> : <View >
+                                    <Button
+                                        onPress={() => this.props.navigation.navigate('RegisterRequest')}
+
+                                        style={styles.loginButton}>
+                                        <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                            {locales('titles.registerBuyAdRequest')}
+                                        </Text>
+                                    </Button>
+                                </View>}
                     </View>
+
+
                     }
                     // getItemLayout={(data, index) => (
                     //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
@@ -735,13 +843,38 @@ class ProductsList extends PureComponent {
                                 this.props.fetchAllProductsList(item).then(_ => {
                                     this.setState({ loaded: false })
                                 }).catch(error => {
-                                    this.setState({ showModal: true })
+                                    this.setState({
+                                        // showModal: true,
+                                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                                    })
                                 });
                             })
                     }}
+                    onEndReachedThreshold={3.5}
                     // initialNumToRender={2}
+                    ListFooterComponent={() => {
+                        return ((loaded && productsListLoading)) ?
+                            <View style={{
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                marginBottom: 15
+
+                            }}>
+                                <ActivityIndicator size="small" color="#00C569"
+                                    style={{
+                                        zIndex: 999,
+                                        width: 50, height: 50,
+                                        borderRadius: 50,
+                                        backgroundColor: '#fff',
+                                        elevation: 5,
+                                        padding: 0,
+                                    }}
+                                />
+                            </View> : null
+                    }
+                    }
                     // initialScrollIndex={0}
-                    refreshing={productsListLoading || categoriesLoading}
+                    refreshing={(!loaded && productsListLoading) || categoriesLoading}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
@@ -764,11 +897,13 @@ class ProductsList extends PureComponent {
                         }
 
                         this.props.fetchAllProductsList(item).catch(error => {
-                            this.setState({ showModal: true })
+                            this.setState({
+                                //  showModal: true,
+                                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                            })
                         });
                     }
                     }
-                    onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     renderItem={({ item }) => <Product
@@ -907,17 +1042,16 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.05,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
     },
     iconContainer: {
-        left: 30,
-        top: 17,
+        left: 10,
+        top: 13,
     }
 });
 
@@ -959,14 +1093,16 @@ const mapStateToProps = (state) => {
 
         productDetailsId: state.productsListReducer.productDetailsId,
 
+        userProfile: state.profileReducer.userProfile,
+
 
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),

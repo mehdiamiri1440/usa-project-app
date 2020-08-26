@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, BackHandler } from 'react-native'
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import GetMobileNumberStep from './Steps/GetMobileNumberStep';
@@ -15,6 +17,7 @@ import { deviceHeight, deviceWidth } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
+import { result } from 'lodash';
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {
@@ -24,6 +27,8 @@ class SignUp extends React.Component {
             verificationCode: '',
             mobileNumber: '',
             firstName: '',
+            provinceName: '',
+            cityName: '',
             lastName: '',
             successfullAlert: false,
             gender: '',
@@ -39,17 +44,31 @@ class SignUp extends React.Component {
         }
     }
 
+    _isMounted = true;
+
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.state.stepNumber > 1) {
-                this.setState({ stepNumber: this.state.stepNumber - 1 })
-                return true;
+
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
             }
-        })
+        });
+        analytics().setCurrentScreen("register", "register");
+
+        this._isMounted = true;
+        if (this._isMounted) {
+            BackHandler.addEventListener('hardwareBackPress', () => {
+                if (this.state.stepNumber > 1) {
+                    this.setState({ stepNumber: this.state.stepNumber - 1 })
+                    return true;
+                }
+            })
+        }
     }
 
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.setState({ successfullAlert: false })
         BackHandler.removeEventListener();
     }
@@ -71,8 +90,8 @@ class SignUp extends React.Component {
     setFullNameAndGender = (firstName, lastName, gender) => {
         this.setState({ firstName, lastName, gender }, () => this.changeStep(4))
     };
-    setCityAndProvice = (city, province) => {
-        this.setState({ city, province }, () => this.changeStep(5))
+    setCityAndProvice = (city, province, provinceName, cityName) => {
+        this.setState({ city, province, provinceName, cityName }, () => this.changeStep(5))
     };
 
     setUserAuthorities = (userName, password) => {
@@ -95,6 +114,8 @@ class SignUp extends React.Component {
             activityType,
             city,
             province,
+            provinceName,
+            cityName
         } = this.state;
 
         let registerObject = {
@@ -104,24 +125,30 @@ class SignUp extends React.Component {
             password,
             user_name: '',
             sex: gender,
-            province,
-            city,
-            activity_type: activityType,
+            province: provinceName,
+            city: cityName,
+            activity_type: activityType == 'buyer' ? '1' : '0',
             category_id: activityZone
         };
-        this.props.submitRegister(registerObject).then(() => {
+        this.props.submitRegister(registerObject).then(result => {
+            analytics().logEvent('successfull_register', {
+                mobile_number: mobileNumber
+            })
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
-                        this.props.fetchUserProfile().catch(_ => this.setState({ showModal: true }));
+                        this.props.fetchUserProfile().then(_ => {
+                        })
+                        // .catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
-                    }, 100).catch(_ => this.setState({ showModal: true }));
+                    }, 100)
+                    // .catch(_ => this.setState({ showModal: true }));
                 })
             })
         }).catch(err => {
             if (err && err.data)
                 this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
-            this.setState({ showModal: true })
+            // this.setState({ showModal: true })
         });
     };
 
@@ -196,7 +223,7 @@ class SignUp extends React.Component {
                         end={{ x: 0.8, y: 0.2 }}
                         colors={['#00C569', '#21AD93']}
                     >
-                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center', top: -5 }]}>
+                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center' }]}>
                             <Text
                                 style={[styles.headerTextStyle]}
                             >
@@ -253,8 +280,10 @@ class SignUp extends React.Component {
                     </View>
 
                     {signUpError ? <Text style={{
-                        color: 'white', backgroundColor: '#DC3545',
-                        padding: 10, textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                        backgroundColor: '#DC3545',
+                        padding: 10, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         fontSize: 16,
                         marginVertical: 10
                     }}>{signUpError}</Text> : null}
@@ -320,10 +349,9 @@ const styles = StyleSheet.create({
     },
     headerTextStyle: {
         color: 'white',
-        position: 'absolute',
         textAlign: 'center',
         fontSize: 26,
-        bottom: 40
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
 })
 

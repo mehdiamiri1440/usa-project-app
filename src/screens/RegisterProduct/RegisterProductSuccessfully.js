@@ -4,6 +4,7 @@ import { Card, CardItem, Body, Button } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 class RegisterProductSuccessfully extends Component {
+
     render() {
         return (
             <View style={{ height: deviceHeight * 0.75, justifyContent: 'center' }}>

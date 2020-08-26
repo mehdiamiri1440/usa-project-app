@@ -115,3 +115,50 @@ export const fetchProductsListByUserName = (userName) => {
 
     return request();
 };
+
+export const editProfile = (item) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .editProfile(item)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.EDIT_PROFILE_FAILED,
+                        reject: actionTypes.EDIT_PROFILE_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.EDIT_PROFILE_LOADING);
+    const success = res => action(actionTypes.EDIT_PROFILE_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchAllProfileInfo = (user_name) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return Promise.all([
+                API.profile.fetchProfileStatistics(user_name),
+                API.profile.fetchProfileByUserName(user_name),
+                API.profile.fetchProductsListByUserName(user_name, false),
+            ])
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_PROFILE_INFO_FAILED,
+                        reject: actionTypes.FETCH_ALL_PROFILE_INFO_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_PROFILE_INFO_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_PROFILE_INFO_SUCCESSFULLY, res);
+
+    return request();
+};

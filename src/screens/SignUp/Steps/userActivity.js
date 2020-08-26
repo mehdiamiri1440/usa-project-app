@@ -4,12 +4,10 @@ import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { Button, Item, Label, Radio } from 'native-base';
 import { connect } from 'react-redux'
-import { Dropdown } from 'react-native-material-dropdown';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
-import OutlinedTextField from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import ENUMS from '../../../enums';
 
@@ -97,16 +95,19 @@ class UserActivity extends React.Component {
                         style={{
                             width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'buyer' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5,
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
                             flexDirection: 'row-reverse',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 10,
+                            backgroundColor: '#fff',
+                            height: 55,
+                            alignItems: 'center'
                         }}>
                         <Radio
                             onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
                             selected={activityType === 'buyer'}
                             color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
+                            // style={{ marginHorizontal: 10 }}
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
@@ -117,15 +118,21 @@ class UserActivity extends React.Component {
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.buyer')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 5 }}>{locales('labels.buyer')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse'
-                            , justifyContent: 'space-between'
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            backgroundColor: '#fff',
+                            alignItems: 'center',
+                            height: 55
+
                         }}
                         onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
                     >
@@ -133,7 +140,7 @@ class UserActivity extends React.Component {
                             onPress={() => this.setState({ activityType: 'seller', activityTypeError: '' })}
                             selected={activityType === 'seller'}
                             color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
+                            // style={{ marginHorizontal: 10 }}
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
@@ -144,7 +151,7 @@ class UserActivity extends React.Component {
                                     alignSelf: "center",
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
+                            <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 2 }}>{locales('labels.seller')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -172,6 +179,8 @@ class UserActivity extends React.Component {
                             width: deviceWidth * 0.9,
                             borderRadius: 5,
                             alignSelf: 'center',
+                            backgroundColor: '#fff',
+                            overflow: 'hidden',
                             borderColor: selectedCategoryId ? '#00C569' : activityZoneError ? '#D50000' : '#a8a8a8'
                         }}
                     >
@@ -242,6 +251,7 @@ class UserActivity extends React.Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
@@ -290,22 +300,23 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.04,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
     },
     iconContainer: {
-        left: 30,
-        top: 17,
+        left: 10,
+        top: 13,
     },
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     labelInputPadding: {
         paddingVertical: 5,

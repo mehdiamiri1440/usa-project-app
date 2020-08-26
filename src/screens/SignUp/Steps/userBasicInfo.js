@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { validator } from '../../../utils';
-import OutlinedTextField from '../../../components/floatingInput';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import * as authActions from '../../../redux/auth/actions'
 import ENUMS from '../../../enums';
 
@@ -109,13 +109,18 @@ class UserBasicInfo extends React.Component {
                 </Text>
                 <View style={[styles.textInputPadding, {
                     marginTop: -20,
-                    alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 50
+                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                 }]}>
                     <TouchableOpacity
                         style={{
                             width: deviceWidth * 0.3,
-                            borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'woman' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5, flexDirection: 'row-reverse', marginHorizontal: 20
+                            borderWidth: 1,
+                            borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'woman' ? '#00C569' : '#BDC4CC'),
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
+                            flexDirection: 'row-reverse',
+                            backgroundColor: '#fff'
                         }}
                         onPress={() => this.setState({ gender: 'woman', genderError: '' })}
                     >
@@ -123,15 +128,16 @@ class UserBasicInfo extends React.Component {
                             onPress={() => this.setState({ gender: 'woman', genderError: '' })}
                             selected={this.state.gender === 'woman'}
                             color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
+                            style={{ marginHorizontal: 5 }}
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Ionicons
-                                name="ios-woman"
+                            <FontAwesome5
+                                name="female"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",
+                                    color: '#777'
                                 }}
                             />
                             <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
@@ -140,10 +146,15 @@ class UserBasicInfo extends React.Component {
                     <TouchableOpacity
                         onPress={() => this.setState({ gender: 'man', genderError: '' })}
                         style={{
-                            borderWidth: 1, borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
-                            padding: 20, borderRadius: 5,
+                            borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
+                            borderWidth: 1,
+                            width: deviceWidth * 0.3,
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 5,
                             flexDirection: 'row-reverse',
-                            width: deviceWidth * 0.3
+                            backgroundColor: '#fff'
+
                         }}>
                         <Radio
                             onPress={() => this.setState({ gender: 'man', genderError: '' })}
@@ -153,11 +164,12 @@ class UserBasicInfo extends React.Component {
                             selectedColor={"#00C569"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Ionicons
-                                name="ios-man"
+                            <FontAwesome5
+                                name="male"
                                 style={{
                                     fontSize: 25,
                                     alignSelf: "center",
+                                    color: '#777'
                                 }}
                             />
                             <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
@@ -173,16 +185,28 @@ class UserBasicInfo extends React.Component {
                     <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterFirstName')}
                     </Label>
-                    <Item regular style={{
-                        borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
-                    }}>
+                    <Item regular
+
+                        style={{
+                            borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
+                            borderRadius: 5,
+                            overflow: 'hidden'
+                        }}>
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                textDecorationLine: 'none',
+                                fontSize: 16,
+                                height: 50,
+                                backgroundColor: '#fff',
+                                padding: 3
+                            }}
                             onChangeText={this.onFirstNameSubmit}
                             value={firstName}
+                            placeholderTextColor="#bebebe"
                             placeholder={locales('titles.firstName')}
                             ref={this.firstNameRef}
 
@@ -207,13 +231,22 @@ class UserBasicInfo extends React.Component {
                         {locales('titles.enterLastName')}
                     </Label>
                     <Item regular style={{
-                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5, padding: 3
+                        borderRadius: 5,
+                        overflow: 'hidden',
+                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5,
                     }}>
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none', fontSize: 16 }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                textDecorationLine: 'none',
+                                fontSize: 16,
+                                height: 50,
+                                backgroundColor: '#fff',
+                                padding: 3
+                            }}
                             onChangeText={this.onLastNameRef}
                             value={lastName}
                             placeholder={locales('titles.lastName')}
@@ -285,7 +318,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     labelInputPadding: {
         paddingVertical: 5,

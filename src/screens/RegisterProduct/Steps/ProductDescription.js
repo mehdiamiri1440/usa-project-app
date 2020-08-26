@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import { Button, Textarea, Label } from 'native-base';
 import { View, Text, StyleSheet, Linking } from "react-native";
-import OutlinedTextField from '../../../components/floatingInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 
 class ProductDecription extends Component {
     constructor(props) {
@@ -44,7 +44,7 @@ class ProductDecription extends Component {
         return (
             <ScrollView>
                 <View
-                    style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
+                    style={[{ backgroundColor: 'white' },]}>
                     <Text
                         style={{
                             marginVertical: 10,
@@ -89,9 +89,9 @@ class ProductDecription extends Component {
                     >
                         با کلیک روی دکمه ثبت نهایی موافقت خود را  با <Text
                             onPress={() => {
-                                return Linking.canOpenURL('z').then(supported => {
+                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/privacy-and-policy`).then(supported => {
                                     if (supported) {
-                                        Linking.openURL('https://www.buskool.com/privacy-and-policy');
+                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/privacy-and-policy`);
                                     }
                                 });
                             }}
@@ -99,8 +99,10 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={{
-                        marginVertical: 20, flexDirection: 'row',
-                        width: '100%', justifyContent: 'space-between'
+                        marginVertical: 20,
+                        marginHorizontal: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
                     }}>
                         <Button
                             onPress={() => this.onSubmit()}
@@ -142,7 +144,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     backButtonText: {
         color: '#7E7E7E',

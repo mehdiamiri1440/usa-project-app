@@ -12,9 +12,9 @@ export const fetchUserProfile = _ => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -36,9 +36,9 @@ export const isUserAllowedToSendMessage = id => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -59,9 +59,9 @@ export const fetchProfileStatistics = user_name => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -82,9 +82,9 @@ export const fetchProfileByUserName = user_name => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });
@@ -105,9 +105,30 @@ export const fetchProductsListByUserName = user_name => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && err.response)
-                    return reject(err.response);
-                return reject(err);
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
+export const editProfile = item => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `user/profile_modification`,
+                method: 'POST',
+                data: item,
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
 
             });
     });

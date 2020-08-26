@@ -2,7 +2,6 @@ import React from 'react';
 import { I18nManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import NetInfo from "@react-native-community/netinfo";
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router/router'
 import RNRestart from 'react-native-restart';
@@ -28,8 +27,11 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
+global.initialProfileRoute = 'HomeIndex';
 global.routes = [];
+global.changed = false;
 global.productIds = [];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -41,32 +43,39 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    messaging().setBackgroundMessageHandler(async _ => {
+    messaging().getInitialNotification(async remoteMessage => {
       store.dispatch(messageActions.isFromOutSide(true))
     });
-    if (I18nManager.isRTL) {
-      I18nManager.forceRTL(false);
-      I18nManager.allowRTL(false);
-      RNRestart.Restart();
-    }
-    NetInfo.addEventListener(this.handleConnectivityChange);
+    messaging().onNotificationOpenedApp(async remoteMessage => {
+      store.dispatch(messageActions.isFromOutSide(true))
+    });
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      store.dispatch(messageActions.isFromOutSide(true))
+    });
+    // if (I18nManager.isRTL) {
+    //   I18nManager.forceRTL(false);
+    //   I18nManager.allowRTL(false);
+    //   RNRestart.Restart();
+    // }
+    // NetInfo.addEventListener(this.handleConnectivityChange);
   }
 
-  componentWillUnmount() {
-    NetInfo.removeEventListener(this.handleConnectivityChange);
-  }
+  // componentWillUnmount() {
+  //   NetInfo.removeEventListener(this.handleConnectivityChange);
+  // }
 
 
 
-  handleConnectivityChange = state => {
-    if (!state.isConnected) {
-      return ToastAndroid.showWithGravity(
-        'اتصال شما به اینترنت دچار مشکل شده‌است .',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }
-  };
+  // handleConnectivityChange = state => {
+  //   if (!state.isConnected) {
+  //     return ToastAndroid.showWithGravity(
+  //       'اتصال شما به اینترنت دچار مشکل شده‌است .',
+  //       ToastAndroid.LONG,
+  //       ToastAndroid.CENTER
+  //     );
+  //   }
+  // };
 
   render() {
     return (

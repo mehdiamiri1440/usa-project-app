@@ -24,10 +24,22 @@ const INITIAL_STATE = {
     submitRegisterError: false,
     submitRegisterMessage: null,
 
+    changeRoleLoading: false,
+    changeRoleFailed: false,
+    changeRoleError: false,
+    changeRoleMessage: null,
+    changeRoleObject: {},
+
     logOutLoading: false,
     logOutFailed: false,
     logOutError: false,
     logOutMessage: null,
+
+    setEvidencesLoading: false,
+    setEvidencesFailed: false,
+    setEvidencesError: false,
+    setEvidencesMessage: null,
+    setEvidencesObject: {},
 
 
     fetchAllActivityZonesLoading: false,
@@ -247,6 +259,51 @@ export default (state = INITIAL_STATE, action) => {
         };
 
 
+        case actionTypes.CHANGE_ROLE_LOADING: {
+            return {
+                ...state,
+                changeRoleLoading: true,
+                changeRoleFailed: false,
+                changeRoleError: false,
+                changeRoleObject: {},
+                changeRoleMessage: null
+            };
+        };
+        case actionTypes.CHANGE_ROLE_SUCCESSFULLY: {
+            return {
+                ...state,
+                changeRoleLoading: false,
+                changeRoleFailed: false,
+                changeRoleError: false,
+                changeRoleMessage: null,
+                changeRoleObject: { ...action.payload },
+
+            };
+        };
+        case actionTypes.CHANGE_ROLE_FAILED: {
+            const { msg } = action.payload;
+            return {
+                ...state,
+                changeRoleLoading: false,
+                changeRoleFailed: true,
+                changeRoleError: false,
+                changeRoleMessage: msg,
+                changeRoleObject: {},
+            };
+        };
+        case actionTypes.CHANGE_ROLE_REJECT: {
+            let { phone = '' } = action.payload
+            return {
+                ...state,
+                changeRoleLoading: false,
+                changeRoleFailed: false,
+                changeRoleError: true,
+                changeRoleMessage: phone,
+                changeRoleObject: {},
+            };
+        };
+
+
         case actionTypes.LOGOUT_LOADING: {
             return {
                 ...state,
@@ -288,6 +345,48 @@ export default (state = INITIAL_STATE, action) => {
                 logOutFailed: false,
                 logOutError: true,
                 logOutMessage: null
+            };
+        };
+
+        case actionTypes.SET_EVIDENCES_LOADING: {
+            return {
+                ...state,
+                setEvidencesLoading: true,
+                setEvidencesFailed: false,
+                setEvidencesError: false,
+                setEvidencesMessage: null,
+                setEvidencesObject: {}
+            };
+        };
+        case actionTypes.SET_EVIDENCES_SUCCESSFULLY: {
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: false,
+                setEvidencesError: false,
+                setEvidencesMessage: null,
+                setEvidencesObject: { ...action.payload }
+            };
+        };
+        case actionTypes.SET_EVIDENCES_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: true,
+                setEvidencesError: false,
+                setEvidencesMessage: msg,
+                setEvidencesObject: {}
+            };
+        };
+        case actionTypes.SET_EVIDENCES_REJECT: {
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: false,
+                setEvidencesError: true,
+                setEvidencesMessage: null,
+                setEvidencesObject: {}
             };
         };
         default:

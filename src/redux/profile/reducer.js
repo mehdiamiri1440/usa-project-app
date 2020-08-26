@@ -30,6 +30,18 @@ const INITIAL_STATE = {
     productsListByUserNameMessage: null,
     productsListByUserName: {},
 
+    editProfileLoading: false,
+    editProfileFailed: false,
+    editProfileError: false,
+    editProfileMessage: null,
+    editProfile: {},
+
+    profileInfoLoading: false,
+    profileInfoFailed: false,
+    profileInfoError: false,
+    profileInfoMessage: null,
+    profileInfo: [],
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -93,7 +105,7 @@ export default (state = INITIAL_STATE, action) => {
         case actionTypes.IS_USER_ALLOWED_TO_SEND_MESSAGE_SUCCESSFULLY: {
             return {
                 ...state,
-                isUserAllowedToSendMessage: { ...action.payload },
+                isUserAllowedToSendMessagePermission: { ...action.payload },
                 isUserAllowedToSendMessageLoading: false,
                 isUserAllowedToSendMessageFailed: false,
                 isUserAllowedToSendMessageError: false,
@@ -249,6 +261,88 @@ export default (state = INITIAL_STATE, action) => {
                 productsListByUserNameFailed: false,
                 productsListByUserNameError: true,
                 productsListByUserNameMessage: phone
+            };
+        };
+
+        case actionTypes.EDIT_PROFILE_LOADING: {
+            return {
+                ...state,
+                editProfile: {},
+                editProfileLoading: true,
+                editProfileFailed: false,
+                editProfileError: false,
+                editProfileMessage: null
+            };
+        };
+        case actionTypes.EDIT_PROFILE_SUCCESSFULLY: {
+            return {
+                ...state,
+                editProfile: { ...action.payload },
+                editProfileLoading: false,
+                editProfileFailed: false,
+                editProfileError: false,
+                editProfileMessage: false,
+            };
+        };
+        case actionTypes.EDIT_PROFILE_FAILED: {
+            return {
+                ...state,
+                editProfile: {},
+                editProfileLoading: false,
+                editProfileFailed: true,
+                editProfileError: false,
+                editProfileMessage: ''
+            };
+        };
+        case actionTypes.EDIT_PROFILE_REJECT: {
+            return {
+                ...state,
+                editProfile: {},
+                editProfileLoading: false,
+                editProfileFailed: false,
+                editProfileError: true,
+                editProfileMessage: ''
+            };
+        };
+
+        case actionTypes.FETCH_ALL_PROFILE_INFO_LOADING: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: true,
+                profileInfoFailed: false,
+                profileInfoError: false,
+                profileInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_SUCCESSFULLY: {
+            return {
+                ...state,
+                profileInfo: [...action.payload],
+                profileInfoLoading: false,
+                profileInfoFailed: false,
+                profileInfoError: false,
+                profileInfoMessage: false,
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_FAILED: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: false,
+                profileInfoFailed: true,
+                profileInfoError: false,
+                profileInfoMessage: ''
+            };
+        };
+        case actionTypes.FETCH_ALL_PROFILE_INFO_REJECT: {
+            return {
+                ...state,
+                profileInfo: [],
+                profileInfoLoading: false,
+                profileInfoFailed: false,
+                profileInfoError: true,
+                profileInfoMessage: ''
             };
         };
 

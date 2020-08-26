@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
-import { Button } from 'native-base';
+import { Button, Toast } from 'native-base';
 import {
-    View, Text, Modal, TouchableOpacity, Image, TextInput, KeyboardAvoidingView,
-    Keyboard, ScrollView, TouchableWithoutFeedback, FlatList, ActivityIndicator
+    ToastAndroid,
+    View, Text, Modal, TouchableOpacity, Image, TextInput,
+    FlatList, ActivityIndicator
 } from 'react-native';
+import Clipboard from "@react-native-community/clipboard";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -36,44 +38,11 @@ class ChatModal extends React.Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        // this.props.fetchUserProfilePhoto(this.props.contact.contact_id);
-        this.props.fetchTotalUnreadMessages();
-        // Keyboard.addListener('keyboardDidShow', event => {
-        //     this.setState({ keyboardHeight: event.endCoordinates.height }, () => setTimeout(() => {
-        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-        //     }, 200)
-        //     )
-        // messaging().onMesonmesage(message => {
-        //     console.warn('dfsfd-->>', this.state.userChatHistory)
-        //     this.props.fetchUserChatHistory(this.props.contact.contact_id).then(() => {
-        //         this.setState({ userChatHistory: this.props.userChatHistory }, () => {
-        //         })
-        //         this.props.fetchAllContactsList().then(_ => {
-        //         })
-        //     })
-        // })
-        // });
-
-
-        // Keyboard.addListener('keyboardDidHide', () => {
-        //     this.setState({ keyboardHeight: 0 }, () => setTimeout(() => {
-        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-        //     }, 200)
-        //     )
-        // });
-
-
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-            // if (this.state.isFirstLoad)
-            //     setTimeout(() => {
-            //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-            //     }, 1000)
-        })
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            this.props.fetchTotalUnreadMessages();
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
                 //     setTimeout(() => {
@@ -82,7 +51,6 @@ class ChatModal extends React.Component {
             })
         }
         if (this.props.message || this.props.contactsListUpdated) {
-            this.props.fetchTotalUnreadMessages();
             this.props.newMessageReceived(false)
             this.props.setcontactsListUpdated(false);
             setTimeout(() => {
@@ -128,10 +96,16 @@ class ChatModal extends React.Component {
                 isFirstLoad: false
             });
 
-            this.props.sendMessage(msgObject).then(() => {
+            this.props.sendMessage(msgObject).then((result) => {
                 setTimeout(() => {
-                    if (this.scrollViewRef && this.scrollViewRef.current)
-                        this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                    if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
+                        this.scrollViewRef.current && this.scrollViewRef.current != null &&
+                        this.scrollViewRef.current != undefined &&
+                        result.payload.message && this.state.userChatHistory.length > 0 &&
+                        !this.props.userChatHistoryLoading)
+                        setTimeout(() => {
+                            this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                        }, 200);
                 }, 10);
                 this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
                     this.setState(state => {
@@ -157,7 +131,6 @@ class ChatModal extends React.Component {
                 visible={visible}
                 onRequestClose={() => {
                     Jmoment.locale('fa')
-                    this.props.fetchTotalUnreadMessages();
                     onRequestClose()
                 }}
             >
@@ -289,11 +262,25 @@ class ChatModal extends React.Component {
                                     backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                                 }}
                             >
-                                <Text style={{
-                                    textAlign: 'right',
-                                    fontSize: 16,
-                                    color: '#333333'
-                                }}>
+                                <Text
+                                    selectionColor='gray'
+                                    suppressHighlighting
+                                    selectable
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString(item.text)
+                                    }}
+                                    style={{
+                                        zIndex: 999999,
+                                        textAlign: 'right',
+                                        fontSize: 16,
+                                        color: '#333333'
+                                    }}>
                                     {item.text}
                                 </Text>
                                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
@@ -410,6 +397,7 @@ class ChatModal extends React.Component {
                         }} />
 
                     <Button
+                        disabled={!!userChatHistoryLoading}
                         onPress={this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
@@ -431,7 +419,7 @@ class ChatModal extends React.Component {
                             textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 6,
                             width: deviceWidth * 0.8, paddingHorizontal: 20,
                             maxHeight: 100, height: 44,
-                            overflow: 'scroll'
+                            overflow: 'scroll',
                         }}
                         placeholder='پیامی بگذارید'
                         placeholderTextColor="#BEBEBE"

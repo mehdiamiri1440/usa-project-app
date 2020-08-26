@@ -7,6 +7,13 @@ const INITIAL_STATE = {
     productsListObject: {},
     productsListArray: [],
 
+    specialProductsListLoading: false,
+    specialProductsListFailed: false,
+    specialProductsListError: false,
+    specialProductsListMessage: null,
+    specialProductsListObject: {},
+    specialProductsListArray: [],
+
 
     relatedProductsLoading: false,
     relatedProductsFailed: false,
@@ -41,7 +48,13 @@ const INITIAL_STATE = {
     productDetailsError: false,
     productDetailsMessage: null,
 
-    productDetailsId: null
+    productDetailsId: null,
+
+    productDetailsInfoLoading: false,
+    productDetailsInfo: [],
+    productDetailsInfoFailed: false,
+    productDetailsInfoError: false,
+    productDetailsInfoMessage: null
 
 };
 export default (state = INITIAL_STATE, action) => {
@@ -91,6 +104,55 @@ export default (state = INITIAL_STATE, action) => {
                 productsListFailed: false,
                 productsListError: true,
                 productsListMessage: null
+            };
+        };
+
+
+
+
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_LOADING: {
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: true,
+                specialProductsListFailed: false,
+                specialProductsListError: false,
+                specialProductsListMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_SUCCESSFULLY: {
+            return {
+                ...state,
+                specialProductsListObject: { ...action.payload },
+                specialProductsListArray: [...action.payload.products],
+                specialProductsListLoading: false,
+                specialProductsListFailed: false,
+                specialProductsListError: false,
+                specialProductsListMessage: null,
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: false,
+                specialProductsListFailed: true,
+                specialProductsListError: false,
+                specialProductsListMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_REJECT: {
+            return {
+                ...state,
+                specialProductsListObject: {},
+                specialProductsListArray: [],
+                specialProductsListLoading: false,
+                specialProductsListFailed: false,
+                specialProductsListError: true,
+                specialProductsListMessage: null
             };
         };
 
@@ -349,6 +411,49 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 productDetailsId: null
+            };
+        };
+
+
+
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING: {
+            return {
+                ...state,
+                productDetailsInfoLoading: true,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_SUCCESSFULLY: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [...action.payload],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_FAILED: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: true,
+                productDetailsInfoError: false,
+                productDetailsInfoMessage: null
+            };
+        };
+        case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_REJECT: {
+            return {
+                ...state,
+                productDetailsInfoLoading: false,
+                productDetailsInfo: [],
+                productDetailsInfoFailed: false,
+                productDetailsInfoError: true,
+                productDetailsInfoMessage: null
             };
         };
 

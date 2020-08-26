@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllProductsList = item => {
+export const fetchAllProductsList = (item, isSpecial) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.productsList
-                .fetchAllProductsList(item)
+                .fetchAllProductsList(item, isSpecial)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -24,6 +24,29 @@ export const fetchAllProductsList = item => {
     };
     const loading = () => action(actionTypes.FETCH_ALL_PRODUCTS_LIST_LOADING);
     const success = res => action(actionTypes.FETCH_ALL_PRODUCTS_LIST_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
+export const fetchAllSpecialProductsList = (item, isSpecial) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchAllProductsList(item, isSpecial)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_FAILED,
+                        reject: actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_SPECIAL_PRODUCTS_LIST_SUCCESSFULLY, res);
 
     return request();
 };
@@ -157,6 +180,31 @@ export const setProductDetailsId = id => {
     };
     const loading = () => action(actionTypes.SET_PRODUCT_DETAILS_ID_LOADING);
     const success = res => action(actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchAllProductInfo = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return Promise.all([
+                API.productsList.fetchProductDetails(id),
+                API.productsList.fetchAllRelatedProducts(id)
+            ]).then(res => {
+                dispatch(success(res))
+            })
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_FAILED,
+                        reject: actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING);
+    const success = res => action(actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_SUCCESSFULLY, res);
 
     return request();
 };

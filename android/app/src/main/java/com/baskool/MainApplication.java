@@ -46,7 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
-    sharedI18nUtilInstance.allowRTL(getApplicationContext(), true);
+    sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);
   }
 
   /**

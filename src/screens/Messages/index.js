@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import analytics from '@react-native-firebase/analytics';
 import { Card, CardItem, Body, Icon, InputGroup, Input } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ import ChatModal from './ChatModal';
 import MessagesContext from './MessagesContext';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
+import Contact from './Contact';
 
 
 class ContactsList extends React.Component {
@@ -41,8 +43,10 @@ class ContactsList extends React.Component {
 
 
     componentDidMount() {
+        analytics().logEvent('messages')
         this.props.isFromOutSide(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }));
+        this.props.fetchAllContactsList(this.state.from, this.state.to)
+        // .catch(_ => this.setState({ showModal: true }));
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -52,13 +56,15 @@ class ContactsList extends React.Component {
         }
 
 
-        if (this.props.message) {
+        if (this.props.message || this.props.messageFromOutSide) {
             this.props.newMessageReceived(false)
+            this.props.isFromOutSide(false)
             setTimeout(() => {
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
                     this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
                     })
-                }).catch(_ => this.setState({ showModal: true }))
+                })
+                // .catch(_ => this.setState({ showModal: true }))
             }, 10);
         }
     }
@@ -73,7 +79,8 @@ class ContactsList extends React.Component {
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to).catch(_ => this.setState({ showModal: true }))
+            this.props.fetchAllContactsList(this.state.from, this.state.to)
+            // .catch(_ => this.setState({ showModal: true }))
         });
     }
 
@@ -83,7 +90,8 @@ class ContactsList extends React.Component {
         this.setState({ from: this.state.to, to: this.state.to + 10 }, () => {
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(result => {
                 this.setState({ contactsList: [...this.state.contactsList, ...this.props.contactsList] });
-            }).catch(_ => this.setState({ showModal: true }));
+            })
+            // .catch(_ => this.setState({ showModal: true }));
         })
     };
 
@@ -109,6 +117,17 @@ class ContactsList extends React.Component {
         this.props.fetchAllContactsList(this.state.from, this.state.to);
     }
 
+
+    setSelectedContact = selectedContact => {
+        this.setState({ selectedContact })
+    };
+
+    setSearchText = searchText => this.setState({ searchText })
+
+    setModalFlag = modalFlag => {
+        this.setState({ modalFlag })
+    };
+
     render() {
 
         let { contactsListLoading } = this.props;
@@ -125,7 +144,7 @@ class ContactsList extends React.Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -154,8 +173,11 @@ class ContactsList extends React.Component {
                         <Input value={searchText}
                             ref={this.serachInputRef}
                             onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light' }}
-                            placeholder={locales('labels.searchContacts')} />
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
+                            placeholder={locales('labels.searchContacts')}
+                            placeholderTextColor="#BEBEBE"
+
+                        />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
                 </View>
@@ -192,7 +214,7 @@ class ContactsList extends React.Component {
                             <CardItem >
                                 <Body >
                                     <FlatList
-                                        ListEmptyComponent={() => searchText ?
+                                        ListEmptyComponent={() => contactsListLoading ? <View></View> : searchText ?
                                             <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
                                                 <AntDesign size={135} name='contacts' color='#BEBEBE' />
                                                 <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
@@ -207,7 +229,8 @@ class ContactsList extends React.Component {
                                         onRefresh={() => {
                                             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                                                 this.setState({ loaded: false })
-                                            }).catch(_ => this.setState({ showModal: true }))
+                                            })
+                                            // .catch(_ => this.setState({ showModal: true }))
                                         }
                                         }
                                         keyExtractor={item => item.contact_id.toString()}
@@ -222,71 +245,16 @@ class ContactsList extends React.Component {
                                         style={{ width: '100%', height: deviceHeight * 1 }}
                                         contentContainerStyle={{ paddingBottom: 220 }}
                                         data={contactsList}
-                                        renderItem={({ item, index, separators }) => (
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ modalFlag: true, selectedContact: item, searchText: '' })}
-                                                key={item.contact_id}
-                                                style={{
-                                                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                                                    flexDirection: 'row-reverse', width: '100%',
-                                                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
-                                                }}
-                                            >
-
-                                                <Image
-                                                    style={{
-                                                        borderRadius: deviceWidth * 0.06,
-                                                        width: deviceWidth * 0.12, height: deviceWidth * 0.12
-                                                    }}
-                                                    source={item.profile_photo ?
-                                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.profile_photo}` }
-                                                        : require('../../../assets/icons/user.png')}
-                                                />
-
-                                                <View>
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                                                            <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
-                                                                {`${item.first_name} ${item.last_name}`}
-                                                            </Text>
-                                                            {item.is_verified ? <ValidatedUserIcon /> : null}
-                                                        </View>
-                                                        <Text style={{ color: '#666666' }}>
-                                                            {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
-                                                        </Text>
-                                                    </View>
-
-
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
-                                                            {item.last_msg.last_msg_text}
-                                                        </Text>
-                                                        {item.unread_msgs_count > 0 && <Text style={{
-                                                            color: 'white', backgroundColor: '#00C569', width: 20, height: 20,
-                                                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
-                                                        }}>
-                                                            {item.unread_msgs_count}
-                                                        </Text>}
-                                                    </View>
-
-                                                </View>
-
-
-                                            </TouchableOpacity>
-
-                                        )}
+                                        renderItem={({ item, index }) => <Contact
+                                            item={item}
+                                            setModalFlag={this.setModalFlag}
+                                            setSelectedContact={this.setSelectedContact}
+                                            index={index}
+                                            setSearchText={this.setSearchText}
+                                            contactsList={contactsList}
+                                            {...this.props}
+                                        />
+                                        }
                                     />
                                 </Body>
                             </CardItem>
@@ -393,7 +361,8 @@ const mapStateToProps = (state) => {
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
 
-        message: state.messagesReducer.message
+        message: state.messagesReducer.message,
+        messageFromOutSide: state.messagesReducer.messageFromOutSide,
 
     }
 }

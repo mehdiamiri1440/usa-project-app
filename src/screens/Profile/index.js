@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import {
     Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, RefreshControl, ActivityIndicator,
     Share, FlatList, Modal
 } from 'react-native';
 import { Button, CardItem, Card, Body } from 'native-base';
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
@@ -19,8 +21,9 @@ import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
-
-class Profile extends Component {
+import RelatedPhotos from './RelatedPhotos';
+import Certificates from './certificates';
+class Profile extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -29,20 +32,133 @@ class Profile extends Component {
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
             selectedImageIndex: -1,
-            showModal: false
+            showModal: false,
+            prevUserName: '',
+            loaded: false,
+
+            firstNameFromByUserName: '',
+            lastNameFromByUserName: '',
+            userIdFromByUserName: '',
+            is_verified: false,
+            relatedsFromByUserName: [],
+            certificatesFromByUserName: [],
+            profilePhotoFromByUserName: '',
+            buyAd_count: null,
+            product_count: null,
+            reputation_score: 0,
+            response_rate: 0,
+            transaction_count: 0,
+            validated_seller: false,
+            avg_score: 0,
+            total_count: 0,
+            rating_info: {},
+            provinceFromByUserName: '',
+            cityFromByUserName: '',
+            companyRegisterCodeFromByUserName: '',
+            companyNameFromByUserName: '',
+            descriptionFromByUserName: '',
+            productsListByUserName: []
         }
     }
 
     componentDidMount() {
-        this.initProfileContent().catch(_ => this.setState({ showModal: false }))
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("profile", "profile");
+
+        this.initProfileContent()
+        // .catch(_ => this.setState({ showModal: false }))
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.profileInfo.length) {
+
+            const {
+                product_count,
+                buyAd_count,
+                rating_info,
+                reputation_score,
+                response_rate,
+                transaction_count,
+                validated_seller
+            } = this.props.profileInfo[0].statistics;
+
+            const {
+                avg_score,
+                total_count
+            } = rating_info;
+
+            const {
+                profile,
+                user_info,
+                certificates: certificatesFromByUserName,
+                activity_domain: activityDomainFromByUserName,
+                relateds: relatedsFromByUserName,
+            } = this.props.profileInfo[1];
+
+            const {
+                products: productsListByUserName
+            } = this.props.profileInfo[2];
+
+            const {
+                address,
+                profile_photo: profilePhotoFromByUserName,
+                company_name: companyNameFromByUserName,
+                company_register_code: companyRegisterCodeFromByUserName,
+                confirmed,
+                description: descriptionFromByUserName
+            } = profile;
+
+            const {
+                first_name: firstNameFromByUserName,
+                last_name: lastNameFromByUserName,
+                id: userIdFromByUserName,
+                is_verified,
+                province: provinceFromByUserName,
+                city: cityFromByUserName,
+            } = user_info;
+
+            this.setState({
+                loaded: true,
+
+                activityDomainFromByUserName,
+                firstNameFromByUserName,
+                lastNameFromByUserName,
+                userIdFromByUserName,
+                is_verified,
+                relatedsFromByUserName,
+                certificatesFromByUserName,
+                profilePhotoFromByUserName,
+                product_count,
+                buyAd_count,
+
+                reputation_score,
+                response_rate,
+                transaction_count,
+                validated_seller,
+                avg_score,
+                total_count,
+                rating_info,
+                provinceFromByUserName,
+                cityFromByUserName,
+                companyRegisterCodeFromByUserName,
+                companyNameFromByUserName,
+                descriptionFromByUserName,
+                productsListByUserName
+            })
+        }
     }
 
     initProfileContent = _ => {
         return new Promise((resolve, reject) => {
             if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
-                this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
-                this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
-                this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
+                this.props.fetchAllProfileInfo(this.props.route.params.user_name)
+                // this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
+                // this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
+                // this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
             }
             else {
                 resolve(true)
@@ -59,14 +175,18 @@ class Profile extends Component {
             sort_by,
             to_record_number,
         };
-        this.props.fetchAllProductsList(item).catch(_ => this.setState({ showModal: false }));
+        this.props.fetchAllProductsList(item)
+        // .catch(_ => this.setState({ showModal: false }));
     };
 
     shareProfileLink = async () => {
+        analytics().logEvent('profile_share', {
+            contact_id: this.state.userIdFromByUserName
+        });
         try {
             const result = await Share.share({
                 message:
-                    `https://www.buskool.com/profile/${this.props.profileByUserName.user_info.user_name}`,
+                    `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
             });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
@@ -87,133 +207,56 @@ class Profile extends Component {
         this.componentDidMount();
     };
 
+    setSelectedImage = (selectedImageModal, selectedImageIndex) => {
+        this.setState({ selectedImageModal, selectedImageIndex })
+    }
+
+    setSelectedEvidence = (selectedEvidenceModal, selectedEvidenceIndex) => {
+        this.setState({ selectedEvidenceModal, selectedEvidenceIndex })
+    }
+
     render() {
-
         const {
-            userProfileLoading,
-            userProfileFailed,
-            userProfileError,
-            userProfileMessage,
-            userProfile = {},
-
-
-            profileStatistics,
-            profileStatisticsLoading,
-            profileStatisticsFailed,
-            profileStatisticsError,
-            profileStatisticsMessage,
-
-
-            profileByUserName,
-            profileByUserNameLoading,
-            profileByUserNameFailed,
-            profileByUserNameError,
-            profileByUserNameMessage,
-
-
-            productsListByUserName = {},
-            productsListByUserNameLoading,
-            productsListByUserNameFailed,
-            productsListByUserNameError,
-            productsListByUserNameMessage,
-
+            profileInfo,
+            profileInfoLoading
         } = this.props;
 
-        const {
-            profile = {},
-            user_info = {},
-            certificates,
-            relateds
-        } = userProfile;
+        let {
+            modalFlag,
+            selectedEvidenceModal,
+            selectedImageModal,
+            selectedEvidenceIndex,
+            selectedImageIndex,
 
-        const {
-            activity_domain = '',
-            address,
-            company_name,
-            company_register_code,
-            confirmed,
-            created_at,
-            description,
-            human_resource_count,
-            id: profileId,
-            is_company,
-            myuser_id,
-            postal_code,
-            profile_photo,
-            public_phone,
-            related_activity_history = '',
-            shaba_code,
-            updated_at
-        } = profile;
 
-        const {
-            active_pakage_type,
-            activity_type = '',
-            category_id,
-            city,
-            contract_confirmed,
-            first_name,
-            id: userId = '',
-            is_blocked,
-            is_buyer,
-            is_seller,
-            last_name,
-            profile_visit,
-            province,
-            sex,
-            user_name,
-        } = user_info
+            firstNameFromByUserName,
+            lastNameFromByUserName,
+            userIdFromByUserName,
+            is_verified,
+            relatedsFromByUserName,
+            certificatesFromByUserName,
+            profilePhotoFromByUserName,
 
-        const {
-            product_count = 0,
-            rating_info = {},
-            reputation_score = 0,
+            product_count,
+            buyAd_count,
+            reputation_score,
             response_rate,
             transaction_count,
             validated_seller,
-        } = profileStatistics;
+            avg_score,
+            total_count,
+            rating_info,
 
-        const {
-            profile: profileFromByUserName = {},
-            user_info: userInfoFromByUserName = {},
-            certificates: certificatesFromByUserName = [],
-            relateds: relatedsFromByUserName = [],
-            activity_domain: activityDomainFromByUserName = ''
-        } = profileByUserName
+            activityDomainFromByUserName,
 
-        const {
-            id: profileIdFromByUserName,
-            description: descriptionFromByUserName,
-            profile_photo: profilePhotoFromByUserName,
-            address: addressFromByUserName,
-            postal_code: postalCodeFromByUserName,
-            is_company: isCompanyFromByUserName,
-            company_name: companyNameFromByUserName,
-            company_register_code: companyRegisterCodeFromByUserName,
-            confirmed: confirmedFromByUserName,
-            myuser_id: myUserIdFromByUserName,
-        } = profileFromByUserName;
+            provinceFromByUserName,
+            cityFromByUserName,
+            companyRegisterCodeFromByUserName,
+            companyNameFromByUserName,
+            descriptionFromByUserName,
 
-        const {
-            id: userIdFromByUserName,
-            user_name: userNameFromByUserName,
-            first_name: firstNameFromByUserName,
-            last_name: lastNameFromByUserName,
-            sex: sexFromByUserName,
-            province: provinceFromByUserName,
-            city: cityFromByUserName,
-            activity_type: activityTypeFromByUserName = '',
-            contract_confirmed: contractConfirmedFromByUserName,
-            is_buyer: isBuyerFromByUserName,
-            is_seller: isSellerFromByUserName,
-            is_blocked: isBlockedFromByUserName,
-            category_id: categoryIdFromByUserName,
-            profile_visit: profileVisitFromByUserName,
-            active_pakage_type: activePackageTypeFromByUserName,
-            is_verified
-        } = userInfoFromByUserName;
-
-        let { modalFlag, selectedEvidenceModal, selectedImageModal, selectedEvidenceIndex, selectedImageIndex } = this.state;
+            productsListByUserName
+        } = this.state;
 
         const selectedContact = {
             first_name: firstNameFromByUserName,
@@ -229,8 +272,7 @@ class Profile extends Component {
                     closeModal={this.closeModal}
                 />
 
-                {(userProfileLoading || profileStatisticsLoading
-                    || profileByUserNameLoading || productsListByUserNameLoading) ?
+                {(profileInfoLoading) ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
@@ -315,7 +357,7 @@ class Profile extends Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
 
                     justifyContent: 'center'
@@ -343,103 +385,149 @@ class Profile extends Component {
                 <ScrollView
                     refreshControl={
                         <RefreshControl refreshing={
-                            userProfileLoading || profileStatisticsLoading
-                            || profileByUserNameLoading || productsListByUserNameLoading
+                            profileInfoLoading
                         } onRefresh={() => this.initProfileContent()} />
                     }
-                    style={{ backgroundColor: 'white', padding: 5 }}>
-                    <View style={{ padding: 20, width: deviceWidth, flexDirection: 'row-reverse' }}>
-                        <Image
-                            style={{ width: deviceWidth * 0.22, height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11 }}
-                            source={
-                                profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
-                                    : require('../../../assets/icons/user.png')}
-                        />
-                        <View style={{ width: deviceWidth * 0.7 }}>
+                    style={{ backgroundColor: 'white' }}>
+                    <View style={{
+                        paddingVertical: 20, width: '100%',
+
+                    }}>
+                        <View
+                            style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
                             <View style={{
-                                flexDirection: 'row-reverse', justifyContent: 'space-around',
-                                alignItems: 'center', marginVertical: 3,
+                                width: '30%',
+                                alignItems: 'center'
                             }}>
-                                <View>
-                                    <Text
-                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
-                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
-                                </View>
+                                <Image
+                                    style={{
+                                        width: deviceWidth * 0.22,
+                                        height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11
+                                    }}
+                                    source={
+                                        profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
+                                            : require('../../../assets/icons/user.png')}
+                                />
+
                             </View>
-                            {userIdFromByUserName != userId ?
-                                <Button
 
-                                    onPress={() => this.setState({ modalFlag: true })}
-                                    style={[styles.loginButton, { flex: 1 }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='envelope' size={23} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
-                                            {locales('titles.sendMessage')}
-                                        </Text>
-                                    </View>
-
-                                </Button>
-                                : <Button
-                                    small
-                                    onPress={() => this.props.navigation.navigate('EditProfile')}
-                                    style={[styles.loginButton, { flex: 1 }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='pencil' size={23} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>
-                                            {locales('labels.editProfile')}
-                                        </Text>
-                                    </View>
-
-                                </Button>}
-                        </View>
-                    </View>
-
-                    <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
-                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                            <Text
-                                numberOfLines={1}
-                                style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
-                                {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                            </Text>
-                            {is_verified ? <ValidatedUserIcon /> : null}
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => this.shareProfileLink()}
-                            style={{
-                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
-                                width: 120, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                            <View style={{
+                                width: '70%'
                             }}>
-
-                            <View style={[styles.textCenterView, styles.buttonText]}>
-                                <Text style={{ marginTop: 5 }}>
-                                    <FontAwesome name='share-alt' size={14} color='#777777' />
-                                </Text>
-                                <Text style={{
-                                    color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                <View style={{
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-around',
+                                    alignItems: 'center',
+                                    marginVertical: 3,
                                 }}>
-                                    {locales('labels.share')}
-                                </Text>
+                                    <View>
+                                        {product_count >= 0 ? <>
+                                            <Text
+                                                style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
+                                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
+                                        </>
+                                            :
+                                            <>
+                                                <Text
+                                                    style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{buyAd_count > 0 ? buyAd_count : 0}</Text>
+                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.requests')}</Text>
+                                            </>
+                                        }
+                                    </View>
+                                    <View>
+                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
+                                        <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
+                                    </View>
+                                </View>
+                                {userIdFromByUserName != (this.props.userProfile &&
+                                    this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
+                                    <Button
+
+                                        onPress={() => {
+                                            analytics().logEvent('open_chat', {
+                                                contact_id: userIdFromByUserName
+                                            });
+                                            this.setState({ modalFlag: true })
+                                        }}
+                                        style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
+                                    >
+                                        <View
+                                            style={[styles.textCenterView,
+                                            styles.buttonText]}
+                                        >
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 8 }]}>
+                                                <FontAwesome name='envelope' size={20} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                {locales('titles.sendMessage')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>
+                                    : <Button
+                                        small
+                                        onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
+                                        style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
+                                    >
+                                        <View style={[styles.textCenterView, styles.buttonText]}>
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 9 }]}>
+                                                <FontAwesome name='pencil' size={20} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                {locales('titles.editProfile')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>}
                             </View>
 
-                        </TouchableOpacity>
+
+                        </View>
                     </View>
 
-                    {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
-                        <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                            {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
-                        </Text>
-                    </View> : null}
+                    <View style={{
+                        marginBottom: 10,
+                    }}>
 
+                        <View style={{ justifyContent: 'space-between', paddingHorizontal: 10, flexDirection: 'row-reverse' }}>
+                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                    {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
+                                </Text>
+                                {is_verified ? <ValidatedUserIcon /> : null}
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => this.shareProfileLink()}
+                                style={{
+                                    borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
+
+                                    width: 120, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                }}>
+
+                                <View style={[styles.textCenterView, styles.buttonText]}>
+                                    <Text style={{ marginTop: 5 }}>
+                                        <FontAwesome name='share-alt' size={14} color='#777777' />
+                                    </Text>
+                                    <Text style={{
+                                        color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                    }}>
+                                        {locales('labels.share')}
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                        </View>
+
+                        {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
+                            <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                            </Text>
+                        </View> : null}
+
+                    </View>
                     {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
                         flex: 1,
                         marginVertical: 10,
@@ -535,7 +623,7 @@ class Profile extends Component {
                         </View>
 
                         <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
-                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18 }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
                                 {locales('titles.headerDescription')}
                             </Text>
                             <Text style={{ color: '#777777', marginVertical: 10 }}>
@@ -545,12 +633,17 @@ class Profile extends Component {
 
                     </View>
                     <View style={{
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, }}>{locales('labels.myProducts')}</Text>
-                        {productsListByUserName && productsListByUserName.products && productsListByUserName.products.length ?
-                            productsListByUserName.products.map((item, index) => (
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.myProducts')}
+                            </Text>
+
+                        </View>
+                        {productsListByUserName && productsListByUserName.length ?
+                            productsListByUserName.map((item, index) => (
                                 <Product
                                     key={index}
                                     productItem={item}
@@ -564,94 +657,37 @@ class Profile extends Component {
                                 alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
                             }}>
                                 <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                                <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
+                                <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noUserProductFound')}</Text>
 
                             </View>
                         }
                     </View>
 
                     <View style={{
-                        width: deviceWidth * 0.93,
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.relatedPhotos')}</Text>
-                        <FlatList
-                            data={relatedsFromByUserName}
-                            horizontal
-                            ListEmptyComponent={() => (
-                                <View style={{
-                                    alignSelf: 'center', justifyContent: 'flex-start',
-                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93
-                                }}>
-                                    <FontAwesome5 name='images' size={80} color='#BEBEBE' solid />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
-                                        {locales('labels.noImageFound')}</Text>
-                                </View>
-                            )}
-                            keyExtractor={((_, index) => index.toString())}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ selectedImageModal: true, selectedImageIndex: index })}
-                                >
-                                    <Image
-                                        style={{
-                                            width: deviceWidth * 0.4,
-                                            borderWidth: 0.7,
-                                            borderColor: '#BEBEBE',
-                                            borderRadius: 4, marginHorizontal: 5, height: deviceWidth * 0.4
-                                        }}
-                                        source={{
-                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            )}
-                        />
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.relatedPhotos')}
+                            </Text>
+
+                        </View>
+                        <RelatedPhotos relatedsFromByUserName={relatedsFromByUserName} setSelectedImage={this.setSelectedImage} />
                     </View>
 
                     <View style={{
-                        width: deviceWidth * 0.93,
-                        alignSelf: 'center', alignItems: 'flex-end',
-                        justifyContent: 'center', marginVertical: 10
+                        width: deviceWidth, alignSelf: 'center', alignItems: 'center',
+                        justifyContent: 'center', marginVertical: 10, padding: 5,
                     }}>
-                        <Text style={{ color: '#666666', fontSize: 18, marginVertical: 5 }}>{locales('labels.myEvidences')}</Text>
-                        <FlatList
-                            showsHorizontalScrollIndicator={false}
-                            data={certificatesFromByUserName}
-                            horizontal
-                            ListEmptyComponent={() => (
-                                <View style={{
-                                    alignSelf: 'center', justifyContent: 'flex-start',
-                                    alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93,
+                        <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
+                                {locales('labels.myEvidences')}
+                            </Text>
 
-                                }}>
-                                    <FontAwesome5 name='tasks' size={80} color='#BEBEBE' />
-                                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
-                                        {locales('labels.noevidenceFound')}</Text>
-                                </View>
-                            )}
-                            keyExtractor={((_, index) => index.toString())}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ selectedEvidenceModal: true, selectedEvidenceIndex: index })}
-                                >
-                                    <Image
-                                        style={{
-                                            borderWidth: 0.7,
-                                            borderColor: '#BEBEBE',
-                                            borderRadius: 4,
-                                            width: deviceWidth * 0.4, borderRadius: 4,
-                                            marginHorizontal: 5, height: deviceWidth * 0.4
-                                        }}
-                                        source={{
-                                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            )}
-                        />
+                        </View>
+
+                        <Certificates setSelectedEvidence={this.setSelectedEvidence} certificatesFromByUserName={certificatesFromByUserName} />
                     </View>
 
                 </ScrollView >
@@ -687,9 +723,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontSize: 18,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        width: '100%',
+        fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        // width: '100%',
         textAlign: 'center'
     },
     disableLoginButton: {
@@ -771,8 +807,8 @@ const styles = StyleSheet.create({
     margin10: {
         margin: 10
     },
-    textSize20: {
-        fontSize: 20
+    textSize18: {
+        fontSize: 18
     }
 });
 
@@ -804,6 +840,9 @@ const mapStateToProps = (state) => {
         productsListByUserNameError,
         productsListByUserNameMessage,
 
+        profileInfo,
+        profileInfoLoading
+
     } = state.profileReducer;
 
     return {
@@ -833,15 +872,22 @@ const mapStateToProps = (state) => {
         productsListByUserNameFailed,
         productsListByUserNameError,
         productsListByUserNameMessage,
+
+        profileInfo,
+        profileInfoLoading
     }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
-        fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item)),
-        fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
+        fetchAllProfileInfo: user_name => dispatch(profileActions.fetchAllProfileInfo(user_name)),
+        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
+        // fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
+        // fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
+        // fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+
+
+// promise all

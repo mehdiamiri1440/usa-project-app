@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
-import { Dropdown } from 'react-native-material-dropdown';
-import OutlinedTextField from '../../../components/floatingInput';
+
 import { deviceWidth, validator, formatter } from '../../../utils';
 import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { sub } from 'react-native-reanimated';
 
 class SelectCategory extends Component {
     constructor(props) {
@@ -21,7 +21,9 @@ class SelectCategory extends Component {
             subCategoryError: '',
             productType: '',
             isFocused: false,
-            loaded: false
+            loaded: false,
+            subCategoriesList: [],
+            categoriesList: [],
         }
     }
 
@@ -29,35 +31,45 @@ class SelectCategory extends Component {
 
 
     componentDidMount() {
-        this.props.fetchAllCategories();
-    }
-
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.subCategoriesList && this.props.subCategoriesList.length && this.props.subCategory) {
-            const { category, subCategory, productType } = this.props;
+        this.props.fetchAllCategories().then(_ => {
+            const { category, subCategory, productType, categoriesList } = this.props;
             this.productTypeRef.current.value = productType;
-            this.setState({ category, subCategory, productType, loaded: true }, () => {
+            this.setState({ category, subCategory, productType, categoriesList, loaded: true }, () => {
             })
-        }
+        });
+
     }
 
-    setCategory = (value) => {
-        let { categoriesList = [] } = this.props;
-        if (categoriesList.length && value) {
-            this.setState({ category: value, categoryError: '' })
-            this.props.fetchAllSubCategories(categoriesList.find(item => item.id == value).id)
+
+
+    setCategory = (id) => {
+        if (id >= 0) {
+
+            let subCategory = this.props.categoriesList.some(item => item.id == id) ?
+                this.props.categoriesList.find(item => item.id == id).subcategories : {};
+            subCategory = Object.values(subCategory);
+
+            this.setState({
+                categoryError: '',
+                category: id,
+                subCategoriesList: subCategory,
+            })
         }
     };
 
-    setSubCategory = (value) => {
-        if (!!value)
-            this.setState({
-                subCategoryError: '', subCategory: value
-            }, () => {
-            })
-    };
+    setSubCategory = (id) => {
+        console.log('item', this.state.subCategoriesList)
+        if (id >= 0) {
+            let subCategory = this.state.subCategoriesList.some(item => item.id == id) ?
+                this.state.subCategoriesList.find(item => item.id == id).id : {};
 
+
+            this.setState({
+                subCategoryError: '',
+                subCategory
+            })
+        }
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
@@ -104,9 +116,10 @@ class SelectCategory extends Component {
 
     render() {
 
-        let { categoriesList, subCategoriesList, subCategoriesLoading, categoriesLoading } = this.props;
-        let { productType, category, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
+        let { subCategoriesLoading, categoriesLoading } = this.props;
+        let { productType, category, subCategoriesList, categoriesList, subCategory, subCategoryError, categoryError, productTypeError } = this.state;
 
+        categoriesList = categoriesList || this.props.categoriesList;
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
 
@@ -133,7 +146,7 @@ class SelectCategory extends Component {
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
-                        <Label style={{ position: 'relative', color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        <Label style={{ position: 'relative', color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.category')}
                         </Label>
                         {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -153,9 +166,11 @@ class SelectCategory extends Component {
                             onValueChange={this.setCategory}
                             style={styles}
                             value={category}
+
                             placeholder={{
                                 label: locales('labels.selectCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
                             }}
                             items={[...categoriesList.map(item => ({
                                 label: item.category_name, value: item.id
@@ -164,48 +179,12 @@ class SelectCategory extends Component {
                     </Item>
                     {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
                 </View>
-                {/* <Item regular
-                    style={styles}
-                    useNativeAndroidPickerStyle={false}
-                >
-                    <Picker
-                        useNativeAndroidPickerStyle={false}
-                        style={styles}
-                        mode="dialog"
-                        iosIcon={<AntDesign name='plus' size={25} color='#00C569' />}
-                        selectedValue={category}
-                        onValueChange={this.setCategory}
 
-                    >
-                        <Picker.Item
-                            useNativeAndroidPickerStyle={false}
-                            style={styles} label={locales('labels.selectCategory')} value='' />
-                        {categoriesList.map((item, index) => {
-                            return (
-                                <Picker.Item
-                                    label={item.category_name}
-                                    value={item.id}
-                                    key={index}
-                                />
-                            )
-                        })}
-                    </Picker>
-                </Item> */}
-                {/* <Dropdown
-                    error={categoryError}
-                    onChangeText={(value, index) => this.setCategory(value, index)}
-                    label={locales('labels.selectCategory')}
-                    data={categoriesList}
-                    value={category}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
                 <View style={styles.labelInputPadding}>
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                             {locales('labels.subCategory')}
                         </Label>
                         {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
@@ -230,7 +209,7 @@ class SelectCategory extends Component {
                             value={subCategory}
                             placeholder={{
                                 label: locales('labels.selectSubCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}
                             items={[...subCategoriesList.map(item => ({
                                 label: item.category_name, value: item.id
@@ -239,18 +218,9 @@ class SelectCategory extends Component {
                     </Item>
                     {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
                 </View>
-                {/* <Dropdown
-                    error={subCategoryError}
-                    onChangeText={(value) => this.setSubCategory(value)}
-                    label={locales('labels.selectSubCategory')}
-                    data={subCategoriesList}
-                    value={subCategory}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                 <View style={styles.labelInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
                     <Item regular style={{
@@ -260,28 +230,24 @@ class SelectCategory extends Component {
                             autoCapitalize='none'
                             autoCorrect={false}
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textDecorationLine: 'none' }}
+                            style={{
+                                textDecorationLine: 'none',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                backgroundColor: '#fff'
+                            }}
                             onChangeText={this.onProductTypeSubmit}
                             value={productType}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.productTypeWithExample')}
                             ref={this.productTypeRef}
                         />
                     </Item>
                     {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-                    {/* <OutlinedTextField
-                        baseColor={productType.length ? '#00C569' : '#a8a8a8'}
-                        onChangeText={this.onProductTypeSubmit}
-                        ref={this.productTypeRef}
-                        isRtl={true}
-                        placeholder={(this.state.isFocused || productType.length) ? locales('titles.productTypeWithExample') : ''}
-                        onFocus={() => this.setState({ isFocused: true })}
-                        onBlur={() => this.setState({ isFocused: false })}
-                        labelTextStyle={{ paddingTop: 5, fontFamily: 'IRANSansWeb(FaNum)_Light' }}
-                        label={this.state.isFocused || productType.length
-                            ? locales('titles.productType') :
-                            locales('titles.productTypeWithExample')}
-                    /> */}
+
                 </View>
+
                 <View style={styles.labelInputPadding}>
 
                     <Button
@@ -308,7 +274,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -348,27 +315,26 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     inputIOS: {
-        fontSize: 16,
+        fontSize: 13,
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 4,
-        color: 'black',
+        color: '#333',
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.04,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
     },
     iconContainer: {
-        left: 30,
-        top: 17,
+        left: 10,
+        top: 13,
     }
 })
 
@@ -394,7 +360,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories()),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id))
     }
 };

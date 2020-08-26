@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -32,6 +33,9 @@ class Settings extends React.Component {
 
     };
 
+    componentDidMount() {
+        analytics().logEvent('setting');
+    }
 
     render() {
         return (
@@ -41,7 +45,7 @@ class Settings extends React.Component {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>

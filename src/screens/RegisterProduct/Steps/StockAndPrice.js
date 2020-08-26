@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, Input, Label, Item } from 'native-base';
-import OutlinedTextField from '../../../components/floatingInput';
 import { deviceWidth, validator, formatter } from '../../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -164,7 +163,7 @@ class StockAndPrice extends Component {
                 </Text>
 
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.amount')}
                     </Label>
                     <Item regular style={{
@@ -175,9 +174,16 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             keyboardType='number-pad'
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)', flexDirection: 'row', textDecorationLine: 'none' }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                flexDirection: 'row',
+                                textDecorationLine: 'none'
+                            }}
                             onChangeText={this.onAmountSubmit}
                             value={amount}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.amountWithExample')}
                             ref={this.amountRef}
 
@@ -202,7 +208,7 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.minimumOrder')}
                     </Label>
                     <Item regular style={{
@@ -213,9 +219,16 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             keyboardType='number-pad'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)', textDecorationLine: 'none' }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                flexDirection: 'row',
+                                textDecorationLine: 'none'
+                            }}
                             onChangeText={this.onMinimumOrderSubmit}
                             value={minimumOrder}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.minimumOrderWithExample')}
                             ref={this.minimumOrderRef}
 
@@ -238,7 +251,7 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.minimumPrice')}
                     </Label>
                     <Item regular style={{
@@ -249,9 +262,16 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             keyboardType='number-pad'
                             autoCompleteType='off'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)', textDecorationLine: 'none' }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                flexDirection: 'row',
+                                textDecorationLine: 'none'
+                            }}
                             onChangeText={this.onMinimumPriceSubmit}
                             value={minimumPrice}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.minimumPriceWithExample')}
                             ref={this.minimumPriceRef}
 
@@ -274,7 +294,7 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.maximumPrice')}
                     </Label>
                     <Item regular style={{
@@ -285,9 +305,17 @@ class StockAndPrice extends Component {
                             autoCorrect={false}
                             autoCompleteType='off'
                             keyboardType='number-pad'
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)', textDecorationLine: 'none' }}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                flexDirection: 'row',
+                                textDecorationLine: 'none'
+
+                            }}
                             onChangeText={this.onMaximumPriceSubmit}
                             value={maximumPrice}
+                            placeholderTextColor="#BEBEBE"
                             placeholder={locales('titles.maximumPriceWithExample')}
                             ref={this.maximumPriceRef}
 
@@ -340,7 +368,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     backButtonText: {
         color: '#7E7E7E',

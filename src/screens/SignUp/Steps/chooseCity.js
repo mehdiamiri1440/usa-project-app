@@ -1,6 +1,5 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, I18nManager, ActivityIndicator } from 'react-native'
-import { Dropdown } from 'react-native-material-dropdown';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
@@ -21,6 +20,7 @@ class ChooseCity extends React.Component {
             provinceError: '',
             errorFlag: false,
             city: '',
+            disableCity: true,
             index: -1,
             loaded: false
         }
@@ -75,7 +75,9 @@ class ChooseCity extends React.Component {
         }
 
         if (isProvinceValid && isCityValid) {
-            this.props.setCityAndProvice(city, province);
+            const provinceName = this.props.allProvincesObject.provinces.find(item => item.id == province).province_name;
+            const cityName = this.props.allCitiesObject.cities.find(item => item.id == city).city_name;
+            this.props.setCityAndProvice(city, province, provinceName, cityName);
         }
         else {
             this.setState({ provinceError, cityError });
@@ -83,10 +85,13 @@ class ChooseCity extends React.Component {
     };
 
     setProvince = (value, index) => {
+        this.setState({ disableCity: true })
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '' })
-            this.props.fetchAllProvinces(provinces.find(item => item.id == value).id)
+            this.setState({ province: value, provinceError: '', city: '', cityError: '' })
+            this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
+                this.setState({ disableCity: false })
+            })
         }
     };
 
@@ -161,6 +166,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: province ? '#00C569' : provinceError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -169,6 +176,7 @@ class ChooseCity extends React.Component {
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setProvince}
                                 style={styles}
+                                disabled={loading}
                                 value={province}
                                 placeholder={{
                                     label: locales('labels.selectProvince'),
@@ -181,15 +189,7 @@ class ChooseCity extends React.Component {
                         </Item>
                         {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
                     </View>
-                    {/* <Dropdown
-                    onChangeText={(value, index) => this.setProvince(value, index)}
-                    label={locales('labels.selectProvince')}
-                    data={provinces}
-                    containerStyle={{
-                        marginVertical: 20,
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                     <View style={[styles.labelInputPadding, { marginTop: 30 }]}>
                         <View style={{
                             flexDirection: 'row-reverse'
@@ -210,6 +210,8 @@ class ChooseCity extends React.Component {
                                 width: deviceWidth * 0.9,
                                 borderRadius: 5,
                                 alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
                                 borderColor: city ? '#00C569' : cityError ? '#D50000' : '#a8a8a8'
                             }}
                         >
@@ -218,10 +220,12 @@ class ChooseCity extends React.Component {
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setCity}
                                 style={styles}
+                                disabled={fetchCitiesLoading || loading || this.state.disableCity}
                                 value={city}
                                 placeholder={{
                                     label: locales('labels.selectCity'),
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
                                 }}
                                 items={[...cities.map(item => ({
                                     label: item.city_name, value: item.id
@@ -230,14 +234,7 @@ class ChooseCity extends React.Component {
                         </Item>
                         {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{cityError}</Label>}
                     </View>
-                    {/* <Dropdown
-                    onChangeText={(value) => this.setCity(value)}
-                    label={locales('labels.selectCity')}
-                    data={cities}
-                    containerStyle={{
-                        paddingHorizontal: 20
-                    }}
-                /> */}
+
                     <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
                         <Button
                             onPress={() => this.onSubmit()}
@@ -274,7 +271,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -382,18 +381,18 @@ const styles = StyleSheet.create({
         paddingRight: 30, // to ensure the text is never behind the icon
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.04,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
-        height: 60,
+        height: 50,
         width: deviceWidth * 0.9,
-        paddingRight: 30, // to ensure the text is never behind the icon
+
     },
     iconContainer: {
-        left: 30,
-        top: 17,
-    },
+        left: 10,
+        top: 13,
+    }
 
 });
 const mapStateToProps = state => {

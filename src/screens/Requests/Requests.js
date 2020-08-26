@@ -2,12 +2,16 @@ import React, { PureComponent, Component } from 'react';
 import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, Modal } from 'react-native';
 import { Dialog, Portal, Paragraph, Snackbar, ActivityIndicator } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { Navigation } from 'react-native-navigation';
+import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Button, Card, CardItem, Body, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as profileActions from '../../redux/profile/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
@@ -16,7 +20,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
-
+import Filters from './Filters';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -27,26 +31,51 @@ class Requests extends PureComponent {
             selectedButton: null,
             from: 0,
             to: 15,
+            loaded: false,
 
             showToast: false,
             modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
             selectedContact: {},
-            showModal: false
+            showFilters: false,
+            showGoldenModal: false,
+            showModal: false,
+            selectedFilterName: ''
         }
     }
 
     requestsRef = React.createRef();
     updateFlag = React.createRef();
 
+    is_mounted = false;
+
     componentDidMount() {
-        this.initialCalls().catch(_ => this.setState({ showModal: true }))
+        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+            if (componentType === 'Component') {
+                analytics().setCurrentScreen(componentName, componentName);
+            }
+        });
+        analytics().setCurrentScreen("buyAds", "buyAds");
+
+        this.is_mounted = true;
+        if (this.is_mounted == true) {
+            this.initialCalls()
+            // .catch(_ => this.setState({ showModal: true }));
+        }
     }
+
     componentWillUnmount() {
+        this.is_mounted = false;
         this.updateFlag.current.close()
     }
 
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
+            this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
+        }
+    }
     // shouldComponentUpdate(nextProps, nextState) {
     //     console.log('this.props', this.props, 'nextprops', nextProps, 'this.state', this.state, 'nexststate', nextState)
     //     if (this.props.isUserAllowedToSendMessageLoading || (this.props.buyAdRequestLoading && this.props.buyAdRequestsList.length) || this.props.buyAdRequestsList.length)
@@ -56,7 +85,6 @@ class Requests extends PureComponent {
 
     initialCalls = _ => {
         return new Promise((resolve, reject) => {
-            this.props.fetchUserProfile().catch(error => reject(error));
             this.props.fetchAllBuyAdRequests().catch(error => reject(error));
         })
 
@@ -69,31 +97,52 @@ class Requests extends PureComponent {
     hideDialog = () => this.setState({ showDialog: false });
 
     openChat = (event, item) => {
+        let { userProfile = {} } = this.props;
+        const { user_info = {} } = userProfile;
+        const { active_pakage_type } = user_info;
+
         event.preventDefault();
-        const { isUserAllowedToSendMessage } = this.props;
-        this.setState({ selectedButton: item.id })
-        isUserAllowedToSendMessage(item.id).then(() => {
-            if (this.props.isUserAllowedToSendMessage) {
-                this.setState({
-                    modalFlag: true,
-                    selectedBuyAdId: item.id,
-                    selectedContact: {
-                        contact_id: item.myuser_id,
-                        first_name: item.first_name,
-                        last_name: item.last_name,
+        if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
+            this.setState({ selectedButton: item.id })
+            this.props.isUserAllowedToSendMessage(item.id).then(() => {
+                if (this.props.isUserAllowedToSendMessagePermission.permission) {
+                    if (!item.is_golden && item.id) {
+                        analytics().logEvent('chat_opened', {
+                            buyAd_id: item.id
+                        });
                     }
-                });
-            }
-            else {
-                this.setState({ showDialog: true })
-            }
-        }).catch(_ => this.setState({ showModal: true }));
+                    this.setState({
+                        modalFlag: true,
+                        selectedBuyAdId: item.id,
+                        selectedContact: {
+                            contact_id: item.myuser_id,
+                            first_name: item.first_name,
+                            last_name: item.last_name,
+                        }
+                    });
+                }
+                else {
+                    analytics().logEvent('permission_denied', {
+                        golden: false
+                    });
+                    this.setState({ showDialog: true })
+                }
+            })
+            // .catch(_ => this.setState({ showModal: true }));
+        }
+        else {
+            analytics().logEvent('permission_denied', {
+                golden: true
+            });
+            this.setState({ showGoldenModal: true });
+        }
     };
 
     renderItem = ({ item, index, separators }) => {
 
-        const { selectedButton } = this.state;
-        const { isUserAllowedToSendMessageLoading, buyAdRequestsList } = this.props;
+        const { selectedButton, buyAdRequestsList } = this.state;
+        const { isUserAllowedToSendMessageLoading } = this.props;
+
 
         return (
             <BuyAdList
@@ -113,13 +162,41 @@ class Requests extends PureComponent {
         this.componentDidMount()
     }
 
+    closeFilters = _ => {
+        this.setState({ showFilters: false }, () => {
+            if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
+                this.props.requestsRef.current && this.props.requestsRef.current != null &&
+                this.props.requestsRef.current != undefined && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
+                setTimeout(() => {
+                    this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
+                }, 300);
+        })
+    };
+
+    selectedFilter = (id, name) => {
+        analytics().logEvent('buyAd_filter', {
+            category: name
+        })
+        this.setState({
+            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id),
+            selectedFilterName: name,
+        })
+    };
+
 
     render() {
 
-        let { buyAdRequestsList, userProfile: info, userProfileLoading, isUserAllowedToSendMessageLoading,
-            isUserAllowedToSendMessage, buyAdRequestLoading } = this.props;
-        let { user_info: userInfo = {} } = info;
-        let { modalFlag, selectedContact, selectedButton, showDialog, selectedBuyAdId, from, to } = this.state;
+        let {
+            buyAdRequestLoading,
+            userProfile = {} } = this.props;
+
+        const { user_info = {} } = userProfile;
+        const { active_pakage_type } = user_info;
+
+        let { modalFlag, selectedContact,
+            buyAdRequestsList,
+            selectedButton, showDialog, selectedBuyAdId, from, to,
+            showFilters, selectedFilterName, showGoldenModal } = this.state;
         return (
             <>
                 <NoConnection
@@ -165,7 +242,8 @@ class Requests extends PureComponent {
                         </Text>
                         <Button
                             onPress={() => {
-                                this.updateFlag.current.close(); this.props.navigation.navigate('PromoteRegistration')
+                                this.updateFlag.current.close();
+                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
                             }}
                             style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
                         >
@@ -174,60 +252,194 @@ class Requests extends PureComponent {
                     </View>
                 </RBSheet>
 
-                {/* <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={updateFlag}
-                    onRequestClose={() => this.setState({ updateFlag: false })}
-                >
 
-                </Modal> */}
 
-                < Portal >
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
                         visible={showDialog}
-                        onDismiss={this.hideDialog}>
-                        <Dialog.Content>
-                            <Paragraph style={{ fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' }}>
+                        onDismiss={this.hideDialog}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={this.hideDialog}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.buyRequests')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
                                 {locales('titles.maximumBuyAdResponse')}
-                            </Paragraph>
-                            <Paragraph
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red' }}>
-                                {locales('titles.promoteForBuyAd')}
-                            </Paragraph>
-                        </Dialog.Content>
-                        <Dialog.Actions style={{
-                            width: '100%',
-                            justifyContent: 'space-between',
-                            alignItems: 'space-between'
-                        }}>
-                            <Button
-                                style={[styles.closeButton, { width: '30%' }]}
-                                onPress={this.hideDialog}>
-                                <Text style={styles.buttonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.loginButton, { width: '30%' }]}
-                                onPress={() => {
-                                    this.hideDialog();
-                                    this.props.navigation.navigate('PromoteRegistration');
-                                }}>
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
+                            </Text>
 
                         </Dialog.Actions>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('titles.icreaseYouRegisterRequstCapacity')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.hideDialog();
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={this.hideDialog}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
                     </Dialog>
-                </Portal>
+                </Portal >
+
+
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showGoldenModal}
+                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.goldenRequests')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.accessToGoldensDeined')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('labels.icreaseToSeeGoldens')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.setState({ showGoldenModal: false })
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ showGoldenModal: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
+
 
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 57,
+                    height: 45,
                     elevation: 5,
                     justifyContent: 'center'
                 }}>
@@ -254,7 +466,7 @@ class Requests extends PureComponent {
 
 
 
-                {userInfo.active_pakage_type == 0 && <View style={{
+                {/* {userInfo.active_pakage_type == 0 && <View style={{
                     shadowOffset: { width: 20, height: 20 },
                     shadowColor: 'black',
                     shadowOpacity: 1.0,
@@ -271,34 +483,153 @@ class Requests extends PureComponent {
                     >
                         <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
                     </Button>
-                </View>}
+                </View>} */}
 
 
+                {selectedFilterName ? <View style={{
+                    backgroundColor: '#f6f6f6',
+                    borderRadius: 6,
+                    paddingVertical: 6,
+                    paddingHorizontal: 15,
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-around',
+                    position: 'relative'
+                }}
+                >
+                    <Button
+                        small
+                        onPress={() => this.setState({
+                            buyAdRequestsList: this.props.buyAdRequestsList,
+                            selectedFilterName: ''
+                        })}
+                        style={{
+                            borderWidth: 1,
+                            borderColor: '#E41C38',
+                            borderRadius: 50,
+                            maxWidth: 250,
+                            backgroundColor: '#fff',
+                            height: 35,
+                        }}
+                    >
+                        <Text style={{
+                            textAlign: 'center',
+                            width: '100%',
+                            color: '#777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17
+                        }}>
+                            {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
+                            {/* {selectedFilterName} */}
+                        </Text>
+                        <FontAwesome5 color="#E41C38" name="times" solid style={{
+                            fontSize: 18,
+                            position: 'absolute',
+                            right: 20,
+                        }} />
 
+                    </Button>
+                </View> : null}
+                <View>
+                    {/* 
+                <Button
+                            style={{
+                                flex: 2,
+                                justifyContent: 'center',
+                                backgroundColor: '#e51c38',
+                                marginRight: 15,
+                                borderRadius: 4
+                            }}
+                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: '#fff',
+                            }}>
+                                {locales('labels.deleteFilter')}
+                            </Text>
+                        </Button> */}
+                </View>
                 <SafeAreaView
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60 }}
                 >
-
+                    {showFilters ? <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
+                    /> : null}
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={buyAdRequestLoading}
-                        onRefresh={() => this.props.fetchAllBuyAdRequests()}
+                        onRefresh={() => {
+                            this.props.fetchAllBuyAdRequests();
+                        }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => <View style={{
+                        ListEmptyComponent={() => !!buyAdRequestLoading ? <View style={{
                             alignSelf: 'center', justifyContent: 'center',
                             alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
                         }}>
                             <Entypo name='list' size={80} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
-                        </View>
+                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
+                        </View> : <View style={{
+                            alignSelf: 'center', justifyContent: 'center',
+                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                        }}>
+                                <Entypo name='list' size={80} color='#BEBEBE' />
+                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
+                            </View>
                         }
                         data={buyAdRequestsList}
                         extraData={this.state}
                         onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
-                        renderItem={this.renderItem} />
+                        renderItem={this.renderItem}
+                        windowSize={10}
+                        initialNumToRender={3}
+                        maxToRenderPerBatch={3}
+                        style={{
+                            // paddingHorizontal: 15,
+                            marginBottom: selectedFilterName ? 92 : 45
+                        }} />
+
+                    <View style={{
+                        position: 'absolute',
+                        zIndex: 1,
+                        bottom: selectedFilterName ? 92 : 45,
+                        width: '100%',
+                        righ: 0,
+                        left: 0,
+                        backgroundColor: '#fff',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        padding: 7,
+                        elevation: 5
+                    }}>
+                        <Button
+                            style={{
+                                flex: 3,
+                                justifyContent: 'center',
+                                backgroundColor: '#556080',
+                                borderRadius: 4
+                            }}
+                            onPress={() => this.setState({ showFilters: true })}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: '#fff',
+                                flexDirection: 'row',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}>
+                                {locales('titles.categories')}
+                            </Text>
+                            <FontAwesome5 name="filter" solid color="#fff" style={{
+                                marginHorizontal: 5
+                            }} />
+
+                        </Button>
+
+                    </View>
+
 
                 </SafeAreaView>
             </>
@@ -370,6 +701,94 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        // alignSelf: 'flex-start',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
+    },
     forgotContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -422,12 +841,9 @@ const mapStateToProps = (state) => {
         buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
         buyAdRequestsList: state.buyAdRequestReducer.buyAdRequestList,
         buyAdRequests: state.buyAdRequestReducer.buyAdRequest,
-
-
-        userProfileLoading: state.profileReducer.userProfileLoading,
         userProfile: state.profileReducer.userProfile,
-
         isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission: state.profileReducer.isUserAllowedToSendMessagePermission,
         isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
     }
 }
@@ -435,7 +851,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
-        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
     }
 }

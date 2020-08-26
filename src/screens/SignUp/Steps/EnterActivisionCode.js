@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
 import {
     CodeField,
     Cursor,
@@ -12,7 +12,6 @@ import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
 import Timer from '../../../components/timer';
-import { OutlinedTextField } from '../../../components/floatingInput';
 import * as authActions from '../../../redux/auth/actions'
 import * as profileActions from '../../../redux/profile/actions'
 import ENUMS from '../../../enums';
@@ -34,9 +33,7 @@ const EnterActivisionCode = (props) => {
         setValue,
     });
     let [showModal, setShowModal] = useState(false);
-    let [timerFlag, setTimerFlag] = useState(false)
     let [flag, setFlag] = useState(false)
-    let [activisionCode, setActivisionCode] = useState('');
 
     activisionCodeRef = React.createRef();
 
@@ -60,8 +57,10 @@ const EnterActivisionCode = (props) => {
                 setValueError('');
                 if (res.payload.redirected) {
                     props.fastLogin(res.payload).then(_ => {
-                        props.fetchUserProfile().catch(_ => setShowModal(true));;
-                    }).catch(_ => setShowModal(true));
+                        props.fetchUserProfile()
+                        // .catch(_ => setShowModal(true));;
+                    })
+                    // .catch(_ => setShowModal(true));
                 }
                 else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
@@ -70,8 +69,8 @@ const EnterActivisionCode = (props) => {
             }).catch(err => {
                 if (err && err.data)
                     setValueError(err.data.errors.phone[0])
-                else
-                    setShowModal(true)
+                // else
+                //     setShowModal(true)
             })
         }
 
@@ -89,7 +88,6 @@ const EnterActivisionCode = (props) => {
                 showModal={showModal}
                 closeModal={closeModal}
             />
-            <Text style={styles.buttonText}>{locales('titles.login')}</Text>
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
@@ -113,16 +111,22 @@ const EnterActivisionCode = (props) => {
                     }}
                     cellCount={CELL_COUNT}
                     rootStyle={styles.codeFiledRoot}
+                    onSubmitEditing={event => {
+                        Keyboard.dismiss();
+                        onSubmit(event.nativeEvent.text);
+
+                    }}
                     keyboardType="number-pad"
+                    textContentType="oneTimeCode"
                     renderCell={({ index, symbol, isFocused }) => (
                         <Text
                             key={index}
                             style={[styles.cell, isFocused && styles.focusCell,
                             {
-                                borderColor: value.length === 4 && !valueError ? "#155724"
+                                borderColor: value.length === 4 && !valueError ? "#00C569"
                                     : value.length === 4 && valueError
                                         ? '#de3545' :
-                                        "grey"
+                                        "#bebebe"
                             }]}
                             onLayout={getCellOnLayoutHandler(index)}>
                             {symbol || (isFocused ? <Cursor
@@ -177,16 +181,18 @@ const EnterActivisionCode = (props) => {
     )
 }
 const styles = StyleSheet.create({
-    root: { flex: 1, paddingHorizontal: 20 },
+    root: { flex: 1, paddingHorizontal: deviceWidth * 0.06 },
     title: { textAlign: 'center', fontSize: 30 },
-    codeFiledRoot: { marginTop: 10 },
+    codeFiledRoot: { marginTop: 20 },
     cell: {
         width: 70,
-        height: 70,
-        lineHeight: 70,
+        backgroundColor: '#fff',
+        elevation: 1,
+        height: 60,
+        lineHeight: 65,
         borderRadius: 5,
         fontSize: 24,
-        borderWidth: 2,
+        borderWidth: 1,
         alignContent: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -209,8 +215,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 70,
-        height: 70,
+
     },
     backButtonText: {
         color: '#7E7E7E',
@@ -240,7 +245,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -251,7 +257,8 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     loginButton: {
         textAlign: 'center',
@@ -262,7 +269,8 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     },
     forgotContainer: {
         flexDirection: 'row',
