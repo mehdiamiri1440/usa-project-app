@@ -182,3 +182,25 @@ export const logOut = () => {
 
     return request();
 };
+
+export const setEvidences = (evidences) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.auth
+                .setEvidences(evidences)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.SET_EVIDENCES_FAILED,
+                        reject: actionTypes.SET_EVIDENCES_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.SET_EVIDENCES_LOADING);
+    const success = res => action(actionTypes.SET_EVIDENCES_SUCCESSFULLY, res);
+
+    return request();
+};

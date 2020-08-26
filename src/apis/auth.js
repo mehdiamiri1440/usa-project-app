@@ -14,7 +14,7 @@ export const login = (mobileNumber, password) => {
                 }
             })
             .then(result => {
-                storeData = async () => {
+                const storeData = async () => {
                     if (result.token)
                         await AsyncStorage.setItem('@Authorization', result.token)
                     else
@@ -35,7 +35,7 @@ export const login = (mobileNumber, password) => {
 
 export const fastLogin = (payload) => {
     return new Promise((resolve, reject) => {
-        storeData = async () => {
+        const storeData = async () => {
             if (payload.token)
                 await AsyncStorage.setItem('@Authorization', payload.token)
             else
@@ -150,6 +150,29 @@ export const changeRole = () => {
             })
             .then(result => {
                 console.log('ressss', result)
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
+
+
+export const setEvidences = evidences => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `verify/upload-photos`,
+                method: 'POST',
+                data: evidences,
+                withAuth: false,
+            })
+            .then(result => {
                 resolve(result);
             })
             .catch(err => {

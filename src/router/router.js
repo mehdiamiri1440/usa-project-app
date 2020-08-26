@@ -6,6 +6,7 @@ import { Alert, Linking, Text, I18nManager, Image, View, ActivityIndicator, Nati
 import { createStackNavigator } from '@react-navigation/stack';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { connect } from 'react-redux';
 import RNRestart from 'react-native-restart';
@@ -38,6 +39,7 @@ import Home from '../screens/Home/Home';
 import Requests from '../screens/Requests/Requests';
 import Dashboard from '../screens/Home/Dashboard';
 import ContactUs from '../screens/Home/ContactUs';
+import Authentication from '../screens/Home/Authentication';
 import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
@@ -57,6 +59,7 @@ import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCa
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
+
 import AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -189,6 +192,13 @@ const App = (props) => {
             .catch(err => navigationRef.current.navigate('SignUp')
             );
 
+        remoteConfig()
+            .setDefaults({
+                appVersion: '1.0.2.996',
+            })
+            .then(() => {
+                console.log('Default values set.');
+            });
 
         if (!props.loggedInUserId) {
             AsyncStorage.getItem('@isIntroductionSeen').then(result => {
@@ -455,6 +465,15 @@ const App = (props) => {
                     key='ContactUs'
                     name='ContactUs'
                     component={ContactUs}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Authentication'
+                    name='Authentication'
+                    component={Authentication}
                 />
             </Stack.Navigator >
         )

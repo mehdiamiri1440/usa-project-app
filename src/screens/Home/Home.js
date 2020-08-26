@@ -7,7 +7,7 @@ import RnRestart from 'react-native-restart';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { useScrollToTop } from '@react-navigation/native';
@@ -15,8 +15,8 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
@@ -34,6 +34,7 @@ let homeRoutes = [
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
+    { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
 ];
@@ -287,7 +288,15 @@ class Home extends React.Component {
                                                 }}>
                                                     {locales('labels.special')}
                                                 </Text>
-                                                : null
+                                                : route.name == 'Authentication' ?
+
+                                                    <View
+                                                        style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
+                                                        <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
+                                                        <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+
+                                                    </View>
+                                                    : null
                                             }
                                         </View>
                                     </TouchableOpacity>
@@ -375,9 +384,8 @@ class Home extends React.Component {
                                 <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.seller')}</Text>
                             </View>
                         </TouchableOpacity>
+
                     </View>
-
-
 
                 </ScrollView>
             </>

@@ -35,6 +35,12 @@ const INITIAL_STATE = {
     logOutError: false,
     logOutMessage: null,
 
+    setEvidencesLoading: false,
+    setEvidencesFailed: false,
+    setEvidencesError: false,
+    setEvidencesMessage: null,
+    setEvidencesObject: {},
+
 
     fetchAllActivityZonesLoading: false,
     fetchAllActivityZonesFailed: false,
@@ -339,6 +345,48 @@ export default (state = INITIAL_STATE, action) => {
                 logOutFailed: false,
                 logOutError: true,
                 logOutMessage: null
+            };
+        };
+
+        case actionTypes.SET_EVIDENCES_LOADING: {
+            return {
+                ...state,
+                setEvidencesLoading: true,
+                setEvidencesFailed: false,
+                setEvidencesError: false,
+                setEvidencesMessage: null,
+                setEvidencesObject: {}
+            };
+        };
+        case actionTypes.SET_EVIDENCES_SUCCESSFULLY: {
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: false,
+                setEvidencesError: false,
+                setEvidencesMessage: null,
+                setEvidencesObject: { ...action.payload }
+            };
+        };
+        case actionTypes.SET_EVIDENCES_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: true,
+                setEvidencesError: false,
+                setEvidencesMessage: msg,
+                setEvidencesObject: {}
+            };
+        };
+        case actionTypes.SET_EVIDENCES_REJECT: {
+            return {
+                ...state,
+                setEvidencesLoading: false,
+                setEvidencesFailed: false,
+                setEvidencesError: true,
+                setEvidencesMessage: null,
+                setEvidencesObject: {}
             };
         };
         default:
