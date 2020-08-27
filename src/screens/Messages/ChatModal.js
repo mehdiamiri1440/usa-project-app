@@ -147,7 +147,6 @@ class ChatModal extends React.Component {
                 const foundSender_id = this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) ?
                     this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
                     : "";
-                console.warn('sensers', sender_ids.some(item => item != foundSender_id))
                 this.setState({ showUnAuthorizedUserPopUp: sender_ids.some(item => item != foundSender_id) });
             }
         }
@@ -416,7 +415,7 @@ class ChatModal extends React.Component {
                     </ScrollView>
  */}
 
-                {(userChatHistory.length && userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) &&
+                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
                     !isSenderVerified && showUnAuthorizedUserPopUp) ? <View style={{ marginBottom: 55, marginTop: -65 }}>
 
                         <ChatWithUnAuthorizedUserPopUp
