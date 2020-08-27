@@ -342,6 +342,11 @@ export default {
     'messages.userActivityZone': 'حوزه فعالیت شما',
     'messages.backToLogin': 'درصورت داشتن  حساب وارد باسکول شوید',
     'messages.codeExpirationTime': 'مدت اعتبار کد',
-    'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شده است را اینجا وارد کنید'
+    'messages.likeYou': 'مانند اطلاعات هویتی شما',
+    'messages.authorize': 'احراز',
+    'messages.notHappened': 'نشده است.',
+    'messages.userNotAuthorized': 'اطلاعات هویتی این کاربر ،',
+    'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شده است را اینجا وارد کنید',
+    'messages.nearBuskool': "نزد باسکول",
   }
 };

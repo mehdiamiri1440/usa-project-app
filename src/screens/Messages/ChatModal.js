@@ -18,7 +18,9 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import messaging from '@react-native-firebase/messaging';
 import MessagesContext from './MessagesContext';
 import { formatter, dataGenerator } from '../../utils';
+import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class ChatModal extends React.Component {
     constructor(props) {
@@ -28,6 +30,7 @@ class ChatModal extends React.Component {
             messageText: '',
             isFirstLoad: true,
             msgCount: 10,
+            showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
             loaded: false
@@ -43,6 +46,7 @@ class ChatModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
+            this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
                 //     setTimeout(() => {
@@ -55,6 +59,7 @@ class ChatModal extends React.Component {
             this.props.setcontactsListUpdated(false);
             setTimeout(() => {
                 this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
+                    this.fetchSenderIds()
                     this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
                         // if (!this.state.isFirstLoad)
                         //     setTimeout(() => {
@@ -119,11 +124,42 @@ class ChatModal extends React.Component {
 
     }
 
-    render() {
-        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo } = this.props;
-        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText, loaded } = this.state;
 
+    hideUnAuthorizedUserChatPopUp = async () => {
+        let sender_ids = [];
+        let id = '';
+        if (this.state.userChatHistory.length) {
+            id = this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) ?
+                this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
+                : "";
+        }
+        if (id) {
+            sender_ids.push(id);
+            this.setState({ showUnAuthorizedUserPopUp: false });
+            return await AsyncStorage.setItem('@sender_ids', JSON.stringify(sender_ids));
+        }
+    };
+
+    fetchSenderIds = () => AsyncStorage.getItem('@sender_ids').then(sender_ids => {
+        sender_ids = JSON.parse(sender_ids);
+        if (sender_ids && sender_ids.length) {
+            if (this.state.userChatHistory.length) {
+                const foundSender_id = this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) ?
+                    this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
+                    : "";
+                console.warn('sensers', sender_ids.some(item => item != foundSender_id))
+                this.setState({ showUnAuthorizedUserPopUp: sender_ids.some(item => item != foundSender_id) });
+            }
+        }
+        else {
+            this.setState({ showUnAuthorizedUserPopUp: true });
+        }
+    })
+
+    render() {
+        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
+        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
+        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp } = this.state;
         return (
             <Modal
                 animationType="slide"
@@ -311,6 +347,7 @@ class ChatModal extends React.Component {
 
 
 
+
                 {/* 
                     <ScrollView
                         keyboardShouldPersistTaps='handled'
@@ -379,6 +416,15 @@ class ChatModal extends React.Component {
                     </ScrollView>
  */}
 
+                {(userChatHistory.length && userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) &&
+                    !isSenderVerified && showUnAuthorizedUserPopUp) ? <View style={{ marginBottom: 55, marginTop: -65 }}>
+
+                        <ChatWithUnAuthorizedUserPopUp
+                            hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                        />
+                    </View>
+                    : null}
+
 
                 <View
                     style={{
@@ -438,6 +484,8 @@ const mapStateToProps = (state) => {
         userChatHistoryLoading: state.messagesReducer.userChatHistoryLoading,
         userChatHistory: state.messagesReducer.userChatHistory,
         loggedInUserId: state.authReducer.loggedInUserId,
+        isSenderVerified: state.messagesReducer.isSenderVerified,
+        userProfile: state.profileReducer.userProfile,
 
         contactsList: state.messagesReducer.contactsList,
         // profile_photo: state.messagesReducer.profile_photo,

@@ -11,6 +11,7 @@ const INITIAL_STATE = {
     userChatHistoryFailed: false,
     userChatHistoryError: false,
     userChatHistoryMessage: null,
+    isSenderVerified: false,
     userChatHistory: [],
 
 
@@ -87,6 +88,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 userChatHistory: [],
                 userChatHistoryLoading: true,
+                isSenderVerified: false,
                 userChatHistoryFailed: false,
                 userChatHistoryError: false,
                 userChatHistoryMessage: null
@@ -96,6 +98,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [...action.payload.messages],
+                isSenderVerified: action.payload.is_verified == 1 ? true : false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
                 userChatHistoryError: false,
@@ -106,6 +109,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [],
+                isSenderVerified: false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: true,
                 userChatHistoryError: false,
@@ -118,6 +122,7 @@ export default (state = INITIAL_STATE, action) => {
                 userChatHistory: [],
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
+                isSenderVerified: false,
                 userChatHistoryError: true,
                 userChatHistoryMessage: null
             };
