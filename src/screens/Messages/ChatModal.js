@@ -125,29 +125,36 @@ class ChatModal extends React.Component {
     }
 
 
-    hideUnAuthorizedUserChatPopUp = async () => {
-        let sender_ids = [];
-        let id = '';
-        if (this.state.userChatHistory.length) {
-            id = this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) ?
-                this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
-                : "";
-        }
-        if (id) {
-            sender_ids.push(id);
-            this.setState({ showUnAuthorizedUserPopUp: false });
-            return await AsyncStorage.setItem('@sender_ids', JSON.stringify(sender_ids));
-        }
+    hideUnAuthorizedUserChatPopUp = () => {
+
+        AsyncStorage.getItem('@sender_ids').then(async (sender_ids_from_storage) => {
+            let sender_ids = [];
+            if (sender_ids_from_storage) {
+                sender_ids = JSON.parse(sender_ids_from_storage);
+            }
+
+            let id = '';
+            if (this.state.userChatHistory.length) {
+                id = this.state.userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) ?
+                    this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
+                    : "";
+            }
+            if (id) {
+                sender_ids.push(id);
+                this.setState({ showUnAuthorizedUserPopUp: false });
+                return await AsyncStorage.setItem('@sender_ids', JSON.stringify(sender_ids));
+            }
+        });
     };
 
     fetchSenderIds = () => AsyncStorage.getItem('@sender_ids').then(sender_ids => {
         sender_ids = JSON.parse(sender_ids);
         if (sender_ids && sender_ids.length) {
             if (this.state.userChatHistory.length) {
-                const foundSender_id = this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId) ?
+                const foundSender_id = this.state.userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) ?
                     this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
                     : "";
-                this.setState({ showUnAuthorizedUserPopUp: sender_ids.some(item => item != foundSender_id) });
+                this.setState({ showUnAuthorizedUserPopUp: sender_ids.every(item => item != foundSender_id) });
             }
         }
         else {
