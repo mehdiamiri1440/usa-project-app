@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
 import { Button } from 'native-base';
@@ -17,7 +17,7 @@ import { formatter, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
-class ChatModal extends PureComponent {
+class ChatModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -90,6 +90,7 @@ class ChatModal extends PureComponent {
 
         if (messageText && messageText.length && messageText.trim()) {
             userChatHistory.push({ ...msgObject });
+
             this.setState({
                 userChatHistory: [...userChatHistory.slice(-10)].reverse(),
                 messageText: '',

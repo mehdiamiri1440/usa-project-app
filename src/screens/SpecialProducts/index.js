@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
+import ContentLoader, { Facebook } from 'react-content-loader/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
 
@@ -121,7 +122,7 @@ class SpecialProducts extends PureComponent {
         this.props.fetchAllSpecialProductsList(item).then(_ => {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -154,10 +155,8 @@ class SpecialProducts extends PureComponent {
 
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -232,7 +231,7 @@ class SpecialProducts extends PureComponent {
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
                 setTimeout(() => {
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
@@ -268,6 +267,51 @@ class SpecialProducts extends PureComponent {
 
     };
 
+
+    renderProductListEmptyComponent = _ => {
+
+        const { specialProductsListLoading } = this.props;
+
+        if (!specialProductsListLoading)
+            return (
+                <View style={{
+                    alignSelf: 'center', justifyContent: 'center',
+                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
+                }}>
+                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
+                        {locales('titles.noProductFound')}</Text>
+                    {
+                        !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
+                            <Button
+                                onPress={() => this.props.navigation.navigate('RegisterProduct')}
+
+                                style={styles.loginButton}>
+                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                    {locales('titles.registerNewProduct')}
+                                </Text>
+                            </Button>
+                        </View> : <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+
+                                    style={styles.loginButton}>
+                                    <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                        {locales('titles.registerBuyAdRequest')}
+                                    </Text>
+                                </Button>
+                            </View>}
+                </View>
+            )
+        if (!this.state.loaded || specialProductsListLoading) {
+            return (
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => <ContentLoader key={index} />)}
+                </View>
+            )
+        }
+        return null;
+    };
 
     render() {
         const {
@@ -511,7 +555,7 @@ class SpecialProducts extends PureComponent {
                                 onPress={() => !specialProductsListLoading && this.setState({ sort_by: item.value }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -605,7 +649,7 @@ class SpecialProducts extends PureComponent {
                                 onPress={() => !specialProductsListLoading && this.setState({ searchText: item.category_name }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
                                             this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
@@ -750,24 +794,7 @@ class SpecialProducts extends PureComponent {
                 <FlatList
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
-                    ListEmptyComponent={!specialProductsListLoading && <View style={{
-                        alignSelf: 'center', justifyContent: 'center',
-                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
-                    }}>
-                        <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
-                        <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterRequest')}
-
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                            </Button>
-                        </View>
-                    </View>
-                    }
+                    ListEmptyComponent={this.renderProductListEmptyComponent}
                     // getItemLayout={(data, index) => (
                     //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
                     // )}
