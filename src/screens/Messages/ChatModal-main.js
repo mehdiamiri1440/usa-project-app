@@ -1,23 +1,28 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
-import { Button } from 'native-base';
-import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
-import AsyncStorage from '@react-native-community/async-storage';
-
+import { Button, Toast } from 'native-base';
+import {
+    ToastAndroid,
+    View, Text, Modal, TouchableOpacity, Image, TextInput,
+    FlatList, ActivityIndicator
+} from 'react-native';
+import Clipboard from "@react-native-community/clipboard";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-
-import { deviceWidth } from '../../utils/deviceDimenssions';
-import Message from './Message';
+import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
+import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import messaging from '@react-native-firebase/messaging';
 import MessagesContext from './MessagesContext';
 import { formatter, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import AsyncStorage from '@react-native-community/async-storage';
 
-class ChatModal extends PureComponent {
+class ChatModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -155,27 +160,7 @@ class ChatModal extends PureComponent {
         else {
             this.setState({ showUnAuthorizedUserPopUp: true });
         }
-    });
-
-    onEndReached = _ => {
-
-        const { loaded, userChatHistory } = this.state;
-
-        if (loaded && userChatHistory.length >= 9)
-            this.setState({ msgCount: this.state.msgCount + 10 }, () => {
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-            })
-    };
-    keyExtractor = (_, index) => index.toString();
-
-    renderItem = ({ item, index, separators }) => {
-        return <Message
-            item={item}
-            contact={this.props.contact}
-            index={index}
-            separators={separators}
-        />;
-    }
+    })
 
     render() {
         let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
@@ -281,20 +266,161 @@ class ChatModal extends PureComponent {
 
 
                 <FlatList
+                    // refreshing={this.state.userChatHistory}
                     data={userChatHistory}
+                    getItemLayout={(data, index) => (
+                        { length: 40, offset: 40 * index, index }
+                    )}
                     inverted
-                    maxToRenderPerBatch={3}
-                    initialNumToRender={3}
-                    windowSize={10}
                     ref={this.scrollViewRef}
                     style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
                     extraData={this.state}
-                    onEndReached={this.onEndReached}
-                    onEndReachedThreshold={0.4}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
+                    onEndReached={() => {
+                        if (loaded && userChatHistory.length >= 9)
+                            this.setState({ msgCount: this.state.msgCount + 10, loaded: false }, () => {
+                                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                            })
+                    }}
+                    // pagingEnabled={true}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index, separators }) => (
+                        <View
+                            style={{
+                                width: deviceWidth,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                marginTop: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
+                                flex: 1,
+                                alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
+                            }}
+                            key={index}
+                        >
+                            <View
+                                style={{
+
+                                    elevation: 1,
+                                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9, paddingVertical: 3,
+                                    backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                                }}
+                            >
+                                <Text
+                                    selectionColor='gray'
+                                    suppressHighlighting
+                                    selectable
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString(item.text)
+                                    }}
+                                    style={{
+                                        zIndex: 999999,
+                                        textAlign: 'right',
+                                        fontSize: 16,
+                                        color: '#333333'
+                                    }}>
+                                    {item.text}
+                                </Text>
+                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
+                                    {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
+                                        style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                        name={item.is_read ? 'check-all' : 'check'} size={14}
+                                        color={item.is_read ? '#60CAF1' : '#617D8A'} /> :
+                                        <Feather name='clock' size={14} color='#617D8A'
+                                            style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                        />
+                                    )
+                                    }
+                                    <Text
+                                        style={{
+                                            color: '#333333',
+                                            fontSize: 12
+                                        }}>
+                                        {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+
+                    )}
                 />
 
+
+
+
+
+
+                {/* 
+                    <ScrollView
+                        keyboardShouldPersistTaps='handled'
+                        keyboardDismissMode='on-drag'
+                        onScroll={event => this.setState({ prevScrollPosition: event.nativeEvent.contentOffset.y })}
+                        onContentSizeChange={() => this.scrollViewRef.current.scrollToEnd({ animated: true })}
+                        ref={this.scrollViewRef}
+                        style={{ height: keyboardHeight == 0 ? deviceHeight * 0.87 : (deviceHeight * 0.87) - keyboardHeight }}
+                    >
+
+                        {
+                            userChatHistory.map((message, index, self) => (
+
+                                <View style={{
+                                    width: deviceWidth,
+                                    paddingHorizontal: 10,
+                                    marginTop: index == 0 ? 10 : 0,
+                                    marginBottom: index == self.length - 1 ? 50 : (index < self.length - 1 && self[index].receiver_id == self[index + 1].receiver_id ? 5 : 10),
+                                    flex: 1,
+                                    alignItems: id == message.receiver_id ? 'flex-end' : 'flex-start'
+                                }}
+                                    key={index}
+                                >
+                                    <View
+                                        style={{
+                                            shadowOffset: { width: 20, height: 20 },
+                                            shadowColor: 'black',
+                                            shadowOpacity: 1.0,
+                                            elevation: 5,
+                                            maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
+                                            backgroundColor: id == message.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                                        }}
+                                    >
+                                        <Text style={{
+                                            textAlign: 'right',
+                                            fontSize: 16,
+                                            color: '#333333'
+                                        }}>
+                                            {message.text}
+                                        </Text>
+                                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
+                                            {id == message.receiver_id && (message.created_at ? <MaterialCommunityIcons
+                                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                                name={message.is_read ? 'check-all' : 'check'} size={14}
+                                                color={message.is_read ? '#60CAF1' : '#617D8A'} /> :
+                                                <Feather name='clock' size={14} color='#617D8A'
+                                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                                />
+                                            )
+                                            }
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    color: '#333333',
+                                                    fontSize: 12
+                                                }}>
+                                                {Jmoment(message.created_at).format('jYY/jM/jD , hh:mm A ')}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+
+                            ))
+
+                        }
+                    </ScrollView>
+ */}
 
                 {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
                     !isSenderVerified && showUnAuthorizedUserPopUp) ? <View style={{ marginBottom: 55, marginTop: -65 }}>
