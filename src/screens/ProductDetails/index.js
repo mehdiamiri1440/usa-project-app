@@ -12,6 +12,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } f
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -543,27 +544,7 @@ class ProductDetails extends PureComponent {
                     closeModal={this.closeModal}
                 />
 
-                {(productDetailsInfoLoading || editProductLoading) ?
-                    <View style={{
-                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
-                        position: 'absolute',
 
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white',
-                    }}>
-                        <ActivityIndicator size="large"
-                            style={{
-                                position: 'absolute', left: '44%', top: '40%',
-
-                                elevation: 5,
-                                borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                            }}
-                            color="#00C569"
-
-                        />
-                    </View> : null}
 
 
                 {modalFlag ? <ChatModal
@@ -893,320 +874,424 @@ class ProductDetails extends PureComponent {
                     </View>
                 </View>
 
+                {(productDetailsInfoLoading || editProductLoading) ?
+                    <ScrollView style={{
 
-                <ScrollView
-                    ref={this.wrapper}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={!!this.props.productDetailsInfoLoading}
-                            onRefresh={() => this.componentDidMount()}
-                        />
-                    }>
-                    <View style={{
-                        backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
-                        elevation: 5,
+                        backgroundColor: '#f6f6f6',
                     }}>
-                        <ProductImages
-                            showFullSizeImage={this.showFullSizeImage}
-                            photosWithCompletePath={photosWithCompletePath}
-                        />
+                        <View>
+                            <ContentLoader
+                                speed={2}
+                                width={deviceWidth}
+                                height={400}
+                                viewBox="0 0 400 400"
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <Rect x="0" y="0" rx="2" ry="2" width="400" height="400" />
+                            </ContentLoader>
+                        </View>
 
-                        <View
-                            style={{
-                                flexDirection: 'row-reverse', alignItems: 'center',
-                                marginVertical: 30, width: deviceWidth, justifyContent: 'space-between',
-                                paddingHorizontal: 15
+                        <View style={{
+                            backgroundColor: '#fff',
+                            elevation: 2,
+
+                        }}>
+                            <View style={{
+                                paddingTop: 20,
+                                alignItems: 'center',
+
                             }}>
-                            <Text
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
-                                {product_name ? product_name : '---'}
-                            </Text>
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => this.shareProductLink(url)}
-                                    style={{
-                                        borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
-                                        flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
-                                    }}>
-                                    <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
-                                    <Text style={{
-                                        color: '#777777', fontSize: 14, marginLeft: 5
-                                    }}>
-                                        {locales('labels.share')}
-                                    </Text>
 
-                                </TouchableOpacity>
+                                <ContentLoader
+                                    speed={2}
+                                    width={deviceWidth}
+                                    height={124}
+                                    viewBox="0 0 410 124"
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <Rect x="174" y="1" rx="3" ry="3" width="221" height="30" />
+                                    <Rect x="232" y="56" rx="3" ry="3" width="163" height="47" />
+                                    <Rect x="15" y="55" rx="3" ry="3" width="122" height="47" />
+                                </ContentLoader>
+                            </View>
+                            <View style={{
+                                paddingTop: 20,
+                                alignItems: 'center',
+                                paddingBottom: 30
+                            }}>
+
+                                <ContentLoader
+                                    speed={2}
+                                    width={deviceWidth}
+                                    height={350}
+                                    viewBox="0 0 410 350"
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <Rect x="249" y="1" rx="3" ry="3" width="146" height="18" />
+                                    <Rect x="15" y="1" rx="3" ry="3" width="133" height="18" />
+                                    <Rect x="15" y="35" rx="3" ry="3" width="379" height="2" />
+                                    <Rect x="207" y="52" rx="3" ry="3" width="187" height="18" />
+                                    <Rect x="14" y="52" rx="3" ry="3" width="98" height="18" />
+                                    <Rect x="14" y="86" rx="3" ry="3" width="379" height="2" />
+                                    <Rect x="285" y="108" rx="3" ry="3" width="108" height="18" />
+                                    <Rect x="13" y="108" rx="3" ry="3" width="156" height="18" />
+                                    <Rect x="13" y="142" rx="3" ry="3" width="379" height="2" />
+                                    <Rect x="258" y="160" rx="3" ry="3" width="134" height="18" />
+                                    <Rect x="12" y="160" rx="3" ry="3" width="122" height="18" />
+                                    <Rect x="12" y="194" rx="3" ry="3" width="379" height="2" />
+                                    <Rect x="173" y="211" rx="3" ry="3" width="218" height="18" />
+                                    <Rect x="12" y="211" rx="3" ry="3" width="99" height="18" />
+                                    <Rect x="12" y="245" rx="3" ry="3" width="379" height="2" />
+                                    <Rect x="223" y="267" rx="3" ry="3" width="168" height="18" />
+                                    <Rect x="120" y="267" rx="3" ry="3" width="84" height="18" />
+                                    <Rect x="15" y="267" rx="3" ry="3" width="83" height="18" />
+                                    <Rect x="306" y="300" rx="3" ry="3" width="84" height="18" />
+                                    <Rect x="155" y="300" rx="3" ry="3" width="134" height="18" />
+                                    <Rect x="15" y="300" rx="3" ry="3" width="121" height="18" />
+                                    <Rect x="307" y="330" rx="3" ry="3" width="84" height="18" />
+                                    <Rect x="202" y="331" rx="3" ry="3" width="84" height="18" />
+                                    <Rect x="15" y="330" rx="3" ry="3" width="156" height="18" />
+                                </ContentLoader>
+                            </View>
+                        </View>
+                        <View style={{
+                            marginTop: 30,
+                            backgroundColor: '#fff',
+                            paddingVertical: 30,
+                            elevation: 2
+                        }}>
+                            <ContentLoader
+                                speed={2}
+                                width={deviceWidth}
+                                height={325}
+                                viewBox="0 0 476 325"
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <Circle cx="237" cy="65" r="60" />
+                                <Rect x="141" y="137" rx="3" ry="3" width="185" height="20" />
+                                <Rect x="132" y="168" rx="3" ry="3" width="208" height="31" />
+                                <Rect x="25" y="225" rx="3" ry="3" width="423" height="43" />
+                                <Rect x="24" y="280" rx="3" ry="3" width="423" height="43" />
+                            </ContentLoader>
+                        </View>
+                    </ScrollView> :
+                    <ScrollView
+                        ref={this.wrapper}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={!!this.props.productDetailsInfoLoading}
+                                onRefresh={() => this.componentDidMount()}
+                            />
+                        }>
+                        <View style={{
+                            backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
+                            elevation: 5,
+                        }}>
+                            <ProductImages
+                                showFullSizeImage={this.showFullSizeImage}
+                                photosWithCompletePath={photosWithCompletePath}
+                            />
+
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse', alignItems: 'center',
+                                    marginVertical: 30, width: deviceWidth, justifyContent: 'space-between',
+                                    paddingHorizontal: 15
+                                }}>
+                                <Text
+                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
+                                    {product_name ? product_name : '---'}
+                                </Text>
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() => this.shareProductLink(url)}
+                                        style={{
+                                            borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
+                                            flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                        <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
+                                        <Text style={{
+                                            color: '#777777', fontSize: 14, marginLeft: 5
+                                        }}>
+                                            {locales('labels.share')}
+                                        </Text>
+
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center',
+                                width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
+
+                            }}>
+                                {userId == loggedInUserId ? <View style={{
+                                    flexDirection: 'row', justifyContent: 'space-around',
+                                    flex: 1
+                                    // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
+                                }}>
+                                    <Button
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            borderRadius: 5,
+                                            marginLeft: !is_elevated ? 5 : 0,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            width: !!is_elevated ? '45%' : '55%',
+                                            paddingRight: 40,
+                                            backgroundColor: '#E41C38'
+                                        }}
+                                    >
+                                        <Text
+                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                            style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                            {locales('titles.elevateProduct')}</Text>
+                                        <FontAwesome5
+                                            name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    </Button>
+                                    <Button
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            borderRadius: 5,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            width: '40%',
+                                            paddingRight: 15,
+                                            backgroundColor: '#000546'
+                                        }}
+                                    >
+                                        <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
+                                        <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
+                                    </Button>
+                                </View> :
+
+                                    <Button
+                                        onPress={() => {
+                                            if (this.props.route.params.productId)
+                                                analytics().logEvent('open_chat', {
+                                                    product_id: this.props.route.params.productId
+                                                });
+                                            this.setState({ modalFlag: true })
+                                        }}
+                                        style={[styles.loginButton, {
+                                            paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
+                                            maxWidth: 160,
+                                            margin: 0
+                                            // width: !!is_elevated ? '50%' : '46%'
+                                        }]}
+                                    >
+                                        <View style={[styles.textCenterView, styles.buttonText]}>
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                                <FontAwesome name='envelope' size={20} />
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                {locales('titles.achiveSaleStatus')}
+                                            </Text>
+                                        </View>
+
+                                    </Button>
+                                }
+                                {is_elevated ? <FontAwesome5
+                                    onPress={() => Toast.show({
+                                        text: locales('titles.elevatorHasAdded'),
+                                        position: "bottom",
+                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                                        duration: 3000
+                                    })} name='chart-line' size={25} color='white'
+                                    style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 10, elevation: 1 }} />
+                                    : null
+                                }
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                borderBottomWidth: 0.7, paddingVertical: 5,
+                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                justifyContent: 'space-between', paddingHorizontal: 10
+                            }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                    {locales('titles.category')}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{category_name}</Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                borderBottomWidth: 0.7, paddingVertical: 5,
+                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                justifyContent: 'space-between', paddingHorizontal: 10
+                            }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                    {locales('titles.province/city')}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{`${province_name || '---'}-${city_name || '==='}`}</Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                borderBottomWidth: 0.7, paddingVertical: 5,
+                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                justifyContent: 'space-between', paddingHorizontal: 10
+                            }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                    {locales('titles.stockQuantity')}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}</Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                borderBottomWidth: 0.7, paddingVertical: 5,
+                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                justifyContent: 'space-between', paddingHorizontal: 10
+                            }}>
+                                <Text style={{
+                                    color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20
+                                }}>
+                                    {locales('titles.minOrder')}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(min_sale_amount)} {locales('labels.kiloGram')}</Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                borderBottomWidth: 0.7, paddingVertical: 5,
+                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                justifyContent: 'space-between', paddingHorizontal: 10
+                            }}>
+                                <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                    {locales('titles.price')}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{locales('titles.achiveThePrice')}</Text>
+                            </View>
+
+                            <View
+
+                                style={{
+                                    paddingVertical: 5,
+                                    marginVertical: 10, width: deviceWidth * 0.97,
+                                    paddingHorizontal: 10
+                                }}>
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                    {locales('titles.headerDescription')}
+                                </Text>
+                                <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
                             </View>
                         </View>
 
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center',
-                            width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
-
-                        }}>
-                            {userId == loggedInUserId ? <View style={{
-                                flexDirection: 'row', justifyContent: 'space-around',
-                                flex: 1
-                                // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
-                            }}>
-                                <Button
-                                    style={{
-                                        color: 'white',
-                                        fontSize: 18,
-                                        borderRadius: 5,
-                                        marginLeft: !is_elevated ? 5 : 0,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        width: !!is_elevated ? '45%' : '55%',
-                                        paddingRight: 40,
-                                        backgroundColor: '#E41C38'
-                                    }}
-                                >
-                                    <Text
-                                        onPress={() => this.setState({ elevatorFlag: true })}
-                                        style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                        {locales('titles.elevateProduct')}</Text>
-                                    <FontAwesome5
-                                        name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
-                                </Button>
-                                <Button
-                                    style={{
-                                        color: 'white',
-                                        fontSize: 18,
-                                        borderRadius: 5,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        width: '40%',
-                                        paddingRight: 15,
-                                        backgroundColor: '#000546'
-                                    }}
-                                >
-                                    <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                    <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
-                                </Button>
-                            </View> :
-
-                                <Button
-                                    onPress={() => {
-                                        if (this.props.route.params.productId)
-                                            analytics().logEvent('open_chat', {
-                                                product_id: this.props.route.params.productId
-                                            });
-                                        this.setState({ modalFlag: true })
-                                    }}
-                                    style={[styles.loginButton, {
-                                        paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
-                                        maxWidth: 160,
-                                        margin: 0
-                                        // width: !!is_elevated ? '50%' : '46%'
-                                    }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                            <FontAwesome name='envelope' size={20} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                            {locales('titles.achiveSaleStatus')}
-                                        </Text>
-                                    </View>
-
-                                </Button>
-                            }
-                            {is_elevated ? <FontAwesome5
-                                onPress={() => Toast.show({
-                                    text: locales('titles.elevatorHasAdded'),
-                                    position: "bottom",
-                                    style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                                    duration: 3000
-                                })} name='chart-line' size={25} color='white'
-                                style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 10, elevation: 1 }} />
-                                : null
-                            }
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                            borderBottomWidth: 0.7, paddingVertical: 5,
-                            marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
-                            justifyContent: 'space-between', paddingHorizontal: 10
-                        }}>
-                            <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
-                                {locales('titles.category')}
-                            </Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{category_name}</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                            borderBottomWidth: 0.7, paddingVertical: 5,
-                            marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
-                            justifyContent: 'space-between', paddingHorizontal: 10
-                        }}>
-                            <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
-                                {locales('titles.province/city')}
-                            </Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{`${province_name || '---'}-${city_name || '==='}`}</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                            borderBottomWidth: 0.7, paddingVertical: 5,
-                            marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
-                            justifyContent: 'space-between', paddingHorizontal: 10
-                        }}>
-                            <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
-                                {locales('titles.stockQuantity')}
-                            </Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                            borderBottomWidth: 0.7, paddingVertical: 5,
-                            marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
-                            justifyContent: 'space-between', paddingHorizontal: 10
-                        }}>
-                            <Text style={{
-                                color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20
-                            }}>
-                                {locales('titles.minOrder')}
-                            </Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(min_sale_amount)} {locales('labels.kiloGram')}</Text>
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                            borderBottomWidth: 0.7, paddingVertical: 5,
-                            marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
-                            justifyContent: 'space-between', paddingHorizontal: 10
-                        }}>
-                            <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
-                                {locales('titles.price')}
-                            </Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{locales('titles.achiveThePrice')}</Text>
-                        </View>
-
-                        <View
-
-                            style={{
-                                paddingVertical: 5,
-                                marginVertical: 10, width: deviceWidth * 0.97,
-                                paddingHorizontal: 10
-                            }}>
-                            <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
-                                {locales('titles.headerDescription')}
-                            </Text>
-                            <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
-                        </View>
-                    </View>
-
-                    <View style={{ marginVertical: 30 }}>
-                        <Card>
-                            <CardItem style={{ borderWidth: active_pakage_type == 3 ? 1 : 0, borderColor: '#00C569' }}>
-                                <Body>
-                                    <View style={{ width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
-                                        <Image
-                                            style={{ width: deviceWidth * 0.35, height: deviceWidth * 0.35, borderRadius: deviceWidth * 0.175 }}
-                                            source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
-                                                : require('../../../assets/icons/user.png')}
-                                        />
-                                        {active_pakage_type == 3 ? <Image source={require('../../../assets/icons/valid_user.png')}
-                                            style={{ bottom: 18, left: 3 }} /> : null}
-                                    </View>
-                                    <View
-                                        style={{
-                                            top: active_pakage_type == 3 ? -20 : 0,
-                                            width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center'
-                                        }}>
-                                        <Text style={{
-                                            color: '#777777', textAlign: 'center', width: '100%',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16
-                                        }}>
-                                            {locales('labels.seller')}
-                                        </Text>
-
-                                        <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
-                                            <Text style={{
-                                                textAlign: 'center', marginHorizontal: 5,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 20
-                                            }}>
-                                                {`${first_name} ${last_name}`}
-                                            </Text>
-                                            {is_verified ? <ValidatedUserIcon /> : null}
-                                        </View>
-
-                                        {active_pakage_type == 3 ? <Text style={{
-                                            color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18
-                                        }}>
-                                            {locales('labels.confirmedUser')}
-                                        </Text> : null}
-
-                                        {response_rate > 0 ? <Text style={{
-                                            textAlign: 'center', width: '100%',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#777777'
-                                        }}>
-                                            {locales('labels.responseRate')} <Text style={{ color: 'red' }}>%{response_rate}</Text>
-                                        </Text> : null}
-                                    </View>
-                                    <Button
-                                        onPress={() => {
-                                            this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })
-                                        }}
-                                        style={[styles.loginButton, {
-                                            borderWidth: 1, borderColor: '#00C569',
-                                            backgroundColor: 'white', alignSelf: 'center'
-                                        }]}
-                                    >
-                                        <Text style={[styles.buttonText, { fontSize: 16, color: '#00C569' }]}>
-                                            {locales('titles.seeProfile')}</Text>
-                                    </Button>
-                                    <Button
-                                        onPress={() => {
-                                            if (userId == loggedInUserId) {
-                                                this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
-                                            }
-                                            else {
-                                                if (this.props.route.params.productId)
-                                                    analytics().logEvent('open_chat', {
-                                                        product_id: this.props.route.params.productId
-                                                    });
-                                                this.setState({ modalFlag: true })
-                                            }
-                                        }
-                                        }
-                                        style={[styles.loginButton, {
-                                            alignSelf: 'center'
-                                        }]}
-                                    >
-
-                                        <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
-                                            {loggedInUserId == userId ? locales('titles.editProfile') : locales('titles.sendMessage')}</Text>
-                                    </Button>
-                                </Body>
-                            </CardItem>
-                        </Card>
-
-                        <View style={{ marginTop: 15 }}>
+                        <View style={{ marginVertical: 30 }}>
                             <Card>
-                                <CardItem>
+                                <CardItem style={{ borderWidth: active_pakage_type == 3 ? 1 : 0, borderColor: '#00C569' }}>
                                     <Body>
-                                        <Text
+                                        <View style={{ width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
+                                            <Image
+                                                style={{ width: deviceWidth * 0.35, height: deviceWidth * 0.35, borderRadius: deviceWidth * 0.175 }}
+                                                source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                                    : require('../../../assets/icons/user.png')}
+                                            />
+                                            {active_pakage_type == 3 ? <Image source={require('../../../assets/icons/valid_user.png')}
+                                                style={{ bottom: 18, left: 3 }} /> : null}
+                                        </View>
+                                        <View
+                                            style={{
+                                                top: active_pakage_type == 3 ? -20 : 0,
+                                                width: deviceWidth, alignItems: 'center', justifyContent: 'center', alignSelf: 'center'
+                                            }}>
+                                            <Text style={{
+                                                color: '#777777', textAlign: 'center', width: '100%',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16
+                                            }}>
+                                                {locales('labels.seller')}
+                                            </Text>
+
+                                            <View style={{ flexDirection: 'row-reverse', width: '100%', justifyContent: 'center' }}>
+                                                <Text style={{
+                                                    textAlign: 'center', marginHorizontal: 5,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 20
+                                                }}>
+                                                    {`${first_name} ${last_name}`}
+                                                </Text>
+                                                {is_verified ? <ValidatedUserIcon /> : null}
+                                            </View>
+
+                                            {active_pakage_type == 3 ? <Text style={{
+                                                color: '#00C569', textAlign: 'center', width: '100%', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18
+                                            }}>
+                                                {locales('labels.confirmedUser')}
+                                            </Text> : null}
+
+                                            {response_rate > 0 ? <Text style={{
+                                                textAlign: 'center', width: '100%',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, color: '#777777'
+                                            }}>
+                                                {locales('labels.responseRate')} <Text style={{ color: 'red' }}>%{response_rate}</Text>
+                                            </Text> : null}
+                                        </View>
+                                        <Button
                                             onPress={() => {
-                                                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
-                                                    if (supported) {
-                                                        Linking.openURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`);
-                                                    }
-                                                });
+                                                this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })
                                             }}
-                                            style={{ color: '#777777', textAlign: 'center', fontSize: 16 }}>
-                                            {locales('labels.buskoolSmallTerms')} <Text style={{ color: '#00C569' }}>{locales('labels.safeShop')}</Text> , {locales('labels.dealEasier')}
-                                        </Text>
+                                            style={[styles.loginButton, {
+                                                borderWidth: 1, borderColor: '#00C569',
+                                                backgroundColor: 'white', alignSelf: 'center'
+                                            }]}
+                                        >
+                                            <Text style={[styles.buttonText, { fontSize: 16, color: '#00C569' }]}>
+                                                {locales('titles.seeProfile')}</Text>
+                                        </Button>
+                                        <Button
+                                            onPress={() => {
+                                                if (userId == loggedInUserId) {
+                                                    this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })
+                                                }
+                                                else {
+                                                    if (this.props.route.params.productId)
+                                                        analytics().logEvent('open_chat', {
+                                                            product_id: this.props.route.params.productId
+                                                        });
+                                                    this.setState({ modalFlag: true })
+                                                }
+                                            }
+                                            }
+                                            style={[styles.loginButton, {
+                                                alignSelf: 'center'
+                                            }]}
+                                        >
+
+                                            <Text style={[styles.buttonText, { fontSize: 16, color: '#fff' }]}>
+                                                {loggedInUserId == userId ? locales('titles.editProfile') : locales('titles.sendMessage')}</Text>
+                                        </Button>
                                     </Body>
                                 </CardItem>
                             </Card>
-                        </View>
 
-                    </View>
-                    {/* <View >
+                            <View style={{ marginTop: 15 }}>
+                                <Card>
+                                    <CardItem>
+                                        <Body>
+                                            <Text
+                                                onPress={() => {
+                                                    return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
+                                                        if (supported) {
+                                                            Linking.openURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`);
+                                                        }
+                                                    });
+                                                }}
+                                                style={{ color: '#777777', textAlign: 'center', fontSize: 16 }}>
+                                                {locales('labels.buskoolSmallTerms')} <Text style={{ color: '#00C569' }}>{locales('labels.safeShop')}</Text> , {locales('labels.dealEasier')}
+                                            </Text>
+                                        </Body>
+                                    </CardItem>
+                                </Card>
+                            </View>
+
+                        </View>
+                        {/* <View >
                         <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
                             <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
                             <View
@@ -1232,8 +1317,8 @@ class ProductDetails extends PureComponent {
                         />
                     </View> */}
 
-                </ScrollView>
-
+                    </ScrollView>
+                }
                 {!this.props.productDetailsInfoLoading && userId != loggedInUserId ? <View style={{
                     backgroundColor: '#fff',
                     width: '100%',

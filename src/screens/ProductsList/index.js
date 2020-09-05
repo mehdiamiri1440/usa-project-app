@@ -325,7 +325,7 @@ class ProductsList extends PureComponent {
         if (!this.state.loaded || productsListLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) =>
+                    {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
                         <View style={{
                             borderRadius: 5,
@@ -333,14 +333,15 @@ class ProductsList extends PureComponent {
                             borderColor: '#eee',
                             paddingBottom: 10,
                             marginBottom: 15
+
                         }}>
                             <ContentLoader
                                 speed={2}
                                 width={deviceWidth}
                                 height={deviceHeight * 0.3}
                                 viewBox="0 0 500 263"
-                                backgroundColor="#eee"
-                                foregroundColor="#ccc"
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
 
                             >
 

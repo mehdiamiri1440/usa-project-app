@@ -580,8 +580,8 @@ class Requests extends PureComponent {
                                         width={deviceWidth}
                                         height={deviceHeight * 0.24}
                                         viewBox="0 0 340 152"
-                                        backgroundColor="#eee"
-                                        foregroundColor="#ccc"
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
                                     >
                                         <Rect x="105" y="-1" rx="3" ry="3" width="140" height="18" />
                                         <Rect x="155" y="75" rx="3" ry="3" width="53" height="15" />
@@ -592,16 +592,6 @@ class Requests extends PureComponent {
                                         <Rect x="21" y="112" rx="3" ry="3" width="301" height="39" />
                                     </ContentLoader>
                                 </View>)
-
-
-
-                            // <View style={{
-                            //     alignSelf: 'center', justifyContent: 'center',
-                            //     alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                            // }}>
-                            //     <Entypo name='list' size={80} color='#BEBEBE' />
-                            //     <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
-                            // </View> 
                             : <View style={{
                                 alignSelf: 'center', justifyContent: 'center',
                                 alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
