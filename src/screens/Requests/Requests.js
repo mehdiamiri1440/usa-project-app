@@ -579,6 +579,7 @@ class Requests extends PureComponent {
                                         speed={2}
                                         width={deviceWidth}
                                         height={deviceHeight * 0.24}
+                                        viewBox="0 0 340 152"
                                         backgroundColor="#eee"
                                         foregroundColor="#ccc"
                                     >
