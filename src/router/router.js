@@ -87,7 +87,7 @@ const App = (props) => {
 
   const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
-  let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
+  // let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
   let unsubscribe;
 
@@ -255,22 +255,22 @@ const App = (props) => {
 
                       messaging().getInitialNotification(() => {
                         messaging().setBackgroundMessageHandler(async remoteMessage => {
-                          try {
-                            await setBackgroundIncomingMessage(true)
-                          }
-                          catch (err) {
-                          }
+                          // try {
+                          //   await setBackgroundIncomingMessage(true)
+                          // }
+                          // catch (err) {
+                          // }
                         })
                       });
 
 
-                      unsubscribe = messaging().onMessage(async remoteMessage => {
-                        if (remoteMessage) {
-                          console.log('datea', remoteMessage)
-                          props.newMessageReceived(true)
-                          setInitialRoute('Messages')
-                        }
-                      });
+                      // unsubscribe = messaging().onMessage(async remoteMessage => {
+                      //   if (remoteMessage) {
+                      //     console.log('datea', remoteMessage)
+                      //     props.newMessageReceived(true)
+                      //     setInitialRoute('Messages')
+                      //   }
+                      // });
                     })
 
                 }
@@ -293,7 +293,7 @@ const App = (props) => {
     return () => {
       isReadyRef.current = false
       Linking.removeEventListener('url', handleIncomingEvent)
-      return unsubscribe
+      // return unsubscribe
     }
 
   }, [initialRoute, is_seller]);
@@ -1195,7 +1195,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-    newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
+    // newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
     changeRole: _ => dispatch(authActions.changeRole()),
   }
 }
