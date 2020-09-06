@@ -11,6 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as profileActions from '../../redux/profile/actions';
@@ -566,16 +567,35 @@ class Requests extends PureComponent {
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => !!buyAdRequestLoading ? <View style={{
-                            alignSelf: 'center', justifyContent: 'center',
-                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                        }}>
-                            <Entypo name='list' size={80} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
-                        </View> : <View style={{
-                            alignSelf: 'center', justifyContent: 'center',
-                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                        }}>
+                        ListEmptyComponent={() => !!buyAdRequestLoading ?
+                            [1, 2, 3, 4, 5, 6, 7, 8].map((_, index) =>
+                                <View style={{
+                                    backgroundColor: '#fff',
+                                    paddingVertical: 25,
+                                    borderBottomWidth: 2,
+                                    borderBottomColor: '#aaa'
+                                }}>
+                                    <ContentLoader
+                                        speed={2}
+                                        width={deviceWidth}
+                                        height={deviceHeight * 0.24}
+                                        viewBox="0 0 340 152"
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                    >
+                                        <Rect x="105" y="-1" rx="3" ry="3" width="140" height="18" />
+                                        <Rect x="155" y="75" rx="3" ry="3" width="53" height="15" />
+                                        <Rect x="215" y="75" rx="3" ry="3" width="72" height="15" />
+                                        <Rect x="46" y="75" rx="3" ry="3" width="100" height="15" />
+                                        <Rect x="11" y="38" rx="3" ry="3" width="140" height="16" />
+                                        <Rect x="159" y="38" rx="3" ry="3" width="173" height="16" />
+                                        <Rect x="21" y="112" rx="3" ry="3" width="301" height="39" />
+                                    </ContentLoader>
+                                </View>)
+                            : <View style={{
+                                alignSelf: 'center', justifyContent: 'center',
+                                alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                            }}>
                                 <Entypo name='list' size={80} color='#BEBEBE' />
                                 <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
                             </View>
