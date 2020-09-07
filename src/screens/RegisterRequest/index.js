@@ -359,7 +359,9 @@ class RegisterRequest extends Component {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                     textDecorationLine: 'none',
                                                     fontSize: 14,
-                                                    height: 45
+                                                    height: 45,
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
                                                 }}
                                                 onChangeText={this.onProductTypeSubmit}
                                                 value={productType}
@@ -392,7 +394,9 @@ class RegisterRequest extends Component {
                                                     flexDirection: 'row',
                                                     textDecorationLine: 'none',
                                                     fontSize: 14,
-                                                    height: 45
+                                                    height: 45,
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
                                                 }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}

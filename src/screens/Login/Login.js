@@ -141,7 +141,9 @@ class Login extends React.Component {
                                             fontSize: 16,
                                             height: 50,
                                             backgroundColor: '#fff',
-                                            padding: 3
+                                            padding: 3,
+                                            direction: 'ltr',
+                                            textAlign: 'left'
                                         }}
                                         onChangeText={this.onMobileNumberSubmit}
                                         value={mobileNumber}

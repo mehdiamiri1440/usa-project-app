@@ -179,7 +179,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onAmountSubmit}
                             value={amount}
@@ -224,7 +226,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onMinimumOrderSubmit}
                             value={minimumOrder}
@@ -267,7 +271,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onMinimumPriceSubmit}
                             value={minimumPrice}
@@ -310,7 +316,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
 
                             }}
                             onChangeText={this.onMaximumPriceSubmit}
