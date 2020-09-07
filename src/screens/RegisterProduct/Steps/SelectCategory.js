@@ -223,7 +223,16 @@ class SelectCategory extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
-                    <Item regular style={{
+
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => onChangeText(text)}
+                        value={value}
+                        placeholder={locales('titles.productTypeWithExample')}
+
+                    />
+
+                    {/* <Item regular style={{
                         borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
                     }}>
                         <Input
@@ -243,7 +252,7 @@ class SelectCategory extends Component {
                             placeholder={locales('titles.productTypeWithExample')}
                             ref={this.productTypeRef}
                         />
-                    </Item>
+                    </Item> */}
                     {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
 
                 </View>
