@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 
@@ -223,6 +223,8 @@ class SelectCategory extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
+
+
                     <Item regular style={{
                         borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
                     }}>
@@ -235,7 +237,9 @@ class SelectCategory extends Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 height: 45,
-                                backgroundColor: '#fff'
+                                backgroundColor: '#fff',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onProductTypeSubmit}
                             value={productType}
@@ -368,6 +372,27 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCategory);
 
 
+
+
+
+
+// import React, { Component } from 'react';
+// import { TextInput } from 'react-native';
+
+// const UselessTextInput = () => {
+//     const [value, onChangeText] = React.useState('سبشسیب');
+
+//     return (
+//         <TextInput
+//             style={{ height: 40, borderColor: 'gray', borderWidth: 1, direction: 'rtl', textAlign: 'right' }}
+//             onChangeText={text => onChangeText(text)}
+//             placeholder={value}
+
+//         />
+//     );
+// }
+
+// export default UselessTextInput;
 
 
 
