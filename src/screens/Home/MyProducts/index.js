@@ -95,14 +95,15 @@ class MyProducts extends Component {
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
-                        <View style={{
-                            borderRadius: 5,
-                            borderWidth: 2,
-                            borderColor: '#eee',
-                            paddingBottom: 10,
-                            marginBottom: 15
-
-                        }}>
+                        <View
+                            key={index}
+                            style={{
+                                borderRadius: 5,
+                                borderWidth: 2,
+                                borderColor: '#eee',
+                                paddingBottom: 10,
+                                marginBottom: 15
+                            }}>
                             <ContentLoader
                                 speed={2}
                                 width={deviceWidth}
