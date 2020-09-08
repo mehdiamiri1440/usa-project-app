@@ -43,16 +43,16 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    messaging().getInitialNotification(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
-    messaging().onNotificationOpenedApp(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
+    // messaging().getInitialNotification(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
+    // messaging().onNotificationOpenedApp(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
 
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
+    // messaging().setBackgroundMessageHandler(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
     // if (I18nManager.isRTL) {
     //   I18nManager.forceRTL(false);
     //   I18nManager.allowRTL(false);

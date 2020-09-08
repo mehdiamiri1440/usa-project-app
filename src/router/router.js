@@ -75,6 +75,75 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 
+export const routeToScreensFromNotifications = (remoteMessage, props) => {
+  console.warn('ert', props)
+  const { userProfile = {}, message } = props;
+  const { user_info = {} } = userProfile;
+  let { is_seller } = user_info;
+  is_seller = is_seller == 0 ? false : true;
+
+  switch (remoteMessage.data.BTarget) {
+    case 'messages': {
+      return navigationRef.current.navigate('Messages');
+    }
+    case 'myProducts': {
+      if (is_seller) {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'dashboard': {
+      if (is_seller) {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'registerProduct': {
+      if (is_seller) {
+        return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'registerBuyAd': {
+      if (!is_seller) {
+        return navigationRef.current.navigate('RegisterRequest');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'specialProducts': {
+      if (!is_seller) {
+        return navigationRef.current.navigate('SpecialProducts');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'productList': {
+      return navigationRef.current.navigate('Home');
+    }
+    case 'myBuskool': {
+      return navigationRef.current.navigate('MyBuskool');
+    }
+    case 'buyAds': {
+      if (is_seller) {
+        return navigationRef.current.navigate('Requests');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    default:
+      return navigationRef.current.navigate('Home');
+  }
+}
 
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
@@ -87,74 +156,11 @@ const App = (props) => {
 
   const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
-  let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
+  // let [backgroundIncomingMessage, setBackgroundIncomingMessage] = useState(false);
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
   let unsubscribe;
 
-  const routeToScreensFromNotifications = remoteMessage => {
 
-    switch (remoteMessage.data.BTarget) {
-      case 'messages': {
-        return navigationRef.current.navigate('Messages');
-      }
-      case 'myProducts': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'dashboard': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'registerProduct': {
-        if (is_seller) {
-          return navigationRef.current.navigate('RegisterProductStack');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'registerBuyAd': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('RegisterRequest');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'specialProducts': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('SpecialProducts');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'productList': {
-        return navigationRef.current.navigate('Home');
-      }
-      case 'myBuskool': {
-        return navigationRef.current.navigate('MyBuskool');
-      }
-      case 'buyAds': {
-        if (is_seller) {
-          return navigationRef.current.navigate('Requests');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      default:
-        return navigationRef.current.navigate('Home');
-    }
-  }
   useEffect(() => {
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
@@ -233,19 +239,19 @@ const App = (props) => {
                 if (enabled) {
                   messaging().onNotificationOpenedApp(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   })
                   messaging().getInitialNotification(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   });
                   messaging().setBackgroundMessageHandler(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   });
@@ -255,21 +261,12 @@ const App = (props) => {
 
                       messaging().getInitialNotification(() => {
                         messaging().setBackgroundMessageHandler(async remoteMessage => {
-                          try {
-                            await setBackgroundIncomingMessage(true)
-                          }
-                          catch (err) {
-                          }
+                          // try {
+                          //   await setBackgroundIncomingMessage(true)
+                          // }
+                          // catch (err) {
+                          // }
                         })
-                      });
-
-
-                      unsubscribe = messaging().onMessage(async remoteMessage => {
-                        if (remoteMessage) {
-                          console.log('datea', remoteMessage)
-                          props.newMessageReceived(true)
-                          setInitialRoute('Messages')
-                        }
                       });
                     })
 
@@ -293,7 +290,7 @@ const App = (props) => {
     return () => {
       isReadyRef.current = false
       Linking.removeEventListener('url', handleIncomingEvent)
-      return unsubscribe
+      // return unsubscribe
     }
 
   }, [initialRoute, is_seller]);
@@ -1195,7 +1192,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-    newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
+    // newMessageReceived: message => dispatch(messagesActions.newMessageReceived(message)),
     changeRole: _ => dispatch(authActions.changeRole()),
   }
 }

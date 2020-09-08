@@ -364,7 +364,7 @@ const router = forwardRef((props, innerRef) => {
                 />
             </View> :
             <Tab.Navigator
-                initialRouteName={props.isFromOutSide ? 'Messages' : initialRoute
+                initialRouteName={props.newMessage ? 'Messages' : initialRoute
                 }
                 shifting={false}
                 activeColor="#00C569"
@@ -447,8 +447,7 @@ const router = forwardRef((props, innerRef) => {
                 <Tab.Screen
                     key='Messages'
                     options={{
-                        tabBarBadge: false,
-                        // tabBarBadge:  props.totalUnreadMessages > 0 ? true : false,
+                        tabBarBadge: props.newMessage ? true : false,
                         tabBarLabel: locales('labels.messages'),
                         tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                     }}
@@ -498,7 +497,7 @@ const mapStateToProps = (state) => {
         changeRoleObject,
         changeRoleLoading,
         productDetailsId: state.productsListReducer.productDetailsId,
-
+        newMessage: state.messagesReducer.newMessage
         // totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
         // totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
     }

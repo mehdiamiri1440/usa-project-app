@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import analytics from '@react-native-firebase/analytics';
+import messaging from '@react-native-firebase/messaging';
 import { Card, CardItem, Body, Icon, InputGroup, Input } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
@@ -17,7 +18,7 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import Contact from './Contact';
 
-
+let unsubscribe;
 class ContactsList extends React.Component {
     constructor(props) {
         super(props);
@@ -44,38 +45,68 @@ class ContactsList extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('messages')
-        this.props.isFromOutSide(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to)
+        // this.props.emptyMessage(false)
+        this.props.fetchAllContactsList(this.state.from, this.state.to);
+
+        unsubscribe = messaging().getInitialNotification(async remoteMessage => {
+            console.log('message reciev from fcm in contacts list when it was init', remoteMessage)
+            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+        });
+        unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+            console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
+            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+        });
+
+        unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
+            console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
+            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+        });
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage) {
+                console.log('message reciev from fcm in contacts list', remoteMessage)
+                this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+            }
+        });
         // .catch(_ => this.setState({ showModal: true }));
     }
 
     componentDidUpdate(prevProps, prevState) {
-
+        console.warn('wear1111', prevState.loaded)
         if (prevState.loaded == false && this.props.contactsList.length) {
+            console.warn('wear', prevState.loaded)
             this.setState({ contactsList: this.props.contactsList, loaded: true })
         }
 
-
-        if (this.props.message || this.props.messageFromOutSide) {
-            this.props.newMessageReceived(false)
-            this.props.isFromOutSide(false)
-            setTimeout(() => {
-                this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
-                    this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
-                    })
-                })
-                // .catch(_ => this.setState({ showModal: true }))
-            }, 10);
-        }
+        // if (this.props.newMessage) {
+        //     this.props.newMessageReceived(false)
+        //     // this.props.isFromOutSide(false)
+        //     setTimeout(() => {
+        //         this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
+        //             this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
+        //             })
+        //         })
+        //         // .catch(_ => this.setState({ showModal: true }))
+        //     }, 10);
+        // }
     }
 
 
-    setNewContactsList = contactsList => {
-        if (contactsList && contactsList.length) {
-            this.setState({ contactsList })
-        }
-    };
+    componentWillUnmount() {
+        return unsubscribe;
+    }
 
+    // setNewContactsList = contactsList => {
+    //     if (contactsList && contactsList.length) {
+    //         this.setState({ contactsList })
+    //     }
+    // };
+
+    setUnreadMessages = id => {
+        let contactsList = this.state.contactsList;
+        const foundIndex = contactsList.findIndex(item => item.contact_id == id);
+        contactsList[foundIndex].unread_msgs_count = 0;
+        this.setState({ contactsList })
+    };
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
@@ -84,22 +115,11 @@ class ContactsList extends React.Component {
         });
     }
 
-    setcontactsListUpdated = contactsListUpdated => this.setState({ contactsListUpdated });
-
-    fetchMoreContacts = () => {
-        this.setState({ from: this.state.to, to: this.state.to + 10 }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to).then(result => {
-                this.setState({ contactsList: [...this.state.contactsList, ...this.props.contactsList] });
-            })
-            // .catch(_ => this.setState({ showModal: true }));
-        })
-    };
-
+    // setcontactsListUpdated = contactsListUpdated => this.setState({ contactsListUpdated });
 
     handleSearch = text => {
         const { contactsList } = this.props;
         this.setState(state => {
-            contactsList.filter(item => (`${item.first_name} ${item.last_name}`).includes(text))
             state.searchText = text;
             state.isSearched = true;
             if (text) {
@@ -198,156 +218,65 @@ class ContactsList extends React.Component {
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
-                    setcontactsListUpdated={this.setcontactsListUpdated}
+                    setUnreadMessages={this.setUnreadMessages}
+                    // setcontactsListUpdated={this.setcontactsListUpdated}
                     visible={modalFlag}
-                    contactsListUpdated={contactsListUpdated}
+                    // contactsListUpdated={contactsListUpdated}
                     contact={selectedContact}
                     onRequestClose={this.closeChatModal}
                 /> : null}
-
+                {/* 
                 <MessagesContext.Provider
                     value={this.setNewContactsList}
                     style={{ paddingBottom: 200, marginBottom: 200 }}
-                >
-                    <>
-                        <Card>
-                            <CardItem >
-                                <Body >
-                                    <FlatList
-                                        ListEmptyComponent={() => contactsListLoading ? <View></View> : searchText ?
-                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
-                                                <AntDesign size={135} name='contacts' color='#BEBEBE' />
-                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
-                                            </View> :
-                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Entypo size={135} name='message' color='#BEBEBE' />
-                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
-                                            </View>
-                                        }
-                                        ref={this.props.contactsListRef}
-                                        refreshing={((!!contactsListLoading))}
-                                        onRefresh={() => {
-                                            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
-                                                this.setState({ loaded: false })
-                                            })
-                                            // .catch(_ => this.setState({ showModal: true }))
-                                        }
-                                        }
-                                        keyExtractor={item => item.contact_id.toString()}
-                                        keyboardShouldPersistTaps='handled'
-                                        keyboardDismissMode='on-drag'
-                                        showsVerticalScrollIndicator={false}
-                                        // getItemLayout={(data, index) => (
-                                        //     { length: 100, offset: 100 * index, index }
-                                        // )}
-                                        // onEndReachedThreshold={0.3}
-                                        // onEndReached={this.fetchMoreContacts}
-                                        style={{ width: '100%', height: deviceHeight * 1 }}
-                                        contentContainerStyle={{ paddingBottom: 220 }}
-                                        data={contactsList}
-                                        renderItem={({ item, index }) => <Contact
-                                            item={item}
-                                            setModalFlag={this.setModalFlag}
-                                            setSelectedContact={this.setSelectedContact}
-                                            index={index}
-                                            setSearchText={this.setSearchText}
-                                            contactsList={contactsList}
-                                            {...this.props}
-                                        />
-                                        }
-                                    />
-                                </Body>
-                            </CardItem>
-                        </Card>
-                    </>
-                    {/* <ScrollView
-                        keyboardShouldPersistTaps='handled'
-                        keyboardDismissMode='on-drag'
-                        style={{ paddingHorizontal: 5, height: deviceHeight * 0.78 }}>
-
-                        {modalFlag ? <ChatModal
-                            transparent={false}
-                            setcontactsListUpdated={this.setcontactsListUpdated}
-                            visible={modalFlag}
-                            contactsListUpdated={contactsListUpdated}
-                            contact={selectedContact}
-                            onRequestClose={this.closeChatModal}
-                        /> : null}
-
-                        <Card style={{ minHeight: deviceHeight * 0.77 }}>
-                            <CardItem>
-                                <Body>
-                                    {
-                                        contactsList && contactsList.map((contact, index) => (
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
-                                                key={contact.contact_id}
-                                                style={{
-                                                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                                                    flexDirection: 'row-reverse', width: '100%',
-                                                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
-                                                }}
-                                            >
-
-                                                <Image
-                                                    style={{
-                                                        borderRadius: deviceWidth * 0.06,
-                                                        width: deviceWidth * 0.12, height: deviceWidth * 0.12
-                                                    }}
-                                                    source={contact.profile_photo ?
-                                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${contact.profile_photo}` }
-                                                        : require('../../../assets/icons/user.png')}
-                                                />
-
-                                                <View>
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                                            {`${contact.first_name} ${contact.last_name}`}
-                                                        </Text>
-                                                        <Text style={{ color: '#666666' }}>
-                                                            {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
-                                                        </Text>
-                                                    </View>
-
-
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
-                                                            {contact.last_msg.last_msg_text}
-                                                        </Text>
-                                                        {contact.unread_msgs_count > 0 && <Text style={{
-                                                            color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
-                                                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
-                                                        }}>
-                                                            {contact.unread_msgs_count}
-                                                        </Text>}
-                                                    </View>
-
-                                                </View>
-
-
-                                            </TouchableOpacity>
-                                     
-                                     ))
+                > */}
+                <>
+                    <Card>
+                        <CardItem >
+                            <Body >
+                                <FlatList
+                                    ListEmptyComponent={() => contactsListLoading ? <View></View> : searchText ?
+                                        <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                                            <AntDesign size={135} name='contacts' color='#BEBEBE' />
+                                            <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
+                                        </View> :
+                                        <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Entypo size={135} name='message' color='#BEBEBE' />
+                                            <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
+                                        </View>
                                     }
-                                </Body>
-                            </CardItem>
-                        </Card>
-
-                    </ScrollView>
-               */}
-                </MessagesContext.Provider>
+                                    ref={this.props.contactsListRef}
+                                    refreshing={!!contactsListLoading}
+                                    onRefresh={() => {
+                                        this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
+                                            this.setState({ loaded: false })
+                                        })
+                                        // .catch(_ => this.setState({ showModal: true }))
+                                    }
+                                    }
+                                    keyExtractor={item => item.contact_id.toString()}
+                                    keyboardShouldPersistTaps='handled'
+                                    keyboardDismissMode='on-drag'
+                                    showsVerticalScrollIndicator={false}
+                                    style={{ width: '100%', height: deviceHeight * 1 }}
+                                    contentContainerStyle={{ paddingBottom: 220 }}
+                                    data={contactsList}
+                                    renderItem={({ item, index }) => <Contact
+                                        item={item}
+                                        setModalFlag={this.setModalFlag}
+                                        setSelectedContact={this.setSelectedContact}
+                                        index={index}
+                                        setSearchText={this.setSearchText}
+                                        contactsList={contactsList}
+                                        {...this.props}
+                                    />
+                                    }
+                                />
+                            </Body>
+                        </CardItem>
+                    </Card>
+                </>
+                {/* </MessagesContext.Provider> */}
             </View >
         )
     }
@@ -361,8 +290,8 @@ const mapStateToProps = (state) => {
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
 
-        message: state.messagesReducer.message,
-        messageFromOutSide: state.messagesReducer.messageFromOutSide,
+        // newMessage: state.messagesReducer.newMessage,
+        // messageFromOutSide: state.messagesReducer.messageFromOutSide,
 
     }
 }
@@ -370,8 +299,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
-        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
-        isFromOutSide: (message) => dispatch(messagesActions.isFromOutSide(message)),
+        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        // emptyMessage: (message) => dispatch(messagesActions.emptyMessage(message)),
 
     }
 };

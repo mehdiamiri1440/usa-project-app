@@ -54,22 +54,22 @@ class ChatModal extends React.Component {
                 //     }, 1000)
             })
         }
-        if (this.props.message || this.props.contactsListUpdated) {
-            this.props.newMessageReceived(false)
-            this.props.setcontactsListUpdated(false);
-            setTimeout(() => {
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.fetchSenderIds()
-                    this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
-                        // if (!this.state.isFirstLoad)
-                        //     setTimeout(() => {
-                        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-                        //     }, 1000)
-                    })
-                })
-            }, 10);
-            console.warn('reached', this.props.message)
-        }
+        // if (this.props.newMessage || this.props.contactsListUpdated) {
+        //     this.props.newMessageReceived(false)
+        //     this.props.setcontactsListUpdated(false);
+        //     setTimeout(() => {
+        //         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
+        //             this.fetchSenderIds()
+        //             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
+        //                 // if (!this.state.isFirstLoad)
+        //                 //     setTimeout(() => {
+        //                 //         this.scrollViewRef.current.scrollToEnd({ animated: true });
+        //                 //     }, 1000)
+        //             })
+        //         })
+        //     }, 10);
+        //     console.warn('reached', this.props.newMessage)
+        // }
     }
 
 
@@ -496,7 +496,7 @@ const mapStateToProps = (state) => {
         contactsList: state.messagesReducer.contactsList,
         // profile_photo: state.messagesReducer.profile_photo,
 
-        message: state.messagesReducer.message
+        newMessage: state.messagesReducer.newMessage
     }
 };
 
@@ -504,7 +504,7 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
-        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))

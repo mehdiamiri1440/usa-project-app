@@ -34,7 +34,7 @@ const INITIAL_STATE = {
     totalUnreadMessages: {},
 
     messageFromOutSide: false,
-    message: false
+    newMessage: false
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -259,14 +259,14 @@ export default (state = INITIAL_STATE, action) => {
             console.log('werewr', action)
             return {
                 ...state,
-                message: action.message
+                newMessage: action.message
             }
         }
 
         case actionTypes.EMPTY_MESSAGE_RECEIVED: {
             return {
                 ...state,
-                message: {}
+                newMessage: false
             }
         }
         case actionTypes.IS_FROM_OUTSIDE: {

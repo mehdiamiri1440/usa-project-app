@@ -4,6 +4,7 @@ import Jmoment from 'moment-jalaali';
 import { Button } from 'native-base';
 import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -17,6 +18,7 @@ import { formatter, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
+let unsubscribe;
 class ChatModal extends Component {
     constructor(props) {
         super(props);
@@ -36,8 +38,30 @@ class ChatModal extends Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+
+        // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        // unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when notification opend app', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+
+        // unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when app was in background', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage) {
+                console.log('message reciev from fcm in chat list', remoteMessage)
+                this.pushNewMessageToChatList(remoteMessage);
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+            }
+        });
     }
+
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
@@ -49,29 +73,53 @@ class ChatModal extends Component {
                 //     }, 1000)
             })
         }
-        if (this.props.message || this.props.contactsListUpdated) {
-            this.props.newMessageReceived(false)
-            this.props.setcontactsListUpdated(false);
-            setTimeout(() => {
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.fetchSenderIds()
-                    this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
-                        // if (!this.state.isFirstLoad)
-                        //     setTimeout(() => {
-                        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-                        //     }, 1000)
-                    })
-                })
-            }, 10);
-            console.warn('reached', this.props.message)
-        }
+        // if (this.props.newMessage || this.props.contactsListUpdated) {
+        //     console.warn('re')
+        //     // this.props.newMessageReceived(false)
+        //     // this.props.setcontactsListUpdated(false);
+        //     setTimeout(() => {
+        //         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
+        //             this.fetchSenderIds()
+        //             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
+        //                 // if (!this.state.isFirstLoad)
+        //                 //     setTimeout(() => {
+        //                 //         this.scrollViewRef.current.scrollToEnd({ animated: true });
+        //                 //     }, 1000)
+        //             })
+        //         })
+        //     }, 10);
+        //     console.warn('reached', this.props.newMessage)
+        // }
     }
 
 
     componentWillUnmount() {
         Jmoment.locale('fa');
-        this.props.fetchAllContactsList();
+        unsubscribe;
+        return this.props.setUnreadMessages(this.props.contact.contact_id)
     }
+
+
+    pushNewMessageToChatList = (remoteMessage) => {
+        const text = remoteMessage.notification.body;
+        let userChatHistory = this.state.userChatHistory;
+
+        const message = {
+            sender_id: this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id,
+            receiver_id: this.props.loggedInUserId,
+            text,
+            is_read: 1
+        };
+
+        userChatHistory.unshift(message);
+
+        this.setState({ userChatHistory }, () => {
+            AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
+            console.log('this.tst', this.state.userChatHistory)
+        }
+        )
+    };
+
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })
@@ -108,12 +156,13 @@ class ChatModal extends Component {
                             this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
                         }, 200);
                 }, 10);
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.setState(state => {
-                        state.loaded = false;
-                        return '';
+                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                    .then(() => {
+                        this.setState(state => {
+                            state.loaded = false;
+                            return '';
+                        })
                     })
-                })
             });
 
         }
@@ -324,7 +373,7 @@ class ChatModal extends Component {
                         }} />
 
                     <Button
-                        disabled={!!userChatHistoryLoading}
+                        // disabled={!!userChatHistoryLoading}
                         onPress={this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
@@ -339,6 +388,7 @@ class ChatModal extends Component {
                     >
                         <MaterialCommunityIcons name='send' size={25} color='white' />
                     </Button>
+
                     <TextInput
                         value={messageText}
                         onChangeText={this.handleMessageTextChange}
@@ -371,7 +421,7 @@ const mapStateToProps = (state) => {
         contactsList: state.messagesReducer.contactsList,
         // profile_photo: state.messagesReducer.profile_photo,
 
-        message: state.messagesReducer.message
+        // newMessage: state.messagesReducer.newMessage
     }
 };
 
@@ -379,7 +429,7 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
-        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
