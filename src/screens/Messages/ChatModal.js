@@ -18,6 +18,7 @@ import { formatter, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
+let unsubscribe;
 class ChatModal extends Component {
     constructor(props) {
         super(props);
@@ -37,22 +38,22 @@ class ChatModal extends Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
 
-        messaging().getInitialNotification(async remoteMessage => {
-            console.log('message reciev from fcm in chat list when it was init', remoteMessage)
-            this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        });
-        messaging().onNotificationOpenedApp(async remoteMessage => {
-            console.log('message reciev from fcm in chat list when notification opend app', remoteMessage)
-            this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        });
+        // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        // unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when notification opend app', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
 
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('message reciev from fcm in chat list when app was in background', remoteMessage)
-            this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        });
-        messaging().onMessage(async remoteMessage => {
+        // unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when app was in background', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        unsubscribe = messaging().onMessage(async remoteMessage => {
             if (remoteMessage) {
                 console.log('message reciev from fcm in chat list', remoteMessage)
                 this.pushNewMessageToChatList(remoteMessage);
@@ -61,24 +62,6 @@ class ChatModal extends Component {
         });
     }
 
-    pushNewMessageToChatList = (remoteMessage) => {
-        const text = remoteMessage.notification.body;
-        let userChatHistory = this.state.userChatHistory;
-
-        const message = {
-            sender_id: this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id,
-            receiver_id: this.props.loggedInUserId,
-            text
-        };
-
-        userChatHistory.unshift(message);
-
-        this.setState({ userChatHistory }, () => {
-            AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
-            console.log('this.tst', this.state.userChatHistory)
-        }
-        )
-    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
@@ -112,8 +95,31 @@ class ChatModal extends Component {
 
     componentWillUnmount() {
         Jmoment.locale('fa');
-        this.props.fetchAllContactsList();
+        unsubscribe;
+        return this.props.setUnreadMessages(this.props.contact.contact_id)
     }
+
+
+    pushNewMessageToChatList = (remoteMessage) => {
+        const text = remoteMessage.notification.body;
+        let userChatHistory = this.state.userChatHistory;
+
+        const message = {
+            sender_id: this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id,
+            receiver_id: this.props.loggedInUserId,
+            text,
+            is_read: 1
+        };
+
+        userChatHistory.unshift(message);
+
+        this.setState({ userChatHistory }, () => {
+            AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
+            console.log('this.tst', this.state.userChatHistory)
+        }
+        )
+    };
+
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })

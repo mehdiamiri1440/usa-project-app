@@ -18,7 +18,7 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import Contact from './Contact';
 
-
+let unsubscribe;
 class ContactsList extends React.Component {
     constructor(props) {
         super(props);
@@ -48,20 +48,20 @@ class ContactsList extends React.Component {
         // this.props.emptyMessage(false)
         this.props.fetchAllContactsList(this.state.from, this.state.to);
 
-        messaging().getInitialNotification(async remoteMessage => {
+        unsubscribe = messaging().getInitialNotification(async remoteMessage => {
             console.log('message reciev from fcm in contacts list when it was init', remoteMessage)
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
         });
-        messaging().onNotificationOpenedApp(async remoteMessage => {
+        unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
             console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
         });
 
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
+        unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
             console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
         });
-        messaging().onMessage(async remoteMessage => {
+        unsubscribe = messaging().onMessage(async remoteMessage => {
             if (remoteMessage) {
                 console.log('message reciev from fcm in contacts list', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
@@ -91,12 +91,22 @@ class ContactsList extends React.Component {
     }
 
 
+    componentWillUnmount() {
+        return unsubscribe;
+    }
+
     // setNewContactsList = contactsList => {
     //     if (contactsList && contactsList.length) {
     //         this.setState({ contactsList })
     //     }
     // };
 
+    setUnreadMessages = id => {
+        let contactsList = this.state.contactsList;
+        const foundIndex = contactsList.findIndex(item => item.contact_id == id);
+        contactsList[foundIndex].unread_msgs_count = 0;
+        this.setState({ contactsList })
+    };
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
@@ -208,6 +218,7 @@ class ContactsList extends React.Component {
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
+                    setUnreadMessages={this.setUnreadMessages}
                     // setcontactsListUpdated={this.setcontactsListUpdated}
                     visible={modalFlag}
                     // contactsListUpdated={contactsListUpdated}
