@@ -30,7 +30,7 @@ class Settings extends React.Component {
         if (name == 'SignOut') {
             this.setState({ loading: true })
             messaging()
-                .subscribeToTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
+                .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
                     this.props.logOut();
                 })
         }

@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import { YellowBox } from 'react-native';
 
 import App from './App';
+import configureStore from './src/redux/configureStore';
 import { routeToScreensFromNotifications } from './src/router/router';
 import { name as appName } from './app.json';
 
@@ -19,7 +20,12 @@ AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => firebaseBa
 AppRegistry.registerComponent(appName, () => App);
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    setTimeout(() => {
-        routeToScreensFromNotifications(remoteMessage);
-    }, 1000);
+    const store = configureStore();
+    store.subscribe(() => {
+        Promise.resolve(store.getState().profileReducer).then(result => {
+            setTimeout(() => {
+                routeToScreensFromNotifications(remoteMessage, result);
+            }, 1000);
+        })
+    })
 })

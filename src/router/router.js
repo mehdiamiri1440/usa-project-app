@@ -75,7 +75,13 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 
-export const routeToScreensFromNotifications = remoteMessage => {
+export const routeToScreensFromNotifications = (remoteMessage, props) => {
+  console.warn('ert', props)
+  const { userProfile = {}, message } = props;
+  const { user_info = {} } = userProfile;
+  let { is_seller } = user_info;
+  is_seller = is_seller == 0 ? false : true;
+
   switch (remoteMessage.data.BTarget) {
     case 'messages': {
       return navigationRef.current.navigate('Messages');
@@ -233,19 +239,19 @@ const App = (props) => {
                 if (enabled) {
                   messaging().onNotificationOpenedApp(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   })
                   messaging().getInitialNotification(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   });
                   messaging().setBackgroundMessageHandler(async remoteMessage => {
                     if (remoteMessage.data.BTarget)
-                      routeToScreensFromNotifications(remoteMessage);
+                      routeToScreensFromNotifications(remoteMessage, props);
                     else
                       setInitialRoute('Messages')
                   });
