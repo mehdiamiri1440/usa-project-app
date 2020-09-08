@@ -75,6 +75,69 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 
+export const routeToScreensFromNotifications = remoteMessage => {
+  switch (remoteMessage.data.BTarget) {
+    case 'messages': {
+      return navigationRef.current.navigate('Messages');
+    }
+    case 'myProducts': {
+      if (is_seller) {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'dashboard': {
+      if (is_seller) {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'registerProduct': {
+      if (is_seller) {
+        return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'registerBuyAd': {
+      if (!is_seller) {
+        return navigationRef.current.navigate('RegisterRequest');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'specialProducts': {
+      if (!is_seller) {
+        return navigationRef.current.navigate('SpecialProducts');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    case 'productList': {
+      return navigationRef.current.navigate('Home');
+    }
+    case 'myBuskool': {
+      return navigationRef.current.navigate('MyBuskool');
+    }
+    case 'buyAds': {
+      if (is_seller) {
+        return navigationRef.current.navigate('Requests');
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
+    default:
+      return navigationRef.current.navigate('Home');
+  }
+}
 
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
@@ -91,70 +154,7 @@ const App = (props) => {
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
   let unsubscribe;
 
-  const routeToScreensFromNotifications = remoteMessage => {
 
-    switch (remoteMessage.data.BTarget) {
-      case 'messages': {
-        return navigationRef.current.navigate('Messages');
-      }
-      case 'myProducts': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'dashboard': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'registerProduct': {
-        if (is_seller) {
-          return navigationRef.current.navigate('RegisterProductStack');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'registerBuyAd': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('RegisterRequest');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'specialProducts': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('SpecialProducts');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      case 'productList': {
-        return navigationRef.current.navigate('Home');
-      }
-      case 'myBuskool': {
-        return navigationRef.current.navigate('MyBuskool');
-      }
-      case 'buyAds': {
-        if (is_seller) {
-          return navigationRef.current.navigate('Requests');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
-        }
-      }
-      default:
-        return navigationRef.current.navigate('Home');
-    }
-  }
   useEffect(() => {
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
@@ -262,15 +262,6 @@ const App = (props) => {
                           // }
                         })
                       });
-
-
-                      // unsubscribe = messaging().onMessage(async remoteMessage => {
-                      //   if (remoteMessage) {
-                      //     console.log('datea', remoteMessage)
-                      //     props.newMessageReceived(true)
-                      //     setInitialRoute('Messages')
-                      //   }
-                      // });
                     })
 
                 }
