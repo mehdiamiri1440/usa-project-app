@@ -142,8 +142,6 @@ export default {
     "labels.extraProductDescription": 'تعداد ظرفیت اضافی برای ثبت محصول را انتخاب کنید سپس دکمه افزایش ظرفیت را بزنید.',
     "labels.extraBuyAdDescription": 'تعداد اضافی ظرفیت پاسخ های روزانه به درخواست های خرید را انتخاب کنید و دکمه افزایش ظرفیت را بزنید.',
     "labels.changeRole": 'برای مشاهده اطلاعات مربوط به این اعلان، نوع کابری خود را به {fieldName} تغییر دهید.',
-    "labels.changeRole": '',
-    "labels.changeRole": '',
 
 
     "titles.buskool": "باسکول",
