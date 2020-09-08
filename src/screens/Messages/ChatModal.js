@@ -4,6 +4,7 @@ import Jmoment from 'moment-jalaali';
 import { Button } from 'native-base';
 import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -112,12 +113,18 @@ class ChatModal extends Component {
         };
 
         userChatHistory.unshift(message);
+        Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`,
+            {
+                msg_count: this.state.msgCount,
+                user_id: this.props.contact.contact_id
+            }).then(_ => {
 
-        this.setState({ userChatHistory }, () => {
-            AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
-            console.log('this.tst', this.state.userChatHistory)
-        }
-        )
+                this.setState({ userChatHistory }, () => {
+                    AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
+                    console.log('this.tst', this.state.userChatHistory)
+                }
+                )
+            })
     };
 
 

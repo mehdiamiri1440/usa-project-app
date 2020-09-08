@@ -148,7 +148,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
-  // console.disableYellowBox = true;
+  console.disableYellowBox = true;
   const { userProfile = {}, message } = props;
   const { user_info = {} } = userProfile;
   let { is_seller } = user_info;
