@@ -569,13 +569,15 @@ class Requests extends PureComponent {
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={() => !!buyAdRequestLoading ?
                             [1, 2, 3, 4, 5].map((_, index) =>
-                                <View style={{
-                                    backgroundColor: '#fff',
-                                    paddingTop: 25,
-                                    paddingBottom: 10,
-                                    borderBottomWidth: 2,
-                                    borderBottomColor: '#ddd'
-                                }}>
+                                <View
+                                    key={index}
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        paddingTop: 25,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 2,
+                                        borderBottomColor: '#ddd'
+                                    }}>
                                     <ContentLoader
                                         speed={2}
                                         width={deviceWidth}

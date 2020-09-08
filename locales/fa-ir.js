@@ -120,6 +120,7 @@ export default {
     'labels.product': 'محصول',
     'labels.searchContacts': 'جستجوی مخاطب',
     'labels.request': 'درخواست',
+    'labels.requestsBlurDate': '۱۳ تیر , ۱۳۰۴',
     'labels.requests': 'درخواست‌ها',
     'labels.noChatFound': 'هیچ مکالمه‌ای وجود ندارد',
     'labels.relatedPhotos': 'عکس‌های مرتبط',
