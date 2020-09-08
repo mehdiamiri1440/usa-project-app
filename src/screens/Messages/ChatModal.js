@@ -97,7 +97,6 @@ class ChatModal extends Component {
     componentWillUnmount() {
         Jmoment.locale('fa');
         unsubscribe;
-        return this.props.setUnreadMessages(this.props.contact.contact_id)
     }
 
 

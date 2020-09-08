@@ -103,12 +103,6 @@ class ContactsList extends React.Component {
     //     }
     // };
 
-    setUnreadMessages = id => {
-        let contactsList = this.state.contactsList;
-        const foundIndex = contactsList.findIndex(item => item.contact_id == id);
-        contactsList[foundIndex].unread_msgs_count = 0;
-        this.setState({ contactsList })
-    };
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
@@ -220,7 +214,6 @@ class ContactsList extends React.Component {
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
-                    setUnreadMessages={this.setUnreadMessages}
                     // setcontactsListUpdated={this.setcontactsListUpdated}
                     visible={modalFlag}
                     // contactsListUpdated={contactsListUpdated}
