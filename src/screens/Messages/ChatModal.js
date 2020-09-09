@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
 import moment from 'moment';
 import { Button } from 'native-base';
-import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
