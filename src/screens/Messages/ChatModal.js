@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
+import moment from 'moment';
 import { Button } from 'native-base';
-import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
@@ -95,8 +96,6 @@ class ChatModal extends Component {
 
 
     componentWillUnmount() {
-        Jmoment.locale('fa');
-        unsubscribe;
     }
 
 
@@ -105,7 +104,7 @@ class ChatModal extends Component {
         let userChatHistory = this.state.userChatHistory;
 
         const message = {
-            sender_id: this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id,
+            sender_id: this.props.contact.contact_id,
             receiver_id: this.props.loggedInUserId,
             text,
             is_read: 1
@@ -132,19 +131,18 @@ class ChatModal extends Component {
     }
 
     sendMessage = () => {
-
         let { messageText } = this.state;
         let userChatHistory = [...this.state.userChatHistory].reverse();
-
         let msgObject = {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(this.props.contact.contact_id),
-            text: formatter.toStandard(messageText)
+            text: formatter.toStandard(messageText),
+            created_at: moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
         }
 
         if (messageText && messageText.length && messageText.trim()) {
             userChatHistory.push({ ...msgObject });
-
+            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
             this.setState({
                 userChatHistory: [...userChatHistory.slice(-10)].reverse(),
                 messageText: '',
@@ -162,13 +160,13 @@ class ChatModal extends Component {
                             this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
                         }, 200);
                 }, 10);
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                    .then(() => {
-                        this.setState(state => {
-                            state.loaded = false;
-                            return '';
-                        })
-                    })
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                //     .then(() => {
+                //         this.setState(state => {
+                //             state.loaded = false;
+                //             return '';
+                //         })
+                //     })
             });
 
         }
