@@ -43,33 +43,36 @@ class ContactsList extends React.Component {
 
     serachInputRef = React.createRef();
     contactsListRef = React.createRef();
-
+    isComponentMounted = false;
 
     componentDidMount() {
-        analytics().logEvent('messages')
-        // this.props.emptyMessage(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to);
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            analytics().logEvent('messages')
+            // this.props.emptyMessage(false)
+            this.props.fetchAllContactsList(this.state.from, this.state.to);
 
-        unsubscribe = messaging().getInitialNotification(async remoteMessage => {
-            console.log('message reciev from fcm in contacts list when it was init', remoteMessage)
-            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
-        });
-        unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
-            console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
-            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
-        });
-
-        unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
-            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
-        });
-        unsubscribe = messaging().onMessage(async remoteMessage => {
-            if (remoteMessage) {
-                console.log('message reciev from fcm in contacts list', remoteMessage)
+            unsubscribe = messaging().getInitialNotification(async remoteMessage => {
+                console.log('message reciev from fcm in contacts list when it was init', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
-            }
-        });
-        // .catch(_ => this.setState({ showModal: true }));
+            });
+            unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+                console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
+                this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+            });
+
+            unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
+                console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
+                this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+            });
+            unsubscribe = messaging().onMessage(async remoteMessage => {
+                if (remoteMessage) {
+                    console.log('message reciev from fcm in contacts list', remoteMessage)
+                    this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
+                }
+            });
+            // .catch(_ => this.setState({ showModal: true }));
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -94,6 +97,7 @@ class ContactsList extends React.Component {
 
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
         return unsubscribe;
     }
 
