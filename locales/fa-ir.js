@@ -333,6 +333,23 @@ export default {
     'titles.supportEmail': 'ایمیل پشتیبانی :‌support@buskool.com',
     'titles.supportUserEmail': 'ایمیل شخصی مدیر فنی :‌ ali_delkhosh@ymail.com',
 
+    "titles.referralTitle": "اعتبار دعوت از دوستان",
+    "titles.referralGift": "هدیه بگیر",
+    "titles.referralMainTitle": " با دعوت هر دوست به باسکول",
+    "titles.referralSecondMainTitle": "25 هزار",
+    "titles.referralThirdMainTitle": "تومان دوستت هدیه میگیره",
+    "titles.referralMainContents": "با دعوت هر دوست به باسکولبا دعوت هر دوست به باسکولبا دعوت هر دوست به باسکولبا دعوت هر",
+    "titles.referralButton": "معرفی به دوستان",
+    "titles.referralShareLink": "لینک دعوت",
+    "titles.referralShareButton": "اشتراک گذاری",
+    "titles.copy": "کپی",
+    "titles.whatsapp": "واتساپ",
+    "titles.instagram": "اینستاگرام",
+    "titles.telegram": "تلگرام",
+    "titles.sms": "پیامک",
+
+
+
     "messages.signedUpUser": ".لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",

@@ -22,6 +22,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 import * as RootNavigation from '../../router/rootNavigation';
 
+import Referral from './Referral'
 
 let role = false
 
@@ -238,6 +239,12 @@ class Home extends React.Component {
                     ref={this.props.homeRef}
                     style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
 
+
+                    <View style={{
+                        paddingHorizontal: 20
+                    }}>
+                        <Referral />
+                    </View>
 
                     {homeRoutes.map((route, index) => {
 
