@@ -333,6 +333,7 @@ export default {
     'titles.supportEmail': 'ایمیل پشتیبانی :‌support@buskool.com',
     'titles.supportUserEmail': 'ایمیل شخصی مدیر فنی :‌ ali_delkhosh@ymail.com',
 
+    "titles.referralListTitle": "وضعیت دوستان",
     "titles.referralTitle": "اعتبار دعوت از دوستان",
     "titles.referralGift": "هدیه بگیر",
     "titles.referralMainTitle": " با دعوت هر دوست به باسکول",
