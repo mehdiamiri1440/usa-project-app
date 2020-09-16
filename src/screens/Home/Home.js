@@ -30,7 +30,7 @@ let homeRoutes = [
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
-    { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'Refferral' },
+    { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
@@ -241,6 +241,8 @@ class Home extends React.Component {
 
 
                     <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Referral')
+                        }
                         style={{
                             alignContent: 'center',
                             backgroundColor: 'white',
@@ -263,16 +265,16 @@ class Home extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 16
                             }}>
-                                با دعوت هر دوست به باسکول
-                                </Text>
+                                {locales('titles.referralMainTitle')}
+                            </Text>
                             <Text
                                 style={{
                                     color: '#777',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     fontSize: 13
                                 }}>
-                                یه مشت متن خوب و با اجساس برای القای مشتری به ریفرال یه مشت متن خوب و با اجساس برای القای مشتری
-                                </Text>
+                                {locales('titles.referralMainContents')}
+                            </Text>
                         </View>
                         <View
                             style={{ width: 130, }}
@@ -305,8 +307,8 @@ class Home extends React.Component {
 
                                     }}
                                 >
-                                    دعوت از دوستان
-                                    </Text>
+                                    {locales('titles.referralButton')}
+                                </Text>
                                 <Ionicons color="#fff" size={20} name='ios-arrow-back' />
 
                             </Button>
