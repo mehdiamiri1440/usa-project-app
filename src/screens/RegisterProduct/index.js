@@ -15,6 +15,7 @@ import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
 import NoConnection from '../../components/noConnectionError';
+import PaymentModal from '../../components/paymentModal';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -22,6 +23,7 @@ class RegisterProduct extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            paymentModalVisibility: false,
             product: {
                 product_name: "",
                 stock: "",
@@ -230,6 +232,7 @@ class RegisterProduct extends React.Component {
             return this.props.addNewProduct(formData).then(_ => {
                 analytics().logEvent('register_product_successfully');
                 this.setState({
+                    paymentModalVisibility: true,
                     productType: '',
                     category: '',
                     detailsArray: '',
@@ -314,10 +317,17 @@ class RegisterProduct extends React.Component {
     }
 
     render() {
-        let { stepNumber, successfullAlert } = this.state;
+        let { stepNumber, successfullAlert, paymentModalVisibility } = this.state;
 
         return (
             <>
+
+                <PaymentModal
+                    {...this.props}
+                    routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
+                    onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
+                    visible={paymentModalVisibility}
+                />
 
                 {(!!this.props.addNewProductLoading) ?
                     <View style={{
