@@ -97,6 +97,7 @@ const PaymentModal = props => {
             </View>
 
             <ScrollView
+                contentContainerStyle={{ backgroundColor: '#F6F6F6' }}
                 ref={wrapperRef}
                 style={{
                     paddingVertical: 30,
@@ -104,67 +105,6 @@ const PaymentModal = props => {
                 }}
             >
 
-                <Card transparent>
-                    <View style={{
-                        backgroundColor: '#fff',
-                        overflow: 'hidden',
-                        borderRadius: 5,
-                        // marginTop: 15,
-                        paddingTop: 15,
-                        marginBottom: 30,
-                        elevation: 2
-                    }}>
-                        <Text style={{
-                            color: '#333',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 18,
-                            textAlign: 'center',
-                            textAlignVertical: 'center',
-                            marginVertical: 7
-                        }}>
-                            {locales('titles.promoteDescriptionTitle')}
-
-                        </Text>
-                        <Text style={{
-                            color: '#777',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 15,
-                            textAlign: 'center',
-                            textAlignVertical: 'center',
-                            marginVertical: 7,
-                            paddingHorizontal: 15
-                        }}>
-                            <Text style={{
-                                width: '100%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-
-                            }}>
-                                {locales('titles.promoteDescriptionTextFirst')}
-
-                            </Text>
-                            <Text style={{
-                                color: 'red'
-                            }}>
-                                {locales('titles.promoteDescriptionTextSecend')}
-                            </Text>
-                            {locales('titles.promoteDescriptionTextThird')}
-                            <Text style={{
-                                color: '#00c569'
-                            }}>
-                                {locales('titles.promoteDescriptionTextFourth')}
-
-                            </Text>
-                            {locales('titles.promoteDescriptionTextFifth')}
-
-                        </Text>
-                        <Button
-                            style={[styles.loginButton, { width: '70%', marginBottom: 30, alignSelf: 'center' }]}
-                            onPress={() => handleScrollToTopButtonClick()}>
-                            <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.promoteDescriptionButton')}
-                            </Text>
-                        </Button>
-                    </View>
-                </Card>
                 <Card transparent>
                     <View style={{
                         backgroundColor: '#fff',
@@ -529,6 +469,54 @@ const PaymentModal = props => {
                     </View>
                 </Card>
 
+
+                <Card transparent>
+                    <View style={{
+                        backgroundColor: '#fff',
+                        overflow: 'hidden',
+                        borderRadius: 5,
+                        // marginTop: 15,
+                        paddingTop: 15,
+                        marginBottom: 30,
+                        elevation: 2
+                    }}>
+                        <Text style={{
+                            color: '#333',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 18,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            marginVertical: 7
+                        }}>
+                            {locales('titles.whatIsSpecialPaymentPackage')}
+
+                        </Text>
+                        <Text style={{
+                            color: '#777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            marginVertical: 7,
+                            paddingHorizontal: 15
+                        }}>
+                            <Text style={{
+                                width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
+                            }}>
+                                {locales('titles.specialPackagefirstDescription')}
+
+                            </Text>
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#00c569'
+                            }}>
+                                {` ${locales('titles.specialPackageSecondDescription')}`}
+                            </Text>
+                        </Text>
+                    </View>
+                </Card>
 
             </ScrollView>
         </Modal>
