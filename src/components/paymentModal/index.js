@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, Text, ScrollView, View, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { Modal, Text, ScrollView, View, TouchableOpacity, StyleSheet, Linking, BackHandler } from 'react-native';
 import { Card, Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,13 +28,6 @@ const PaymentModal = props => {
     };
 
 
-
-    const handleScrollToTopButtonClick = () => {
-        if (wrapperRef && wrapperRef.current) {
-            wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.55, animate: true })
-        }
-    }
-
     const closeAndNavigate = _ => {
 
         const { routeTo = {} } = props;
@@ -56,7 +49,15 @@ const PaymentModal = props => {
     } = dashboard;
 
     useEffect(() => {
+
         props.fetchAllDashboardData();
+
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            closeAndNavigate();
+            return true;
+        });
+        return BackHandler.removeEventListener();
+
     }, []);
 
     return (
@@ -477,7 +478,7 @@ const PaymentModal = props => {
                         borderRadius: 5,
                         // marginTop: 15,
                         paddingTop: 15,
-                        marginBottom: 30,
+                        marginBottom: 50,
                         elevation: 2
                     }}>
                         <Text style={{
