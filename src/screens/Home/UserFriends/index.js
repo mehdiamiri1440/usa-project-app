@@ -40,10 +40,59 @@ const UserFriends = props => {
                     </Text>
                 </View>
             </View>
+
+
+
+
+
             <ScrollView style={{
                 flex: 1,
                 backgroundColor: '#fff'
             }}>
+
+                <View style={{
+                    alignItems: 'center',
+
+                }}>
+                    <Text style={{
+                        fontSize: 20,
+                        paddingTop: 15,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: '#555',
+                    }}>
+                        {locales('titles.referralTitle')}
+                    </Text>
+                    <View style={{
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Text style={{
+                            fontSize: 22,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: '#00C569',
+                        }}>
+                            25,000
+                                    </Text>
+                        <Text style={{
+                            fontSize: 17,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: '#777',
+                            marginHorizontal: 3,
+                            marginTop: 4
+                        }}>
+                            {locales('titles.toman')}
+                        </Text>
+                    </View>
+                    <Button
+                        style={[styles.loginButton, { width: '55%', marginTop: 0, marginBottom: 0, elevation: 0, height: 40, alignSelf: 'center' }]}
+                    >
+                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
+
+                            {locales('titles.referralButton')}
+
+                        </Text>
+                    </Button>
+                </View>
+
                 <View style={{
                     padding: 10
                 }}>
@@ -57,7 +106,7 @@ const UserFriends = props => {
                             paddingBottom: 5,
                         }}
                     >
-                        در حال انجام
+                        {locales('titles.doing')}
                     </Text>
                     {[1, 2].map((_, index) =>
                         <View
@@ -119,8 +168,9 @@ const UserFriends = props => {
                                             }}>
                                                 80%
                                             </Text>
-                                             تا آزاد سازی
-                                             <Text
+                                            {locales('titles.referralToFree')}
+
+                                            <Text
                                                 style={{
                                                     fontSize: 13,
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -128,9 +178,9 @@ const UserFriends = props => {
 
                                                 }}
                                             >
-                                                25 هزار
-                                             </Text>
-                                             تومن
+                                                {locales('titles.referralSecondMainTitle')}
+                                            </Text>
+                                            {locales('titles.toman')}
                                         </Text>
                                     </View>
                                     <View style={{
@@ -175,7 +225,7 @@ const UserFriends = props => {
                             paddingBottom: 5,
                         }}
                     >
-                        در حال انجام
+                        {locales('titles.done')}
                     </Text>
                     {[1, 2, 3].map((_, index) =>
                         <View
@@ -225,7 +275,7 @@ const UserFriends = props => {
                                         marginHorizontal: 5,
                                         color: '#00c569'
                                     }}>
-                                        انجام شده
+                                        {locales('titles.done')}
                                     </Text>
                                 </View>
                             </View>
@@ -238,4 +288,22 @@ const UserFriends = props => {
 
 }
 
+
+const styles = StyleSheet.create({
+
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        width: '100%',
+        textAlign: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        borderRadius: 4,
+        backgroundColor: '#00C569',
+        width: '70%',
+        color: 'white',
+    },
+})
 export default UserFriends

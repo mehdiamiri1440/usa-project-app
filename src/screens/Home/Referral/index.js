@@ -86,8 +86,8 @@ const Referral = props => {
 
                     <Image source={require('./../../../../assets/images/gift-card.png')}
                         style={{
-                            width: deviceWidth * 0.8,
-                            height: deviceHeight * 0.35
+                            width: deviceWidth * 0.7,
+                            height: deviceHeight * 0.30
                         }}
                     />
                     <Text style={{
@@ -131,8 +131,8 @@ const Referral = props => {
                             marginHorizontal: 3,
                             marginTop: 4
                         }}>
-                            تومان
-                                    </Text>
+                            {locales('titles.toman')}
+                        </Text>
                     </View>
                     <Button
                         style={[styles.loginButton, { width: '55%', marginTop: 0, marginBottom: 0, elevation: 0, height: 40, alignSelf: 'center' }]}
@@ -171,28 +171,30 @@ const Referral = props => {
                             <Button style={styles.iconWrapper}>
                                 <FontAwesome5 name="whatsapp" color="#777" size={15} />
                                 <Text style={styles.iconContents}>
-                                    واتساپ
-                                    </Text>
+                                    {locales('titles.whatsapp')}
+                                </Text>
                             </Button>
                             <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
 
                                 <FontAwesome5 name="instagram" color="#777" size={15} />
                                 <Text style={styles.iconContents}>
-                                    اینستاگرام
-                                    </Text>
+                                    {locales('titles.instagram')}
+                                </Text>
                             </Button>
                             <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
 
                                 <FontAwesome5 name="telegram-plane" color="#777" size={15} />
                                 <Text style={styles.iconContents}>
-                                    تلگرام
-                                    </Text>
+                                    {locales('titles.telegram')}
+
+                                </Text>
                             </Button>
                             <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
 
                                 <FontAwesome5 name="comment-alt" color="#777" size={15} />
                                 <Text style={styles.iconContents}>
-                                    پیامک
+                                    {locales('titles.sms')}
+
                                 </Text>
                             </Button>
                         </View>

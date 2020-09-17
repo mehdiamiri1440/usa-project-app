@@ -241,8 +241,7 @@ class Home extends React.Component {
 
 
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('Referral')
-                        }
+                        onPress={() => this.props.navigation.navigate('Referral')}
                         style={{
                             alignContent: 'center',
                             backgroundColor: 'white',
@@ -288,16 +287,19 @@ class Home extends React.Component {
                                     marginBottom: 5
                                 }}
                             />
-                            <Button style={{
-                                backgroundColor: '#e41c38',
-                                borderRadius: 3,
-                                padding: 0,
-                                margin: 0,
-                                justifyContent: 'space-around',
-                                alignItems: 'center',
-                                flexDirection: 'row-reverse',
-                                height: 30
-                            }}>
+                            <Button
+                                onPress={() => this.props.navigation.navigate('Referral')}
+
+                                style={{
+                                    backgroundColor: '#e41c38',
+                                    borderRadius: 3,
+                                    padding: 0,
+                                    margin: 0,
+                                    justifyContent: 'space-around',
+                                    alignItems: 'center',
+                                    flexDirection: 'row-reverse',
+                                    height: 30
+                                }}>
 
                                 <Text
                                     style={{

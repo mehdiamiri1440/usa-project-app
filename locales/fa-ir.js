@@ -334,7 +334,7 @@ export default {
     'titles.supportUserEmail': 'ایمیل شخصی مدیر فنی :‌ ali_delkhosh@ymail.com',
 
     "titles.referralListTitle": "وضعیت دوستان",
-    "titles.referralTitle": "اعتبار دعوت از دوستان",
+    "titles.referralTitle": "اعتبار دعوت از دوستان شما",
     "titles.referralGift": "هدیه بگیر",
     "titles.referralMainTitle": " با دعوت هر دوست به باسکول",
     "titles.referralSecondMainTitle": "25 هزار",
@@ -343,13 +343,16 @@ export default {
     "titles.referralButton": "معرفی به دوستان",
     "titles.referralShareLink": "لینک دعوت",
     "titles.referralShareButton": "اشتراک گذاری",
+    "titles.referralToFree": "تا آزاد سازی",
+    "titles.copy": "کپی",
     "titles.copy": "کپی",
     "titles.whatsapp": "واتساپ",
     "titles.instagram": "اینستاگرام",
     "titles.telegram": "تلگرام",
     "titles.sms": "پیامک",
 
-
+    "titles.doing": "درحال انجام",
+    "titles.done": "انجام شده",
 
     "messages.signedUpUser": ".لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
