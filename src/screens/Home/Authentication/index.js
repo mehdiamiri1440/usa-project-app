@@ -407,18 +407,18 @@ const Authentication = props => {
                     </Text>
                     <Image
                         resizeMode='contain'
-                        style={{ width: '90%', height: deviceHeight * 0.3, marginTop: 20, borderRadius: 3 }}
+                        style={{ width: '100%', maxWidth: 320, height: deviceHeight * 0.3, marginVertical: 20, borderRadius: 3 }}
                         source={require('../../../../assets/images/user-id-card.jpg')}
                     />
                     {!idCard.uri ?
                         <TouchableOpacity
                             onPress={() => chooseImage('idCard')}
                             style={{
-                                flex: 3,
-                                marginHorizontal: 10,
+                                // flex: 3,
+                                // marginHorizontal: 10,
                                 height: deviceHeight * 0.3,
-                                minWidth: deviceWidth * 0.9,
-                                maxWidth: deviceWidth * 0.9,
+                                width: '85%',
+                                maxWidth: 320,
                                 borderWidth: 1,
                                 borderRadius: 5,
                                 borderStyle: 'dashed',
@@ -428,22 +428,24 @@ const Authentication = props => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                            <Entypo name='plus' size={25} color='#00C569' />
+                            <Entypo name='plus' size={45} color='#00C569' />
                             <Text>{locales('labels.uploadIdCard')}</Text>
                         </TouchableOpacity>
                         :
                         <TouchableOpacity
                             activeOpacity={1}
                             style={{
-                                width: deviceWidth * 0.9, height: deviceHeight * 0.5
+                                width: deviceWidth,
+                                alignItems: 'center',
                             }}
                             onPress={() => chooseImage('idCard')}
                         >
                             <Image
-                                resizeMode='contain'
+                                resizeMode='cover'
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
+                                    width: deviceWidth - 50,
+                                    maxWidth: 320,
+                                    height: deviceHeight * 0.3,
                                     borderRadius: 5
                                 }}
                                 source={{ uri: idCard.uri }} />
@@ -452,7 +454,7 @@ const Authentication = props => {
                     <Text style={{
                         color: 'red',
                         fontSize: 20,
-                        marginVertical: 30
+                        marginTop: 15
                     }}>
                         {idCardError}
                     </Text>
@@ -464,22 +466,28 @@ const Authentication = props => {
                         }}
                     >
                         2- {locales('titles.idCardSampleWithOwner')}
-                        <Text style={{ color: 'red', marginBottom: 10 }}>*</Text>
+                        <Text style={{ color: 'red' }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
-                        style={{ width: '90%', height: deviceHeight * 0.3, borderRadius: 3, marginVertical: 20 }}
+                        style={{
+                            width: '85%',
+                            maxWidth: 320,
+                            borderRadius: 3,
+                            height: deviceHeight * 1 - 255,
+                            marginVertical: 20
+                        }}
                         source={require('../../../../assets/images/verifi-user-image.jpg')}
                     />
                     {!idCardWithOwner.uri ?
                         <TouchableOpacity
                             onPress={() => chooseImage('idCardWithOwner')}
                             style={{
-                                flex: 3,
+
                                 marginHorizontal: 10,
+                                width: deviceWidth - 50,
+                                maxWidth: 320,
                                 height: deviceHeight * 0.3,
-                                minWidth: deviceWidth * 0.9,
-                                maxWidth: deviceWidth * 0.9,
                                 borderWidth: 1,
                                 borderRadius: 5,
                                 borderStyle: 'dashed',
@@ -489,22 +497,24 @@ const Authentication = props => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                            <Entypo name='plus' size={25} color='#00C569' />
-                            <Text>{locales('labels.uploadIdCardSampleWithOwner')}</Text>
+                            <Entypo name='plus' size={45} color='#00C569' />
+                            <Text style={{ paddingHorizontal: 20, textAlign: 'center' }}>{locales('labels.uploadIdCardSampleWithOwner')}</Text>
                         </TouchableOpacity>
                         :
                         <TouchableOpacity
                             activeOpacity={1}
                             style={{
-                                width: deviceWidth * 0.9, height: deviceHeight * 0.5
+                                width: deviceWidth * 0.9
                             }}
                             onPress={() => chooseImage('idCardWithOwner')}
                         >
                             <Image
-                                resizeMode='contain'
+                                resizeMode='cover'
                                 style={{
+                                    backgroundColor: 'red',
                                     width: '100%',
-                                    height: '100%',
+                                    maxWidth: 320,
+                                    height: deviceHeight * 1 - 255,
                                     borderRadius: 5
                                 }}
                                 source={{ uri: idCardWithOwner.uri }} />
@@ -512,8 +522,8 @@ const Authentication = props => {
                     }
                     <Text style={{
                         color: 'red',
-                        fontSize: 20,
-                        marginVertical: 30
+                        fontSize: 18,
+                        marginTop: 15
                     }}>
                         {idCardWithOwnerError}
                     </Text>
@@ -529,18 +539,16 @@ const Authentication = props => {
                     </Text>
                     <Image
                         resizeMode='contain'
-                        style={{ width: '90%', height: deviceHeight * 0.3, borderRadius: 3 }}
+                        style={{ width: '90%', maxWidth: 400, height: deviceHeight * 0.3, borderRadius: 3 }}
                         source={require('../../../../assets/images/madarek.jpg')}
                     />
                     {!evidence.uri ?
                         <TouchableOpacity
                             onPress={() => chooseImage('evidence')}
                             style={{
-                                flex: 3,
-                                marginHorizontal: 10,
                                 height: deviceHeight * 0.3,
-                                minWidth: deviceWidth * 0.9,
-                                maxWidth: deviceWidth * 0.9,
+                                width: '85%',
+                                maxWidth: 320,
                                 borderWidth: 1,
                                 borderRadius: 5,
                                 borderStyle: 'dashed',
@@ -557,15 +565,17 @@ const Authentication = props => {
                         <TouchableOpacity
                             activeOpacity={1}
                             style={{
-                                width: deviceWidth * 0.9, height: deviceHeight * 0.5
+                                width: deviceWidth * 0.9
                             }}
                             onPress={() => chooseImage('evidence')}
                         >
                             <Image
-                                resizeMode='contain'
+                                resizeMode='cover'
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
+                                    width: deviceWidth,
+                                    maxWidth: 320,
+                                    height: deviceHeight * 0.3,
+                                    backgroundColor: 'red',
                                     borderRadius: 5
                                 }}
                                 source={{ uri: evidence.uri }} />
@@ -590,7 +600,7 @@ const Authentication = props => {
                             animating={!!setEvidencesLoading}
                             color="white"
                             style={{
-                                position: 'absolute', left: '35%', top: '28%',
+                                position: 'absolute', left: '25%', top: '28%',
                                 width: 25, height: 25, borderRadius: 15
                             }}
                         />
