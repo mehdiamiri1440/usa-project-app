@@ -66,7 +66,7 @@ class ContactsList extends React.Component {
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
             });
             unsubscribe = messaging().onMessage(async remoteMessage => {
-                if (remoteMessage) {
+                if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
                     console.log('message reciev from fcm in contacts list', remoteMessage)
                     this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
                 }

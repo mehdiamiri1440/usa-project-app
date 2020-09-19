@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_MAIN_DOMAIN } from 'react-native-dotenv';
 import RNEmulatorCheck from 'react-native-emulator-check'
 
 
