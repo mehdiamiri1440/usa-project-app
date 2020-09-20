@@ -256,7 +256,7 @@ class Home extends React.Component {
                         }}
                     >
                         <View style={{
-                            width: deviceWidth - 160,
+                            width: deviceWidth - 150,
                             paddingTop: 13
                         }}>
                             <Text style={{
@@ -274,9 +274,25 @@ class Home extends React.Component {
                                 }}>
                                 {locales('titles.referralMainContents')}
                             </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainSecondContents')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainThirdContents')}
+                            </Text>
                         </View>
                         <View
-                            style={{ width: 130, }}
+                            style={{ width: 125, }}
 
                         >
                             <Image
@@ -295,7 +311,8 @@ class Home extends React.Component {
                                     borderRadius: 3,
                                     padding: 0,
                                     margin: 0,
-                                    justifyContent: 'space-around',
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: 20,
                                     alignItems: 'center',
                                     flexDirection: 'row-reverse',
                                     height: 30
@@ -303,7 +320,7 @@ class Home extends React.Component {
 
                                 <Text
                                     style={{
-
+                                        textAlign: 'center',
                                         color: '#fff',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
 

@@ -1,11 +1,12 @@
 
 
 import React from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
 import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../../utils';
+import Clipboard from "@react-native-community/clipboard";
 
 import UserFriends from '../UserFriends/UserLists'
 
@@ -14,6 +15,22 @@ import UserFriends from '../UserFriends/UserLists'
 const Referral = props => {
 
 
+    const openWhatsApp = () => {
+        let url = 'whatsapp://send?text=سلام این لینک باسکول هست';
+
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                ToastAndroid.showWithGravityAndOffset(
+                    'نرم افزار واتساپ نصب نیست',
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    5,
+                    20)
+            }
+        })
+    }
 
 
     return (
@@ -58,7 +75,7 @@ const Referral = props => {
 
                 }}>
                     <Text style={{
-                        fontSize: 18,
+                        fontSize: 14,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#556080',
                         textAlign: 'center',
@@ -71,6 +88,11 @@ const Referral = props => {
 
                     </Text> */}
                         <Text style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        }}>
+                            {locales('titles.referralFirstMainTitle')}
+                        </Text>
+                        <Text style={{
                             color: '#00C569',
                             marginHorizontal: 5,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -78,6 +100,7 @@ const Referral = props => {
                         }}>
                             {locales('titles.referralSecondMainTitle')}
                         </Text>
+
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         }}>
@@ -97,7 +120,7 @@ const Referral = props => {
                         textAlign: 'center',
                         paddingTop: 14
                     }}>
-                        {locales('titles.referralMainContents')}
+                        {locales('titles.referralMainPageContents')}
 
                     </Text>
 
@@ -108,34 +131,25 @@ const Referral = props => {
 
                 }}>
                     <Text style={{
-                        fontSize: 22,
+                        fontSize: 20,
                         paddingTop: 5,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#555',
                     }}>
                         {locales('titles.referralTitle')}
-                    </Text>
-                    <View style={{
-                        flexDirection: 'row-reverse'
-                    }}>
                         <Text style={{
                             fontSize: 22,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             color: '#00C569',
                         }}>
-                            25,000
-                                    </Text>
-                        <Text style={{
-                            fontSize: 17,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: '#777',
-                            marginHorizontal: 3,
-                            marginTop: 4
-                        }}>
-                            {locales('titles.toman')}
-                        </Text>
-                    </View>
-                    <Button
+                            25,000,000
+                                     </Text>
+
+                        {locales('titles.toman')}
+
+                    </Text>
+
+                    {/* <Button
                         style={[styles.loginButton, { width: '55%', marginTop: 0, marginBottom: 0, elevation: 0, height: 40, alignSelf: 'center' }]}
                     >
                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
@@ -143,7 +157,7 @@ const Referral = props => {
                             {locales('titles.referralButton')}
 
                         </Text>
-                    </Button>
+                    </Button> */}
                 </View>
 
                 <View style={{
@@ -155,7 +169,7 @@ const Referral = props => {
                         padding: 10,
 
                     }}>
-                        <Text style={{
+                        {/* <Text style={{
                             color: '#556080',
                             marginHorizontal: 5,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -163,19 +177,22 @@ const Referral = props => {
                         }}>
                             {locales('titles.referralShareButton')}
 
-                        </Text>
+                        </Text> */}
 
                         <View style={{
                             flexDirection: 'row-reverse',
                             paddingTop: 5
                         }}>
-                            <Button style={styles.iconWrapper}>
-                                <FontAwesome5 name="whatsapp" color="#777" size={15} />
+                            <Button
+
+                                onPress={openWhatsApp}
+                                style={[styles.iconWrapper, { backgroundColor: '#00C569' }]}>
+                                <FontAwesome5 name="whatsapp" color="#fff" size={23} />
                                 <Text style={styles.iconContents}>
                                     {locales('titles.whatsapp')}
                                 </Text>
                             </Button>
-                            <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
+                            {/* <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
 
                                 <FontAwesome5 name="instagram" color="#777" size={15} />
                                 <Text style={styles.iconContents}>
@@ -189,11 +206,11 @@ const Referral = props => {
                                     {locales('titles.telegram')}
 
                                 </Text>
-                            </Button>
-                            <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
+                            </Button> */}
+                            <Button style={[styles.iconWrapper, { borderWidth: 2, borderColor: '#777', backgroundColor: '#fff', marginLeft: 5 }]}>
 
-                                <FontAwesome5 name="comment-alt" color="#777" size={15} />
-                                <Text style={styles.iconContents}>
+                                <FontAwesome5 name="comment-alt" color="#777" size={20} />
+                                <Text style={[styles.iconContents, { color: '#777' }]}>
                                     {locales('titles.sms')}
 
                                 </Text>
@@ -214,12 +231,22 @@ const Referral = props => {
                                 marginTop: 10
                             }}>
                                 <Input disabled style={{ fontSize: 14, height: 35, color: '#777', padding: 5, margin: 0, backgroundColor: '#eee', borderWidth: 0, borderRadius: 4, textAlign: 'left' }} placeholder="https://buskool.com/profile/del" />
-                                <Button style={{
-                                    backgroundColor: '#556080',
-                                    paddingHorizontal: 20,
-                                    height: 35,
-                                    elevation: 0
-                                }}>
+                                <Button
+                                    onPress={() => {
+                                        ToastAndroid.showWithGravityAndOffset(
+                                            locales('titles.copiedToClipboard'),
+                                            ToastAndroid.LONG,
+                                            ToastAndroid.BOTTOM,
+                                            5,
+                                            20)
+                                        Clipboard.setString('https://buskool.com/profile/del')
+                                    }}
+                                    style={{
+                                        backgroundColor: '#556080',
+                                        paddingHorizontal: 20,
+                                        height: 35,
+                                        elevation: 0
+                                    }}>
                                     <Text style={{
                                         color: '#fff',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -235,6 +262,7 @@ const Referral = props => {
 
                 <UserFriends />
             </ScrollView>
+
         </>
     )
 }
@@ -268,18 +296,17 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row-reverse',
         borderRadius: 5,
-        borderColor: '#777',
-        borderWidth: 1,
-        height: 30,
+        height: 45,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
-        elevation: 1
+
+        elevation: 0
     },
     iconContents: {
-        color: '#777',
+        color: '#fff',
+        fontSize: 16,
         marginRight: 3,
-        fontSize: 13
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
     }
 });
 
