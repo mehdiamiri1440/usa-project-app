@@ -7,6 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../../utils';
 
+import UserFriends from '../UserFriends/UserLists'
 
 
 
@@ -147,7 +148,7 @@ const Referral = props => {
 
                 <View style={{
                     width: '100%',
-                    paddingBottom: 40
+                    paddingBottom: 20
                 }}>
 
                     <View style={{
@@ -231,6 +232,8 @@ const Referral = props => {
                         </View>
                     </View>
                 </View>
+
+                <UserFriends />
             </ScrollView>
         </>
     )
