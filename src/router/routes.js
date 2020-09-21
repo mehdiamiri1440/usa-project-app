@@ -15,6 +15,8 @@ import Home from '../screens/Home/Home';
 import Dashboard from '../screens/Home/Dashboard';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
+import Referral from '../screens/Home/Referral';
+import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
@@ -102,6 +104,24 @@ const router = forwardRef((props, innerRef) => {
                     key='EditProfile'
                     name='EditProfile'
                     component={EditProfile}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Referral'
+                    name='Referral'
+                    component={Referral}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='UserFriends'
+                    name='UserFriends'
+                    component={UserFriends}
                 />
                 <Stack.Screen
                     options={({ navigation, route }) => ({
