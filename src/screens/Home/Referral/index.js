@@ -15,6 +15,23 @@ import UserFriends from '../UserFriends/UserLists'
 const Referral = props => {
 
 
+    const openSms = () => {
+        let url = 'sms:?body=سلام این لینک باسکول هست';
+
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                ToastAndroid.showWithGravityAndOffset(
+                    'پیامک در دسترس نیست',
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    5,
+                    20)
+            }
+        })
+    }
+
     const openWhatsApp = () => {
         let url = 'whatsapp://send?text=سلام این لینک باسکول هست';
 
@@ -207,7 +224,9 @@ const Referral = props => {
 
                                 </Text>
                             </Button> */}
-                            <Button style={[styles.iconWrapper, { borderWidth: 2, borderColor: '#777', backgroundColor: '#fff', marginLeft: 5 }]}>
+                            <Button
+                                onPress={openSms}
+                                style={[styles.iconWrapper, { borderWidth: 2, borderColor: '#777', backgroundColor: '#fff', marginLeft: 5 }]}>
 
                                 <FontAwesome5 name="comment-alt" color="#777" size={20} />
                                 <Text style={[styles.iconContents, { color: '#777' }]}>
