@@ -24,6 +24,7 @@ class SelectCategory extends Component {
             loaded: false,
             subCategoriesList: [],
             categoriesList: [],
+            subCategoryName: ''
         }
     }
 
@@ -58,7 +59,6 @@ class SelectCategory extends Component {
     };
 
     setSubCategory = (id) => {
-        console.log('item', this.state.subCategoriesList)
         if (id >= 0) {
             let subCategory = this.state.subCategoriesList.some(item => item.id == id) ?
                 this.state.subCategoriesList.find(item => item.id == id).id : {};
@@ -66,7 +66,8 @@ class SelectCategory extends Component {
 
             this.setState({
                 subCategoryError: '',
-                subCategory
+                subCategory,
+                subCategoryName: this.state.subCategoriesList.find(item => item.id == id).category_name
             })
         }
     };
@@ -81,7 +82,7 @@ class SelectCategory extends Component {
 
     onSubmit = () => {
 
-        let { productType, category, subCategory } = this.state;
+        let { productType, category, subCategory, subCategoryName } = this.state;
         let productTypeError = '', categoryError = '', subCategoryError = '';
 
 
@@ -110,7 +111,7 @@ class SelectCategory extends Component {
         }
         this.setState({ productTypeError, subCategoryError, categoryError })
         if (!productTypeError && !categoryError && !subCategoryError) {
-            this.props.setProductType(productType, category, subCategory);
+            this.props.setProductType(productType, category, subCategory, subCategoryName);
         }
     }
 

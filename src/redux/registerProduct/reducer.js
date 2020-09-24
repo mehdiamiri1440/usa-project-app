@@ -30,7 +30,10 @@ const INITIAL_STATE = {
     subCategoriesError: false,
     subCategoriesMessage: null,
     subCategoriesList: [],
-    subCategories: {}
+    subCategories: {},
+
+    subCategoryId: null,
+    subCategoryName: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -268,7 +271,13 @@ export default (state = INITIAL_STATE, action) => {
         };
 
 
-
+        case actionTypes.SET_PRODUCT_ID_FROM_REGISTER_PRODUCT: {
+            return {
+                ...state,
+                subCategoryId: action.payload.id,
+                subCategoryName: action.payload.name
+            }
+        }
         default:
             return state
     }

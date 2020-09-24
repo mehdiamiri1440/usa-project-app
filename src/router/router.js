@@ -148,7 +148,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
-  console.disableYellowBox = true;
+  // console.disableYellowBox = true;
   const { userProfile = {}, message } = props;
   const { user_info = {} } = userProfile;
   let { is_seller } = user_info;
@@ -163,40 +163,40 @@ const App = (props) => {
 
   useEffect(() => {
 
-    fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-      .then(res => {
-        res.text().then(result => {
-          const resultOfVersion = JSON.parse(result);
-          if (
-            RNAppUpdate.versionName.toString() !==
-            resultOfVersion.versionName.toString()
-          ) {
-            if (!resultOfVersion.forceUpdate) {
-              setUpdateModalFlag(true);
-              // Alert.alert(
-              //     'به روز رسانی',
-              //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
-              //     [
-              //         {
-              //             text: 'به روز رسانی',
-              //             onPress: () => navigationRef.current.navigate('UpgradeApp')
-              //         },
-              //         {
-              //             text: 'انصراف',
-              //             onPress: () => { },
-              //             style: 'cancel'
-              //         },
-              //     ],
-              // );
-            }
-            else {
-              navigationRef.current.navigate('UpgradeApp')
-            }
-          }
-        });
-      })
-      .catch(err => navigationRef.current.navigate('SignUp')
-      );
+    // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+    //   .then(res => {
+    //     res.text().then(result => {
+    //       const resultOfVersion = JSON.parse(result);
+    //       if (
+    //         RNAppUpdate.versionName.toString() !==
+    //         resultOfVersion.versionName.toString()
+    //       ) {
+    //         if (!resultOfVersion.forceUpdate) {
+    //           setUpdateModalFlag(true);
+    //           // Alert.alert(
+    //           //     'به روز رسانی',
+    //           //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
+    //           //     [
+    //           //         {
+    //           //             text: 'به روز رسانی',
+    //           //             onPress: () => navigationRef.current.navigate('UpgradeApp')
+    //           //         },
+    //           //         {
+    //           //             text: 'انصراف',
+    //           //             onPress: () => { },
+    //           //             style: 'cancel'
+    //           //         },
+    //           //     ],
+    //           // );
+    //         }
+    //         else {
+    //           navigationRef.current.navigate('UpgradeApp')
+    //         }
+    //       }
+    //     });
+    //   })
+    //   .catch(err => navigationRef.current.navigate('SignUp')
+    //   );
 
     remoteConfig()
       .setDefaults({
@@ -309,8 +309,16 @@ const App = (props) => {
       case 'register-product': {
         return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
       }
-      case 'buyAd-requests':
-        return navigationRef.current.navigate('Requests');
+      case 'buyAd-requests': {
+        AsyncStorage.getItem('@registerProductParams').then(result => {
+          console.log('res========>>', result)
+          result = JSON.parse(result);
+          if (result) {
+            return navigationRef.current.navigate('Requests', { subCategoryId: props.subCategoryId, subCategoryName: props.subCategoryName });
+          }
+          return navigationRef.current.navigate('Requests');
+        })
+      }
       default:
         break;
     }
@@ -1186,6 +1194,9 @@ const mapStateToProps = (state) => {
     userProfileLoading: state.profileReducer.userProfileLoading,
 
     productDetailsId: state.productsListReducer.productDetailsId,
+
+    // subCategoryId: state.registerProductReducer.subCategoryId,
+    // subCategoryName: state.registerProductReducer.subCategoryName
   }
 };
 
