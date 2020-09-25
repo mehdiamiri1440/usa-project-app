@@ -311,10 +311,9 @@ const App = (props) => {
       }
       case 'buyAd-requests': {
         AsyncStorage.getItem('@registerProductParams').then(result => {
-          console.log('res========>>', result)
           result = JSON.parse(result);
-          if (result) {
-            return navigationRef.current.navigate('Requests', { subCategoryId: props.subCategoryId, subCategoryName: props.subCategoryName });
+          if (result && result.subCategoryId && result.subCategoryName) {
+            return navigationRef.current.navigate('Requests', { subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName });
           }
           return navigationRef.current.navigate('Requests');
         })
