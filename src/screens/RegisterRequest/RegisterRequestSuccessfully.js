@@ -87,7 +87,7 @@ const RegisterRequestSuccessfully = props => {
                         </Text>
 
                         <Button
-                            onPress={() => props.navigation.navigate('Home')}
+                            onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList' })}
                             style={{
                                 textAlign: 'center',
                                 borderRadius: 5,

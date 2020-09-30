@@ -871,6 +871,11 @@ const App = (props) => {
                   tabBarLabel: locales('labels.home'),
                   tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
                 }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Home', { screen: 'ProductsList' })
+                  },
+                }}
                 name='Home'
                 component={HomeStack}
               />
@@ -882,12 +887,22 @@ const App = (props) => {
                   tabBarLabel: locales('labels.requests'),
                   tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                 }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Requests')
+                  },
+                }}
                 name={'Requests'}
                 component={Requests}
               />
                 :
                 <Tab.Screen
                   key={'SpecialProducts'}
+                  listeners={{
+                    tabPress: e => {
+                      navigationRef.current.navigate('SpecialProducts', { screen: 'SpecialProducts' })
+                    },
+                  }}
                   options={{
                     tabBarBadge: false,
                     tabBarLabel: locales('labels.specialProducts'),
@@ -940,6 +955,11 @@ const App = (props) => {
                   tabBarBadge: false,
                   tabBarLabel: locales('labels.messages'),
                   tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
+                }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Messages', { screen: 'Messages' })
+                  },
                 }}
                 name='Messages'
                 component={MessagesStack}
