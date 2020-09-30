@@ -8,7 +8,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { sub } from 'react-native-reanimated';
+
 
 class SelectCategory extends Component {
     constructor(props) {

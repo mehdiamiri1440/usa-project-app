@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import { sub } from 'react-native-reanimated';
+
 
 class Filters extends Component {
     constructor(props) {

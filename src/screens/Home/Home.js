@@ -22,7 +22,6 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 import * as RootNavigation from '../../router/rootNavigation';
 
-
 let role = false
 
 
@@ -31,6 +30,7 @@ let homeRoutes = [
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
+    { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
@@ -236,7 +236,86 @@ class Home extends React.Component {
 
                 <ScrollView
                     ref={this.props.homeRef}
-                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
+                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingBottom: 20 }}>
+
+
+
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Referral')}
+                        style={{
+                            alignContent: 'center',
+                            backgroundColor: 'white',
+                            paddingTop: 10,
+                            paddingBottom: 30,
+                            elevation: 2,
+                            paddingHorizontal: 10,
+                            marginBottom: 10,
+                            marginHorizontal: 0,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <View style={{
+                            width: deviceWidth - 160,
+                            paddingTop: 13
+                        }}>
+                            <Text style={{
+                                color: '#556080',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16
+                            }}>
+                                {locales('titles.referralMainTitle')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainContents')}
+                            </Text>
+                        </View>
+                        <View
+                            style={{ width: 130, }}
+
+                        >
+                            <Image
+                                source={require('./../../../assets/images/gift-box.gif')}
+                                style={{
+                                    width: 130,
+                                    height: 65,
+                                    marginBottom: 5
+                                }}
+                            />
+                            <Button
+                                onPress={() => this.props.navigation.navigate('Referral')}
+
+                                style={{
+                                    backgroundColor: '#e41c38',
+                                    borderRadius: 3,
+                                    padding: 0,
+                                    margin: 0,
+                                    justifyContent: 'space-around',
+                                    alignItems: 'center',
+                                    flexDirection: 'row-reverse',
+                                    height: 30
+                                }}>
+
+                                <Text
+                                    style={{
+
+                                        color: '#fff',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                    }}
+                                >
+                                    {locales('titles.referralButton')}
+                                </Text>
+                                <Ionicons color="#fff" size={20} name='ios-arrow-back' />
+
+                            </Button>
+                        </View>
+                    </TouchableOpacity>
 
 
                     {homeRoutes.map((route, index) => {
