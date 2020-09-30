@@ -129,6 +129,9 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       }
     }
     case 'productList': {
+      if (remoteMessage.data.product_id) {
+        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.product_id } });
+      }
       return navigationRef.current.navigate('Home');
     }
     case 'myBuskool': {
@@ -165,40 +168,40 @@ const App = (props) => {
 
   useEffect(() => {
 
-    fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-      .then(res => {
-        res.text().then(result => {
-          const resultOfVersion = JSON.parse(result);
-          if (
-            RNAppUpdate.versionName.toString() !==
-            resultOfVersion.versionName.toString()
-          ) {
-            if (!resultOfVersion.forceUpdate) {
-              setUpdateModalFlag(true);
-              // Alert.alert(
-              //     'به روز رسانی',
-              //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
-              //     [
-              //         {
-              //             text: 'به روز رسانی',
-              //             onPress: () => navigationRef.current.navigate('UpgradeApp')
-              //         },
-              //         {
-              //             text: 'انصراف',
-              //             onPress: () => { },
-              //             style: 'cancel'
-              //         },
-              //     ],
-              // );
-            }
-            else {
-              navigationRef.current.navigate('UpgradeApp')
-            }
-          }
-        });
-      })
-      .catch(err => navigationRef.current.navigate('SignUp')
-      );
+    // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+    //   .then(res => {
+    //     res.text().then(result => {
+    //       const resultOfVersion = JSON.parse(result);
+    //       if (
+    //         RNAppUpdate.versionName.toString() !==
+    //         resultOfVersion.versionName.toString()
+    //       ) {
+    //         if (!resultOfVersion.forceUpdate) {
+    //           setUpdateModalFlag(true);
+    //           // Alert.alert(
+    //           //     'به روز رسانی',
+    //           //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
+    //           //     [
+    //           //         {
+    //           //             text: 'به روز رسانی',
+    //           //             onPress: () => navigationRef.current.navigate('UpgradeApp')
+    //           //         },
+    //           //         {
+    //           //             text: 'انصراف',
+    //           //             onPress: () => { },
+    //           //             style: 'cancel'
+    //           //         },
+    //           //     ],
+    //           // );
+    //         }
+    //         else {
+    //           navigationRef.current.navigate('UpgradeApp')
+    //         }
+    //       }
+    //     });
+    //   })
+    //   .catch(err => navigationRef.current.navigate('SignUp')
+    //   );
 
     remoteConfig()
       .setDefaults({
