@@ -24,6 +24,7 @@ const INITIAL_STATE = {
     registerBuyAdRequestFailed: false,
     registerBuyAdRequestError: false,
     registerBuyAdRequestMessage: null,
+    products: [],
 
     subCategoriesLoading: false,
     subCategoriesFailed: false,
@@ -234,17 +235,19 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: null,
+                products: [],
                 registerBuyAdRequest: {}
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_SUCCESSFULLY: {
-            let { msg = '', } = action.payload
+            let { msg = '', products = [] } = action.payload
             return {
                 ...state,
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: msg,
+                products,
                 registerBuyAdRequest: { ...action.payload }
             };
         };
@@ -256,12 +259,14 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestFailed: true,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: msg,
-                registerBuyAdRequest: {}
+                registerBuyAdRequest: {},
+                products: []
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_REJECT: {
             return {
                 ...state,
+                products: [],
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: true,

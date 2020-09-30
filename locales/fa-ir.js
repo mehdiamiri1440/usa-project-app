@@ -67,6 +67,7 @@ export default {
     'labels.products': 'محصولات',
     'labels.selectSubCategory': 'انتخاب زیر دسته‌بندی',
     'labels.subCategory': 'زیردسته‌بندی',
+    'labels.suggestedProducts': 'محصولات پیشنهادی',
     'labels.myProfile': "پروفایل من",
     'labels.uploadIdCard': 'تصویر کارت ملی خود را اینجا بارگذاری کنید',
     'labels.category': 'دسته‌بندی محصول',
