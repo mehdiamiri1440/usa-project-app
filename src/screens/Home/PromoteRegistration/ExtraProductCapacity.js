@@ -12,7 +12,6 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
-import { color } from 'react-native-reanimated';
 import { formatter } from '../../../utils'
 
 class ExtraProductCapacity extends React.Component {

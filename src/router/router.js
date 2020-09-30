@@ -43,6 +43,8 @@ import Authentication from '../screens/Home/Authentication';
 import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
+// import Referral from '../screens/Home/Referral';
+// import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
@@ -127,6 +129,9 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       }
     }
     case 'productList': {
+      if (remoteMessage.data.product_id) {
+        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.product_id } });
+      }
       return navigationRef.current.navigate('Home');
     }
     case 'myBuskool': {
@@ -148,7 +153,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
-  console.disableYellowBox = true;
+  // console.disableYellowBox = true;
   const { userProfile = {}, message } = props;
   const { user_info = {} } = userProfile;
   let { is_seller } = user_info;
@@ -200,7 +205,7 @@ const App = (props) => {
 
     remoteConfig()
       .setDefaults({
-        appVersion: '1.0.2.996',
+        appVersion: '1.1.2.997',
       })
       .then(() => {
         console.log('Default values set.');
@@ -309,8 +314,15 @@ const App = (props) => {
       case 'register-product': {
         return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
       }
-      case 'buyAd-requests':
-        return navigationRef.current.navigate('Requests');
+      case 'buyAd-requests': {
+        AsyncStorage.getItem('@registerProductParams').then(result => {
+          result = JSON.parse(result);
+          if (result && result.subCategoryId && result.subCategoryName) {
+            return navigationRef.current.navigate('Requests', { subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName });
+          }
+          return navigationRef.current.navigate('Requests');
+        })
+      }
       default:
         break;
     }
@@ -373,6 +385,24 @@ const App = (props) => {
           name='EditProfile'
           component={EditProfile}
         />
+        {/* <Stack.Screen
+          options={({ navigation, route }) => ({
+            headerShown: false,
+            title: null,
+          })}
+          key='Referral'
+          name='Referral'
+          component={Referral}
+        />
+        <Stack.Screen
+          options={({ navigation, route }) => ({
+            headerShown: false,
+            title: null,
+          })}
+          key='UserFriends'
+          name='UserFriends'
+          component={UserFriends}
+        /> */}
         <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
@@ -841,6 +871,11 @@ const App = (props) => {
                   tabBarLabel: locales('labels.home'),
                   tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
                 }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Home', { screen: 'ProductsList' })
+                  },
+                }}
                 name='Home'
                 component={HomeStack}
               />
@@ -852,12 +887,22 @@ const App = (props) => {
                   tabBarLabel: locales('labels.requests'),
                   tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                 }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Requests')
+                  },
+                }}
                 name={'Requests'}
                 component={Requests}
               />
                 :
                 <Tab.Screen
                   key={'SpecialProducts'}
+                  listeners={{
+                    tabPress: e => {
+                      navigationRef.current.navigate('SpecialProducts', { screen: 'SpecialProducts' })
+                    },
+                  }}
                   options={{
                     tabBarBadge: false,
                     tabBarLabel: locales('labels.specialProducts'),
@@ -910,6 +955,11 @@ const App = (props) => {
                   tabBarBadge: false,
                   tabBarLabel: locales('labels.messages'),
                   tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
+                }}
+                listeners={{
+                  tabPress: e => {
+                    navigationRef.current.navigate('Messages', { screen: 'Messages' })
+                  },
                 }}
                 name='Messages'
                 component={MessagesStack}
@@ -1186,6 +1236,9 @@ const mapStateToProps = (state) => {
     userProfileLoading: state.profileReducer.userProfileLoading,
 
     productDetailsId: state.productsListReducer.productDetailsId,
+
+    // subCategoryId: state.registerProductReducer.subCategoryId,
+    // subCategoryName: state.registerProductReducer.subCategoryName
   }
 };
 

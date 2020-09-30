@@ -85,6 +85,8 @@ class ProductImages extends Component {
                             state.images[index] = resultObj
                         }
                         else {
+                            if (typeof state.images != 'object')
+                                state.images = [];
                             state.images.push(resultObj)
                         }
                         return '';
@@ -117,8 +119,11 @@ class ProductImages extends Component {
 
                         if (index >= 0)
                             state.images[index] = resultObj
-                        else
+                        else {
+                            if (typeof state.images != 'object')
+                                state.images = [];
                             state.images.push(resultObj)
+                        }
                         return '';
                     }
                     )

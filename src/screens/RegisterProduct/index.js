@@ -16,6 +16,7 @@ import ProductDescription from './Steps/ProductDescription';
 import ProductMoreDetails from './Steps/ProductMoreDetails';
 import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -62,7 +63,9 @@ class RegisterProduct extends React.Component {
             description: '',
             province: '',
             stepNumber: 0,
-            showModal: false
+            showModal: false,
+            subCategoryName: '',
+            subCategoryId: null
         }
     }
 
@@ -107,8 +110,9 @@ class RegisterProduct extends React.Component {
 
 
 
-    setProductType = (productType, category, subCategory) => {
-        this.setState({ productType, category, subCategory, stepNumber: 2 });
+    setProductType = (productType, category, subCategory, subCategoryName) => {
+        AsyncStorage.setItem('@registerProductParams', JSON.stringify({ subCategoryId: subCategory, subCategoryName }))
+        this.setState({ productType, category, subCategory, subCategoryId: subCategory, subCategoryName, stepNumber: 2 });
     };
 
     setStockAndPrice = (minimumOrder, maximumPrice, minimumPrice, amount) => {
@@ -236,11 +240,11 @@ class RegisterProduct extends React.Component {
                     productType: '',
                     category: '',
                     detailsArray: '',
-                    subCategory: '',
                     minimumOrder: '',
                     maximumPrice: '',
                     minimumPrice: '',
                     amount: '',
+                    subCategory: '',
                     city: '',
                     description: '',
                     images: '',
@@ -259,7 +263,7 @@ class RegisterProduct extends React.Component {
 
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
-            minimumOrder, maximumPrice, minimumPrice, amount, city, province } = this.state
+            minimumOrder, maximumPrice, minimumPrice, amount, city, province, subCategoryId, subCategoryName } = this.state
         switch (stepNumber) {
             case 0: {
                 return <GuidToRegisterProduct
@@ -303,7 +307,11 @@ class RegisterProduct extends React.Component {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
             }
             case 7: {
-                return <RegisterProductSuccessfully {...this.props} />
+                return <RegisterProductSuccessfully
+                    subCategoryId={subCategoryId}
+                    subCategoryName={subCategoryName}
+                    {...this.props}
+                />
             }
             default:
                 break;
@@ -317,7 +325,7 @@ class RegisterProduct extends React.Component {
     }
 
     render() {
-        let { stepNumber, successfullAlert, paymentModalVisibility } = this.state;
+        let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
 
         return (
             <>
@@ -325,6 +333,7 @@ class RegisterProduct extends React.Component {
                 <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
+                    routeParams={{ subCategoryId, subCategoryName }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 />
@@ -509,7 +518,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
-        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab))
+        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
+        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
     }
 };
 

@@ -30,15 +30,16 @@ const PaymentModal = props => {
 
     const closeAndNavigate = _ => {
 
-        const { routeTo = {} } = props;
+        const { routeTo = {}, routeParams = {} } = props;
         const { parentScreen, childScreen } = routeTo;
 
         props.onRequestToClose();
 
         if (!!routeTo.childScreen) {
-            return props.navigation.navigate(parentScreen, { screen: childScreen });
+            return props.navigation.navigate(parentScreen, { screen: childScreen, ...routeParams });
         }
-        return props.navigation.navigate(parentScreen);
+        console.warn('route para', routeParams)
+        return props.navigation.navigate(parentScreen, routeParams);
     };
 
     const wrapperRef = useRef('');
