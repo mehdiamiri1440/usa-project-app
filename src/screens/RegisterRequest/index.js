@@ -154,8 +154,8 @@ class RegisterRequest extends Component {
                 category_id: subCategory
             };
             this.props.registerBuyAdRequest(requestObj).then(result => {
-                this.setState({ category: '', subCategory: '', amount: '', productType: '' })
-                this.props.navigation.navigate('RegisterRequestSuccessfully', { emptyState: this.emptyState });
+                this.emptyState();
+                this.props.navigation.navigate('RegisterRequestSuccessfully');
             })
             // .catch(_ => this.setState({ showModal: true }));
         }

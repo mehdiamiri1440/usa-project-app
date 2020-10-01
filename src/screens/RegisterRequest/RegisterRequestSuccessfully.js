@@ -17,7 +17,6 @@ const RegisterRequestSuccessfully = props => {
 
     const handleBack = () => {
         if (props.route && props.route.params) {
-            props.route.params.emptyState();
             props.navigation.goBack();
         }
 
@@ -165,7 +164,13 @@ const RegisterRequestSuccessfully = props => {
                                         minWidth: 180,
                                     }}
                                     activeOpacity={1}
-                                    onPress={() => props.navigation.navigate('Home', { screen: 'ProductDetails', params: { productId: item.id } })}>
+                                    onPress={() => {
+                                        props.navigation.navigate('Home')
+                                        setTimeout(() => {
+                                            return props.navigation.navigate('ProductDetails', { productId: item.id })
+                                        }, 10);
+                                    }}
+                                >
                                     <FastImage
                                         resizeMethod='resize'
                                         style={{ width: deviceWidth * 0.5, height: deviceWidth * 0.3 }}
