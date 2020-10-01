@@ -168,7 +168,7 @@ const RegisterRequestSuccessfully = props => {
                                         props.navigation.navigate('Home')
                                         setTimeout(() => {
                                             return props.navigation.navigate('ProductDetails', { productId: item.id })
-                                        }, 10);
+                                        }, 100);
                                     }}
                                 >
                                     <FastImage
