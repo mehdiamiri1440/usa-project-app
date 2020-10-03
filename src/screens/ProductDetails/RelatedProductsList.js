@@ -20,7 +20,9 @@ const RelatedProductsList = props => {
     }), []);
 
     const renderListEmpty = useCallback(() => (
-        <Text style={[{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18 }, styles.textBold]}>{locales('titles.noRelatedProductFound')}</Text>
+        <Text style={[{ width: deviceWidth, color: '#777777', textAlign: 'center', fontSize: 18 }, styles.textBold]}>
+            {locales('titles.noRelatedProductFound')}
+        </Text>
     ), []);
 
     const renderItem = useCallback(
@@ -32,14 +34,13 @@ const RelatedProductsList = props => {
                     margin: 10,
                     backgroundColor: '#fff',
                     overflow: 'hidden',
-                    maxWidth: 180,
-                    minWidth: 180,
+                    width: 180,
                 }}
                 activeOpacity={1}
                 onPress={() => {
                     // this.props.navigation.setParams({ productId: item.id, key: item.id })
                     // routes.push(item.id);
-                    props.navigation.navigate({ name: 'ProductDetails', params: { productId: item.id }, key: item.id, index: item.id })
+                    props.navigation.push('ProductDetails', { productId: item.id })
                 }}>
                 <FastImage
                     resizeMethod='resize'
@@ -87,53 +88,7 @@ const RelatedProductsList = props => {
             ListEmptyComponent={renderListEmpty}
             keyExtractor={keyExtractor}
             data={relatedProductsArray}
-            renderItem={({ item }) => (
-                <Card transparent>
-                    <TouchableOpacity
-                        style={{
-                            borderRadius: 6,
-                            elevation: 5,
-                            margin: 10,
-                            backgroundColor: '#fff',
-                            overflow: 'hidden',
-                            maxWidth: 180,
-                            minWidth: 180,
-                        }}
-                        activeOpacity={1}
-                        onPress={() => {
-                            // this.props.navigation.setParams({ productId: item.id, key: item.id })
-                            // routes.push(item.id);
-                            props.navigation.navigate({ name: 'ProductDetails', params: { productId: item.id }, key: item.id, index: item.id })
-                        }}>
-                        <FastImage
-                            resizeMethod='resize'
-                            style={{ width: deviceWidth * 0.5, height: deviceWidth * 0.3 }}
-                            source={{
-                                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`,
-                                headers: { Authorization: 'eTag' },
-                                priority: FastImage.priority.low,
-                            }}
-                            resizeMode={FastImage.resizeMode.cover}
-                        />
-                        <Text
-                            numberOfLines={1}
-                            style={[{
-                                width: '100%',
-                                paddingTop: 5,
-                                alignSelf: 'center',
-                                textAlign: 'center',
-                                paddingHorizontal: 10
-                            }, styles.textBold]}>
-                            {item.product_name}
-                        </Text>
-                        <Text
-                            numberOfLines={1}
-                            style={[{ padding: 10, paddingTop: 0, alignSelf: 'center', textAlign: 'center', width: '100%', color: '#00C569' }, styles.textBold]}>
-                            {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text>
-                    </TouchableOpacity>
-                </Card>
-            )
-            }
+            renderItem={renderItem}
         />
     )
 }
