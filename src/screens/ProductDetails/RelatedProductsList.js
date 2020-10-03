@@ -38,9 +38,7 @@ const RelatedProductsList = props => {
                 }}
                 activeOpacity={1}
                 onPress={() => {
-                    // this.props.navigation.setParams({ productId: item.id, key: item.id })
-                    // routes.push(item.id);
-                    props.navigation.navigate('ProductDetails', { productId: item.id, prevProductId: props.route.params.productId })
+                    props.navigation.navigate('ProductDetails', { productId: item.id })
                 }}>
                 <FastImage
                     resizeMethod='resize'

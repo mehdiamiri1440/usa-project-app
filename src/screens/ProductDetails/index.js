@@ -114,11 +114,7 @@ class ProductDetails extends PureComponent {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
         BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.props.route && this.props.route.params && this.props.route.params.prevProductId &&
-                this.props.route.params.productId && this.props.route.params.productId != this.props.route.params.prevProductId)
-                this.props.navigation.navigate('ProductDetails', { productId: this.props.route.params.prevProductId })
-            else
-                this.props.navigation.navigate('Home', { screen: 'ProductsList' })
+            this.props.navigation.goBack()
             return true;
         });
     }
@@ -843,13 +839,7 @@ class ProductDetails extends PureComponent {
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
-                            // global.productIds.pop();
-                            if (this.props.route && this.props.route.params && this.props.route.params.prevProductId &&
-                                this.props.route.params.productId && this.props.route.params.proudctId != this.props.route.params.prevProductId)
-                                this.props.navigation.navigate('ProductDetails', { productId: this.props.route.params.prevProductId })
-                            else
-                                this.props.navigation.navigate('Home', { screen: 'ProductsList' })
-                            // this.callApi();
+                            this.props.navigation.goBack()
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
