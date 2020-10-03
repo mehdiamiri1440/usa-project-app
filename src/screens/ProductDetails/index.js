@@ -113,6 +113,14 @@ class ProductDetails extends PureComponent {
         if (this.props.route.params.productId) {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            if (this.props.route && this.props.route.params && this.props.route.params.prevProductId &&
+                this.props.route.params.productId && this.props.route.params.productId != this.props.route.params.prevProductId)
+                this.props.navigation.navigate('ProductDetails', { productId: this.props.route.params.prevProductId })
+            else
+                this.props.navigation.navigate('Home', { screen: 'ProductsList' })
+            return true;
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -836,7 +844,11 @@ class ProductDetails extends PureComponent {
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             // global.productIds.pop();
-                            this.props.navigation.goBack()
+                            if (this.props.route && this.props.route.params && this.props.route.params.prevProductId &&
+                                this.props.route.params.productId && this.props.route.params.proudctId != this.props.route.params.prevProductId)
+                                this.props.navigation.navigate('ProductDetails', { productId: this.props.route.params.prevProductId })
+                            else
+                                this.props.navigation.navigate('Home', { screen: 'ProductsList' })
                             // this.callApi();
                         }}
                     >

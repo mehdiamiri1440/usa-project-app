@@ -40,7 +40,7 @@ const RelatedProductsList = props => {
                 onPress={() => {
                     // this.props.navigation.setParams({ productId: item.id, key: item.id })
                     // routes.push(item.id);
-                    props.navigation.push('ProductDetails', { productId: item.id })
+                    props.navigation.navigate('ProductDetails', { productId: item.id, prevProductId: props.route.params.productId })
                 }}>
                 <FastImage
                     resizeMethod='resize'
