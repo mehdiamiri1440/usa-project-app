@@ -330,13 +330,13 @@ class RegisterProduct extends React.Component {
         return (
             <>
 
-                <PaymentModal
+                {stepNumber == 7 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
                     routeParams={{ subCategoryId, subCategoryName }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
-                />
+                /> : null}
 
                 {(!!this.props.addNewProductLoading) ?
                     <View style={{
