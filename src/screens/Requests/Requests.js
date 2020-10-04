@@ -78,8 +78,10 @@ class Requests extends PureComponent {
         if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
             this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
         }
-        if (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
-            this.props.route.params.subCategoryId != prevProps.route.params.subCategoryId) {
+        if ((this.props.route && this.props.route.params && this.props.route.params.subCategoryId >= 0 &&
+            prevProps.route && !prevProps.route.params)
+            || (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
+                this.props.route.params.subCategoryId != prevProps.route.params.subCategoryId)) {
             this.checkForFiltering()
         }
     }
