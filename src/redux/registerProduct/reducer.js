@@ -24,13 +24,17 @@ const INITIAL_STATE = {
     registerBuyAdRequestFailed: false,
     registerBuyAdRequestError: false,
     registerBuyAdRequestMessage: null,
+    products: [],
 
     subCategoriesLoading: false,
     subCategoriesFailed: false,
     subCategoriesError: false,
     subCategoriesMessage: null,
     subCategoriesList: [],
-    subCategories: {}
+    subCategories: {},
+
+    subCategoryId: null,
+    subCategoryName: null,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -231,17 +235,19 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: null,
+                products: [],
                 registerBuyAdRequest: {}
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_SUCCESSFULLY: {
-            let { msg = '', } = action.payload
+            let { msg = '', products = [] } = action.payload
             return {
                 ...state,
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: msg,
+                products,
                 registerBuyAdRequest: { ...action.payload }
             };
         };
@@ -253,12 +259,14 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestFailed: true,
                 registerBuyAdRequestError: false,
                 registerBuyAdRequestMessage: msg,
-                registerBuyAdRequest: {}
+                registerBuyAdRequest: {},
+                products: []
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_REJECT: {
             return {
                 ...state,
+                products: [],
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: true,
@@ -268,7 +276,13 @@ export default (state = INITIAL_STATE, action) => {
         };
 
 
-
+        case actionTypes.SET_PRODUCT_ID_FROM_REGISTER_PRODUCT: {
+            return {
+                ...state,
+                subCategoryId: action.payload.id,
+                subCategoryName: action.payload.name
+            }
+        }
         default:
             return state
     }

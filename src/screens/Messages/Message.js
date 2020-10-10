@@ -62,8 +62,8 @@ const Message = props => {
                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
                     {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
                         style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                        name={item.is_read ? 'check-all' : 'check'} size={14}
-                        color={item.is_read ? '#60CAF1' : '#617D8A'} /> :
+                        name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
+                        color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
                         <Feather name='clock' size={14} color='#617D8A'
                             style={{ textAlign: 'right', paddingHorizontal: 3 }}
                         />

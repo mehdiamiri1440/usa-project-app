@@ -109,26 +109,18 @@ class ProductDetails extends PureComponent {
         });
         analytics().setCurrentScreen("product_view", "product_view");
 
-        // BackHandler.addEventListener('hardwareBackPress', () => {
-        //     global.productIds.pop();
-        //     this.props.navigation.navigate({ name: 'ProductDetails', params: { productId: global.productIds[global.productIds.length - 1] }, key: global.productIds[global.productIds.length - 1], index: global.productIds[global.productIds.length - 1] })
-        //     this.callApi();
-        //     return true;
-        // })
-        // this.callApi()
-        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
-            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
-        }
 
         if (this.props.route.params.productId) {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.wrapper && this.wrapper.current && this.props.productDetailsInfo && this.props.productDetailsInfo.length && !this.props.productDetailsInfoLoading && !this.props.productDetailsLoading) {
-            this.wrapper.current.scrollTo({ x: 0, y: 0, animated: true });
-        }
+
 
         if (prevProps.route.params.productId != this.props.route.params.productId) {
             this.setState({ loaded: false });
@@ -238,38 +230,30 @@ class ProductDetails extends PureComponent {
     }
 
 
-    callApi = param => {
-        let code = param || global.productIds[global.productIds.length - 1];
-        if (!global.productIds.length) return this.props.navigation.goBack();
-        if (code) {
-            this.props.fetchAllRelatedProducts(code)
-            // .catch(_ => this.setState({ showModal: true }));
-            this.props.fetchProductDetails(code).then(_ => {
-                if (this.props.productDetailsInfo.length) {
-                    const {
-                        max_sale_price,
-                        min_sale_price,
-                        stock,
-                        min_sale_amount
-                    } = this.props.productDetailsInfo[0].product.main;
+    callApi = code => {
+        this.props.fetchAllRelatedProducts(code)
+        // .catch(_ => this.setState({ showModal: true }));
+        this.props.fetchProductDetails(code).then(_ => {
+            if (this.props.productDetailsInfo.length) {
+                const {
+                    max_sale_price,
+                    min_sale_price,
+                    stock,
+                    min_sale_amount
+                } = this.props.productDetailsInfo[0].product.main;
 
-                    this.setState({
-                        minimumOrder: min_sale_amount.toString(),
-                        maximumPrice: max_sale_price.toString(),
-                        minimumPrice: min_sale_price.toString(),
-                        amount: stock.toString(),
-                        loaded: true
-                    });
-                }
-                else {
-                    this.setState({ showModal: true })
-                }
-            })
-            // .catch(_ => this.setState({ showModal: true }))
-        }
-        else {
-            this.setState({ showModal: true })
-        }
+                this.setState({
+                    minimumOrder: min_sale_amount.toString(),
+                    maximumPrice: max_sale_price.toString(),
+                    minimumPrice: min_sale_price.toString(),
+                    amount: stock.toString(),
+                    loaded: true
+                });
+            }
+
+        })
+        // .catch(_ => this.setState({ showModal: true }))
+
     }
 
 
@@ -855,9 +839,7 @@ class ProductDetails extends PureComponent {
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
-                            // global.productIds.pop();
                             this.props.navigation.goBack()
-                            // this.callApi();
                         }}
                     >
                         <AntDesign name='arrowright' size={25} />
@@ -1291,31 +1273,33 @@ class ProductDetails extends PureComponent {
                             </View>
 
                         </View>
-                        {/* <View >
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
-                            <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.relatedProducts')}</Text>
-                            <View
-                                style={{
-                                    height: 2,
-                                    flex: 1,
-                                    alignSelf: 'center',
-                                    backgroundColor: "#BEBEBE",
-                                }}>
+                        <View >
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
+                                <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>
+                                    {locales('labels.relatedProducts')}
+                                </Text>
                                 <View
                                     style={{
-                                        height: 4,
-                                        bottom: 2,
-                                        width: 40,
-                                        alignSelf: 'flex-end',
-                                        backgroundColor: "#00C469",
-                                    }}></View>
+                                        height: 2,
+                                        flex: 1,
+                                        alignSelf: 'center',
+                                        backgroundColor: "#BEBEBE",
+                                    }}>
+                                    <View
+                                        style={{
+                                            height: 4,
+                                            bottom: 2,
+                                            width: 40,
+                                            alignSelf: 'flex-end',
+                                            backgroundColor: "#00C469",
+                                        }}></View>
+                                </View>
                             </View>
+                            <RelatedProductsList
+                                {...this.props}
+                                relatedProductsArray={related_products}
+                            />
                         </View>
-                        <RelatedProductsList
-                            {...this.props}
-                            relatedProductsArray={related_products}
-                        />
-                    </View> */}
 
                     </ScrollView>
                 }

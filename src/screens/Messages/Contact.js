@@ -11,7 +11,7 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 const ContactsList = props => {
 
     const { item, index, contactsList } = props;
-    console.warn('item----------------->>>>>', item.unread_msgs_count)
+    console.log('item----------------->>>>>', item.unread_msgs_count)
 
 
 
@@ -93,4 +93,4 @@ const ContactsList = props => {
     )
 }
 
-export default memo(ContactsList)
+export default (ContactsList)

@@ -43,9 +43,9 @@ import Authentication from '../screens/Home/Authentication';
 import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
-import Referral from '../screens/Home/Referral';
-import UserFriends from '../screens/Home/UserFriends';
 import PromotionIntro from '../screens/Home/PromotionIntro';
+// import Referral from '../screens/Home/Referral';
+// import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
@@ -130,6 +130,9 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       }
     }
     case 'productList': {
+      if (remoteMessage.data.product_id) {
+        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.product_id } });
+      }
       return navigationRef.current.navigate('Home');
     }
     case 'myBuskool': {
@@ -203,7 +206,7 @@ const App = (props) => {
 
     remoteConfig()
       .setDefaults({
-        appVersion: '1.0.2.996',
+        appVersion: '1.1.2.997',
       })
       .then(() => {
         console.log('Default values set.');
@@ -312,8 +315,15 @@ const App = (props) => {
       case 'register-product': {
         return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
       }
-      case 'buyAd-requests':
-        return navigationRef.current.navigate('Requests');
+      case 'buyAd-requests': {
+        AsyncStorage.getItem('@registerProductParams').then(result => {
+          result = JSON.parse(result);
+          if (result && result.subCategoryId && result.subCategoryName) {
+            return navigationRef.current.navigate('Requests', { subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName });
+          }
+          return navigationRef.current.navigate('Requests');
+        })
+      }
       default:
         break;
     }
@@ -376,7 +386,7 @@ const App = (props) => {
           name='EditProfile'
           component={EditProfile}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
             title: null,
@@ -393,7 +403,7 @@ const App = (props) => {
           key='UserFriends'
           name='UserFriends'
           component={UserFriends}
-        />
+        /> */}
         <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
@@ -1216,6 +1226,9 @@ const mapStateToProps = (state) => {
     userProfileLoading: state.profileReducer.userProfileLoading,
 
     productDetailsId: state.productsListReducer.productDetailsId,
+
+    // subCategoryId: state.registerProductReducer.subCategoryId,
+    // subCategoryName: state.registerProductReducer.subCategoryName
   }
 };
 

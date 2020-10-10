@@ -4,8 +4,28 @@ import { Card, CardItem, Body, Button } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 class RegisterProductSuccessfully extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            subCategoryId: null,
+            subCategoryName: '',
+            loaded: false
+        }
+    }
+
 
     render() {
+        const {
+            route = {}
+        } = this.props;
+        const {
+            params = {}
+        } = route;
+        const {
+            subCategoryId,
+            subCategoryName
+        } = params;
+
         return (
             <View style={{ height: deviceHeight * 0.75, justifyContent: 'center' }}>
                 <Card>
@@ -35,7 +55,9 @@ class RegisterProductSuccessfully extends Component {
                             </Text>
                             <Button
                                 style={styles.loginButton}
-                                onPress={() => this.props.navigation.navigate('Requests')}
+                                onPress={() => {
+                                    this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
+                                }}
                             >
                                 <Text style={styles.buttonText}>
                                     {locales('titles.seeBuyAds')}</Text>
@@ -43,7 +65,7 @@ class RegisterProductSuccessfully extends Component {
                         </Body>
                     </CardItem>
                 </Card>
-            </View>
+            </View >
         )
     }
 }

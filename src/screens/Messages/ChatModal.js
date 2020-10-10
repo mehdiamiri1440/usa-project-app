@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
+import moment from 'moment';
 import { Button } from 'native-base';
 import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -14,7 +16,7 @@ import { deviceWidth } from '../../utils/deviceDimenssions';
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
-import { formatter, dataGenerator } from '../../utils';
+import { formatter } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
@@ -26,7 +28,7 @@ class ChatModal extends Component {
             keyboardHeight: 0,
             messageText: '',
             isFirstLoad: true,
-            msgCount: 10,
+            msgCount: 25,
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
@@ -38,7 +40,7 @@ class ChatModal extends Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
 
         // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
         //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
@@ -54,7 +56,7 @@ class ChatModal extends Component {
         //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
         // });
         unsubscribe = messaging().onMessage(async remoteMessage => {
-            if (remoteMessage) {
+            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
                 console.log('message reciev from fcm in chat list', remoteMessage)
                 this.pushNewMessageToChatList(remoteMessage);
                 // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
@@ -65,6 +67,7 @@ class ChatModal extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
+            console.warn('end reached in updated', this.state.loaded)
             this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
@@ -94,30 +97,34 @@ class ChatModal extends Component {
 
 
     componentWillUnmount() {
-        Jmoment.locale('fa');
-        unsubscribe;
-        return this.props.setUnreadMessages(this.props.contact.contact_id)
     }
 
 
     pushNewMessageToChatList = (remoteMessage) => {
         const text = remoteMessage.notification.body;
-        let userChatHistory = this.state.userChatHistory;
-
+        let userChatHistory = [...this.state.userChatHistory];
         const message = {
-            sender_id: this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id,
+            sender_id: this.props.contact.contact_id,
             receiver_id: this.props.loggedInUserId,
             text,
             is_read: 1
         };
 
+
         userChatHistory.unshift(message);
 
+        userChatHistory.slice(0, 60).forEach(item => {
+            if (item.is_read == undefined) {
+                item.is_read = true;
+            }
+        })
         this.setState({ userChatHistory }, () => {
-            AsyncStorage.setItem('@userChatHistory', JSON.stringify(this.state.userChatHistory));
-            console.log('this.tst', this.state.userChatHistory)
-        }
-        )
+            Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`, {
+                msg_count: this.state.msgCount,
+                user_id: this.props.contact.contact_id
+            })
+        })
+
     };
 
 
@@ -126,21 +133,20 @@ class ChatModal extends Component {
     }
 
     sendMessage = () => {
-
         let { messageText } = this.state;
         let userChatHistory = [...this.state.userChatHistory].reverse();
-
         let msgObject = {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(this.props.contact.contact_id),
-            text: formatter.toStandard(messageText)
+            text: formatter.toStandard(messageText),
+            created_at: moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
         }
 
         if (messageText && messageText.length && messageText.trim()) {
             userChatHistory.push({ ...msgObject });
-
+            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
             this.setState({
-                userChatHistory: [...userChatHistory.slice(-10)].reverse(),
+                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
                 messageText: '',
                 isFirstLoad: false
             });
@@ -156,13 +162,13 @@ class ChatModal extends Component {
                             this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
                         }, 200);
                 }, 10);
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                    .then(() => {
-                        this.setState(state => {
-                            state.loaded = false;
-                            return '';
-                        })
-                    })
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                //     .then(() => {
+                //         this.setState(state => {
+                //             state.loaded = false;
+                //             return '';
+                //         })
+                //     })
             });
 
         }
@@ -210,10 +216,9 @@ class ChatModal extends Component {
     onEndReached = _ => {
 
         const { loaded, userChatHistory } = this.state;
-
         if (loaded && userChatHistory.length >= 9)
-            this.setState({ msgCount: this.state.msgCount + 10 }, () => {
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+            this.setState({ msgCount: this.state.msgCount + 25 }, () => {
+                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }))
             })
     };
     keyExtractor = (_, index) => index.toString();
@@ -225,6 +230,30 @@ class ChatModal extends Component {
             index={index}
             separators={separators}
         />;
+    };
+
+    renderListFooterComponent = _ => {
+        if (!this.state.isFirstLoad && (this.props.userChatHistoryLoading || !this.state.loaded))
+            return (
+                <View style={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 15
+
+                }}>
+                    <ActivityIndicator size="small" color="#00C569"
+                        style={{
+                            zIndex: 999,
+                            width: 50, height: 50,
+                            borderRadius: 50,
+                            backgroundColor: '#fff',
+                            elevation: 5,
+                            padding: 0,
+                        }}
+                    />
+                </View>
+            )
+        return null;
     }
 
     render() {
@@ -332,6 +361,8 @@ class ChatModal extends Component {
 
                 <FlatList
                     data={userChatHistory}
+                    ListFooterComponentStyle={{ padding: 10 }}
+                    ListFooterComponent={this.renderListFooterComponent}
                     inverted
                     maxToRenderPerBatch={3}
                     initialNumToRender={3}
@@ -340,7 +371,7 @@ class ChatModal extends Component {
                     style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
                     extraData={this.state}
                     onEndReached={this.onEndReached}
-                    onEndReachedThreshold={0.4}
+                    onEndReachedThreshold={0.5}
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                 />

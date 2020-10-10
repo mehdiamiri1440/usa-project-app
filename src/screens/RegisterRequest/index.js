@@ -154,8 +154,8 @@ class RegisterRequest extends Component {
                 category_id: subCategory
             };
             this.props.registerBuyAdRequest(requestObj).then(result => {
-                this.setState({ category: '', subCategory: '', amount: '', productType: '' })
-                this.props.navigation.navigate('RegisterRequestSuccessfully', { emptyState: this.emptyState });
+                this.emptyState();
+                this.props.navigation.navigate('RegisterRequestSuccessfully');
             })
             // .catch(_ => this.setState({ showModal: true }));
         }
@@ -432,8 +432,7 @@ class RegisterRequest extends Component {
                                                 animating={!!this.props.registerBuyAdRequestLoading} color="white"
                                                 style={{
                                                     position: 'relative',
-                                                    marginLeft: -25,
-                                                    marginRight: 5,
+                                                    marginRight: -30,
                                                     width: 25, height: 25, borderRadius: 15
                                                 }}
                                             />
@@ -475,7 +474,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
         width: '100%',
-        maxWidth: 150,
+        maxWidth: 200,
         color: 'white',
         justifyContent: 'center',
         alignItems: 'center'
@@ -486,7 +485,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         backgroundColor: '#00C569',
         width: '100%',
-        maxWidth: 150,
+        maxWidth: 200,
         color: 'white',
         justifyContent: 'center',
         alignItems: 'center'
