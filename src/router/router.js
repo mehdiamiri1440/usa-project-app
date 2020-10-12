@@ -44,8 +44,8 @@ import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
 import PromotionIntro from '../screens/Home/PromotionIntro';
-// import Referral from '../screens/Home/Referral';
-// import UserFriends from '../screens/Home/UserFriends';
+import Referral from '../screens/Home/Referral';
+import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
@@ -386,7 +386,7 @@ const App = (props) => {
           name='EditProfile'
           component={EditProfile}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
             title: null,
@@ -403,7 +403,7 @@ const App = (props) => {
           key='UserFriends'
           name='UserFriends'
           component={UserFriends}
-        /> */}
+        />
         <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
