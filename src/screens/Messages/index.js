@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import * as messagesActions from '../../redux/messages/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, TabViewAnimated, SceneMap } from 'react-native-tab-view';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import Jmoment from 'moment-jalaali';
 import ChatModal from './ChatModal';
@@ -26,17 +26,19 @@ import MessagesContext from './MessagesContext';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import Contact from './Contact';
-
+import MessagesTab from './MessagesTab';
+import RequestsTab from './RequestsTab';
 let unsubscribe;
+
+
+
+
 class ContactsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tabViewIndex: 1,
-            routes: [
-                { key: 'first', title: 'First' },
-                { key: 'second', title: 'Second' },
-            ],
+            tabIndex: 0,
+            routes: [{ key: 'messages', title: locales('labels.messages') }, { key: 'requests', title: locales('labels.requests') }],
             modalFlag: false,
             searchText: '',
             contactsList: [],
@@ -163,64 +165,28 @@ class ContactsList extends React.Component {
 
 
 
-    FirstRoute = () => <View style={[styles.scene, { backgroundColor: '#ff4081' }]} >
-        <Text>
-            ali
-            </Text>
-    </View>
 
-
-    SecondRoute = () => <View style={[styles.scene, { backgroundColor: '#673ab7' }]} >
-        <Text>
-            mehdi
-            </Text>
-    </View>
-
-
-
-    renderScene = () => SceneMap({
-        first: this.FirstRoute,
-        second: this.SecondRoute,
-    });
 
     TabViewExample = () => {
-        const { tabViewIndex: index, routes } = this.state;
+        const { tabIndex, routes } = this.state;
 
 
 
-        const initialLayout = { width: Dimensions.get('window').width };
-
-
-        return (
-            <TabView
-                style={{ backgroundColor: 'red' }}
-                navigationState={{
-                    index, routes: [
-                        { key: 'first', title: 'First' },
-                        { key: 'second', title: 'Second' },
-                    ]
-                }}
-                renderScene={this.renderScene}
-                onIndexChange={this.setTabViewIndex}
-                initialLayout={initialLayout}
-            />
-        );
-    }
-
-    setTabViewIndex = index => {
-        this.setState({ tabViewIndex: index })
-    };
-
-    render() {
-
-        let { contactsListLoading } = this.props;
-        let { modalFlag, selectedContact, loaded, searchText, contactsList, contactsListUpdated } = this.state;
+        const initialLayout = { width: deviceWidth, height: 0 };
+        const renderScene = SceneMap({
+            messages: () => <MessagesTab />,
+            requests: () => <RequestsTab />,
+        });
 
         return (
-
-            <View>
-                <Text>Babe</Text>
-                {this.TabViewExample()}
+            <>
+                <TabView
+                    useNativeDriver
+                    navigationState={{ index: tabIndex, routes }}
+                    renderScene={renderScene}
+                    onIndexChange={this.setTabIndex}
+                    initialLayout={initialLayout}
+                />
 
                 {/* <NoConnection
                     showModal={this.state.showModal}
@@ -369,15 +335,31 @@ class ContactsList extends React.Component {
                     </Card>
                 </> */}
                 {/* </MessagesContext.Provider> */}
-            </View >
+            </>
+        );
+    }
+
+
+    setTabIndex = index => {
+        this.setState({ tabIndex: index })
+    };
+
+    render() {
+
+        let { contactsListLoading } = this.props;
+        let { modalFlag, selectedContact, loaded, searchText, contactsList, contactsListUpdated } = this.state;
+
+        return (
+            <View style={{ flex: 1 }}>
+                {this.TabViewExample()}
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
     scene: {
-        width: 100,
-        height: 100
+        flex: 1
     },
 });
 
