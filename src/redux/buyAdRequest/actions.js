@@ -27,3 +27,25 @@ export const fetchAllBuyAdRequests = () => {
 
     return request();
 };
+
+export const fetchRelatedRequests = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.buyAdRequest
+                .fetchRelatedRequests()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_RELATED_BUYAD_REQUESTS_FAILED,
+                        reject: actionTypes.FETCH_RELATED_BUYAD_REQUESTS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_RELATED_BUYAD_REQUESTS_LOADING);
+    const success = res => action(actionTypes.FETCH_RELATED_BUYAD_REQUESTS_SUCCESSFULLY, res);
+
+    return request();
+};

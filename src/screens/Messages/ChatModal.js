@@ -233,7 +233,9 @@ class ChatModal extends Component {
     };
 
     renderListFooterComponent = _ => {
-        if (!this.state.isFirstLoad && (this.props.userChatHistoryLoading || !this.state.loaded))
+        if (!this.state.isFirstLoad && (this.props.userChatHistoryLoading || !this.state.loaded &&
+            this.state.userChatHistory.some(item => item.sender_id != this.props.loggedInUserId))
+        )
             return (
                 <View style={{
                     textAlign: 'center',

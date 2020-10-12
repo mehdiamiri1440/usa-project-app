@@ -7,6 +7,13 @@ const INITIAL_STATE = {
     buyAdRequestList: [],
     buyAdRequest: {},
 
+    relatedBuyAdRequestsLoading: false,
+    relatedBuyAdRequestsFailed: false,
+    relatedBuyAdRequestsError: false,
+    relatedBuyAdRequestsMessage: null,
+    relatedBuyAdRequestsList: [],
+    relatedBuyAdRequests: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -56,6 +63,55 @@ export default (state = INITIAL_STATE, action) => {
                 buyAdRequestFailed: false,
                 buyAdRequestError: true,
                 buyAdRequestMessage: ''
+            };
+        };
+
+
+        case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_LOADING: {
+            return {
+                ...state,
+                relatedBuyAdRequestsList: [],
+                relatedBuyAdRequests: {},
+                relatedBuyAdRequestsLoading: true,
+                relatedBuyAdRequestsFailed: false,
+                relatedBuyAdRequestsError: false,
+                relatedBuyAdRequestsMessage: null
+            };
+        };
+        case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            console.warn('action', action.payload)
+            return {
+                ...state,
+                relatedBuyAdRequestsList: [...action.payload.buyAds],
+                relatedBuyAdRequests: { ...action.payload },
+                relatedBuyAdRequestsLoading: false,
+                relatedBuyAdRequestsFailed: false,
+                relatedBuyAdRequestsError: false,
+                relatedBuyAdRequestsMessage: msg,
+            };
+        };
+        case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                relatedBuyAdRequestsList: [],
+                relatedBuyAdRequests: {},
+                relatedBuyAdRequestsLoading: false,
+                relatedBuyAdRequestsFailed: true,
+                relatedBuyAdRequestsError: false,
+                relatedBuyAdRequestsMessage: msg
+            };
+        };
+        case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_REJECT: {
+            return {
+                ...state,
+                relatedBuyAdRequestsList: [],
+                relatedBuyAdRequests: {},
+                relatedBuyAdRequestsLoading: false,
+                relatedBuyAdRequestsFailed: false,
+                relatedBuyAdRequestsError: true,
+                relatedBuyAdRequestsMessage: ''
             };
         };
 
