@@ -94,9 +94,10 @@ class RequestsTab extends Component {
 
         return (
             <View
-                style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 1 }}>
+                style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
                 <View style={{
-                    borderBottomWidth: 1, width: '90%', padding: 20,
+                    borderBottomWidth: 1, width: '85%', padding: 20,
+                    borderBottomColor: '#F3F3F3',
                     alignSelf: 'center',
                     backgroundColor: 'white', flexDirection: 'row-reverse'
                 }}
@@ -109,77 +110,132 @@ class RequestsTab extends Component {
                         }}
                         source={require('../../../assets/icons/user.png')} />
                     <Text
-                        style={{ width: '90%' }}
+                        style={{
+                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#9B9B9B',
+                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 18
+                        }}
                         numberOfLines={1}
                     >
                         {item.first_name} {item.last_name}
                     </Text>
                 </View>
-                <Text>
-                    <Text>
-                        {locales('labels.buyer')}
-                    </Text>
-                    <Text>
-                        {this.renderRequirementAmount(item.requirement_amount)}
-                    </Text>
-                    <Text>
-                        {
-                            locales('labels.fromType')
-                        }
-                    </Text>
-                    <Text>
-                        {item.subcategory_name}
-                    </Text>
-                </Text>
-                {!item.expired ?
-                    <View
-                        style={{ alignSelf: 'center' }}
-                    >
-                        <View
-                            style={{ flexDirection: 'row-reverse' }}>
-                            <FontAwesome5 name='hourglass-half' size={25} color='red' />
-                            <Text>
-                                <Text>
-                                    {item.remaining_time == 1 ? locales('labels.one') : item.remaining_time} {locales('labels.hour')}
-                                </Text>
-                                <Text>
-                                    {locales('labels.remainedTimeToResponseToRequest')}
-                                </Text>
-                            </Text>
-                        </View>
-                        <Text>
-                            {locales('labels.notifMeIfExists')}
-                        </Text>
-                    </View>
-                    :
+
+                <View
+                    style={{
+                        padding: 20,
+                        marginVertical: 10,
+                    }}
+                >
                     <Text
                         style={{
-                            color: 'red',
                             textAlign: 'center'
                         }}
                     >
-                        {locales('labels.responseToRequestExpired')}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                fontSize: 16
+                            }}
+                        >
+                            {`${locales('labels.buyer')} `}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                fontSize: 16
+                            }}
+                        >
+                            {`${this.renderRequirementAmount(item.requirement_amount)} `}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                fontSize: 16
+                            }}
+                        >
+                            {`${locales('labels.fromType')} `}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                fontSize: 16
+                            }}
+                        >
+                            {item.subcategory_name}
+                        </Text>
                     </Text>
-                }
-                <Button
-                    onPress={event => !item.expired && this.openChat(event, item)}
-                    style={[item.expired ? styles.disableLoginButton : styles.loginButton,
-                    { alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}
-                >
-                    <ActivityIndicator size={20} color='white'
-                        animating={selectedButton == item.id &&
-                            !!isUserAllowedToSendMessageLoading}
-                        style={{
-                            position: 'relative',
-                            width: 10, height: 10, borderRadius: 5,
-                            marginLeft: -15,
-                            marginRight: 5
-                        }}
-                    />
-                    <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
-                        {locales('titles.achiveSaleStatus')}
-                    </Text>
-                </Button>
+                    {!item.expired ?
+                        <View
+                            style={{ alignSelf: 'center', marginVertical: 10 }}
+                        >
+                            <View
+                                style={{ flexDirection: 'row-reverse' }}>
+                                <FontAwesome5 name='hourglass-half' size={20} color='red' />
+                                <Text
+                                    style={{ marginHorizontal: 5, textAlign: 'center' }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: 'red',
+                                            fontSize: 16
+                                        }}>
+                                        {`${item.remaining_time == 1 ? locales('labels.one') : item.remaining_time} ${locales('labels.hour')} `}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                            fontSize: 16
+                                        }}
+                                    >
+                                        {locales('labels.remainedTimeToResponseToRequest')}
+                                    </Text>
+                                </Text>
+                            </View>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    marginVertical: 10,
+                                    color: '#BEBEBE',
+                                    fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                }}
+                            >
+                                {locales('labels.notifMeIfExists')}
+                            </Text>
+                        </View>
+                        :
+                        <Text
+                            style={{
+                                color: 'red',
+                                marginBottom: 5,
+                                marginTop: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                textAlign: 'center'
+                            }}
+                        >
+                            {locales('labels.responseToRequestExpired')}
+                        </Text>
+                    }
+                    <Button
+                        onPress={event => !item.expired && this.openChat(event, item)}
+                        style={[item.expired ? styles.disableLoginButton : styles.loginButton,
+                        { alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}
+                    >
+                        <ActivityIndicator size={20} color='white'
+                            animating={selectedButton == item.id &&
+                                !!isUserAllowedToSendMessageLoading}
+                            style={{
+                                position: 'relative',
+                                width: 10, height: 10, borderRadius: 5,
+                                marginLeft: -15,
+                                marginRight: 5
+                            }}
+                        />
+                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
+                            {locales('titles.achiveSaleStatus')}
+                        </Text>
+                    </Button>
+                </View>
             </View>
 
         )
@@ -296,8 +352,8 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        marginVertical: 10,
-        width: '40%',
+        marginTop: 30,
+        width: '60%',
         height: 40,
         elevation: 0,
         borderRadius: 4,
@@ -306,8 +362,8 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        marginVertical: 10,
-        width: '40%',
+        marginTop: 30,
+        width: '60%',
         height: 40,
         elevation: 0,
         borderRadius: 4,
