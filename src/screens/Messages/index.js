@@ -1,5 +1,12 @@
+
+
+
+
+
+
+
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -11,7 +18,7 @@ import { connect } from 'react-redux';
 import * as messagesActions from '../../redux/messages/actions';
 import { ScrollView } from 'react-native-gesture-handler';
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
-
+import { TabView, SceneMap } from 'react-native-tab-view';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import Jmoment from 'moment-jalaali';
 import ChatModal from './ChatModal';
@@ -25,6 +32,11 @@ class ContactsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            tabViewIndex: 1,
+            routes: [
+                { key: 'first', title: 'First' },
+                { key: 'second', title: 'Second' },
+            ],
             modalFlag: false,
             searchText: '',
             contactsList: [],
@@ -76,9 +88,9 @@ class ContactsList extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.warn('wear1111', prevState.loaded)
+        // console.warn('wear1111', prevState.loaded)
         if (prevState.loaded == false && this.props.contactsList.length) {
-            console.warn('wear', prevState.loaded)
+            // console.warn('wear', prevState.loaded)
             this.setState({ contactsList: this.props.contactsList, loaded: true })
         }
 
@@ -115,6 +127,7 @@ class ContactsList extends React.Component {
         });
     }
 
+
     // setcontactsListUpdated = contactsListUpdated => this.setState({ contactsListUpdated });
 
     handleSearch = text => {
@@ -148,14 +161,68 @@ class ContactsList extends React.Component {
         this.setState({ modalFlag })
     };
 
+
+
+    FirstRoute = () => <View style={[styles.scene, { backgroundColor: '#ff4081' }]} >
+        <Text>
+            ali
+            </Text>
+    </View>
+
+
+    SecondRoute = () => <View style={[styles.scene, { backgroundColor: '#673ab7' }]} >
+        <Text>
+            mehdi
+            </Text>
+    </View>
+
+
+
+    renderScene = () => SceneMap({
+        first: this.FirstRoute,
+        second: this.SecondRoute,
+    });
+
+    TabViewExample = () => {
+        const { tabViewIndex: index, routes } = this.state;
+
+
+
+        const initialLayout = { width: Dimensions.get('window').width };
+
+
+        return (
+            <TabView
+                style={{ backgroundColor: 'red' }}
+                navigationState={{
+                    index, routes: [
+                        { key: 'first', title: 'First' },
+                        { key: 'second', title: 'Second' },
+                    ]
+                }}
+                renderScene={this.renderScene}
+                onIndexChange={this.setTabViewIndex}
+                initialLayout={initialLayout}
+            />
+        );
+    }
+
+    setTabViewIndex = index => {
+        this.setState({ tabViewIndex: index })
+    };
+
     render() {
 
         let { contactsListLoading } = this.props;
         let { modalFlag, selectedContact, loaded, searchText, contactsList, contactsListUpdated } = this.state;
 
         return (
+
             <View>
-                <NoConnection
+                <Text>Babe</Text>
+                {this.TabViewExample()}
+
+                {/* <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
@@ -200,7 +267,7 @@ class ContactsList extends React.Component {
                         />
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
-                </View>
+                </View> */}
 
 
 
@@ -215,7 +282,7 @@ class ContactsList extends React.Component {
                         backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                     }}
                 /> : null} */}
-                {modalFlag ? <ChatModal
+                {/* {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}
                     // setcontactsListUpdated={this.setcontactsListUpdated}
@@ -223,15 +290,16 @@ class ContactsList extends React.Component {
                     // contactsListUpdated={contactsListUpdated}
                     contact={selectedContact}
                     onRequestClose={this.closeChatModal}
-                /> : null}
+                /> : null} */}
                 {/* 
                 <MessagesContext.Provider
                     value={this.setNewContactsList}
                     style={{ paddingBottom: 200, marginBottom: 200 }}
                 > */}
-                <>
+                {/* <>
                     <Card>
-                        <CardItem >
+
+                         <CardItem >
                             <Body >
                                 <FlatList
                                     ListEmptyComponent={() =>
@@ -299,12 +367,19 @@ class ContactsList extends React.Component {
                             </Body>
                         </CardItem>
                     </Card>
-                </>
+                </> */}
                 {/* </MessagesContext.Provider> */}
             </View >
         )
     }
 }
+
+const styles = StyleSheet.create({
+    scene: {
+        width: 100,
+        height: 100
+    },
+});
 
 const mapStateToProps = (state) => {
     return {
