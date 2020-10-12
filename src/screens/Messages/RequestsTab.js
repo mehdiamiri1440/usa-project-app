@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button, Card, CardItem, Body } from 'native-base';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
@@ -8,6 +9,7 @@ import { Navigation } from 'react-native-navigation';
 
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as profileActions from '../../redux/profile/actions';
@@ -20,6 +22,7 @@ class RequestsTab extends Component {
         super(props);
         this.state = {
             selectedButton: null,
+            showDialog: false,
             modalFlag: false,
             selectedBuyAdId: -1,
             selectedContact: {},
@@ -270,6 +273,7 @@ class RequestsTab extends Component {
         })
     };
 
+    hideDialog = () => this.setState({ showDialog: false });
 
     render() {
         const {
@@ -280,11 +284,13 @@ class RequestsTab extends Component {
         let {
             modalFlag,
             selectedContact,
+            showDialog,
             selectedBuyAdId
         } = this.state;
 
         return (
             <>
+
                 {modalFlag && <ChatModal
                     transparent={false}
                     {...this.props}
@@ -293,6 +299,95 @@ class RequestsTab extends Component {
                     contact={{ ...selectedContact }}
                     onRequestClose={() => this.setState({ modalFlag: false })}
                 />}
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showDialog}
+                        onDismiss={this.hideDialog}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={this.hideDialog}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.buyRequests')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.maximumBuyAdResponse')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('titles.icreaseYouRegisterRequstCapacity')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.hideDialog();
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={this.hideDialog}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
 
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
