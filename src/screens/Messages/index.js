@@ -133,7 +133,7 @@ const Messages = props => {
                     <Text
                         style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                     >
-                        {locales('labels.messages')}
+                        {locales('titles.messanger')}
                     </Text>
                 </View>
             </View>

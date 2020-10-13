@@ -202,6 +202,7 @@ export default {
     'titles.no': 'خیر',
     'titles.newVersionUpdate': 'آیا مایل به نصب نسخه جدید باسکول هستید ؟',
     'titles.installIt': 'نصب کن',
+    'titles.messanger': 'پیام‌رسان',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
     'titles.remianedCapacityToSendMessageToBuyer': 'ظرفیت باقی‌مانده برای ارسال پیام به خریدار این محصول',
