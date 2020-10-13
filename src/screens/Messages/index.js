@@ -66,7 +66,8 @@ const Messages = props => {
         }
     };
 
-    const refreshMessanger = _ => {
+    const refreshTabs = _ => {
+        setSearchText('');
         if (index == 1) {
             return props.fetchAllContactsList().then(_ => {
                 setRefresh(true);
@@ -79,7 +80,7 @@ const Messages = props => {
 
     const renderTabBar = internalProps => (
         <TabBar
-            onTabPress={() => refreshMessanger()}
+            onTabPress={() => refreshTabs()}
             {...internalProps}
             indicatorStyle={{ backgroundColor: 'white' }}
             style={{ backgroundColor: '#22AC93' }}
@@ -167,7 +168,7 @@ const Messages = props => {
 
             {is_seller ?
                 <TabView
-                    onSwipeStart={() => refreshMessanger()}
+                    onSwipeStart={() => refreshTabs()}
                     lazy
                     removeClippedSubviews={true}
                     renderTabBar={renderTabBar}

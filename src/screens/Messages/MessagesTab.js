@@ -194,7 +194,7 @@ class ContactsList extends Component {
                                                 </View>
                                     }
                                     ref={this.props.contactsListRef}
-                                    refreshing={!!contactsListLoading}
+                                    refreshing={false}
                                     onRefresh={() => {
                                         this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                                             this.setState({ loaded: false })

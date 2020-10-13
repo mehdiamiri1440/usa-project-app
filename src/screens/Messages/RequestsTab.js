@@ -46,15 +46,15 @@ class RequestsTab extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.relatedBuyAdRequestsList.length) {
             this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
-
-            if (prevProps.refresh != this.props.refresh) {
-                this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
-            }
-            if (this.props.searchText != this.state.searchText) {
-                this.handleSearch(this.props.searchText)
-            }
-            this.props.setRefresh(false)
         }
+
+        if (prevProps.refresh != this.props.refresh) {
+            this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
+        }
+        if (this.props.searchText != this.state.searchText) {
+            this.handleSearch(this.props.searchText)
+        }
+        this.props.setRefresh(false)
     }
 
     handleSearch = text => {
@@ -178,7 +178,7 @@ class RequestsTab extends Component {
                                 fontSize: 16
                             }}
                         >
-                            {`${this.renderRequirementAmount(item.requirement_amount)} `}
+                            {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
                         </Text>
                         <Text
                             style={{
@@ -194,7 +194,7 @@ class RequestsTab extends Component {
                                 fontSize: 16
                             }}
                         >
-                            {item.subcategory_name}
+                            {item.name}
                         </Text>
                     </Text>
                     {!item.expired ?
@@ -306,16 +306,13 @@ class RequestsTab extends Component {
     hideDialog = () => this.setState({ showDialog: false });
 
     render() {
-        const {
-            relatedBuyAdRequestsList
-        } = this.props;
-
-
         let {
             modalFlag,
             selectedContact,
             showDialog,
-            selectedBuyAdId
+            selectedBuyAdId,
+
+            relatedBuyAdRequestsList
         } = this.state;
 
         return (
