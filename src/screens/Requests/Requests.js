@@ -588,7 +588,7 @@ class Requests extends PureComponent {
                     /> : null}
                     <FlatList
                         ref={this.props.requestsRef}
-                        refreshing={buyAdRequestLoading}
+                        refreshing={false}
                         onRefresh={() => {
                             this.props.fetchAllBuyAdRequests();
                         }}
