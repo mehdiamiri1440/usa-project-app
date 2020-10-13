@@ -29,7 +29,6 @@ export const fetchRelatedRequests = _ => {
                 withAuth: false,
             })
             .then(result => {
-                console.warn('her', result)
                 resolve(result)
             })
             .catch(err => {

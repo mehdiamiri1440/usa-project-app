@@ -11,7 +11,6 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 const ContactsList = props => {
 
     const { item, index, contactsList } = props;
-    console.log('item----------------->>>>>', item.unread_msgs_count)
 
 
 

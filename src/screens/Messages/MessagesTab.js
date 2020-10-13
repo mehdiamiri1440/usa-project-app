@@ -41,7 +41,6 @@ class ContactsList extends Component {
         }
     }
 
-    serachInputRef = React.createRef();
     contactsListRef = React.createRef();
     isComponentMounted = false;
 
@@ -86,18 +85,13 @@ class ContactsList extends Component {
             // console.warn('wear', prevState.loaded)
             this.setState({ contactsList: this.props.contactsList, loaded: true })
         }
-
-        // if (this.props.newMessage) {
-        //     this.props.newMessageReceived(false)
-        //     // this.props.isFromOutSide(false)
-        //     setTimeout(() => {
-        //         this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
-        //             this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
-        //             })
-        //         })
-        //         // .catch(_ => this.setState({ showModal: true }))
-        //     }, 10);
-        // }
+        if (prevProps.refresh != this.props.refresh) {
+            this.setState({ contactsList: this.props.contactsList, loaded: true })
+        }
+        if (this.props.searchText != this.state.searchText) {
+            this.handleSearch(this.props.searchText)
+        }
+        this.props.setRefresh(false)
     }
 
 
@@ -107,20 +101,17 @@ class ContactsList extends Component {
     }
 
     handleSearch = text => {
-        const { contactsList } = this.props;
-        this.setState(state => {
-            state.searchText = text;
-            state.isSearched = true;
-            if (text) {
-                state.contactsList = contactsList.filter(item => `${item.first_name} ${item.last_name}`.includes(text));
-            }
-            else {
-                state.contactsList = [...contactsList]
-            }
-            return '';
-        })
+        let contactsList = [...this.state.contactsList];
+        if (text) {
+            contactsList = this.props.contactsList.filter(item => `${item.first_name} ${item.last_name}`.includes(text));
+        }
+        else {
+            contactsList = [...this.props.contactsList]
+        }
+        this.setState({ contactsList, searchText: text })
     }
 
+    setSearchText = searchText => this.setState({ searchText })
 
     closeChatModal = () => {
         this.setState({ modalFlag: false, loaded: false }, () => {
@@ -133,8 +124,6 @@ class ContactsList extends Component {
         this.setState({ selectedContact })
     };
 
-    setSearchText = searchText => this.setState({ searchText })
-
     setModalFlag = modalFlag => {
         this.setState({ modalFlag })
     };
@@ -144,38 +133,11 @@ class ContactsList extends Component {
 
     render() {
 
-        let { contactsListLoading } = this.props;
-        let { modalFlag, selectedContact, loaded, searchText, contactsList, contactsListUpdated } = this.state;
+        let { contactsListLoading, } = this.props;
+        let { modalFlag, selectedContact, contactsList, searchText } = this.state;
         return (
             <>
 
-                <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
-                    <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
-                        <Input value={searchText}
-                            ref={this.serachInputRef}
-                            onChangeText={this.handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
-                            placeholder={locales('labels.searchContacts')}
-                            placeholderTextColor="#BEBEBE"
-
-                        />
-                        <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
-                    </InputGroup>
-                </View>
-
-
-
-                {/* {() ? <ActivityIndicator size="large" color="#00C569"
-                    style={{
-                        position: 'absolute', left: '44%', top: '40%',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                    }}
-                /> : null} */}
                 {modalFlag ? <ChatModal
                     transparent={false}
                     {...this.props}

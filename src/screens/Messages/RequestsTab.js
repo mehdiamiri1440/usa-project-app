@@ -26,6 +26,8 @@ class RequestsTab extends Component {
             modalFlag: false,
             selectedBuyAdId: -1,
             selectedContact: {},
+            loaded: false,
+            relatedBuyAdRequestsList: []
         }
     }
 
@@ -39,6 +41,34 @@ class RequestsTab extends Component {
 
         this.props.fetchRelatedRequests();
     }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.relatedBuyAdRequestsList.length) {
+            this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
+
+            if (prevProps.refresh != this.props.refresh) {
+                this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
+            }
+            if (this.props.searchText != this.state.searchText) {
+                this.handleSearch(this.props.searchText)
+            }
+            this.props.setRefresh(false)
+        }
+    }
+
+    handleSearch = text => {
+        let relatedBuyAdRequestsList = [...this.state.relatedBuyAdRequestsList];
+        if (text) {
+            relatedBuyAdRequestsList = this.props.relatedBuyAdRequestsList
+                .filter(item => `${item.first_name} ${item.last_name}`.includes(text) || `${item.subcategory_name}`.includes(text) ||
+                    `${item.name}`.includes(text));
+        }
+        else {
+            relatedBuyAdRequestsList = [...this.props.relatedBuyAdRequestsList]
+        }
+        this.setState({ relatedBuyAdRequestsList, searchText: text })
+    };
 
     renderListEmptyComponent = _ => {
         const { relatedBuyAdRequestsLoading } = this.props;

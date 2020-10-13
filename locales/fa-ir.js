@@ -186,6 +186,8 @@ export default {
     'titles.enterPassword': 'کلمه‌عبور را وارد نمایید',
     'titles.elevatorHasAdded': 'نردبان اعمال شده‌است',
     "titles.chooseCityAndProvince": "با وارد کردن شهر، شما می توانید با دیگران بهتر ارتباط برقرار کنید",
+    'titles.new': 'جدید',
+    'titles.searchBuyAd': 'جستجوی درخواست',
     'titles.achiveSaleStatus': 'استعلام قیمت',
     "titles.phoneNumber": 'شماره همراه',
     'titles.sellerHintToRegisterProduct': ' فروشنده محترم برای استفاده از خدمات باسکول و ارتباط مستقیم با خریداران ابتدا باید محصولات خود را در سامانه باسکول ثبت کنید. ',

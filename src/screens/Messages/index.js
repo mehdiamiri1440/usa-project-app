@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
+import { Icon, InputGroup, Input } from 'native-base';
 
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar } from 'react-native-tab-view';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import * as messagesActions from '../../redux/messages/actions';
+import * as requestActions from '../../redux/buyAdRequest/actions';
 
 import MessagesTab from './MessagesTab';
 import RequestsTab from './RequestsTab';
@@ -12,6 +15,8 @@ import RequestsTab from './RequestsTab';
 
 
 const Messages = props => {
+
+    const serachInputRef = useRef();
 
     const {
         userProfile = {}
@@ -23,6 +28,8 @@ const Messages = props => {
         is_seller
     } = user_info;
 
+    const [searchText, setSearchText] = useState('');
+    const [refresh, setRefresh] = useState(false);
     const [index, setIndex] = useState(0);
     const [routes] = useState([
         { key: 'messages', title: locales('labels.messages') },
@@ -31,12 +38,65 @@ const Messages = props => {
     );
 
 
+    const handleSearch = text => setSearchText(text);
+
+
+
     const initialLayout = { width: deviceWidth, height: 0 };
 
-    const renderScene = SceneMap({
-        messages: () => <MessagesTab {...props} />,
-        requests: () => <RequestsTab  {...props} />,
-    });
+
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case 'messages':
+                return <MessagesTab
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    searchText={searchText}
+                    {...props}
+                />
+            case 'requests':
+                return <RequestsTab
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    searchText={searchText}
+                    {...props}
+                />;
+            default:
+                return null;
+        }
+    };
+
+    const refreshMessanger = _ => {
+        if (index == 1) {
+            return props.fetchAllContactsList().then(_ => {
+                setRefresh(true);
+            });
+        }
+        return props.fetchRelatedRequests().then(_ => {
+            setRefresh(true);
+        });
+    }
+
+    const renderTabBar = internalProps => (
+        <TabBar
+            onTabPress={() => refreshMessanger()}
+            {...internalProps}
+            indicatorStyle={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: '#22AC93' }}
+            renderLabel={({ route, focused, color }) => (
+                <Text style={{ color: 'white', margin: 8 }}>
+                    {route.title} {route.key == 'requests' ?
+                        <Text
+                            style={{ color: 'white', backgroundColor: 'red' }}
+                        >
+                            {locales('titles.new')}
+                        </Text>
+                        : null}
+                </Text>
+
+            )}
+        />
+    );
 
     return (
         <View style={{ flex: 1 }}>
@@ -69,7 +129,48 @@ const Messages = props => {
             </View>
 
             {is_seller ?
+                <View>
+                    <InputGroup rounded style={{
+                        backgroundColor: '#22AC93', borderBottomColor: 'white',
+                        borderBottomWidth: 2,
+                        elevation: 1, width: deviceWidth, borderRadius: 0
+                    }}>
+                        <Input
+                            value={searchText}
+                            ref={serachInputRef}
+                            onChangeText={handleSearch}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#FFFFFF' }}
+                            placeholder={index == 0 ? locales('labels.searchContacts') : locales('titles.searchBuyAd')}
+                            placeholderTextColor="#FFFFFF"
+
+                        />
+                        <Icon name='ios-search' style={{ color: '#FFFFFF', marginHorizontal: 5 }} />
+                    </InputGroup>
+                </View>
+                :
+                <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
+                    <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
+                        <Input
+                            value={searchText}
+                            ref={serachInputRef}
+                            onChangeText={handleSearch}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
+                            placeholder={locales('labels.searchContacts')}
+                            placeholderTextColor="#BEBEBE"
+
+                        />
+                        <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
+                    </InputGroup>
+                </View>
+            }
+
+
+            {is_seller ?
                 <TabView
+                    onSwipeStart={() => refreshMessanger()}
+                    lazy
+                    removeClippedSubviews={true}
+                    renderTabBar={renderTabBar}
                     useNativeDriver
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
@@ -77,7 +178,11 @@ const Messages = props => {
                     initialLayout={initialLayout}
                 />
                 :
-                <MessagesTab {...props} />
+                <MessagesTab
+                    setRefresh={setRefresh}
+                    refresh={refresh}
+                    searchText={searchText}
+                    {...props} />
             }
 
         </View>
@@ -92,5 +197,14 @@ const mapStateToProps = (state) => {
     return {
         userProfile
     }
-}
-export default connect(mapStateToProps)(Messages)
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
+        fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests()),
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Messages)

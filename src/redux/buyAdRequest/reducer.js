@@ -80,7 +80,6 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_SUCCESSFULLY: {
             let { msg = '' } = action.payload
-            console.warn('action', action.payload)
             return {
                 ...state,
                 relatedBuyAdRequestsList: [...action.payload.buyAds],
