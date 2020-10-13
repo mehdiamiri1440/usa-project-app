@@ -85,16 +85,25 @@ const Messages = props => {
             indicatorStyle={{ backgroundColor: 'white' }}
             style={{ backgroundColor: '#22AC93' }}
             renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: 'white', margin: 8 }}>
-                    {route.title} {route.key == 'requests' ?
+                <View
+                    style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}
+                >
+                    <Text style={{ color: 'white', textAlign: 'center', textAlignVertical: 'center' }}>
+                        {route.title}
+                    </Text>
+                    {route.key == 'requests' ?
                         <Text
-                            style={{ color: 'white', backgroundColor: 'red' }}
+                            style={{
+                                color: 'white', backgroundColor: '#D92941', width: 40,
+                                borderRadius: 4,
+                                marginHorizontal: 10,
+                                textAlign: 'center', textAlignVertical: 'center'
+                            }}
                         >
                             {locales('titles.new')}
                         </Text>
                         : null}
-                </Text>
-
+                </View>
             )}
         />
     );
