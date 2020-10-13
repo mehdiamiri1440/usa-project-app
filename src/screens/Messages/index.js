@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
+import { connect } from 'react-redux';
 
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -11,6 +12,17 @@ import RequestsTab from './RequestsTab';
 
 
 const Messages = props => {
+
+    const {
+        userProfile = {}
+    } = props;
+    const {
+        user_info = {}
+    } = userProfile;
+    const {
+        is_seller
+    } = user_info;
+
     const [index, setIndex] = useState(0);
     const [routes] = useState([
         { key: 'messages', title: locales('labels.messages') },
@@ -56,17 +68,29 @@ const Messages = props => {
                 </View>
             </View>
 
-            <TabView
-                useNativeDriver
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                initialLayout={initialLayout}
-            />
+            {is_seller ?
+                <TabView
+                    useNativeDriver
+                    navigationState={{ index, routes }}
+                    renderScene={renderScene}
+                    onIndexChange={setIndex}
+                    initialLayout={initialLayout}
+                />
+                :
+                <MessagesTab {...props} />
+            }
 
         </View>
     );
 }
 
+const mapStateToProps = (state) => {
+    const {
+        userProfile
+    } = state.profileReducer;
 
-export default Messages
+    return {
+        userProfile
+    }
+}
+export default connect(mapStateToProps)(Messages)
