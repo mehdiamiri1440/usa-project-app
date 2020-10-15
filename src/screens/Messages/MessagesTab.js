@@ -207,7 +207,7 @@ class ContactsList extends Component {
                                     keyboardDismissMode='on-drag'
                                     showsVerticalScrollIndicator={false}
                                     style={{ width: '100%', height: deviceHeight * 1 }}
-                                    contentContainerStyle={{ paddingBottom: 220 }}
+                                    contentContainerStyle={{ paddingBottom: 235 }}
                                     data={contactsList}
                                     renderItem={({ item, index }) => <Contact
                                         item={item}
