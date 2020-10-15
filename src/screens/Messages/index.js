@@ -83,27 +83,28 @@ const Messages = props => {
             onTabPress={() => refreshTabs()}
             {...internalProps}
             indicatorStyle={{ backgroundColor: 'white' }}
-            style={{ backgroundColor: '#22AC93' }}
+            style={{
+                backgroundColor: '#22AC93',
+            }}
             renderLabel={({ route, focused, color }) => (
-                <View
-                    style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}
-                >
-                    <Text style={{ color: 'white', textAlign: 'center', textAlignVertical: 'center' }}>
-                        {route.title}
-                    </Text>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    margin: 0,
+                }}>
                     {route.key == 'requests' ?
                         <Text
-                            style={{
-                                color: 'white', backgroundColor: '#D92941', width: 40,
-                                borderRadius: 4,
-                                marginHorizontal: 10,
-                                textAlign: 'center', textAlignVertical: 'center'
-                            }}
+                            style={{ color: 'white', backgroundColor: '#e41c38', borderRadius: 4, paddingHorizontal: 6, fontSize: 10, height: 20, paddingTop: 1, fontFamily: 'IRANSansWeb(FaNum)_Bold', right: 6, top: 1 }}
                         >
                             {locales('titles.new')}
                         </Text>
                         : null}
+                    <Text style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {route.title}
+                    </Text>
                 </View>
+
+
             )}
         />
     );
@@ -139,11 +140,19 @@ const Messages = props => {
             </View>
 
             {is_seller ?
-                <View>
+                <View style={{
+                    paddingHorizontal: 15,
+                    left: 0,
+                    backgroundColor: '#22AC93',
+                }}>
                     <InputGroup rounded style={{
-                        backgroundColor: '#22AC93', borderBottomColor: 'white',
-                        borderBottomWidth: 2,
-                        elevation: 1, width: deviceWidth, borderRadius: 0
+                        borderWidth: 0,
+                        borderColor: 'transparent',
+                        borderBottomColor: 'white',
+                        borderBottomWidth: 1,
+                        width: '100%',
+                        borderRadius: 0,
+
                     }}>
                         <Input
                             value={searchText}

@@ -74,32 +74,47 @@ class RequestsTab extends Component {
         const { relatedBuyAdRequestsLoading } = this.props;
 
         if (relatedBuyAdRequestsLoading)
-            return [1, 2, 3, 4, 5].map((_, index) => <View
-                key={index}
-                style={{
-                    backgroundColor: '#fff',
-                }}>
-                <ContentLoader
-                    speed={2}
-                    width={deviceWidth}
-                    height={80}
-                    viewBox="0 0 480 80"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
+            return <View style={{
+                paddingTop: 50
+            }}>
+                {[1, 2, 3, 4, 5].map((_, index) => <View
+                    key={index}
                 >
-                    <Rect x="158" y="11" rx="3" ry="3" width="183" height="15" />
-                    <Circle cx="398" cy="33" r="33" />
-                    <Rect x="191" y="44" rx="3" ry="3" width="147" height="13" />
-                    <Rect x="0" y="11" rx="3" ry="3" width="88" height="15" />
-                    <Rect x="2" y="77" rx="0" ry="0" width="436" height="2" />
-                </ContentLoader>
-            </View>)
+                    <ContentLoader
+                        style={{
+                            marginTop: -30,
 
-        return <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
-            <Entypo size={135} name='unread' color='#BEBEBE' />
-            <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>
-                {locales('labels.noRelateRequstFound')}
-            </Text>
+                        }}
+                        speed={2}
+                        width={deviceWidth}
+                        height={260}
+                        viewBox="0 0 430 320"
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+
+                    >
+                        <Rect x="164" y="21" rx="3" ry="3" width="183" height="20" />
+                        <Circle cx="395" cy="30" r="30" />
+                        <Rect x="42" y="94" rx="3" ry="3" width="349" height="24" />
+                        <Rect x="5" y="69" rx="0" ry="0" width="436" height="2" />
+                        <Rect x="17" y="136" rx="3" ry="3" width="398" height="19" />
+                        <Rect x="62" y="175" rx="3" ry="3" width="312" height="17" />
+                        <Rect x="97" y="211" rx="3" ry="3" width="237" height="48" />
+                    </ContentLoader>
+
+                </View>)}
+            </View>
+
+        return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
+            <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
+                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
+                    {locales('labels.noRelateRequstFoundFirst')}
+                </Text>
+                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
+                    {locales('labels.noRelateRequstFoundSecond')}
+                </Text>
+            </View>
         </View>
     };
 
@@ -129,23 +144,27 @@ class RequestsTab extends Component {
             <View
                 style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
                 <View style={{
-                    borderBottomWidth: 1, width: '85%', padding: 20,
-                    borderBottomColor: '#F3F3F3',
+                    borderBottomWidth: 1,
+                    paddingVertical: 5,
+                    paddingHorizontal: 15,
+                    borderBottomColor: '#F2F2F2',
                     alignSelf: 'center',
-                    backgroundColor: 'white', flexDirection: 'row-reverse'
+                    width: '100%',
+                    backgroundColor: 'white',
+                    flexDirection: 'row-reverse'
                 }}
                 >
                     <Image
                         style={{
                             borderRadius: deviceWidth * 0.06,
-                            width: deviceWidth * 0.12,
-                            height: deviceWidth * 0.12
+                            width: 40,
+                            height: 40
                         }}
                         source={require('../../../assets/icons/user.png')} />
                     <Text
                         style={{
-                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#9B9B9B',
-                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 18
+                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E',
+                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 16
                         }}
                         numberOfLines={1}
                     >
@@ -155,8 +174,7 @@ class RequestsTab extends Component {
 
                 <View
                     style={{
-                        padding: 20,
-                        marginVertical: 10,
+                        padding: 10,
                     }}
                 >
                     <Text
@@ -203,33 +221,34 @@ class RequestsTab extends Component {
                         >
                             <View
                                 style={{ flexDirection: 'row-reverse' }}>
-                                <FontAwesome5 name='hourglass-half' size={20} color='red' />
+                                <FontAwesome5 name='hourglass-half' size={20} color='#E41C38' style={{
+                                    marginLeft: 3
+                                }} />
                                 <Text
-                                    style={{ marginHorizontal: 5, textAlign: 'center' }}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        color: '#E41C38',
+                                        fontSize: 14,
+
+                                    }}>
+                                    {`${item.remaining_time == 1 ? locales('labels.one') : item.remaining_time} ${locales('labels.hour')} `}
+
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                        fontSize: 14
+                                    }}
                                 >
-                                    <Text
-                                        style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: 'red',
-                                            fontSize: 16
-                                        }}>
-                                        {`${item.remaining_time == 1 ? locales('labels.one') : item.remaining_time} ${locales('labels.hour')} `}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
-                                            fontSize: 16
-                                        }}
-                                    >
-                                        {locales('labels.remainedTimeToResponseToRequest')}
-                                    </Text>
+                                    {locales('labels.remainedTimeToResponseToRequest')}
                                 </Text>
                             </View>
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    marginVertical: 10,
+                                    marginTop: 10,
                                     color: '#BEBEBE',
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 }}
                             >
@@ -239,9 +258,10 @@ class RequestsTab extends Component {
                         :
                         <Text
                             style={{
-                                color: 'red',
-                                marginBottom: 5,
-                                marginTop: 20,
+                                color: '#E41C38',
+                                marginTop: 15,
+                                marginBottom: 15,
+                                paddingHorizontal: 40,
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 textAlign: 'center'
                             }}
@@ -265,7 +285,7 @@ class RequestsTab extends Component {
                             }}
                         />
                         <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
-                            {locales('titles.achiveSaleStatus')}
+                            {locales('labels.messageToBuyer')}
                         </Text>
                     </Button>
                 </View>
@@ -311,7 +331,6 @@ class RequestsTab extends Component {
             selectedContact,
             showDialog,
             selectedBuyAdId,
-
             relatedBuyAdRequestsList
         } = this.state;
 
@@ -374,7 +393,7 @@ class RequestsTab extends Component {
 
                         </Dialog.Actions>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {locales('titles.icreaseYouRegisterRequstCapacity')}
                         </Paragraph>
                         <View style={{
@@ -474,9 +493,9 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        marginTop: 30,
         width: '60%',
         height: 40,
+        marginBottom: 10,
         elevation: 0,
         borderRadius: 4,
         backgroundColor: '#BEBEBE',
@@ -484,10 +503,10 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        marginTop: 30,
         width: '60%',
         height: 40,
         elevation: 0,
+        marginBottom: 10,
         borderRadius: 4,
         backgroundColor: '#00C569',
         color: 'white',
