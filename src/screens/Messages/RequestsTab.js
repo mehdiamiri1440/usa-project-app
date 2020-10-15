@@ -74,32 +74,36 @@ class RequestsTab extends Component {
         const { relatedBuyAdRequestsLoading } = this.props;
 
         if (relatedBuyAdRequestsLoading)
-            return [1, 2, 3, 4, 5].map((_, index) => <View
-                key={index}
-            >
-                <ContentLoader
-                    style={{
-                        marginTop: -30,
-
-                    }}
-                    speed={2}
-                    width={deviceWidth}
-                    height={260}
-                    viewBox="0 0 430 320"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-
+            return <View style={{
+                paddingTop: 50
+            }}>
+                {[1, 2, 3, 4, 5].map((_, index) => <View
+                    key={index}
                 >
-                    <Rect x="164" y="21" rx="3" ry="3" width="183" height="20" />
-                    <Circle cx="395" cy="30" r="30" />
-                    <Rect x="42" y="94" rx="3" ry="3" width="349" height="24" />
-                    <Rect x="5" y="69" rx="0" ry="0" width="436" height="2" />
-                    <Rect x="17" y="136" rx="3" ry="3" width="398" height="19" />
-                    <Rect x="62" y="175" rx="3" ry="3" width="312" height="17" />
-                    <Rect x="97" y="211" rx="3" ry="3" width="237" height="48" />
-                </ContentLoader>
+                    <ContentLoader
+                        style={{
+                            marginTop: -30,
 
-            </View>)
+                        }}
+                        speed={2}
+                        width={deviceWidth}
+                        height={260}
+                        viewBox="0 0 430 320"
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+
+                    >
+                        <Rect x="164" y="21" rx="3" ry="3" width="183" height="20" />
+                        <Circle cx="395" cy="30" r="30" />
+                        <Rect x="42" y="94" rx="3" ry="3" width="349" height="24" />
+                        <Rect x="5" y="69" rx="0" ry="0" width="436" height="2" />
+                        <Rect x="17" y="136" rx="3" ry="3" width="398" height="19" />
+                        <Rect x="62" y="175" rx="3" ry="3" width="312" height="17" />
+                        <Rect x="97" y="211" rx="3" ry="3" width="237" height="48" />
+                    </ContentLoader>
+
+                </View>)}
+            </View>
 
         return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
             <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
