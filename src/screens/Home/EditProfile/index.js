@@ -32,6 +32,7 @@ class EditProfile extends Component {
             first_name: '',
             last_name: '',
             editErrors: [],
+            is_verified: false,
             showSubmitEditionModal: false
         }
     }
@@ -50,7 +51,7 @@ class EditProfile extends Component {
                 public_phone,
                 description } = this.props.userProfile.profile;
 
-            const { first_name, last_name } = this.props.userProfile.user_info;
+            const { first_name, last_name, is_verified } = this.props.userProfile.user_info;
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
@@ -62,7 +63,8 @@ class EditProfile extends Component {
                 public_phone,
                 first_name,
                 last_name,
-                description
+                is_verified,
+                description,
             });
         }
     }
@@ -216,6 +218,7 @@ class EditProfile extends Component {
             imageSizeError,
             first_name,
             last_name,
+            is_verified,
 
             editErrors,
             showSubmitEditionModal
@@ -396,6 +399,35 @@ class EditProfile extends Component {
                                 {`${first_name} ${last_name}`}
                             </Text>
                         </View>
+                        {!is_verified ?
+                            <View style={{ width: deviceWidth, flexDirection: 'row-reverse', padding: 25, justifyContent: 'center' }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                        textAlign: 'center',
+                                        width: '70%',
+                                        marginVertical: 10,
+                                        color: 'red',
+                                    }}>
+                                    {locales('labels.youAreNotAuthorized')}
+                                </Text>
+                                <Button
+                                    style={[styles.loginButton, {
+                                        width: '30%',
+                                        alignSelf: 'center', alignItems: 'center', justifyContent: 'center', margin: 0,
+                                    }]}
+
+                                    onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'Authentication' })}>
+                                    <Text style={{
+                                        color: 'white',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        textAlign: 'center'
+                                    }}>
+                                        {locales('labels.authentication')}
+                                    </Text>
+                                </Button>
+                            </View> : null}
 
                         <Card transparent>
                             <View style={{

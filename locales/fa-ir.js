@@ -49,6 +49,7 @@ export default {
     'labels.responseRate': 'احتمال پاسخگویی',
     'labels.response': 'پاسخ',
     'labels.addMoreDetails': 'ثبت جزییات بیشتر',
+    'labels.youAreNotAuthorized': 'اطلاعات هویتی شما احراز نشده‌ است',
     'labels.uploadIdCardSampleWithOwner': 'تصویر کارت ملی در کنار تصویر خود را اینجا بارگذاری کنید',
     'labels.uploadEvidence': 'تصویر مدارک خود را اینجا بارگذاری کنید',
     'labels.addMore': 'افزودن بیشتر',

@@ -131,7 +131,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
     }
     case 'productList': {
       if (remoteMessage.data.productId) {
-        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.product_id } });
+        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
       }
       return navigationRef.current.navigate('Home');
     }

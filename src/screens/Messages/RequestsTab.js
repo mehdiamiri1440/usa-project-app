@@ -294,6 +294,12 @@ class RequestsTab extends Component {
         )
     };
 
+    refreshList = () => {
+        this.props.fetchRelatedRequests().then(result => {
+            this.setState({ relatedBuyAdRequestsList: result.payload.buyAds })
+        });
+    }
+
     openChat = (event, item) => {
 
         event.preventDefault();
@@ -444,6 +450,8 @@ class RequestsTab extends Component {
                     keyExtractor={this.keyExtractor}
                     initialNumToRender={2}
                     renderItem={this.renderItem}
+                    refreshing={false}
+                    onRefresh={this.refreshList}
                 />
             </>
         );
