@@ -400,29 +400,33 @@ class EditProfile extends Component {
                             </Text>
                         </View>
                         {!is_verified ?
-                            <View style={{ width: deviceWidth, flexDirection: 'row-reverse', padding: 25, justifyContent: 'center' }}>
+                            <View style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center' }}>
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 16,
                                         textAlign: 'center',
-                                        width: '70%',
-                                        marginVertical: 10,
                                         color: 'red',
                                     }}>
                                     {locales('labels.youAreNotAuthorized')}
                                 </Text>
                                 <Button
                                     style={[styles.loginButton, {
-                                        width: '30%',
-                                        alignSelf: 'center', alignItems: 'center', justifyContent: 'center', margin: 0,
+                                        width: '50%',
+                                        alignSelf: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginTop: 15,
+                                        height: 35
                                     }]}
 
                                     onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'Authentication' })}>
                                     <Text style={{
                                         color: 'white',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        textAlign: 'center'
+                                        textAlign: 'center',
+                                        width: '100%',
+                                        fontSize: 16
                                     }}>
                                         {locales('labels.authentication')}
                                     </Text>
@@ -435,7 +439,7 @@ class EditProfile extends Component {
                             }}>
 
                                 <Text style={{
-                                    marginTop: 20,
+                                    marginTop: 10,
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#333'
                                 }}>

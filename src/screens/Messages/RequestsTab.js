@@ -284,7 +284,7 @@ class RequestsTab extends Component {
                                 marginRight: 5
                             }}
                         />
-                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
+                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: -3 }]}>
                             {locales('labels.messageToBuyer')}
                         </Text>
                     </Button>
