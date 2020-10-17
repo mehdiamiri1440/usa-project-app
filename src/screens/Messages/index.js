@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
@@ -30,13 +30,19 @@ const Messages = props => {
 
     const [searchText, setSearchText] = useState('');
     const [refresh, setRefresh] = useState(false);
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
     const [routes] = useState([
         { key: 'messages', title: locales('labels.messages') },
         { key: 'requests', title: locales('labels.requests') }
     ]
     );
 
+
+    useEffect(() => {
+        if (props.route && props.route.params && props.route.params.tabIndex) {
+            setIndex(props.route.params.tabIndex)
+        }
+    }, [props.route, props.route?.params, props.route?.params?.tabIndex])
 
     const handleSearch = text => setSearchText(text);
 

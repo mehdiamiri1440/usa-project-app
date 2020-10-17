@@ -146,6 +146,14 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
       }
     }
+    case 'buyAdSuggestion': {
+      if (is_seller) {
+        return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
+      }
+      else {
+        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+      }
+    }
     default:
       return navigationRef.current.navigate('Home');
   }
