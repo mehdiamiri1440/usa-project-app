@@ -27,6 +27,7 @@ export default {
     'labels.city': 'شهر',
     "labels.selectProvince": "استان را انتخاب کنید",
     "labels.buyer": "خریدار",
+    'labels.editProfileAuthentication': 'احراز هویت کنید',
     'labels.authentication': 'احراز هویت',
     'labels.noContactFound': 'مخاطبی یافت نشد',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",

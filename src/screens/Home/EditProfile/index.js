@@ -400,24 +400,26 @@ class EditProfile extends Component {
                             </Text>
                         </View>
                         {!is_verified ?
-                            <View style={{ justifyContent: 'center', textAlign: 'center', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', textAlign: 'center', alignItems: 'center' }}>
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         textAlign: 'center',
                                         color: 'red',
                                     }}>
                                     {locales('labels.youAreNotAuthorized')}
                                 </Text>
-                                <Button
+                                <TouchableOpacity
                                     style={[styles.loginButton, {
-                                        width: '50%',
+                                        width: 90,
                                         alignSelf: 'center',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        marginTop: 15,
-                                        height: 35
+                                        marginTop: 10,
+                                        height: 25,
+                                        backgroundColor: '#556080',
+
                                     }]}
 
                                     onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'Authentication' })}>
@@ -426,11 +428,11 @@ class EditProfile extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         textAlign: 'center',
                                         width: '100%',
-                                        fontSize: 16
+                                        fontSize: 12
                                     }}>
-                                        {locales('labels.authentication')}
+                                        {locales('labels.editProfileAuthentication')}
                                     </Text>
-                                </Button>
+                                </TouchableOpacity>
                             </View> : null}
 
                         <Card transparent>
