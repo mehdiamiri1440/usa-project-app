@@ -198,22 +198,25 @@ class RequestsTab extends Component {
                         >
                             {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
                         </Text>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
-                                fontSize: 16
-                            }}
-                        >
-                            {`${locales('labels.fromType')} `}
-                        </Text>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
-                                fontSize: 16
-                            }}
-                        >
-                            {item.name}
-                        </Text>
+                        {item.name ? <>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                    fontSize: 16
+                                }}
+                            >
+                                {`${locales('labels.fromType')} `}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                    fontSize: 16
+                                }}
+                            >
+                                {item.name}
+                            </Text>
+                        </>
+                            : null}
                     </Text>
                     {!item.expired ?
                         <View
