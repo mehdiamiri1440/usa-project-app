@@ -109,10 +109,10 @@ class RequestsTab extends Component {
             <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                 <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
                 <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
-                    {locales('labels.noRelateRequstFoundFirst')}
+                    {locales('labels.messengerNoRelateRequstFoundFirst')}
                 </Text>
                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
-                    {locales('labels.noRelateRequstFoundSecond')}
+                    {locales('labels.messengerNoRelateRequstFoundSecond')}
                 </Text>
             </View>
         </View>
