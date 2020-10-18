@@ -196,7 +196,7 @@ class Requests extends PureComponent {
                 this.props.requestsRef.current && this.props.requestsRef.current != null &&
                 this.props.requestsRef.current != undefined && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
                 setTimeout(() => {
-                    this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
         })
     };
