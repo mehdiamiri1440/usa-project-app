@@ -83,7 +83,7 @@ class RequestsTab extends Component {
     };
 
     renderListEmptyComponent = _ => {
-        const { relatedBuyAdRequestsLoading } = this.state;
+        const { relatedBuyAdRequestsLoading } = this.props;
 
         if (relatedBuyAdRequestsLoading)
             return <View style={{
