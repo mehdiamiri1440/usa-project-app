@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { Button, Card, CardItem, Body } from 'native-base';
+import { Button } from 'native-base';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
 
-import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -27,7 +26,9 @@ class RequestsTab extends Component {
             selectedBuyAdId: -1,
             selectedContact: {},
             loaded: false,
-            relatedBuyAdRequestsList: []
+            relatedBuyAdRequestsList: [],
+            goldenBuyAdsList: [],
+            showGoldenModal: false,
         }
     }
 
@@ -45,11 +46,17 @@ class RequestsTab extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.relatedBuyAdRequestsList.length) {
-            this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
+            this.setState({
+                relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList,
+                goldenBuyAdsList: this.props.goldenBuyAdsList, loaded: true
+            })
         }
 
         if (prevProps.refresh != this.props.refresh) {
-            this.setState({ relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList, loaded: true })
+            this.setState({
+                relatedBuyAdRequestsList: this.props.relatedBuyAdRequestsList,
+                goldenBuyAdsList: this.props.goldenBuyAdsList, loaded: true
+            })
         }
         if (this.props.searchText != this.state.searchText) {
             this.handleSearch(this.props.searchText)
@@ -59,19 +66,24 @@ class RequestsTab extends Component {
 
     handleSearch = text => {
         let relatedBuyAdRequestsList = [...this.state.relatedBuyAdRequestsList];
+        let goldenBuyAdsList = [...this.state.goldenBuyAdsList];
         if (text) {
             relatedBuyAdRequestsList = this.props.relatedBuyAdRequestsList
+                .filter(item => `${item.first_name} ${item.last_name}`.includes(text) || `${item.subcategory_name}`.includes(text) ||
+                    `${item.name}`.includes(text));
+            goldenBuyAdsList = this.props.goldenBuyAdsList
                 .filter(item => `${item.first_name} ${item.last_name}`.includes(text) || `${item.subcategory_name}`.includes(text) ||
                     `${item.name}`.includes(text));
         }
         else {
             relatedBuyAdRequestsList = [...this.props.relatedBuyAdRequestsList]
+            goldenBuyAdsList = [...this.props.goldenBuyAdsList]
         }
-        this.setState({ relatedBuyAdRequestsList, searchText: text })
+        this.setState({ relatedBuyAdRequestsList, goldenBuyAdsList, searchText: text })
     };
 
     renderListEmptyComponent = _ => {
-        const { relatedBuyAdRequestsLoading } = this.props;
+        const { relatedBuyAdRequestsLoading } = this.state;
 
         if (relatedBuyAdRequestsLoading)
             return <View style={{
@@ -130,8 +142,120 @@ class RequestsTab extends Component {
         return null;
     };
 
-    renderItem = ({ item }) => {
+    renderGoldenListItem = ({ item }) => {
+        const {
+            selectedButton
+        } = this.state;
 
+        const {
+            isUserAllowedToSendMessageLoading
+        } = this.props;
+
+        return (
+            <View
+                style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
+                <View style={{
+                    borderBottomWidth: 1,
+                    paddingVertical: 5,
+                    paddingHorizontal: 15,
+                    borderBottomColor: '#F2F2F2',
+                    alignSelf: 'center',
+                    width: '100%',
+                    backgroundColor: 'white',
+                    flexDirection: 'row-reverse'
+                }}
+                >
+                    <Image
+                        style={{
+                            borderRadius: deviceWidth * 0.06,
+                            width: 40,
+                            height: 40
+                        }}
+                        source={require('../../../assets/icons/user.png')} />
+                    <Text
+                        style={{
+                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E',
+                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 16
+                        }}
+                        numberOfLines={1}
+                    >
+                        {item.first_name} {item.last_name}
+                    </Text>
+                </View>
+
+                <View
+                    style={{
+                        padding: 10,
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'center'
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                fontSize: 16
+                            }}
+                        >
+                            {`${locales('labels.buyer')} `}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                fontSize: 16
+                            }}
+                        >
+                            {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
+                        </Text>
+                        {item.name ? <>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                    fontSize: 16
+                                }}
+                            >
+                                {`${locales('labels.fromType')} `}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                    fontSize: 16
+                                }}
+                            >
+                                {item.name}
+                            </Text>
+                        </>
+                            : null}
+                    </Text>
+
+                    <Button
+                        onPress={event => this.openChat(event, item, true)}
+                        style={[styles.loginButton,
+                        { alignSelf: 'center', backgroundColor: 'red', justifyContent: 'center', alignItems: 'center' }]}
+                    >
+                        <ActivityIndicator size={20} color='white'
+                            animating={selectedButton == item.id &&
+                                !!isUserAllowedToSendMessageLoading}
+                            style={{
+                                position: 'relative',
+                                width: 10, height: 10, borderRadius: 5,
+                                marginLeft: -15,
+                                marginRight: 5
+                            }}
+                        />
+                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: -3 }]}>
+                            {locales('labels.messageToBuyer')}
+                        </Text>
+                    </Button>
+                </View>
+            </View>
+
+        )
+    };
+
+    renderItem = ({ item }) => {
         const {
             selectedButton
         } = this.state;
@@ -273,7 +397,7 @@ class RequestsTab extends Component {
                         </Text>
                     }
                     <Button
-                        onPress={event => !item.expired && this.openChat(event, item)}
+                        onPress={event => !item.expired && this.openChat(event, item, false)}
                         style={[item.expired ? styles.disableLoginButton : styles.loginButton,
                         { alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}
                     >
@@ -299,15 +423,38 @@ class RequestsTab extends Component {
 
     refreshList = () => {
         this.props.fetchRelatedRequests().then(result => {
-            this.setState({ relatedBuyAdRequestsList: result.payload.buyAds })
+            this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
         });
     }
 
-    openChat = (event, item) => {
+    openChat = (event, item, isGolden) => {
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            active_pakage_type
+        } = user_info;
 
         event.preventDefault();
 
         this.setState({ selectedButton: item.id })
+        if (isGolden) {
+            if (active_pakage_type != 0) {
+                this.checkUserPermissionToSendMessage(item)
+            }
+            else {
+                this.setState({ showGoldenModal: true });
+            }
+        }
+        else {
+            this.checkUserPermissionToSendMessage(item);
+        }
+    };
+
+    checkUserPermissionToSendMessage = item => {
         this.props.isUserAllowedToSendMessage(item.id).then(() => {
             if (this.props.isUserAllowedToSendMessagePermission.permission) {
                 analytics().logEvent('buyAd_suggestion_chat_opened', {
@@ -334,17 +481,43 @@ class RequestsTab extends Component {
 
     hideDialog = () => this.setState({ showDialog: false });
 
+    renderHeaderComponent = _ => {
+
+        const {
+            goldenBuyAdsList
+        } = this.state;
+
+        if (goldenBuyAdsList && goldenBuyAdsList.length)
+            return (
+                <FlatList
+                    contentContainerStyle={{ backgroundColor: 'white' }}
+                    windowSize={10}
+                    data={goldenBuyAdsList}
+                    maxToRenderPerBatch={3}
+                    keyExtractor={this.keyExtractor}
+                    initialNumToRender={2}
+                    renderItem={this.renderGoldenListItem}
+                    refreshing={false}
+                    onRefresh={this.refreshList}
+                />
+
+            )
+        return null;
+    }
+
     render() {
         let {
             modalFlag,
             selectedContact,
             showDialog,
             selectedBuyAdId,
-            relatedBuyAdRequestsList
+            relatedBuyAdRequestsList,
+            showGoldenModal
         } = this.state;
 
         return (
             <>
+
 
                 {modalFlag && <ChatModal
                     transparent={false}
@@ -356,6 +529,91 @@ class RequestsTab extends Component {
                 />}
 
 
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showGoldenModal}
+                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.goldenRequests')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.accessToGoldensDeined')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('labels.icreaseToSeeGoldens')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.setState({ showGoldenModal: false })
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ showGoldenModal: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
 
                 < Portal
                     style={{
@@ -446,6 +704,7 @@ class RequestsTab extends Component {
 
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
+                    ListHeaderComponent={this.renderHeaderComponent}
                     ListEmptyComponent={this.renderListEmptyComponent}
                     windowSize={10}
                     data={relatedBuyAdRequestsList}
@@ -693,7 +952,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     const {
         relatedBuyAdRequestsLoading,
-        relatedBuyAdRequestsList
+        relatedBuyAdRequestsList,
+        goldenBuyAdsList
     } = state.buyAdRequestReducer;
 
     const {
@@ -707,6 +967,7 @@ const mapStateToProps = (state) => {
     return {
         relatedBuyAdRequestsLoading,
         relatedBuyAdRequestsList,
+        goldenBuyAdsList,
 
         userProfile,
 

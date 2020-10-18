@@ -12,6 +12,7 @@ const INITIAL_STATE = {
     relatedBuyAdRequestsError: false,
     relatedBuyAdRequestsMessage: null,
     relatedBuyAdRequestsList: [],
+    goldenBuyAdsList: [],
     relatedBuyAdRequests: {},
 
 };
@@ -71,6 +72,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 relatedBuyAdRequestsList: [],
+                goldenBuyAdsList: [],
                 relatedBuyAdRequests: {},
                 relatedBuyAdRequestsLoading: true,
                 relatedBuyAdRequestsFailed: false,
@@ -83,6 +85,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 relatedBuyAdRequestsList: [...action.payload.buyAds],
+                goldenBuyAdsList: [...action.payload.golden_buyAds] || [],
                 relatedBuyAdRequests: { ...action.payload },
                 relatedBuyAdRequestsLoading: false,
                 relatedBuyAdRequestsFailed: false,
@@ -95,6 +98,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 relatedBuyAdRequestsList: [],
+                goldenBuyAdsList: [],
                 relatedBuyAdRequests: {},
                 relatedBuyAdRequestsLoading: false,
                 relatedBuyAdRequestsFailed: true,
@@ -106,6 +110,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 relatedBuyAdRequestsList: [],
+                goldenBuyAdsList: [],
                 relatedBuyAdRequests: {},
                 relatedBuyAdRequestsLoading: false,
                 relatedBuyAdRequestsFailed: false,
