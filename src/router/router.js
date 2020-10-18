@@ -31,7 +31,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 
 
-
+import Loading from '../screens/Loading';
 import UpgradeApp from '../screens/UpgradeApp'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
@@ -84,7 +84,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
   const { user_info = {} } = userProfile;
   let { is_seller } = user_info;
   is_seller = is_seller == 0 ? false : true;
-
+  global.isFromOutSide = false
   switch (remoteMessage.data.BTarget) {
     case 'messages': {
       return navigationRef.current.navigate('Messages');
@@ -94,7 +94,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
       }
     }
     case 'dashboard': {
@@ -102,7 +103,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
       }
     }
     case 'registerProduct': {
@@ -110,7 +112,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
       }
     }
     case 'registerBuyAd': {
@@ -118,7 +121,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('RegisterRequest');
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
       }
     }
     case 'specialProducts': {
@@ -126,7 +130,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('SpecialProducts');
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
       }
     }
     case 'productList': {
@@ -143,7 +148,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('Requests');
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
       }
     }
     case 'buyAdSuggestion': {
@@ -151,7 +157,8 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
         return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
       }
       else {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'ChangeRole' });
+        return navigationRef.current.navigate('MyBuskool',
+          { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
       }
     }
     default:
@@ -307,7 +314,7 @@ const App = (props) => {
       // return unsubscribe
     }
 
-  }, [initialRoute, is_seller]);
+  }, [initialRoute, is_seller, props.loggedInUserId]);
 
   const linking = {
     prefixes: ['buskool://Home'],
@@ -526,7 +533,9 @@ const App = (props) => {
 
 
   const RegisterProductStack = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={global.isFromOutSide ? 'Loading' : 'RegisterProduct'}
+    >
 
       <Stack.Screen
         options={({ navigation, route }) => ({
@@ -566,11 +575,25 @@ const App = (props) => {
         name={`UpgradeApp`}
         component={UpgradeApp}
       />
+
+      <Stack.Screen
+        options={({ navigation, route }) => ({
+          headerShown: false,
+          title: null,
+        })}
+        key='Loading'
+        name='Loading'
+        component={Loading}
+      />
+
+
     </Stack.Navigator>
   )
 
   const RegisterRequestStack = () => (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={global.isFromOutSide ? 'Loading' : 'RegisterRequest'}
+    >
 
       <Stack.Screen
         options={({ navigation, route }) => ({
@@ -601,6 +624,15 @@ const App = (props) => {
       />
 
 
+      <Stack.Screen
+        options={({ navigation, route }) => ({
+          headerShown: false,
+          title: null,
+        })}
+        key='Loading'
+        name='Loading'
+        component={Loading}
+      />
     </Stack.Navigator>
   )
 

@@ -8,7 +8,7 @@ import { routeToScreensFromNotifications } from './src/router/router';
 import { name as appName } from './app.json';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
-
+global.isFromOutSide = false
 export async function firebaseBackgroundMessage(message) {
     let notif = message['data'];
     console.warn(notif);
@@ -21,6 +21,7 @@ AppRegistry.registerComponent(appName, () => App);
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     const store = configureStore();
+    global.isFromOutSide = true
     store.subscribe(() => {
         Promise.resolve(store.getState().profileReducer).then(result => {
             setTimeout(() => {

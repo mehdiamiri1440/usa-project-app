@@ -139,6 +139,8 @@ export default {
     'labels.relatedPhotos': 'عکس‌های مرتبط',
     'labels.noImageFound': 'عکسی یافت نشد',
     'labels.noevidenceFound': 'مدرکی یافت نشد',
+    'labels.pleaseWait': 'لطفا شکیبا باشید ...',
+    'labels.redirecting': 'درحال انتقال',
     'labels.myEvidences': 'مدارک من',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
     'labels.buyRequests': 'درخواست‌های خرید',

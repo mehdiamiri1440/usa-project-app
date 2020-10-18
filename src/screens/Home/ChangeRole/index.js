@@ -29,7 +29,20 @@ class ChangeRole extends Component {
     changeRole = _ => {
         this.props.changeRole().then(_ => {
             this.props.fetchUserProfile().then(_ => {
-                this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' })
+                if (this.props.route && this.props.route.params) {
+                    const {
+                        route
+                    } = this.props;
+                    const {
+                        params
+                    } = route;
+                    const {
+                        parentRoute,
+                        childRoute,
+                        routeParams
+                    } = params;
+                    this.props.navigation.navigate(parentRoute, { screen: childRoute, params: { ...routeParams } })
+                }
             });
         })
     }

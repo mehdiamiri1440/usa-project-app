@@ -34,7 +34,6 @@
     "axios": "^0.19.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-preset-react-native": "^4.0.1",
-    "firebase": "^7.13.2",
     "jetifier": "^1.6.6",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",

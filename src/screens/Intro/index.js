@@ -27,7 +27,7 @@ class Intro extends Component {
     }
 
     componentDidMount() {
-        // AsyncStorage.setItem('@isIntroductionSeen', JSON.stringify(true))
+        AsyncStorage.setItem('@isIntroductionSeen', JSON.stringify(true))
     }
 
     render() {

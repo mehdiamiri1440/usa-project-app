@@ -126,7 +126,7 @@ class ProductsList extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
                 setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
         }).catch(error => {
             this.setState({
