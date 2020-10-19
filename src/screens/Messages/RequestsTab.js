@@ -6,7 +6,7 @@ import { Button } from 'native-base';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
-
+import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -146,6 +146,15 @@ class RequestsTab extends Component {
         const {
             selectedButton
         } = this.state;
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            active_pakage_type
+        } = user_info;
 
         const {
             isUserAllowedToSendMessageLoading
@@ -153,12 +162,15 @@ class RequestsTab extends Component {
 
         return (
             <View
-                style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
+                style={{
+                    borderColor: '#c7a84f',
+                    borderWidth: 2,
+                    backgroundColor: 'white',
+                    width: deviceWidth
+                }}>
                 <View style={{
-                    borderBottomWidth: 1,
                     paddingVertical: 5,
                     paddingHorizontal: 15,
-                    borderBottomColor: '#F2F2F2',
                     alignSelf: 'center',
                     width: '100%',
                     backgroundColor: 'white',
@@ -183,40 +195,35 @@ class RequestsTab extends Component {
                     </Text>
                 </View>
 
-                <View
-                    style={{
-                        padding: 10,
-                    }}
-                >
-                    <Text
+                { active_pakage_type > 0 ?
+                    <View
                         style={{
-                            textAlign: 'center'
+                            padding: 10,
                         }}
                     >
+                        <View
+                            style={{ flexDirection: 'row-reverse' }}>
+
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                    fontSize: 14,
+                                }}
+                            >
+                            </Text>
+                        </View>
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
-                                fontSize: 16
+                                textAlign: 'center'
                             }}
                         >
-                            {`${locales('labels.buyer')} `}
-                        </Text>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
-                                fontSize: 16
-                            }}
-                        >
-                            {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
-                        </Text>
-                        {item.name ? <>
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
                                     fontSize: 16
                                 }}
                             >
-                                {`${locales('labels.fromType')} `}
+                                {`${locales('labels.buyer')} `}
                             </Text>
                             <Text
                                 style={{
@@ -224,32 +231,202 @@ class RequestsTab extends Component {
                                     fontSize: 16
                                 }}
                             >
-                                {item.name}
+                                {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
                             </Text>
-                        </>
-                            : null}
-                    </Text>
+                            {item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {`${locales('labels.fromType')} `}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                            </>
+                                :
+                                null}
+                        </Text>
 
-                    <Button
-                        onPress={event => this.openChat(event, item, true)}
-                        style={[styles.loginButton,
-                        { alignSelf: 'center', backgroundColor: 'red', justifyContent: 'center', alignItems: 'center' }]}
+                        <View
+                            style={{ alignSelf: 'center', marginVertical: 10 }}
+                        >
+
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    marginTop: 10,
+                                    color: '#BEBEBE',
+                                    fontSize: 14,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                }}
+                            >
+                                {locales('labels.notifMeIfExists')}
+                            </Text>
+                        </View>
+                        <Button
+                            onPress={event => this.openChat(event, item, true)}
+                            style={[styles.loginButton,
+                            { alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'center', alignItems: 'center' }]}
+                        >
+
+                            <LinearGradient
+                                start={{ x: 0, y: 0.51, z: 1 }}
+                                end={{ x: 0.8, y: 0.2, z: 1 }}
+                                colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                style={{
+                                    width: '100%',
+                                    borderWidth: 0,
+                                    paddingHorizontal: 10,
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    justifyContent: 'center',
+                                    height: 35,
+                                    borderRadius: 6,
+                                    elevation: 2
+                                }}
+                            >
+                                <Text style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 14,
+                                    color: '#333',
+                                    paddingHorizontal: 3
+                                }}>
+                                    {locales('labels.messageToBuyer')}
+
+
+                                </Text>
+                                <ActivityIndicator size={20} color={'#333'}
+                                    animating={selectedButton == item.id &&
+                                        !!isUserAllowedToSendMessageLoading}
+                                    style={{
+                                        position: 'relative',
+                                        width: 10, height: 10, borderRadius: 5,
+                                        marginLeft: -10,
+                                        marginRight: 5
+                                    }}
+                                />
+                            </LinearGradient>
+                        </Button>
+                    </View>
+                    :
+
+                    <View
+                        style={{
+                            padding: 10,
+                            overflow: 'hidden',
+                        }}
                     >
-                        <ActivityIndicator size={20} color='white'
-                            animating={selectedButton == item.id &&
-                                !!isUserAllowedToSendMessageLoading}
+
+                        <Image source={require('../../../assets/images/blur-items.jpg')}
                             style={{
-                                position: 'relative',
-                                width: 10, height: 10, borderRadius: 5,
-                                marginLeft: -15,
-                                marginRight: 5
+                                height: '100%',
+                                position: 'absolute',
+                                top: 0,
+                                right: 10,
+                                width: '100%',
+                                zIndex: -1
                             }}
                         />
-                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: -3 }]}>
-                            {locales('labels.messageToBuyer')}
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                marginVertical: 43
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777',
+                                    fontSize: 18
+                                }}
+                            >
+                                {`${locales('labels.buyer')} `}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444',
+                                    fontSize: 18
+                                }}
+                            >
+                                {/* {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `} */}
+                                {`${item.subcategory_name} `}
+                            </Text>
+                            {/* {item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {`${locales('labels.fromType')} `}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                            </>
+                                : null} */}
                         </Text>
-                    </Button>
-                </View>
+
+                        <Button
+                            onPress={event => this.openChat(event, item, true)}
+                            style={[styles.loginButton,
+                            { alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'center', alignItems: 'center' }]}
+                        >
+
+                            <LinearGradient
+                                start={{ x: 0, y: 0.51, z: 1 }}
+                                end={{ x: 0.8, y: 0.2, z: 1 }}
+                                colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                style={{
+                                    width: '100%',
+                                    borderWidth: 0,
+                                    paddingHorizontal: 10,
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    justifyContent: 'center',
+                                    height: 35,
+                                    borderRadius: 6,
+                                    elevation: 2
+                                }}
+                            >
+                                <Text style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 14,
+                                    color: '#333',
+                                    paddingHorizontal: 3
+                                }}>
+                                    {locales('labels.messageToBuyer')}
+
+
+                                </Text>
+                                <ActivityIndicator size={20} color={'#333'}
+                                    animating={selectedButton == item.id &&
+                                        !!isUserAllowedToSendMessageLoading}
+                                    style={{
+                                        position: 'relative',
+                                        width: 10, height: 10, borderRadius: 5,
+                                        marginLeft: -10,
+                                        marginRight: 5
+                                    }}
+                                />
+                            </LinearGradient>
+                        </Button>
+                    </View>
+                }
             </View>
 
         )
