@@ -9,10 +9,10 @@ const getUrl = route => {
     //     if (!RNEmulatorCheck.isEmulator())
     //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
     // }
-    return `http://192.168.1.102:3030/${route}`;
+    // return `http://192.168.1.102:3030/${route}`;
 
     // return `https://www.alidelkhosh.ir/${route}`;
-    // return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
+    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 };
 getData = async () => {
