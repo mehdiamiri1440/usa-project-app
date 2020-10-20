@@ -17,6 +17,7 @@ import ProductMoreDetails from './Steps/ProductMoreDetails';
 import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../Loading';
 
 let stepsArray = [1, 2, 3, 4, 5, 6],
     tempDefaultArray = []
@@ -329,7 +330,7 @@ class RegisterProduct extends React.Component {
 
         return (
             <>
-
+                <Loading />
                 {stepNumber == 7 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}

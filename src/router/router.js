@@ -31,7 +31,6 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 
 
-import Loading from '../screens/Loading';
 import UpgradeApp from '../screens/UpgradeApp'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
@@ -534,7 +533,7 @@ const App = (props) => {
 
   const RegisterProductStack = () => (
     <Stack.Navigator
-      initialRouteName={global.isFromOutSide ? 'Loading' : 'RegisterProduct'}
+      initialRouteName={'RegisterProduct'}
     >
 
       <Stack.Screen
@@ -576,23 +575,12 @@ const App = (props) => {
         component={UpgradeApp}
       />
 
-      <Stack.Screen
-        options={({ navigation, route }) => ({
-          headerShown: false,
-          title: null,
-        })}
-        key='Loading'
-        name='Loading'
-        component={Loading}
-      />
-
-
     </Stack.Navigator>
   )
 
   const RegisterRequestStack = () => (
     <Stack.Navigator
-      initialRouteName={global.isFromOutSide ? 'Loading' : 'RegisterRequest'}
+      initialRouteName={'RegisterRequest'}
     >
 
       <Stack.Screen
@@ -623,16 +611,6 @@ const App = (props) => {
         component={UpgradeApp}
       />
 
-
-      <Stack.Screen
-        options={({ navigation, route }) => ({
-          headerShown: false,
-          title: null,
-        })}
-        key='Loading'
-        name='Loading'
-        component={Loading}
-      />
     </Stack.Navigator>
   )
 
