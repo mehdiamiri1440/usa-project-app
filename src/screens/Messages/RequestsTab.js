@@ -83,9 +83,9 @@ class RequestsTab extends Component {
     };
 
     renderListEmptyComponent = _ => {
-        const { relatedBuyAdRequestsLoading } = this.props;
+        const { relatedBuyAdRequestsLoading, goldenBuyAdsList } = this.props;
 
-        if (relatedBuyAdRequestsLoading)
+        if (relatedBuyAdRequestsLoading || goldenBuyAdsList)
             return <View style={{
                 paddingTop: 50
             }}>

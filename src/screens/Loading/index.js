@@ -1,7 +1,20 @@
-import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, BackHandler, AppState, View, ActivityIndicator } from 'react-native';
 
 const Loading = _ => {
+
+    useEffect(() => {
+        AppState.addEventListener('change', handleChangeInAppState)
+        return () => AppState.removeEventListener('change', handleChangeInAppState)
+    }, []);
+
+
+    const handleChangeInAppState = state => {
+        if (AppState.currentState == state) {
+            return BackHandler.exitApp();
+        }
+    };
+
     return (
         <View
             style={{
