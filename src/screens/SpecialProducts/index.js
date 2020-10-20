@@ -374,7 +374,7 @@ class SpecialProducts extends PureComponent {
         let cities = [];
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
-        if (Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
         return (
