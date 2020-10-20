@@ -83,9 +83,14 @@ class RequestsTab extends Component {
     };
 
     renderListEmptyComponent = _ => {
-        const { relatedBuyAdRequestsLoading, goldenBuyAdsList } = this.props;
+        const { relatedBuyAdRequestsLoading } = this.props;
+        const { relatedBuyAdRequestsList = [], goldenBuyAdsList = [] } = this.state;
 
-        if (relatedBuyAdRequestsLoading || goldenBuyAdsList)
+        if (goldenBuyAdsList && goldenBuyAdsList.length)
+            if (relatedBuyAdRequestsList && !relatedBuyAdRequestsList.length)
+                return null;
+
+        if (relatedBuyAdRequestsLoading)
             return <View style={{
                 paddingTop: 50
             }}>
@@ -117,17 +122,18 @@ class RequestsTab extends Component {
                 </View>)}
             </View>
 
-        return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
-            <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
-                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
-                    {locales('labels.messengerNoRelateRequstFoundFirst')}
-                </Text>
-                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
-                    {locales('labels.messengerNoRelateRequstFoundSecond')}
-                </Text>
+        if (!relatedBuyAdRequestsList.length && !goldenBuyAdsList.length && !relatedBuyAdRequestsLoading)
+            return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
+                <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                    <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
+                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
+                        {locales('labels.messengerNoRelateRequstFoundFirst')}
+                    </Text>
+                    <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
+                        {locales('labels.messengerNoRelateRequstFoundSecond')}
+                    </Text>
+                </View>
             </View>
-        </View>
     };
 
     keyExtractor = item => item.id.toString();
