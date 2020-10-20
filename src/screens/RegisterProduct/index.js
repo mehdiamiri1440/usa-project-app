@@ -483,7 +483,7 @@ class RegisterProduct extends React.Component {
 const styles = StyleSheet.create({
     stepsContainer: {
         marginVertical: 5,
-        height: deviceHeight
+        flex: 1
     },
     loginFailedContainer: {
         backgroundColor: '#D4EDDA',

@@ -33,7 +33,7 @@ const Messages = props => {
     const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
     const [routes] = useState([
         { key: 'messages', title: locales('labels.messages') },
-        { key: 'requests', title: locales('labels.requests') }
+        { key: 'requests', title: locales('labels.suggestedBuyers') }
     ]
     );
 
@@ -165,7 +165,7 @@ const Messages = props => {
                             ref={serachInputRef}
                             onChangeText={handleSearch}
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#FFFFFF' }}
-                            placeholder={index == 0 ? locales('labels.searchContacts') : locales('titles.searchBuyAd')}
+                            placeholder={locales('labels.search')}
                             placeholderTextColor="#FFFFFF"
 
                         />

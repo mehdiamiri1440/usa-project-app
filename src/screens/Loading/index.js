@@ -17,7 +17,7 @@ const Loading = props => {
         <Modal
             animationType="slide"
             transparent={false}
-            visible={visible}
+            visible={true}
             onRequestClose={() => setVisible(false)}
         >
 
@@ -27,20 +27,20 @@ const Loading = props => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
-                <Text
+                {/* <Text
                     style={{
                         width: '100%', textAlign: 'center',
                         marginTop: 15,
                         fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
                     }}>
                     {locales('labels.redirecting')}
-                </Text>
+                </Text> */}
                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center' }}>
                     <Text
                         style={{
                             textAlign: 'center',
                             marginTop: 15,
-                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#00C569'
                         }}>
                         {locales('labels.pleaseWait')}
                     </Text>
