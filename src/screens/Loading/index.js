@@ -17,7 +17,7 @@ const Loading = props => {
         <Modal
             animationType="slide"
             transparent={false}
-            visible={true}
+            visible={visible}
             onRequestClose={() => setVisible(false)}
         >
 
