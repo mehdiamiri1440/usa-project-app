@@ -10,6 +10,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { navigationRef, isReadyRef } from './rootNavigation';
 
 const Tabs = props => {
 
