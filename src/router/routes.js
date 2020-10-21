@@ -1,23 +1,32 @@
-import React, { useEffect, forwardRef, useRef, useState } from 'react';
-import { Image, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, View, Text } from 'react-native';
 import { connect } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import messaging from '@react-native-firebase/messaging';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+
 import Octicons from 'react-native-vector-icons/dist/Octicons';
-import Requests from '../screens/Requests/Requests';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Feather from 'react-native-vector-icons/dist/Feather';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
+
+import UpgradeApp from '../screens/UpgradeApp'
+import Intro from '../screens/Intro'
+import SignUp from '../screens/SignUp'
 import Home from '../screens/Home/Home';
+import Requests from '../screens/Requests/Requests';
 import Dashboard from '../screens/Home/Dashboard';
+import ContactUs from '../screens/Home/ContactUs';
+import Authentication from '../screens/Home/Authentication';
+import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
-import Referral from '../screens/Home/Referral';
-import UserFriends from '../screens/Home/UserFriends';
-import PromotionIntro from '../screens/Home/PromotionIntro';
+// import PromotionIntro from '../screens/Home/PromotionIntro';
+// import Referral from '../screens/Home/Referral';
+// import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
@@ -35,31 +44,44 @@ import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
 
-import { deviceWidth, deviceHeight } from '../utils';
-
+import { deviceWidth } from '../utils';
+import * as authActions from '../redux/auth/actions';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
-import * as RootNavigation from './rootNavigation';
 
 
+const routes = props => {
+
+    const {
+        initialRoute,
+        userProfile = {},
+    } = props;
 
 
+    const { user_info = {} } = userProfile;
+    let { is_seller } = user_info;
+    is_seller = is_seller == 0 ? false : true;
 
-const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
+    const Stack = createStackNavigator();
+    const Tab = createMaterialBottomTabNavigator();
 
-const router = forwardRef((props, innerRef) => {
+    const linking = {
+        prefixes: ['buskool://Home'],
+    };
 
-    const { changeRoleObject = {}, userProfile } = props;
+    const [newMessage, setNewMessage] = useState(false);
 
-    const { is_seller = null } = changeRoleObject;
+    useEffect(() => {
+        messaging().onMessage(async remoteMessage => {
+            setNewMessage(true);
+        })
+    }, []);
 
-    let [initialRoute, setInitialRoute] = useState();
-
-    const MyBuskoolStack = (props) => {
+    const MyBuskoolStack = _ => {
         return (
             <Stack.Navigator
                 initialRouteName={global.initialProfileRoute}
+            // initialRouteName={'ChangeRole'}
             >
                 <Stack.Screen
                     options={({ navigation, route }) => ({
@@ -79,6 +101,7 @@ const router = forwardRef((props, innerRef) => {
                     name='Dashboard'
                     component={Dashboard}
                 />
+
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -106,33 +129,33 @@ const router = forwardRef((props, innerRef) => {
                     name='EditProfile'
                     component={EditProfile}
                 />
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerShown: false,
-                        title: null,
-                    })}
-                    key='Referral'
-                    name='Referral'
-                    component={Referral}
-                />
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerShown: false,
-                        title: null,
-                    })}
-                    key='UserFriends'
-                    name='UserFriends'
-                    component={UserFriends}
-                />
-                <Stack.Screen
-                    options={({ navigation, route }) => ({
-                        headerShown: false,
-                        title: null,
-                    })}
-                    key='PromotionIntro'
-                    name='PromotionIntro'
-                    component={PromotionIntro}
-                />
+                {/* <Stack.Screen
+          options={({ navigation, route }) => ({
+            headerShown: false,
+            title: null,
+          })}
+          key='Referral'
+          name='Referral'
+          component={Referral}
+        /> */}
+                {/* <Stack.Screen
+          options={({ navigation, route }) => ({
+            headerShown: false,
+            title: null,
+          })}
+          key='UserFriends'
+          name='UserFriends'
+          component={UserFriends}
+        /> */}
+                {/* <Stack.Screen
+          options={({ navigation, route }) => ({
+            headerShown: false,
+            title: null,
+          })}
+          key='PromotionIntro'
+          name='PromotionIntro'
+          component={PromotionIntro}
+        /> */}
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -187,9 +210,15 @@ const router = forwardRef((props, innerRef) => {
                     name='Payment'
                     component={Payment}
                 />
-
-
-
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ChangeRole'
+                    name='ChangeRole'
+                    component={ChangeRole}
+                />
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -208,13 +237,33 @@ const router = forwardRef((props, innerRef) => {
                     name='ExtraProductCapacity'
                     component={ExtraProductCapacity}
                 />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='ContactUs'
+                    name='ContactUs'
+                    component={ContactUs}
+                />
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Authentication'
+                    name='Authentication'
+                    component={Authentication}
+                />
             </Stack.Navigator >
         )
     };
 
 
-    const RegisterProductStack = () => (
-        <Stack.Navigator>
+    const RegisterProductStack = _ => (
+        <Stack.Navigator
+            initialRouteName={'RegisterProduct'}
+        >
 
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -246,12 +295,22 @@ const router = forwardRef((props, innerRef) => {
                 name='RegisterProductSuccessfully'
                 component={RegisterProductSuccessfully}
             />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
 
         </Stack.Navigator>
     )
 
-    const RegisterRequestStack = () => (
-        <Stack.Navigator>
+    const RegisterRequestStack = _ => (
+        <Stack.Navigator
+            initialRouteName={'RegisterRequest'}
+        >
 
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -272,12 +331,19 @@ const router = forwardRef((props, innerRef) => {
                 name={`RegisterRequestSuccessfully`}
                 component={RegisterRequestSuccessfully}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
 
         </Stack.Navigator>
     )
 
-    const MessagesStack = () => (
+    const MessagesStack = _ => (
         <Stack.Navigator>
 
             <Stack.Screen
@@ -303,10 +369,9 @@ const router = forwardRef((props, innerRef) => {
     )
 
 
-    const HomeStack = (props) => {
+    const HomeStack = _ => {
         return (
             <Stack.Navigator>
-
                 <Stack.Screen
                     options={({ navigation, route }) => ({
                         headerShown: false,
@@ -360,190 +425,241 @@ const router = forwardRef((props, innerRef) => {
 
             </Stack.Navigator>
         )
-    }
-    // const mapStateToProps = (state) => {
-    //     return {
-    //         productDetailsId: state.productsListReducer.productDetailsId,
-    //     }
-    // }
-    // ProductsListStack = connect(mapStateToProps)(ProductsListStack);
+    };
 
-    useEffect(() => {
-    }, [initialRoute])
+    const SpecialProductsStack = _ => {
+        return (
+            <Stack.Navigator>
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='SpecialProducts'
+                    name='SpecialProducts'
+                    component={SpecialProducts}
+                />
+
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    name={`ProductDetails`}
+                    component={ProductDetails}
+                />
+
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Payment'
+                    name='Payment'
+                    component={Payment}
+                />
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='PromoteRegistration'
+                    name='PromoteRegistration'
+                    component={PromoteRegistration}
+                />
+
+                <Stack.Screen
+                    options={({ navigation, route }) => ({
+                        headerShown: false,
+                        title: null,
+                    })}
+                    key='Profile'
+                    name='Profile'
+                    component={Profile}
+                />
+
+            </Stack.Navigator>
+        )
+    };
+
+
     return (
+        <NavigationContainer
+            linking={linking}
+            fallback={<Text>Loading...</Text>}
+            ref={navigationRef}
+            onReady={() => {
+                isReadyRef.current = true;
+            }}
+        >
 
-        props.changeRoleLoading ?
-            <View style={{
-                backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
-                position: 'absolute',
 
-                elevation: 5,
-                borderColor: 'black',
-                backgroundColor: 'white',
-            }}>
-                <ActivityIndicator size="large"
-                    style={{
-                        position: 'absolute', left: '44%', top: '40%',
-
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                    }}
-                    color="#00C569"
-
-                />
-            </View> :
-            <Tab.Navigator
-                initialRouteName={props.newMessage ? 'Messages' : initialRoute
-                }
-                shifting={false}
-                activeColor="#00C569"
-                inactiveColor="#FFFFFF"
-                barStyle={{ backgroundColor: '#313A43' }
-                }
-            >
+            {(!props.loggedInUserId) ?
+                (
+                    <Stack.Navigator
+                        headerMode='none'>
+                        <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
+                        <Stack.Screen key='Intro' name='Intro' component={Intro} />
+                        <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
+                    </Stack.Navigator>
+                )
+                : (
+                    <Tab.Navigator
+                        initialRouteName={initialRoute}
+                        shifting={false}
+                        activeColor="#00C569"
+                        inactiveColor="#FFFFFF"
+                        barStyle={{ backgroundColor: '#313A43' }
+                        }
+                    >
 
 
 
-                <Tab.Screen
-                    options={{
-                        tabBarBadge: false,
-                        tabBarLabel: locales('labels.home'),
-                        tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
-                    }}
-                    name='Home'
-                    component={HomeStack}
-                />
+                        <Tab.Screen
+                            key={'Home'}
+                            options={{
+                                tabBarBadge: false,
+                                tabBarLabel: locales('labels.home'),
+                                tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+                            }}
+                            name='Home'
+                            component={HomeStack}
+                        />
 
-                {!is_seller ? <Tab.Screen
-                    key={'Requests'}
-                    options={{
-                        tabBarBadge: false,
-                        tabBarLabel: locales('labels.requests'),
-                        tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
-                    }}
-                    name={'Requests'}
-                    component={Requests}
-                />
-                    :
-                    <Tab.Screen
-                        key={'SpecialProducts'}
-                        options={{
-                            tabBarBadge: false,
-                            tabBarLabel: locales('labels.specialProducts'),
-                            tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
-                        }}
-                        name={'SpecialProducts'}
-                        component={SpecialProducts}
-                    />}
-
-
-
-                {!is_seller ? <Tab.Screen
-                    key={'RegisterProduct'}
-                    listeners={{
-                        tabPress: e => {
-                            if (!!global.resetRegisterProduct)
-                                global.resetRegisterProduct(true)
-                        },
-                    }}
-                    options={{
-                        tabBarBadge: false,
-                        tabBarLabel: locales('labels.registerProduct'),
-                        tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
-                    }}
-                    name={'RegisterProductStack'}
-                    component={RegisterProductStack}
-                />
-                    :
-                    <Tab.Screen
-                        key={'RegisterRequest'}
-                        listeners={{
-                            tabPress: e => {
-                                if (!!global.resetRegisterRequest)
-                                    global.resetRegisterRequest(true)
-                            },
-                        }}
-                        options={{
-                            tabBarBadge: false,
-                            tabBarLabel: locales('labels.registerRequest'),
-                            tabBarIcon: ({ focused, color }) => <Feather size={26} name='plus-square' color={color} />,
-                        }}
-                        name={'RegisterRequest'}
-                        component={RegisterRequestStack}
-                    />}
-
-
-                <Tab.Screen
-                    key='Messages'
-                    options={{
-                        tabBarBadge: props.newMessage ? true : false,
-                        tabBarLabel: locales('labels.messages'),
-                        tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
-                    }}
-                    name='Messages'
-                    component={MessagesStack}
-                />
-
-                <Tab.Screen
-                    key={'MyBuskool'}
-                    options={{
-                        tabBarBadge: false,
-                        tabBarLabel: locales('labels.myBuskool'),
-                        tabBarIcon: ({ focused, color }) => (
-                            <Image
-                                style={{
-                                    borderRadius: deviceWidth * 0.032,
-                                    width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                        {is_seller ? <Tab.Screen
+                            key={'Requests'}
+                            options={{
+                                tabBarBadge: false,
+                                tabBarLabel: locales('labels.requests'),
+                                tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
+                            }}
+                            name={'Requests'}
+                            component={Requests}
+                        />
+                            :
+                            <Tab.Screen
+                                key={'SpecialProducts'}
+                                options={{
+                                    tabBarBadge: false,
+                                    tabBarLabel: locales('labels.specialProducts'),
+                                    tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
-                                source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
-                                    userProfile.profile.profile_photo.length ?
-                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
-                                    : require('../../assets/icons/user.png')
-                                }
-                            />
-                        ),
-                    }}
-                    name='MyBuskool'
-                    component={MyBuskoolStack}
-                />
-            </Tab.Navigator>
+                                name={'SpecialProducts'}
+                                component={SpecialProductsStack}
+                            />}
+
+
+
+                        {is_seller ? <Tab.Screen
+                            key={'RegisterProduct'}
+                            listeners={{
+                                tabPress: e => {
+                                    if (!!global.resetRegisterProduct)
+                                        global.resetRegisterProduct(true)
+                                },
+                            }}
+                            options={{
+                                tabBarBadge: false,
+                                tabBarLabel: locales('labels.registerProduct'),
+                                tabBarIcon: ({ focused, color }) => <View
+                                    style={{
+                                        backgroundColor: color, height: 30, width: 30,
+                                        top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
+                                    }}
+                                >
+                                    <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                </View>,
+                            }}
+                            name={'RegisterProductStack'}
+                            component={RegisterProductStack}
+                        />
+                            :
+                            <Tab.Screen
+                                key={'RegisterRequest'}
+                                listeners={{
+                                    tabPress: e => {
+                                        if (!!global.resetRegisterRequest)
+                                            global.resetRegisterRequest(true)
+                                    },
+                                }}
+                                options={{
+                                    tabBarBadge: false,
+                                    tabBarLabel: locales('labels.registerRequest'),
+                                    tabBarIcon: ({ focused, color }) => <View style={{
+                                        backgroundColor: color, height: 30,
+                                        width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
+                                    }}
+                                    >
+                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                    </View>,
+                                }}
+                                name={'RegisterRequest'}
+                                component={RegisterRequestStack}
+                            />}
+
+
+                        <Tab.Screen
+                            key='Messages'
+                            listeners={{
+                                tabPress: e => {
+                                    setNewMessage(false)
+                                },
+                            }}
+                            options={{
+                                tabBarBadge: !!newMessage,
+                                tabBarLabel: locales('labels.messages'),
+                                tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
+                            }}
+                            name='Messages'
+                            component={MessagesStack}
+                        />
+
+                        <Tab.Screen
+                            listeners={{
+                                tabPress: e => {
+                                    navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
+                                },
+                            }}
+                            key={'MyBuskool'}
+                            options={{
+                                tabBarBadge: false,
+                                tabBarLabel: locales('labels.myBuskool'),
+                                tabBarIcon: ({ focused, color }) => (
+                                    <Image
+                                        style={{
+                                            borderRadius: deviceWidth * 0.032,
+                                            width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                                        }}
+                                        source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
+                                            userProfile.profile.profile_photo.length ?
+                                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
+                                            : require('../../assets/icons/user.png')
+                                        }
+                                    />
+                                ),
+                            }}
+                            name='MyBuskool'
+                            component={MyBuskoolStack}
+                        />
+                    </Tab.Navigator>
+
+                )
+            }
+
+        </NavigationContainer >
 
     )
 }
-)
-
-
-
 
 const mapStateToProps = (state) => {
-    const {
-        changeRoleObject,
-        changeRoleLoading
-    } = state.authReducer;
 
     return {
         userProfile: state.profileReducer.userProfile,
-        changeRoleObject,
-        changeRoleLoading,
-        productDetailsId: state.productsListReducer.productDetailsId,
-        newMessage: state.messagesReducer.newMessage
-        // totalUnreadMessagesLoading: state.messagesReducer.totalUnreadMessagesLoading,
-        // totalUnreadMessages: state.messagesReducer.totalUnreadMessages,
     }
 };
 
-const areEqual = (prevProps, nextProps) => {
-    if (
-        global.initialProfileRoute == 'EditProfile'
-    ) {
-        global.initialProfileRoute = 'HomeIndex';
-        return true;
-    }
-    if (!!prevProps.changeRoleObject && !!nextProps.changeRoleObject &&
-        nextProps.changeRoleObject.is_seller == prevProps.changeRoleObject.is_seller) {
-        return true;
-    }
-}
-
-export default connect(mapStateToProps)(React.memo(router, areEqual))
+export default connect(mapStateToProps)(routes)

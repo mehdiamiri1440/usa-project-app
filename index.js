@@ -4,7 +4,7 @@ import { YellowBox } from 'react-native';
 
 import App from './App';
 import configureStore from './src/redux/configureStore';
-import { routeToScreensFromNotifications } from './src/router/router';
+import { routeToScreensFromNotifications } from './src/router';
 import { name as appName } from './app.json';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
