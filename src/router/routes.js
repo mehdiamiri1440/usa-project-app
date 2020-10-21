@@ -69,12 +69,12 @@ const routes = props => {
         prefixes: ['buskool://Home'],
     };
 
-    const [newMessage, setNewMessage] = useState(false);
+    // const [newMessage, setNewMessage] = useState(false);
 
     useEffect(() => {
-        messaging().onMessage(async remoteMessage => {
-            setNewMessage(true);
-        })
+        // messaging().onMessage(async remoteMessage => {
+        //     setNewMessage(true);
+        // })
     }, []);
 
     const MyBuskoolStack = _ => {
@@ -604,13 +604,13 @@ const routes = props => {
 
                         <Tab.Screen
                             key='Messages'
-                            listeners={{
-                                tabPress: e => {
-                                    setNewMessage(false)
-                                },
-                            }}
+                            // listeners={{
+                            //     tabPress: e => {
+                            //         setNewMessage(false)
+                            //     },
+                            // }}
                             options={{
-                                tabBarBadge: !!newMessage,
+                                // tabBarBadge: !!newMessage,
                                 tabBarLabel: locales('labels.messages'),
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                             }}
@@ -659,6 +659,7 @@ const mapStateToProps = (state) => {
 
     return {
         userProfile: state.profileReducer.userProfile,
+        // newMessage: state.messagesReducer.newMessage
     }
 };
 
