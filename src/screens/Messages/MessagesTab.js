@@ -71,6 +71,7 @@ class ContactsList extends Component {
             });
             unsubscribe = messaging().onMessage(async remoteMessage => {
                 if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
+                    this.props.newMessageReceived(true)
                     console.log('message reciev from fcm in contacts list', remoteMessage)
                     this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
                 }
@@ -81,9 +82,14 @@ class ContactsList extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         // console.warn('wear1111', prevState.loaded)
+
         if (prevState.loaded == false && this.props.contactsList.length) {
             // console.warn('wear', prevState.loaded)
-            this.setState({ contactsList: this.props.contactsList, loaded: true })
+            this.setState({ contactsList: this.props.contactsList, loaded: true }, () => {
+                if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
+                    this.props.newMessageReceived(false);
+                }
+            })
         }
         if (prevProps.refresh != this.props.refresh) {
             this.setState({ contactsList: this.props.contactsList, loaded: true })
@@ -92,6 +98,8 @@ class ContactsList extends Component {
             this.handleSearch(this.props.searchText)
         }
         this.props.setRefresh(false)
+
+
     }
 
 
@@ -254,7 +262,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
-        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         // emptyMessage: (message) => dispatch(messagesActions.emptyMessage(message)),
 
     }

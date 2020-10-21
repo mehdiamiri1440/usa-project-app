@@ -13,7 +13,6 @@ import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 
-import * as profileActions from '../redux/profile/actions';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
@@ -24,7 +23,7 @@ import { deviceWidth, deviceHeight } from '../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import Routes from './routes';
+import AppNavigator from './navigator';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -404,7 +403,7 @@ const App = (props) => {
 
           />
         </View> : null}
-      <Routes
+      <AppNavigator
         initialRoute={initialRoute}
         {...props}
       />
