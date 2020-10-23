@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, AppState } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -41,6 +41,8 @@ class RequestsTab extends Component {
         analytics().setCurrentScreen("buyAd_suggestion", "buyAd_suggestion");
 
         this.props.fetchRelatedRequests();
+
+        AppState.addEventListener('change', this.handleAppStateChange)
     }
 
 
@@ -64,6 +66,10 @@ class RequestsTab extends Component {
         this.props.setRefresh(false)
     }
 
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
     handleSearch = text => {
         let relatedBuyAdRequestsList = [...this.state.relatedBuyAdRequestsList];
         let goldenBuyAdsList = [...this.state.goldenBuyAdsList];
@@ -80,6 +86,16 @@ class RequestsTab extends Component {
             goldenBuyAdsList = [...this.props.goldenBuyAdsList]
         }
         this.setState({ relatedBuyAdRequestsList, goldenBuyAdsList, searchText: text })
+    };
+
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchRelatedRequests().then(result => {
+                this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
+            });
+        }
     };
 
     renderListEmptyComponent = _ => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, AppState } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -78,6 +78,7 @@ class ContactsList extends Component {
             });
             // .catch(_ => this.setState({ showModal: true }));
         }
+        AppState.addEventListener('change', this.handleAppStateChange)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -105,6 +106,7 @@ class ContactsList extends Component {
 
     componentWillUnmount() {
         this.isComponentMounted = false;
+        AppState.removeEventListener('change', this.handleAppStateChange)
         return unsubscribe;
     }
 
@@ -118,6 +120,16 @@ class ContactsList extends Component {
         }
         this.setState({ contactsList, searchText: text })
     }
+
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
+                this.setState({ loaded: false })
+            })
+        }
+    };
 
     setSearchText = searchText => this.setState({ searchText })
 
