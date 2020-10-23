@@ -73,6 +73,35 @@ class ProductsList extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if ((!prevProps.route && this.props.route && this.props.route.params &&
+            this.props.route.params.productsListRefreshKey)
+            ||
+            (
+                prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                prevProps.route.params.productsListRefreshKey != this.props.route.params.productsListRefreshKey)
+        ) {
+
+            const { from_record_number, to_record_number, sort_by, searchText } = this.state;
+            let item = {
+                from_record_number,
+                sort_by,
+                to_record_number,
+            };
+            if (searchText && searchText.length) {
+                item = {
+                    from_record_number,
+                    sort_by,
+                    search_text: searchText,
+                    to_record_number,
+                };
+            }
+
+            this.props.fetchAllProductsList(item).then(result => {
+                this.setState({
+                    productsListArray: [...this.state.productsListArray, ...result.payload.products]
+                })
+            })
+        }
 
         if (this.state.loaded == false && this.props.productsListArray.length) {
             this.setState({

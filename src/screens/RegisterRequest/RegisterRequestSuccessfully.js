@@ -6,7 +6,7 @@ import { Card, Button } from 'native-base'
 import FastImage from 'react-native-fast-image'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth } from '../../utils/deviceDimenssions';
-import { formatter } from '../../utils';
+import { dataGenerator, formatter } from '../../utils';
 
 
 const RegisterRequestSuccessfully = props => {
@@ -86,7 +86,7 @@ const RegisterRequestSuccessfully = props => {
                         </Text>
 
                         <Button
-                            onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList' })}
+                            onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
                             style={{
                                 textAlign: 'center',
                                 borderRadius: 5,
