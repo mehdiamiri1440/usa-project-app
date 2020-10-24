@@ -35,7 +35,7 @@ const EnterActivisionCode = (props) => {
     let [showModal, setShowModal] = useState(false);
     let [flag, setFlag] = useState(false)
 
-    activisionCodeRef = React.createRef();
+    const activisionCodeRef = React.createRef();
 
     let { verificationCode, message, loading, error, mobileNumber, getAgainLoading } = props
 

@@ -81,7 +81,7 @@ class GuidToRegisterProduct extends React.Component {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.registerProduct')}
+                                {locales('labels.registerProductLimit')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -102,6 +102,20 @@ class GuidToRegisterProduct extends React.Component {
 
                             <Text style={styles.mainTextDialogModal}>
                                 {locales('titles.maximumProductRegisteration')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: 'red',
+                                paddingHorizontal: 15,
+                                width: '100%'
+                            }}>
+                                {locales('titles.clickExtraCapacityButton')}
                             </Text>
 
                         </Dialog.Actions>
