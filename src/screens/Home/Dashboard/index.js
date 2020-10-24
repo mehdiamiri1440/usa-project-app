@@ -30,13 +30,16 @@ const Dashboard = props => {
         dashboardMessage,
         dashboard
     } = props;
+
     let {
         active_pakage_type: activePackageType = 0,
         reputation_score: reputationScore,
         max_buyAds_reply: maxBuyAdsReply,
         is_valid: isValid,
         max_allowed_product_register_count: maxAllowedProductRegisterCount,
-        confirmed_products_count: confirmedProductsCount
+        confirmed_products_count: confirmedProductsCount,
+        access_to_golden_buyAds,
+        is_verified
     } = dashboard;
 
     const closeModal = _ => {
@@ -215,7 +218,7 @@ const Dashboard = props => {
                             <AntDesign name='plus' color='white' size={25} />
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                {locales('titles.moreCapacity')}</Text>
+                                {locales('titles.increaseProductRegistrationCapacity')}</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -276,7 +279,7 @@ const Dashboard = props => {
                             <AntDesign name='plus' color='white' size={25} />
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                {locales('titles.moreCapacity')}</Text>
+                                {locales('titles.increaseReplyCapacity')}</Text>
                         </TouchableOpacity>
                     </View>
                 </Card>
@@ -299,7 +302,7 @@ const Dashboard = props => {
 
                         <View>
                             <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
-                                {locales('titles.authorizedSeller')}
+                                {locales('titles.authroized')}
                             </Text>
                         </View>
                         <View >
@@ -307,7 +310,7 @@ const Dashboard = props => {
                                 padding: 15,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26,
                             }}>
-                                {isValid ? locales('titles.yes') : locales('titles.no')}
+                                {is_verified ? locales('titles.yes') : locales('titles.no')}
                             </Text>
                             <FontAwesome5 name='award' size={75} color='#21AD93' solid
                                 style={{
@@ -319,7 +322,23 @@ const Dashboard = props => {
                                 }} />
                         </View>
 
-
+                        {!is_verified ? <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Authentication')}
+                            style={{
+                                backgroundColor: '#556080',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                bottom: 0,
+                                height: 40,
+                                position: 'absolute',
+                                width: '100%'
+                            }}>
+                            <Text
+                                style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.editProfileAuthentication')}</Text>
+                        </TouchableOpacity> : null}
                     </View>
                 </Card>
 
@@ -341,7 +360,7 @@ const Dashboard = props => {
 
                         <View>
                             <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
-                                {locales('titles.authorizationLevel')}
+                                {locales('titles.accessToGoldens')}
                             </Text>
                         </View>
                         <View >
@@ -349,7 +368,7 @@ const Dashboard = props => {
                                 padding: 15,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26,
                             }}>
-                                {reputationScore}
+                                {access_to_golden_buyAds ? locales('titles.yes') : locales('titles.no')}
                             </Text>
                             <FontAwesome5 name='star' size={75} color='#00C5BE' solid
                                 style={{
@@ -361,7 +380,23 @@ const Dashboard = props => {
                                 }} />
                         </View>
 
-
+                        {!access_to_golden_buyAds ? <TouchableOpacity
+                            onPress={() => props.navigation.navigate('PromoteRegistration')}
+                            style={{
+                                backgroundColor: '#556080',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                bottom: 0,
+                                height: 40,
+                                position: 'absolute',
+                                width: '100%'
+                            }}>
+                            <Text
+                                style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('titles.accessToGoldens')}</Text>
+                        </TouchableOpacity> : null}
                     </View>
                 </Card>
 
@@ -404,7 +439,24 @@ const Dashboard = props => {
                                     right: -15
                                 }} />
                         </View>
-
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('MyProducts')}
+                            style={{
+                                backgroundColor: '#556080',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                bottom: 0,
+                                height: 40,
+                                position: 'absolute',
+                                width: '100%'
+                            }}>
+                            <FontAwesome5 name='list-ol' color='white' size={25} style={{ marginHorizontal: 5 }} />
+                            <Text
+                                style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                {locales('labels.myProducts')}</Text>
+                        </TouchableOpacity>
 
                     </View>
                 </Card>

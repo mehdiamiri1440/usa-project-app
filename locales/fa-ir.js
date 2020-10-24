@@ -373,8 +373,12 @@ export default {
     "titles.referralShareButton": "اشتراک گذاری",
     "titles.referralToFree": " تا آزاد سازی ",
     "titles.copy": "کپی",
+    'titles.authroized': 'احراز هویت شده',
     "titles.whatsapp": " دعوت در واتساپ ",
+    'titles.accessToGoldens': 'دسترسی به درخواست‌های خرید طلایی',
     "titles.instagram": "اینستاگرام",
+    "titles.increaseProductRegistrationCapacity": "افزایش ظرفیت ثبت محصول",
+    "titles.increaseReplyCapacity": "افزایش ظرفیت پاسخگویی",
     "titles.telegram": "تلگرام",
     "titles.sms": " دعوت با پیامک ",
 
