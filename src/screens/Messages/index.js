@@ -39,7 +39,7 @@ const Messages = props => {
 
 
     useEffect(() => {
-        if (props.route && props.route.params && props.route.params.tabIndex) {
+        if (props.route && props.route.params && (props.route.params.tabIndex == 0 || props.route.params.tabIndex == 1)) {
             setIndex(props.route.params.tabIndex)
         }
     }, [props.route, props.route?.params, props.route?.params?.tabIndex])

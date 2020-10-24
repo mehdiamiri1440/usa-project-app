@@ -168,6 +168,14 @@ const routes = props => {
 
                         <Tab.Screen
                             key='Messages'
+                            listeners={{
+                                tabPress: e => {
+                                    e.preventDefault();
+                                    if (is_seller)
+                                        return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 0 } });
+                                    return navigationRef.current.navigate('Messages');
+                                },
+                            }}
                             options={{
                                 tabBarBadge: newMessage > 0 ? newMessage : false,
                                 tabBarLabel: locales('labels.messages'),
