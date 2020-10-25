@@ -155,7 +155,7 @@ class ProductsList extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
                 setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
         }).catch(error => {
             this.setState({
@@ -189,7 +189,7 @@ class ProductsList extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading) {
-                this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             }
             if (province) {
                 item = { ...item, province_id: province }
@@ -276,7 +276,7 @@ class ProductsList extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
                 setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
         }).catch(error => {
@@ -649,7 +649,7 @@ class ProductsList extends PureComponent {
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
                                         setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
                                     const { searchText } = this.state;
                                     let searchItem = {
@@ -743,7 +743,7 @@ class ProductsList extends PureComponent {
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
                                         setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
 
                                     const { sort_by } = this.state;

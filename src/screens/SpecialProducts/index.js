@@ -124,7 +124,7 @@ class SpecialProducts extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
                 setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
         })
         // .catch(error => {
@@ -156,7 +156,7 @@ class SpecialProducts extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -233,7 +233,7 @@ class SpecialProducts extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
                 setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
@@ -594,7 +594,7 @@ class SpecialProducts extends PureComponent {
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
                                     const { searchText } = this.state;
                                     let searchItem = {
@@ -688,7 +688,7 @@ class SpecialProducts extends PureComponent {
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
                                         setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                         }, 300);
                                     const { sort_by } = this.state;
                                     let searchItem = {
