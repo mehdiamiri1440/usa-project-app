@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
-    TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
+    TouchableOpacity, Linking, Share, RefreshControl, AppState
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
 import * as productListActions from '../../redux/productsList/actions';
+import * as profileActions from '../../redux/profile/actions';
+import * as dashboardActions from '../../redux/home/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
@@ -96,12 +98,10 @@ class ProductDetails extends PureComponent {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener();
-    }
 
     wrapper = React.createRef();
-    componentDidMount(param) {
+
+    componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().setCurrentScreen(componentName, componentName);
@@ -117,7 +117,16 @@ class ProductDetails extends PureComponent {
             this.props.navigation.goBack()
             return true;
         });
+        AppState.addEventListener('change', this.handleAppStateChange)
+
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
+
 
     componentDidUpdate(prevProps, prevState) {
 
@@ -229,6 +238,14 @@ class ProductDetails extends PureComponent {
         }
     }
 
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchAllDashboardData();
+            this.props.fetchUserProfile();
+        }
+    };
 
     callApi = code => {
         this.props.fetchAllRelatedProducts(code)
@@ -1602,7 +1619,9 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
 
-        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id))
+        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id)),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(dashboardActions.fetchAllDashboardData()),
     }
 };
 

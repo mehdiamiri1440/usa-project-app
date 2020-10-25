@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl, AppState } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 import { connect } from 'react-redux';
 import { Card, Body, CardItem, Button } from 'native-base';
@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
+import * as profileActions from '../../../redux/profile/actions';
 
 class PromoteRegistration extends React.Component {
     constructor(props) {
@@ -23,9 +24,26 @@ class PromoteRegistration extends React.Component {
     }
 
     wrapperRef = createRef();
+
     componentDidMount() {
         analytics().logEvent('package_payment');
+        AppState.addEventListener('change', this.handleAppStateChange)
+
     }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchAllDashboardData();
+            this.props.fetchUserProfile();
+        }
+    };
+
     pay = (type = 3) => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)
@@ -622,7 +640,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData())
+        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile())
     }
 };
 
