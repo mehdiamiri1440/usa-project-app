@@ -256,7 +256,6 @@ export default (state = INITIAL_STATE, action) => {
 
 
         case actionTypes.NEW_MESSAGE_RECEIVED: {
-            console.warn('action', action)
             return {
                 ...state,
                 newMessage: action.payload

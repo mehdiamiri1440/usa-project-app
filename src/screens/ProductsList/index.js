@@ -98,7 +98,7 @@ class ProductsList extends PureComponent {
 
             this.props.fetchAllProductsList(item).then(result => {
                 this.setState({
-                    productsListArray: [...this.state.productsListArray, ...result.payload.products]
+                    productsListArray: [...result.payload.products]
                 })
             })
         }
@@ -977,8 +977,9 @@ class ProductsList extends PureComponent {
                         if (city) {
                             item = { ...item, city_id: city }
                         }
-
-                        this.props.fetchAllProductsList(item).catch(error => {
+                        this.props.fetchAllProductsList(item).then(result => this.setState({
+                            productsListArray: [...result.payload.products]
+                        })).catch(error => {
                             this.setState({
                                 //  showModal: true,
                                 searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false

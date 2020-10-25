@@ -118,6 +118,9 @@ class RegisterRequest extends Component {
         if (!amount) {
             amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
         }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
+        }
         else {
             amountError = '';
         }
