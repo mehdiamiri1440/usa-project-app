@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, AppState } from 'react-native';
 import { Card, CardItem, Body } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
@@ -9,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils';
 import * as homeActions from '../../../redux/home/actions';
+import * as profileActions from '../../../redux/profile/actions';
 import ENUMS from '../../../enums';
 
 const Dashboard = props => {
@@ -16,7 +17,9 @@ const Dashboard = props => {
 
     useEffect(() => {
         analytics().logEvent('dashboard');
-        props.fetchAllDashboardData()
+        props.fetchAllDashboardData();
+        AppState.addEventListener('change', handleAppStateChange)
+        return () => AppState.removeEventListener('change', handleAppStateChange)
         // .catch(_ => setShowModal(true));
     },
         [])
@@ -41,6 +44,16 @@ const Dashboard = props => {
         access_to_golden_buyAds,
         is_verified
     } = dashboard;
+
+
+    const handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            props.fetchAllDashboardData();
+            props.fetchUserProfile();
+        }
+    };
 
     const closeModal = _ => {
         setShowModal(false);
@@ -492,7 +505,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData())
+        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile())
     }
 };
 
