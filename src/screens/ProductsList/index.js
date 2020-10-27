@@ -13,6 +13,8 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import Product from './Product';
 
 import NoConnection from '../../components/noConnectionError';
+import * as homeActions from '../../redux/home/actions';
+import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
@@ -20,7 +22,6 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
-
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -43,7 +44,7 @@ class ProductsList extends PureComponent {
             loaded: false,
             searchFlag: false,
             showModal: false,
-            selectedCategoryModal: ''
+            selectedCategoryModal: '',
         }
 
     }
@@ -73,7 +74,31 @@ class ProductsList extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if ((!prevProps.route && this.props.route && this.props.route.params &&
+        if (this.props.updateProductsListFlag) {
+            let item = {
+                from_record_number: 0,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                to_record_number: 15,
+            };
+            this.props.fetchAllProductsList(item).then(result => {
+                this.setState({ productsListArray: [...this.props.productsListArray] })
+            })
+            this.props.updateProductsList(false)
+        }
+
+        if (
+            (this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
+
+        if (((!prevProps.route || prevProps.route && !prevProps.route.params) && this.props.route && this.props.route.params &&
             this.props.route.params.productsListRefreshKey)
             ||
             (
@@ -81,24 +106,22 @@ class ProductsList extends PureComponent {
                 prevProps.route.params.productsListRefreshKey != this.props.route.params.productsListRefreshKey)
         ) {
 
-            const { from_record_number, to_record_number, sort_by, searchText } = this.state;
             let item = {
-                from_record_number,
-                sort_by,
-                to_record_number,
+                from_record_number: 0,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                to_record_number: 15,
             };
-            if (searchText && searchText.length) {
-                item = {
-                    from_record_number,
-                    sort_by,
-                    search_text: searchText,
-                    to_record_number,
-                };
-            }
-
             this.props.fetchAllProductsList(item).then(result => {
                 this.setState({
                     productsListArray: [...result.payload.products]
+                }, () => {
+                    setTimeout(() => {
+                        if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                            this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                            this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading) {
+                            this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 });
+                        }
+                    }, 300);
                 })
             })
         }
@@ -154,9 +177,7 @@ class ProductsList extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         }).catch(error => {
             this.setState({
                 //  showModal: true,
@@ -168,9 +189,7 @@ class ProductsList extends PureComponent {
 
     handleSearch = (text) => {
 
-        analytics().logEvent('search_text', {
-            text
-        })
+
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
@@ -199,6 +218,9 @@ class ProductsList extends PureComponent {
             }
 
             this.props.fetchAllProductsList(item).then(_ => {
+                analytics().logEvent('search_text', {
+                    text
+                })
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             }).catch(error => {
                 this.setState({
@@ -275,9 +297,7 @@ class ProductsList extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({
@@ -648,9 +668,7 @@ class ProductsList extends PureComponent {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -968,7 +986,7 @@ class ProductsList extends PureComponent {
                                 from_record_number: 0,
                                 sort_by: this.state.sort_by,
                                 to_record_number: 15,
-                                search_text: this.statesearchText
+                                search_text: this.state.searchText
                             }
                         }
                         if (province) {
@@ -977,9 +995,11 @@ class ProductsList extends PureComponent {
                         if (city) {
                             item = { ...item, city_id: city }
                         }
-                        this.props.fetchAllProductsList(item).then(result => this.setState({
-                            productsListArray: [...result.payload.products]
-                        })).catch(error => {
+                        this.props.fetchAllProductsList(item).then(result => {
+                            this.setState({
+                                productsListArray: [...this.props.productsListArray, ...result.payload.products]
+                            })
+                        }).catch(error => {
                             this.setState({
                                 //  showModal: true,
                                 searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
@@ -1176,6 +1196,8 @@ const mapStateToProps = (state) => {
 
         productDetailsId: state.productsListReducer.productDetailsId,
 
+        updateProductsListFlag: state.productsListReducer.updateProductsListFlag,
+
         userProfile: state.profileReducer.userProfile,
 
 
@@ -1189,7 +1211,9 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
-
+        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
+        fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
     }
 };
 

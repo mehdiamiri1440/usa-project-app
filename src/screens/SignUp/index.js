@@ -17,7 +17,7 @@ import { deviceHeight, deviceWidth } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
-import { result } from 'lodash';
+
 
 let stepsArray = [1, 2, 3, 4, 5, 6]
 class SignUp extends React.Component {

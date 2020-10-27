@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as authActions from '../../redux/auth/actions';
-import * as profileActions from '../../redux/profile/actions';
 import { Radio, Button } from 'native-base';
-import RnRestart from 'react-native-restart';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { useScrollToTop } from '@react-navigation/native';
+
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -18,9 +16,13 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import Feather from 'react-native-vector-icons/dist/Feather';
+
+
+import * as productListActions from '../../redux/productsList/actions';
+import * as authActions from '../../redux/auth/actions';
+import * as profileActions from '../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
-import * as RootNavigation from '../../router/rootNavigation';
 
 let role = false
 
@@ -108,7 +110,8 @@ class Home extends React.Component {
     closeModal = () => {
         this.setState({ showchangeRoleModal: false }, () => {
             this.props.fetchUserProfile().then(_ => {
-                this.props.navigation.navigate(!role ? 'Home' : 'Requests')
+                this.props.updateProductsList(true)
+                return this.props.navigation.navigate(!role ? 'Home' : 'Requests')
             });
         });
     }
@@ -714,6 +717,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         logOut: () => dispatch(authActions.logOut()),
         changeRole: _ => dispatch(authActions.changeRole()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        updateProductsList: flag => dispatch(productListActions.updateProductsList(flag))
     }
 }
 const mapStateToProps = (state, ownProps) => {

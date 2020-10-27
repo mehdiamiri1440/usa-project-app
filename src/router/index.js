@@ -16,7 +16,7 @@ import messaging from '@react-native-firebase/messaging';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
-import { deviceWidth, deviceHeight } from '../utils';
+import { deviceWidth, deviceHeight, dataGenerator } from '../utils';
 
 
 
@@ -277,21 +277,33 @@ const App = (props) => {
   const handleIncomingEvent = event => {
     switch ((event.url).split('://')[1]) {
       case 'pricing':
-        return RootNavigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+        return RootNavigation.navigate('MyBuskool', {
+          screen: 'PromoteRegistration',
+          params: { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_pricing_') }
+        });
 
       case 'product-list':
-        return RootNavigation.navigate('Home');
+        return navigationRef.current.navigate('Home', {
+          screen: 'ProductsList',
+          params: { needToRefreshKey: dataGenerator.generateKey('product_list_from_product_list_') }
+        });
 
       case 'register-product': {
-        return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+        return navigationRef.current.navigate('RegisterProductStack', {
+          screen: 'RegisterProduct',
+          params: { needToRefreshKey: dataGenerator.generateKey('register_product_from_register_product_') }
+        });
       }
       case 'buyAd-requests': {
         AsyncStorage.getItem('@registerProductParams').then(result => {
           result = JSON.parse(result);
           if (result && result.subCategoryId && result.subCategoryName) {
-            return navigationRef.current.navigate('Requests', { subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName });
+            return navigationRef.current.navigate('Requests', {
+              needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_'),
+              subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName
+            });
           }
-          return navigationRef.current.navigate('Requests');
+          return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
         })
       }
       default:

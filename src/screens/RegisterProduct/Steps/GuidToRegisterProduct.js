@@ -10,6 +10,8 @@ import analytics from '@react-native-firebase/analytics';
 
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
+import * as homeActions from '../../../redux/home/actions';
+import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 class GuidToRegisterProduct extends React.Component {
@@ -28,6 +30,19 @@ class GuidToRegisterProduct extends React.Component {
             }
         });
         analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
     }
 
     onSubmit = () => {
@@ -501,7 +516,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct())
+        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
     }
 };
 
