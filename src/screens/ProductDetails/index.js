@@ -1202,7 +1202,7 @@ class ProductDetails extends PureComponent {
                                                 }}>
                                                     {`${first_name} ${last_name}`}
                                                 </Text>
-                                                {is_verified ? <ValidatedUserIcon /> : null}
+                                                {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                             </View>
 
                                             {active_pakage_type == 3 ? <Text style={{

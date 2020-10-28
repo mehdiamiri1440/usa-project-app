@@ -625,7 +625,7 @@ class Profile extends PureComponent {
                                         style={{ color: '#666666', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
                                         {`${firstNameFromByUserName} ${lastNameFromByUserName}`}
                                     </Text>
-                                    {is_verified ? <ValidatedUserIcon /> : null}
+                                    {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                 </View>
                                 <TouchableOpacity
                                     onPress={() => this.shareProfileLink()}

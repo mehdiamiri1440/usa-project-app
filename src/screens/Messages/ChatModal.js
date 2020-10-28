@@ -341,7 +341,7 @@ class ChatModal extends Component {
                             >
                                 {`${firstName} ${lastName}`}
                             </Text>
-                            {is_verified ? <ValidatedUserIcon /> : null}
+                            {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                         </View>
                     </TouchableOpacity>
                 </View>
