@@ -14,6 +14,7 @@ import ContentLoader, { Rect } from "react-content-loader/native"
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productActions from '../../redux/registerProduct/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
@@ -75,6 +76,17 @@ class Requests extends PureComponent {
 
 
     componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
+
         if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
             this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
         }
@@ -899,6 +911,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
         setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
     }

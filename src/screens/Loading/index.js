@@ -1,35 +1,54 @@
-import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, ActivityIndicator, Modal } from 'react-native';
 
-const Loading = _ => {
+const Loading = props => {
+
+    const [visible, setVisible] = useState(global.isFromOutSide);
+
+    useEffect(() => {
+        global.isFromOutSide = false;
+        setTimeout(() => {
+            setVisible(false)
+        }, 1200);
+    }, []);
+
+
     return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-            <Text
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={visible}
+            onRequestClose={() => setVisible(false)}
+        >
+
+            <View
                 style={{
-                    width: '100%', textAlign: 'center',
-                    marginTop: 15,
-                    fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }}>
-                {locales('labels.redirecting')}
-            </Text>
-            <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center' }}>
-                <Text
+                {/* <Text
                     style={{
-                        textAlign: 'center',
+                        width: '100%', textAlign: 'center',
                         marginTop: 15,
                         fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
                     }}>
-                    {locales('labels.pleaseWait')}
-                </Text>
-                <ActivityIndicator size='large' color='#00C569' />
-            </View>
+                    {locales('labels.redirecting')}
+                </Text> */}
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            marginTop: 15,
+                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#00C569'
+                        }}>
+                        {locales('labels.pleaseWait')}
+                    </Text>
+                    <ActivityIndicator size='large' color='#00C569' />
+                </View>
 
-        </View>
+            </View>
+        </Modal>
     )
 }
 export default Loading

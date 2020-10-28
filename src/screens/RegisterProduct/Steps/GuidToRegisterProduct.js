@@ -10,6 +10,8 @@ import analytics from '@react-native-firebase/analytics';
 
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
+import * as homeActions from '../../../redux/home/actions';
+import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 class GuidToRegisterProduct extends React.Component {
@@ -28,6 +30,19 @@ class GuidToRegisterProduct extends React.Component {
             }
         });
         analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
     }
 
     onSubmit = () => {
@@ -81,7 +96,7 @@ class GuidToRegisterProduct extends React.Component {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.registerProduct')}
+                                {locales('labels.registerProductLimit')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -102,6 +117,20 @@ class GuidToRegisterProduct extends React.Component {
 
                             <Text style={styles.mainTextDialogModal}>
                                 {locales('titles.maximumProductRegisteration')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: 'red',
+                                paddingHorizontal: 15,
+                                width: '100%'
+                            }}>
+                                {locales('titles.clickExtraCapacityButton')}
                             </Text>
 
                         </Dialog.Actions>
@@ -487,7 +516,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct())
+        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
     }
 };
 

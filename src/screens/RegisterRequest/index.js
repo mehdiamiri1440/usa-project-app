@@ -13,7 +13,7 @@ import * as productActions from '../../redux/registerProduct/actions';
 
 import { deviceWidth, validator } from '../../utils';
 import NoConnection from '../../components/noConnectionError';
-
+import Loading from '../Loading';
 
 class RegisterRequest extends Component {
     constructor(props) {
@@ -118,6 +118,9 @@ class RegisterRequest extends Component {
         if (!amount) {
             amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
         }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
+        }
         else {
             amountError = '';
         }
@@ -185,6 +188,7 @@ class RegisterRequest extends Component {
 
         return (
             <>
+                <Loading />
                 <NoConnection
                     closeModal={this.closeModal}
                     showModal={showModal}

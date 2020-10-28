@@ -122,10 +122,7 @@ export const fetchTotalUnreadMessages = () => {
 
 
 export const newMessageReceived = (message) => {
-    return {
-        type: actionTypes.NEW_MESSAGE_RECEIVED,
-        message
-    };
+    return dispatch => dispatch(action(actionTypes.NEW_MESSAGE_RECEIVED, message));
 };
 
 

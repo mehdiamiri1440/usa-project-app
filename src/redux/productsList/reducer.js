@@ -54,7 +54,9 @@ const INITIAL_STATE = {
     productDetailsInfo: [],
     productDetailsInfoFailed: false,
     productDetailsInfoError: false,
-    productDetailsInfoMessage: null
+    productDetailsInfoMessage: null,
+
+    updateProductsListFlag: false
 
 };
 export default (state = INITIAL_STATE, action) => {
@@ -454,6 +456,13 @@ export default (state = INITIAL_STATE, action) => {
                 productDetailsInfoFailed: false,
                 productDetailsInfoError: true,
                 productDetailsInfoMessage: null
+            };
+        };
+
+        case actionTypes.UPDATE_PRODUCTS_LIST: {
+            return {
+                ...state,
+                updateProductsListFlag: action.payload
             };
         };
 

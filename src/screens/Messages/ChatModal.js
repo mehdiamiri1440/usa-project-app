@@ -57,8 +57,8 @@ class ChatModal extends Component {
         // });
         unsubscribe = messaging().onMessage(async remoteMessage => {
             if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
-                console.log('message reciev from fcm in chat list', remoteMessage)
-                this.pushNewMessageToChatList(remoteMessage);
+                if (this.props.contact && this.props.contact.contact_id == remoteMessage.data.senderId)
+                    this.pushNewMessageToChatList(remoteMessage);
                 // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
             }
         });

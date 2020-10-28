@@ -256,10 +256,9 @@ export default (state = INITIAL_STATE, action) => {
 
 
         case actionTypes.NEW_MESSAGE_RECEIVED: {
-            console.log('werewr', action)
             return {
                 ...state,
-                newMessage: action.message
+                newMessage: action.payload
             }
         }
 

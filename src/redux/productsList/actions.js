@@ -208,3 +208,7 @@ export const fetchAllProductInfo = id => {
 
     return request();
 };
+
+export const updateProductsList = flag => {
+    return dispatch => dispatch(action(actionTypes.UPDATE_PRODUCTS_LIST, flag));
+};

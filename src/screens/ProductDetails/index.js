@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
-    TouchableOpacity, Linking, Share, RefreshControl, ActivityIndicator
+    TouchableOpacity, Linking, Share, RefreshControl
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
@@ -17,7 +17,7 @@ import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { validator, dataGenerator } from '../../utils';
+import { validator } from '../../utils';
 import ChatModal from '../Messages/ChatModal';
 import { formatter } from '../../utils'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
@@ -96,12 +96,10 @@ class ProductDetails extends PureComponent {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener();
-    }
 
     wrapper = React.createRef();
-    componentDidMount(param) {
+
+    componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().setCurrentScreen(componentName, componentName);
@@ -118,6 +116,12 @@ class ProductDetails extends PureComponent {
             return true;
         });
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
+    }
+
+
 
     componentDidUpdate(prevProps, prevState) {
 
@@ -1602,7 +1606,7 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
 
-        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id))
+        fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id)),
     }
 };
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, AppState } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -41,6 +41,8 @@ class RequestsTab extends Component {
         analytics().setCurrentScreen("buyAd_suggestion", "buyAd_suggestion");
 
         this.props.fetchRelatedRequests();
+
+        AppState.addEventListener('change', this.handleAppStateChange)
     }
 
 
@@ -64,6 +66,10 @@ class RequestsTab extends Component {
         this.props.setRefresh(false)
     }
 
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
     handleSearch = text => {
         let relatedBuyAdRequestsList = [...this.state.relatedBuyAdRequestsList];
         let goldenBuyAdsList = [...this.state.goldenBuyAdsList];
@@ -82,8 +88,23 @@ class RequestsTab extends Component {
         this.setState({ relatedBuyAdRequestsList, goldenBuyAdsList, searchText: text })
     };
 
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchRelatedRequests().then(result => {
+                this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
+            });
+        }
+    };
+
     renderListEmptyComponent = _ => {
         const { relatedBuyAdRequestsLoading } = this.props;
+        const { relatedBuyAdRequestsList = [], goldenBuyAdsList = [] } = this.state;
+
+        if (goldenBuyAdsList && goldenBuyAdsList.length)
+            if (relatedBuyAdRequestsList && !relatedBuyAdRequestsList.length)
+                return null;
 
         if (relatedBuyAdRequestsLoading)
             return <View style={{
@@ -117,17 +138,18 @@ class RequestsTab extends Component {
                 </View>)}
             </View>
 
-        return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
-            <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
-                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
-                    {locales('labels.messengerNoRelateRequstFoundFirst')}
-                </Text>
-                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
-                    {locales('labels.messengerNoRelateRequstFoundSecond')}
-                </Text>
+        if (!relatedBuyAdRequestsList.length && !goldenBuyAdsList.length && !relatedBuyAdRequestsLoading)
+            return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
+                <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                    <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
+                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#7E7E7E', textAlign: 'center' }}>
+                        {locales('labels.messengerNoRelateRequstFoundFirst')}
+                    </Text>
+                    <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
+                        {locales('labels.messengerNoRelateRequstFoundSecond')}
+                    </Text>
+                </View>
             </View>
-        </View>
     };
 
     keyExtractor = item => item.id.toString();
@@ -171,6 +193,8 @@ class RequestsTab extends Component {
                 <View style={{
                     paddingVertical: 5,
                     paddingHorizontal: 15,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#F2F2F2',
                     alignSelf: 'center',
                     width: '100%',
                     backgroundColor: 'white',
@@ -227,11 +251,19 @@ class RequestsTab extends Component {
                             </Text>
                             <Text
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    color: '#676772',
                                     fontSize: 16
                                 }}
                             >
-                                {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
+                                <Text style={{
+                                    color: '#E41C38',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                }}>
+                                    {this.renderRequirementAmount(item.requirement_amount)}
+                                </Text>
+                                {` ${item.subcategory_name} `}
                             </Text>
                             {item.name ? <>
                                 <Text
@@ -248,11 +280,19 @@ class RequestsTab extends Component {
                                         fontSize: 16
                                     }}
                                 >
-                                    {item.name}
+                                    {`${item.name} `}
                                 </Text>
                             </>
                                 :
                                 null}
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                    fontSize: 16
+                                }}
+                            >
+                                {locales('labels.is')}
+                            </Text>
                         </Text>
 
                         <View
@@ -289,17 +329,18 @@ class RequestsTab extends Component {
                                     alignItems: 'center',
                                     textAlign: 'center',
                                     justifyContent: 'center',
-                                    height: 35,
-                                    borderRadius: 6,
+                                    height: 40,
+                                    borderRadius: 4,
                                     elevation: 2
                                 }}
                             >
-                                <Text style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 14,
-                                    color: '#333',
-                                    paddingHorizontal: 3
-                                }}>
+                                <Text style={[
+                                    styles.textBold, {
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        color: '#333',
+                                        fontSize: 16,
+                                        paddingHorizontal: 3
+                                    }]}>
                                     {locales('labels.messageToBuyer')}
 
 
@@ -359,7 +400,7 @@ class RequestsTab extends Component {
                                 {/* {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `} */}
                                 {`${item.subcategory_name} `}
                             </Text>
-                            {/* {item.name ? <>
+                            {item.name ? <>
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777',
@@ -374,10 +415,18 @@ class RequestsTab extends Component {
                                         fontSize: 16
                                     }}
                                 >
-                                    {item.name}
+                                    {`${item.name} `}
                                 </Text>
                             </>
-                                : null} */}
+                                : null}
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                    fontSize: 16
+                                }}
+                            >
+                                {locales('labels.is')}
+                            </Text>
                         </Text>
 
                         <Button
@@ -446,9 +495,9 @@ class RequestsTab extends Component {
                 style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
                 <View style={{
                     borderBottomWidth: 1,
+                    borderBottomColor: '#F2F2F2',
                     paddingVertical: 5,
                     paddingHorizontal: 15,
-                    borderBottomColor: '#F2F2F2',
                     alignSelf: 'center',
                     width: '100%',
                     backgroundColor: 'white',
@@ -485,19 +534,28 @@ class RequestsTab extends Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
-                                fontSize: 16
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                color: '#9B9B9B',
                             }}
                         >
                             {`${locales('labels.buyer')} `}
                         </Text>
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#676772',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: '#676772',
                                 fontSize: 16
                             }}
                         >
-                            {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `}
+                            <Text style={{
+                                color: '#E41C38',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                            }}>
+                                {this.renderRequirementAmount(item.requirement_amount)}
+                            </Text>
+                            {` ${item.subcategory_name} `}
                         </Text>
                         {item.name ? <>
                             <Text
@@ -514,10 +572,18 @@ class RequestsTab extends Component {
                                     fontSize: 16
                                 }}
                             >
-                                {item.name}
+                                {`${item.name} `}
                             </Text>
                         </>
                             : null}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#9B9B9B',
+                                fontSize: 16
+                            }}
+                        >
+                            {locales('labels.is')}
+                        </Text>
                     </Text>
                     {!item.expired ?
                         <View

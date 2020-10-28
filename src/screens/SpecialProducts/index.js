@@ -119,13 +119,11 @@ class SpecialProducts extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllSpecialProductsList(item).then(_ => {
+        this.props.fetchAllSpecialProductsList(item).then(result => {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         })
         // .catch(error => {
         //     this.setState({ showModal: true })
@@ -134,9 +132,7 @@ class SpecialProducts extends PureComponent {
 
 
     handleSearch = (text) => {
-        analytics().logEvent('search_text', {
-            text
-        })
+
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
@@ -156,7 +152,7 @@ class SpecialProducts extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -165,6 +161,9 @@ class SpecialProducts extends PureComponent {
             }
 
             this.props.fetchAllSpecialProductsList(item).then(_ => {
+                analytics().logEvent('search_text', {
+                    text
+                })
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             })
             // .catch(error => {
@@ -232,9 +231,7 @@ class SpecialProducts extends PureComponent {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
@@ -374,7 +371,7 @@ class SpecialProducts extends PureComponent {
         let cities = [];
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
-        if (Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
         return (
@@ -593,9 +590,7 @@ class SpecialProducts extends PureComponent {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -687,9 +682,7 @@ class SpecialProducts extends PureComponent {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
                                         this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef?.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -886,7 +879,7 @@ class SpecialProducts extends PureComponent {
                                 from_record_number: 0,
                                 sort_by: this.state.sort_by,
                                 to_record_number: 15,
-                                search_text: this.statesearchText
+                                search_text: this.state.searchText
                             }
                         }
                         if (province) {
