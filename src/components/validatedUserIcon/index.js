@@ -1,18 +1,26 @@
-import React, { useRef } from 'react';
-import { TouchableOpacity, Linking, View, Text } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { TouchableOpacity, Modal, View, Text } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
 
 const ValidatedUserIcon = _ => {
 
     const refRBSheet = useRef();
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <>
+            {
+                showModal ?
+                    <ValidatedUserDescription
+                        shwModal={showModal}
+                        onRequestClose={() => setShowModal(false)}
+                    />
+                    : null
+            }
+
             <TouchableOpacity
                 onPress={event => {
                     event.stopPropagation();
@@ -49,13 +57,7 @@ const ValidatedUserIcon = _ => {
                 </Text>
                 <View style={{ paddingVertical: 10, marginVertical: 15 }}>
                     <TouchableOpacity
-                        onPress={() => {
-                            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`).then(supported => {
-                                if (supported) {
-                                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`);
-                                }
-                            })
-                        }}
+                        onPress={() => setShowModal(true)}
                         style={{ width: '100%', justifyContent: 'center', marginTop: 8, alignItems: 'center' }}>
                         <FontAwesome5 name='certificate' color='#1DA1F2' size={75} />
                         <FontAwesome5 color='white' name='check' size={45} style={{ position: 'absolute' }} />
@@ -67,13 +69,7 @@ const ValidatedUserIcon = _ => {
                         {locales('titles.thisUserIsValidated')}
                     </Text>
                     <TouchableOpacity
-                        onPress={() => {
-                            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`).then(supported => {
-                                if (supported) {
-                                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`);
-                                }
-                            })
-                        }}
+                        onPress={() => setShowModal(true)}
                         style={{ marginVertical: 30, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center' }}>
                         <FontAwesome name='exclamation-circle' size={25} color='#E41C38' />
                         <Text style={{
@@ -87,6 +83,21 @@ const ValidatedUserIcon = _ => {
                 </View>
             </RBSheet>
         </>
+    )
+}
+
+export const ValidatedUserDescription = ({ showModal, onRequestClose }) => {
+    return (
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={showModal}
+            onRequestClose={() => onRequestClose()}
+        >
+            <Text>
+                sdf
+                </Text>
+        </Modal>
     )
 }
 export default ValidatedUserIcon
