@@ -56,7 +56,7 @@ const ContactsList = props => {
                             }}>
                                 {`${item.first_name} ${item.last_name}`}
                             </Text>
-                            {item.is_verified ? <ValidatedUserIcon /> : null}
+                            {item.is_verified ? <ValidatedUserIcon {...props} /> : null}
                         </View>
                         <Text style={{ color: '#666666' }}>
                             {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}

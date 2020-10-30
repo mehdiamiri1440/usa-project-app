@@ -31,6 +31,13 @@ export default {
     'labels.editProfileAuthentication': 'احراز هویت کنید',
     'labels.authentication': 'احراز هویت',
     'labels.call': 'تماس',
+    'labels.authenticationTitle': 'کاربران احراز هویت شده چه کسانی هستند؟',
+    'labels.authenticationFirst': 'اطلاعات کارت ملی آن ها نزد باسکول است.',
+    'labels.authenticationSecond': 'مطابقت تصویر کارت ملی با تصویر خودشان انجام شده است.',
+    'labels.authenticationThird': 'اطلاعات آدرس مکانی انها احراز شده است.',
+    'labels.authenticationButton': 'شما هم احراز هویت کنید',
+    'labels.authenticationDescription': 'باسکول هیچ مسئولیتی در قبال سو رفتار کاربران احراز هویت شده به عهده نمی گیرد و صرفا اطلاعات هویتی آنها را مطابق توضیحات بالا تایید می کند.',
+
     'labels.noContactFound': 'مخاطبی یافت نشد',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     'labels.notRegistered': 'ثبت نشده‌است',
