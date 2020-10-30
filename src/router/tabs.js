@@ -29,6 +29,7 @@ import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCa
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
+import MyRequests from '../screens/Home/MyRequests'
 
 
 const Stack = createStackNavigator();
@@ -210,6 +211,15 @@ export const MyBuskoolStack = _ => {
                 key='Authentication'
                 name='Authentication'
                 component={Authentication}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='MyRequests'
+                name='MyRequests'
+                component={MyRequests}
             />
         </Stack.Navigator >
     )

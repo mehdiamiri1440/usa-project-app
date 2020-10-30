@@ -32,6 +32,7 @@ let homeRoutes = [
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
+    { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
