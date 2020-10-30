@@ -889,7 +889,13 @@ class SpecialProducts extends PureComponent {
                             item = { ...item, city_id: city }
                         }
 
-                        this.props.fetchAllSpecialProductsList(item).catch(error => {
+                        this.props.fetchAllSpecialProductsList(item).then(result => {
+                            this.setState({
+                                specialProductsListArray: [...result.payload.products],
+                                from_record_number: 0,
+                                to_record_number: 15
+                            })
+                        }).catch(error => {
                             // this.setState({ showModal: true })
                         });
                     }
