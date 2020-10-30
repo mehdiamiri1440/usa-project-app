@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
+import { locale } from 'moment';
 
 
 const BuyAdList = props => {
@@ -67,7 +68,8 @@ const BuyAdList = props => {
                             flexWrap: 'wrap', width: '100%', textAlign: 'center',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                         }}
-                    >{`${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
+                    >
+                        {item.is_golden && active_pakage_type == 0 ? `${item.subcategory_name} | ${item.subcategory_name} ` : `${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
                 </View>
 
 
@@ -79,7 +81,9 @@ const BuyAdList = props => {
                             flexWrap: 'wrap', width: '100%', textAlign: 'center',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                         }}
-                    >{`${locales('titles.requirementQuantity')} : ${formatter.numberWithCommas(item.requirement_amount)} ${locales('labels.kiloGram')}`}
+                    >
+
+                        {item.is_golden && active_pakage_type == 0 ? `${locales('titles.requirementQuantity')} : نامشخص` : `${locales('titles.requirementQuantity')} : ${formatter.numberWithCommas(item.requirement_amount)} ${locales('labels.kiloGram')}`}
                     </Text>
                 </View>
 
@@ -92,7 +96,7 @@ const BuyAdList = props => {
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
                         }}
                     >
-                        {item.register_date}
+                        {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : item.register_date}
                     </Text>
                 </View>
 

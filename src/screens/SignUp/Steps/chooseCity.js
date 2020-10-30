@@ -39,7 +39,9 @@ class ChooseCity extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities.length && this.props.city) {
+        if (prevState.loaded == false && this.props.allCitiesObject &&
+            Object.entries(this.props.allCitiesObject).length &&
+            this.props.allCitiesObject.cities.length && this.props.city) {
             const { province, city } = this.props;
             this.setState({ province, city, loaded: true })
         }
@@ -125,7 +127,7 @@ class ChooseCity extends React.Component {
 
         provinces = provinces.map(item => ({ ...item, value: item.province_name }));
 
-        if (Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
         }
 

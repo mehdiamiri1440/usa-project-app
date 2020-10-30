@@ -1,33 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
-import { Button, Toast } from 'native-base';
-import {
-    ToastAndroid,
-    View, Text, Modal, TouchableOpacity, Image, TextInput,
-    FlatList, ActivityIndicator
-} from 'react-native';
-import Clipboard from "@react-native-community/clipboard";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import * as messagesActions from '../../redux/messages/actions';
+import moment from 'moment';
+import { Button } from 'native-base';
+import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+
+import { deviceWidth } from '../../utils/deviceDimenssions';
+import Message from './Message';
+import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
-import { formatter, dataGenerator } from '../../utils';
+import { formatter, validator } from '../../utils';
+import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
-class ChatModal extends React.Component {
+let unsubscribe;
+class ChatModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             keyboardHeight: 0,
             messageText: '',
             isFirstLoad: true,
-            msgCount: 10,
+            msgCount: 25,
+            showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
             loaded: false
@@ -38,11 +40,35 @@ class ChatModal extends React.Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+        this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
+
+        // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        // unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when notification opend app', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+
+        // unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
+        //     console.log('message reciev from fcm in chat list when app was in background', remoteMessage)
+        //     this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+        // });
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
+                if (this.props.contact && this.props.contact.contact_id == remoteMessage.data.senderId)
+                    this.pushNewMessageToChatList(remoteMessage);
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
+            }
+        });
     }
+
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
+            console.warn('end reached in updated', this.state.loaded)
+            this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
                 //     setTimeout(() => {
@@ -50,48 +76,78 @@ class ChatModal extends React.Component {
                 //     }, 1000)
             })
         }
-        if (this.props.message || this.props.contactsListUpdated) {
-            this.props.newMessageReceived(false)
-            this.props.setcontactsListUpdated(false);
-            setTimeout(() => {
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
-                        // if (!this.state.isFirstLoad)
-                        //     setTimeout(() => {
-                        //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-                        //     }, 1000)
-                    })
-                })
-            }, 10);
-            console.warn('reached', this.props.message)
-        }
+        // if (this.props.newMessage || this.props.contactsListUpdated) {
+        //     console.warn('re')
+        //     // this.props.newMessageReceived(false)
+        //     // this.props.setcontactsListUpdated(false);
+        //     setTimeout(() => {
+        //         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
+        //             this.fetchSenderIds()
+        //             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
+        //                 // if (!this.state.isFirstLoad)
+        //                 //     setTimeout(() => {
+        //                 //         this.scrollViewRef.current.scrollToEnd({ animated: true });
+        //                 //     }, 1000)
+        //             })
+        //         })
+        //     }, 10);
+        //     console.warn('reached', this.props.newMessage)
+        // }
     }
 
 
     componentWillUnmount() {
-        Jmoment.locale('fa');
-        this.props.fetchAllContactsList();
     }
+
+
+    pushNewMessageToChatList = (remoteMessage) => {
+        const text = remoteMessage.notification.body;
+        let userChatHistory = [...this.state.userChatHistory];
+        const message = {
+            sender_id: this.props.contact.contact_id,
+            receiver_id: this.props.loggedInUserId,
+            text,
+            is_phone: validator.isMobileNumber(text),
+            is_read: 1
+        };
+
+
+        userChatHistory.unshift(message);
+
+        userChatHistory.slice(0, 60).forEach(item => {
+            if (item.is_read == undefined) {
+                item.is_read = true;
+            }
+        })
+        this.setState({ userChatHistory }, () => {
+            Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`, {
+                msg_count: this.state.msgCount,
+                user_id: this.props.contact.contact_id
+            })
+        })
+
+    };
+
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })
     }
 
     sendMessage = () => {
-
         let { messageText } = this.state;
         let userChatHistory = [...this.state.userChatHistory].reverse();
-
         let msgObject = {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(this.props.contact.contact_id),
-            text: formatter.toStandard(messageText)
+            text: formatter.toStandard(messageText),
+            created_at: moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
         }
 
         if (messageText && messageText.length && messageText.trim()) {
             userChatHistory.push({ ...msgObject });
+            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
             this.setState({
-                userChatHistory: [...userChatHistory.slice(-10)].reverse(),
+                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
                 messageText: '',
                 isFirstLoad: false
             });
@@ -104,26 +160,108 @@ class ChatModal extends React.Component {
                         result.payload.message && this.state.userChatHistory.length > 0 &&
                         !this.props.userChatHistoryLoading)
                         setTimeout(() => {
-                            this.scrollViewRef.current.scrollToIndex({ animated: true, index: 0 });
+                            this.scrollViewRef?.current.scrollToIndex({ animated: true, index: 0 });
                         }, 200);
                 }, 10);
-                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-                    this.setState(state => {
-                        state.loaded = false;
-                        return '';
-                    })
-                })
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                //     .then(() => {
+                //         this.setState(state => {
+                //             state.loaded = false;
+                //             return '';
+                //         })
+                //     })
             });
 
         }
 
     }
 
-    render() {
-        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo } = this.props;
-        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText, loaded } = this.state;
 
+    hideUnAuthorizedUserChatPopUp = () => {
+
+        AsyncStorage.getItem('@sender_ids').then(async (sender_ids_from_storage) => {
+            let sender_ids = [];
+            if (sender_ids_from_storage) {
+                sender_ids = JSON.parse(sender_ids_from_storage);
+            }
+
+            let id = '';
+            if (this.state.userChatHistory.length) {
+                id = this.state.userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) ?
+                    this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
+                    : "";
+            }
+            if (id) {
+                sender_ids.push(id);
+                this.setState({ showUnAuthorizedUserPopUp: false });
+                return await AsyncStorage.setItem('@sender_ids', JSON.stringify(sender_ids));
+            }
+        });
+    };
+
+    fetchSenderIds = () => AsyncStorage.getItem('@sender_ids').then(sender_ids => {
+        sender_ids = JSON.parse(sender_ids);
+        if (sender_ids && sender_ids.length) {
+            if (this.state.userChatHistory.length) {
+                const foundSender_id = this.state.userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) ?
+                    this.state.userChatHistory.find(item => item.sender_id != this.props.loggedInUserId).sender_id
+                    : "";
+                this.setState({ showUnAuthorizedUserPopUp: sender_ids.every(item => item != foundSender_id) });
+            }
+        }
+        else {
+            this.setState({ showUnAuthorizedUserPopUp: true });
+        }
+    });
+
+    onEndReached = _ => {
+
+        const { loaded, userChatHistory } = this.state;
+        if (loaded && userChatHistory.length >= 9)
+            this.setState({ msgCount: this.state.msgCount + 25 }, () => {
+                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }))
+            })
+    };
+    keyExtractor = (_, index) => index.toString();
+
+    renderItem = ({ item, index, separators }) => {
+        return <Message
+            item={item}
+            loggedInUserId={this.props.loggedInUserId}
+            contact={this.props.contact}
+            index={index}
+            separators={separators}
+        />;
+    };
+
+    renderListFooterComponent = _ => {
+        if (!this.state.isFirstLoad && (this.props.userChatHistoryLoading))
+            return (
+                <View style={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 15
+
+                }}>
+                    <ActivityIndicator size="small" color="#00C569"
+                        style={{
+                            zIndex: 999,
+                            width: 50, height: 50,
+                            borderRadius: 50,
+                            backgroundColor: '#fff',
+                            elevation: 5,
+                            padding: 0,
+                        }}
+                    />
+                </View>
+            )
+        return null;
+    }
+
+    render() {
+        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
+        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
+        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp } = this.state;
         return (
             <Modal
                 animationType="slide"
@@ -203,7 +341,7 @@ class ChatModal extends React.Component {
                             >
                                 {`${firstName} ${lastName}`}
                             </Text>
-                            {is_verified ? <ValidatedUserIcon /> : null}
+                            {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -224,160 +362,31 @@ class ChatModal extends React.Component {
 
 
                 <FlatList
-                    // refreshing={this.state.userChatHistory}
                     data={userChatHistory}
-                    getItemLayout={(data, index) => (
-                        { length: 40, offset: 40 * index, index }
-                    )}
+                    ListFooterComponentStyle={{ padding: 10 }}
+                    ListFooterComponent={this.renderListFooterComponent}
                     inverted
+                    maxToRenderPerBatch={3}
+                    initialNumToRender={3}
+                    windowSize={10}
                     ref={this.scrollViewRef}
                     style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
                     extraData={this.state}
-                    onEndReached={() => {
-                        if (loaded && userChatHistory.length >= 9)
-                            this.setState({ msgCount: this.state.msgCount + 10, loaded: false }, () => {
-                                this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                            })
-                    }}
-                    // pagingEnabled={true}
-                    onEndReachedThreshold={0.1}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index, separators }) => (
-                        <View
-                            style={{
-                                width: deviceWidth,
-                                paddingHorizontal: 10,
-                                paddingVertical: 0,
-                                marginTop: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
-                                flex: 1,
-                                alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
-                            }}
-                            key={index}
-                        >
-                            <View
-                                style={{
-
-                                    elevation: 1,
-                                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9, paddingVertical: 3,
-                                    backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
-                                }}
-                            >
-                                <Text
-                                    selectionColor='gray'
-                                    suppressHighlighting
-                                    selectable
-                                    onPress={() => {
-                                        ToastAndroid.showWithGravityAndOffset(
-                                            locales('titles.copiedToClipboard'),
-                                            ToastAndroid.LONG,
-                                            ToastAndroid.BOTTOM,
-                                            5,
-                                            20)
-                                        Clipboard.setString(item.text)
-                                    }}
-                                    style={{
-                                        zIndex: 999999,
-                                        textAlign: 'right',
-                                        fontSize: 16,
-                                        color: '#333333'
-                                    }}>
-                                    {item.text}
-                                </Text>
-                                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
-                                    {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
-                                        style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                        name={item.is_read ? 'check-all' : 'check'} size={14}
-                                        color={item.is_read ? '#60CAF1' : '#617D8A'} /> :
-                                        <Feather name='clock' size={14} color='#617D8A'
-                                            style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                        />
-                                    )
-                                    }
-                                    <Text
-                                        style={{
-                                            color: '#333333',
-                                            fontSize: 12
-                                        }}>
-                                        {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
-
-                    )}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.5}
+                    keyExtractor={this.keyExtractor}
+                    renderItem={this.renderItem}
                 />
 
 
+                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
+                    !isSenderVerified && showUnAuthorizedUserPopUp) ? <View style={{ marginBottom: 55, marginTop: -65 }}>
 
-
-
-                {/* 
-                    <ScrollView
-                        keyboardShouldPersistTaps='handled'
-                        keyboardDismissMode='on-drag'
-                        onScroll={event => this.setState({ prevScrollPosition: event.nativeEvent.contentOffset.y })}
-                        onContentSizeChange={() => this.scrollViewRef.current.scrollToEnd({ animated: true })}
-                        ref={this.scrollViewRef}
-                        style={{ height: keyboardHeight == 0 ? deviceHeight * 0.87 : (deviceHeight * 0.87) - keyboardHeight }}
-                    >
-
-                        {
-                            userChatHistory.map((message, index, self) => (
-
-                                <View style={{
-                                    width: deviceWidth,
-                                    paddingHorizontal: 10,
-                                    marginTop: index == 0 ? 10 : 0,
-                                    marginBottom: index == self.length - 1 ? 50 : (index < self.length - 1 && self[index].receiver_id == self[index + 1].receiver_id ? 5 : 10),
-                                    flex: 1,
-                                    alignItems: id == message.receiver_id ? 'flex-end' : 'flex-start'
-                                }}
-                                    key={index}
-                                >
-                                    <View
-                                        style={{
-                                            shadowOffset: { width: 20, height: 20 },
-                                            shadowColor: 'black',
-                                            shadowOpacity: 1.0,
-                                            elevation: 5,
-                                            maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9,
-                                            backgroundColor: id == message.receiver_id ? '#DCF8C6' : '#F7F7F7',
-                                        }}
-                                    >
-                                        <Text style={{
-                                            textAlign: 'right',
-                                            fontSize: 16,
-                                            color: '#333333'
-                                        }}>
-                                            {message.text}
-                                        </Text>
-                                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingVertical: 10 }}>
-                                            {id == message.receiver_id && (message.created_at ? <MaterialCommunityIcons
-                                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                                name={message.is_read ? 'check-all' : 'check'} size={14}
-                                                color={message.is_read ? '#60CAF1' : '#617D8A'} /> :
-                                                <Feather name='clock' size={14} color='#617D8A'
-                                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                                />
-                                            )
-                                            }
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    color: '#333333',
-                                                    fontSize: 12
-                                                }}>
-                                                {Jmoment(message.created_at).format('jYY/jM/jD , hh:mm A ')}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-
-                            ))
-
-                        }
-                    </ScrollView>
- */}
+                        <ChatWithUnAuthorizedUserPopUp
+                            hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                        />
+                    </View>
+                    : null}
 
 
                 <View
@@ -397,7 +406,7 @@ class ChatModal extends React.Component {
                         }} />
 
                     <Button
-                        disabled={!!userChatHistoryLoading}
+                        // disabled={!!userChatHistoryLoading}
                         onPress={this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
@@ -412,6 +421,7 @@ class ChatModal extends React.Component {
                     >
                         <MaterialCommunityIcons name='send' size={25} color='white' />
                     </Button>
+
                     <TextInput
                         value={messageText}
                         onChangeText={this.handleMessageTextChange}
@@ -438,11 +448,13 @@ const mapStateToProps = (state) => {
         userChatHistoryLoading: state.messagesReducer.userChatHistoryLoading,
         userChatHistory: state.messagesReducer.userChatHistory,
         loggedInUserId: state.authReducer.loggedInUserId,
+        isSenderVerified: state.messagesReducer.isSenderVerified,
+        userProfile: state.profileReducer.userProfile,
 
         contactsList: state.messagesReducer.contactsList,
         // profile_photo: state.messagesReducer.profile_photo,
 
-        message: state.messagesReducer.message
+        // newMessage: state.messagesReducer.newMessage
     }
 };
 
@@ -450,7 +462,7 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
-        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))

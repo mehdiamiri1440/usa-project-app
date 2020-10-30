@@ -1,178 +1,184 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { useScrollToTop } from '@react-navigation/native';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
-import analytics from '@react-native-firebase/analytics';
-import { Card, CardItem, Body, Icon, InputGroup, Input } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
+import { Icon, InputGroup, Input } from 'native-base';
+
+import { TabView, TabBar } from 'react-native-tab-view';
+import { deviceWidth } from '../../utils/deviceDimenssions';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as messagesActions from '../../redux/messages/actions';
-import { ScrollView } from 'react-native-gesture-handler';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import Jmoment from 'moment-jalaali';
-import ChatModal from './ChatModal';
-import MessagesContext from './MessagesContext';
-import ValidatedUserIcon from '../../components/validatedUserIcon';
-import NoConnection from '../../components/noConnectionError';
-import Contact from './Contact';
+import * as requestActions from '../../redux/buyAdRequest/actions';
+
+import MessagesTab from './MessagesTab';
+import RequestsTab from './RequestsTab';
 
 
-class ContactsList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalFlag: false,
-            searchText: '',
-            contactsList: [],
-            from: 0,
-            to: 15,
-            contactsListUpdated: false,
-            loaded: false,
-            selectedContact: {
-                first_name: '',
-                last_name: '',
-                id: null
-            },
-            showModal: false
+
+const Messages = props => {
+
+    const serachInputRef = useRef();
+
+    const {
+        userProfile = {}
+    } = props;
+    const {
+        user_info = {}
+    } = userProfile;
+    const {
+        is_seller
+    } = user_info;
+
+    const [searchText, setSearchText] = useState('');
+    const [refresh, setRefresh] = useState(false);
+    const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
+    const [routes] = useState([
+        { key: 'messages', title: locales('labels.messages') },
+        { key: 'requests', title: locales('labels.suggestedBuyers') }
+    ]
+    );
+
+
+    useEffect(() => {
+        if (props.route && props.route.params && (props.route.params.tabIndex == 0 || props.route.params.tabIndex == 1)) {
+            setIndex(props.route.params.tabIndex)
         }
-    }
+    }, [props.route, props.route?.params, props.route?.params?.tabIndex])
 
-    serachInputRef = React.createRef();
-    contactsListRef = React.createRef();
-
-
-    componentDidMount() {
-        analytics().logEvent('messages')
-        this.props.isFromOutSide(false)
-        this.props.fetchAllContactsList(this.state.from, this.state.to)
-        // .catch(_ => this.setState({ showModal: true }));
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-        if (prevState.loaded == false && this.props.contactsList.length) {
-            this.setState({ contactsList: this.props.contactsList, loaded: true })
-        }
+    const handleSearch = text => setSearchText(text);
 
 
-        if (this.props.message || this.props.messageFromOutSide) {
-            this.props.newMessageReceived(false)
-            this.props.isFromOutSide(false)
-            setTimeout(() => {
-                this.props.fetchAllContactsList(this.state.from, this.state.to).then(() => {
-                    this.setState({ contactsList: this.props.contactsList, contactsListUpdated: true }, () => {
-                    })
-                })
-                // .catch(_ => this.setState({ showModal: true }))
-            }, 10);
-        }
-    }
+
+    const initialLayout = { width: deviceWidth, height: 0 };
 
 
-    setNewContactsList = contactsList => {
-        if (contactsList && contactsList.length) {
-            this.setState({ contactsList })
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case 'messages':
+                return <MessagesTab
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    searchText={searchText}
+                    {...props}
+                />
+            case 'requests':
+                return <RequestsTab
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    searchText={searchText}
+                    {...props}
+                />;
+            default:
+                return null;
         }
     };
 
-
-    closeChatModal = () => {
-        this.setState({ modalFlag: false, loaded: false }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to)
-            // .catch(_ => this.setState({ showModal: true }))
+    const refreshTabs = _ => {
+        setSearchText('');
+        if (index == 1) {
+            return props.fetchAllContactsList().then(_ => {
+                setRefresh(true);
+            });
+        }
+        return props.fetchRelatedRequests().then(_ => {
+            setRefresh(true);
         });
     }
 
-    setcontactsListUpdated = contactsListUpdated => this.setState({ contactsListUpdated });
-
-    fetchMoreContacts = () => {
-        this.setState({ from: this.state.to, to: this.state.to + 10 }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to).then(result => {
-                this.setState({ contactsList: [...this.state.contactsList, ...this.props.contactsList] });
-            })
-            // .catch(_ => this.setState({ showModal: true }));
-        })
-    };
-
-
-    handleSearch = text => {
-        const { contactsList } = this.props;
-        this.setState(state => {
-            contactsList.filter(item => (`${item.first_name} ${item.last_name}`).includes(text))
-            state.searchText = text;
-            state.isSearched = true;
-            if (text) {
-                state.contactsList = contactsList.filter(item => `${item.first_name} ${item.last_name}`.includes(text));
-            }
-            else {
-                state.contactsList = [...contactsList]
-            }
-            return '';
-        })
-    }
-
-    closeModal = _ => {
-        this.setState({ showModal: false, });
-        this.props.fetchAllContactsList(this.state.from, this.state.to);
-    }
-
-
-    setSelectedContact = selectedContact => {
-        this.setState({ selectedContact })
-    };
-
-    setSearchText = searchText => this.setState({ searchText })
-
-    setModalFlag = modalFlag => {
-        this.setState({ modalFlag })
-    };
-
-    render() {
-
-        let { contactsListLoading } = this.props;
-        let { modalFlag, selectedContact, loaded, searchText, contactsList, contactsListUpdated } = this.state;
-
-        return (
-            <View>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
+    const renderTabBar = internalProps => (
+        <TabBar
+            onTabPress={() => refreshTabs()}
+            {...internalProps}
+            indicatorStyle={{ backgroundColor: 'white' }}
+            style={{
+                backgroundColor: '#22AC93',
+            }}
+            renderLabel={({ route, focused, color }) => (
                 <View style={{
-                    backgroundColor: 'white',
+                    flex: 1,
                     flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
+                    margin: 0,
                 }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
+                    {route.key == 'requests' ?
                         <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                            style={{ color: 'white', backgroundColor: '#e41c38', borderRadius: 4, paddingHorizontal: 6, fontSize: 10, height: 20, paddingTop: 1, fontFamily: 'IRANSansWeb(FaNum)_Bold', right: 6, top: 1 }}
                         >
-                            {locales('labels.messages')}
+                            {locales('titles.new')}
                         </Text>
-                    </View>
+                        : null}
+                    <Text style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {route.title}
+                    </Text>
                 </View>
 
 
+            )}
+        />
+    );
+
+    return (
+        <View style={{ flex: 1 }}>
+            <View style={{
+                backgroundColor: 'white',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                height: 45,
+                elevation: 5,
+                justifyContent: 'center'
+            }}>
+                <TouchableOpacity
+                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                    onPress={() => props.navigation.goBack()}
+                >
+                    <AntDesign name='arrowright' size={25} />
+                </TouchableOpacity>
+
+                <View style={{
+                    width: '100%',
+                    alignItems: 'center'
+                }}>
+                    <Text
+                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                    >
+                        {locales('titles.messanger')}
+                    </Text>
+                </View>
+            </View>
+
+            {is_seller ?
+                <View style={{
+                    paddingHorizontal: 15,
+                    left: 0,
+                    backgroundColor: '#22AC93',
+                }}>
+                    <InputGroup rounded style={{
+                        borderWidth: 0,
+                        borderColor: 'transparent',
+                        borderBottomColor: 'white',
+                        borderBottomWidth: 1,
+                        width: '100%',
+                        borderRadius: 0,
+
+                    }}>
+                        <Input
+                            value={searchText}
+                            ref={serachInputRef}
+                            onChangeText={handleSearch}
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#FFFFFF' }}
+                            placeholder={locales('labels.search')}
+                            placeholderTextColor="#FFFFFF"
+
+                        />
+                        <Icon name='ios-search' style={{ color: '#FFFFFF', marginHorizontal: 5 }} />
+                    </InputGroup>
+                </View>
+                :
                 <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
                     <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
-                        <Input value={searchText}
-                            ref={this.serachInputRef}
-                            onChangeText={this.handleSearch}
+                        <Input
+                            value={searchText}
+                            ref={serachInputRef}
+                            onChangeText={handleSearch}
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
                             placeholder={locales('labels.searchContacts')}
                             placeholderTextColor="#BEBEBE"
@@ -181,210 +187,49 @@ class ContactsList extends React.Component {
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                     </InputGroup>
                 </View>
+            }
 
 
+            {is_seller ?
+                <TabView
+                    onSwipeStart={() => refreshTabs()}
+                    lazy
+                    removeClippedSubviews={true}
+                    renderTabBar={renderTabBar}
+                    useNativeDriver
+                    navigationState={{ index, routes }}
+                    renderScene={renderScene}
+                    onIndexChange={setIndex}
+                    initialLayout={initialLayout}
+                />
+                :
+                <MessagesTab
+                    setRefresh={setRefresh}
+                    refresh={refresh}
+                    searchText={searchText}
+                    {...props} />
+            }
 
-                {/* {() ? <ActivityIndicator size="large" color="#00C569"
-                    style={{
-                        position: 'absolute', left: '44%', top: '40%',
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                    }}
-                /> : null} */}
-                {modalFlag ? <ChatModal
-                    transparent={false}
-                    {...this.props}
-                    setcontactsListUpdated={this.setcontactsListUpdated}
-                    visible={modalFlag}
-                    contactsListUpdated={contactsListUpdated}
-                    contact={selectedContact}
-                    onRequestClose={this.closeChatModal}
-                /> : null}
-
-                <MessagesContext.Provider
-                    value={this.setNewContactsList}
-                    style={{ paddingBottom: 200, marginBottom: 200 }}
-                >
-                    <>
-                        <Card>
-                            <CardItem >
-                                <Body >
-                                    <FlatList
-                                        ListEmptyComponent={() => contactsListLoading ? <View></View> : searchText ?
-                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
-                                                <AntDesign size={135} name='contacts' color='#BEBEBE' />
-                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noContactFound')}</Text>
-                                            </View> :
-                                            <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Entypo size={135} name='message' color='#BEBEBE' />
-                                                <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>{locales('labels.noChatFound')}</Text>
-                                            </View>
-                                        }
-                                        ref={this.props.contactsListRef}
-                                        refreshing={((!!contactsListLoading))}
-                                        onRefresh={() => {
-                                            this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
-                                                this.setState({ loaded: false })
-                                            })
-                                            // .catch(_ => this.setState({ showModal: true }))
-                                        }
-                                        }
-                                        keyExtractor={item => item.contact_id.toString()}
-                                        keyboardShouldPersistTaps='handled'
-                                        keyboardDismissMode='on-drag'
-                                        showsVerticalScrollIndicator={false}
-                                        // getItemLayout={(data, index) => (
-                                        //     { length: 100, offset: 100 * index, index }
-                                        // )}
-                                        // onEndReachedThreshold={0.3}
-                                        // onEndReached={this.fetchMoreContacts}
-                                        style={{ width: '100%', height: deviceHeight * 1 }}
-                                        contentContainerStyle={{ paddingBottom: 220 }}
-                                        data={contactsList}
-                                        renderItem={({ item, index }) => <Contact
-                                            item={item}
-                                            setModalFlag={this.setModalFlag}
-                                            setSelectedContact={this.setSelectedContact}
-                                            index={index}
-                                            setSearchText={this.setSearchText}
-                                            contactsList={contactsList}
-                                            {...this.props}
-                                        />
-                                        }
-                                    />
-                                </Body>
-                            </CardItem>
-                        </Card>
-                    </>
-                    {/* <ScrollView
-                        keyboardShouldPersistTaps='handled'
-                        keyboardDismissMode='on-drag'
-                        style={{ paddingHorizontal: 5, height: deviceHeight * 0.78 }}>
-
-                        {modalFlag ? <ChatModal
-                            transparent={false}
-                            setcontactsListUpdated={this.setcontactsListUpdated}
-                            visible={modalFlag}
-                            contactsListUpdated={contactsListUpdated}
-                            contact={selectedContact}
-                            onRequestClose={this.closeChatModal}
-                        /> : null}
-
-                        <Card style={{ minHeight: deviceHeight * 0.77 }}>
-                            <CardItem>
-                                <Body>
-                                    {
-                                        contactsList && contactsList.map((contact, index) => (
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({ modalFlag: true, selectedContact: contact })}
-                                                key={contact.contact_id}
-                                                style={{
-                                                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                                                    flexDirection: 'row-reverse', width: '100%',
-                                                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
-                                                }}
-                                            >
-
-                                                <Image
-                                                    style={{
-                                                        borderRadius: deviceWidth * 0.06,
-                                                        width: deviceWidth * 0.12, height: deviceWidth * 0.12
-                                                    }}
-                                                    source={contact.profile_photo ?
-                                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${contact.profile_photo}` }
-                                                        : require('../../../assets/icons/user.png')}
-                                                />
-
-                                                <View>
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                                            {`${contact.first_name} ${contact.last_name}`}
-                                                        </Text>
-                                                        <Text style={{ color: '#666666' }}>
-                                                            {Jmoment(contact.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
-                                                        </Text>
-                                                    </View>
-
-
-                                                    <View
-                                                        style={{
-                                                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
-                                                            flexDirection: 'row-reverse',
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }} numberOfLines={1}>
-                                                            {contact.last_msg.last_msg_text}
-                                                        </Text>
-                                                        {contact.unread_msgs_count > 0 && <Text style={{
-                                                            color: 'white', backgroundColor: '#00C569', width: 30, height: 30,
-                                                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
-                                                        }}>
-                                                            {contact.unread_msgs_count}
-                                                        </Text>}
-                                                    </View>
-
-                                                </View>
-
-
-                                            </TouchableOpacity>
-                                     
-                                     ))
-                                    }
-                                </Body>
-                            </CardItem>
-                        </Card>
-
-                    </ScrollView>
-               */}
-                </MessagesContext.Provider>
-            </View >
-        )
-    }
+        </View>
+    );
 }
 
 const mapStateToProps = (state) => {
+    const {
+        userProfile
+    } = state.profileReducer;
+
     return {
-        contactsList: state.messagesReducer.contactsList,
-        contactsListMessage: state.messagesReducer.contactsListMessage,
-        contactsListError: state.messagesReducer.contactsListError,
-        contactsListFailed: state.messagesReducer.contactsListFailed,
-        contactsListLoading: state.messagesReducer.contactsListLoading,
-
-        message: state.messagesReducer.message,
-        messageFromOutSide: state.messagesReducer.messageFromOutSide,
-
+        userProfile
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
-        newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
-        isFromOutSide: (message) => dispatch(messagesActions.isFromOutSide(message)),
-
+        fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests()),
     }
 };
 
 
-
-
-const Wrapper = (props) => {
-    const ref = React.useRef(null);
-
-    useScrollToTop(ref);
-
-    return <ContactsList {...props} contactsListRef={ref} />;
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
+export default connect(mapStateToProps, mapDispatchToProps)(Messages)

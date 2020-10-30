@@ -374,7 +374,11 @@ class ProductMoreDetails extends Component {
                                                     autoCapitalize='none'
                                                     autoCorrect={false}
                                                     autoCompleteType='off'
-                                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', textDecorationLine: 'none', fontSize: 14 }}
+                                                    style={{
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', textDecorationLine: 'none', fontSize: 14,
+                                                        direction: 'rtl',
+                                                        textAlign: 'right'
+                                                    }}
                                                     onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
                                                     placeholderTextColor="#bebebe"
                                                     placeholder={locales('titles.writeDescription')}

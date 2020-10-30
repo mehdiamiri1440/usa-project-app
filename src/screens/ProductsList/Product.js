@@ -63,7 +63,8 @@ class Product extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.productItem).length) {
+        if (prevState.loaded == false && this.props.productItem
+            && Object.entries(this.props.productItem).length) {
             const {
                 max_sale_price,
                 min_sale_price,
@@ -823,7 +824,7 @@ class Product extends PureComponent {
                                                 }}>
                                                 {`${first_name} ${last_name}`}
                                             </Text>
-                                            {is_verified ? <ValidatedUserIcon /> : null}
+                                            {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                         </View>
                                         {response_rate > 0 && loggedInUserId != myuser_id &&
                                             <Text style={{ color: '#BEBEBE', fontSize: 12, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>

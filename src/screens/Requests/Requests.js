@@ -1,19 +1,22 @@
-import React, { PureComponent, Component } from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, Modal } from 'react-native';
-import { Dialog, Portal, Paragraph, Snackbar, ActivityIndicator } from 'react-native-paper';
+import React, { PureComponent } from 'react';
+import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
-import { Button, Card, CardItem, Body, Toast } from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import { Button } from 'native-base';
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import ContentLoader, { Rect } from "react-content-loader/native"
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
+import * as productActions from '../../redux/registerProduct/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
 import ChatModal from '../Messages/ChatModal';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -60,6 +63,7 @@ class Requests extends PureComponent {
 
         this.is_mounted = true;
         if (this.is_mounted == true) {
+            AsyncStorage.setItem('@registerProductParams', JSON.stringify({}))
             this.initialCalls()
             // .catch(_ => this.setState({ showModal: true }));
         }
@@ -72,8 +76,25 @@ class Requests extends PureComponent {
 
 
     componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
+
         if (prevState.loaded == false && this.props.buyAdRequestsList.length) {
             this.setState({ buyAdRequestsList: this.props.buyAdRequestsList, loaded: true })
+        }
+        if ((this.props.route && this.props.route.params && this.props.route.params.subCategoryId >= 0 &&
+            prevProps.route && !prevProps.route.params)
+            || (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
+                this.props.route.params.subCategoryId != prevProps.route.params.subCategoryId)) {
+            this.checkForFiltering()
         }
     }
     // shouldComponentUpdate(nextProps, nextState) {
@@ -83,11 +104,30 @@ class Requests extends PureComponent {
     //     return true
     // }
 
-    initialCalls = _ => {
-        return new Promise((resolve, reject) => {
-            this.props.fetchAllBuyAdRequests().catch(error => reject(error));
-        })
+    checkForFiltering = async () => {
+        let isFilter = await this.checkForFilterParamsAvailability();
+        if (isFilter) {
+            this.selectedFilter(this.props.route.params.subCategoryId, this.props.route.params.subCategoryName)
+        }
+    }
 
+    checkForFilterParamsAvailability = () => {
+        return new Promise((resolve, reject) => {
+            if (this.props.route.params.subCategoryId >= 0 && this.props.route.params.subCategoryName) {
+                resolve(true)
+            }
+            else {
+                resolve(false)
+            }
+        })
+    }
+
+    initialCalls = () => {
+        return new Promise((resolve, reject) => {
+            this.props.fetchAllBuyAdRequests().then(() => {
+                this.checkForFiltering()
+            }).catch(error => reject(error));
+        })
     }
 
     checkForSendingMessage = (item) => {
@@ -168,7 +208,7 @@ class Requests extends PureComponent {
                 this.props.requestsRef.current && this.props.requestsRef.current != null &&
                 this.props.requestsRef.current != undefined && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
                 setTimeout(() => {
-                    this.props.requestsRef.current.scrollToIndex({ animated: true, index: 0 });
+                    this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
         })
     };
@@ -560,22 +600,41 @@ class Requests extends PureComponent {
                     /> : null}
                     <FlatList
                         ref={this.props.requestsRef}
-                        refreshing={buyAdRequestLoading}
+                        refreshing={false}
                         onRefresh={() => {
                             this.props.fetchAllBuyAdRequests();
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => !!buyAdRequestLoading ? <View style={{
-                            alignSelf: 'center', justifyContent: 'center',
-                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                        }}>
-                            <Entypo name='list' size={80} color='#BEBEBE' />
-                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.buyLoading')}</Text>
-                        </View> : <View style={{
-                            alignSelf: 'center', justifyContent: 'center',
-                            alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                        }}>
+                        ListEmptyComponent={() => !!buyAdRequestLoading ?
+                            [1, 2, 3, 4, 5].map((_, index) =>
+                                <View
+                                    key={index}
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        paddingTop: 25,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 2,
+                                        borderBottomColor: '#ddd'
+                                    }}>
+                                    <ContentLoader
+                                        speed={2}
+                                        width={deviceWidth}
+                                        height={deviceHeight * 0.24}
+                                        viewBox="0 0 340 160"
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                    >
+                                        <Rect x="50" y="37" rx="3" ry="3" width="242" height="20" />
+                                        <Rect x="85" y="3" rx="3" ry="3" width="169" height="20" />
+                                        <Rect x="22" y="119" rx="3" ry="3" width="299" height="30" />
+                                        <Rect x="116" y="74" rx="3" ry="3" width="105" height="20" />
+                                    </ContentLoader>
+                                </View>)
+                            : <View style={{
+                                alignSelf: 'center', justifyContent: 'center',
+                                alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
+                            }}>
                                 <Entypo name='list' size={80} color='#BEBEBE' />
                                 <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
                             </View>
@@ -845,13 +904,17 @@ const mapStateToProps = (state) => {
         isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
         isUserAllowedToSendMessagePermission: state.profileReducer.isUserAllowedToSendMessagePermission,
         isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
+
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
-        isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id))
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
+        isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
+        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
     }
 }
 

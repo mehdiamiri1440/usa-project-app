@@ -11,6 +11,7 @@ const INITIAL_STATE = {
     userChatHistoryFailed: false,
     userChatHistoryError: false,
     userChatHistoryMessage: null,
+    isSenderVerified: false,
     userChatHistory: [],
 
 
@@ -33,7 +34,7 @@ const INITIAL_STATE = {
     totalUnreadMessages: {},
 
     messageFromOutSide: false,
-    message: false
+    newMessage: false
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -87,6 +88,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 userChatHistory: [],
                 userChatHistoryLoading: true,
+                isSenderVerified: false,
                 userChatHistoryFailed: false,
                 userChatHistoryError: false,
                 userChatHistoryMessage: null
@@ -96,6 +98,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [...action.payload.messages],
+                isSenderVerified: action.payload.is_verified == 1 ? true : false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
                 userChatHistoryError: false,
@@ -106,6 +109,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [],
+                isSenderVerified: false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: true,
                 userChatHistoryError: false,
@@ -118,6 +122,7 @@ export default (state = INITIAL_STATE, action) => {
                 userChatHistory: [],
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
+                isSenderVerified: false,
                 userChatHistoryError: true,
                 userChatHistoryMessage: null
             };
@@ -251,17 +256,16 @@ export default (state = INITIAL_STATE, action) => {
 
 
         case actionTypes.NEW_MESSAGE_RECEIVED: {
-            console.log('werewr', action)
             return {
                 ...state,
-                message: action.message
+                newMessage: action.payload
             }
         }
 
         case actionTypes.EMPTY_MESSAGE_RECEIVED: {
             return {
                 ...state,
-                message: {}
+                newMessage: false
             }
         }
         case actionTypes.IS_FROM_OUTSIDE: {

@@ -115,3 +115,7 @@ export const registerBuyAdRequest = requestObj => {
 
     return request();
 };
+
+
+export const setSubCategoryIdFromRegisterProduct = (id, name) => dispatch => dispatch(action(actionTypes.SET_PRODUCT_ID_FROM_REGISTER_PRODUCT, { id, name }));
+

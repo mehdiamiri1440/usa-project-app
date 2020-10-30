@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_MAIN_DOMAIN } from 'react-native-dotenv';
 import RNEmulatorCheck from 'react-native-emulator-check'
 
 
@@ -9,10 +9,9 @@ const getUrl = route => {
     //     if (!RNEmulatorCheck.isEmulator())
     //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
     // }
-    // return `http://192.168.1.46:3030/${route}`;
+    // return `http://192.168.1.102:3030/${route}`;
 
-    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
-    // return `https://www.buskool.com/${route}`
+    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 };
 getData = async () => {

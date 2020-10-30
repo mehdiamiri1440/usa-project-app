@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
+import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
 
@@ -118,13 +119,11 @@ class SpecialProducts extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllSpecialProductsList(item).then(_ => {
+        this.props.fetchAllSpecialProductsList(item).then(result => {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
         })
         // .catch(error => {
         //     this.setState({ showModal: true })
@@ -133,9 +132,7 @@ class SpecialProducts extends PureComponent {
 
 
     handleSearch = (text) => {
-        analytics().logEvent('search_text', {
-            text
-        })
+
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
@@ -154,10 +151,8 @@ class SpecialProducts extends PureComponent {
 
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -166,6 +161,9 @@ class SpecialProducts extends PureComponent {
             }
 
             this.props.fetchAllSpecialProductsList(item).then(_ => {
+                analytics().logEvent('search_text', {
+                    text
+                })
                 this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
             })
             // .catch(error => {
@@ -232,10 +230,8 @@ class SpecialProducts extends PureComponent {
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
             if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length && !this.props.specialProductsListLoading)
-                setTimeout(() => {
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
+                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
@@ -269,6 +265,88 @@ class SpecialProducts extends PureComponent {
     };
 
 
+    renderProductListEmptyComponent = _ => {
+
+        const { specialProductsListLoading } = this.props;
+
+        if (!specialProductsListLoading)
+            return (
+                <View style={{
+                    alignSelf: 'center', justifyContent: 'center',
+                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
+                }}>
+                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
+                        {locales('titles.noProductFound')}</Text>
+                    {
+                        !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
+                            <Button
+                                onPress={() => this.props.navigation.navigate('RegisterProduct')}
+
+                                style={styles.loginButton}>
+                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                    {locales('titles.registerNewProduct')}
+                                </Text>
+                            </Button>
+                        </View> : <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+
+                                    style={styles.loginButton}>
+                                    <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                        {locales('titles.registerBuyAdRequest')}
+                                    </Text>
+                                </Button>
+                            </View>}
+                </View>
+            )
+        if (!this.state.loaded || specialProductsListLoading) {
+            return (
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                    {[1, 2, 3, 4, 5, 6].map((_, index) =>
+                        // <ContentLoader key={index} />
+                        <View
+                            key={index}
+                            style={{
+                                borderRadius: 5,
+                                borderWidth: 2,
+                                borderColor: '#eee',
+                                paddingBottom: 10,
+                                marginBottom: 15
+
+                            }}>
+                            <ContentLoader
+                                speed={2}
+                                width={deviceWidth}
+                                height={deviceHeight * 0.3}
+                                viewBox="0 0 500 263"
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+
+                            >
+
+                                <Rect x="296" y="24" rx="3" ry="3" width="88" height="10" />
+                                <Rect x="273" y="47" rx="3" ry="3" width="110" height="8" />
+                                <Rect x="79" y="96" rx="3" ry="3" width="209" height="15" />
+                                <Rect x="149" y="141" rx="3" ry="3" width="139" height="15" />
+                                <Rect x="196" y="185" rx="3" ry="3" width="93" height="15" />
+                                <Circle cx="430" cy="39" r="30" />
+                                <Rect x="17" y="30" rx="8" ry="8" width="84" height="17" />
+                                <Rect x="337" y="88" rx="3" ry="3" width="122" height="122" />
+                                <Rect x="0" y="74" rx="0" ry="0" width="472" height="2" />
+                                <Circle cx="309" cy="105" r="12" />
+                                <Circle cx="309" cy="148" r="12" />
+                                <Circle cx="309" cy="191" r="12" />
+                                <Rect x="15" y="223" rx="3" ry="3" width="445" height="46" />
+                            </ContentLoader>
+                        </View>
+                    )}
+                </View>
+            )
+        }
+        return null;
+    };
+
     render() {
         const {
             specialProductsListObject,
@@ -293,7 +371,7 @@ class SpecialProducts extends PureComponent {
         let cities = [];
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
-        if (Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
         return (
@@ -511,10 +589,8 @@ class SpecialProducts extends PureComponent {
                                 onPress={() => !specialProductsListLoading && this.setState({ sort_by: item.value }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -605,10 +681,8 @@ class SpecialProducts extends PureComponent {
                                 onPress={() => !specialProductsListLoading && this.setState({ searchText: item.category_name }, () => {
                                     if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
                                         this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length && !this.props.specialProductsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
+                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
+                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -750,24 +824,7 @@ class SpecialProducts extends PureComponent {
                 <FlatList
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
-                    ListEmptyComponent={!specialProductsListLoading && <View style={{
-                        alignSelf: 'center', justifyContent: 'center',
-                        alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
-                    }}>
-                        <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                        <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noProductFound')}</Text>
-                        <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterRequest')}
-
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                            </Button>
-                        </View>
-                    </View>
-                    }
+                    ListEmptyComponent={this.renderProductListEmptyComponent}
                     // getItemLayout={(data, index) => (
                     //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
                     // )}
@@ -822,7 +879,7 @@ class SpecialProducts extends PureComponent {
                                 from_record_number: 0,
                                 sort_by: this.state.sort_by,
                                 to_record_number: 15,
-                                search_text: this.statesearchText
+                                search_text: this.state.searchText
                             }
                         }
                         if (province) {
@@ -832,7 +889,13 @@ class SpecialProducts extends PureComponent {
                             item = { ...item, city_id: city }
                         }
 
-                        this.props.fetchAllSpecialProductsList(item).catch(error => {
+                        this.props.fetchAllSpecialProductsList(item).then(result => {
+                            this.setState({
+                                specialProductsListArray: [...result.payload.products],
+                                from_record_number: 0,
+                                to_record_number: 15
+                            })
+                        }).catch(error => {
                             // this.setState({ showModal: true })
                         });
                     }

@@ -29,7 +29,20 @@ class ChangeRole extends Component {
     changeRole = _ => {
         this.props.changeRole().then(_ => {
             this.props.fetchUserProfile().then(_ => {
-                this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' })
+                if (this.props.route && this.props.route.params) {
+                    const {
+                        route
+                    } = this.props;
+                    const {
+                        params
+                    } = route;
+                    const {
+                        parentRoute,
+                        childRoute,
+                        routeParams
+                    } = params;
+                    this.props.navigation.navigate(parentRoute, { screen: childRoute, params: { ...routeParams } })
+                }
             });
         })
     }
@@ -78,7 +91,8 @@ class ChangeRole extends Component {
                         alignItems: 'center',
                         height: 45,
                         elevation: 5,
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        backgroundColor: '#fff'
                     }}>
                     <TouchableOpacity
                         style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
@@ -102,7 +116,9 @@ class ChangeRole extends Component {
                 <View style={{
                     padding: 15,
                     margin: 0,
-                    paddingTop: 80
+                    paddingTop: 80,
+                    backgroundColor: '#fff',
+                    flex: 1
                 }}>
 
                     <View

@@ -2,17 +2,14 @@ import React, { createRef } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
-import { Card, Body, InputGroup, CardItem, Input, Button } from 'native-base';
+import { Card, InputGroup, Input, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import analytics from '@react-native-firebase/analytics';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
-import { color } from 'react-native-reanimated';
 import { formatter } from '../../../utils'
 
 class ExtraProductCapacity extends React.Component {
@@ -31,14 +28,13 @@ class ExtraProductCapacity extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('extra_product_capacity_payment');
-
     }
+
     pay = () => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)
             userId = this.props.userProfile.user_info.id;
 
-        console.log('user', userId)
         return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`).then(supported => {
             if (supported) {
                 Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`);
@@ -497,7 +493,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData())
+        fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
     }
 };
 

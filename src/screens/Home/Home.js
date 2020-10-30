@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as authActions from '../../redux/auth/actions';
-import * as profileActions from '../../redux/profile/actions';
 import { Radio, Button } from 'native-base';
-import RnRestart from 'react-native-restart';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { useScrollToTop } from '@react-navigation/native';
+
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -18,19 +16,25 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import Feather from 'react-native-vector-icons/dist/Feather';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
-import * as RootNavigation from '../../router/rootNavigation';
+
+import * as productListActions from '../../redux/productsList/actions';
+import * as authActions from '../../redux/auth/actions';
+import * as profileActions from '../../redux/profile/actions';
+import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 
 let role = false
 
 
 let homeRoutes = [
+    // { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'PromotionIntro' },
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
+    // { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
+    // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
@@ -107,7 +111,8 @@ class Home extends React.Component {
     closeModal = () => {
         this.setState({ showchangeRoleModal: false }, () => {
             this.props.fetchUserProfile().then(_ => {
-                this.props.navigation.navigate(!role ? 'Home' : 'Requests')
+                this.props.updateProductsList(true)
+                return this.props.navigation.navigate(!role ? 'Home' : 'Requests')
             });
         });
     }
@@ -236,8 +241,104 @@ class Home extends React.Component {
 
                 <ScrollView
                     ref={this.props.homeRef}
-                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
+                    style={{ flex: 1, backgroundColor: '#F2F2F2', paddingBottom: 20 }}>
 
+
+                    {/* 
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Referral')}
+                        style={{
+                            alignContent: 'center',
+                            backgroundColor: 'white',
+                            paddingTop: 10,
+                            paddingBottom: 30,
+                            elevation: 2,
+                            paddingHorizontal: 10,
+                            marginBottom: 10,
+                            marginHorizontal: 0,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <View style={{
+                            width: deviceWidth - 150,
+                            paddingTop: 13
+                        }}>
+                            <Text style={{
+                                color: '#556080',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16
+                            }}>
+                                {locales('titles.referralMainTitle')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainContents')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainSecondContents')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 13
+                                }}>
+                                {locales('titles.referralMainThirdContents')}
+                            </Text>
+                        </View>
+                        <View
+                            style={{ width: 125, }}
+
+                        >
+                            <Image
+                                source={require('./../../../assets/images/gift-box.gif')}
+                                style={{
+                                    width: 130,
+                                    height: 65,
+                                    marginBottom: 5
+                                }}
+                            />
+                            <Button
+                                onPress={() => this.props.navigation.navigate('Referral')}
+
+                                style={{
+                                    backgroundColor: '#e41c38',
+                                    borderRadius: 3,
+                                    padding: 0,
+                                    margin: 0,
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: 20,
+                                    alignItems: 'center',
+                                    flexDirection: 'row-reverse',
+                                    height: 30
+                                }}>
+
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        color: '#fff',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                    }}
+                                >
+                                    {locales('titles.referralButton')}
+                                </Text>
+                                <Ionicons color="#fff" size={20} name='ios-arrow-back' />
+
+                            </Button>
+                        </View>
+                    </TouchableOpacity>
+ */}
 
                     {homeRoutes.map((route, index) => {
 
@@ -617,6 +718,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         logOut: () => dispatch(authActions.logOut()),
         changeRole: _ => dispatch(authActions.changeRole()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        updateProductsList: flag => dispatch(productListActions.updateProductsList(flag))
     }
 }
 const mapStateToProps = (state, ownProps) => {

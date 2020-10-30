@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
 
@@ -8,7 +8,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { sub } from 'react-native-reanimated';
+
 
 class SelectCategory extends Component {
     constructor(props) {
@@ -24,6 +24,7 @@ class SelectCategory extends Component {
             loaded: false,
             subCategoriesList: [],
             categoriesList: [],
+            subCategoryName: ''
         }
     }
 
@@ -58,7 +59,6 @@ class SelectCategory extends Component {
     };
 
     setSubCategory = (id) => {
-        console.log('item', this.state.subCategoriesList)
         if (id >= 0) {
             let subCategory = this.state.subCategoriesList.some(item => item.id == id) ?
                 this.state.subCategoriesList.find(item => item.id == id).id : {};
@@ -66,7 +66,8 @@ class SelectCategory extends Component {
 
             this.setState({
                 subCategoryError: '',
-                subCategory
+                subCategory,
+                subCategoryName: this.state.subCategoriesList.find(item => item.id == id).category_name
             })
         }
     };
@@ -81,7 +82,7 @@ class SelectCategory extends Component {
 
     onSubmit = () => {
 
-        let { productType, category, subCategory } = this.state;
+        let { productType, category, subCategory, subCategoryName } = this.state;
         let productTypeError = '', categoryError = '', subCategoryError = '';
 
 
@@ -110,7 +111,7 @@ class SelectCategory extends Component {
         }
         this.setState({ productTypeError, subCategoryError, categoryError })
         if (!productTypeError && !categoryError && !subCategoryError) {
-            this.props.setProductType(productType, category, subCategory);
+            this.props.setProductType(productType, category, subCategory, subCategoryName);
         }
     }
 
@@ -223,6 +224,8 @@ class SelectCategory extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
+
+
                     <Item regular style={{
                         borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
                     }}>
@@ -235,7 +238,9 @@ class SelectCategory extends Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 height: 45,
-                                backgroundColor: '#fff'
+                                backgroundColor: '#fff',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onProductTypeSubmit}
                             value={productType}
@@ -368,6 +373,27 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCategory);
 
 
+
+
+
+
+// import React, { Component } from 'react';
+// import { TextInput } from 'react-native';
+
+// const UselessTextInput = () => {
+//     const [value, onChangeText] = React.useState('سبشسیب');
+
+//     return (
+//         <TextInput
+//             style={{ height: 40, borderColor: 'gray', borderWidth: 1, direction: 'rtl', textAlign: 'right' }}
+//             onChangeText={text => onChangeText(text)}
+//             placeholder={value}
+
+//         />
+//     );
+// }
+
+// export default UselessTextInput;
 
 
 

@@ -202,7 +202,9 @@ class UserBasicInfo extends React.Component {
                                 fontSize: 16,
                                 height: 50,
                                 backgroundColor: '#fff',
-                                padding: 3
+                                padding: 3,
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onFirstNameSubmit}
                             value={firstName}
@@ -245,7 +247,9 @@ class UserBasicInfo extends React.Component {
                                 fontSize: 16,
                                 height: 50,
                                 backgroundColor: '#fff',
-                                padding: 3
+                                padding: 3,
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onLastNameRef}
                             value={lastName}

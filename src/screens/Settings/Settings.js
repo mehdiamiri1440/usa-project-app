@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import { ScrollView } from 'react-native-gesture-handler';
+import messaging from '@react-native-firebase/messaging';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
@@ -20,12 +21,18 @@ let settingRoutes = [
 class Settings extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            loading: false
+        }
     }
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
-            this.props.logOut();
+            this.setState({ loading: true })
+            messaging()
+                .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
+                    this.props.logOut();
+                })
         }
         else {
             this.props.navigation.navigate(name)
@@ -111,7 +118,7 @@ class Settings extends React.Component {
                         )
                     })}
                 </ScrollView>
-                {this.props.logOutLoading ? <ActivityIndicator size="small" color="#00C569"
+                {(this.state.loading || this.props.logOutLoading) ? <ActivityIndicator size="small" color="#00C569"
                     style={{
                         position: 'absolute', left: '44%', top: '40%',
                         elevation: 5,
@@ -132,7 +139,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 const mapStateToProps = (state) => {
     return {
-        logOutLoading: state.authReducer.logOutLoading
+        logOutLoading: state.authReducer.logOutLoading,
+        loggedInUserId: state.authReducer.loggedInUserId,
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

@@ -3,7 +3,7 @@ import { I18nManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
-import Router from './src/router/router'
+import Router from './src/router'
 import RNRestart from 'react-native-restart';
 import configureStore, { persistor } from './src/redux/configureStore';
 import messaging from '@react-native-firebase/messaging';
@@ -43,16 +43,16 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    messaging().getInitialNotification(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
-    messaging().onNotificationOpenedApp(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
+    // messaging().getInitialNotification(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
+    // messaging().onNotificationOpenedApp(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
 
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      store.dispatch(messageActions.isFromOutSide(true))
-    });
+    // messaging().setBackgroundMessageHandler(async remoteMessage => {
+    //   store.dispatch(messageActions.newMessageReceived(true))
+    // });
     // if (I18nManager.isRTL) {
     //   I18nManager.forceRTL(false);
     //   I18nManager.allowRTL(false);

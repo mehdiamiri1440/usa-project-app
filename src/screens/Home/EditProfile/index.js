@@ -32,6 +32,7 @@ class EditProfile extends Component {
             first_name: '',
             last_name: '',
             editErrors: [],
+            is_verified: false,
             showSubmitEditionModal: false
         }
     }
@@ -41,7 +42,7 @@ class EditProfile extends Component {
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
-        if (Object.entries(this.props.userProfile).length) {
+        if (this.props.userProfile && Object.entries(this.props.userProfile).length) {
             const {
                 profile_photo,
                 is_company,
@@ -50,7 +51,7 @@ class EditProfile extends Component {
                 public_phone,
                 description } = this.props.userProfile.profile;
 
-            const { first_name, last_name } = this.props.userProfile.user_info;
+            const { first_name, last_name, is_verified } = this.props.userProfile.user_info;
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
@@ -62,7 +63,8 @@ class EditProfile extends Component {
                 public_phone,
                 first_name,
                 last_name,
-                description
+                is_verified,
+                description,
             });
         }
     }
@@ -216,6 +218,7 @@ class EditProfile extends Component {
             imageSizeError,
             first_name,
             last_name,
+            is_verified,
 
             editErrors,
             showSubmitEditionModal
@@ -396,6 +399,41 @@ class EditProfile extends Component {
                                 {`${first_name} ${last_name}`}
                             </Text>
                         </View>
+                        {!is_verified ?
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', textAlign: 'center', alignItems: 'center' }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 13,
+                                        textAlign: 'center',
+                                        color: 'red',
+                                    }}>
+                                    {locales('labels.youAreNotAuthorized')}
+                                </Text>
+                                <TouchableOpacity
+                                    style={[styles.loginButton, {
+                                        width: 90,
+                                        alignSelf: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginTop: 10,
+                                        height: 25,
+                                        backgroundColor: '#556080',
+
+                                    }]}
+
+                                    onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'Authentication' })}>
+                                    <Text style={{
+                                        color: 'white',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        textAlign: 'center',
+                                        width: '100%',
+                                        fontSize: 12
+                                    }}>
+                                        {locales('labels.editProfileAuthentication')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View> : null}
 
                         <Card transparent>
                             <View style={{
@@ -403,7 +441,7 @@ class EditProfile extends Component {
                             }}>
 
                                 <Text style={{
-                                    marginTop: 20,
+                                    marginTop: 10,
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#333'
                                 }}>

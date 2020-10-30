@@ -32,7 +32,8 @@ class UserActivity extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && Object.entries(this.props.activityZones).length) {
+        if (prevState.loaded == false &&
+            this.props.activityZones && Object.entries(this.props.activityZones).length) {
             const { activityZones, activityType, activityZone } = this.props;
             this.setState({ activityType, selectedCategoryId: activityZone, loaded: true })
         }

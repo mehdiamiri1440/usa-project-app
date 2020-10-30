@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, Text, Image, StyleSheet } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
@@ -10,6 +10,8 @@ import analytics from '@react-native-firebase/analytics';
 
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
+import * as homeActions from '../../../redux/home/actions';
+import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 class GuidToRegisterProduct extends React.Component {
@@ -28,6 +30,19 @@ class GuidToRegisterProduct extends React.Component {
             }
         });
         analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            this.props.fetchAllDashboardData()
+            this.props.fetchUserProfile()
+        }
     }
 
     onSubmit = () => {
@@ -81,7 +96,7 @@ class GuidToRegisterProduct extends React.Component {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.registerProduct')}
+                                {locales('labels.registerProductLimit')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -105,6 +120,20 @@ class GuidToRegisterProduct extends React.Component {
                             </Text>
 
                         </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: 'red',
+                                paddingHorizontal: 15,
+                                width: '100%'
+                            }}>
+                                {locales('titles.clickExtraCapacityButton')}
+                            </Text>
+
+                        </Dialog.Actions>
 
                         <View style={{
                             width: '100%',
@@ -115,7 +144,7 @@ class GuidToRegisterProduct extends React.Component {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('ExtraProductCapacity');
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraProductCapacity' });
                                 }}
                             >
 
@@ -148,16 +177,16 @@ class GuidToRegisterProduct extends React.Component {
 
 
 
-                <View style={{ width: deviceWidth, paddingVertical: 40, justifyContent: 'center', alignItems: 'center' }}>
+                {/* <View style={{ width: deviceWidth, paddingVertical: 40, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 28 }}>
                         {locales('labels.registerProduct')}
                     </Text>
-                </View>
-                <View style={{ backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                </View> */}
+                <View style={{ height: deviceHeight / 1.3, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
 
 
 
-                    <View
+                    {/* <View
                         style={{
                             width: deviceWidth,
                             justifyContent: 'center',
@@ -174,7 +203,7 @@ class GuidToRegisterProduct extends React.Component {
                         >
                             {locales('titles.sellerHintToRegisterProduct')}
                         </Text>
-                    </View>
+                    </View> */}
 
 
                     <View
@@ -189,27 +218,40 @@ class GuidToRegisterProduct extends React.Component {
                         }}
                     >
                         <Text
+                            style={{
+                                textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlignVertical: 'center',
+                                fontSize: 18,
+                                color: '#374761'
+                            }}
+                        >
+                            {locales('labels.noRelateRequstFoundFirst')}
+                        </Text>
+                        <Text
 
                             style={{
                                 textAlignVertical: 'center',
                                 color: 'red',
-                                fontSize: 18,
-                                // paddingHorizontal: 5,
+                                paddingHorizontal: 5,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
+                                fontSize: 18,
+                                color: '#000546'
                             }}
                         >
-                            {locales('titles.only')}
+                            {locales('labels.buyer')}
                         </Text>
                         <Text
                             style={{
                                 textAlign: 'center',
-                                paddingTop: 20,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlignVertical: 'center',
+                                fontSize: 18,
+                                color: '#374761'
                             }}
                         >
-                            {locales('titles.registerProductHint')}
+                            {locales('labels.noRelateRequstFoundSecond')}
                         </Text>
                     </View>
 
@@ -224,25 +266,36 @@ class GuidToRegisterProduct extends React.Component {
                     >
                         <Text
                             style={{
-                                width: '70%',
+
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 16,
+                                fontSize: 17,
                                 textAlign: 'center',
-                                flexWrap: 'wrap'
+                                flexWrap: 'wrap',
+                                color: '#000546'
                             }}
                         >
                             {locales('titles.registerYourProductNow')}
+
                         </Text>
+
+                        <View style={{
+                            textAlign: 'left',
+                            alignItems: 'flex-start',
+                            width: deviceWidth - 50,
+                        }}>
+                            <Image source={require('../../../../assets/images/arrow-mobile.png')} />
+
+                        </View>
                     </View>
 
 
 
                     <Button
                         onPress={() => this.onSubmit()}
-                        style={styles.loginButton}
+                        style={[styles.loginButton, { marginTop: -20, width: 192 }]}
                     >
 
-                        <Text style={styles.buttonText}>{locales('titles.registerNewProduct')}</Text>
+                        <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
                         <ActivityIndicator size="small" color="white"
                             animating={!!userPermissionToRegisterProductLoading}
                             style={{
@@ -463,7 +516,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct())
+        checkUserPermissionToRegisterProduct: () => dispatch(registerProductActions.checkUserPermissionToRegisterProduct()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
     }
 };
 

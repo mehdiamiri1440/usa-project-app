@@ -94,6 +94,9 @@ class StockAndPrice extends Component {
         if (!amount) {
             amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
         }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
+        }
         else {
             amountError = '';
         }
@@ -101,6 +104,9 @@ class StockAndPrice extends Component {
 
         if (!minimumOrder) {
             minimumOrderError = locales('errors.fieldNeeded', { fieldName: locales('titles.minimumOrderNeeded') })
+        }
+        else if (minimumOrder && minimumOrder <= 0) {
+            minimumOrderError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderNeeded') })
         }
         else {
             minimumOrderError = '';
@@ -110,17 +116,25 @@ class StockAndPrice extends Component {
         if (!maximumPrice) {
             maximumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.maxPriceNeeded') })
         }
+        else if (maximumPrice && maximumPrice <= 0) {
+            maximumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.maxPriceNeeded') })
+        }
         else {
             maximumPriceError = '';
         }
 
 
+
         if (!minimumPrice) {
             minimumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.minPriceNeeded') })
+        }
+        else if (minimumPrice && minimumPrice <= 0) {
+            minimumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minPriceNeeded') })
         }
         else {
             minimumPriceError = '';
         }
+
         this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             this.props.setStockAndPrice(minimumOrder, maximumPrice, minimumPrice, amount);
@@ -179,7 +193,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onAmountSubmit}
                             value={amount}
@@ -224,7 +240,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onMinimumOrderSubmit}
                             value={minimumOrder}
@@ -267,7 +285,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
                             }}
                             onChangeText={this.onMinimumPriceSubmit}
                             value={minimumPrice}
@@ -310,7 +330,9 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
-                                textDecorationLine: 'none'
+                                textDecorationLine: 'none',
+                                direction: 'rtl',
+                                textAlign: 'right'
 
                             }}
                             onChangeText={this.onMaximumPriceSubmit}
