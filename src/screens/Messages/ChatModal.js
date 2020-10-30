@@ -16,7 +16,7 @@ import { deviceWidth } from '../../utils/deviceDimenssions';
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
-import { formatter } from '../../utils';
+import { formatter, validator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
@@ -107,6 +107,7 @@ class ChatModal extends Component {
             sender_id: this.props.contact.contact_id,
             receiver_id: this.props.loggedInUserId,
             text,
+            is_phone: validator.isMobileNumber(text),
             is_read: 1
         };
 
@@ -226,6 +227,7 @@ class ChatModal extends Component {
     renderItem = ({ item, index, separators }) => {
         return <Message
             item={item}
+            loggedInUserId={this.props.loggedInUserId}
             contact={this.props.contact}
             index={index}
             separators={separators}

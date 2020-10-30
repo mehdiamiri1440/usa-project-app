@@ -1,12 +1,14 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text } from 'react-native';
+import { ToastAndroid, View, Text, TouchableOpacity, Linking } from 'react-native';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
+import { validator } from '../../utils';
 
 const Message = props => {
 
@@ -14,9 +16,28 @@ const Message = props => {
         item,
         index,
         separators,
-        contact
+        contact,
+        loggedInUserId
     } = props;
     const { contact_id: id } = contact;
+
+    const showPhoneFormat = item.sender_id != loggedInUserId && item.is_phone;
+
+    const openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    }
 
     return (
         <View
@@ -55,7 +76,7 @@ const Message = props => {
                         zIndex: 999999,
                         textAlign: 'right',
                         fontSize: 16,
-                        color: '#333333'
+                        color: showPhoneFormat ? '#5188B8' : '#333333'
                     }}>
                     {item.text}
                 </Text>
@@ -71,12 +92,32 @@ const Message = props => {
                     }
                     <Text
                         style={{
-                            color: '#333333',
+                            color: showPhoneFormat ? '#5188B8' : '#333333',
                             fontSize: 12
                         }}>
                         {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
                     </Text>
                 </View>
+                {showPhoneFormat ?
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => openCallPad(item.text)}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#4FA992',
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{ color: 'white' }}
+                        >
+                            {locales('labels.call')}
+                        </Text>
+                        <FontAwesome name='phone' color='white' size={25} />
+                    </TouchableOpacity>
+                    : null}
             </View>
         </View>
     )

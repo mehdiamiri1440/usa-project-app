@@ -30,6 +30,7 @@ export default {
     "labels.buyer": "خریدار",
     'labels.editProfileAuthentication': 'احراز هویت کنید',
     'labels.authentication': 'احراز هویت',
+    'labels.call': 'تماس',
     'labels.noContactFound': 'مخاطبی یافت نشد',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     'labels.notRegistered': 'ثبت نشده‌است',
