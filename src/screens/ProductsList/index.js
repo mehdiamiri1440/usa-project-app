@@ -997,7 +997,7 @@ class ProductsList extends PureComponent {
                         }
                         this.props.fetchAllProductsList(item).then(result => {
                             this.setState({
-                                productsListArray: [...this.props.productsListArray, ...result.payload.products]
+                                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 15
                             })
                         }).catch(error => {
                             this.setState({
