@@ -144,7 +144,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         multiDexEnabled true
-        versionName "1.1.2.997"
+        versionName "2.0.0.998"
     }
     signingConfigs {
         release {
