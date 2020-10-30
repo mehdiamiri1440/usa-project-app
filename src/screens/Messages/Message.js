@@ -75,8 +75,9 @@ const Message = props => {
                     style={{
                         zIndex: 999999,
                         textAlign: 'right',
-                        fontSize: 16,
+                        fontSize: showPhoneFormat ? 18 : 16,
                         color: showPhoneFormat ? '#5188B8' : '#333333'
+
                     }}>
                     {item.text}
                 </Text>
@@ -102,20 +103,50 @@ const Message = props => {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={() => openCallPad(item.text)}
-                        style={{
-                            width: '100%',
-                            backgroundColor: '#4FA992',
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
                     >
-                        <Text
-                            style={{ color: 'white' }}
+                        <View
+                            style={{
+                                width: 210,
+                                backgroundColor: '#4FA992',
+
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+
+                                flexDirection: 'row-reverse',
+
+                                paddingVertical: 5,
+                                marginHorizontal: -10,
+                                marginBottom: -5,
+                                borderBottomLeftRadius: 8,
+                                borderBottomRightRadius: 8,
+                                bottom: 2,
+                                marginTop: 7,
+                                overflow: "hidden",
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+
+                            }}
                         >
-                            {locales('labels.call')}
-                        </Text>
-                        <FontAwesome name='phone' color='white' size={25} />
+                            <Text style={{
+                                color: 'white',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}>
+                                {locales('labels.call')}
+
+                            </Text>
+                            <Text style={{
+                                // position: 'absolute',
+                                // left: 0,
+                                marginRight: 10
+                            }}>
+                                <FontAwesome name='phone'
+
+                                    color='white' size={18} />
+                            </Text>
+
+                        </View>
                     </TouchableOpacity>
                     : null}
             </View>
