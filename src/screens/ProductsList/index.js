@@ -81,7 +81,11 @@ class ProductsList extends PureComponent {
                 to_record_number: 15,
             };
             this.props.fetchAllProductsList(item).then(result => {
-                this.setState({ productsListArray: [...this.props.productsListArray] })
+                this.setState({
+                    productsListArray: [...this.props.productsListArray],
+                    to_record_number: 15,
+                    from_record_number: 0
+                })
             })
             this.props.updateProductsList(false)
         }
@@ -113,7 +117,9 @@ class ProductsList extends PureComponent {
             };
             this.props.fetchAllProductsList(item).then(result => {
                 this.setState({
-                    productsListArray: [...result.payload.products]
+                    productsListArray: [...result.payload.products],
+                    to_record_number: 15,
+                    from_record_number: 0
                 }, () => {
                     setTimeout(() => {
                         if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
