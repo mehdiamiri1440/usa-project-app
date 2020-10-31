@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import { ScrollView } from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
+
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
-import * as authReducer from '../../redux/auth/actions';
-import { deviceWidth } from '../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+
+import * as authReducer from '../../redux/auth/actions';
+
 
 
 let settingRoutes = [

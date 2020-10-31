@@ -142,44 +142,44 @@ const App = (props) => {
 
   useEffect(() => {
 
-    // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-    //   .then(res => {
-    //     res.text().then(result => {
-    //       const resultOfVersion = JSON.parse(result);
-    //       if (
-    //         RNAppUpdate.versionName.toString() !==
-    //         resultOfVersion.versionName.toString()
-    //       ) {
-    //         if (!resultOfVersion.forceUpdate) {
-    //           setUpdateModalFlag(true);
-    //           // Alert.alert(
-    //           //     'به روز رسانی',
-    //           //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
-    //           //     [
-    //           //         {
-    //           //             text: 'به روز رسانی',
-    //           //             onPress: () => navigationRef.current.navigate('UpgradeApp')
-    //           //         },
-    //           //         {
-    //           //             text: 'انصراف',
-    //           //             onPress: () => { },
-    //           //             style: 'cancel'
-    //           //         },
-    //           //     ],
-    //           // );
-    //         }
-    //         else {
-    //           navigationRef.current.navigate('UpgradeApp')
-    //         }
-    //       }
-    //     });
-    //   })
-    //   .catch(err => navigationRef.current.navigate('SignUp')
-    //   );
+    fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+      .then(res => {
+        res.text().then(result => {
+          const resultOfVersion = JSON.parse(result);
+          if (
+            RNAppUpdate.versionName.toString() !==
+            resultOfVersion.versionName.toString()
+          ) {
+            if (!resultOfVersion.forceUpdate) {
+              setUpdateModalFlag(true);
+              // Alert.alert(
+              //     'به روز رسانی',
+              //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
+              //     [
+              //         {
+              //             text: 'به روز رسانی',
+              //             onPress: () => navigationRef.current.navigate('UpgradeApp')
+              //         },
+              //         {
+              //             text: 'انصراف',
+              //             onPress: () => { },
+              //             style: 'cancel'
+              //         },
+              //     ],
+              // );
+            }
+            else {
+              navigationRef.current.navigate('UpgradeApp')
+            }
+          }
+        });
+      })
+      .catch(err => navigationRef.current.navigate('SignUp')
+      );
 
     remoteConfig()
       .setDefaults({
-        appVersion: '1.1.2.997',
+        appVersion: '2.0.0.998',
       })
       .then(() => {
         console.log('Default values set.');
