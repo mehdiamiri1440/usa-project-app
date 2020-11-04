@@ -10,7 +10,8 @@ export const login = (mobileNumber, password) => {
                 withAuth: false,
                 data: {
                     phone: mobileNumber,
-                    password
+                    password,
+                    client: 'mobile'
                 }
             })
             .then(result => {
