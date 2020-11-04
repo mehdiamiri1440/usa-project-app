@@ -104,6 +104,7 @@ export const checkActivisionCode = (code, mobileNumber) => {
                 data: {
                     phone: mobileNumber,
                     verification_code: code,
+                    client: 'mobile'
                 }
             })
             .then(result => {
