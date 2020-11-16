@@ -141,7 +141,7 @@ android {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
             vectorDrawables.useSupportLibrary = true
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion 29
         versionCode 2
         multiDexEnabled true
         versionName "2.0.0.998"
@@ -177,8 +177,8 @@ android {
         afterEvaluate {project ->
             if (project.hasProperty("android")) {
                 android {
-                    compileSdkVersion rootProject.ext.compileSdkVersion
-                    buildToolsVersion rootProject.ext.buildToolsVersion
+                    compileSdkVersion 29
+                    buildToolsVersion 29
                 }
             }
         }
