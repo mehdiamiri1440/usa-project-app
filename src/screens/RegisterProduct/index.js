@@ -327,11 +327,19 @@ class RegisterProduct extends React.Component {
 
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
-
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            active_pakage_type
+        } = user_info
         return (
             <>
                 <Loading />
-                {stepNumber == 7 ? <PaymentModal
+                {stepNumber == 7 && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
                     routeParams={{ subCategoryId, subCategoryName }}
@@ -511,6 +519,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
+        userProfile: state.profileReducer.userProfile,
         addNewProductLoading: state.registerProductReducer.addNewProductLoading,
         resetTab: state.registerProductReducer.resetTab
     }
