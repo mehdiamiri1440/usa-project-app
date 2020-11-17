@@ -1,11 +1,15 @@
 import React, { Fragment } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Text, View, StyleSheet, BackHandler, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
-import * as productActions from '../../redux/registerProduct/actions';
 import analytics from '@react-native-firebase/analytics';
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceWidth, deviceHeight } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+
+import * as productActions from '../../redux/registerProduct/actions';
+import * as profileActions from '../../redux/profile/actions';
+
+import ProductMoreDetails from './Steps/ProductMoreDetails';
 import SelectCategory from './Steps/SelectCategory';
 import StockAndPrice from './Steps/StockAndPrice';
 import GuidToRegisterProduct from './Steps/GuidToRegisterProduct';
@@ -13,14 +17,12 @@ import ChooseCity from './Steps/ChooseCity';
 import ProductImages from './Steps/ProductImages';
 import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
-import ProductMoreDetails from './Steps/ProductMoreDetails';
 import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
-import AsyncStorage from '@react-native-community/async-storage';
+import { deviceWidth, deviceHeight } from '../../utils';
 import Loading from '../Loading';
 
-let stepsArray = [1, 2, 3, 4, 5, 6],
-    tempDefaultArray = []
+let stepsArray = [1, 2, 3, 4, 5, 6];
 class RegisterProduct extends React.Component {
     constructor(props) {
         super(props)
@@ -80,6 +82,7 @@ class RegisterProduct extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('register_product');
+        this.props.fetchUserProfile();
         global.resetRegisterProduct = data => {
             if (data) {
                 this.changeStep(0);
@@ -528,6 +531,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
     }
