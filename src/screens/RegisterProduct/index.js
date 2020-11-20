@@ -391,7 +391,10 @@ class RegisterProduct extends React.Component {
                     }}>
                         <TouchableOpacity
                             style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => { stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) : this.props.navigation.goBack(); }}
+                            onPress={() => {
+                                stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
+                                this.props.navigation.goBack();
+                            }}
 
                         >
                             <AntDesign name='arrowright' size={25} />
