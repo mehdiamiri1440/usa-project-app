@@ -7,7 +7,6 @@ import {
   NativeModules, StyleSheet
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import remoteConfig from '@react-native-firebase/remote-config';
 import { connect } from 'react-redux';
 import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
@@ -177,13 +176,7 @@ const App = (props) => {
     //   .catch(err => navigationRef.current.navigate('SignUp')
     //   );
 
-    remoteConfig()
-      .setDefaults({
-        appVersion: '2.0.0.998',
-      })
-      .then(() => {
-        console.log('Default values set.');
-      });
+
 
     if (!props.loggedInUserId) {
       AsyncStorage.getItem('@isIntroductionSeen').then(result => {

@@ -22,8 +22,6 @@
     "@react-native-firebase/app": "^10.0.0",
     "@react-native-firebase/crashlytics": "^10.0.0",
     "@react-native-firebase/messaging": "^10.0.0",
-    "@react-native-firebase/perf": "^10.0.0",
-    "@react-native-firebase/remote-config": "^10.0.1",
     "@react-navigation/bottom-tabs": "^5.1.0",
     "@react-navigation/drawer": "^5.1.0",
     "@react-navigation/material-bottom-tabs": "^5.1.0",
