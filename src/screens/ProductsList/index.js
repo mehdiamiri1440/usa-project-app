@@ -55,10 +55,16 @@ class ProductsList extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("product_list", "product_list");
+        analytics().logScreenView({
+            screen_name: "product_list",
+            screen_class: "product_list",
+        });
 
         this.fetchAllProducts();
         this.initialCalls().catch(error => {

@@ -102,10 +102,16 @@ class ProductDetails extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("product_view", "product_view");
+        analytics().logScreenView({
+            screen_name: "product_view",
+            screen_class: "product_view",
+        });
 
 
         if (this.props.route.params.productId) {

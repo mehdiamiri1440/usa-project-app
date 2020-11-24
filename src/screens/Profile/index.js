@@ -66,10 +66,16 @@ class Profile extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("profile", "profile");
+        analytics().logScreenView({
+            screen_name: "profile",
+            screen_class: "profile",
+        });
 
         this.initProfileContent()
         // .catch(_ => this.setState({ showModal: false }))

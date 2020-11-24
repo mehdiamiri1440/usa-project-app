@@ -26,10 +26,16 @@ class GuidToRegisterProduct extends React.Component {
 
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+        analytics().logScreenView({
+            screen_name: "GuidToRegisterProduct",
+            screen_class: "GuidToRegisterProduct",
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {

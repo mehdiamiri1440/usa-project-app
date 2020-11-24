@@ -55,10 +55,16 @@ class Product extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("product", "product");
+        analytics().logScreenView({
+            screen_name: "product",
+            screen_class: "product",
+        });
 
     }
 

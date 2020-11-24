@@ -54,10 +54,16 @@ class SpecialProducts extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("special_products", "special_products");
+        analytics().logScreenView({
+            screen_name: "special_products",
+            screen_class: "special_products",
+        });
 
         this.fetchAllProducts();
         this.initialCalls()

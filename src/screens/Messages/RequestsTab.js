@@ -35,10 +35,16 @@ class RequestsTab extends Component {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("buyAd_suggestion", "buyAd_suggestion");
+        analytics().logScreenView({
+            screen_name: "buyAd_suggestion",
+            screen_class: "buyAd_suggestion",
+        });
 
         this.props.fetchRelatedRequests();
 

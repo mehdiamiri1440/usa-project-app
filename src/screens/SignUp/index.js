@@ -50,10 +50,16 @@ class SignUp extends React.Component {
 
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("register", "register");
+        analytics().logScreenView({
+            screen_name: "register",
+            screen_class: "register",
+        });
 
         this._isMounted = true;
         if (this._isMounted) {

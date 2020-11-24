@@ -71,10 +71,16 @@ class Home extends React.Component {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("my_buskool", "my_buskool");
+        analytics().logScreenView({
+            screen_name: "my_buskool",
+            screen_class: "my_buskool",
+        });
 
     }
 
