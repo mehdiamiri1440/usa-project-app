@@ -226,7 +226,9 @@ android {
 }
 
 dependencies {
-    
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+
+
     // For animated GIF support
     compile 'com.facebook.fresco:fresco:1.+'
     compile 'com.facebook.fresco:animated-gif:1.+'
