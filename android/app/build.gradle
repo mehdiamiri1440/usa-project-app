@@ -1,8 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-
-
+android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
 import com.android.build.OutputFile
 
 /**
@@ -124,7 +123,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-
+    ndkVersion "22.0.6917172"
     compileOptions {
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -145,6 +144,13 @@ android {
         versionCode 2
         multiDexEnabled true
         versionName "2.0.0.998"
+    //     ndk {
+    //   // Specifies the ABI configurations of your native
+    //   // libraries Gradle should build and package with your APK.
+    //   abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a',
+    //                'arm64-v8a'
+    //         }
+
     }
     signingConfigs {
         release {
@@ -233,7 +239,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ndk'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.7'
      implementation project(':react-native-linear-gradient')
