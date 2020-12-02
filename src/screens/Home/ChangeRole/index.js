@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         color: 'white',
         alignItems: 'center',
+        alignSelf: 'center',
         borderRadius: 5,
         justifyContent: 'center',
     },

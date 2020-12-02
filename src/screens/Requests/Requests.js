@@ -814,6 +814,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         maxWidth: 145,
         marginVertical: 10,
+        alignSelf: 'center',
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,

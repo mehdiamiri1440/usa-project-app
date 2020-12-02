@@ -1,22 +1,26 @@
 import React from 'react';
-import { I18nManager, ToastAndroid } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
 import Router from './src/router'
-import RNRestart from 'react-native-restart';
 import configureStore, { persistor } from './src/redux/configureStore';
-import messaging from '@react-native-firebase/messaging';
 
-import * as messageActions from './src/redux/messages/actions';
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { Root, Toast } from 'native-base';
-import AsyncStorage from '@react-native-community/async-storage';
-import SplashScreen from 'react-native-splash-screen';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Root } from 'native-base';
+
 const store = configureStore()
 
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
 
 const customTextProps = {
   style: {
@@ -43,7 +47,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    SplashScreen.hide()
     // messaging().getInitialNotification(async remoteMessage => {
     //   store.dispatch(messageActions.newMessageReceived(true))
     // });
@@ -79,11 +82,12 @@ class App extends React.Component {
   // };
 
   render() {
+
     return (
       <>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <PaperProvider>
+            <PaperProvider theme={theme}>
               <Root>
                 <ErrorBoundary>
                   <Router />
