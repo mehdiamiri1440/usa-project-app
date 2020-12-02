@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
+        color: 'black',
         height: 50,
         width: deviceWidth * 0.9,
     },

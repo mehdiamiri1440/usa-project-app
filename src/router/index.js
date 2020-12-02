@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'IRANSansWeb(FaNum)_Light',
     paddingVertical: 8,
+    color: 'black',
     height: 60,
     width: deviceWidth * 0.9,
     paddingRight: 30, // to ensure the text is never behind the icon
