@@ -32,7 +32,7 @@ let homeRoutes = [
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
-    // { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
+    { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
@@ -347,6 +347,7 @@ class Home extends React.Component {
                             (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
                                 this.props.userProfile.user_info.active_pakage_type == 3) ? null :
                                 (!is_seller && (route.name == 'PromoteRegistration' || route.name == 'Dashboard' || route.name == 'MyProducts')) ? null :
+
                                     <TouchableOpacity
                                         onPress={() => this.handleRouteChange(route.name)}
                                         style={{
@@ -364,7 +365,8 @@ class Home extends React.Component {
                                             flexDirection: 'row-reverse',
                                         }}
                                         key={index}>
-                                        <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                        <View style={{ width: '60%', flexDirection: 'row-reverse' }}>
+
                                             <View style={{
                                                 borderRadius: 5,
                                                 backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
@@ -376,7 +378,7 @@ class Home extends React.Component {
                                                 {locales(route.label)}
                                             </Text>
                                         </View>
-                                        <View style={{ width: '55%', flexDirection: 'row' }}>
+                                        <View style={{ width: '40%', flexDirection: 'row' }}>
                                             <Text style={{ textAlignVertical: 'center' }}>
                                                 <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
                                             </Text>
