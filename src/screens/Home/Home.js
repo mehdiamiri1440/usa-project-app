@@ -37,7 +37,7 @@ let homeRoutes = [
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
-    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
+    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='white' />, name: 'Profile' },
     { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
