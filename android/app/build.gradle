@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+
 android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
 import com.android.build.OutputFile
 
@@ -83,7 +84,30 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+project.ext.vectoricons = [
+    iconFontNames: [ 
+    'MaterialIcons.ttf', 
+    'EvilIcons.ttf',
+    'AntDesign.ttf',
+    'Entypo.ttf',
+    'EvilIcons.ttf',
+    'Feather.ttf',
+    'FontAwesome',
+    'FontAwesome5_Brands.ttf',
+    'FontAwesome5_Solid.ttf',
+    'FontAwesome5_Regular.ttf',
+    'Fontisto.ttf',
+    'Foundation.ttf',
+    'Ionicon.ttf',
+    'MaterialIcons.ttf',
+    'MaterialCommunityIcons.ttf',
+    'Octicons.ttf',
+    'Zocial.ttf',
+    'SimpleLineIcons.ttf'
+    ] // Name of the font files you want to copy
+]
+ 
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -232,16 +256,16 @@ dependencies {
     implementation 'org.webkit:android-jsc:+'
     implementation project(':react-native-restart')
     implementation project(':react-native-splash-screen')
+    implementation project(':react-native-community-toolbar-android')
     implementation project(':react-native-fs')
     implementation project(':react-native-contacts')
-    implementation project(':@react-native-community_masked-view')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    compile project(':react-native-vector-icons')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
-
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.7'
     implementation project(':react-native-linear-gradient')
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
@@ -264,3 +288,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+

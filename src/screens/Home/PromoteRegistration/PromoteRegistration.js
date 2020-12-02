@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import { Card, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, Button } from 'native-base'
 import FastImage from 'react-native-fast-image'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

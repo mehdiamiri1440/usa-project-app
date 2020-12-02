@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { Input, Label, Item } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Card, CardItem, Body, Toast, Button } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { Card, Input, Label, Item, Toast, Button } from 'native-base';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';

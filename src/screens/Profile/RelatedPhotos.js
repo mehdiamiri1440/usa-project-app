@@ -3,7 +3,7 @@
 import React, { memo } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { deviceWidth } from '../../utils/deviceDimenssions';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 

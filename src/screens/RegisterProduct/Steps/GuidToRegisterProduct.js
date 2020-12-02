@@ -53,6 +53,7 @@ class GuidToRegisterProduct extends React.Component {
 
     onSubmit = () => {
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
+
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {
                 changeStep(1);
@@ -370,6 +371,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.7,
         color: 'white',
         alignItems: 'center',
+        alignSelf: 'center',
         borderRadius: 5,
         flexDirection: 'row-reverse',
         justifyContent: 'center',

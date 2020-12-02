@@ -8,7 +8,7 @@ import Clipboard from "@react-native-community/clipboard";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { deviceHeight } from '../../../utils/deviceDimenssions';

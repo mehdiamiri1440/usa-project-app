@@ -1,7 +1,7 @@
 // import react-native element
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Item, Input, Label, Picker } from 'native-base';
+import { Button, Item, Input, Label } from 'native-base';
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';

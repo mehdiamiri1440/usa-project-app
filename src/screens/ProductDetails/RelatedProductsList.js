@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { Image, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { Card } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { formatter } from '../../utils';

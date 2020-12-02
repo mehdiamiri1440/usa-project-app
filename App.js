@@ -10,10 +10,11 @@ import messaging from '@react-native-firebase/messaging';
 
 import * as messageActions from './src/redux/messages/actions';
 import ErrorBoundary from './ErrorBoundary';
-import locales from './locales/index';
+import locales from './locales';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Root, Toast } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from 'react-native-splash-screen';
 const store = configureStore()
 
 
@@ -42,7 +43,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
+    SplashScreen.hide()
     // messaging().getInitialNotification(async remoteMessage => {
     //   store.dispatch(messageActions.newMessageReceived(true))
     // });

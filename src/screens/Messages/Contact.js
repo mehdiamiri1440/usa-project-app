@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
 import Jmoment from 'moment-jalaali';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 
 
