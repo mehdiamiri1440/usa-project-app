@@ -61,10 +61,13 @@ class Home extends React.Component {
         }
         if (name == 'Profile') {
             if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-                this.props.navigation.navigate(name, { user_name: this.props.userProfile.user_info.user_name })
+                this.props.navigation.navigate('MyBuskool', { screen: name, params: { user_name: this.props.userProfile.user_info.user_name } })
+        }
+        if (name == 'Messages') {
+            this.props.navigation.navigate("Messages")
         }
         else {
-            this.props.navigation.navigate(name)
+            this.props.navigation.navigate('MyBuskool', { screen: name })
         }
 
     };
