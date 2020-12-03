@@ -181,13 +181,16 @@ const App = (props) => {
     if (!props.loggedInUserId) {
       AsyncStorage.getItem('@isIntroductionSeen').then(result => {
         if (JSON.parse(result)) {
-          navigationRef.current.navigate('SignUp')
+          setInitialRoute('SignUp')
+          RootNavigation.navigate('SignUp')
         }
-        else navigationRef.current.navigate('Intro')
+        else {
+          setInitialRoute('Intro')
+          RootNavigation.navigate('Intro')
+        }
         setTimeout(() => {
           SplashScreen.hide();
         }, 200);
-
       })
     }
     else {
