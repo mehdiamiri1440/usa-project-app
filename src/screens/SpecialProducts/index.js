@@ -287,7 +287,7 @@ class SpecialProducts extends PureComponent {
                     {
                         !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
                             <Button
-                                onPress={() => this.props.navigation.navigate('RegisterProduct')}
+                                onPress={() => this.props.navigation.navigate('RegisterProductStack')}
 
                                 style={styles.loginButton}>
                                 <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
