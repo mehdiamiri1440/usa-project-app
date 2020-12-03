@@ -87,8 +87,9 @@ const routes = props => {
                             key={'Home'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.home'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+
                             }}
                             name='Home'
                             component={HomeStack}
@@ -98,7 +99,7 @@ const routes = props => {
                             key={'Requests'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.requests'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                             }}
                             name={'Requests'}
@@ -109,7 +110,7 @@ const routes = props => {
                                 key={'SpecialProducts'}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: locales('labels.specialProducts'),
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.specialProducts')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
                                 name={'SpecialProducts'}
@@ -128,7 +129,7 @@ const routes = props => {
                             }}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.registerProduct'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerProduct')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <View
                                     style={{
                                         backgroundColor: color, height: 30, width: 30,
@@ -152,7 +153,7 @@ const routes = props => {
                                 }}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: locales('labels.registerRequest'),
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerRequest')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <View style={{
                                         backgroundColor: color, height: 30,
                                         width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
@@ -178,7 +179,7 @@ const routes = props => {
                             }}
                             options={{
                                 tabBarBadge: newMessage > 0 ? newMessage : false,
-                                tabBarLabel: locales('labels.messages'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.messages')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                             }}
                             name='Messages'
@@ -194,7 +195,7 @@ const routes = props => {
                             key={'MyBuskool'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.myBuskool'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.myBuskool')}</Text>,
                                 tabBarIcon: ({ focused, color }) => (
                                     <Image
                                         style={{
