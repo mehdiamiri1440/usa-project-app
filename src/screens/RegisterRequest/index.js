@@ -417,7 +417,7 @@ class RegisterRequest extends Component {
 
 
                                     <View style={[styles.labelInputPadding], {
-
+                                        alignSelf: 'center', justifyContent: 'center',
                                         alignItems: 'center',
 
                                     }}>
