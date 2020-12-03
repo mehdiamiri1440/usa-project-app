@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, BackHandler, Linking, RefreshControl } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import { Card, Button } from 'native-base';
@@ -24,9 +24,15 @@ class PromoteRegistration extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('package_payment');
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
     }
 
-
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
+    }
     pay = (type = 3) => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)

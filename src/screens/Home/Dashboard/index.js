@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, BackHandler } from 'react-native';
 import { Card } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
@@ -17,6 +17,11 @@ const Dashboard = props => {
     useEffect(() => {
         analytics().logEvent('dashboard');
         props.fetchAllDashboardData();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            props.navigation.goBack()
+            return true;
+        })
+        return BackHandler.removeEventListener()
         // .catch(_ => setShowModal(true));
     },
         [])

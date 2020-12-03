@@ -1,7 +1,7 @@
 
 
-import React from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, BackHandler, StyleSheet, Image, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
 import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -14,6 +14,13 @@ import UserFriends from '../UserFriends/UserLists'
 
 const Referral = props => {
 
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            props.navigation.goBack()
+            return true;
+        })
+        return _ => BackHandler.removeEventListener()
+    }, [])
 
     const openSms = () => {
         let url = 'sms:?body=سلام این لینک باسکول هست';
@@ -31,6 +38,7 @@ const Referral = props => {
             }
         })
     }
+
 
     const openWhatsApp = () => {
         let url = 'whatsapp://send?text=سلام این لینک باسکول هست';

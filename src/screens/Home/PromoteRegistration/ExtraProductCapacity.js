@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, BackHandler, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, InputGroup, Input, Button } from 'native-base';
@@ -28,8 +28,15 @@ class ExtraProductCapacity extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('extra_product_capacity_payment');
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
+    }
     pay = () => {
         let userId = '';
         if (!!this.props.userProfile && !!this.props.userProfile.user_info)

@@ -1,7 +1,7 @@
 import React from 'react';
 import analytics from '@react-native-firebase/analytics';
 import {
-    Text, TouchableOpacity, View, StyleSheet, Image, ToastAndroid, Linking
+    Text, TouchableOpacity, View, BackHandler, Image, ToastAndroid, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import Clipboard from "@react-native-community/clipboard";
@@ -16,7 +16,16 @@ class ContactUs extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('support');
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
+    }
+
     render() {
         return (
             <>

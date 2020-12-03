@@ -1466,7 +1466,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        // alignSelf: 'flex-start',
+        alignSelf: 'center',
         justifyContent: 'center',
     },
     modalCloseButton: {
