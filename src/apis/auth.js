@@ -1,6 +1,20 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { requester } from '../utils';
 
+
+const storeData = (payload) => {
+    return new Promise((resolve, _) => {
+        if (payload.token)
+            AsyncStorage.setItem('@Authorization', payload.token).then(_ => {
+                resolve(payload);
+            })
+        else
+            AsyncStorage.removeItem('@Authorization').then(_ => {
+                resolve(payload);
+            })
+    })
+};
+
 export const login = (mobileNumber, password) => {
     return new Promise((resolve, reject) => {
         requester
@@ -15,14 +29,7 @@ export const login = (mobileNumber, password) => {
                 }
             })
             .then(result => {
-                const storeData = async () => {
-                    if (result.token)
-                        await AsyncStorage.setItem('@Authorization', result.token)
-                    else
-                        await AsyncStorage.removeItem('@Authorization')
-                    resolve(result);
-                }
-                storeData()
+                storeData(result).then(payload => resolve(payload))
             })
             .catch(err => {
                 if (err && !err.response)
@@ -34,16 +41,9 @@ export const login = (mobileNumber, password) => {
 };
 
 
-export const fastLogin = (payload) => {
+export const fastLogin = (result) => {
     return new Promise((resolve, reject) => {
-        const storeData = async () => {
-            if (payload.token)
-                await AsyncStorage.setItem('@Authorization', payload.token)
-            else
-                await AsyncStorage.removeItem('@Authorization')
-            resolve(payload);
-        }
-        storeData()
+        storeData(result).then(payload => resolve(payload))
     })
 };
 
