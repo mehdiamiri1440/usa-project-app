@@ -26,7 +26,7 @@ import {
     SpecialProductsStack
 }
     from './tabs';
-import { deviceWidth } from '../utils';
+import { deviceWidth, deviceHeight } from '../utils';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 
@@ -38,7 +38,6 @@ const routes = props => {
         userProfile = {},
         newMessage
     } = props;
-
 
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
@@ -54,7 +53,27 @@ const routes = props => {
     return (
         <NavigationContainer
             linking={linking}
-            fallback={<Text>Loading...</Text>}
+            fallback={<View
+                style={{
+                    flex: 1,
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: deviceHeight,
+                    width: deviceWidth
+                }}
+            >
+                <Text
+                    style={{
+                        color: '#00C569',
+                        textAlign: 'center',
+                        fontSize: 20,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}
+                >
+                    {locales('labels.pleaseWait')}
+                </Text>
+            </View>}
             ref={navigationRef}
             onReady={() => {
                 isReadyRef.current = true;
@@ -227,8 +246,7 @@ const mapStateToProps = (state) => {
 
     return {
         userProfile: state.profileReducer.userProfile,
-        newMessage: state.messagesReducer.newMessage
+        newMessage: state.messagesReducer.newMessage,
     }
 };
-
 export default connect(mapStateToProps)(routes)
