@@ -13,7 +13,7 @@ import * as registerProductActions from '../../../redux/registerProduct/actions'
 import * as homeActions from '../../../redux/home/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-
+import myStyle from '../../../styles'
 class GuidToRegisterProduct extends React.Component {
     constructor(props) {
         super(props);
@@ -212,9 +212,7 @@ class GuidToRegisterProduct extends React.Component {
                         </Text>
                     </View> */}
 
-
-                    <View
-                        style={{
+                    {/* {
                             width: deviceWidth,
                             alignSelf: 'center',
                             alignContent: 'center',
@@ -222,22 +220,24 @@ class GuidToRegisterProduct extends React.Component {
                             paddingHorizontal: 40,
                             alignItems: 'center',
                             flexDirection: 'row-reverse'
-                        }}
+                        } */}
+                    <View
+                        style={[myStyle.contentCenter, { width: deviceWidth, flexDirection: 'row-reverse' }]}
                     >
-                        <Text
-                            style={{
+                        {/* {
                                 textAlign: 'center',
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlignVertical: 'center',
                                 fontSize: 18,
                                 color: '#374761'
-                            }}
+                            } */}
+                        <Text
+                            style={[myStyle.h3, myStyle.textBlueGray]}
+
                         >
                             {locales('labels.noRelateRequstFoundFirst')}
                         </Text>
-                        <Text
-
-                            style={{
+                        {/* {
                                 textAlignVertical: 'center',
                                 color: 'red',
                                 paddingHorizontal: 5,
@@ -245,18 +245,23 @@ class GuidToRegisterProduct extends React.Component {
                                 textAlign: 'center',
                                 fontSize: 18,
                                 color: '#000546'
-                            }}
+                            } */}
+                        <Text
+
+                            style={[myStyle.h3, myStyle.textHardBlue, myStyle.ph5]}
                         >
                             {locales('labels.buyer')}
                         </Text>
                         <Text
-                            style={{
-                                textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                textAlignVertical: 'center',
-                                fontSize: 18,
-                                color: '#374761'
-                            }}
+                            // style={{
+                            //     textAlign: 'center',
+                            //     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            //     textAlignVertical: 'center',
+                            //     fontSize: 18,
+                            //     color: '#374761'
+                            // }}
+                            style={[myStyle.h3, myStyle.textBlueGray]}
+
                         >
                             {locales('labels.noRelateRequstFoundSecond')}
                         </Text>
@@ -264,22 +269,26 @@ class GuidToRegisterProduct extends React.Component {
 
 
                     <View
-                        style={{
-                            marginTop: 30,
-                            width: deviceWidth,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
+                        // style={{
+                        //     marginTop: 30,
+                        //     width: deviceWidth,
+                        //     justifyContent: 'center',
+                        //     alignItems: 'center'
+                        // }}
+                        style={
+                            [myStyle.contentCenter, myStyle.mTop30, { width: deviceWidth }]
+                        }
                     >
                         <Text
-                            style={{
+                            // style={{
 
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 17,
-                                textAlign: 'center',
-                                flexWrap: 'wrap',
-                                color: '#000546'
-                            }}
+                            //     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            //     fontSize: 17,
+                            //     textAlign: 'center',
+                            //     flexWrap: 'wrap',
+                            //     color: '#000546'
+                            // }}
+                            style={[myStyle.h4, myStyle.textHardBlue]}
                         >
                             {locales('titles.registerYourProductNow')}
 
