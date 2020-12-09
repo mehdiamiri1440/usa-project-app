@@ -184,8 +184,8 @@ export const BtnSmall = (props) => {
 
 
     const animatedValue = new Animated.Value(animatedSpeed);
-    const elevationValue = new Animated.Value(disabled ? units.n1 : units.n3);
-    const heightValue = new Animated.Value(disabled ? units.n1 : units.n3);
+    const elevationValue = new Animated.Value(disabled ? units.n1 : units.n2);
+    const heightValue = new Animated.Value(disabled ? units.n1 : units.n2);
 
     const animatedStyle = {
         transform: [{ scale: animatedValue }],
@@ -226,12 +226,12 @@ export const BtnSmall = (props) => {
             tension: animatedConfig.tension,
         }).start()
         Animated.spring(elevationValue, {
-            toValue: disabled ? units.n1 : units.n3,
+            toValue: disabled ? units.n1 : units.n2,
             friction: animatedConfig.friction,
             tension: animatedConfig.tension,
         }).start()
         Animated.spring(heightValue, {
-            toValue: disabled ? units.n1 : units.n3,
+            toValue: disabled ? units.n1 : units.n2,
             friction: animatedConfig.friction,
             tension: animatedConfig.tension,
         }).start()
