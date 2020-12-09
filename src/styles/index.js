@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import colors from './colors'
 import fonts from './fonts'
 import units from './fonts/units.js'
-import general from './general'
 
 
 
@@ -24,10 +23,30 @@ const styles = StyleSheet.create({
     fontSize: fonts.smallTitle,
     fontFamily: fonts.bold
   },
+  textBold: {
+    fontSize: fonts.text,
+    fontFamily: fonts.bold
+  },
+  smallTextBold: {
+    fontSize: fonts.smallText,
+    fontFamily: fonts.bold
+  },
+  p: {
+    fontSize: fonts.text,
+  },
+  small: {
+    fontSize: fonts.smallText,
+  },
   textRight: {
     textAlign: 'right'
   },
-  contentRight: {
+  textCenter: {
+    textAlign: 'center'
+  },
+  textLeft: {
+    textAlign: 'left'
+  },
+  contentLeft: {
     alignSelf: 'flex-start',
     alignContent: 'flex-start',
     justifyContent: 'flex-start',
@@ -39,13 +58,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  contentLeft: {
+  contentRight: {
     alignSelf: 'flex-end',
     alignContent: 'flex-end',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-
   },
+  rtl: {
+    direction: 'rtl'
+  },
+  ltr: {
+    direction: 'ltr'
+  },
+  row: {
+    flexDirection: 'row'
+  },
+  rowR: {
+    flexDirection: 'row-reverse'
+  },
+
+  // Generals *******
+
+  radius: {
+    borderRadius: units.n4
+  },
+  radius12: {
+    borderRadius: units.n12
+  },
+  radius50: {
+    borderRadius: 500
+  },
+
+
+
 
   // ‌Borders *******
 
@@ -372,6 +417,10 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.lightGreen,
     borderBottomWidth: units.n1
   },
+  borderBottomDarkGreen: {
+    borderBottomColor: colors.darkGreen,
+    borderBottomWidth: units.n1
+  },
   borderBottomGreen: {
     borderBottomColor: colors.green,
     borderBottomWidth: units.n1
@@ -522,166 +571,166 @@ const styles = StyleSheet.create({
     margin: units.n5
   },
   m7: {
-    margin: 7
+    margin: units.n7
   },
   m10: {
-    margin: 10
+    margin: units.n10
   },
   m15: {
-    margin: 15
+    margin: units.n15
   },
   m20: {
-    margin: 20
+    margin: units.n20
   },
   m25: {
-    margin: 25
+    margin: units.n25
   },
   m30: {
-    margin: 30
+    margin: units.n30
   },
   mv0: {
     marginVertical: 0
   },
   mv5: {
-    marginVertical: 5
+    marginVertical: units.n5
   },
   mv7: {
-    marginVertical: 7
+    marginVertical: units.n7
   },
   mv10: {
-    marginVertical: 10
+    marginVertical: units.n10
   },
   mv15: {
-    marginVertical: 15
+    marginVertical: units.n15
   },
   mv20: {
-    marginVertical: 20
+    marginVertical: units.n20
   },
   mv25: {
-    marginVertical: 25
+    marginVertical: units.n25
   },
   mv30: {
-    marginVertical: 30
+    marginVertical: units.n30
   },
   mh0: {
     marginHorizontal: 0
   },
   mh5: {
-    marginHorizontal: 5
+    marginHorizontal: units.n5
   },
   mh7: {
-    marginHorizontal: 7
+    marginHorizontal: units.n7
   },
   mh10: {
-    marginHorizontal: 10
+    marginHorizontal: units.n10
   },
   mh15: {
-    marginHorizontal: 15
+    marginHorizontal: units.n15
   },
   mh20: {
-    marginHorizontal: 20
+    marginHorizontal: units.n20
   },
   mh25: {
-    marginHorizontal: 25
+    marginHorizontal: units.n25
   },
   mh30: {
-    marginHorizontal: 30
+    marginHorizontal: units.n30
   },
   mLeft0: {
     marginLeft: 0
   },
   mLeft5: {
-    marginLeft: 5
+    marginLeft: units.n5
   },
   mLeft7: {
-    marginLeft: 7
+    marginLeft: units.n7
   },
   mLeft10: {
-    marginLeft: 10
+    marginLeft: units.n10
   },
   mLeft15: {
-    marginLeft: 15
+    marginLeft: units.n15
   },
   mLeft20: {
-    marginLeft: 20
+    marginLeft: units.n20
   },
   mLeft25: {
-    marginLeft: 25
+    marginLeft: units.n25
   },
   mLeft30: {
-    marginLeft: 30
+    marginLeft: units.n30
   },
   mRight0: {
     marginRight: 0
   },
   mRight5: {
-    marginRight: 5
+    marginRight: units.n5
   },
   mRight7: {
-    marginRight: 7
+    marginRight: units.n7
   },
   mRight10: {
-    marginRight: 10
+    marginRight: units.n10
   },
   mRight15: {
-    marginRight: 15
+    marginRight: units.n15
   },
   mRight20: {
-    marginRight: 20
+    marginRight: units.n20
   },
   mRight25: {
-    marginRight: 25
+    marginRight: units.n25
   },
   mRight30: {
-    marginRight: 30
+    marginRight: units.n30
   },
   mTop0: {
     marginTop: 0
   },
   mTop5: {
-    marginTop: 5
+    marginTop: units.n5
   },
   mTop7: {
-    marginTop: 7
+    marginTop: units.n7
   },
   mTop10: {
-    marginTop: 10
+    marginTop: units.n10
   },
   mTop15: {
-    marginTop: 15
+    marginTop: units.n15
   },
   mTop20: {
-    marginTop: 20
+    marginTop: units.n20
   },
   mTop25: {
-    marginTop: 25
+    marginTop: units.n25
   },
   mTop30: {
-    marginTop: 30
+    marginTop: units.n30
   },
   mBottom0: {
     marginBottom: 0
   },
   mBottom5: {
-    marginBottom: 5
+    marginBottom: units.n5
   },
   mBottom7: {
-    marginBottom: 7
+    marginBottom: units.n7
   },
   mBottom10: {
-    marginBottom: 10
+    marginBottom: units.n10
   },
   mBottom15: {
-    marginBottom: 15
+    marginBottom: units.n15
   },
   mBottom20: {
-    marginBottom: 20
+    marginBottom: units.n20
   },
   mBottom25: {
-    marginBottom: 25
+    marginBottom: units.n25
   },
   mBottom30: {
-    marginBottom: 30
+    marginBottom: units.n30
   },
 
   // Boxing -> Padding *******
@@ -690,169 +739,190 @@ const styles = StyleSheet.create({
     padding: 0
   },
   p5: {
-    padding: 5
+    padding: units.n5
   },
   p7: {
-    padding: 7
+    padding: units.n7
   },
   p10: {
-    padding: 10
+    padding: units.n10
   },
   p15: {
-    padding: 15
+    padding: units.n15
   },
   p20: {
-    padding: 20
+    padding: units.n20
   },
   p25: {
-    padding: 25
+    padding: units.n25
   },
   p30: {
-    padding: 30
+    padding: units.n30
   },
   pv0: {
     paddingVertical: 0
   },
   pv5: {
-    paddingVertical: 5
+    paddingVertical: units.n5
   },
   pv7: {
-    paddingVertical: 7
+    paddingVertical: units.n7
   },
   pv10: {
-    paddingVertical: 10
+    paddingVertical: units.n10
   },
   pv15: {
-    paddingVertical: 15
+    paddingVertical: units.n15
   },
   pv20: {
-    paddingVertical: 20
+    paddingVertical: units.n20
   },
   pv25: {
-    paddingVertical: 25
+    paddingVertical: units.n25
   },
   pv30: {
-    paddingVertical: 30
+    paddingVertical: units.n30
   },
   ph0: {
     paddingHorizontal: 0
   },
   ph5: {
-    paddingHorizontal: 5
+    paddingHorizontal: units.n5
   },
   ph7: {
-    paddingHorizontal: 7
+    paddingHorizontal: units.n7
   },
   ph10: {
-    paddingHorizontal: 10
+    paddingHorizontal: units.n10
   },
   ph15: {
-    paddingHorizontal: 15
+    paddingHorizontal: units.n15
   },
   ph20: {
-    paddingHorizontal: 20
+    paddingHorizontal: units.n20
   },
   ph25: {
-    paddingHorizontal: 25
+    paddingHorizontal: units.n25
   },
   ph30: {
-    paddingHorizontal: 30
+    paddingHorizontal: units.n30
   },
   pLeft0: {
     paddingLeft: 0
   },
   pLeft5: {
-    paddingLeft: 5
+    paddingLeft: units.n5
   },
   pLeft7: {
-    paddingLeft: 7
+    paddingLeft: units.n7
   },
   pLeft10: {
-    paddingLeft: 10
+    paddingLeft: units.n10
   },
   pLeft15: {
-    paddingLeft: 15
+    paddingLeft: units.n15
   },
   pLeft20: {
-    paddingLeft: 20
+    paddingLeft: units.n20
   },
   pLeft25: {
-    paddingLeft: 25
+    paddingLeft: units.n25
   },
   pLeft30: {
-    paddingLeft: 30
+    paddingLeft: units.n30
   },
   pRight0: {
     paddingRight: 0
   },
   pRight5: {
-    paddingRight: 5
+    paddingRight: units.n5
   },
   pRight7: {
-    paddingRight: 7
+    paddingRight: units.n7
   },
   pRight10: {
-    paddingRight: 10
+    paddingRight: units.n10
   },
   pRight15: {
-    paddingRight: 15
+    paddingRight: units.n15
   },
   mRight20: {
-    marginRight: 20
+    marginRight: units.n20
   },
   pRight25: {
-    paddingRight: 25
+    paddingRight: units.n25
   },
   pRight30: {
-    paddingRight: 30
+    paddingRight: units.n30
   },
   pTop0: {
     paddingTop: 0
   },
+  pTop1: {
+    paddingTop: units.n1
+  },
+  pTop2: {
+    paddingTop: units.n2
+  },
+  pTop3: {
+    paddingTop: units.n3
+  },
+  pTop4: {
+    paddingTop: units.n4
+  },
   pTop5: {
-    paddingTop: 5
+    paddingTop: units.n5
+  },
+  pTop6: {
+    paddingTop: units.n6
   },
   pTop7: {
-    paddingTop: 7
+    paddingTop: units.n7
+  },
+  pTop8: {
+    paddingTop: units.n8
+  },
+  pTop9: {
+    paddingTop: units.n9
   },
   pTop10: {
-    paddingTop: 10
+    paddingTop: units.n10
   },
   pTop15: {
-    paddingTop: 15
+    paddingTop: units.n15
   },
   pTop20: {
-    paddingTop: 20
+    paddingTop: units.n20
   },
   pTop25: {
-    paddingTop: 25
+    paddingTop: units.n25
   },
   pTop30: {
-    paddingTop: 30
+    paddingTop: units.n30
   },
   pBottom0: {
     paddingBottom: 0
   },
   pBottom5: {
-    paddingBottom: 5
+    paddingBottom: units.n5
   },
   pBottom7: {
-    paddingBottom: 7
+    paddingBottom: units.n7
   },
   pBottom10: {
-    paddingBottom: 10
+    paddingBottom: units.n10
   },
   pBottom15: {
-    paddingBottom: 15
+    paddingBottom: units.n15
   },
   pBottom20: {
-    paddingBottom: 20
+    paddingBottom: units.n20
   },
   pBottom25: {
-    paddingBottom: 25
+    paddingBottom: units.n25
   },
   pBottom30: {
-    paddingBottom: 30
+    paddingBottom: units.n30
   },
 
 });

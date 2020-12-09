@@ -12,6 +12,7 @@ const colors = {
         softBlue: '#BCA6CE',
         blueGray: '#374761',
         lightGreen: '#21AD93',
+        darkGreen: '#009750',
         green: '#00C569',
         yellow: '#FFBB00',
         red: '#E41C38',

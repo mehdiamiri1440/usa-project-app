@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
-
 import { deviceWidth, validator, formatter } from '../../../utils';
 import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import { BtnSmall } from '../../../components/buttons'
+import myStyles from '../../../styles'
 
 
 class SelectCategory extends Component {
@@ -162,7 +165,7 @@ class SelectCategory extends Component {
                         }}
                     >
                         <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setCategory}
                             style={styles}
@@ -255,7 +258,7 @@ class SelectCategory extends Component {
 
                 <View style={styles.labelInputPadding}>
 
-                    <Button
+                    {/* <Button
                         onPress={() => this.onSubmit()}
                         style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)
                             ? styles.disableLoginButton : styles.loginButton}
@@ -263,7 +266,29 @@ class SelectCategory extends Component {
                     >
                         <AntDesign name='arrowleft' size={25} color='white' />
                         <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                    </Button>
+                    </Button> */}
+                    <View
+                        style={[{
+                            paddingVertical: 10,
+                        }]}
+                    >
+                        <BtnSmall
+                            leftIcon='arrow-left'
+                            onPressOut={() => this.onSubmit()}
+                            disabled={
+                                !this.state.category ||
+                                !this.state.subCategory ||
+                                !productType ||
+                                !validator.isPersianNameWithDigits(productType)
+                            }
+                            style={
+                                {
+                                    ...myStyles.contentLeft
+                                }
+                            }
+                            text={locales('titles.nextStep')}
+                        />
+                    </View>
 
                 </View>
             </View >

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, Image, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, Text, Image, StyleSheet, Animated } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
@@ -14,13 +14,20 @@ import * as homeActions from '../../../redux/home/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import myStyle from '../../../styles'
+
+import { Btn } from '../../../components/buttons'
 class GuidToRegisterProduct extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            showModal: false
+            showModal: false,
+
         }
+
     }
+
+
 
     componentDidMount() {
 
@@ -36,6 +43,7 @@ class GuidToRegisterProduct extends React.Component {
             screen_name: "GuidToRegisterProduct",
             screen_class: "GuidToRegisterProduct",
         });
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -69,6 +77,7 @@ class GuidToRegisterProduct extends React.Component {
 
     hideDialog = () => this.setState({ showModal: false });
 
+
     render() {
 
         let {
@@ -76,6 +85,7 @@ class GuidToRegisterProduct extends React.Component {
             userPermissionToRegisterProductError,
         } = this.props;
         let { showModal } = this.state;
+
 
         return (
             <>
@@ -212,40 +222,16 @@ class GuidToRegisterProduct extends React.Component {
                         </Text>
                     </View> */}
 
-                    {/* {
-                            width: deviceWidth,
-                            alignSelf: 'center',
-                            alignContent: 'center',
-                            justifyContent: 'center',
-                            paddingHorizontal: 40,
-                            alignItems: 'center',
-                            flexDirection: 'row-reverse'
-                        } */}
+
                     <View
                         style={[myStyle.contentCenter, { width: deviceWidth, flexDirection: 'row-reverse' }]}
                     >
-                        {/* {
-                                textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                textAlignVertical: 'center',
-                                fontSize: 18,
-                                color: '#374761'
-                            } */}
+
                         <Text
                             style={[myStyle.h3, myStyle.textBlueGray]}
-
                         >
                             {locales('labels.noRelateRequstFoundFirst')}
                         </Text>
-                        {/* {
-                                textAlignVertical: 'center',
-                                color: 'red',
-                                paddingHorizontal: 5,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                textAlign: 'center',
-                                fontSize: 18,
-                                color: '#000546'
-                            } */}
                         <Text
 
                             style={[myStyle.h3, myStyle.textHardBlue, myStyle.ph5]}
@@ -253,13 +239,6 @@ class GuidToRegisterProduct extends React.Component {
                             {locales('labels.buyer')}
                         </Text>
                         <Text
-                            // style={{
-                            //     textAlign: 'center',
-                            //     fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            //     textAlignVertical: 'center',
-                            //     fontSize: 18,
-                            //     color: '#374761'
-                            // }}
                             style={[myStyle.h3, myStyle.textBlueGray]}
 
                         >
@@ -269,25 +248,11 @@ class GuidToRegisterProduct extends React.Component {
 
 
                     <View
-                        // style={{
-                        //     marginTop: 30,
-                        //     width: deviceWidth,
-                        //     justifyContent: 'center',
-                        //     alignItems: 'center'
-                        // }}
                         style={
                             [myStyle.contentCenter, myStyle.mTop30, { width: deviceWidth }]
                         }
                     >
                         <Text
-                            // style={{
-
-                            //     fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            //     fontSize: 17,
-                            //     textAlign: 'center',
-                            //     flexWrap: 'wrap',
-                            //     color: '#000546'
-                            // }}
                             style={[myStyle.h4, myStyle.textHardBlue]}
                         >
                             {locales('titles.registerYourProductNow')}
@@ -306,7 +271,7 @@ class GuidToRegisterProduct extends React.Component {
 
 
 
-                    <Button
+                    {/* <Button
                         onPress={() => this.onSubmit()}
                         style={[styles.loginButton, { marginTop: -20, width: 192 }]}
                     >
@@ -323,7 +288,16 @@ class GuidToRegisterProduct extends React.Component {
                             }}
                         />
 
-                    </Button>
+                    </Button> */}
+
+                    <Btn
+                        rightIcon='plus'
+                        onPressOut={() => this.onSubmit()}
+                        loader={!!userPermissionToRegisterProductLoading}
+                        // disabled={true}
+                        text={locales('titles.registerNewProduct')}
+                    />
+
 
                 </View>
             </>
