@@ -271,30 +271,11 @@ class GuidToRegisterProduct extends React.Component {
 
 
 
-                    {/* <Button
-                        onPress={() => this.onSubmit()}
-                        style={[styles.loginButton, { marginTop: -20, width: 192 }]}
-                    >
-
-                        <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
-                        <ActivityIndicator size="small" color="white"
-                            animating={!!userPermissionToRegisterProductLoading}
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 15,
-                                fontSize: 20,
-                                marginLeft: -30
-                            }}
-                        />
-
-                    </Button> */}
 
                     <Btn
                         rightIcon='plus'
                         onPressOut={() => this.onSubmit()}
                         loader={!!userPermissionToRegisterProductLoading}
-                        // disabled={true}
                         text={locales('titles.registerNewProduct')}
                     />
 
@@ -306,192 +287,192 @@ class GuidToRegisterProduct extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
-    loginFailedContainer: {
-        backgroundColor: '#F8D7DA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#761C24'
-    },
-    buttonText: {
-        color: 'white',
-        textAlign: 'center',
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        fontSize: 20,
-    },
-    backButtonText: {
-        color: '#7E7E7E',
-        width: '60%',
-        textAlign: 'center'
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.4,
-        color: 'white',
-        alignItems: 'center',
-        backgroundColor: '#B5B5B5',
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-    },
-    loginButton: {
-        textAlign: 'center',
-        margin: 10,
-        backgroundColor: '#00C569',
-        width: deviceWidth * 0.7,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        borderRadius: 5,
-        flexDirection: 'row-reverse',
-        justifyContent: 'center',
+// const styles = StyleSheet.create({
+//     loginFailedContainer: {
+//         backgroundColor: '#F8D7DA',
+//         padding: 10,
+//         borderRadius: 5
+//     },
+//     loginFailedText: {
+//         textAlign: 'center',
+//         width: deviceWidth,
+//         color: '#761C24'
+//     },
+//     buttonText: {
+//         color: 'white',
+//         textAlign: 'center',
+//         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+//         fontSize: 20,
+//     },
+//     backButtonText: {
+//         color: '#7E7E7E',
+//         width: '60%',
+//         textAlign: 'center'
+//     },
+//     backButtonContainer: {
+//         textAlign: 'center',
+//         margin: 10,
+//         width: deviceWidth * 0.4,
+//         backgroundColor: 'white',
+//         alignItems: 'center',
+//         alignSelf: 'flex-end',
+//         justifyContent: 'center'
+//     },
+//     disableLoginButton: {
+//         textAlign: 'center',
+//         margin: 10,
+//         width: deviceWidth * 0.4,
+//         color: 'white',
+//         alignItems: 'center',
+//         backgroundColor: '#B5B5B5',
+//         alignSelf: 'flex-start',
+//         justifyContent: 'center',
+//     },
+//     loginButton: {
+//         textAlign: 'center',
+//         margin: 10,
+//         backgroundColor: '#00C569',
+//         width: deviceWidth * 0.7,
+//         color: 'white',
+//         alignItems: 'center',
+//         alignSelf: 'center',
+//         borderRadius: 5,
+//         flexDirection: 'row-reverse',
+//         justifyContent: 'center',
 
-    },
-    dialogWrapper: {
-        borderRadius: 12,
-        padding: 0,
-        margin: 0,
-        overflow: "hidden"
-    },
-    dialogHeader: {
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e5e5e5',
-        padding: 0,
-        margin: 0,
-        position: 'relative',
-    },
-    closeDialogModal: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        padding: 15,
-        height: '100%',
-        backgroundColor: 'transparent',
-        elevation: 0
-    },
-    headerTextDialogModal: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        textAlign: 'center',
-        fontSize: 17,
-        paddingTop: 11,
-        color: '#474747'
-    },
-    mainWrapperTextDialogModal: {
-        width: '100%',
-        marginBottom: 0
-    },
-    mainTextDialogModal: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        color: '#777',
-        textAlign: 'center',
-        fontSize: 15,
-        paddingHorizontal: 15,
-        width: '100%'
-    },
-    modalButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        maxWidth: 145,
-        marginVertical: 10,
-        color: 'white',
-        alignItems: 'center',
-        borderRadius: 5,
-        alignSelf: 'center',
-        justifyContent: 'center',
-    },
-    modalCloseButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-        elevation: 0,
-        borderRadius: 0,
-        backgroundColor: '#ddd',
-        marginTop: 10
-    },
-    closeButtonText: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        color: '#555',
-    },
-    dialogIcon: {
+//     },
+//     dialogWrapper: {
+//         borderRadius: 12,
+//         padding: 0,
+//         margin: 0,
+//         overflow: "hidden"
+//     },
+//     dialogHeader: {
+//         justifyContent: 'center',
+//         borderBottomWidth: 1,
+//         borderBottomColor: '#e5e5e5',
+//         padding: 0,
+//         margin: 0,
+//         position: 'relative',
+//     },
+//     closeDialogModal: {
+//         position: "absolute",
+//         top: 0,
+//         right: 0,
+//         padding: 15,
+//         height: '100%',
+//         backgroundColor: 'transparent',
+//         elevation: 0
+//     },
+//     headerTextDialogModal: {
+//         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+//         textAlign: 'center',
+//         fontSize: 17,
+//         paddingTop: 11,
+//         color: '#474747'
+//     },
+//     mainWrapperTextDialogModal: {
+//         width: '100%',
+//         marginBottom: 0
+//     },
+//     mainTextDialogModal: {
+//         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+//         color: '#777',
+//         textAlign: 'center',
+//         fontSize: 15,
+//         paddingHorizontal: 15,
+//         width: '100%'
+//     },
+//     modalButton: {
+//         textAlign: 'center',
+//         width: '100%',
+//         fontSize: 16,
+//         maxWidth: 145,
+//         marginVertical: 10,
+//         color: 'white',
+//         alignItems: 'center',
+//         borderRadius: 5,
+//         alignSelf: 'center',
+//         justifyContent: 'center',
+//     },
+//     modalCloseButton: {
+//         textAlign: 'center',
+//         width: '100%',
+//         fontSize: 16,
+//         color: 'white',
+//         alignItems: 'center',
+//         alignSelf: 'flex-start',
+//         justifyContent: 'center',
+//         elevation: 0,
+//         borderRadius: 0,
+//         backgroundColor: '#ddd',
+//         marginTop: 10
+//     },
+//     closeButtonText: {
+//         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+//         color: '#555',
+//     },
+//     dialogIcon: {
 
-        height: 80,
-        width: 80,
-        textAlign: 'center',
-        borderWidth: 4,
-        borderRadius: 80,
-        paddingTop: 5,
-        marginTop: 20
+//         height: 80,
+//         width: 80,
+//         textAlign: 'center',
+//         borderWidth: 4,
+//         borderRadius: 80,
+//         paddingTop: 5,
+//         marginTop: 20
 
-    },
-    greenButton: {
-        backgroundColor: '#00C569',
-    },
-    redButton: {
-        backgroundColor: '#E41C39',
-    },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        marginTop: 10,
-        textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 16,
-        padding: 10,
-    },
-    enterText: {
-        marginTop: 10,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#00C569',
-        fontSize: 20,
-        padding: 10,
-    },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
-    textInputPadding: {
-        padding: 20,
-    },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'right',
-        color: '#7E7E7E'
-    }
-});
+//     },
+//     greenButton: {
+//         backgroundColor: '#00C569',
+//     },
+//     redButton: {
+//         backgroundColor: '#E41C39',
+//     },
+//     forgotContainer: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         justifyContent: 'center'
+//     },
+//     forgotPassword: {
+//         marginTop: 10,
+//         textAlign: 'center',
+//         color: '#7E7E7E',
+//         fontSize: 16,
+//         padding: 10,
+//     },
+//     enterText: {
+//         marginTop: 10,
+//         fontWeight: 'bold',
+//         textAlign: 'center',
+//         color: '#00C569',
+//         fontSize: 20,
+//         padding: 10,
+//     },
+//     linearGradient: {
+//         height: deviceHeight * 0.15,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     headerTextStyle: {
+//         color: 'white',
+//         position: 'absolute',
+//         textAlign: 'center',
+//         fontSize: 26,
+//         bottom: 40
+//     },
+//     textInputPadding: {
+//         padding: 20,
+//     },
+//     userText: {
+//         flexWrap: 'wrap',
+//         paddingTop: '3%',
+//         fontSize: 20,
+//         padding: 20,
+//         textAlign: 'right',
+//         color: '#7E7E7E'
+//     }
+// });
 
 
 const mapStateToProps = (state) => {

@@ -33,9 +33,12 @@ const styles = StyleSheet.create({
   },
   p: {
     fontSize: fonts.text,
+    fontFamily: fonts.medium
+
   },
   small: {
     fontSize: fonts.smallText,
+    fontFamily: fonts.medium
   },
   textRight: {
     textAlign: 'right'

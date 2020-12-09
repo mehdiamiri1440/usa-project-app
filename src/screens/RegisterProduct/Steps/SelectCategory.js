@@ -5,8 +5,6 @@ import { Button, Input, Item, Label, Form, Container, Content, Header } from 'na
 import { deviceWidth, validator, formatter } from '../../../utils';
 import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { BtnSmall } from '../../../components/buttons'
@@ -146,7 +144,7 @@ class SelectCategory extends Component {
                 </Text>
 
 
-                <View style={styles.labelInputPadding}>
+                <View style={[myStyles.pv5, myStyles.ph20]}>
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
@@ -184,7 +182,7 @@ class SelectCategory extends Component {
                     {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
                 </View>
 
-                <View style={styles.labelInputPadding}>
+                <View style={[myStyles.pv5, myStyles.ph20]}>
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
@@ -206,7 +204,7 @@ class SelectCategory extends Component {
                         }}
                     >
                         <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setSubCategory}
                             style={styles}
@@ -223,7 +221,7 @@ class SelectCategory extends Component {
                     {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
                 </View>
 
-                <View style={styles.labelInputPadding}>
+                <View style={[myStyles.pv5, myStyles.ph20]}>
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                         {locales('titles.enterYourProductType')}
                     </Label>
@@ -256,17 +254,8 @@ class SelectCategory extends Component {
 
                 </View>
 
-                <View style={styles.labelInputPadding}>
+                <View style={[myStyles.pv5, myStyles.ph20]}>
 
-                    {/* <Button
-                        onPress={() => this.onSubmit()}
-                        style={!this.state.category || !this.state.subCategory || !productType || !validator.isPersianNameWithDigits(productType)
-                            ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                    >
-                        <AntDesign name='arrowleft' size={25} color='white' />
-                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                    </Button> */}
                     <View
                         style={[{
                             paddingVertical: 10,
@@ -283,7 +272,8 @@ class SelectCategory extends Component {
                             }
                             style={
                                 {
-                                    ...myStyles.contentLeft
+                                    ...myStyles.contentLeft,
+                                    ...myStyles.ph30
                                 }
                             }
                             text={locales('titles.nextStep')}
@@ -328,10 +318,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'
-    },
-    labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
     },
     container: {
         flex: 1,
