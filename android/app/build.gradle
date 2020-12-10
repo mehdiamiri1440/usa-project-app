@@ -165,7 +165,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
             vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
-        versionCode 2
+        versionCode 3
         multiDexEnabled true
         versionName "2.0.0.999"
     //     ndk {
