@@ -44,85 +44,86 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 
   global.isFromOutSide = false
 
-  switch (remoteMessage.data.BTarget) {
-    case 'messages': {
-      return navigationRef.current.navigate('Messages');
+  if (navigationRef.current)
+    switch (remoteMessage.data.BTarget) {
+      case 'messages': {
+        return navigationRef.current.navigate('Messages');
+      }
+      case 'myProducts': {
+        if (is_seller) {
+          return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
+        }
+      }
+      case 'dashboard': {
+        if (is_seller) {
+          return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
+        }
+      }
+      case 'registerProduct': {
+        if (is_seller) {
+          return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
+        }
+      }
+      case 'registerBuyAd': {
+        if (!is_seller) {
+          return navigationRef.current.navigate('RegisterRequest');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
+        }
+      }
+      case 'specialProducts': {
+        if (!is_seller) {
+          return navigationRef.current.navigate('SpecialProducts');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
+        }
+      }
+      case 'productList': {
+        if (remoteMessage.data.productId) {
+          return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
+        }
+        return navigationRef.current.navigate('Home');
+      }
+      case 'myBuskool': {
+        return navigationRef.current.navigate('MyBuskool');
+      }
+      case 'buyAds': {
+        if (is_seller) {
+          return navigationRef.current.navigate('Requests');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
+        }
+      }
+      case 'buyAdSuggestion': {
+        if (is_seller) {
+          return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
+        }
+      }
+      default:
+        return navigationRef.current.navigate('Home');
     }
-    case 'myProducts': {
-      if (is_seller) {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
-      }
-    }
-    case 'dashboard': {
-      if (is_seller) {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
-      }
-    }
-    case 'registerProduct': {
-      if (is_seller) {
-        return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
-      }
-    }
-    case 'registerBuyAd': {
-      if (!is_seller) {
-        return navigationRef.current.navigate('RegisterRequest');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
-      }
-    }
-    case 'specialProducts': {
-      if (!is_seller) {
-        return navigationRef.current.navigate('SpecialProducts');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
-      }
-    }
-    case 'productList': {
-      if (remoteMessage.data.productId) {
-        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
-      }
-      return navigationRef.current.navigate('Home');
-    }
-    case 'myBuskool': {
-      return navigationRef.current.navigate('MyBuskool');
-    }
-    case 'buyAds': {
-      if (is_seller) {
-        return navigationRef.current.navigate('Requests');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
-      }
-    }
-    case 'buyAdSuggestion': {
-      if (is_seller) {
-        return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
-      }
-    }
-    default:
-      return navigationRef.current.navigate('Home');
-  }
 }
 
 const App = (props) => {
