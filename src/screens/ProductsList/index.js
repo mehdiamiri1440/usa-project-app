@@ -20,7 +20,7 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+// import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
 
 let myTimeout;
@@ -524,7 +524,7 @@ class ProductsList extends PureComponent {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setProvince}
                                                     onOpen={() => { this.setState({ disableSubCategory: true }) }}
@@ -562,7 +562,7 @@ class ProductsList extends PureComponent {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setCity}
                                                     disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
@@ -716,7 +716,7 @@ class ProductsList extends PureComponent {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
                                     color: 'red'
                                 }}>
-                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <Ionicons name='ios-arrow-back' size={30} color='#777' />}
+                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
                                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
@@ -803,7 +803,7 @@ class ProductsList extends PureComponent {
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <FontAwesome5 name='angle-left' size={26} color='#777' />
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
                             </TouchableOpacity>
                         )}

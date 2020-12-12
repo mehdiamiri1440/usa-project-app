@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import RNPickerSelect from 'react-native-picker-select';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Item, Label, Radio } from 'native-base';
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
@@ -186,7 +186,7 @@ class UserActivity extends React.Component {
                         }}
                     >
                         <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={(category) => this.onActivityZoneSubmit(category)}
                             style={styles}

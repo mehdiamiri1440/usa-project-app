@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -145,7 +145,8 @@ class Filters extends Component {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}
                             >
-                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <FontAwesome5 name='angle-left' size={30} color='#777' />
+
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>
@@ -226,7 +227,7 @@ class Filters extends Component {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}
                             >
-                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <FontAwesome5 name='angle-left' size={30} color='#777' />
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>

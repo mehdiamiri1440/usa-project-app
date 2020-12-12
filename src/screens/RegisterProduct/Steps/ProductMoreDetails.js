@@ -7,7 +7,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { dataGenerator, validator } from '../../../utils';
 
@@ -330,7 +330,7 @@ class ProductMoreDetails extends Component {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
                                                     style={styles}
