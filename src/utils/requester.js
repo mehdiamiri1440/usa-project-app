@@ -5,7 +5,7 @@ import RnRestart from 'react-native-restart';
 import * as authActions from '../redux/auth/actions';
 import configureStore from '../redux/configureStore';
 
-const getUrl = (route, alternativeBaseUrl) => {
+export const getUrl = (route, alternativeBaseUrl) => {
     // if (__DEV__) {
     //     if (!RNEmulatorCheck.isEmulator())
     //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
@@ -98,10 +98,8 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     reject(err.response.data);
                 }
 
-                if (err.response && err.response.status === 400) {
-                    reject(err.response.data);
-                }
-                if (err.response && err.response.status === 522) {
+
+                if (err.response && (err.response.status === 522 || err.response.status === 302)) {
                     return fetchAPI(route, method, data, withAuth, params, true)
                 }
 

@@ -29,6 +29,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 
+let counter = 0;
 
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();
@@ -44,7 +45,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 
   global.isFromOutSide = false
 
-  if (navigationRef.current)
+  if (navigationRef.current) {
     switch (remoteMessage.data.BTarget) {
       case 'messages': {
         return navigationRef.current.navigate('Messages');
@@ -96,7 +97,10 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       }
       case 'productList': {
         if (remoteMessage.data.productId) {
-          return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
+          return navigationRef.current.navigate('Home', {
+            screen: 'ProductDetails',
+            params: { productId: remoteMessage.data.productId }
+          });
         }
         return navigationRef.current.navigate('Home');
       }
@@ -124,6 +128,16 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       default:
         return navigationRef.current.navigate('Home');
     }
+  }
+  else {
+    if (counter <= 2) {
+      // I used counter variable to make sure that this recursive function calling will not occures more than 3 times and
+      // prevent any looping inside app that can cause any crash
+      return setTimeout(() => {
+        return routeToScreensFromNotifications(remoteMessage, props)
+      }, 1000);
+    }
+  }
 }
 
 const App = (props) => {
