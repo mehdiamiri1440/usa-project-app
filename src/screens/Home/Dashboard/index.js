@@ -371,6 +371,7 @@ const Dashboard = props => {
                         <View >
                             <Text style={{
                                 padding: 15,
+                                paddingTop: 10,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 26,
                             }}>
                                 {access_to_golden_buyAds ? locales('titles.yes') : locales('titles.no')}
@@ -380,7 +381,7 @@ const Dashboard = props => {
                                     width: '100%',
                                     position: 'absolute',
                                     opacity: 0.14,
-                                    top: 0,
+                                    top: -15,
                                     right: -15
                                 }} />
                         </View>

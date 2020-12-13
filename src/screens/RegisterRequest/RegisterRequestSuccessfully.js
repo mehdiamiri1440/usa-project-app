@@ -80,6 +80,7 @@ const RegisterRequestSuccessfully = props => {
                             <Text
                                 style={{
                                     marginTop: 40,
+                                    paddingHorizontal: 10,
                                     textAlign: 'center',
                                     fontSize: 18
                                 }}>

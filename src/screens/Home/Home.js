@@ -387,7 +387,7 @@ class Home extends React.Component {
                                         </View>
                                         <View style={{ width: '55%', flexDirection: 'row' }}>
                                             <Text style={{ textAlignVertical: 'center' }}>
-                                                <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
+                                                <FontAwesome5 color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='angle-left' />
                                             </Text>
                                             {route.name == 'PromoteRegistration' ?
                                                 <Text style={{

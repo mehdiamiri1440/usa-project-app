@@ -37,7 +37,9 @@ class RegisterProductSuccessfully extends Component {
                         borderBottomColor: '#00C569', borderBottomWidth: 2
                     }}>
                         <Text style={{
-                            textAlign: 'center', textAlignVertical: 'center',
+                            textAlign: 'center',
+                            paddingHorizontal: 10,
+                            textAlignVertical: 'center',
                             fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold'
                         }}>{locales('titles.registerProductDoneSuccessfully')}</Text>
                     </CardItem>
