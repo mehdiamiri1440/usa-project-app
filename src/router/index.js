@@ -7,7 +7,6 @@ import {
   NativeModules, StyleSheet
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import remoteConfig from '@react-native-firebase/remote-config';
 import { connect } from 'react-redux';
 import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
@@ -45,85 +44,86 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
 
   global.isFromOutSide = false
 
-  switch (remoteMessage.data.BTarget) {
-    case 'messages': {
-      return navigationRef.current.navigate('Messages');
+  if (navigationRef.current)
+    switch (remoteMessage.data.BTarget) {
+      case 'messages': {
+        return navigationRef.current.navigate('Messages');
+      }
+      case 'myProducts': {
+        if (is_seller) {
+          return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
+        }
+      }
+      case 'dashboard': {
+        if (is_seller) {
+          return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
+        }
+      }
+      case 'registerProduct': {
+        if (is_seller) {
+          return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
+        }
+      }
+      case 'registerBuyAd': {
+        if (!is_seller) {
+          return navigationRef.current.navigate('RegisterRequest');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
+        }
+      }
+      case 'specialProducts': {
+        if (!is_seller) {
+          return navigationRef.current.navigate('SpecialProducts');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
+        }
+      }
+      case 'productList': {
+        if (remoteMessage.data.productId) {
+          return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
+        }
+        return navigationRef.current.navigate('Home');
+      }
+      case 'myBuskool': {
+        return navigationRef.current.navigate('MyBuskool');
+      }
+      case 'buyAds': {
+        if (is_seller) {
+          return navigationRef.current.navigate('Requests');
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
+        }
+      }
+      case 'buyAdSuggestion': {
+        if (is_seller) {
+          return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
+        }
+        else {
+          return navigationRef.current.navigate('MyBuskool',
+            { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
+        }
+      }
+      default:
+        return navigationRef.current.navigate('Home');
     }
-    case 'myProducts': {
-      if (is_seller) {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
-      }
-    }
-    case 'dashboard': {
-      if (is_seller) {
-        return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
-      }
-    }
-    case 'registerProduct': {
-      if (is_seller) {
-        return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
-      }
-    }
-    case 'registerBuyAd': {
-      if (!is_seller) {
-        return navigationRef.current.navigate('RegisterRequest');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
-      }
-    }
-    case 'specialProducts': {
-      if (!is_seller) {
-        return navigationRef.current.navigate('SpecialProducts');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
-      }
-    }
-    case 'productList': {
-      if (remoteMessage.data.productId) {
-        return navigationRef.current.navigate('Home', { screen: 'ProductDetails', params: { productId: remoteMessage.data.productId } });
-      }
-      return navigationRef.current.navigate('Home');
-    }
-    case 'myBuskool': {
-      return navigationRef.current.navigate('MyBuskool');
-    }
-    case 'buyAds': {
-      if (is_seller) {
-        return navigationRef.current.navigate('Requests');
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
-      }
-    }
-    case 'buyAdSuggestion': {
-      if (is_seller) {
-        return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
-      }
-      else {
-        return navigationRef.current.navigate('MyBuskool',
-          { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
-      }
-    }
-    default:
-      return navigationRef.current.navigate('Home');
-  }
 }
 
 const App = (props) => {
@@ -142,59 +142,56 @@ const App = (props) => {
 
   useEffect(() => {
 
-    fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-      .then(res => {
-        res.text().then(result => {
-          const resultOfVersion = JSON.parse(result);
-          if (
-            RNAppUpdate.versionName.toString() !==
-            resultOfVersion.versionName.toString()
-          ) {
-            if (!resultOfVersion.forceUpdate) {
-              setUpdateModalFlag(true);
-              // Alert.alert(
-              //     'به روز رسانی',
-              //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
-              //     [
-              //         {
-              //             text: 'به روز رسانی',
-              //             onPress: () => navigationRef.current.navigate('UpgradeApp')
-              //         },
-              //         {
-              //             text: 'انصراف',
-              //             onPress: () => { },
-              //             style: 'cancel'
-              //         },
-              //     ],
-              // );
-            }
-            else {
-              navigationRef.current.navigate('UpgradeApp')
-            }
-          }
-        });
-      })
-      .catch(err => navigationRef.current.navigate('SignUp')
-      );
+    // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+    //   .then(res => {
+    //     res.text().then(result => {
+    //       const resultOfVersion = JSON.parse(result);
+    //       if (
+    //         RNAppUpdate.versionName.toString() !==
+    //         resultOfVersion.versionName.toString()
+    //       ) {
+    //         if (!resultOfVersion.forceUpdate) {
+    //           setUpdateModalFlag(true);
+    //           // Alert.alert(
+    //           //     'به روز رسانی',
+    //           //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
+    //           //     [
+    //           //         {
+    //           //             text: 'به روز رسانی',
+    //           //             onPress: () => navigationRef.current.navigate('UpgradeApp')
+    //           //         },
+    //           //         {
+    //           //             text: 'انصراف',
+    //           //             onPress: () => { },
+    //           //             style: 'cancel'
+    //           //         },
+    //           //     ],
+    //           // );
+    //         }
+    //         else {
+    //           navigationRef.current.navigate('UpgradeApp')
+    //         }
+    //       }
+    //     });
+    //   })
+    //   .catch(err => navigationRef.current.navigate('SignUp')
+    //   );
 
-    remoteConfig()
-      .setDefaults({
-        appVersion: '2.0.0.998',
-      })
-      .then(() => {
-        console.log('Default values set.');
-      });
+
 
     if (!props.loggedInUserId) {
       AsyncStorage.getItem('@isIntroductionSeen').then(result => {
         if (JSON.parse(result)) {
-          navigationRef.current.navigate('SignUp')
+          setInitialRoute('SignUp')
+          RootNavigation.navigate('SignUp')
         }
-        else navigationRef.current.navigate('Intro')
+        else {
+          setInitialRoute('Intro')
+          RootNavigation.navigate('Intro')
+        }
         setTimeout(() => {
           SplashScreen.hide();
         }, 200);
-
       })
     }
     else {
@@ -478,6 +475,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'IRANSansWeb(FaNum)_Light',
     paddingVertical: 8,
+    color: 'black',
     height: 60,
     width: deviceWidth * 0.9,
     paddingRight: 30, // to ensure the text is never behind the icon

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 
 import Octicons from 'react-native-vector-icons/dist/Octicons';
@@ -26,7 +26,7 @@ import {
     SpecialProductsStack
 }
     from './tabs';
-import { deviceWidth } from '../utils';
+import { deviceWidth, deviceHeight } from '../utils';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 
@@ -38,7 +38,6 @@ const routes = props => {
         userProfile = {},
         newMessage
     } = props;
-
 
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
@@ -54,7 +53,27 @@ const routes = props => {
     return (
         <NavigationContainer
             linking={linking}
-            fallback={<Text>Loading...</Text>}
+            fallback={<View
+                style={{
+                    flex: 1,
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: deviceHeight,
+                    width: deviceWidth
+                }}
+            >
+                <Text
+                    style={{
+                        color: '#00C569',
+                        textAlign: 'center',
+                        fontSize: 20,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}
+                >
+                    {locales('labels.pleaseWait')}
+                </Text>
+            </View>}
             ref={navigationRef}
             onReady={() => {
                 isReadyRef.current = true;
@@ -87,8 +106,9 @@ const routes = props => {
                             key={'Home'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.home'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+
                             }}
                             name='Home'
                             component={HomeStack}
@@ -98,7 +118,7 @@ const routes = props => {
                             key={'Requests'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.requests'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                             }}
                             name={'Requests'}
@@ -109,7 +129,7 @@ const routes = props => {
                                 key={'SpecialProducts'}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: locales('labels.specialProducts'),
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.specialProducts')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
                                 name={'SpecialProducts'}
@@ -128,7 +148,7 @@ const routes = props => {
                             }}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.registerProduct'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerProduct')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <View
                                     style={{
                                         backgroundColor: color, height: 30, width: 30,
@@ -152,7 +172,7 @@ const routes = props => {
                                 }}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: locales('labels.registerRequest'),
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerRequest')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <View style={{
                                         backgroundColor: color, height: 30,
                                         width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
@@ -178,7 +198,7 @@ const routes = props => {
                             }}
                             options={{
                                 tabBarBadge: newMessage > 0 ? newMessage : false,
-                                tabBarLabel: locales('labels.messages'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.messages')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
                             }}
                             name='Messages'
@@ -194,7 +214,7 @@ const routes = props => {
                             key={'MyBuskool'}
                             options={{
                                 tabBarBadge: false,
-                                tabBarLabel: locales('labels.myBuskool'),
+                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.myBuskool')}</Text>,
                                 tabBarIcon: ({ focused, color }) => (
                                     <Image
                                         style={{
@@ -226,8 +246,7 @@ const mapStateToProps = (state) => {
 
     return {
         userProfile: state.profileReducer.userProfile,
-        newMessage: state.messagesReducer.newMessage
+        newMessage: state.messagesReducer.newMessage,
     }
 };
-
 export default connect(mapStateToProps)(routes)

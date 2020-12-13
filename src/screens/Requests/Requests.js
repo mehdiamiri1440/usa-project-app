@@ -56,10 +56,16 @@ class Requests extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("buyAds", "buyAds");
+        analytics().logScreenView({
+            screen_name: "buyAds",
+            screen_class: "buyAds",
+        });
 
         this.is_mounted = true;
         if (this.is_mounted == true) {
@@ -808,10 +814,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         maxWidth: 145,
         marginVertical: 10,
+        alignSelf: 'center',
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        // alignSelf: 'flex-start',
+        alignSelf: 'center',
         justifyContent: 'center',
     },
     modalCloseButton: {

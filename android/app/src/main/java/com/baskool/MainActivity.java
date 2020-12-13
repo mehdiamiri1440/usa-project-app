@@ -1,10 +1,10 @@
 package com.buskool;
 
 import android.os.Bundle; // here 
-import com.facebook.react.ReactActivity;
-import org.devio.rn.splashscreen.SplashScreen; // here 
+import com.reactnativenavigation.NavigationActivity;
+import org.devio.rn.splashscreen.SplashScreen;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends NavigationActivity {
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
@@ -15,8 +15,8 @@ public class MainActivity extends ReactActivity {
         SplashScreen.show(this);  // here 
         super.onCreate(savedInstanceState);
     }
-  @Override
-  protected String getMainComponentName() {
-    return "Buskool";
-  }
+  // @Override
+  // protected String getMainComponentName() {
+  //   return "Buskool";
+  // }
 }

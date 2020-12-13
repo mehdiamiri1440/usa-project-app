@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, BackHandler, ActivityIndicator } from 'react-native';
 
 import { ActionSheet, Button } from 'native-base';
 import { connect } from 'react-redux';
@@ -54,6 +54,14 @@ const Authentication = props => {
         buttonIndex => onActionSheetClicked(buttonIndex, name)
     );
 
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            props.navigation.goBack()
+            return true;
+        })
+        return BackHandler.removeEventListener()
+    }, [])
 
     const onActionSheetClicked = (buttonIndex, name) => {
         const options = {
@@ -765,6 +773,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,
+        color: 'black',
         width: deviceWidth * 0.9,
     },
     iconContainer: {

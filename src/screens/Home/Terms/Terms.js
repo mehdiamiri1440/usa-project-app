@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, Linking } from 'react-native';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 class Terms extends React.Component {
 
     componentDidMount() {

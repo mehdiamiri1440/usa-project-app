@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
+import { Text, View, BackHandler, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
@@ -43,6 +43,16 @@ class PromotionIntro extends React.Component {
         }
     }
 
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
+    }
 
     renderComment = (item) => {
 

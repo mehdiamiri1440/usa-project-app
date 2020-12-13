@@ -26,10 +26,16 @@ class GuidToRegisterProduct extends React.Component {
 
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("GuidToRegisterProduct", "GuidToRegisterProduct");
+        analytics().logScreenView({
+            screen_name: "GuidToRegisterProduct",
+            screen_class: "GuidToRegisterProduct",
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -47,6 +53,7 @@ class GuidToRegisterProduct extends React.Component {
 
     onSubmit = () => {
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
+
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {
                 changeStep(1);
@@ -364,6 +371,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.7,
         color: 'white',
         alignItems: 'center',
+        alignSelf: 'center',
         borderRadius: 5,
         flexDirection: 'row-reverse',
         justifyContent: 'center',
@@ -420,7 +428,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        // alignSelf: 'flex-start',
+        alignSelf: 'center',
         justifyContent: 'center',
     },
     modalCloseButton: {

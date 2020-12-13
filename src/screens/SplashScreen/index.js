@@ -2,8 +2,6 @@
 
 import React, { Component } from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
-import { Button, } from "native-base";
-import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 
 
 class SplashScreen extends Component {
@@ -39,8 +37,8 @@ class SplashScreen extends Component {
                         style={{
                             width: 84,
                             height: 97,
-                            }}  
-                            source={require("../../../assets/icons/main-logo.png")} />
+                        }}
+                        source={require("../../../assets/icons/main-logo.png")} />
                 </View>
                 <Text style={{
                     position: "absolute",
@@ -48,7 +46,7 @@ class SplashScreen extends Component {
                     width: "100%",
                     left: 0,
                     textAlign: "center",
-                    color:  "#666666",
+                    color: "#666666",
                     fontFamily: "IRANSansWeb(FaNum)_Bold",
                     fontSize: 23,
                 }}>
@@ -56,9 +54,9 @@ class SplashScreen extends Component {
                 </Text>
             </View>
 
-                
 
-        ) 
+
+        )
     }
 }
 

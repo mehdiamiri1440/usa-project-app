@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import { Body, Card, CardItem, Label, Item, Input, Button } from 'native-base';
 
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
@@ -286,7 +286,7 @@ class RegisterRequest extends Component {
                                             }}
                                         >
                                             <RNPickerSelect
-                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                 useNativeAndroidPickerStyle={false}
                                                 onValueChange={this.setCategory}
                                                 disabled={categoriesLoading}
@@ -326,7 +326,7 @@ class RegisterRequest extends Component {
                                             }}
                                         >
                                             <RNPickerSelect
-                                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                 useNativeAndroidPickerStyle={false}
                                                 onValueChange={this.setSubCategory}
                                                 style={styles}
@@ -417,7 +417,7 @@ class RegisterRequest extends Component {
 
 
                                     <View style={[styles.labelInputPadding], {
-
+                                        alignSelf: 'center', justifyContent: 'center',
                                         alignItems: 'center',
 
                                     }}>
@@ -524,6 +524,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: deviceWidth * 0.062,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
+        color: 'black',
         height: 50,
         width: deviceWidth * 0.9,
     },

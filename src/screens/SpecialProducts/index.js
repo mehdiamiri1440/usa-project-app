@@ -54,10 +54,16 @@ class SpecialProducts extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("special_products", "special_products");
+        analytics().logScreenView({
+            screen_name: "special_products",
+            screen_class: "special_products",
+        });
 
         this.fetchAllProducts();
         this.initialCalls()
@@ -281,7 +287,7 @@ class SpecialProducts extends PureComponent {
                     {
                         !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
                             <Button
-                                onPress={() => this.props.navigation.navigate('RegisterProduct')}
+                                onPress={() => this.props.navigation.navigate('RegisterProductStack')}
 
                                 style={styles.loginButton}>
                                 <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
@@ -437,7 +443,7 @@ class SpecialProducts extends PureComponent {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setProvince}
                                                     style={styles}
@@ -473,7 +479,7 @@ class SpecialProducts extends PureComponent {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={this.setCity}
                                                     style={styles}
@@ -626,7 +632,7 @@ class SpecialProducts extends PureComponent {
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
                                     color: 'red'
                                 }}>
-                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <Ionicons name='ios-arrow-back' size={30} color='#777' />}
+                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
                                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
@@ -710,7 +716,7 @@ class SpecialProducts extends PureComponent {
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                                 }}>
-                                <Ionicons name='ios-arrow-back' size={30} color='#777' />
+                                <FontAwesome5 name='angle-left' size={26} color='#777' />
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
                             </TouchableOpacity>
                         )}
@@ -1064,6 +1070,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,
+        color: 'black',
         width: deviceWidth * 0.9,
     },
     iconContainer: {

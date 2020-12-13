@@ -7,7 +7,7 @@ import { deviceWidth, validator, formatter } from '../../../utils';
 import RNPickerSelect from 'react-native-picker-select';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 
 class SelectCategory extends Component {
@@ -162,7 +162,7 @@ class SelectCategory extends Component {
                         }}
                     >
                         <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setCategory}
                             style={styles}
@@ -203,7 +203,7 @@ class SelectCategory extends Component {
                         }}
                     >
                         <RNPickerSelect
-                            Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                             useNativeAndroidPickerStyle={false}
                             onValueChange={this.setSubCategory}
                             style={styles}
@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
+        color: 'black',
         height: 50,
         width: deviceWidth * 0.9,
     },

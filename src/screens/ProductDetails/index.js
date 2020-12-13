@@ -8,7 +8,7 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -102,10 +102,16 @@ class ProductDetails extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("product_view", "product_view");
+        analytics().logScreenView({
+            screen_name: "product_view",
+            screen_class: "product_view",
+        });
 
 
         if (this.props.route.params.productId) {
@@ -1460,7 +1466,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        // alignSelf: 'flex-start',
+        alignSelf: 'center',
         justifyContent: 'center',
     },
     modalCloseButton: {

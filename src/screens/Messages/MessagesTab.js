@@ -49,10 +49,16 @@ class ContactsList extends Component {
         if (this.isComponentMounted) {
             Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
                 if (componentType === 'Component') {
-                    analytics().setCurrentScreen(componentName, componentName);
+                    analytics().logScreenView({
+                        screen_name: componentName,
+                        screen_class: componentName,
+                    });
                 }
             });
-            analytics().setCurrentScreen("messanger", "messanger");
+            analytics().logScreenView({
+                screen_name: "messanger",
+                screen_class: "messanger",
+            });
             // this.props.emptyMessage(false)
             this.props.fetchAllContactsList(this.state.from, this.state.to);
 

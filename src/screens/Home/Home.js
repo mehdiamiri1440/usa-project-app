@@ -37,7 +37,7 @@ let homeRoutes = [
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
-    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-card-details-outline' color='white' />, name: 'Profile' },
+    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='white' />, name: 'Profile' },
     { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
@@ -61,20 +61,29 @@ class Home extends React.Component {
         }
         if (name == 'Profile') {
             if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-                this.props.navigation.navigate(name, { user_name: this.props.userProfile.user_info.user_name })
+                this.props.navigation.navigate('MyBuskool', { screen: name, params: { user_name: this.props.userProfile.user_info.user_name } })
+        }
+        if (name == 'Messages') {
+            this.props.navigation.navigate("Messages")
         }
         else {
-            this.props.navigation.navigate(name)
+            this.props.navigation.navigate('MyBuskool', { screen: name })
         }
 
     };
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("my_buskool", "my_buskool");
+        analytics().logScreenView({
+            screen_name: "my_buskool",
+            screen_class: "my_buskool",
+        });
 
     }
 
@@ -378,7 +387,7 @@ class Home extends React.Component {
                                         </View>
                                         <View style={{ width: '55%', flexDirection: 'row' }}>
                                             <Text style={{ textAlignVertical: 'center' }}>
-                                                <Ionicons color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='ios-arrow-back' />
+                                                <FontAwesome5 color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='angle-left' />
                                             </Text>
                                             {route.name == 'PromoteRegistration' ?
                                                 <Text style={{
@@ -548,6 +557,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,
+        color: 'black',
         width: deviceWidth * 0.9,
     },
     iconContainer: {

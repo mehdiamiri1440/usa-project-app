@@ -1,13 +1,13 @@
 // import react-native element
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Item, Input, Label, Picker } from 'native-base';
+import { Button, Item, Input, Label } from 'native-base';
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { dataGenerator, validator } from '../../../utils';
 
@@ -330,7 +330,7 @@ class ProductMoreDetails extends Component {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
                                                     style={styles}
@@ -599,6 +599,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         // paddingVertical: 8,
+        color: 'black',
         height: 50,
         width: deviceWidth * 0.45,
     },

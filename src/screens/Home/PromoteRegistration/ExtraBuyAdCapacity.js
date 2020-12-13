@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, BackHandler, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, InputGroup, Input, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import analytics from '@react-native-firebase/analytics';
@@ -27,6 +27,14 @@ class ExtraBuyAdCapacity extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('extra_buyAd_capacity_payment');
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
     }
 
 

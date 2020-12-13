@@ -229,6 +229,7 @@ export const MyBuskoolStack = _ => {
 export const RegisterProductStack = _ => (
     <Stack.Navigator
         initialRouteName={'RegisterProduct'}
+        headerMode='none'
     >
 
         <Stack.Screen

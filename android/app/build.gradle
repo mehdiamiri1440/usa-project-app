@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-
+android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
 import com.android.build.OutputFile
 
 /**
@@ -84,7 +84,30 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+project.ext.vectoricons = [
+    iconFontNames: [ 
+    'MaterialIcons.ttf', 
+    'EvilIcons.ttf',
+    'AntDesign.ttf',
+    'Entypo.ttf',
+    'EvilIcons.ttf',
+    'Feather.ttf',
+    'FontAwesome',
+    'FontAwesome5_Brands.ttf',
+    'FontAwesome5_Solid.ttf',
+    'FontAwesome5_Regular.ttf',
+    'Fontisto.ttf',
+    'Foundation.ttf',
+    'Ionicon.ttf',
+    'MaterialIcons.ttf',
+    'MaterialCommunityIcons.ttf',
+    'Octicons.ttf',
+    'Zocial.ttf',
+    'SimpleLineIcons.ttf'
+    ] // Name of the font files you want to copy
+]
+ 
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -124,7 +147,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-
+    ndkVersion "22.0.6917172"
     compileOptions {
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -141,10 +164,17 @@ android {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
             vectorDrawables.useSupportLibrary = true
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        targetSdkVersion 29
+        versionCode 3
         multiDexEnabled true
-        versionName "2.0.0.998"
+        versionName "2.0.0.999"
+    //     ndk {
+    //   // Specifies the ABI configurations of your native
+    //   // libraries Gradle should build and package with your APK.
+    //   abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a',
+    //                'arm64-v8a'
+    //         }
+
     }
     signingConfigs {
         release {
@@ -177,8 +207,8 @@ android {
         afterEvaluate {project ->
             if (project.hasProperty("android")) {
                 android {
-                    compileSdkVersion rootProject.ext.compileSdkVersion
-                    buildToolsVersion rootProject.ext.buildToolsVersion
+                    compileSdkVersion 29
+                    buildToolsVersion 29
                 }
             }
         }
@@ -198,7 +228,8 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
                 signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
+            minifyEnabled true
+            // minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }
@@ -220,25 +251,26 @@ android {
 }
 
 dependencies {
-    
     // For animated GIF support
     compile 'com.facebook.fresco:fresco:1.+'
     compile 'com.facebook.fresco:animated-gif:1.+'
     implementation 'org.webkit:android-jsc:+'
     implementation project(':react-native-restart')
     implementation project(':react-native-splash-screen')
+    implementation project(':react-native-community-toolbar-android')
     implementation project(':react-native-fs')
     implementation project(':react-native-contacts')
-    implementation project(':@react-native-community_masked-view')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-    implementation 'com.google.firebase:firebase-analytics:17.5.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    compile project(':react-native-vector-icons')
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.7'
-     implementation project(':react-native-linear-gradient')
-implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    implementation project(':react-native-linear-gradient')
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
@@ -257,3 +289,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+

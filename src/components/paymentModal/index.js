@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Modal, Text, ScrollView, View, TouchableOpacity, StyleSheet, Linking, BackHandler } from 'react-native';
 import { Card, Button } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 

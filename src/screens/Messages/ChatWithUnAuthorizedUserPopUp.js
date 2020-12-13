@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Linking, TouchableOpacity } from 'react-native';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';

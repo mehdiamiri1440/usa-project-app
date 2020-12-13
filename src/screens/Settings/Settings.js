@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
 
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -111,7 +112,7 @@ class Settings extends React.Component {
                                 </View>
                                 <View style={{ width: '55%', flexDirection: 'row' }}>
                                     <Text style={{ textAlignVertical: 'center' }}>
-                                        <Ionicons color={'#666666'} size={25} name='ios-arrow-back' />
+                                        <FontAwesome5 color={'#666666'} size={25} name='angle-left' />
                                     </Text>
                                 </View>
                             </TouchableOpacity>

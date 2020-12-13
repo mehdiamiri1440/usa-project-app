@@ -1,14 +1,14 @@
 import React from 'react';
 import analytics from '@react-native-firebase/analytics';
 import {
-    Text, TouchableOpacity, View, StyleSheet, Image, ToastAndroid, Linking
+    Text, TouchableOpacity, View, BackHandler, Image, ToastAndroid, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import Clipboard from "@react-native-community/clipboard";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
@@ -16,7 +16,16 @@ class ContactUs extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('support');
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true;
+        })
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
+    }
+
     render() {
         return (
             <>

@@ -7,7 +7,7 @@ import { Button, CardItem, Card, Body } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -66,10 +66,16 @@ class Profile extends PureComponent {
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
-                analytics().setCurrentScreen(componentName, componentName);
+                analytics().logScreenView({
+                    screen_name: componentName,
+                    screen_class: componentName,
+                });
             }
         });
-        analytics().setCurrentScreen("profile", "profile");
+        analytics().logScreenView({
+            screen_name: "profile",
+            screen_class: "profile",
+        });
 
         this.initProfileContent()
         // .catch(_ => this.setState({ showModal: false }))

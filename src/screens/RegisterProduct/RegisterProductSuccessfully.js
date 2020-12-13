@@ -21,10 +21,13 @@ class RegisterProductSuccessfully extends Component {
         const {
             params = {}
         } = route;
-        const {
+        let {
             subCategoryId,
             subCategoryName
         } = params;
+
+        subCategoryId = subCategoryId || this.props.subCategoryId;
+        subCategoryName = subCategoryName || this.props.subCategoryName;
 
         return (
             <View style={{ height: deviceHeight * 0.75, justifyContent: 'center' }}>
@@ -34,7 +37,9 @@ class RegisterProductSuccessfully extends Component {
                         borderBottomColor: '#00C569', borderBottomWidth: 2
                     }}>
                         <Text style={{
-                            textAlign: 'center', textAlignVertical: 'center',
+                            textAlign: 'center',
+                            paddingHorizontal: 10,
+                            textAlignVertical: 'center',
                             fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold'
                         }}>{locales('titles.registerProductDoneSuccessfully')}</Text>
                     </CardItem>

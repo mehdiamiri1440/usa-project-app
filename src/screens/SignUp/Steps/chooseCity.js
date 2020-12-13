@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, I18nManager, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Item, Label } from 'native-base'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -174,7 +174,7 @@ class ChooseCity extends React.Component {
                             }}
                         >
                             <RNPickerSelect
-                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setProvince}
                                 style={styles}
@@ -218,7 +218,7 @@ class ChooseCity extends React.Component {
                             }}
                         >
                             <RNPickerSelect
-                                Icon={() => <Ionicons name='ios-arrow-down' size={25} color='gray' />}
+                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                 useNativeAndroidPickerStyle={false}
                                 onValueChange={this.setCity}
                                 style={styles}
@@ -388,6 +388,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,
+        color: 'black',
         width: deviceWidth * 0.9,
 
     },

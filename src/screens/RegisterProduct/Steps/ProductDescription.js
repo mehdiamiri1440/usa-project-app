@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Linking } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { REACT_APP_API_ENDPOINT_RELEASE } from 'react-native-dotenv';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 class ProductDecription extends Component {
     constructor(props) {

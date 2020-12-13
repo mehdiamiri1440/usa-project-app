@@ -1,8 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT, REACT_APP_API_ENDPOINT_REAL_DEVICE, REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_MAIN_DOMAIN } from 'react-native-dotenv';
-import RNEmulatorCheck from 'react-native-emulator-check'
-
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import RnRestart from 'react-native-restart';
+import * as authActions from '../redux/auth/actions';
+import configureStore from '../redux/configureStore';
 
 const getUrl = route => {
     // if (__DEV__) {
@@ -14,18 +15,29 @@ const getUrl = route => {
     return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 };
-getData = async () => {
-    try {
-        const value = await AsyncStorage.getItem('@Authorization')
-        if (value !== null) {
-            return value
+
+
+getTokenFromStorage = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            AsyncStorage.getItem('@Authorization').then(result => {
+                if (result !== null) {
+                    resolve(result);
+                }
+                else {
+                    resolve('')
+                }
+            })
         }
-    } catch (e) {
-        return null
-    }
-}
-const getRequestHeaders = withAuth => {
-    let token = getData()
+        catch (e) {
+            reject('')
+        }
+    })
+};
+
+
+const getRequestHeaders = async () => {
+    let token = await getTokenFromStorage()
     return {
         'Content-Type': 'application/json; charset=utf-8',
         'X-Requested-With': 'XMLHttpRequest',
@@ -33,14 +45,38 @@ const getRequestHeaders = withAuth => {
     };
 };
 
-export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
 
+
+const redirectToLogin = _ => {
+    const store = configureStore();
+    AsyncStorage.removeItem('@Authorization').then(_ => {
+        return store.dispatch(authActions.logOut()).then(_ => {
+            RnRestart.Restart();
+        })
+    })
+};
+
+
+
+const refreshToken = (route, method, data, withAuth, headers) => {
+    axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/refresh-token`, undefined, { headers }).then(result => {
+        const token = result.data.token
+        AsyncStorage.setItem("@Authorization", token).then(_ => {
+            fetchAPI({ route, method, data, withAuth })
+        })
+    })
+        .catch(_ => redirectToLogin())
+};
+
+
+export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+    const headers = await getRequestHeaders();
     return new Promise((resolve, reject) => {
         axios
             .request({
                 url: getUrl(route),
                 method,
-                headers: getRequestHeaders(withAuth),
+                headers,
                 data,
                 params,
                 timeout: 5000,
@@ -49,9 +85,18 @@ export const fetchAPI = ({ route, method = 'GET', data = {}, withAuth = true, pa
                 resolve(result.data ? result.data : result);
             })
             .catch(err => {
+                if (err.response && err.response.status === 401) {
+                    if (err.response.data.refresh)
+                        refreshToken(route, method, data, withAuth, headers)
+                    else redirectToLogin()
+                }
+
+
                 if (err.response && err.response.status === 400) {
                     reject(err.response.data);
-                } else {
+                }
+
+                else {
                     reject(err);
                 }
             });
