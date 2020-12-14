@@ -5,14 +5,14 @@ import RnRestart from 'react-native-restart';
 import * as authActions from '../redux/auth/actions';
 import configureStore from '../redux/configureStore';
 
-export const getUrl = (route, alternativeBaseUrl) => {
+export const getUrl = (route) => {
     // if (__DEV__) {
     //     if (!RNEmulatorCheck.isEmulator())
     //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
     // }
     // return `http://192.168.1.102:3030/${route}`;
 
-    return `${alternativeBaseUrl ? REACT_APP_API_ALTERNATIVE_ENDPOINT_RELEASE : REACT_APP_API_ENDPOINT_RELEASE}/${route}`
+    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 };
 
@@ -58,8 +58,8 @@ const redirectToLogin = _ => {
 
 
 
-const refreshToken = (route, method, data, withAuth, headers, alternativeBaseUrl) => {
-    axios.post(`${alternativeBaseUrl ? REACT_APP_API_ALTERNATIVE_ENDPOINT_RELEASE : REACT_APP_API_ENDPOINT_RELEASE}/refresh-token`,
+const refreshToken = (route, method, data, withAuth, headers) => {
+    axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/refresh-token`,
         undefined, { headers })
         .then(result => {
             const token = result.data.token
@@ -71,12 +71,12 @@ const refreshToken = (route, method, data, withAuth, headers, alternativeBaseUrl
 };
 
 
-export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null, alternativeBaseUrl = false }) => {
+export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
     const headers = await getRequestHeaders();
     return new Promise((resolve, reject) => {
         axios
             .request({
-                url: getUrl(route, alternativeBaseUrl),
+                url: getUrl(route),
                 method,
                 headers,
                 data,
@@ -89,18 +89,13 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
             .catch(err => {
                 if (err.response && err.response.status === 401) {
                     if (err.response.data.refresh)
-                        refreshToken(route, method, data, withAuth, headers, alternativeBaseUrl)
+                        refreshToken(route, method, data, withAuth, headers)
                     else redirectToLogin()
                 }
 
 
                 if (err.response && err.response.status === 400) {
                     reject(err.response.data);
-                }
-
-
-                if (err.response && (err.response.status === 522 || err.response.status === 302)) {
-                    return fetchAPI(route, method, data, withAuth, params, true)
                 }
 
                 else {
