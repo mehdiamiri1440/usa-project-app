@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ALTERNATIVE_ENDPOINT_RELEASE } from '@env';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import RnRestart from 'react-native-restart';
 import * as authActions from '../redux/auth/actions';
 import configureStore from '../redux/configureStore';
