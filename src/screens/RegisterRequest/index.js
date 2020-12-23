@@ -14,7 +14,7 @@ import * as productActions from '../../redux/registerProduct/actions';
 import { deviceWidth, validator } from '../../utils';
 import NoConnection from '../../components/noConnectionError';
 import Loading from '../Loading';
-
+import { formatter } from '../../utils/formatter';
 class RegisterRequest extends Component {
     constructor(props) {
         super(props)
@@ -22,6 +22,7 @@ class RegisterRequest extends Component {
             disableSubCategory: true,
             amountError: '',
             amount: '',
+            amountText: '',
             category: '',
             subCategory: '',
             productTypeError: '',
@@ -57,6 +58,7 @@ class RegisterRequest extends Component {
         this.setState({
             amountError: '',
             amount: '',
+            amountText: '',
             category: '',
             subCategory: '',
             productTypeError: '',
@@ -92,14 +94,33 @@ class RegisterRequest extends Component {
 
 
 
-
     onAmountSubmit = field => {
         this.setState(() => ({
-            amount: field,
-            amountError: ''
-        }));
-    };
+            amountError: '',
+            amount: field
 
+        }));
+
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    amountError: "لطفا  فقط عدد وارد کنید"
+                }));
+            }
+            if (!this.amountError) {
+                this.setState(() => ({
+                    amountText: formatter.convertUnitsToText(field)
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                amount: '',
+                amountText: ''
+            }));
+        }
+
+
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
@@ -179,7 +200,8 @@ class RegisterRequest extends Component {
             subCategoryError, categoryError, productTypeError,
             amountError,
             showModal,
-            amount
+            amount,
+            amountText
         } = this.state;
 
         categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -226,8 +248,7 @@ class RegisterRequest extends Component {
                     keyboardShouldPersistTaps='handled'
                 >
                     <View style={{
-                        paddingVertical: 15,
-                        paddingHorizontal: 7
+                        paddingVertical: 15
                     }} >
                         <Card style={{ marginBottom: 20, elevation: 2, borderRadius: 6 }} transparent>
                             <CardItem>
@@ -412,6 +433,7 @@ class RegisterRequest extends Component {
                                             />
                                         </Item>
                                         {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
+                                        {!amountError ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{amount.length ? amountText : null}</Label> : null}
                                     </View>
 
 

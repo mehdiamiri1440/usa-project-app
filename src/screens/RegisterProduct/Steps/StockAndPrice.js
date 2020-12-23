@@ -18,7 +18,9 @@ class StockAndPrice extends Component {
             isMinimumPriceFocused: false,
             isMaximumPriceFocused: false,
             minimumOrder: '',
+            minimumOrderText: '',
             amount: '',
+            amountText: '',
             loaded: false,
             maximumPrice: '',
             minimumPrice: ''
@@ -39,13 +41,32 @@ class StockAndPrice extends Component {
         this.minimumOrderRef.current.value = minimumOrder;
         this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
     }
-
-
     onAmountSubmit = field => {
         this.setState(() => ({
-            amount: field,
-            amountError: ''
+            amountError: '',
+            amount: field
+
         }));
+
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    amountError: "لطفا  فقط عدد وارد کنید"
+                }));
+            }
+            if (!this.amountError) {
+                this.setState(() => ({
+                    amountText: formatter.convertUnitsToText(field)
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                amount: '',
+                amountText: ''
+            }));
+        }
+
+
     };
 
     onMinimumPriceSubmit = field => {
@@ -73,15 +94,30 @@ class StockAndPrice extends Component {
     };
 
     onMinimumOrderSubmit = field => {
-        if (validator.isNumber(field))
+
+        this.setState(() => ({
+            minimumOrderError: '',
+            minimumOrder: field
+        }));
+
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    minimumOrderError: "لطفا  فقط عدد وارد کنید"
+                }));
+            }
+            if (!this.minimumOrderError) {
+                this.setState(() => ({
+                    minimumOrderText: formatter.convertUnitsToText(field)
+                }));
+            }
+        } else {
             this.setState(() => ({
-                minimumOrder: field,
-                minimumOrderError: ''
+                minimumOrder: '',
+                minimumOrderText: ''
             }));
-        else
-            this.setState(() => ({
-                minimumOrder: ''
-            }));
+        }
+
     };
 
 
@@ -153,7 +189,9 @@ class StockAndPrice extends Component {
             isAmountFocused,
             isMinimumPriceFocused,
             minimumOrder,
+            minimumOrderText,
             amount,
+            amountText,
             minimumPrice,
             maximumPrice
         } = this.state;
@@ -206,6 +244,7 @@ class StockAndPrice extends Component {
                         />
                     </Item>
                     {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
+                    {!amountError && amount.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{amountText}</Label> : null}
 
                     {/* <OutlinedTextField
                         placeholder={(this.state.isAmountFocused || amount.length) ? locales('titles.amountWithExample') : ''}
@@ -253,6 +292,8 @@ class StockAndPrice extends Component {
                         />
                     </Item>
                     {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
+                    {!minimumOrderError && minimumOrder.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{minimumOrderText}</Label> : null}
+
                     {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMinimumOrderSubmit}

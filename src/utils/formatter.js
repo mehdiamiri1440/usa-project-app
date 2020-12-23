@@ -46,3 +46,40 @@ export const numberWithCommas = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   else return "";
 };
+
+
+export const convertedNumbersToTonUnit = (number) => {
+  if (number || typeof number === "number") {
+    let data = number / 1000;
+    if (number < 1000) {
+      return number + " " + locales('labels.kiloGram');
+    } else {
+      return data + " " + locales('labels.ton');
+    }
+  } else return "";
+}
+
+export const convertUnitsToText = (number) => {
+  let data = number / 1000;
+  let text = "";
+  if (number < 1000) {
+    return number + " " + locales('labels.kiloGram');
+  } else {
+    let ton = data.toString().split(".")[0];
+    let kg = number.toString().substr(ton.length);
+    kg = kg.replace(/^0+/, "");
+    ton = ton + " " + locales('labels.ton');
+
+    if (kg) {
+      kg = " و " + kg + locales('labels.kiloGram');
+      text = ton + kg;
+    } else {
+      text = ton;
+    }
+
+    return text;
+  }
+}
+validateRegx = (input, regx) => {
+  return regx.test(input);
+}

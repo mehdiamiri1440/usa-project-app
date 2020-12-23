@@ -83,7 +83,7 @@ const BuyAdList = props => {
                         }}
                     >
 
-                        {item.is_golden && active_pakage_type == 0 ? `${locales('titles.requirementQuantity')} : نامشخص` : `${locales('titles.requirementQuantity')} : ${formatter.numberWithCommas(item.requirement_amount)} ${locales('labels.kiloGram')}`}
+                        {item.is_golden && active_pakage_type == 0 ? `${locales('titles.requirementQuantity')} : نامشخص` : `${locales('titles.requirementQuantity')} : ${formatter.convertedNumbersToTonUnit(item.requirement_amount)}`}
                     </Text>
                 </View>
 

@@ -918,7 +918,7 @@ class Product extends PureComponent {
                                             <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
                                         </Text>
                                         <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
-                                            {formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}
+                                            {formatter.convertedNumbersToTonUnit(stock)}
                                         </Text>
                                     </View>
 
