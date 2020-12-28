@@ -13,6 +13,7 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as authActions from '../../../redux/auth/actions';
+import { permissions } from '../../../utils';
 
 
 
@@ -85,6 +86,12 @@ const Authentication = props => {
 
         switch (buttonIndex) {
             case 0: {
+
+                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
+
+                if (!isAllowedToOpenCamera)
+                    return;
+
                 launchCamera(options, image => {
                     if (image.didCancel)
                         return;

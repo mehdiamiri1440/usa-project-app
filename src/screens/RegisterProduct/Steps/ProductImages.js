@@ -6,14 +6,14 @@ import {
     TouchableOpacity,
     Image, View, Text, StyleSheet
 } from "react-native";
-import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 
+import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+import { permissions } from '../../../utils';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +31,8 @@ class ProductImages extends Component {
         this.setState({ images, loaded: true });
     }
 
+
+
     chooseProductImage = (index) => ActionSheet.show(
         {
             options: [locales('labels.camera'), locales('labels.gallery')],
@@ -38,7 +40,7 @@ class ProductImages extends Component {
         buttonIndex => this.onActionSheetClicked(buttonIndex, index)
     )
 
-    onActionSheetClicked = (buttonIndex, index) => {
+    onActionSheetClicked = async (buttonIndex, index) => {
         const options = {
             width: 300,
             height: 400,
@@ -61,6 +63,12 @@ class ProductImages extends Component {
         switch (buttonIndex) {
             case 0: {
                 this.setState({ errorFlag: false });
+
+                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
+
+                if (!isAllowedToOpenCamera)
+                    return;
+
                 launchCamera(options, image => {
                     if (image.didCancel)
                         return;

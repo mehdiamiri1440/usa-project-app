@@ -15,6 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as profileActions from '../../../redux/profile/actions';
+import { permissions } from '../../../utils';
 
 class EditProfile extends Component {
     constructor(props) {
@@ -143,6 +144,12 @@ class EditProfile extends Component {
         switch (buttonIndex) {
             case 0: {
                 this.setState({ errorFlag: false });
+
+                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
+
+                if (!isAllowedToOpenCamera)
+                    return;
+
                 launchCamera(options, image => {
                     if (image.didCancel)
                         return;
