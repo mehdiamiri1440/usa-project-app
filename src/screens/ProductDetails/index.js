@@ -1133,7 +1133,7 @@ class ProductDetails extends PureComponent {
                                 <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
                                     {locales('titles.stockQuantity')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(stock)} {locales('labels.kiloGram')}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.convertedNumbersToTonUnit(stock)} </Text>
                             </View>
 
                             <View style={{
@@ -1147,7 +1147,7 @@ class ProductDetails extends PureComponent {
                                 }}>
                                     {locales('titles.minOrder')}
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.numberWithCommas(min_sale_amount)} {locales('labels.kiloGram')}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>{formatter.convertedNumbersToTonUnit(min_sale_amount)}</Text>
                             </View>
 
                             <View style={{
