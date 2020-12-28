@@ -64,7 +64,7 @@ const Authentication = props => {
         return BackHandler.removeEventListener()
     }, [])
 
-    const onActionSheetClicked = (buttonIndex, name) => {
+    const onActionSheetClicked = async (buttonIndex, name) => {
         const options = {
             width: 300,
             height: 400,

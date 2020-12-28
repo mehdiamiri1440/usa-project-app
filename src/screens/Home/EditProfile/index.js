@@ -121,7 +121,7 @@ class EditProfile extends Component {
 
     handleDescriptionChange = description => this.setState({ description });
 
-    onActionSheetClicked = (buttonIndex) => {
+    onActionSheetClicked = async (buttonIndex) => {
         const options = {
             width: 300,
             height: 400,
