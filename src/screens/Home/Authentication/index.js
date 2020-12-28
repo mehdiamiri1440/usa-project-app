@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, BackHandle
 
 import { ActionSheet, Button } from 'native-base';
 import { connect } from 'react-redux';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -85,7 +85,7 @@ const Authentication = props => {
 
         switch (buttonIndex) {
             case 0: {
-                ImagePicker.launchCamera(options, image => {
+                launchCamera(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)
@@ -124,7 +124,7 @@ const Authentication = props => {
             }
 
             case 1: {
-                ImagePicker.launchImageLibrary(options, image => {
+                launchImageLibrary(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)

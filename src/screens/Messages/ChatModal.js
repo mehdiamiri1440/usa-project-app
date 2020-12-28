@@ -3,14 +3,21 @@ import { connect } from 'react-redux';
 import Jmoment from 'moment-jalaali';
 import moment from 'moment';
 import { Button } from 'native-base';
-import { View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import {
+    View, Text, Modal, TouchableOpacity, Image, TextInput, FlatList,
+    ActivityIndicator, StyleSheet, TouchableHighlight
+} from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import { AudioRecorder, AudioUtils } from 'react-native-audio';
+import Sound from 'react-native-sound';
+// import Voice from '@react-native-community/voice';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import Message from './Message';
@@ -19,6 +26,8 @@ import MessagesContext from './MessagesContext';
 import { formatter, validator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import { generateKey } from '../../utils/dataGenerator';
+import RNFetchBlob from 'rn-fetch-blob';
 
 let unsubscribe;
 class ChatModal extends Component {
@@ -32,15 +41,57 @@ class ChatModal extends Component {
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
-            loaded: false
+            loaded: false,
+
+            isVoiceMessage: true,
+
+            currentTime: 0,
+            recording: false,
+            paused: false,
+            stoppedRecording: false,
+            finished: false,
+            audioPath: AudioUtils.DownloadsDirectoryPath + `/messanger-voice-${generateKey()}.aac`,
+            hasPermission: undefined,
+
         };
-        Jmoment.locale('en')
+        Jmoment.locale('en');
+        // Voice.onSpeechStart = this.onSpeechStart;
+        // Voice.onSpeechEnd = this.onSpeechEnd;
+        // Voice.onSpeechError = this.onSpeechError;
+        // Voice.onSpeechResults = this.onSpeechResults;
+        // Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+        // Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
     }
 
     scrollViewRef = React.createRef();
 
     componentDidMount() {
         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
+        AudioRecorder.requestAuthorization().then((isAuthorised) => {
+            this.setState({ hasPermission: isAuthorised });
+
+            if (!isAuthorised) return;
+
+            this.prepareRecordingPath(this.state.audioPath);
+
+            AudioRecorder.onProgress = (data) => {
+                this.setState(state => {
+                    let seconds = Math.floor(data.currentTime % 60);
+                    let minutes = Math.floor(data.currentTime / 60);
+                    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`
+                    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`
+                    state.currentTime = `${minutes}:${seconds}`;
+                    return '';
+                });
+            };
+
+            AudioRecorder.onFinished = (data) => {
+                // Android callback comes in the form of a promise instead.
+                if (Platform.OS === 'ios') {
+                    this._finishRecording(data.status === "OK", data.audioFileURL, data.audioFileSize);
+                }
+            };
+        });
 
         // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
         //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
@@ -67,7 +118,7 @@ class ChatModal extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            console.warn('end reached in updated', this.state.loaded)
+            // console.warn('end reached in updated', this.state.loaded)
             this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
@@ -256,12 +307,256 @@ class ChatModal extends Component {
                 </View>
             )
         return null;
+    };
+
+
+
+
+    // onStartButtonPress = async (e) => {
+    //     try {
+    //         await Voice.start('fa-IR');
+    //         this.setState({
+    //             recognized: '',
+    //             started: '',
+    //             results: [],
+    //         });
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // }
+
+    // const onSpeechStart = (e) => {
+    //     //Invoked when .start() is called without error
+    //     console.log('onSpeechStart: ', e);
+    //     setStarted('√');
+    // };
+
+    // const onSpeechEnd = (e) => {
+    //     //Invoked when SpeechRecognizer stops recognition
+    //     console.log('onSpeechEnd: ', e);
+    //     setEnd('√');
+    // };
+
+    // const onSpeechError = (e) => {
+    //     //Invoked when an error occurs.
+    //     console.log('onSpeechError: ', e);
+    //     setError(JSON.stringify(e.error));
+    // };
+
+    // const onSpeechResults = (e) => {
+    //     //Invoked when SpeechRecognizer is finished recognizing
+    //     console.log('onSpeechResults: ', e);
+    //     setResults(e.value);
+    // };
+
+    // const onSpeechPartialResults = (e) => {
+    //     //Invoked when any results are computed
+    //     console.log('onSpeechPartialResults: ', e);
+    //     setPartialResults(e.value);
+    // };
+
+    // const onSpeechVolumeChanged = (e) => {
+    //     //Invoked when pitch that is recognized changed
+    //     console.log('onSpeechVolumeChanged: ', e);
+    //     setPitch(e.value);
+    // };
+
+    // const startRecognizing = async () => {
+    //     //Starts listening for speech for a specific locale
+    //     try {
+    //         await Voice.start('en-US');
+    //         setPitch('');
+    //         setError('');
+    //         setStarted('');
+    //         setResults([]);
+    //         setPartialResults([]);
+    //         setEnd('');
+    //     } catch (e) {
+    //         //eslint-disable-next-line
+    //         console.error(e);
+    //     }
+    // };
+
+    // const stopRecognizing = async () => {
+    //     //Stops listening for speech
+    //     try {
+    //         await Voice.stop();
+    //     } catch (e) {
+    //         //eslint-disable-next-line
+    //         console.error(e);
+    //     }
+    // };
+
+    // const cancelRecognizing = async () => {
+    //     //Cancels the speech recognition
+    //     try {
+    //         await Voice.cancel();
+    //     } catch (e) {
+    //         //eslint-disable-next-line
+    //         console.error(e);
+    //     }
+    // };
+
+    // const destroyRecognizer = async () => {
+    //     //Destroys the current SpeechRecognizer instance
+    //     try {
+    //         await Voice.destroy();
+    //         setPitch('');
+    //         setError('');
+    //         setStarted('');
+    //         setResults([]);
+    //         setPartialResults([]);
+    //         setEnd('');
+    //     } catch (e) {
+    //         //eslint-disable-next-line
+    //         console.error(e);
+    //     }
+    // };
+    prepareRecordingPath = (audioPath) => {
+        AudioRecorder.prepareRecordingAtPath(audioPath, {
+            SampleRate: 22050,
+            Channels: 1,
+            AudioQuality: "Low",
+            AudioEncoding: "aac",
+            AudioEncodingBitRate: 32000
+        });
     }
+    pause = async () => {
+        if (!this.state.recording) {
+            console.warn('Can\'t pause, not recording!');
+            return;
+        }
+
+        try {
+            const filePath = await AudioRecorder.pauseRecording();
+            this.setState({ paused: true });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    resume = async () => {
+        if (!this.state.paused) {
+            console.warn('Can\'t resume, not paused!');
+            return;
+        }
+
+        try {
+            await AudioRecorder.resumeRecording();
+            this.setState({ paused: false });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    stop = async () => {
+        if (!this.state.recording) {
+            console.warn('Can\'t stop, not recording!');
+            return;
+        }
+
+        this.setState({ stoppedRecording: true, recording: false, paused: false });
+
+        try {
+            const filePath = await AudioRecorder.stopRecording();
+            console.warn('fil', filePath)
+            if (Platform.OS === 'android') {
+                this._finishRecording(true, filePath);
+            }
+            const fs = RNFetchBlob.fs
+            const base64 = RNFetchBlob.base64
+            fs.createFile(filePath, `messanger-voice-${generateKey()}`, 'utf8')
+            return filePath;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    play = async () => {
+        if (this.state.recording) {
+            await this.stop();
+        }
+
+        // These timeouts are a hacky workaround for some issues with react-native-sound.
+        // See https://github.com/zmxv/react-native-sound/issues/89.
+        setTimeout(() => {
+            var sound = new Sound(this.state.audioPath, '', (error) => {
+                if (error) {
+                    console.log('failed to load the sound', error);
+                }
+            });
+
+            setTimeout(() => {
+                sound.play((success) => {
+                    if (success) {
+                        console.log('successfully finished playing');
+                    } else {
+                        console.log('playback failed due to audio decoding errors');
+                    }
+                });
+            }, 100);
+        }, 100);
+    }
+
+    record = async () => {
+        if (this.state.recording) {
+            console.warn('Already recording!');
+            return;
+        }
+
+        if (!this.state.hasPermission) {
+            console.warn('Can\'t record, no permission granted!');
+            return;
+        }
+
+        if (this.state.stoppedRecording) {
+            this.prepareRecordingPath(this.state.audioPath);
+        }
+
+        this.setState({ recording: true, paused: false });
+
+        try {
+            const filePath = await AudioRecorder.startRecording();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    _finishRecording = (didSucceed, filePath, fileSize) => {
+        this.setState({ finished: didSucceed });
+        console.log(`Finished recording of duration ${this.state.currentTime} seconds at path: ${filePath} and size of ${fileSize || 0} bytes`);
+    }
+
+    _renderButton = (title, onPress, active) => {
+        var style = (active) ? styles.activeButtonText : styles.buttonText;
+
+        return (
+            <TouchableHighlight style={styles.button} onPress={onPress}>
+                <Text style={style}>
+                    {title}
+                </Text>
+            </TouchableHighlight>
+        );
+    }
+
+    _renderPauseButton = (onPress, active) => {
+        var style = (active) ? styles.activeButtonText : styles.buttonText;
+        var title = this.state.paused ? "RESUME" : "PAUSE";
+        return (
+            <TouchableHighlight style={styles.button} onPress={onPress}>
+                <Text style={style}>
+                    {title}
+                </Text>
+            </TouchableHighlight>
+        );
+    }
+
+
 
     render() {
         let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp } = this.state;
+        let { userChatHistory, isFirstLoad, messageText, recording, showUnAuthorizedUserPopUp, isVoiceMessage, currentTime } = this.state;
         return (
             <Modal
                 animationType="slide"
@@ -272,6 +567,21 @@ class ChatModal extends Component {
                     onRequestClose()
                 }}
             >
+
+
+
+                <View style={styles.container}>
+                    <View style={styles.controls}>
+                        {this._renderButton("RECORD", () => { this.record() }, this.state.recording)}
+                        {this._renderButton("PLAY", () => { this.play() })}
+                        {this._renderButton("STOP", () => { this.stop() })}
+                        {/* {this._renderButton("PAUSE", () => {this.pause()} )} */}
+                        {this._renderPauseButton(() => { this.state.paused ? this.resume() : this.pause() })}
+                        <Text style={styles.progressText}>{this.state.currentTime}s</Text>
+                    </View>
+                </View>
+
+                {/* <Text onPress={this.onStartButtonPress}>press</Text> */}
 
 
                 <Image source={require('../../../assets/images/whatsapp-wallpaper.png')} style={{
@@ -407,7 +717,7 @@ class ChatModal extends Component {
 
                     <Button
                         // disabled={!!userChatHistoryLoading}
-                        onPress={this.sendMessage}
+                        onPress={isVoiceMessage ? this.record : this.sendMessage}
                         style={{
                             backgroundColor: '#00C569',
                             width: 44,
@@ -419,7 +729,12 @@ class ChatModal extends Component {
                             marginHorizontal: 10
                         }}
                     >
-                        <MaterialCommunityIcons name='send' size={25} color='white' />
+
+                        {isVoiceMessage ?
+                            <FontAwesome5 name='microphone' size={25} color='white' />
+                            :
+                            <MaterialCommunityIcons name='send' size={25} color='white' />
+                        }
                     </Button>
 
                     <TextInput
@@ -431,10 +746,16 @@ class ChatModal extends Component {
                             maxHeight: 100, height: 44,
                             overflow: 'scroll',
                         }}
-                        placeholder='پیامی بگذارید'
+                        placeholder={recording ? 'در حال ضبط' : 'پیامی بگذارید'}
                         placeholderTextColor="#BEBEBE"
                         multiline={true}
                     />
+                    <TouchableOpacity
+                        onPress={this.stop}
+                        style={{ flexDirection: 'row', position: 'absolute', left: 100 }}>
+                        <FontAwesome5 name='microphone' size={25} color='#E41C38' />
+                        <Text style={{ color: '#21AD93' }}>{currentTime}</Text>
+                    </TouchableOpacity>
                 </View>
 
             </Modal>
@@ -468,6 +789,37 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
     }
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#2b608a",
+    },
+    controls: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+    },
+    progressText: {
+        paddingTop: 50,
+        fontSize: 50,
+        color: "#fff"
+    },
+    button: {
+        padding: 20
+    },
+    disabledButtonText: {
+        color: '#eee'
+    },
+    buttonText: {
+        fontSize: 20,
+        color: "#fff"
+    },
+    activeButtonText: {
+        fontSize: 20,
+        color: "#B81F00"
+    },
+})
 
 ChatModal.contextType = MessagesContext;
 

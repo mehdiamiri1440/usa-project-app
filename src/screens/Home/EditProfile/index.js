@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Card, Button, Textarea, ActionSheet } from 'native-base';
@@ -143,7 +143,7 @@ class EditProfile extends Component {
         switch (buttonIndex) {
             case 0: {
                 this.setState({ errorFlag: false });
-                ImagePicker.launchCamera(options, image => {
+                launchCamera(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)
@@ -172,7 +172,7 @@ class EditProfile extends Component {
             }
             case 1: {
                 this.setState({ errorFlag: false });
-                ImagePicker.launchImageLibrary(options, image => {
+                launchImageLibrary(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)

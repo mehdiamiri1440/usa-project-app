@@ -1,6 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ActionSheet, Button } from 'native-base';
 import {
     TouchableOpacity,
@@ -61,7 +61,7 @@ class ProductImages extends Component {
         switch (buttonIndex) {
             case 0: {
                 this.setState({ errorFlag: false });
-                ImagePicker.launchCamera(options, image => {
+                launchCamera(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)
@@ -97,7 +97,7 @@ class ProductImages extends Component {
             }
             case 1: {
                 this.setState({ errorFlag: false });
-                ImagePicker.launchImageLibrary(options, image => {
+                launchImageLibrary(options, image => {
                     if (image.didCancel)
                         return;
                     else if (image.error)
