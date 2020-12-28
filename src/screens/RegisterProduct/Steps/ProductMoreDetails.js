@@ -153,8 +153,10 @@ class ProductMoreDetails extends Component {
                 state.detailsArray[index].itemKey = '';
                 state.detailsArray[index].itemValue = '';
                 state.detailsArray[index].error = '';
-                state.defaultFieldsOptions[selectedIndex].alreadySelected = false;
-                state.defaultFieldsOptions[selectedIndex].selectedIndex = null;
+                if (selectedIndex > -1) {
+                    state.defaultFieldsOptions[selectedIndex].alreadySelected = false;
+                    state.defaultFieldsOptions[selectedIndex].selectedIndex = null;
+                }
                 return '';
             });
         }
@@ -171,10 +173,13 @@ class ProductMoreDetails extends Component {
             })
         }
         this.setState(state => {
+            console.log('state', state.defaultFieldsOptions, 'index', selectedIndex)
             this.state.detailsArray[index].itemKey = value;
             state.deletedIndexes.push(selectedIndex);
-            state.defaultFieldsOptions[selectedIndex].alreadySelected = true;
-            state.defaultFieldsOptions[selectedIndex].selectedIndex = selectedIndex;
+            if (selectedIndex > -1) {
+                state.defaultFieldsOptions[selectedIndex].alreadySelected = true;
+                state.defaultFieldsOptions[selectedIndex].selectedIndex = selectedIndex;
+            }
             state.defaultFieldsOptions.forEach(item => {
                 if (item.selectedIndex && state.deletedIndexes.indexOf(item.selectedIndex) < 0) {
                     item.alreadySelected = false;
