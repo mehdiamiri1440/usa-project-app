@@ -14,7 +14,7 @@ import * as productActions from '../../redux/registerProduct/actions';
 import { deviceWidth, validator } from '../../utils';
 import NoConnection from '../../components/noConnectionError';
 import Loading from '../Loading';
-import { formatter } from '../../utils/formatter';
+import { formatter } from '../../utils';
 class RegisterRequest extends Component {
     constructor(props) {
         super(props)
