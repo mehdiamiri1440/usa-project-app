@@ -97,7 +97,7 @@ class EditProfile extends Component {
         if (!!profile_photo && profile_photo.type)
             formData.append('profile_photo', profile_photo);
 
-        this.props.editProfile(formData).then(_ => {
+        this.props.editProfile(formData).then(result => {
             this.setState({ showSubmitEditionModal: true }, () => {
                 setTimeout(() => {
                     this.props.fetchUserProfile();
@@ -217,22 +217,23 @@ class EditProfile extends Component {
 
 
     render() {
-        const { editProfileLoading, userProfileLoading } = this.props;
+        const {
+            editProfileLoading,
+            userProfileLoading,
+            editProfileMessage,
+            editProfileError
+        } = this.props;
 
 
         const {
             profile_photo,
-            is_company,
-            company_name,
-            company_register_code,
-            public_phone,
+
             description,
             imageSizeError,
             first_name,
             last_name,
             is_verified,
 
-            editErrors,
             showSubmitEditionModal
         } = this.state;
 
@@ -511,17 +512,28 @@ class EditProfile extends Component {
                                     >{locales('errors.imageSizeError')}</Text>
                                     : null}
 
-                                {editErrors.length ?
-                                    <Text style={{
-                                        width: '100%',
-                                        color: 'white',
-                                        marginVertical: 10,
-                                        paddingHorizontal: 15,
-                                        backgroundColor: '#E41C38',
-                                        paddingVertical: 5,
-                                        borderRadius: 4
-                                    }}
-                                    >{editErrors[0][0]}</Text>
+                                {editProfileError && editProfileMessage && editProfileMessage.length ?
+                                    editProfileMessage.map((error, index) => (
+                                        <View
+                                            style={{
+                                                width: deviceWidth, justifyContent: 'center', alignItems: 'center',
+                                                alignContent: 'center'
+                                            }}
+                                            key={index}
+                                        >
+                                            <Text style={{
+                                                width: '100%',
+                                                color: '#E41C38',
+                                                textAlign: 'center',
+                                                marginVertical: 10,
+                                                paddingHorizontal: 15,
+                                                paddingVertical: 5,
+                                                borderRadius: 4
+                                            }}
+                                            >{error}
+                                            </Text>
+                                        </View>
+                                    ))
                                     : null}
                             </View>
                         </Card>
@@ -711,7 +723,9 @@ const mapStateToProps = (state) => {
         userProfileLoading,
 
         editProfile,
-        editProfileLoading
+        editProfileLoading,
+        editProfileMessage,
+        editProfileError
     } = state.profileReducer;
 
     return {
@@ -719,7 +733,9 @@ const mapStateToProps = (state) => {
         userProfileLoading,
 
         editProfile,
-        editProfileLoading
+        editProfileLoading,
+        editProfileMessage,
+        editProfileError
     }
 };
 

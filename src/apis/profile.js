@@ -126,9 +126,10 @@ export const editProfile = item => {
                 resolve(result)
             })
             .catch(err => {
-                if (err && !err.response)
-                    // return reject(err.response);
-                    return reject(err);
+                // if (err && !err.response)
+                //     return reject(err.response);
+                return reject(err);
+
 
             });
     });

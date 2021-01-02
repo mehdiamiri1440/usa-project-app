@@ -281,7 +281,7 @@ export default (state = INITIAL_STATE, action) => {
                 editProfileLoading: false,
                 editProfileFailed: false,
                 editProfileError: false,
-                editProfileMessage: false,
+                editProfileMessage: null,
             };
         };
         case actionTypes.EDIT_PROFILE_FAILED: {
@@ -291,17 +291,22 @@ export default (state = INITIAL_STATE, action) => {
                 editProfileLoading: false,
                 editProfileFailed: true,
                 editProfileError: false,
-                editProfileMessage: ''
+                editProfileMessage: null
             };
         };
         case actionTypes.EDIT_PROFILE_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
             return {
                 ...state,
                 editProfile: {},
                 editProfileLoading: false,
                 editProfileFailed: false,
                 editProfileError: true,
-                editProfileMessage: ''
+                editProfileMessage: [...description]
             };
         };
 
