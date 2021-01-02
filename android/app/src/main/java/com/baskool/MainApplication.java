@@ -15,6 +15,8 @@ import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.wenkesj.voice.VoicePackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.zmxv.RNSound.RNSoundPackage;
+import com.masteratul.RNAppstoreVersionCheckerPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 
 public class MainApplication extends NavigationApplication {
 

@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
+import DeviceInfo from 'react-native-device-info';
 
 
 import { navigationRef, isReadyRef } from './rootNavigation';
@@ -152,9 +154,28 @@ const App = (props) => {
   const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
+  let [isForceUpdate, setIsForceUpdate] = useState(true);
 
 
   useEffect(() => {
+    getAppstoreAppMetadata("com.buskool") //put any apps packageId here
+      .then(metadata => {
+        if (
+          DeviceInfo.getVersion() != metadata.version
+        ) {
+          const versionParts = metadata.version.split('.');
+          if (versionParts[versionParts.length - 1] == '1') {
+            setIsForceUpdate(true);
+          }
+          else {
+            setIsForceUpdate(false);
+          }
+          setUpdateModalFlag(true);
+        }
+      })
+      .catch(err => {
+        console.log("error occurred", err);
+      });
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
@@ -341,11 +362,11 @@ const App = (props) => {
           <Dialog.Actions
             style={styles.dialogHeader}
           >
-            <Button
+            {!isForceUpdate ? <Button
               onPress={() => setUpdateModalFlag(false)}
               style={styles.closeDialogModal}>
               <FontAwesome5 name="times" color="#777" solid size={18} />
-            </Button>
+            </Button> : null}
             <Paragraph style={styles.headerTextDialogModal}>
               {locales('titles.update')}
             </Paragraph>
@@ -378,14 +399,20 @@ const App = (props) => {
             <Button
               style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
               onPress={() => {
-                setUpdateModalFlag(false);
-                setTimeout(() => {
-                  navigationRef.current.navigate('UpgradeApp');
-                }, 200);
+                Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                  if (!!supported) {
+                    Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                  } else {
+                    Linking.openURL('https://play.google.com')
+                  }
+                })
+                  .catch(() => {
+                    Linking.openURL('https://play.google.com')
+                  })
               }}
             >
 
-              <Text style={styles.buttonText}>{locales('titles.installIt')}
+              <Text style={styles.buttonText}>{locales('titles.downloadIt')}
               </Text>
             </Button>
           </View>
@@ -394,13 +421,13 @@ const App = (props) => {
             width: '100%',
             padding: 0
           }}>
-            <Button
+            {!isForceUpdate ? <Button
               style={[styles.modalCloseButton,]}
               onPress={() => setUpdateModalFlag(false)}>
 
               <Text style={styles.closeButtonText}>{locales('titles.cancel')}
               </Text>
-            </Button>
+            </Button> : null}
           </Dialog.Actions>
         </Dialog>
       </Portal >
