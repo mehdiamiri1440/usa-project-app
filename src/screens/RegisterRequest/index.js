@@ -139,7 +139,7 @@ class RegisterRequest extends Component {
         if (!amount) {
             amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
         }
-        else if (amount && amount <= 0) {
+        else if (amount && (amount <= 0 || amount >= 1000000000)) {
             amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
         }
         else {
@@ -193,7 +193,8 @@ class RegisterRequest extends Component {
     render() {
 
 
-        let { categoriesList, subCategoriesList, subCategoriesLoading, categoriesLoading } = this.props;
+        let { categoriesList, subCategoriesList, subCategoriesLoading, categoriesLoading,
+            registerBuyAdRequestMessage, registerBuyAdRequestError } = this.props;
 
         let {
             productType, category, subCategory,
@@ -243,6 +244,30 @@ class RegisterRequest extends Component {
                         </Text>
                     </View>
                 </View>
+
+                {registerBuyAdRequestError && registerBuyAdRequestMessage && registerBuyAdRequestMessage.length ?
+                    registerBuyAdRequestMessage.map((error, index) => (
+                        <View
+                            style={{
+                                width: deviceWidth, justifyContent: 'center', alignItems: 'center',
+                                alignContent: 'center'
+                            }}
+                            key={index}
+                        >
+                            <Text style={{
+                                width: '100%',
+                                color: '#E41C38',
+                                textAlign: 'center',
+                                marginVertical: 10,
+                                paddingHorizontal: 15,
+                                paddingVertical: 5,
+                                borderRadius: 4
+                            }}
+                            >{error}
+                            </Text>
+                        </View>
+                    ))
+                    : null}
 
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
@@ -576,6 +601,8 @@ const mapStateToProps = (state) => {
 
         registerBuyAdRequestLoading: state.registerProductReducer.registerBuyAdRequestLoading,
         registerBuyAdRequest: state.registerProductReducer.registerBuyAdRequest,
+        registerBuyAdRequestMessage: state.registerProductReducer.registerBuyAdRequestMessage,
+        registerBuyAdRequestError: state.registerProductReducer.registerBuyAdRequestError,
     }
 };
 const mapDispatchToProps = (dispatch) => {

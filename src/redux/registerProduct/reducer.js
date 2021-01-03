@@ -23,7 +23,7 @@ const INITIAL_STATE = {
     registerBuyAdRequestLoading: false,
     registerBuyAdRequestFailed: false,
     registerBuyAdRequestError: false,
-    registerBuyAdRequestMessage: null,
+    registerBuyAdRequestMessage: [],
     products: [],
 
     subCategoriesLoading: false,
@@ -238,7 +238,7 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestLoading: true,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
-                registerBuyAdRequestMessage: null,
+                registerBuyAdRequestMessage: [],
                 products: [],
                 registerBuyAdRequest: {}
             };
@@ -250,7 +250,7 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: false,
-                registerBuyAdRequestMessage: msg,
+                registerBuyAdRequestMessage: [],
                 products,
                 registerBuyAdRequest: { ...action.payload }
             };
@@ -262,19 +262,25 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: true,
                 registerBuyAdRequestError: false,
-                registerBuyAdRequestMessage: msg,
+                registerBuyAdRequestMessage: [],
                 registerBuyAdRequest: {},
                 products: []
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const errorsArray = Object.values(errors);
+
             return {
                 ...state,
                 products: [],
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: true,
-                registerBuyAdRequestMessage: '',
+                registerBuyAdRequestMessage: errorsArray,
                 registerBuyAdRequest: {}
             };
         };
