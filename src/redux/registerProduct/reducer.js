@@ -11,7 +11,7 @@ const INITIAL_STATE = {
     addNewProductLoading: false,
     addNewProductFailed: false,
     addNewProductError: false,
-    addNewProductMessage: null,
+    addNewProductMessage: [],
 
     userPermissionToRegisterProductLoading: false,
     userPermissionToRegisterProductFailed: false,
@@ -144,7 +144,7 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: true,
                 addNewProductFailed: false,
                 addNewProductError: false,
-                addNewProductMessage: null
+                addNewProductMessage: []
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_SUCCESSFULLY: {
@@ -154,7 +154,7 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: false,
-                addNewProductMessage: msg,
+                addNewProductMessage: [],
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_FAILED: {
@@ -164,16 +164,20 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: false,
                 addNewProductFailed: true,
                 addNewProductError: false,
-                addNewProductMessage: msg
+                addNewProductMessage: []
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_REJECT: {
+            const { data = {} } = action.payload;
+            const { errors = {} } = data;
+            const errorsArray = Object.values(errors);
+
             return {
                 ...state,
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: true,
-                addNewProductMessage: ''
+                addNewProductMessage: errorsArray
             };
         };
 

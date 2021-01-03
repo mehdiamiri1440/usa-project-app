@@ -6,7 +6,7 @@ export default {
     "errors.invalidUserName": "نام کاربری نا‌معتبر است",
     'errors.error': 'خطا',
     'errors.imageTooLarge': 'حجم عکس بزرگ می‌باشد.',
-    'errors.filedShouldBeGreaterThanZero': 'فیلد {fieldName} باید مقدار بزرگتر از صفر داشته باشد.',
+    'errors.filedShouldBeGreaterThanZero': 'فیلد {fieldName} باید مقدار بزرگتر از صفر و کوچکتر از 1،000،000تن  داشته باشد.',
     'errors.filedShouldBeLessThanMillion': 'فیلد {fieldName} باید مقدار کوچکتر از 1،000،000تن داشته باشد.',
     'errors.fieldNeeded': '{fieldName} الزامی است',
     'errors.invalidFormat': 'فرمت {fieldName} اشتباه است',

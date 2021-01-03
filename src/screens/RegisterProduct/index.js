@@ -331,7 +331,9 @@ class RegisterProduct extends React.Component {
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
         const {
-            userProfile = {}
+            userProfile = {},
+            addNewProductMessage = [],
+            addNewProductError
         } = this.props;
         const {
             user_info = {}
@@ -393,7 +395,7 @@ class RegisterProduct extends React.Component {
                             style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                             onPress={() => {
                                 stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
-                                this.props.navigation.goBack();
+                                    this.props.navigation.goBack();
                             }}
 
                         >
@@ -469,7 +471,29 @@ class RegisterProduct extends React.Component {
                             </View>
                         </View>}
 
-
+                        {addNewProductError && addNewProductMessage && addNewProductMessage.length ?
+                            addNewProductMessage.map((error, index) => (
+                                <View
+                                    style={{
+                                        width: deviceWidth, justifyContent: 'center', alignItems: 'center',
+                                        alignContent: 'center'
+                                    }}
+                                    key={index}
+                                >
+                                    <Text style={{
+                                        width: '100%',
+                                        color: '#E41C38',
+                                        textAlign: 'center',
+                                        marginVertical: 10,
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 5,
+                                        borderRadius: 4
+                                    }}
+                                    >{error}
+                                    </Text>
+                                </View>
+                            ))
+                            : null}
 
 
 
@@ -527,7 +551,9 @@ const mapStateToProps = (state) => {
     return {
         userProfile: state.profileReducer.userProfile,
         addNewProductLoading: state.registerProductReducer.addNewProductLoading,
-        resetTab: state.registerProductReducer.resetTab
+        resetTab: state.registerProductReducer.resetTab,
+        addNewProductMessage: state.registerProductReducer.addNewProductMessage,
+        addNewProductError: state.registerProductReducer.addNewProductError,
     }
 };
 

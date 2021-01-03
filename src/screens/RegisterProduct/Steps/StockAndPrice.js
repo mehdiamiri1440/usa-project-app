@@ -130,7 +130,7 @@ class StockAndPrice extends Component {
         if (!amount) {
             amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
         }
-        else if (amount && amount <= 0) {
+        else if (amount && (amount <= 0 || amount >= 1000000000)) {
             amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
         }
         else {
@@ -141,7 +141,7 @@ class StockAndPrice extends Component {
         if (!minimumOrder) {
             minimumOrderError = locales('errors.fieldNeeded', { fieldName: locales('titles.minimumOrderNeeded') })
         }
-        else if (minimumOrder && minimumOrder <= 0) {
+        else if (minimumOrder && (minimumOrder <= 0 || minimumOrder >= 1000000000)) {
             minimumOrderError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderNeeded') })
         }
         else {
