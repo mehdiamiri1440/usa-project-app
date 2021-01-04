@@ -412,7 +412,7 @@ const App = (props) => {
               }}
             >
 
-              <Text style={styles.buttonText}>{locales('titles.downloadIt')}
+              <Text style={styles.buttonText}>{locales('titles.update')}
               </Text>
             </Button>
           </View>
