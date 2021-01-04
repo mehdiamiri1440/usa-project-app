@@ -8,6 +8,7 @@ import {
 } from 'react-native-confirmation-code-field';
 import { Button, Label } from 'native-base'
 import { connect } from 'react-redux'
+import analytics from '@react-native-firebase/analytics';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
@@ -56,8 +57,10 @@ const EnterActivisionCode = (props) => {
             props.checkActivisionCode(value, mobileNumber).then((res) => {
                 setValueError('');
                 if (res.payload.redirected) {
-                    props.fastLogin(res.payload).then(_ => {
-                        props.fetchUserProfile()
+                    props.fastLogin(res.payload).then(result => {
+                        analytics().setUserId(result.payload.id.toString());
+                        props.fetchUserProfile().then(_ => {
+                        })
                         // .catch(_ => setShowModal(true));;
                     })
                     // .catch(_ => setShowModal(true));

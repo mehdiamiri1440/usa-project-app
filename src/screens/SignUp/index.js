@@ -143,6 +143,7 @@ class SignUp extends React.Component {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
+                        analytics().setUserId(result.payload.id.toString());
                         this.props.fetchUserProfile().then(_ => {
                         })
                         // .catch(_ => this.setState({ showModal: true }));
