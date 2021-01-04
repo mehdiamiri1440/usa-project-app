@@ -229,9 +229,9 @@ class ProductMoreDetails extends Component {
             <>
 
                 {!!this.props.addNewProductMessage &&
-                    this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
+                    this.props.addNewProductMessage.length ? <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                    </View>}
+                    </View> : null}
                 <View
                     style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                     <Text
