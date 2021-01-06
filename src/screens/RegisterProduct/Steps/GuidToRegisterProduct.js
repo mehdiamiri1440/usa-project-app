@@ -4,10 +4,11 @@ import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import analytics from '@react-native-firebase/analytics';
-
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import * as homeActions from '../../../redux/home/actions';
@@ -295,13 +296,13 @@ class GuidToRegisterProduct extends React.Component {
                         </View>
                     </View>
 
-
+                    <FontAwesome5 name='arrow-down' size={30} color='#00C569' style={{ top: -20 }} />
 
                     <Button
                         onPress={() => this.onSubmit()}
-                        style={[styles.loginButton, { marginTop: -20, width: 192 }]}
+                        style={[styles.loginButton, { width: 237 }]}
                     >
-
+                        <FontAwesome name='plus-square' size={25} color='white' style={{ marginHorizontal: 9 }} />
                         <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
                         <ActivityIndicator size="small" color="white"
                             animating={!!userPermissionToRegisterProductLoading}
