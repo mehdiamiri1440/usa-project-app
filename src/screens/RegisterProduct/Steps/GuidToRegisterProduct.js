@@ -286,17 +286,17 @@ class GuidToRegisterProduct extends React.Component {
 
                         </Text>
 
-                        <View style={{
+                        {/* <View style={{
                             textAlign: 'left',
                             alignItems: 'flex-start',
                             width: deviceWidth - 50,
                         }}>
                             <Image source={require('../../../../assets/images/arrow-mobile.png')} />
 
-                        </View>
+                        </View> */}
                     </View>
 
-                    <FontAwesome5 name='arrow-down' size={30} color='#00C569' style={{ top: -20 }} />
+                    <FontAwesome5 name='arrow-down' size={30} color='#00C569' style={{ marginTop: 20, marginBottom: 10 }} />
 
                     <Button
                         onPress={() => this.onSubmit()}
