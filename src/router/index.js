@@ -135,6 +135,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
     if (counter <= 2) {
       // I used counter variable to make sure that this recursive function calling will not occures more than 3 times and
       // prevent any looping inside app that can cause any crash
+      counter = counter + 1
       return setTimeout(() => {
         return routeToScreensFromNotifications(remoteMessage, props)
       }, 1000);
@@ -171,6 +172,9 @@ const App = (props) => {
             setIsForceUpdate(false);
           }
           setUpdateModalFlag(true);
+        }
+        else {
+          setUpdateModalFlag(false);
         }
       })
       .catch(err => {
