@@ -391,7 +391,7 @@ class RegisterProduct extends React.Component {
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                             onPress={() => {
                                 stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
@@ -400,7 +400,7 @@ class RegisterProduct extends React.Component {
 
                         >
                             <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         <View style={{
                             width: '100%',
