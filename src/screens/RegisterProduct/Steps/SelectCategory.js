@@ -70,6 +70,7 @@ class SelectCategory extends Component {
             categoryError: '',
             subCategoryError: '',
             productType: '',
+            submitButtonClick: false,
             isFocused: false,
             loaded: false,
             subCategoriesList: [],
@@ -81,7 +82,7 @@ class SelectCategory extends Component {
         }
     }
 
-    productTypeRef = React.createRef();
+    productTypxdeRef = React.createRef();
 
 
     componentDidMount() {
@@ -160,6 +161,7 @@ class SelectCategory extends Component {
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
+            submitButtonClick: false,
             productType: field,
             productTypeError: (!field || validator.isPersianNameWithDigits(field)) ?
                 '' : locales('titles.productTypeInvalid')
@@ -176,7 +178,7 @@ class SelectCategory extends Component {
         if (!productType) {
             productTypeError = locales('titles.productTypeEmpty');
         }
-        else if (!validator.isPersianNameWithDigits(productType)) {
+        else if (productType && !validator.isPersianNameWithDigits(productType)) {
             productTypeError = locales('titles.productTypeInvalid');
         }
         else {
@@ -196,7 +198,7 @@ class SelectCategory extends Component {
         else {
             subCategoryError = '';
         }
-        this.setState({ productTypeError, subCategoryError, categoryError })
+        this.setState({ submitButtonClick: true, productTypeError, subCategoryError, categoryError })
         if (!productTypeError && !categoryError && !subCategoryError) {
             this.props.setProductType(productType, category, subCategory, subCategoryName);
         }
@@ -279,7 +281,7 @@ class SelectCategory extends Component {
         let { subCategoriesLoading, categoriesLoading } = this.props;
         let { productType, category, subCategoriesList, categoriesList,
             showParentCategoriesFlag, showProductTypeFlag,
-            subCategory, subCategoryError, categoryError, productTypeError } = this.state;
+            subCategory, subCategoryError, categoryError, productTypeError, submitButtonClick } = this.state;
 
         // categoriesList = categoriesList || this.props.categoriesList;
         // categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -372,10 +374,14 @@ class SelectCategory extends Component {
                                 style={{
                                     borderRadius: 4,
                                     borderWidth: 1,
-                                    borderColor: productType ? productTypeError ? '#f08c9a' : '#7ee0b2' : '#000000'
+                                    borderColor: productType ? productTypeError ? '#f08c9a' : '#7ee0b2' :
+                                        submitButtonClick ? '#f08c9a' : '#000000'
                                 }}>
-                                <FontAwesome5 name={productType ? productTypeError ? 'times-circle' : 'check-circle' : 'edit'}
-                                    color={productType ? productTypeError ? '#f08c9a' : '#7ee0b2' : '#000000'}
+                                <FontAwesome5 name={
+                                    productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                        ? 'times-circle' : 'edit'}
+                                    color={productType ? productTypeError ? '#f08c9a' : '#7ee0b2'
+                                        : submitButtonClick ? '#f08c9a' : '#000000'}
                                 />
                                 <Input
                                     autoCapitalize='none'
