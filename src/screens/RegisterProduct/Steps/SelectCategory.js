@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, BackHandler, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, BackHandler, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path } from "react-native-svg"
-import { Button, Input, Icon, Item, Label, Form, Container, Content, Header, InputGroup } from 'native-base';
+import { Button, Input, Label, InputGroup } from 'native-base';
 
-import { deviceWidth, validator, formatter } from '../../../utils';
-import RNPickerSelect from 'react-native-picker-select';
+import { deviceWidth, validator } from '../../../utils';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { deviceHeight } from '../../../utils/deviceDimenssions';
 
 
 const CategoriesIcons = [
@@ -205,8 +205,7 @@ class SelectCategory extends Component {
     }
 
     setSelectedSubCategory = (id, isSub) => {
-        const { subCategoriesTogether, showParentCategoriesFlag,
-            productType, category, subCategory, subCategoryName } = this.state;
+        const { subCategoriesTogether } = this.state;
         if (!isSub) {
             let selectedSubs = [];
             subCategoriesTogether.forEach(item => {
@@ -276,12 +275,29 @@ class SelectCategory extends Component {
         )
     };
 
+
+    renderListEmptyComponent = _ => {
+        return (
+            <View style={{
+                alignSelf: 'center', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center',
+                width: deviceWidth, height: deviceHeight * 0.7
+            }}>
+                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                <Text style={{
+                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}>
+                    {locales('labels.emptyList')}</Text>
+            </View>
+        )
+    };
+
+
     render() {
 
-        let { subCategoriesLoading, categoriesLoading } = this.props;
         let { productType, category, subCategoriesList, categoriesList,
-            showParentCategoriesFlag, showProductTypeFlag,
-            subCategory, subCategoryError, categoryError, productTypeError, submitButtonClick } = this.state;
+            subCategory, productTypeError, submitButtonClick } = this.state;
 
         // categoriesList = categoriesList || this.props.categoriesList;
         // categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -308,7 +324,7 @@ class SelectCategory extends Component {
                 {!category ?
                     <FlatList
                         data={categoriesList}
-                        ListEmptyComponent={_ => <Text>nothing to show</Text>}
+                        ListEmptyComponent={this.renderListEmptyComponent}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                     />
@@ -318,7 +334,7 @@ class SelectCategory extends Component {
                     !subCategory && category ?
                         <FlatList
                             data={subCategoriesList}
-                            ListEmptyComponent={_ => <Text>nothing to show</Text>}
+                            ListEmptyComponent={this.renderListEmptyComponent}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={this.renderItem}
                             ListFooterComponent={this.subCategoriesListFooterComponent}
@@ -667,30 +683,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCategory);
-
-
-
-
-
-
-// import React, { Component } from 'react';
-// import { TextInput } from 'react-native';
-
-// const UselessTextInput = () => {
-//     const [value, onChangeText] = React.useState('سبشسیب');
-
-//     return (
-//         <TextInput
-//             style={{ height: 40, borderColor: 'gray', borderWidth: 1, direction: 'rtl', textAlign: 'right' }}
-//             onChangeText={text => onChangeText(text)}
-//             placeholder={value}
-
-//         />
-//     );
-// }
-
-// export default UselessTextInput;
-
 
 
 
