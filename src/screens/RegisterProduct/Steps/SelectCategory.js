@@ -372,7 +372,11 @@ class SelectCategory extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                     }}
                                 >
-                                    {` ${locales('titles.enterYours')}`}
+                                    {` ${locales('titles.enterYours')}`} <Text
+                                        style={{
+                                            color: '#D44546'
+                                        }}
+                                    >*</Text>
                                 </Text>
                             </Text>
                             <Text

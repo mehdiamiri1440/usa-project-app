@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Input, Label, Item } from 'native-base';
-import { deviceWidth, validator, formatter } from '../../../utils';
+import { Button, Input, Label, Item, InputGroup } from 'native-base';
+
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
+import { deviceWidth, validator, formatter } from '../../../utils';
 
 class StockAndPrice extends Component {
     constructor(props) {
@@ -22,6 +24,7 @@ class StockAndPrice extends Component {
             amount: '',
             amountText: '',
             loaded: false,
+            submitButtonClick: false,
             maximumPrice: '',
             minimumPrice: ''
         }
@@ -44,7 +47,8 @@ class StockAndPrice extends Component {
     onAmountSubmit = field => {
         this.setState(() => ({
             amountError: '',
-            amount: field
+            amount: field,
+            submitButtonClick: false
 
         }));
 
@@ -73,11 +77,13 @@ class StockAndPrice extends Component {
         if (validator.isNumber(field))
             this.setState(() => ({
                 minimumPrice: field,
-                minimumPriceError: ''
+                minimumPriceError: '',
+                submitButtonClick: false
             }));
         else
             this.setState(() => ({
-                minimumPrice: ''
+                minimumPrice: '',
+                submitButtonClick: false
             }));
     };
 
@@ -85,11 +91,13 @@ class StockAndPrice extends Component {
         if (validator.isNumber(field))
             this.setState(() => ({
                 maximumPrice: field,
-                maximumPriceError: ''
+                maximumPriceError: '',
+                submitButtonClick: false
             }));
         else
             this.setState(() => ({
-                maximumPrice: ''
+                maximumPrice: '',
+                submitButtonClick: false
             }));
     };
 
@@ -97,7 +105,8 @@ class StockAndPrice extends Component {
 
         this.setState(() => ({
             minimumOrderError: '',
-            minimumOrder: field
+            minimumOrder: field,
+            submitButtonClick: false
         }));
 
         if (field) {
@@ -171,7 +180,7 @@ class StockAndPrice extends Component {
             minimumPriceError = '';
         }
 
-        this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
+        this.setState({ submitButtonClick: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError })
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             this.props.setStockAndPrice(minimumOrder, maximumPrice, minimumPrice, amount);
         }
@@ -188,6 +197,7 @@ class StockAndPrice extends Component {
             isMaximumPriceFocused,
             isAmountFocused,
             isMinimumPriceFocused,
+            submitButtonClick,
             minimumOrder,
             minimumOrderText,
             amount,
@@ -215,12 +225,40 @@ class StockAndPrice extends Component {
                 </Text>
 
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.amount')}
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {locales('titles.amount')} <Text
+                            style={{
+                                color: '#D44546'
+                            }}
+                        >*</Text>
                     </Label>
-                    <Item regular style={{
-                        borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                    }}>
+                    <Text
+                        style={{
+                            color: '#777777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            marginBottom: 5
+                        }}
+                    >
+                        {locales('titles.amountWithExample')}
+                    </Text>
+
+                    <InputGroup
+                        regular
+                        style={{
+                            borderRadius: 4,
+                            borderWidth: 1,
+                            borderColor: amount ? amountError ? '#f08c9a' : '#7ee0b2' :
+                                submitButtonClick ? '#f08c9a' : '#000000'
+                        }}
+                    >
+                        <FontAwesome5 name={
+                            amount ? amountError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                ? 'times-circle' : 'edit'}
+                            style={{ paddingHorizontal: 4 }}
+                            color={amount ? amountError ? '#f08c9a' : '#7ee0b2'
+                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                        />
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -237,12 +275,12 @@ class StockAndPrice extends Component {
                             }}
                             onChangeText={this.onAmountSubmit}
                             value={amount}
+                            placeholder={locales('titles.enterAmount')}
                             placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.amountWithExample')}
                             ref={this.amountRef}
 
                         />
-                    </Item>
+                    </InputGroup>
                     {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
                     {!amountError && amount.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{amountText}</Label> : null}
 
@@ -263,12 +301,39 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.minimumOrder')}
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {locales('titles.minimumOrder')} <Text
+                            style={{
+                                color: '#D44546'
+                            }}
+                        >*</Text>
                     </Label>
-                    <Item regular style={{
-                        borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                    }}>
+                    <Text
+                        style={{
+                            color: '#777777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            marginBottom: 5
+                        }}
+                    >
+                        {locales('titles.minimumOrderWithExample')}
+                    </Text>
+                    <InputGroup
+                        regular
+                        style={{
+                            borderRadius: 4,
+                            borderWidth: 1,
+                            borderColor: minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2' :
+                                submitButtonClick ? '#f08c9a' : '#000000'
+                        }}
+                    >
+                        <FontAwesome5 name={
+                            minimumOrder ? minimumOrderError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                ? 'times-circle' : 'edit'}
+                            style={{ paddingHorizontal: 4 }}
+                            color={minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2'
+                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                        />
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -286,11 +351,11 @@ class StockAndPrice extends Component {
                             onChangeText={this.onMinimumOrderSubmit}
                             value={minimumOrder}
                             placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.minimumOrderWithExample')}
+                            placeholder={locales('titles.enterMinOrder')}
                             ref={this.minimumOrderRef}
 
                         />
-                    </Item>
+                    </InputGroup>
                     {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
                     {!minimumOrderError && minimumOrder.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{minimumOrderText}</Label> : null}
 
@@ -310,12 +375,39 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.minimumPrice')}
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {locales('titles.minimumPrice')} <Text
+                            style={{
+                                color: '#D44546'
+                            }}
+                        >*</Text>
                     </Label>
-                    <Item regular style={{
-                        borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                    }}>
+                    <Text
+                        style={{
+                            color: '#777777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            marginBottom: 5
+                        }}
+                    >
+                        {locales('titles.minimumPriceWithExample')}
+                    </Text>
+                    <InputGroup
+                        regular
+                        style={{
+                            borderRadius: 4,
+                            borderWidth: 1,
+                            borderColor: minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2' :
+                                submitButtonClick ? '#f08c9a' : '#000000'
+                        }}
+                    >
+                        <FontAwesome5 name={
+                            minimumPrice ? minimumPriceError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                ? 'times-circle' : 'edit'}
+                            style={{ paddingHorizontal: 4 }}
+                            color={minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2'
+                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                        />
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -333,11 +425,11 @@ class StockAndPrice extends Component {
                             onChangeText={this.onMinimumPriceSubmit}
                             value={minimumPrice}
                             placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.minimumPriceWithExample')}
+                            placeholder={locales('titles.enterMinPrice')}
                             ref={this.minimumPriceRef}
 
                         />
-                    </Item>
+                    </InputGroup>
                     {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumPriceError}</Label>}
                     {/* <OutlinedTextField
                         baseColor={minimumPrice.length ? '#00C569' : '#a8a8a8'}
@@ -355,12 +447,39 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.maximumPrice')}
+                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {locales('titles.maximumPrice')} <Text
+                            style={{
+                                color: '#D44546'
+                            }}
+                        >*</Text>
                     </Label>
-                    <Item regular style={{
-                        borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                    }}>
+                    <Text
+                        style={{
+                            color: '#777777',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            marginBottom: 5
+                        }}
+                    >
+                        {locales('titles.maximumPriceWithExample')}
+                    </Text>
+                    <InputGroup
+                        regular
+                        style={{
+                            borderRadius: 4,
+                            borderWidth: 1,
+                            borderColor: maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2' :
+                                submitButtonClick ? '#f08c9a' : '#000000'
+                        }}
+                    >
+                        <FontAwesome5 name={
+                            maximumPrice ? maximumPriceError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                ? 'times-circle' : 'edit'}
+                            style={{ paddingHorizontal: 4 }}
+                            color={maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2'
+                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                        />
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -379,11 +498,11 @@ class StockAndPrice extends Component {
                             onChangeText={this.onMaximumPriceSubmit}
                             value={maximumPrice}
                             placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.maximumPriceWithExample')}
+                            placeholder={locales('titles.enterMaxPrice')}
                             ref={this.maximumPriceRef}
 
                         />
-                    </Item>
+                    </InputGroup>
                     {!!maximumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{maximumPriceError}</Label>}
                     {/* <OutlinedTextField
                         baseColor={maximumPrice.length ? '#00C569' : '#a8a8a8'}
