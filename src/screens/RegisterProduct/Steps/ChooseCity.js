@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Item, Label } from 'native-base';
@@ -20,38 +20,68 @@ class ChooseCity extends React.Component {
             index: -1,
             provinceError: '',
             cityError: '',
-            loaded: false
+            loaded: false,
+            provinces: [],
+            cities: [],
         }
     }
     provinceRef = React.createRef();
     cityRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchAllProvinces();
+        this.props.fetchAllProvinces().then(_ => {
+
+            const {
+                province,
+                provinces
+            } = this.props;
+
+            this.setState({
+                province,
+                provinces,
+                cities: province ?
+                    Object.values(provinces.find(item => item.id == province).cities)
+                    : []
+            })
+        }
+        )
         // if (!I18nManager.isRTL) {
         //     RNRestart.Restart();
         //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+
+            const {
+                province,
+                city,
+            } = this.state;
+            console.log('prvo', province, 'city', city)
+
+            if (city && province) {
+                this.setState({ city: '', province })
+                return true;
+            }
+
+            if (!city && province) {
+                this.setState({ province: '' })
+                return true;
+            }
+            if (!city && !province) {
+                this.props.changeStep(2);
+                return true;
+            }
+        });
     }
 
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false &&
-            this.props.allCitiesObject &&
-            Object.entries(this.props.allCitiesObject).length
-            && this.props.allCitiesObject.cities.length
-            && this.props.city) {
-            const { province, city } = this.props;
-            this.setState({ province, city, loaded: true })
-        }
-    }
 
     componentWillUnmount() {
+        BackHandler.removeEventListener();
         // if (I18nManager.isRTL) {
         //     I18nManager.forceRTL(false);
         // }
     }
+
 
     onSubmit = () => {
         let { city, province } = this.state;
@@ -78,21 +108,106 @@ class ChooseCity extends React.Component {
             this.props.setCityAndProvice(city, province);
         }
     };
-    setProvince = (value, index) => {
-        this.setState({ disableCity: true })
-        let { provinces = [] } = this.props.allProvincesObject;
-        if (provinces.length) {
-            this.setState({ province: value, provinceError: '', city: '', cityError: '' })
-            this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
-                this.setState({ disableCity: false })
-            })
+    // setProvince = (value, index) => {
+    //     this.setState({ disableCity: true })
+    //     let { provinces = [] } = this.props.allProvincesObject;
+    //     if (provinces.length) {
+    //         this.setState({ province: value, provinceError: '', city: '', cityError: '' })
+    //         this.props.fetchAllProvinces(provinces.some(item => item.id == value) ? provinces.find(item => item.id == value).id : undefined).then(_ => {
+    //             this.setState({ disableCity: false })
+    //         })
+    //     }
+    // };
+
+
+    // setCity = (value) => {
+    //     if (!!value)
+    //         this.setState({ city: value, cityError: '' })
+    // };
+
+    renderListEmptyComponent = _ => {
+        return (
+            <View style={{
+                alignSelf: 'center', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center',
+                width: deviceWidth, height: deviceHeight * 0.7
+            }}>
+                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                <Text style={{
+                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}>
+                    {locales('labels.emptyList')}</Text>
+            </View>
+        )
+    };
+
+    setSelectedLocation = (id, isCity) => {
+        if (!isCity) {
+            this.setState({
+                cities: Object.values(this.state.provinces.find(item => item.id == id).cities),
+                province: id
+            });
+        }
+        else {
+            this.setState({
+                city: id,
+                city_name: this.state.cities.find(item => item.id == id).city_name
+            }, _ => this.onSubmit())
         }
     };
 
+    renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity
+                style={{
+                    width: deviceWidth,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E0E0E0',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 30,
+                    paddingVertical: 20,
+                    flexDirection: 'row-reverse'
+                }}
+                onPress={_ => this.setSelectedLocation(item.id, !item.cities)}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#38485F',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 15
+                        }}
+                    >
+                        {item.cities ? item.province_name : item.city_name}
+                    </Text>
+                </View>
+                <FontAwesome5 name='angle-left' size={25} color='gray' />
+            </TouchableOpacity>
 
-    setCity = (value) => {
-        if (!!value)
-            this.setState({ city: value, cityError: '' })
+        )
+    };
+
+
+    listFooterComponent = (isCity) => {
+        return (
+            <View
+                style={{ width: deviceWidth * 0.4, margin: 20, alignSelf: 'flex-end' }}
+            >
+                <Button
+                    onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
+                    style={[styles.backButtonContainer, { flex: 1 }]}
+                    rounded
+                >
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                </Button>
+            </View>
+        )
     };
 
     render() {
@@ -100,33 +215,21 @@ class ChooseCity extends React.Component {
             message,
             loading,
             error,
-            allProvincesObject,
-            fetchCitiesLoading,
-            fetchCitiesError,
-            fetchCitiesFailed,
-            fetchCitiesMessage,
-            allCitiesObject
         } = this.props;
 
         let {
             city,
             province,
-            provinceError,
-            cityError
+            provinces,
+            cities
         } = this.state;
 
-        let { provinces = [] } = allProvincesObject;
 
-        let cities = [];
-
-        provinces = provinces.map(item => ({ ...item, value: item.province_name }));
-
-        if (allCitiesObject && Object.entries(allCitiesObject).length) {
-            cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
-        }
 
         return (
             <View style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
+
+                <ActivityIndicator size='large' color='#00C569' animating={loading} />
 
                 <Text style={styles.userText}>
                     {locales('titles.selectOrigin')}
@@ -138,7 +241,29 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
-                <View>
+
+                {!province ?
+                    <FlatList
+                        data={provinces}
+                        ListEmptyComponent={!loading && this.renderListEmptyComponent}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={this.renderItem}
+                        ListFooterComponent={_ => this.listFooterComponent(false)}
+                    />
+                    : null}
+
+                {
+                    !city && province ?
+                        <FlatList
+                            data={cities}
+                            ListEmptyComponent={!loading && this.renderListEmptyComponent}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={this.renderItem}
+                            ListFooterComponent={_ => this.listFooterComponent(true)}
+                        />
+                        : null
+                }
+                {/* <View>
                     <View style={{
                         flexDirection: 'row-reverse'
                     }}>
@@ -179,18 +304,7 @@ class ChooseCity extends React.Component {
                     </Item>
                     {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
                 </View>
-                {/* <Dropdown
-                        onChangeText={(value, index) => this.setProvince(value, index)}
-                        label={locales('labels.selectProvince')}
-                        data={provinces}
-                        error={provinceError}
-                        value={province}
-                        containerStyle={{
-                            marginVertical: 20,
-                            paddingHorizontal: 20
-                        }}
-                    /> */}
-
+              
                 <View >
                     <View style={{
                         flexDirection: 'row-reverse'
@@ -232,17 +346,11 @@ class ChooseCity extends React.Component {
                     </Item>
                     {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{cityError}</Label>}
                 </View>
-                {/* <Dropdown
-                        value={city}
-                        error={cityError}
-                        onChangeText={(value) => this.setCity(value)}
-                        label={locales('labels.selectCity')}
-                        data={cities}
-                        containerStyle={{
-                            paddingHorizontal: 20
-                        }}
-                    /> */}
-                <View style={{ flexDirection: 'row', marginVertical: 20, width: deviceWidth, justifyContent: 'space-between', width: '100%' }}>
+               */}
+                {/* <View style={{
+                    flexDirection: 'row', marginVertical: 20,
+                    width: deviceWidth, justifyContent: 'space-between', width: '100%'
+                }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!city || !province ? styles.disableLoginButton : styles.loginButton}
@@ -259,7 +367,7 @@ class ChooseCity extends React.Component {
                         <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                         <AntDesign name='arrowright' size={25} color='#7E7E7E' />
                     </Button>
-                </View>
+                </View> */}
             </View >
         )
     }
@@ -407,19 +515,12 @@ const mapStateToProps = state => {
         error: state.locationsReducer.fetchAllProvincesError,
         failed: state.locationsReducer.fetchAllProvincesFailed,
         message: state.locationsReducer.fetchAllProvincesMessage,
-        allProvincesObject: state.locationsReducer.allProvincesObject,
-
-        fetchCitiesLoading: state.locationsReducer.fetchAllCitiesLoading,
-        fetchCitiesError: state.locationsReducer.fetchAllCitiesError,
-        fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
-        fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
-        allCitiesObject: state.locationsReducer.allCitiesObject,
+        provinces: state.locationsReducer.provinces,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
-        fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, true)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseCity)

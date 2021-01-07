@@ -16,7 +16,9 @@ const INITIAL_STATE = {
     fetchAllCitiesFailed: false,
     fetchAllCitiesError: false,
     fetchAllCitiesMessage: null,
-    allCitiesObject: {}
+    allCitiesObject: {},
+    provinces: []
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -26,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllProvincesLoading: true,
                 fetchAllProvincesFailed: false,
                 fetchAllProvincesError: false,
+                provinces: [],
                 fetchAllProvincesMessage: null
             };
         };
@@ -36,7 +39,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllProvincesFailed: false,
                 fetchAllProvincesError: false,
                 fetchAllProvincesMessage: null,
-                allProvincesObject: action.payload
+                allProvincesObject: action.payload,
+                provinces: [...action.payload.provinces]
             };
         };
         case actionTypes.FETCH_ALL_PROVINCES_FAILED: {
@@ -46,7 +50,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllProvincesLoading: false,
                 fetchAllProvincesFailed: true,
                 fetchAllProvincesError: false,
-                fetchAllProvincesMessage: msg
+                fetchAllProvincesMessage: msg,
+                provinces: []
             };
         };
         case actionTypes.FETCH_ALL_PROVINCES_REJECT: {
@@ -55,7 +60,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllProvincesLoading: false,
                 fetchAllProvincesFailed: false,
                 fetchAllProvincesError: true,
-                fetchAllProvincesMessage: null
+                fetchAllProvincesMessage: null,
+                provinces: []
             };
         };
 

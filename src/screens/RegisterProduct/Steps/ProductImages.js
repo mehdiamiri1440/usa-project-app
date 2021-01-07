@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ActionSheet, Button } from 'native-base';
 import {
-    TouchableOpacity,
+    TouchableOpacity, BackHandler,
     Image, View, Text, StyleSheet
 } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
@@ -29,8 +29,15 @@ class ProductImages extends Component {
     componentDidMount() {
         const { images } = this.props;
         this.setState({ images, loaded: true });
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.props.changeStep(3)
+            return true;
+        })
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
+    }
 
 
     chooseProductImage = (index) => ActionSheet.show(

@@ -120,14 +120,14 @@ class SelectCategory extends Component {
                 this.setState({ category: '' })
                 return true;
             }
+            return false;
         });
 
-        return false;
     }
 
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress');
+        BackHandler.removeEventListener();
     }
 
     // setCategory = (id) => {

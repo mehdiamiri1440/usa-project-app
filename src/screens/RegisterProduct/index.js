@@ -65,7 +65,7 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 2,
+            stepNumber: 0,
             showModal: false,
             subCategoryName: '',
             subCategoryId: null

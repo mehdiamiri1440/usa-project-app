@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button, Input, Label, Item, InputGroup } from 'native-base';
+import { View, Text, StyleSheet, BackHandler } from 'react-native';
+import { Button, Input, Label, InputGroup } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -43,7 +43,17 @@ class StockAndPrice extends Component {
         this.maximumPriceRef.current.value = maximumPrice;
         this.minimumOrderRef.current.value = minimumOrder;
         this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
+
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.props.changeStep(1)
+            return true;
+        })
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener()
+    }
+
     onAmountSubmit = field => {
         this.setState(() => ({
             amountError: '',
