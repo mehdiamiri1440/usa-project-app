@@ -39,7 +39,7 @@ class ChooseCity extends React.Component {
             this.setState({
                 province,
                 provinces,
-                cities: province ?
+                cities: province && provinces && provinces.length ?
                     Object.values(provinces.find(item => item.id == province).cities)
                     : []
             })
@@ -143,16 +143,20 @@ class ChooseCity extends React.Component {
     };
 
     setSelectedLocation = (id, isCity) => {
+        const {
+            provinces,
+            cities
+        } = this.state;
         if (!isCity) {
             this.setState({
-                cities: Object.values(this.state.provinces.find(item => item.id == id).cities),
+                cities: provinces && provinces.length ? Object.values(provinces.find(item => item.id == id).cities) : [],
                 province: id
             });
         }
         else {
             this.setState({
                 city: id,
-                city_name: this.state.cities.find(item => item.id == id).city_name
+                city_name: cities && cities.length ? cities.find(item => item.id == id).city_name : ''
             }, _ => this.onSubmit())
         }
     };

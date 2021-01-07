@@ -97,7 +97,7 @@ class SelectCategory extends Component {
                 subCategoriesTogether: categoriesList.map(item => item.subcategories),
                 categoriesList,
                 loaded: true,
-                subCategoriesList: category ?
+                subCategoriesList: category && categoriesList && categoriesList.length ?
                     Object.values(categoriesList.find(item => item.id == category).subcategories)
                     : []
             })
@@ -205,7 +205,7 @@ class SelectCategory extends Component {
     }
 
     setSelectedSubCategory = (id, isSub) => {
-        const { subCategoriesTogether } = this.state;
+        const { subCategoriesTogether, subCategoriesList } = this.state;
         if (!isSub) {
             let selectedSubs = [];
             subCategoriesTogether.forEach(item => {
@@ -217,7 +217,7 @@ class SelectCategory extends Component {
         else {
             this.setState({
                 subCategory: id,
-                subCategoryName: this.state.subCategoriesList.find(item => item.id == id).category_name
+                subCategoryName: subCategoriesList && subCategoriesList.length ? subCategoriesList.find(item => item.id == id).category_name : ''
             })
         }
     };
