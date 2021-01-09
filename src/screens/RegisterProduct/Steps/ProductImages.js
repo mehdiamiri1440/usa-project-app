@@ -190,7 +190,11 @@ class ProductImages extends Component {
                             paddingHorizontal: 10
                         }}
                     >
-                        {locales('labels.addProductImages')}
+                        {locales('labels.addProductImages')} <Text
+                            style={{
+                                color: '#D44546'
+                            }}
+                        >*</Text>
                     </Text>
 
                     <Text

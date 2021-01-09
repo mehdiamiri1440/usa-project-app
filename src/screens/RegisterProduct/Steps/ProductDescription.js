@@ -44,10 +44,10 @@ class ProductDecription extends Component {
         return (
             <ScrollView>
                 <View
-                    style={[{ backgroundColor: 'white' },]}>
+                    style={[{ backgroundColor: 'white' }]}>
                     <Text
                         style={{
-                            marginVertical: 10,
+                            margin: 10,
                             color: '#666666',
                             fontSize: 20,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -58,8 +58,8 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('titles.description')}
+                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, fontSize: 15, marginVertical: 5 }}>
+                            {locales('titles.descriptionWithExample')}
                         </Label>
                         <Textarea
                             onChangeText={this.onDescriptionSubmit}
@@ -68,7 +68,7 @@ class ProductDecription extends Component {
                             autoCapitalize='none'
                             autoCompleteType='off'
                             autoCorrect={false}
-                            placeholder={locales('titles.descriptionWithExample')}
+                            placeholder={locales('titles.writeYourFinalDescription')}
                             ref={this.descriptionRef}
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Light', borderRadius: 5,
@@ -95,7 +95,7 @@ class ProductDecription extends Component {
                                     }
                                 });
                             }}
-                            style={{ color: '#00C569' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
+                            style={{ color: '#1DA1F2' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
                     </Text>
 
                     <View style={{
