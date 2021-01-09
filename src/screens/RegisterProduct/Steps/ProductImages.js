@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import { permissions } from '../../../utils';
@@ -177,10 +178,8 @@ class ProductImages extends Component {
         let { images } = this.state;
         return (
             <>
-                <View
-                    style={{ backgroundColor: 'white' }}
-                >
-
+                <ScrollView
+                    contentContainerStyle={{ padding: 10 }}>
 
                     <Text
                         style={{
@@ -205,132 +204,143 @@ class ProductImages extends Component {
                         {locales('labels.uploadProductImages')}
                     </Text>
 
-                    {this.state.imageSizeError && <View style={styles.loginFailedContainer}>
+                    {this.state.imageSizeError ? <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>{locales('errors.imageSizeError')}</Text>
-                    </View>}
-                    {this.state.errorFlag && <View style={styles.loginFailedContainer}>
+                    </View> : null}
+                    {this.state.errorFlag ? <View style={styles.loginFailedContainer}>
                         <Text style={styles.loginFailedText}>{locales('errors.fieldNeeded', { fieldName: locales('titles.chooseImage') })}</Text>
-                    </View>}
-                    <ScrollView style={{
-                        height: deviceHeight * 0.4,
-                        paddingVertical: 10,
-                        backgroundColor: '#eee'
+                    </View> : null}
+
+                    <View style={{
+                        width: deviceWidth,
+                        flexDirection: 'row-reverse',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        padding: 20,
+
                     }}>
-                        <View style={{
-                            width: deviceWidth,
-                            flexDirection: 'row-reverse',
-                            flexWrap: 'wrap',
-                            paddingVertical: 10,
 
-                        }}>
-
-
+                        {images.length ? images.map((image, index) => <TouchableOpacity
+                            key={index}
+                            onPress={() => this.chooseProductImage(index)}
+                            style={{
+                                margin: 7,
+                                height: deviceWidth / 2.4,
+                                minWidth: deviceWidth / 2.4,
+                                maxWidth: deviceWidth / 2.4,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                borderStyle: 'dashed',
+                                borderColor: '#707070',
+                                backgroundColor: '#fff',
+                                zIndex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
                             <TouchableOpacity
-                                onPress={() => this.chooseProductImage()}
-                                style={{
-                                    flex: 3,
-                                    marginHorizontal: 10,
-                                    height: 100,
-                                    minWidth: 100,
-                                    maxWidth: 120,
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    borderStyle: 'dashed',
-                                    borderColor: '#707070',
-                                    backgroundColor: '#fff',
-                                    zIndex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                <Entypo name='plus' size={25} color='#00C569' />
-                                <Text>{locales('labels.addImage')}</Text>
-                            </TouchableOpacity>
-
-
-                            {images.length ? images.map((image, index) => <TouchableOpacity
-                                key={index}
                                 onPress={() => this.chooseProductImage(index)}
                                 style={{
-                                    flex: 3,
-                                    height: 100,
-                                    minWidth: 100,
-                                    maxWidth: 120,
-                                    marginHorizontal: 10,
-                                    marginBottom: 20,
-                                    borderWidth: 1,
-                                    position: 'relative',
-                                    borderRadius: 5,
-                                    borderStyle: 'dashed',
-                                    borderColor: '#707070',
-                                    zIndex: 999999,
-                                    justifyContent: 'center',
+                                    position: 'absolute',
+                                    opacity: 0.5,
+                                    width: '100%',
+                                    zIndex: 10,
+                                    top: 0,
+                                    justifyContent: 'flex-end',
                                     alignItems: 'center',
-                                }}>
-                                <TouchableOpacity
-                                    onPress={() => this.chooseProductImage(index)}
-                                    style={{
-                                        position: 'absolute',
-                                        opacity: 0.5,
-                                        width: '100%',
-                                        zIndex: 10,
-                                        top: 0,
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'center',
-                                        backgroundColor: 'black',
-                                    }}
-                                >
-                                    <FontAwesome name='pencil' size={25} color='white' />
-                                </TouchableOpacity>
-                                <Image
-                                    resizeMode="cover"
-                                    style={{
-                                        width: '100%', height: '100%',
-                                        borderRadius: 5, alignContent: 'center',
-                                        alignItems: 'center', justifyContent: 'center'
-                                    }}
-                                    source={{ uri: image.uri }} />
-                                <TouchableOpacity
-                                    onPress={() => this.deleteImage(index)}
-                                    style={{
-                                        position: 'absolute',
-                                        opacity: 0.5,
-                                        width: '100%',
-                                        zIndex: 10,
-                                        bottom: 0,
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'center',
-                                        backgroundColor: 'black',
-                                    }}
-                                >
-                                    <FontAwesome name='trash' size={25} color='white' />
-                                </TouchableOpacity>
+                                    backgroundColor: 'black',
+                                }}
+                            >
+                                <FontAwesome name='pencil' size={25} color='white' />
                             </TouchableOpacity>
+                            <Image
+                                resizeMode="cover"
+                                style={{
+                                    width: '100%', height: '100%',
+                                    borderRadius: 5, alignContent: 'center',
+                                    alignItems: 'center', justifyContent: 'center'
+                                }}
+                                source={{ uri: image.uri }} />
+                            <TouchableOpacity
+                                onPress={() => this.deleteImage(index)}
+                                style={{
+                                    position: 'absolute',
+                                    opacity: 0.5,
+                                    width: '100%',
+                                    zIndex: 10,
+                                    bottom: 0,
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    backgroundColor: 'black',
+                                }}
+                            >
+                                <FontAwesome name='trash' size={25} color='white' />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
 
-                            ) :
-                                null
-                            }
+                        ) :
+                            null
+                        }
 
-                        </View>
-                    </ScrollView>
-                </View>
-                <View style={{ marginVertical: 20, paddingHorizontal: 10, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={!images.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                    >
-                        <AntDesign name='arrowleft' size={25} color='white' />
-                        <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                    </Button>
-                    <Button
-                        onPress={() => this.props.changeStep(3)}
-                        style={styles.backButtonContainer}
-                        rounded
-                    >
-                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                    </Button>
-                </View>
+                        <TouchableOpacity
+                            onPress={() => this.chooseProductImage()}
+                            style={{
+                                margin: 7,
+                                height: deviceWidth / 2.4,
+                                minWidth: deviceWidth / 2.4,
+                                maxWidth: deviceWidth / 2.4,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                borderStyle: 'dashed',
+                                borderColor: '#707070',
+                                backgroundColor: '#fff',
+                                zIndex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+
+                            <View style={{
+                                backgroundColor: "white", width: 20, height: 20,
+                                borderWidth: 1, borderColor: 'white',
+                                position: 'absolute', top: 50, right: 55, borderBottomLeftRadius: 2, zIndex: 10,
+                                justifyContent: 'center'
+                            }}>
+                                <FontAwesome color='#00C569' name="plus-square" size={18} />
+                            </View>
+
+                            <FontAwesome5
+                                color='#323A42'
+                                name='camera' size={35} />
+
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    color: '#323A42'
+                                }}
+                            >{locales('labels.addImage')}</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                    <View style={{ marginVertical: 20, paddingHorizontal: 10, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                        <Button
+                            onPress={() => this.onSubmit()}
+                            style={!images.length ? styles.disableLoginButton : styles.loginButton}
+                            rounded
+                        >
+                            <AntDesign name='arrowleft' size={25} color='white' />
+                            <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                        </Button>
+                        <Button
+                            onPress={() => this.props.changeStep(3)}
+                            style={styles.backButtonContainer}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                        </Button>
+                    </View>
+                </ScrollView>
+
             </>
         )
     }
