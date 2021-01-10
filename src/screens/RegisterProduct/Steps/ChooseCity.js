@@ -233,7 +233,6 @@ class ChooseCity extends React.Component {
         return (
             <View style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
 
-                <ActivityIndicator size='large' color='#00C569' animating={loading} />
 
                 <Text style={styles.userText}>
                     {locales('titles.selectOrigin')}
@@ -245,6 +244,8 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
+
+                <ActivityIndicator size='large' color='#00C569' animating={loading} />
 
                 {!province ?
                     <FlatList

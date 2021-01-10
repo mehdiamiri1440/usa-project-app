@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, Image, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, Text, StyleSheet, Animated } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
@@ -19,12 +19,12 @@ class GuidToRegisterProduct extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false
+            showModal: false,
+            animation: new Animated.Value(0)
         }
     }
 
     componentDidMount() {
-
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -37,6 +37,7 @@ class GuidToRegisterProduct extends React.Component {
             screen_name: "GuidToRegisterProduct",
             screen_class: "GuidToRegisterProduct",
         });
+        this.animateTheArrow();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -51,6 +52,29 @@ class GuidToRegisterProduct extends React.Component {
             this.props.fetchUserProfile()
         }
     }
+
+
+    animateTheArrow = _ => {
+        const { animation } = this.state;
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(animation, {
+                    toValue: 10,
+                    useNativeDriver: true,
+                    duration: 500,
+                    tension: 1,
+                    friction: 1
+                }),
+                Animated.timing(animation, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                    tension: 1,
+                    friction: 1
+                })
+            ]),
+        ).start();
+    };
 
     onSubmit = () => {
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
@@ -71,6 +95,11 @@ class GuidToRegisterProduct extends React.Component {
     hideDialog = () => this.setState({ showModal: false });
 
     render() {
+        const animationStyles = {
+            transform: [
+                { translateY: this.state.animation }
+            ]
+        };
 
         let {
             userPermissionToRegisterProductLoading,
@@ -295,8 +324,16 @@ class GuidToRegisterProduct extends React.Component {
 
                         </View> */}
                     </View>
+                    <Animated.View useNativeDriver style={[animationStyles]}
 
-                    <FontAwesome5 name='arrow-down' size={30} color='#00C569' style={{ marginTop: 20, marginBottom: 10 }} />
+                    >
+                        <FontAwesome5
+                            name='arrow-down'
+                            size={30}
+                            color='#00C569'
+                            style={{ marginTop: 20, marginBottom: 10 }}
+                        />
+                    </Animated.View>
 
                     <Button
                         onPress={() => this.onSubmit()}

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -128,6 +128,19 @@ class ProductMoreDetails extends Component {
         }
     }
     pickerRef = React.createRef();
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.props.changeStep(5)
+            return true;
+        })
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
+    }
+
+
     onSubmit = () => {
         let { detailsArray } = this.state;
         if (detailsArray.some(item => item.itemKey && !item.itemValue)) {
@@ -227,73 +240,66 @@ class ProductMoreDetails extends Component {
 
         return (
             <>
+                <ScrollView>
+                    {!!this.props.addNewProductMessage &&
+                        this.props.addNewProductMessage.length ? <View style={styles.loginFailedContainer}>
+                            <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
+                        </View> : null}
+                    <View
+                        style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
+                        <Text
+                            style={{
+                                marginBottom: 10,
+                                color: '#666666',
+                                fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                paddingHorizontal: 10
+                            }}
+                        >
+                            {locales('labels.addMoreDetails')}
+                        </Text>
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
 
-                {!!this.props.addNewProductMessage &&
-                    this.props.addNewProductMessage.length ? <View style={styles.loginFailedContainer}>
-                        <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                    </View> : null}
-                <View
-                    style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
-                    <Text
-                        style={{
-                            marginBottom: 10,
-                            color: '#666666',
-                            fontSize: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            paddingHorizontal: 10
-                        }}
-                    >
-                        {locales('labels.addMoreDetails')}
-                    </Text>
-                    <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
+                            </Text>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.boxing')}
+                                </Text>
+                            </View>
 
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
                             </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.boxing')}
-                            </Text>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.8kMotherBox')}
+                                </Text>
+                            </View>
+
+
                         </View>
-
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.8kMotherBox')}
-                            </Text>
-                        </View>
-
-
-                    </View>
-                    <ScrollView style={{
-                        height: deviceHeight * 0.35,
-                        marginVertical: 10,
-                        backgroundColor: '#eee',
-                        paddingBottom: 50,
-                        elevation: 2
-                    }}>
                         {detailsArray.map((detail, index) => (
                             <>
                                 {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
@@ -313,7 +319,7 @@ class ProductMoreDetails extends Component {
                                             height: 45,
                                             width: 30
                                         }}>
-                                        <FontAwesome name='trash' color='red' size={25} />
+                                        <FontAwesome5 name='trash' color='#666666' size={20} />
                                     </TouchableOpacity>
 
                                     <View style={{
@@ -325,6 +331,7 @@ class ProductMoreDetails extends Component {
                                             <Item regular
                                                 style={{
                                                     height: 45,
+                                                    marginVertical: 10,
                                                     backgroundColor: '#fff',
                                                     overflow: "hidden",
                                                     alignSelf: 'center',
@@ -364,7 +371,7 @@ class ProductMoreDetails extends Component {
                             /> */}
                                         <View style={{
                                             flex: 1,
-
+                                            marginVertical: 10,
                                         }}>
                                             <Item error={detail.error} regular style={{
                                                 height: 45,
@@ -412,55 +419,55 @@ class ProductMoreDetails extends Component {
 
 
 
-                    </ScrollView>
-                    <View style={{
-                        marginVertical: 0, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between',
+                        <View style={{
+                            marginVertical: 0, flexDirection: 'row',
+                            width: deviceWidth, justifyContent: 'space-between',
 
-                    }}>
-                        <Button
-                            onPress={() => this.addMoreRow()}
-                            style={[styles.addMoreButton, {
-                                borderWidth: 1,
-                                borderColor: '#00C569'
-                            }]}
-                            rounded
-                        >
-                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                            <AntDesign name='plus' size={25} color='#00C569' />
-                        </Button>
+                        }}>
+                            <Button
+                                onPress={() => this.addMoreRow()}
+                                style={[styles.addMoreButton, {
+                                    borderWidth: 1,
+                                    borderColor: '#00C569'
+                                }]}
+                                rounded
+                            >
+                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                                <AntDesign name='plus' size={25} color='#00C569' />
+                            </Button>
+                        </View>
+                        <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                            <Button
+                                onPress={() => this.onSubmit()}
+                                style={[styles.loginButton, { flex: 1 }]}
+                                rounded
+                            >
+                                <ActivityIndicator size="small" color="white"
+                                    animating={!!this.props.addNewProductLoading}
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        fontSize: 20,
+                                        marginLeft: -30
+                                    }}
+                                />
+                                <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
+
+                            </Button>
+                            <Button
+                                onPress={() => this.props.changeStep(5)}
+                                style={[styles.backButtonContainer, { flex: 1 }]}
+                                rounded
+                            >
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            </Button>
+                        </View>
+
                     </View>
-                    <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={[styles.loginButton, { flex: 1 }]}
-                            rounded
-                        >
-                            <ActivityIndicator size="small" color="white"
-                                animating={!!this.props.addNewProductLoading}
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: 15,
-                                    fontSize: 20,
-                                    marginLeft: -30
-                                }}
-                            />
-                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
-
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(5)}
-                            style={[styles.backButtonContainer, { flex: 1 }]}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
-                    </View>
-
-                </View>
+                </ScrollView>
             </>
         )
     }

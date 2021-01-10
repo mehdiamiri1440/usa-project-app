@@ -1,7 +1,7 @@
 // import react-native element
 import React, { Component } from 'react';
 import { Button, Textarea, Label } from 'native-base';
-import { View, Text, StyleSheet, Linking } from "react-native";
+import { View, Text, StyleSheet, Linking, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -25,6 +25,14 @@ class ProductDecription extends Component {
             this.descriptionRef.current.value = description;
             this.setState({ description })
         }
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.props.changeStep(4)
+            return true;
+        })
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener();
     }
 
     onDescriptionSubmit = field => {

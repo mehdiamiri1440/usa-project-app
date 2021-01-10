@@ -325,7 +325,11 @@ class ProductImages extends Component {
                         </TouchableOpacity>
 
                     </View>
-                    <View style={{ marginVertical: 20, paddingHorizontal: 10, flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between' }}>
+                    <View style={{
+                        marginVertical: 20,
+                        paddingRight: 15, flexDirection: 'row',
+                        width: deviceWidth, justifyContent: 'space-between'
+                    }}>
                         <Button
                             onPress={() => this.onSubmit()}
                             style={!images.length ? styles.disableLoginButton : styles.loginButton}
