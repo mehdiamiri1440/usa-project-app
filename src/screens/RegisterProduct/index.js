@@ -21,6 +21,7 @@ import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
 import { deviceWidth, deviceHeight } from '../../utils';
 import Loading from '../Loading';
+import ChatModal from '../Messages/ChatModal';
 
 let stepsArray = [1, 2, 3, 4, 5, 6];
 class RegisterProduct extends React.Component {
@@ -68,7 +69,14 @@ class RegisterProduct extends React.Component {
             stepNumber: 0,
             showModal: false,
             subCategoryName: '',
-            subCategoryId: null
+            subCategoryId: null,
+
+            selectedButton: null,
+            modalFlag: false,
+            selectedBuyAdId: -1,
+            selectedContact: {},
+            showDialog: false,
+            showGoldenModal: false
         }
     }
 
@@ -267,7 +275,14 @@ class RegisterProduct extends React.Component {
 
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
-            minimumOrder, maximumPrice, minimumPrice, amount, city, province, subCategoryId, subCategoryName } = this.state
+            minimumOrder, maximumPrice, minimumPrice, amount, city,
+            province, subCategoryId, subCategoryName, selectedButton, modalFlag, selectedBuyAdId, selectedContact } = this.state
+
+        const {
+            product,
+            buyAds
+        } = this.props;
+
         switch (stepNumber) {
             case 0: {
                 return <GuidToRegisterProduct
@@ -311,11 +326,30 @@ class RegisterProduct extends React.Component {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
             }
             case 7: {
-                return <RegisterProductSuccessfully
-                    subCategoryId={subCategoryId}
-                    subCategoryName={subCategoryName}
-                    {...this.props}
-                />
+                return (
+                    <>
+
+                        {modalFlag && <ChatModal
+                            transparent={false}
+                            {...this.props}
+                            visible={modalFlag}
+                            buyAdId={selectedBuyAdId}
+                            contact={{ ...selectedContact }}
+                            onRequestClose={() => this.setState({ modalFlag: false })}
+                        />}
+
+                        <RegisterProductSuccessfully
+                            subCategoryId={subCategoryId}
+                            product={product}
+                            buyAds={buyAds}
+                            subCategoryName={subCategoryName}
+                            openChat={this.openChat}
+                            selectedButton={selectedButton}
+                            isUserAllowedToSendMessageLoading={this.props.isUserAllowedToSendMessageLoading}
+                            {...this.props}
+                        />
+                    </>
+                )
             }
             default:
                 break;
@@ -326,7 +360,51 @@ class RegisterProduct extends React.Component {
     closeModal = _ => {
         this.setState({ showModal: false })
         this.componentDidMount();
-    }
+    };
+
+
+    openChat = (event, item) => {
+        let { userProfile = {} } = this.props;
+        const { user_info = {} } = userProfile;
+        const { active_pakage_type } = user_info;
+
+        event.preventDefault();
+        if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
+            this.setState({ selectedButton: item.id })
+            this.props.isUserAllowedToSendMessage(item.id).then(() => {
+                if (this.props.isUserAllowedToSendMessagePermission.permission) {
+                    if (!item.is_golden && item.id) {
+                        analytics().logEvent('chat_opened', {
+                            buyAd_id: item.id
+                        });
+                    }
+                    this.setState({
+                        modalFlag: true,
+                        selectedBuyAdId: item.id,
+                        selectedContact: {
+                            contact_id: item.myuser_id,
+                            first_name: item.first_name,
+                            last_name: item.last_name,
+                        }
+                    });
+                }
+                else {
+                    analytics().logEvent('permission_denied', {
+                        golden: false
+                    });
+                    this.setState({ showDialog: true })
+                }
+            })
+            // .catch(_ => this.setState({ showModal: true }));
+        }
+        else {
+            analytics().logEvent('permission_denied', {
+                golden: true
+            });
+            this.setState({ showGoldenModal: true });
+        }
+    };
+
 
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
@@ -343,6 +421,7 @@ class RegisterProduct extends React.Component {
         } = user_info
         return (
             <>
+
                 <Loading />
                 {stepNumber == 7 && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
@@ -548,12 +627,26 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => {
+    const {
+        isUserAllowedToSendMessageLoading,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+    } = state.profileReducer;
+
     return {
         userProfile: state.profileReducer.userProfile,
         addNewProductLoading: state.registerProductReducer.addNewProductLoading,
         resetTab: state.registerProductReducer.resetTab,
         addNewProductMessage: state.registerProductReducer.addNewProductMessage,
         addNewProductError: state.registerProductReducer.addNewProductError,
+
+        product: state.registerProductReducer.product,
+        buyAds: state.registerProductReducer.buyAds,
+
+        isUserAllowedToSendMessageLoading,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission
+
     }
 };
 
@@ -562,7 +655,8 @@ const mapDispatchToProps = (dispatch) => {
         addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
-        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
+        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name)),
+        isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
     }
 };
 

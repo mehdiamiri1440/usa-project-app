@@ -20,11 +20,15 @@ const INITIAL_STATE = {
     isUserLimitedToRegisterProduct: false,
     userPermissionToRegisterProductStatus: false,
 
+    buyAdsAfterPaymentLoading: false,
+    buyAdsAfterPaymentFailed: false,
+    buyAdsAfterPaymentError: false,
+    buyAdsAfterPaymentMessage: [],
+
     registerBuyAdRequestLoading: false,
     registerBuyAdRequestFailed: false,
     registerBuyAdRequestError: false,
     registerBuyAdRequestMessage: [],
-    products: [],
 
     subCategoriesLoading: false,
     subCategoriesFailed: false,
@@ -35,6 +39,10 @@ const INITIAL_STATE = {
 
     subCategoryId: null,
     subCategoryName: null,
+
+    products: [],
+    product: {},
+    buyAds: []
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -144,17 +152,21 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: true,
                 addNewProductFailed: false,
                 addNewProductError: false,
-                addNewProductMessage: []
+                addNewProductMessage: [],
+                product: {},
+                buyAds: []
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_SUCCESSFULLY: {
-            let { msg = '', status = true } = action.payload
+            let { buyAds = [], product = {} } = action.payload;
             return {
                 ...state,
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: false,
                 addNewProductMessage: [],
+                product,
+                buyAds
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_FAILED: {
@@ -164,7 +176,9 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: false,
                 addNewProductFailed: true,
                 addNewProductError: false,
-                addNewProductMessage: []
+                addNewProductMessage: [],
+                product: {},
+                buyAds: []
             };
         };
         case actionTypes.ADD_NEW_PRODUCT_REJECT: {
@@ -177,7 +191,9 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: true,
-                addNewProductMessage: errorsArray
+                addNewProductMessage: errorsArray,
+                product: {},
+                buyAds: []
             };
         };
 
@@ -282,6 +298,61 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestError: true,
                 registerBuyAdRequestMessage: errorsArray,
                 registerBuyAdRequest: {}
+            };
+        };
+
+
+
+        case actionTypes.BUYADS_AFTER_PAYMENT_LOADING: {
+            return {
+                ...state,
+                buyAdsAfterPaymentLoading: true,
+                buyAdsAfterPaymentFailed: false,
+                buyAdsAfterPaymentError: false,
+                buyAdsAfterPaymentMessage: [],
+                products: [],
+                buyAdsAfterPayment: {}
+            };
+        };
+        case actionTypes.BUYADS_AFTER_PAYMENT_SUCCESSFULLY: {
+            let { msg = '', products = [] } = action.payload
+            return {
+                ...state,
+                buyAdsAfterPaymentLoading: false,
+                buyAdsAfterPaymentFailed: false,
+                buyAdsAfterPaymentError: false,
+                buyAdsAfterPaymentMessage: [],
+                products,
+                buyAdsAfterPayment: { ...action.payload }
+            };
+        };
+        case actionTypes.BUYADS_AFTER_PAYMENT_FAILED: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                buyAdsAfterPaymentLoading: false,
+                buyAdsAfterPaymentFailed: true,
+                buyAdsAfterPaymentError: false,
+                buyAdsAfterPaymentMessage: [],
+                buyAdsAfterPayment: {},
+                products: []
+            };
+        };
+        case actionTypes.BUYADS_AFTER_PAYMENT_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const errorsArray = Object.values(errors);
+
+            return {
+                ...state,
+                products: [],
+                buyAdsAfterPaymentLoading: false,
+                buyAdsAfterPaymentFailed: false,
+                buyAdsAfterPaymentError: true,
+                buyAdsAfterPaymentMessage: errorsArray,
+                buyAdsAfterPayment: {}
             };
         };
 

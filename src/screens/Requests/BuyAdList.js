@@ -6,12 +6,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
-import { locale } from 'moment';
 
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, buyAdRequestsList, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
+    const { item, index, selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
     return (
@@ -186,7 +185,11 @@ const BuyAdList = props => {
 
 const arePropsEqual = (prevProps, nextProps) => {
     // console.log('prevprops', prevProps, 'nextPRops', nextProps)
-    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList || prevProps.item == nextProps.item || !nextProps.buyAdRequestsList || !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length || !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading || prevProps.isUserAllowedToSendMessageLoading)
+    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
+        prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
+        !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||
+        !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading
+        || prevProps.isUserAllowedToSendMessageLoading)
         return false
     return true;
 }
