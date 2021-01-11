@@ -21,7 +21,6 @@ const BuyAdList = props => {
                 width: '100%',
                 borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
                 borderWidth: 1,
-                borderColor: '#ddd'
             }}
             key={item.id}
         >

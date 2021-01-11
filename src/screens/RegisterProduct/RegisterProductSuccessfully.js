@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, ScrollView } from 'react-native';
 import { Button, Toast } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
@@ -29,6 +29,7 @@ class RegisterProductSuccessfully extends Component {
         const { active_pakage_type } = user_info;
 
         return (
+
             <View
                 style={{
                     padding: 10,
@@ -36,10 +37,42 @@ class RegisterProductSuccessfully extends Component {
                     width: '100%',
                     borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
                     borderWidth: 1,
-                    borderColor: '#ddd'
                 }}
                 key={item.id}
             >
+
+                {item.is_golden && active_pakage_type == 0 ?
+
+                    <View style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        left: 0,
+                        top: 0,
+                        zIndex: 1
+                    }}>
+                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                            style={{
+                                width: deviceWidth,
+                                height: '100%'
+                            }}
+                        />
+                        <Text style={{
+                            position: 'absolute',
+                            width: '100%',
+                            top: 30,
+                            fontSize: 23,
+                            textAlign: 'center',
+                            // backgroundColor: 'red',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            zIndex: 2
+                        }}>
+                            {item.subcategory_name}
+                        </Text>
+                    </View>
+
+                    : null}
+
                 <View
                     style={{
                         justifyContent: 'flex-start',
@@ -60,134 +93,79 @@ class RegisterProductSuccessfully extends Component {
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
-                        {`${item.first_name} ${item.last_name}`}
+                        {item.is_golden && active_pakage_type == 0 ? '...' : `${item.first_name} ${item.last_name}`}
                     </Text>
                 </View>
 
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row-reverse',
-                        marginVertical: 10,
-                    }}
-                >
-                    <Text
+                {item.is_golden && active_pakage_type == 0 ?
+                    <Text style={{ textAlign: 'center' }}>...</Text>
+                    :
+                    <View
                         style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 18,
-                            color: '#7e7e7e'
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row-reverse',
+                            marginVertical: 10,
                         }}
                     >
-                        {locales('labels.buyer')}
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 18,
-                                color: '#e41c38',
-                                marginHorizontal: 2
-                            }}
-                        >
-                            {` ${formatter.convertedNumbersToTonUnit(item.requirement_amount)} ${item.subcategory_name} `}
-                        </Text>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
-                                marginHorizontal: 2,
                                 color: '#7e7e7e'
                             }}
                         >
-                            {locales('labels.fromType')}
-                        </Text>
-                        <Text
-                            style={{
-                                color: '#556083',
-                                fontSize: 18,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                marginHorizontal: 2
-                            }}
-                        >
-                            {` ${item.name} `}
-                        </Text>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
-                                marginHorizontal: 2,
-                                color: '#7e7e7e'
-                            }}
-                        >
-                            {locales('labels.is')}
-                        </Text>
-                    </Text>
-                </View>
-                {/* 
-                <View >
-                    {item.is_golden && active_pakage_type == 0 ?
-
-                        <View style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            left: 0,
-                            top: 0,
-                            zIndex: 1
-                        }}>
-                            <Image source={require('../../../assets/images/blur-items.jpg')}
+                            {locales('labels.buyer')}
+                            <Text
                                 style={{
-                                    width: '100%',
-                                    height: '100%'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    color: '#e41c38',
+                                    marginHorizontal: 2
                                 }}
-                            />
-                            <Text style={{
-                                position: 'absolute',
-                                width: '100%',
-                                top: 50,
-                                fontSize: 23,
-                                textAlign: 'center',
-                                // backgroundColor: 'red',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                zIndex: 2
-                            }}>
-                                {item.subcategory_name}
+                            >
+                                {` ${formatter.convertedNumbersToTonUnit(item.requirement_amount)} ${item.subcategory_name} `}
                             </Text>
-                        </View>
+                            {item.is_golden && active_pakage_type == 0 ?
+                                <Text> </Text>
+                                :
+                                <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 18,
+                                            marginHorizontal: 2,
+                                            color: '#7e7e7e'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: '#556083',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginHorizontal: 2
+                                        }}
+                                    >
+                                        {` ${item.name} `}
+                                    </Text>
+                                </>
 
-                        : null}
-                    <View>
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                marginVertical: 5,
-                                flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                            }}
-                        >
-                            {item.is_golden && active_pakage_type == 0
-                                ? `${item.subcategory_name} | ${item.subcategory_name} ` :
-                                `${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}
+                            }
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    marginHorizontal: 2,
+                                    color: '#7e7e7e'
+                                }}
+                            >
+                                {locales('labels.is')}
+                            </Text>
                         </Text>
                     </View>
-
-
-                    <View>
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                marginVertical: 5,
-                                flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                            }}
-                        >
-
-                            {item.is_golden && active_pakage_type == 0
-                                ? `${locales('titles.requirementQuantity')} : نامشخص` :
-                                `${locales('titles.requirementQuantity')} : ${formatter.convertedNumbersToTonUnit(item.requirement_amount)}`}
-                        </Text>
-                    </View>
-
-                </View> */}
+                }
 
                 <View style={{ marginVertical: 5 }}>
 
@@ -272,21 +250,47 @@ class RegisterProductSuccessfully extends Component {
                     alignItems: 'center'
                 }
                 }>
-                <Button
-                    style={[styles.loginButton, {
-                        justifyContent: 'center',
-                        alignItems: 'center', alignSelf: 'center', marginVertical: 20
-                    }]}
+                <Text
                     onPress={() => {
                         this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
-                    }}
-                >
-                    <Text style={styles.buttonText}>
-                        {locales('titles.otherRelatedBuyads')}</Text>
-                </Button>
+                    }} style={[styles.buttonText, {
+                        color: '#1da6f4', marginTop: 50,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }]}>
+                    {locales('titles.otherRelatedBuyads')}</Text>
             </View>
         )
     };
+
+    renderListHeaderComponent = _ => {
+        return (
+            <View
+                style={{
+                    padding: 20, marginVertical: 20
+                }}
+            >
+                <Text
+                    style={{
+                        color: 'black',
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    }}
+                >
+                    {locales('labels.buyers')}
+                </Text>
+                <Text
+                    style={{
+                        color: 'black',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {locales('labels.suggestedBuyersForYou')}
+                </Text>
+            </View>
+
+        )
+    }
 
     render() {
 
@@ -309,7 +313,7 @@ class RegisterProductSuccessfully extends Component {
         subCategoryName = subCategoryName || this.props.subCategoryName;
 
         return (
-            <>
+            <ScrollView>
                 <View
                     style={{
                         marginVertical: 10,
@@ -365,6 +369,7 @@ class RegisterProductSuccessfully extends Component {
                         keyExtractor={item => item.id.toString()}
                         renderItem={this.renderItem}
                         data={buyAds}
+                        ListHeaderComponent={this.renderListHeaderComponent}
                         ListFooterComponent={this.renderListFooterComponent}
                     />
                     :
@@ -394,7 +399,7 @@ class RegisterProductSuccessfully extends Component {
                         </Button>
                     </View>
                 }
-            </>
+            </ScrollView>
         )
     }
 }

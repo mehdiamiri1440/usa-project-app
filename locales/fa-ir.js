@@ -128,6 +128,8 @@ export default {
     'labels.goldenBuyAdRequests': 'دسترسی به درخواست های خرید طلایی',
     'labels.countOfBuyAdRequests': 'ظرفیت درخواستهای خرید روزانه',
     'labels.home': 'خانه',
+    'labels.buyers': 'خریداران',
+    'labels.suggestedBuyersForYou': 'خریداران پیشنهادی از طرف باسکول برای محصول شما.',
     'labels.settings': 'تنظیمات',
     'labels.validatedUser': 'فروشنده معتبر',
     'labels.edition': 'ویرایش {fieldName}',

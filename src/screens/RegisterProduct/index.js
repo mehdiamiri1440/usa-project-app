@@ -1,9 +1,12 @@
 import React, { Fragment } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Text, View, StyleSheet, BackHandler, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, ActivityIndicator, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Button } from 'native-base';
+
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as productActions from '../../redux/registerProduct/actions';
@@ -276,7 +279,8 @@ class RegisterProduct extends React.Component {
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
             minimumOrder, maximumPrice, minimumPrice, amount, city,
-            province, subCategoryId, subCategoryName, selectedButton, modalFlag, selectedBuyAdId, selectedContact } = this.state
+            province, subCategoryId, subCategoryName, selectedButton,
+            showGoldenModal, modalFlag, selectedBuyAdId, selectedContact } = this.state
 
         const {
             product,
@@ -328,6 +332,96 @@ class RegisterProduct extends React.Component {
             case 7: {
                 return (
                     <>
+
+
+
+                        <Portal
+                            style={{
+                                padding: 0,
+                                margin: 0
+
+                            }}>
+                            <Dialog
+                                visible={showGoldenModal}
+                                onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                                style={styles.dialogWrapper}
+                            >
+                                <Dialog.Actions
+                                    style={styles.dialogHeader}
+                                >
+                                    <Button
+                                        onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                        style={styles.closeDialogModal}>
+                                        <FontAwesome5 name="times" color="#777" solid size={18} />
+                                    </Button>
+                                    <Paragraph style={styles.headerTextDialogModal}>
+                                        {locales('labels.goldenRequests')}
+                                    </Paragraph>
+                                </Dialog.Actions>
+
+
+
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                        borderColor: '#facea8',
+                                    }]} />
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.accessToGoldensDeined')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                                <Paragraph
+                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                                    {locales('labels.icreaseToSeeGoldens')}
+                                </Paragraph>
+                                <View style={{
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Button
+                                        style={[styles.modalButton, styles.greenButton]}
+                                        onPress={() => {
+                                            this.setState({ showGoldenModal: false })
+                                            this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                        }}
+                                    >
+
+                                        <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                        </Text>
+                                    </Button>
+                                </View>
+
+
+
+
+                                <Dialog.Actions style={{
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    padding: 0
+                                }}>
+                                    <Button
+                                        style={styles.modalCloseButton}
+                                        onPress={() => this.setState({ showGoldenModal: false })}
+                                    >
+
+                                        <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                        </Text>
+                                    </Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal >
+
+
 
                         {modalFlag && <ChatModal
                             transparent={false}
@@ -623,6 +717,120 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 26,
         bottom: 40
+    },
+
+
+
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        alignSelf: 'center',
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    buttonText: {
+        color: 'white',
+        width: '80%',
+        textAlign: 'center'
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
     },
 })
 
