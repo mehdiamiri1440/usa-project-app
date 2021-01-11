@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList, BackHandler } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Body, Card, CardItem, Label, InputGroup, Input, Button } from 'native-base';
@@ -679,12 +679,16 @@ class RegisterRequest extends Component {
                                             }}>
                                                 <Button
                                                     onPress={() => this.onSubmit()}
-                                                    style={!this.state.category || !this.state.subCategory || !productType ||
-                                                        !validator.isPersianNameWithDigits(productType)
+                                                    style={!this.state.category || !this.state.subCategory || !amount ||
+                                                        (productType ? !validator.isPersianNameWithDigits(productType) : null)
                                                         ? styles.disableLoginButton : styles.loginButton}
                                                     rounded
                                                 >
-                                                    <FontAwesome5 name='check' size={15} color='white' />
+                                                    {!this.props.registerBuyAdRequestLoading
+                                                        ? <FontAwesome5 name='check' size={15} color='white' /> :
+                                                        <ActivityIndicator size="small" color="white"
+                                                        />
+                                                    }
                                                     <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
                                                 </Button>
                                                 <Button

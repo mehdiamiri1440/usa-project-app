@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, Button } from 'native-base'
 import FastImage from 'react-native-fast-image'
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { dataGenerator, formatter } from '../../utils';
 
@@ -62,57 +65,83 @@ const RegisterRequestSuccessfully = props => {
                 </View>
             </View>
 
-            <ScrollView >
-                <View style={{
-                    paddingVertical: products && products.length ? 30 : 80,
-                    paddingHorizontal: 7
-                }}>
-                    <Card>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 0 }}>
-                            <Text style={{
-                                borderBottomColor: '#00C569', borderBottomWidth: 2,
-                                paddingVertical: 5,
-                                width: '100%', textAlign: 'center',
-                                fontSize: 20, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                            }}>
-                                {locales('titles.requestSubmittedSuccessfully')}
-                            </Text>
-                            <Text
-                                style={{
-                                    marginTop: 40,
-                                    paddingHorizontal: 10,
-                                    textAlign: 'center',
-                                    fontSize: 18
-                                }}>
-                                {locales('titles.registerRequestDescription')}
-                            </Text>
+            <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+                <View
+                    style={{
+                        marginVertical: 10,
+                        backgroundColor: '#edf8e6',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 20,
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: deviceWidth * 0.1,
+                            height: deviceWidth * 0.2,
+                            width: deviceWidth * 0.2,
+                            borderWidth: 1,
+                            borderColor: 'white',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <FontAwesome
+                            name='check'
+                            size={50}
+                            color='#21ad93'
+                        />
+                    </View>
+                    <Text
+                        style={{
+                            marginVertical: 10,
+                            textAlign: 'center',
+                            color: '#21ad93',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 20
+                        }}
+                    >
+                        {locales('titles.requestSubmittedSuccessfully')}
 
-                            <Button
-                                onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
-                                style={{
-                                    textAlign: 'center',
-                                    borderRadius: 5,
-                                    marginVertical: 40,
-                                    backgroundColor: '#00C569',
-                                    width: '70%',
-                                    color: 'white',
-                                    alignItems: 'center',
-                                    alignSelf: 'center',
-                                    justifyContent: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}
-                                rounded
-                            >
-                                <Text style={{
-                                    color: 'white',
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>{locales('labels.productsList')}</Text>
-                            </Button>
-                        </View>
-                    </Card>
+                    </Text>
+
                 </View>
+
+
+                <Text
+                    style={{
+                        marginTop: 40,
+                        paddingHorizontal: 10,
+                        textAlign: 'center',
+                        fontSize: 18
+                    }}>
+                    {locales('titles.registerRequestDescription')}
+                </Text>
+
+                <Button
+                    onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
+                    style={{
+                        textAlign: 'center',
+                        borderRadius: 5,
+                        marginVertical: 40,
+                        backgroundColor: '#00C569',
+                        width: '70%',
+                        color: 'white',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}
+                    rounded
+                >
+                    <Text style={{
+                        color: 'white',
+                        width: '100%',
+                        textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}>{locales('labels.productsList')}</Text>
+                </Button>
 
 
                 {products && products.length ?
