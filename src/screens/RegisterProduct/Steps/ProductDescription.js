@@ -1,10 +1,14 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button, Textarea, Label } from 'native-base';
+import { Button, Textarea, InputGroup } from 'native-base';
 import { View, Text, StyleSheet, Linking, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 class ProductDecription extends Component {
@@ -66,27 +70,42 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, fontSize: 15, marginVertical: 5 }}>
-                            {locales('titles.descriptionWithExample')}
-                        </Label>
-                        <Textarea
-                            onChangeText={this.onDescriptionSubmit}
-                            error=''
-                            value={description}
-                            autoCapitalize='none'
-                            autoCompleteType='off'
-                            autoCorrect={false}
-                            placeholder={locales('titles.writeYourFinalDescription')}
-                            ref={this.descriptionRef}
+                        {/* <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, fontSize: 15, marginVertical: 5 }}>
+                            {locales('titles.writeYourFinalDescription')}
+                        </Label> */}
+                        <InputGroup
+                            regular
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Light', borderRadius: 5,
-                                borderColor: description.length ? '#00C569' : '#a8a8a8'
-                            }}
-                            rowSpan={5} bordered
-                        />
+                                alignItems: 'flex-start',
+                                borderRadius: 4,
+                                borderWidth: 1,
+                                borderColor: !description ? '#777777' : '#00C569'
+                            }}>
+                            <FontAwesome5
+                                name={!description ? 'edit' : 'check-circle'}
+                                color={!description ? '#777777' : '#00C569'}
+                                style={{ position: 'absolute', top: 5, left: 5 }}
+                            />
+                            <Textarea
+                                onChangeText={this.onDescriptionSubmit}
+                                error=''
+                                value={description}
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                placeholderTextColor='#777777'
+                                placeholder={locales('titles.descriptionWithExample')}
+                                ref={this.descriptionRef}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    paddingTop: 10
+                                }}
+                                rowSpan={5}
+                            />
+                        </InputGroup>
                     </View>
 
-
+                    {/* 
                     <Text
                         style={{
                             marginVertical: 10,
@@ -104,7 +123,7 @@ class ProductDecription extends Component {
                                 });
                             }}
                             style={{ color: '#1DA1F2' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
-                    </Text>
+                    </Text> */}
 
                     <View style={{
                         marginVertical: 20,

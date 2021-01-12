@@ -263,7 +263,7 @@ class ProductMoreDetails extends Component {
                             <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
                                 <Text
                                     style={{
-                                        color: '#666666',
+                                        color: '#E41C38',
                                         fontSize: 14,
                                     }}
                                 >
@@ -282,7 +282,7 @@ class ProductMoreDetails extends Component {
                             <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
                                 <Text
                                     style={{
-                                        color: '#666666',
+                                        color: '#E41C38',
                                         fontSize: 14,
                                     }}
                                 >
@@ -319,7 +319,7 @@ class ProductMoreDetails extends Component {
                                             height: 45,
                                             width: 30
                                         }}>
-                                        <FontAwesome5 name='trash' color='#666666' size={20} />
+                                        <FontAwesome5 name='trash' color='#E41C38' size={20} />
                                     </TouchableOpacity>
 
                                     <View style={{

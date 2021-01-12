@@ -22,7 +22,7 @@ class RegisterProductSuccessfully extends Component {
         }
     }
 
-    renderItem = ({ item }) => {
+    renderItem = ({ item, index }) => {
 
         const { selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = this.props;
         const { user_info = {} } = userProfile;
@@ -32,8 +32,8 @@ class RegisterProductSuccessfully extends Component {
 
             <View
                 style={{
-                    padding: 10,
-                    backgroundColor: '#FFFFFF',
+                    padding: 20,
+                    backgroundColor: index % 2 == 0 ? 'rgba(234,247,255,0.45)' : '#FFFFFF',
                     width: '100%',
                     borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
                     borderWidth: 1,
@@ -77,6 +77,7 @@ class RegisterProductSuccessfully extends Component {
                     style={{
                         justifyContent: 'flex-start',
                         alignItems: 'center',
+                        marginVertical: 10,
                         flexDirection: 'row-reverse'
                     }}
                 >
@@ -84,12 +85,13 @@ class RegisterProductSuccessfully extends Component {
                     <FontAwesome
                         name='user-circle'
                         color='#adadad'
-                        size={25}
+                        size={20}
                     />
                     <Text
                         style={{
                             marginHorizontal: 5,
                             color: '#adadad',
+                            fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
@@ -167,7 +169,7 @@ class RegisterProductSuccessfully extends Component {
                     </View>
                 }
 
-                <View style={{ marginVertical: 5 }}>
+                <View style={{ marginVertical: 15 }}>
 
                     <Button
                         small
@@ -278,15 +280,35 @@ class RegisterProductSuccessfully extends Component {
                 >
                     {locales('labels.buyers')}
                 </Text>
+
                 <Text
                     style={{
-                        color: 'black',
-                        fontSize: 16,
+                        color: '#777777',
+                        fontSize: 17,
+                        marginVertical: 10,
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     }}
                 >
-                    {locales('labels.suggestedBuyersForYou')}
+                    {locales('labels.suggestedBuyersForYou')} <Text
+                        style={{
+                            color: '#21AD93',
+                            fontSize: 17,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}
+                    >
+                        {locales('titles.buskool')}
+                    </Text>
+                    <Text
+                        style={{
+                            color: '#777777',
+                            fontSize: 17,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}
+                    >
+                        {locales('labels.forYourProduct')}
+                    </Text>
                 </Text>
+
             </View>
 
         )
@@ -296,7 +318,6 @@ class RegisterProductSuccessfully extends Component {
 
         const {
             route = {},
-            product = {},
             buyAds = []
         } = this.props;
 
@@ -355,7 +376,7 @@ class RegisterProductSuccessfully extends Component {
                     <Text
                         style={{
                             textAlign: 'center',
-                            color: '#3ac9d3',
+                            color: '#21AD93',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 16
                         }}
@@ -447,7 +468,8 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 4,
         backgroundColor: '#00C569',
-        width: '92%',
+        width: '82%',
+        height: 60,
         color: 'white',
     },
     forgotContainer: {
