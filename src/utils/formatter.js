@@ -52,9 +52,9 @@ export const convertedNumbersToTonUnit = (number) => {
   if (number || typeof number === "number") {
     let data = number / 1000;
     if (number < 1000) {
-      return number + " " + locales('labels.kiloGram');
+      return numberWithCommas(number) + " " + locales('labels.kiloGram');
     } else {
-      return data + " " + locales('labels.ton');
+      return numberWithCommas(data) + " " + locales('labels.ton');
     }
   } else return "";
 }

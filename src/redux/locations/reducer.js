@@ -71,7 +71,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllCitiesLoading: true,
                 fetchAllCitiesFailed: false,
                 fetchAllCitiesError: false,
-                fetchAllCitiesMessage: null
+                fetchAllCitiesMessage: null,
+                allCitiesObject: {}
             };
         };
         case actionTypes.FETCH_ALL_CITIES_SUCCESSFULLY: {
@@ -91,7 +92,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllCitiesLoading: false,
                 fetchAllCitiesFailed: true,
                 fetchAllCitiesError: false,
-                fetchAllCitiesMessage: msg
+                fetchAllCitiesMessage: msg,
+                allCitiesObject: {}
             };
         };
         case actionTypes.FETCH_ALL_CITIES_REJECT: {
@@ -100,7 +102,8 @@ export default (state = INITIAL_STATE, action) => {
                 fetchAllCitiesLoading: false,
                 fetchAllCitiesFailed: false,
                 fetchAllCitiesError: true,
-                fetchAllCitiesMessage: null
+                fetchAllCitiesMessage: null,
+                allCitiesObject: {}
             };
         };
         default:

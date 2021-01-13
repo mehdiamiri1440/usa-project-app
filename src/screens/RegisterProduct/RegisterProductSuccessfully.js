@@ -35,8 +35,8 @@ class RegisterProductSuccessfully extends Component {
                     padding: 20,
                     backgroundColor: index % 2 == 0 ? 'rgba(234,247,255,0.45)' : '#FFFFFF',
                     width: '100%',
-                    borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
-                    borderWidth: 1,
+                    borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
+                    borderWidth: 0.8,
                 }}
                 key={item.id}
             >
@@ -51,24 +51,100 @@ class RegisterProductSuccessfully extends Component {
                         top: 0,
                         zIndex: 1
                     }}>
+
                         <Image source={require('../../../assets/images/blur-items.jpg')}
                             style={{
                                 width: deviceWidth,
                                 height: '100%'
                             }}
                         />
-                        <Text style={{
-                            position: 'absolute',
-                            width: '100%',
-                            top: 30,
-                            fontSize: 23,
-                            textAlign: 'center',
-                            // backgroundColor: 'red',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            zIndex: 2
-                        }}>
-                            {item.subcategory_name}
+                        <View
+                            style={{
+                                alignItems: 'center',
+                                marginVertical: 10,
+                                right: -25,
+                                position: 'absolute',
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <FontAwesome
+                                name='user-circle'
+                                color='#adadad'
+                                size={20}
+                            />
+                            <Text
+                                style={{
+                                    marginHorizontal: 5,
+                                    color: '#adadad',
+                                    fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                }}
+                            >
+                                {`${item.first_name} ${item.last_name}`}
+                            </Text>
+                        </View>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                position: 'absolute',
+                                top: 65,
+                                textAlign: 'center',
+                                left: deviceWidth * 0.25,
+                                fontSize: 18,
+                                color: '#7e7e7e'
+                            }}
+                        >
+                            {locales('labels.buyer')}
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    color: '#556083',
+                                    marginHorizontal: 2
+                                }}
+                            >
+                                {` ${item.subcategory_name} `}
+                            </Text>
+                            {item.is_golden && active_pakage_type == 0 ?
+                                <Text> </Text>
+                                :
+                                item.name ? <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 18,
+                                            marginHorizontal: 2,
+                                            color: '#7e7e7e'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: '#556083',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginHorizontal: 2
+                                        }}
+                                    >
+                                        {` ${item.name} `}
+                                    </Text>
+                                </> : null
+
+                            }
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    marginHorizontal: 2,
+                                    color: '#7e7e7e'
+                                }}
+                            >
+                                {locales('labels.is')}
+                            </Text>
                         </Text>
+
                     </View>
 
                     : null}
@@ -95,7 +171,7 @@ class RegisterProductSuccessfully extends Component {
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
-                        {item.is_golden && active_pakage_type == 0 ? '...' : `${item.first_name} ${item.last_name}`}
+                        {`${item.first_name} ${item.last_name}`}
                     </Text>
                 </View>
 
@@ -131,7 +207,7 @@ class RegisterProductSuccessfully extends Component {
                             {item.is_golden && active_pakage_type == 0 ?
                                 <Text> </Text>
                                 :
-                                <>
+                                item.name ? <>
                                     <Text
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -152,7 +228,7 @@ class RegisterProductSuccessfully extends Component {
                                     >
                                         {` ${item.name} `}
                                     </Text>
-                                </>
+                                </> : null
 
                             }
                             <Text
@@ -166,6 +242,7 @@ class RegisterProductSuccessfully extends Component {
                                 {locales('labels.is')}
                             </Text>
                         </Text>
+
                     </View>
                 }
 
@@ -257,6 +334,7 @@ class RegisterProductSuccessfully extends Component {
                         this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
                     }} style={[styles.buttonText, {
                         color: '#1da6f4', marginTop: 50,
+                        paddingBottom: 50,
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }]}>
                     {locales('titles.otherRelatedBuyads')}</Text>
@@ -338,7 +416,7 @@ class RegisterProductSuccessfully extends Component {
                 <View
                     style={{
                         marginVertical: 10,
-                        backgroundColor: '#edf8e6',
+                        backgroundColor: 'rgba(237,248,230,0.6)',
                         justifyContent: 'center',
                         alignItems: 'center',
                         padding: 20

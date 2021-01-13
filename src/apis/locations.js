@@ -7,7 +7,8 @@ export const fetchAllProvinces = (provinceId, cascade_list) => {
                 route: `location/get_location_info`,
                 method: 'POST',
                 data: {
-                    cascade_list
+                    cascade_list,
+                    province_id: provinceId
                 },
                 withAuth: false,
             })

@@ -292,7 +292,10 @@ class StockAndPrice extends Component {
                         />
                     </InputGroup>
                     {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
-                    {!amountError && amount.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{amountText}</Label> : null}
+                    {!amountError && amount.length ? <Label style={{
+                        fontSize: 14, color: '#1DA1F2',
+                        textAlign: 'left', fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}>{amountText}</Label> : null}
 
                     {/* <OutlinedTextField
                         placeholder={(this.state.isAmountFocused || amount.length) ? locales('titles.amountWithExample') : ''}
@@ -367,7 +370,10 @@ class StockAndPrice extends Component {
                         />
                     </InputGroup>
                     {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
-                    {!minimumOrderError && minimumOrder.length ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{minimumOrderText}</Label> : null}
+                    {!minimumOrderError && minimumOrder.length ? <Label style={{
+                        fontSize: 14, color: '#1DA1F2',
+                        textAlign: 'left', fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}>{minimumOrderText}</Label> : null}
 
                     {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}

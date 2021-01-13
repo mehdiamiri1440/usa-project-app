@@ -71,10 +71,10 @@ class Product extends PureComponent {
         if (prevState.loaded == false && this.props.productItem
             && Object.entries(this.props.productItem).length) {
             const {
-                max_sale_price,
-                min_sale_price,
-                stock,
-                min_sale_amount
+                max_sale_price = '',
+                min_sale_price = '',
+                stock = '',
+                min_sale_amount = ''
             } = this.props.productItem.main;
 
             this.setState({

@@ -22,6 +22,21 @@ import Loading from '../Loading';
 const CategoriesIcons = [
     <Svg
         xmlns="http://www.w3.org/2000/svg"
+        width="31.32"
+        height="24.469"
+        viewBox="0 0 31.32 24.469"
+    >
+        <Path
+            fill="#38485f"
+            d="M26.427 12.234a.612.612 0 10.612.612.612.612 0 00-.612-.612zm0 0M17.145 15.517a.612.612 0 10-.224-.836.612.612 0 00.224.836zm0 0M15.293 17.978a.612.612 0 10-.836-.224.612.612 0 00.836.224zm0 0M11.623 18.963a.612.612 0 10-.612-.612.612.612 0 00.612.612zm0 0M7.948 17.978a.612.612 0 10-.224-.836.612.612 0 00.224.836zm0 0M5.266 15.293a.612.612 0 10.224-.836.612.612 0 00-.224.836zm0 0"
+        ></Path>
+        <Path
+            fill="#38485f"
+            d="M19.189 0h-.1A12.229 12.229 0 006.852 12.234H.612a.612.612 0 00-.612.612 11.629 11.629 0 0015.3 11.027 12.218 12.218 0 003.68.6h.1A12.237 12.237 0 0019.189 0zm-2.55 12.234c0-4.68 1.049-11.011 2.447-11.011 1.788 0 2.447 8.411 2.447 11.011zm2.913 1.223a7.953 7.953 0 01-15.858 0zM17.088 1.725c-1.318 2.7-1.672 7.49-1.672 10.509h-3.059c0-3.946 1.49-8.84 4.731-10.509zm-2.588.489c-2.36 2.561-3.367 6.486-3.367 10.02H8.075A11.024 11.024 0 0114.5 2.214zM1.241 13.458h1.227a9.175 9.175 0 0018.31 0H22a10.4 10.4 0 01-20.763 0zm22.451 8.773a13.708 13.708 0 003.083-6.848.612.612 0 10-1.206-.206c-.8 4.7-3.441 8.016-6.414 8.068h-.145a4.247 4.247 0 01-1.567-.336 11.651 11.651 0 005.8-10.062.612.612 0 00-.489-.6v-.012c0-3.044-.358-7.813-1.669-10.5 2.864 1.484 4.314 5.474 4.64 8.73a.612.612 0 001.217-.122 14.1 14.1 0 00-3.254-8.1 11 11 0 010 19.993zm0 0"
+        ></Path>
+    </Svg>,
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
         width="27.763px"
         style={{ justifyContent: 'center', flex: 1 }}
         height="25.358px"
@@ -34,21 +49,6 @@ const CategoriesIcons = [
         <Path
             fill="#38485f"
             d="M8.676 23.19a6.507 6.507 0 10-6.507-6.507 6.513 6.513 0 006.507 6.507zm-4.2-9.937l2.728 2.728a1.559 1.559 0 00-.066.159H3.28a5.37 5.37 0 011.2-2.888zm9.592 2.888H10.21a1.66 1.66 0 00-.066-.159l2.728-2.728a5.37 5.37 0 011.197 2.887zm-1.199 3.975l-2.728-2.729a1.559 1.559 0 00.066-.159h3.862a5.371 5.371 0 01-1.2 2.888zm-3.654-3.43a.542.542 0 11-.542-.542.542.542 0 01.545.539zm-1.244 1.468a1.61 1.61 0 00.159.066v3.861a5.37 5.37 0 01-2.888-1.2zm1.244.066a1.666 1.666 0 00.159-.066l2.728 2.728a5.369 5.369 0 01-2.888 1.2zm.159-3a1.6 1.6 0 00-.159-.066v-3.861a5.371 5.371 0 012.888 1.2zm-1.244-.066a1.6 1.6 0 00-.159.066l-2.728-2.728a5.371 5.371 0 012.888-1.2zm-.992 2.077a1.634 1.634 0 00.066.159l-2.725 2.726a5.367 5.367 0 01-1.2-2.887zm0 0M4.717 9.037a.542.542 0 10.542.542.542.542 0 00-.542-.542zm0 0"
-        ></Path>
-    </Svg>,
-    <Svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="31.32"
-        height="24.469"
-        viewBox="0 0 31.32 24.469"
-    >
-        <Path
-            fill="#38485f"
-            d="M26.427 12.234a.612.612 0 10.612.612.612.612 0 00-.612-.612zm0 0M17.145 15.517a.612.612 0 10-.224-.836.612.612 0 00.224.836zm0 0M15.293 17.978a.612.612 0 10-.836-.224.612.612 0 00.836.224zm0 0M11.623 18.963a.612.612 0 10-.612-.612.612.612 0 00.612.612zm0 0M7.948 17.978a.612.612 0 10-.224-.836.612.612 0 00.224.836zm0 0M5.266 15.293a.612.612 0 10.224-.836.612.612 0 00-.224.836zm0 0"
-        ></Path>
-        <Path
-            fill="#38485f"
-            d="M19.189 0h-.1A12.229 12.229 0 006.852 12.234H.612a.612.612 0 00-.612.612 11.629 11.629 0 0015.3 11.027 12.218 12.218 0 003.68.6h.1A12.237 12.237 0 0019.189 0zm-2.55 12.234c0-4.68 1.049-11.011 2.447-11.011 1.788 0 2.447 8.411 2.447 11.011zm2.913 1.223a7.953 7.953 0 01-15.858 0zM17.088 1.725c-1.318 2.7-1.672 7.49-1.672 10.509h-3.059c0-3.946 1.49-8.84 4.731-10.509zm-2.588.489c-2.36 2.561-3.367 6.486-3.367 10.02H8.075A11.024 11.024 0 0114.5 2.214zM1.241 13.458h1.227a9.175 9.175 0 0018.31 0H22a10.4 10.4 0 01-20.763 0zm22.451 8.773a13.708 13.708 0 003.083-6.848.612.612 0 10-1.206-.206c-.8 4.7-3.441 8.016-6.414 8.068h-.145a4.247 4.247 0 01-1.567-.336 11.651 11.651 0 005.8-10.062.612.612 0 00-.489-.6v-.012c0-3.044-.358-7.813-1.669-10.5 2.864 1.484 4.314 5.474 4.64 8.73a.612.612 0 001.217-.122 14.1 14.1 0 00-3.254-8.1 11 11 0 010 19.993zm0 0"
         ></Path>
     </Svg>,
     <Svg
@@ -86,7 +86,8 @@ class RegisterRequest extends Component {
             loaded: false,
             categoriesList: [],
             subCategoriesList: [],
-            showModal: false
+            showModal: false,
+            selectedIndex: 0
         }
     }
 
@@ -162,7 +163,8 @@ class RegisterRequest extends Component {
             productType: '',
             isFocused: false,
             loaded: false,
-            showModal: false
+            showModal: false,
+            selectedIndex: 0
         })
     }
 
@@ -287,7 +289,7 @@ class RegisterRequest extends Component {
     };
 
 
-    setSelectedSubCategory = (id, isSub) => {
+    setSelectedSubCategory = (id, isSub, index) => {
         const { subCategoriesTogether, subCategoriesList } = this.state;
         if (!isSub) {
             let selectedSubs = [];
@@ -295,7 +297,7 @@ class RegisterRequest extends Component {
                 selectedSubs.push(Object.values(item).filter(sub => sub.parent_id == id))
             })
             selectedSubs = selectedSubs.filter(item => item && item.length).flatMap(item => item)
-            this.setState({ subCategoriesList: selectedSubs, category: id });
+            this.setState({ subCategoriesList: selectedSubs, category: id, selectedIndex: index });
         }
         else {
             this.setState({
@@ -317,14 +319,13 @@ class RegisterRequest extends Component {
                     padding: 20,
                     flexDirection: 'row-reverse'
                 }}
-                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories)}
+                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories, index)}
             >
                 <View
                     style={{
                         flexDirection: 'row-reverse',
                     }}
                 >
-                    {item.subcategories ? CategoriesIcons[index] : null}
                     <Text
                         style={{
                             color: '#38485F',
@@ -389,9 +390,12 @@ class RegisterRequest extends Component {
             subCategoryError, categoryError, productTypeError,
             amountError,
             showModal, subCategoriesList, categoriesList,
-            amount, submitButtonClick,
+            amount, submitButtonClick, selectedIndex,
             amountText
         } = this.state;
+
+        const categoryIcon = categoriesList && categoriesList.length && category ?
+            categoriesList[selectedIndex].subcategories ? CategoriesIcons[selectedIndex] : null : null
 
         return (
             <>
@@ -450,9 +454,11 @@ class RegisterRequest extends Component {
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                 >
-                    <View style={{
-                        paddingVertical: 15
-                    }} >
+                    <View
+                        style={{
+                            paddingVertical: 15
+                        }}
+                    >
                         <Card style={{ marginBottom: 20, elevation: 2, borderRadius: 6 }} transparent>
                             <CardItem
                                 style={{ backgroundColor: '#e6f4f8' }}>
@@ -479,24 +485,27 @@ class RegisterRequest extends Component {
 
                         <Card >
                             <View style={{ alignItems: 'center', justifyContent: 'center', padding: 0 }}>
-                                <Text style={{
-                                    borderBottomColor: '#BEBEBE', borderBottomWidth: 2,
-                                    padding: 15,
-                                    width: '100%',
-                                    fontSize: 22, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                                <Text
-                                    style={{
+                                {!category || !subCategory ? <>
+                                    <Text style={{
+                                        borderBottomColor: '#BEBEBE', borderBottomWidth: 2,
                                         padding: 15,
-                                        marginVertical: 20,
                                         width: '100%',
-                                        fontSize: 18, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                    }}
-                                >
-                                    {locales('labels.chooseProductCategory')}
-                                </Text>
+                                        fontSize: 22, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }}>
+                                        {locales('titles.registerBuyAdRequest')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            padding: 2,
+                                            marginVertical: 20,
+                                            width: '95%',
+                                            fontSize: 18, color: '#555555', fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                        }}
+                                    >
+                                        {categoryIcon}
+                                        {locales('labels.chooseProductCategory')}
+                                    </Text>
+                                </> : null}
 
                                 {!category ?
                                     <FlatList
@@ -614,7 +623,7 @@ class RegisterRequest extends Component {
                                                     fontSize: 20
                                                 }}
                                             >
-                                                {locales('titles.amount')} <Text
+                                                {locales('titles.amountNeeded')} ({locales('labels.kiloGram')}) <Text
                                                     style={{
                                                         color: '#D44546'
                                                     }}
@@ -622,7 +631,8 @@ class RegisterRequest extends Component {
                                             </Text>
                                             <Text
                                                 style={{
-                                                    marginVertical: 20,
+                                                    marginTop: 20,
+                                                    marginBottom: 10,
                                                     color: '#777777',
                                                     marginHorizontal: 15,
                                                     fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -664,7 +674,7 @@ class RegisterRequest extends Component {
                                                     onChangeText={this.onAmountSubmit}
                                                     value={amount}
                                                     placeholderTextColor="#BEBEBE"
-                                                    placeholder={locales('titles.enterAmount')}
+                                                    placeholder={locales('titles.enterRequirment')}
                                                     ref={this.amountRef}
 
                                                 />

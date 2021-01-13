@@ -78,7 +78,8 @@ class SelectCategory extends Component {
             subCategoryName: '',
             subCategoriesTogether: [],
             showParentCategoriesFlag: true,
-            showProductTypeFlag: true
+            showProductTypeFlag: true,
+            selectedIndex: 0
         }
     }
 
@@ -204,7 +205,7 @@ class SelectCategory extends Component {
         }
     }
 
-    setSelectedSubCategory = (id, isSub) => {
+    setSelectedSubCategory = (id, isSub, index) => {
         const { subCategoriesTogether, subCategoriesList } = this.state;
         if (!isSub) {
             let selectedSubs = [];
@@ -212,7 +213,7 @@ class SelectCategory extends Component {
                 selectedSubs.push(Object.values(item).filter(sub => sub.parent_id == id))
             })
             selectedSubs = selectedSubs.filter(item => item && item.length).flatMap(item => item)
-            this.setState({ subCategoriesList: selectedSubs, category: id });
+            this.setState({ subCategoriesList: selectedSubs, category: id, selectedIndex: index });
         }
         else {
             this.setState({
@@ -234,14 +235,14 @@ class SelectCategory extends Component {
                     padding: 20,
                     flexDirection: 'row-reverse'
                 }}
-                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories)}
+                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories, index)}
             >
                 <View
                     style={{
                         flexDirection: 'row-reverse',
                     }}
                 >
-                    {item.subcategories ? CategoriesIcons[index] : null}
+
                     <Text
                         style={{
                             color: '#38485F',
@@ -297,11 +298,14 @@ class SelectCategory extends Component {
     render() {
 
         let { productType, category, subCategoriesList, categoriesList,
-            subCategory, productTypeError, submitButtonClick } = this.state;
+            subCategory, productTypeError, submitButtonClick, selectedIndex } = this.state;
 
         // categoriesList = categoriesList || this.props.categoriesList;
         // categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         // subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
+
+        const categoryIcon = categoriesList && categoriesList.length && category ?
+            categoriesList[selectedIndex].subcategories ? CategoriesIcons[selectedIndex] : null : null
 
         return (
             <View
@@ -315,10 +319,10 @@ class SelectCategory extends Component {
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#666666',
                         fontSize: 20,
-                        paddingHorizontal: 15
+                        marginHorizontal: 10
                     }}
                 >
-                    {locales('labels.selectedProductCategory')}
+                    {categoryIcon} {locales('labels.selectedProductCategory')}
                 </Text>
 
                 {!category ?
