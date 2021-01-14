@@ -159,27 +159,7 @@ const App = (props) => {
 
 
   useEffect(() => {
-    getAppstoreAppMetadata("com.buskool") //put any apps packageId here
-      .then(metadata => {
-        if (
-          DeviceInfo.getVersion() != metadata.version
-        ) {
-          const versionParts = metadata.version.split('.');
-          if (versionParts[versionParts.length - 1] == '1') {
-            setIsForceUpdate(true);
-          }
-          else {
-            setIsForceUpdate(false);
-          }
-          setUpdateModalFlag(true);
-        }
-        else {
-          setUpdateModalFlag(false);
-        }
-      })
-      .catch(err => {
-        console.log("error occurred", err);
-      });
+    checkForUpdate()
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
@@ -309,6 +289,29 @@ const App = (props) => {
 
   }, [initialRoute, is_seller, props.loggedInUserId]);
 
+  const checkForUpdate = _ => {
+    getAppstoreAppMetadata("com.buskool") //put any apps packageId here
+      .then(metadata => {
+        if (
+          DeviceInfo.getVersion() != metadata.version
+        ) {
+          const versionParts = metadata.version.split('.');
+          if (versionParts[versionParts.length - 1] == '1') {
+            setIsForceUpdate(true);
+          }
+          else {
+            setIsForceUpdate(false);
+          }
+          setUpdateModalFlag(true);
+        }
+        else {
+          setUpdateModalFlag(false);
+        }
+      })
+      .catch(err => {
+        console.log("error occurred", err);
+      });
+  }
 
   const handleIncomingEvent = event => {
     switch ((event.url).split('://')[1]) {

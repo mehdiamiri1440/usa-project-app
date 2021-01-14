@@ -155,6 +155,28 @@ class RequestsTab extends Component {
                         {locales('labels.messengerNoRelateRequstFoundSecond')}
                     </Text>
                 </View>
+                <Button
+                    onPress={_ => this.props.navigation.navigate('RegisterProduct')}
+                    style={{
+                        alignSelf: 'center',
+                        backgroundColor: '#00C569',
+                        width: deviceWidth * 0.6,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: 50,
+                        borderRadius: 4,
+                    }}
+                >
+
+                    <Text style={{
+                        color: 'white',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 18,
+                        textAlign: 'center', textAlignVertical: 'center'
+                    }}>
+                        {locales('labels.registerProduct')}
+                    </Text>
+                </Button>
             </View>
     };
 
@@ -320,7 +342,10 @@ class RequestsTab extends Component {
                         <Button
                             onPress={event => this.openChat(event, item, true)}
                             style={[styles.loginButton,
-                            { alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'center', alignItems: 'center' }]}
+                            {
+                                alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0,
+                                justifyContent: 'center', alignItems: 'center'
+                            }]}
                         >
 
                             <LinearGradient
