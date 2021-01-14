@@ -148,6 +148,7 @@ class Requests extends PureComponent {
         const { active_pakage_type } = user_info;
 
         event.preventDefault();
+        event.stopPropagation();
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {

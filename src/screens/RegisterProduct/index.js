@@ -461,7 +461,7 @@ class RegisterProduct extends React.Component {
         let { userProfile = {} } = this.props;
         const { user_info = {} } = userProfile;
         const { active_pakage_type } = user_info;
-
+        event.stopPropagation()
         event.preventDefault();
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })

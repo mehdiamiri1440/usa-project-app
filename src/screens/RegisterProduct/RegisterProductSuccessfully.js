@@ -250,7 +250,10 @@ class RegisterProductSuccessfully extends Component {
 
                     <Button
                         small
-                        onPress={event => this.props.openChat(event, item)}
+                        onPress={event => {
+                            event.stopPropagation();
+                            this.props.openChat(event, item)
+                        }}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
                             width: "80%",

@@ -8,6 +8,7 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
+import { deviceWidth } from '../../utils/deviceDimenssions';
 
 
 const BuyAdList = props => {
@@ -15,7 +16,6 @@ const BuyAdList = props => {
     const { item, index, selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
-    console.warn('item-------/,,', item)
     return (
 
         <View
@@ -78,8 +78,8 @@ const BuyAdList = props => {
                             position: 'absolute',
                             top: 65,
                             textAlign: 'center',
-                            left: deviceWidth * 0.25,
-                            fontSize: 18,
+                            left: deviceWidth * 0.33,
+                            fontSize: 20,
                             color: '#7e7e7e'
                         }}
                     >
@@ -87,12 +87,12 @@ const BuyAdList = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
+                                fontSize: 20,
                                 color: '#556083',
                                 marginHorizontal: 2
                             }}
                         >
-                            {` ${item.subcategory_name} `}
+                            {` ${item.subcategory_name}`}
                         </Text>
                         {item.is_golden && active_pakage_type == 0 ?
                             <Text> </Text>
@@ -101,7 +101,7 @@ const BuyAdList = props => {
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         marginHorizontal: 2,
                                         color: '#7e7e7e'
                                     }}
@@ -111,7 +111,7 @@ const BuyAdList = props => {
                                 <Text
                                     style={{
                                         color: '#556083',
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 2
                                     }}
@@ -283,10 +283,13 @@ const BuyAdList = props => {
 
                 <Button
                     small
-                    onPress={event => props.openChat(event, item)}
+                    onPress={event => {
+                        event.stopPropagation()
+                        props.openChat(event, item)
+                    }}
                     style={{
                         borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                        width: "70%",
+                        width: "80%", zIndex: 1000,
                         position: 'relative',
                         alignSelf: 'center',
 
