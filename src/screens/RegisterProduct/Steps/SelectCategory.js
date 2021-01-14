@@ -446,7 +446,7 @@ class SelectCategory extends Component {
                                 </Button>
                                 <Button
                                     onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                    style={[styles.backButtonContainer, { width: '40%' }]}
+                                    style={[styles.backButtonContainer, { width: '40%', marginRight: 30 }]}
                                     rounded
                                 >
                                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
