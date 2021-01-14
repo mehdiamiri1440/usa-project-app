@@ -90,7 +90,7 @@ class RegisterProductSuccessfully extends Component {
                                 position: 'absolute',
                                 top: 65,
                                 textAlign: 'center',
-                                left: deviceWidth * 0.25,
+                                left: deviceWidth * 0.31,
                                 fontSize: 18,
                                 color: '#7e7e7e'
                             }}
