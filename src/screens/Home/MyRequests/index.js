@@ -28,8 +28,7 @@ const MyRequests = props => {
 
     const deleteBuyAd = id => {
         setDeleteModalFlag(true);
-        props.deleteBuyAd(id).then(result => {
-            console.warn('re', result)
+        props.deleteBuyAd(id).then(_ => {
             props.fetchMyRequests();
             setDeleteModalFlag(false);
         })
@@ -134,7 +133,15 @@ const MyRequests = props => {
                     </Dialog>
                 </Portal >
 
-                <Card>
+                <Card
+                    style={{
+                        borderTopColor: '#374761',
+                        borderTopWidth: 5,
+                        width: deviceWidth * 0.93,
+                        alignSelf: 'center',
+                        borderRadius: 7
+                    }}
+                >
                     <CardItem>
                         <Body>
                             {subcategory_name ? <View
@@ -157,13 +164,13 @@ const MyRequests = props => {
                                     }}
                                     numberOfLines={1}
                                 >
-                                    {locales('titles.category')}:
-                            </Text>
+                                    {locales('titles.category')}
+                                </Text>
                                 <Text
                                     style={{
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#000000',
+                                        color: '#374761',
                                         width: '60%',
                                         textAlign: 'center'
                                     }}
@@ -194,13 +201,13 @@ const MyRequests = props => {
                                     }}
                                     numberOfLines={1}
                                 >
-                                    {locales('titles.productType')}:
-                            </Text>
+                                    {locales('titles.productType')}
+                                </Text>
                                 <Text
                                     style={{
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#000000',
+                                        color: '#374761',
                                         width: '60%',
                                         textAlign: 'center'
                                     }}
@@ -229,13 +236,13 @@ const MyRequests = props => {
                                     }}
                                     numberOfLines={1}
                                 >
-                                    {locales('titles.amountNeeded')}:
-                            </Text>
+                                    {locales('titles.amountNeeded')}
+                                </Text>
                                 <Text
                                     style={{
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#000000',
+                                        color: '#374761',
                                         width: '60%',
                                         textAlign: 'center'
                                     }}
@@ -267,13 +274,13 @@ const MyRequests = props => {
                                         }}
                                         numberOfLines={1}
                                     >
-                                        {locales('titles.createdAt')}:
-                            </Text>
+                                        {locales('titles.createdAt')}
+                                    </Text>
                                     <Text
                                         style={{
                                             fontSize: 16,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            color: '#000000',
+                                            color: '#374761',
                                             width: '60%',
                                             textAlign: 'center'
                                         }}
@@ -304,13 +311,13 @@ const MyRequests = props => {
                                     }}
                                     numberOfLines={1}
                                 >
-                                    {locales('titles.countOfRecievedReply')}:
-                            </Text>
+                                    {locales('titles.countOfRecievedReply')}
+                                </Text>
                                 <Text
                                     style={{
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#000000',
+                                        color: '#374761',
                                         width: '50%',
                                         textAlign: 'center'
                                     }}
@@ -347,7 +354,7 @@ const MyRequests = props => {
                                     style={{
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#000000',
+                                        color: '#374761',
                                         width: '60%',
                                         textAlign: 'center'
                                     }}
@@ -423,10 +430,27 @@ const MyRequests = props => {
         props.fetchMyRequests()
     };
 
+    const renderItemSeparatorComponent = _ => {
+        return (
+            <View
+                style={{
+                    paddingVertical: 5
+                }
+                }>
+
+            </View>
+        )
+    }
+
     return (
-        <>
-            <View style={{
+        <View
+            style={{
                 backgroundColor: 'white',
+                flex: 1
+            }}
+        >
+            <View style={{
+                backgroundColor: '#F6FBFF',
                 flexDirection: 'row',
                 alignContent: 'center',
                 alignItems: 'center',
@@ -453,14 +477,16 @@ const MyRequests = props => {
                 </View>
             </View>
             <FlatList
+                style={{ marginTop: 10 }}
                 data={myRequestsList}
                 renderItem={renderItem}
+                ItemSeparatorComponent={renderItemSeparatorComponent}
                 keyExtractor={item => item.id.toString()}
                 ListEmptyComponent={renderListEmptyComponent}
                 refreshing={myRequestsLoading}
                 onRefresh={onRefresh}
             />
-        </>
+        </View>
     )
 };
 
