@@ -116,7 +116,6 @@ const RegisterRequestSuccessfully = props => {
 
 
     const renderItem = ({ item }) => {
-        console.warn('item', item)
         const {
             product_name,
             stock,
@@ -305,9 +304,14 @@ const RegisterRequestSuccessfully = props => {
                             </View>
                         </View>
                         <Button
-                            onPress={_ => setModalFlag(true)}
+                            onPress={event => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                setModalFlag(true);
+                            }}
                             style={{
                                 textAlign: 'center',
+                                zIndex: 10005,
                                 borderRadius: 5,
                                 padding: 30,
                                 marginBottom: 10,
@@ -321,14 +325,28 @@ const RegisterRequestSuccessfully = props => {
                             }}
                             rounded
                         >
-                            <Text style={{
-                                color: 'white',
-                                textAlign: 'center',
-                                fontSize: 22,
-                                marginHorizontal: 3,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                            }}>{locales('labels.sendMessageToSeller')}</Text>
-                            <MaterialCommunityIcons name='message' size={25} color='#FFFFFF' />
+                            <View
+                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                                <Text
+                                    onPress={event => {
+                                        event.stopPropagation();
+                                        event.preventDefault();
+                                        setModalFlag(true);
+                                    }}
+                                    style={{
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        fontSize: 22,
+                                        marginHorizontal: 3,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }}>{locales('labels.sendMessageToSeller')}</Text>
+                                <MaterialCommunityIcons name='message' size={25} color='#FFFFFF'
+                                    onPress={event => {
+                                        event.stopPropagation();
+                                        event.preventDefault();
+                                        setModalFlag(true);
+                                    }} />
+                            </View>
                         </Button>
                         {/* <FastImage
                         resizeMethod='resize'

@@ -32,7 +32,7 @@ let homeRoutes = [
     { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
-    // { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
+    { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
@@ -355,61 +355,63 @@ class Home extends React.Component {
 
                             (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
                                 this.props.userProfile.user_info.active_pakage_type == 3) ? null :
-                                (!is_seller && (route.name == 'PromoteRegistration' || route.name == 'Dashboard' || route.name == 'MyProducts')) ? null :
-                                    <TouchableOpacity
-                                        onPress={() => this.handleRouteChange(route.name)}
-                                        style={{
-                                            alignContent: 'center',
-                                            backgroundColor: 'white',
-                                            borderRadius: 5,
-                                            marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                            borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
-                                            borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
-                                            paddingVertical: 10,
-                                            elevation: 2,
-                                            paddingHorizontal: 20,
-                                            marginVertical: 10,
-                                            marginHorizontal: 20,
-                                            flexDirection: 'row-reverse',
-                                        }}
-                                        key={index}>
-                                        <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                            <View style={{
+                                (!is_seller && (route.name == 'PromoteRegistration' ||
+                                    route.name == 'Dashboard' || route.name == 'MyProducts')) ? null :
+                                    route.name == 'MyRequests' && is_seller ? null :
+                                        <TouchableOpacity
+                                            onPress={() => this.handleRouteChange(route.name)}
+                                            style={{
+                                                alignContent: 'center',
+                                                backgroundColor: 'white',
                                                 borderRadius: 5,
-                                                backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
-                                                padding: 5
-                                            }}>
-                                                {route.icon}
-                                            </View>
-                                            <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
-                                                {locales(route.label)}
-                                            </Text>
-                                        </View>
-                                        <View style={{ width: '55%', flexDirection: 'row' }}>
-                                            <Text style={{ textAlignVertical: 'center' }}>
-                                                <FontAwesome5 color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='angle-left' />
-                                            </Text>
-                                            {route.name == 'PromoteRegistration' ?
-                                                <Text style={{
-                                                    fontSize: 18,
-                                                    backgroundColor: '#E41C38', color: 'white',
-                                                    borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
-                                                    textAlignVertical: 'center', width: 60
+                                                marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
+                                                borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '',
+                                                borderWidth: route.name === 'PromoteRegistration' ? 1 : 0,
+                                                paddingVertical: 10,
+                                                elevation: 2,
+                                                paddingHorizontal: 20,
+                                                marginVertical: 10,
+                                                marginHorizontal: 20,
+                                                flexDirection: 'row-reverse',
+                                            }}
+                                            key={index}>
+                                            <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                                <View style={{
+                                                    borderRadius: 5,
+                                                    backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#666666',
+                                                    padding: 5
                                                 }}>
-                                                    {locales('labels.special')}
+                                                    {route.icon}
+                                                </View>
+                                                <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                                    {locales(route.label)}
                                                 </Text>
-                                                : route.name == 'Authentication' ?
+                                            </View>
+                                            <View style={{ width: '55%', flexDirection: 'row' }}>
+                                                <Text style={{ textAlignVertical: 'center' }}>
+                                                    <FontAwesome5 color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='angle-left' />
+                                                </Text>
+                                                {route.name == 'PromoteRegistration' ?
+                                                    <Text style={{
+                                                        fontSize: 18,
+                                                        backgroundColor: '#E41C38', color: 'white',
+                                                        borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
+                                                        textAlignVertical: 'center', width: 60
+                                                    }}>
+                                                        {locales('labels.special')}
+                                                    </Text>
+                                                    : route.name == 'Authentication' ?
 
-                                                    <View
-                                                        style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
-                                                        <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                                                        <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+                                                        <View
+                                                            style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
+                                                            <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
+                                                            <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
 
-                                                    </View>
-                                                    : null
-                                            }
-                                        </View>
-                                    </TouchableOpacity>
+                                                        </View>
+                                                        : null
+                                                }
+                                            </View>
+                                        </TouchableOpacity>
 
                         )
                     })}
