@@ -290,8 +290,12 @@ class SelectCategory extends Component {
 
 
     renderListEmptyComponent = _ => {
+        const {
+            categoriesLoading
+        } = this.props;
+
         return (
-            <View style={{
+            !categoriesLoading ? <View style={{
                 alignSelf: 'center', justifyContent: 'center',
                 alignContent: 'center', alignItems: 'center',
                 width: deviceWidth, height: deviceHeight * 0.7
@@ -302,7 +306,7 @@ class SelectCategory extends Component {
                     fontSize: 17, padding: 15, textAlign: 'center'
                 }}>
                     {locales('labels.emptyList')}</Text>
-            </View>
+            </View> : null
         )
     };
 
@@ -312,6 +316,9 @@ class SelectCategory extends Component {
         let { productType, category, subCategoriesList, categoriesList,
             subCategory, productTypeError, submitButtonClick, selectedSvgName } = this.state;
 
+        const {
+            categoriesLoading
+        } = this.props;
         // categoriesList = categoriesList || this.props.categoriesList;
         // categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
         // subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
@@ -342,6 +349,7 @@ class SelectCategory extends Component {
                         data={categoriesList}
                         ListEmptyComponent={this.renderListEmptyComponent}
                         keyExtractor={(item) => item.id.toString()}
+                        refreshing={categoriesLoading}
                         renderItem={this.renderItem}
                     />
                     : null}

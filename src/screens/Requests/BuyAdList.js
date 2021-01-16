@@ -88,6 +88,7 @@ const BuyAdList = props => {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 20,
+                                textAlign: 'center',
                                 color: '#556083',
                                 marginHorizontal: 2
                             }}
@@ -103,6 +104,7 @@ const BuyAdList = props => {
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         fontSize: 20,
                                         marginHorizontal: 2,
+                                        textAlign: 'center',
                                         color: '#7e7e7e'
                                     }}
                                 >
@@ -112,6 +114,7 @@ const BuyAdList = props => {
                                     style={{
                                         color: '#556083',
                                         fontSize: 20,
+                                        textAlign: 'center',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 2
                                     }}
@@ -124,6 +127,7 @@ const BuyAdList = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
                                 fontSize: 18,
                                 marginHorizontal: 2,
                                 color: '#7e7e7e'
@@ -141,7 +145,7 @@ const BuyAdList = props => {
                 style={{
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                    marginVertical: 10,
+                    marginTop: 10,
                     flexDirection: 'row-reverse'
                 }}
             >
@@ -178,6 +182,7 @@ const BuyAdList = props => {
                     <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            textAlign: 'center',
                             fontSize: 18,
                             color: '#7e7e7e'
                         }}
@@ -186,6 +191,7 @@ const BuyAdList = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
                                 fontSize: 18,
                                 color: '#e41c38',
                                 marginHorizontal: 2
@@ -210,6 +216,7 @@ const BuyAdList = props => {
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         fontSize: 18,
+                                        textAlign: 'center',
                                         marginHorizontal: 2,
                                         color: '#7e7e7e'
                                     }}
@@ -219,6 +226,7 @@ const BuyAdList = props => {
                                 <Text
                                     style={{
                                         color: '#556083',
+                                        textAlign: 'center',
                                         fontSize: 18,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 2
@@ -233,6 +241,7 @@ const BuyAdList = props => {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 18,
+                                textAlign: 'center',
                                 marginHorizontal: 2,
                                 color: '#7e7e7e'
                             }}

@@ -24,9 +24,12 @@ class StockAndPrice extends Component {
             amount: '',
             amountText: '',
             loaded: false,
-            submitButtonClick: false,
             maximumPrice: '',
-            minimumPrice: ''
+            minimumPrice: '',
+            amountClicked: false,
+            minimumOrderClicked: false,
+            minPriceClicked: false,
+            maxPriceClicked: false,
         }
     }
 
@@ -58,25 +61,27 @@ class StockAndPrice extends Component {
         this.setState(() => ({
             amountError: '',
             amount: field,
-            submitButtonClick: false
-
+            amountClicked: true
         }));
 
         if (field) {
             if (!validator.isNumber(field)) {
                 this.setState(() => ({
-                    amountError: "لطفا  فقط عدد وارد کنید"
+                    amountError: "لطفا  فقط عدد وارد کنید",
+                    amountClicked: true
                 }));
             }
             if (!this.amountError) {
                 this.setState(() => ({
-                    amountText: formatter.convertUnitsToText(field)
+                    amountText: formatter.convertUnitsToText(field),
+                    amountClicked: true
                 }));
             }
         } else {
             this.setState(() => ({
                 amount: '',
-                amountText: ''
+                amountText: '',
+                amountClicked: false
             }));
         }
 
@@ -88,12 +93,12 @@ class StockAndPrice extends Component {
             this.setState(() => ({
                 minimumPrice: field,
                 minimumPriceError: '',
-                submitButtonClick: false
+                minPriceClicked: true
             }));
         else
             this.setState(() => ({
                 minimumPrice: '',
-                submitButtonClick: false
+                minPriceClicked: false
             }));
     };
 
@@ -102,12 +107,12 @@ class StockAndPrice extends Component {
             this.setState(() => ({
                 maximumPrice: field,
                 maximumPriceError: '',
-                submitButtonClick: false
+                maxPriceClicked: true
             }));
         else
             this.setState(() => ({
                 maximumPrice: '',
-                submitButtonClick: false
+                maxPriceClicked: false
             }));
     };
 
@@ -116,24 +121,27 @@ class StockAndPrice extends Component {
         this.setState(() => ({
             minimumOrderError: '',
             minimumOrder: field,
-            submitButtonClick: false
+            minimumOrderClicked: true
         }));
 
         if (field) {
             if (!validator.isNumber(field)) {
                 this.setState(() => ({
-                    minimumOrderError: "لطفا  فقط عدد وارد کنید"
+                    minimumOrderError: "لطفا  فقط عدد وارد کنید",
+                    minimumOrderClicked: true
                 }));
             }
             if (!this.minimumOrderError) {
                 this.setState(() => ({
-                    minimumOrderText: formatter.convertUnitsToText(field)
+                    minimumOrderText: formatter.convertUnitsToText(field),
+                    minimumOrderClicked: true
                 }));
             }
         } else {
             this.setState(() => ({
                 minimumOrder: '',
-                minimumOrderText: ''
+                minimumOrderText: '',
+                minimumOrderClicked: false
             }));
         }
 
@@ -190,7 +198,10 @@ class StockAndPrice extends Component {
             minimumPriceError = '';
         }
 
-        this.setState({ submitButtonClick: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError })
+        this.setState({
+            minimumOrderClicked: true, maxPriceClicked: true,
+            minPriceClicked: true, amountClicked: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError
+        })
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             this.props.setStockAndPrice(minimumOrder, maximumPrice, minimumPrice, amount);
         }
@@ -203,13 +214,12 @@ class StockAndPrice extends Component {
             maximumPriceError,
             minimumPriceError,
             amountError,
-            isMinimumOrderFocused,
-            isMaximumPriceFocused,
-            isAmountFocused,
-            isMinimumPriceFocused,
-            submitButtonClick,
             minimumOrder,
             minimumOrderText,
+            amountClicked,
+            minimumOrderClicked,
+            minPriceClicked,
+            maxPriceClicked,
             amount,
             amountText,
             minimumPrice,
@@ -259,15 +269,15 @@ class StockAndPrice extends Component {
                             borderRadius: 4,
                             borderWidth: 1,
                             borderColor: amount ? amountError ? '#f08c9a' : '#7ee0b2' :
-                                submitButtonClick ? '#f08c9a' : '#000000'
+                                amountClicked ? '#f08c9a' : '#000000'
                         }}
                     >
                         <FontAwesome5 name={
-                            amount ? amountError ? 'times-circle' : 'check-circle' : submitButtonClick
+                            amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
                                 ? 'times-circle' : 'edit'}
                             style={{ paddingHorizontal: 4 }}
                             color={amount ? amountError ? '#f08c9a' : '#7ee0b2'
-                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                                : amountClicked ? '#f08c9a' : '#000000'}
                         />
                         <Input
                             autoCapitalize='none'
@@ -337,15 +347,15 @@ class StockAndPrice extends Component {
                             borderRadius: 4,
                             borderWidth: 1,
                             borderColor: minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2' :
-                                submitButtonClick ? '#f08c9a' : '#000000'
+                                minimumOrderClicked ? '#f08c9a' : '#000000'
                         }}
                     >
                         <FontAwesome5 name={
-                            minimumOrder ? minimumOrderError ? 'times-circle' : 'check-circle' : submitButtonClick
+                            minimumOrder ? minimumOrderError ? 'times-circle' : 'check-circle' : minimumOrderClicked
                                 ? 'times-circle' : 'edit'}
                             style={{ paddingHorizontal: 4 }}
                             color={minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2'
-                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                                : minimumOrderClicked ? '#f08c9a' : '#000000'}
                         />
                         <Input
                             autoCapitalize='none'
@@ -414,15 +424,15 @@ class StockAndPrice extends Component {
                             borderRadius: 4,
                             borderWidth: 1,
                             borderColor: minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                submitButtonClick ? '#f08c9a' : '#000000'
+                                minPriceClicked ? '#f08c9a' : '#000000'
                         }}
                     >
                         <FontAwesome5 name={
-                            minimumPrice ? minimumPriceError ? 'times-circle' : 'check-circle' : submitButtonClick
+                            minimumPrice ? minimumPriceError ? 'times-circle' : 'check-circle' : minPriceClicked
                                 ? 'times-circle' : 'edit'}
                             style={{ paddingHorizontal: 4 }}
                             color={minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                                : minPriceClicked ? '#f08c9a' : '#000000'}
                         />
                         <Input
                             autoCapitalize='none'
@@ -486,15 +496,15 @@ class StockAndPrice extends Component {
                             borderRadius: 4,
                             borderWidth: 1,
                             borderColor: maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                submitButtonClick ? '#f08c9a' : '#000000'
+                                maxPriceClicked ? '#f08c9a' : '#000000'
                         }}
                     >
                         <FontAwesome5 name={
-                            maximumPrice ? maximumPriceError ? 'times-circle' : 'check-circle' : submitButtonClick
+                            maximumPrice ? maximumPriceError ? 'times-circle' : 'check-circle' : maxPriceClicked
                                 ? 'times-circle' : 'edit'}
                             style={{ paddingHorizontal: 4 }}
                             color={maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : submitButtonClick ? '#f08c9a' : '#000000'}
+                                : maxPriceClicked ? '#f08c9a' : '#000000'}
                         />
                         <Input
                             autoCapitalize='none'
