@@ -191,7 +191,7 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductLoading: false,
                 addNewProductFailed: false,
                 addNewProductError: true,
-                addNewProductMessage: errorsArray,
+                addNewProductMessage: errorsArray && errorsArray.length ? errorsArray : ['خطای سرور'],
                 product: {},
                 buyAds: []
             };
@@ -272,7 +272,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_FAILED: {
-            let { msg = '' } = action.payload
             return {
                 ...state,
                 registerBuyAdRequestLoading: false,
@@ -284,7 +283,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.REGISTER_BUYAD_REQUEST_REJECT: {
-
             const { response = {} } = action.payload;
             const { data = {} } = response;
             const { errors = {} } = data;
@@ -296,7 +294,7 @@ export default (state = INITIAL_STATE, action) => {
                 registerBuyAdRequestLoading: false,
                 registerBuyAdRequestFailed: false,
                 registerBuyAdRequestError: true,
-                registerBuyAdRequestMessage: errorsArray,
+                registerBuyAdRequestMessage: errorsArray && errorsArray.length ? errorsArray : ['خطای سرور'],
                 registerBuyAdRequest: {}
             };
         };
@@ -351,7 +349,7 @@ export default (state = INITIAL_STATE, action) => {
                 buyAdsAfterPaymentLoading: false,
                 buyAdsAfterPaymentFailed: false,
                 buyAdsAfterPaymentError: true,
-                buyAdsAfterPaymentMessage: errorsArray,
+                buyAdsAfterPaymentMessage: errorsArray && errorsArray.length ? errorsArray : ['خطای سرور'],
                 buyAdsAfterPayment: {}
             };
         };
