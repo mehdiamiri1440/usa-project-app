@@ -43,13 +43,15 @@ const RegisterRequestSuccessfully = props => {
         return (
             <View
                 style={{
-                    padding: 20
+                    padding: 20,
+                    marginTop: 15
                 }}
             >
                 <Text
                     style={{
                         fontSize: 22,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: '#323A42'
                     }}
                 >
                     {locales('labels.suggestedSellers')}
@@ -114,6 +116,18 @@ const RegisterRequestSuccessfully = props => {
         )
     };
 
+    const renderItemSeparatorComponent = _ => {
+        return (
+            <View
+                style={{
+                    marginVertical: 15
+                }}
+            >
+
+            </View>
+        )
+    }
+
 
     const renderItem = ({ item }) => {
         const {
@@ -147,13 +161,16 @@ const RegisterRequestSuccessfully = props => {
 
                 <Card
                     style={{
-                        padding: 10,
-                        borderColor: active_pakage_type == 3 ? '#00C569' : '#bebebe',
+                        paddingVertical: 5,
+                        borderColor: active_pakage_type == 3 ? '#00C569' : '#CCC',
                         borderTopWidth: 2,
                         borderBottomWidth: 2,
+                        elevation: 0,
                         borderRightWidth: 2,
                         borderLeftWidth: 2,
-                        borderRadius: 3, width: deviceWidth * 0.96, alignSelf: 'center'
+                        borderRadius: 8,
+                        width: deviceWidth * 0.96,
+                        alignSelf: 'center'
                     }}
                 >
                     {/* <TouchableOpacity
@@ -192,10 +209,10 @@ const RegisterRequestSuccessfully = props => {
                             <Image
                                 source={require('../../../assets/icons/user.png')}
                                 style={{
-                                    width: deviceWidth * 0.1,
-                                    height: deviceWidth * 0.1,
-                                    borderRadius: deviceWidth * 0.05,
-                                    marginBottom: 10
+                                    width: deviceWidth * 0.09,
+                                    marginBottom: 5,
+                                    height: deviceWidth * 0.09,
+                                    borderRadius: deviceWidth * 0.045,
                                 }}
                             />
                             <View style={{ flexDirection: 'row-reverse' }}>
@@ -203,7 +220,7 @@ const RegisterRequestSuccessfully = props => {
                                     numberOfLines={1}
                                     style={{
                                         color: '#666666',
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginTop: 5,
                                         marginHorizontal: 5,
@@ -226,8 +243,9 @@ const RegisterRequestSuccessfully = props => {
                             <FastImage
                                 resizeMethod='resize'
                                 style={{
-                                    width: deviceWidth * 0.4, borderWidth: 0.6,
-                                    borderColor: '#BEBEBE', height: deviceWidth * 0.3, borderRadius: 4
+                                    backgroundColor: "#f0f3f6",
+                                    width: deviceWidth * 0.25,
+                                    borderColor: '#BEBEBE', height: deviceWidth * 0.25, borderRadius: 4
                                 }}
                                 source={{
                                     uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photo}`,
@@ -238,7 +256,7 @@ const RegisterRequestSuccessfully = props => {
                             />
                             <View
                                 style={{
-                                    marginTop: 20,
+                                    marginTop: 5,
                                     marginHorizontal: 10
                                 }}
                             >
@@ -250,14 +268,14 @@ const RegisterRequestSuccessfully = props => {
                                         width: '100%'
                                     }}
                                 >
-                                    <Entypo name='location-pin' size={20} color='#BEBEBE' />
+                                    <Entypo name='location-pin' size={20} color='#777777' />
                                     <Text
                                         numberOfLines={1}
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 18,
-                                            width: '65%',
-                                            color: '#BEBEBE'
+                                            fontSize: 16,
+                                            width: '75%',
+                                            color: '#777'
                                         }}
                                     >
                                         {subcategory_name}
@@ -265,7 +283,7 @@ const RegisterRequestSuccessfully = props => {
                                             numberOfLines={1}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 color: '#000',
                                             }}
                                         >
@@ -282,12 +300,12 @@ const RegisterRequestSuccessfully = props => {
                                         width: '100%'
                                     }}
                                 >
-                                    <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
+                                    <FontAwesome5 name='box-open' size={15} color='#777' />
                                     <Text
                                         numberOfLines={1}
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             marginHorizontal: 2,
                                             color: '#000',
                                             width: '65%'
@@ -296,10 +314,10 @@ const RegisterRequestSuccessfully = props => {
                                         <Text
                                             numberOfLines={1}
                                             style={{
-                                                color: '#BEBEBE',
+                                                color: '#777',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 16,
-                                            }}>{locales('titles.stockQuantity')}:</Text> {formatter.convertedNumbersToTonUnit(stock)}
+                                            }}>{locales('titles.stockQuantity')} :</Text> {formatter.convertedNumbersToTonUnit(stock)}
                                     </Text>
                                 </View>
                             </View>
@@ -314,10 +332,11 @@ const RegisterRequestSuccessfully = props => {
                                 textAlign: 'center',
                                 zIndex: 10005,
                                 borderRadius: 5,
-                                padding: 30,
+                                elevation: 0,
+                                padding: 25,
                                 marginBottom: 10,
                                 backgroundColor: '#00C569',
-                                width: '95%',
+                                width: '80%',
                                 color: 'white',
                                 alignItems: 'center',
                                 alignSelf: 'center',
@@ -337,11 +356,11 @@ const RegisterRequestSuccessfully = props => {
                                     style={{
                                         color: 'white',
                                         textAlign: 'center',
-                                        fontSize: 22,
+                                        fontSize: 20,
                                         marginHorizontal: 3,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                     }}>{locales('labels.sendMessageToSeller')}</Text>
-                                <MaterialCommunityIcons name='message' size={25} color='#FFFFFF'
+                                <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
@@ -419,7 +438,6 @@ const RegisterRequestSuccessfully = props => {
             <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
                 <View
                     style={{
-                        marginVertical: 10,
                         backgroundColor: '#edf8e6',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -579,6 +597,7 @@ const RegisterRequestSuccessfully = props => {
                             keyExtractor={keyExtractor}
                             data={products}
                             renderItem={renderItem}
+                            ItemSeparatorComponent={renderItemSeparatorComponent}
                         />
                     </View>
                     : null}

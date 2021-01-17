@@ -332,7 +332,7 @@ class SelectCategory extends Component {
             >
 
 
-                <Text
+                {!category || !subCategory ? <Text
                     style={{
                         marginVertical: 10,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -342,7 +342,7 @@ class SelectCategory extends Component {
                     }}
                 >
                     {categoryIcon} {locales('labels.selectedProductCategory')}
-                </Text>
+                </Text> : null}
 
                 {!category ?
                     <FlatList

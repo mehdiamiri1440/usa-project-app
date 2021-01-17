@@ -119,7 +119,7 @@ export default {
     'labels.inUse': 'درحال استفاده',
     'labels.elevatorCount': 'تعداد نردبان',
     'labels.showInSpecialProductsList': 'نمایش در لیست محصولات ویژه',
-    'labels.uploadProductImages': '.لطفا فقط عکس‌های مرتبط با محصول خود را ثبت کنید',
+    'labels.uploadProductImages': 'لطفا فقط عکس‌های مرتبط با محصول خود را ثبت کنید.',
     'labels.terms': 'قوانین',
     'labels.registerProduct': 'ثبت ‌محصول',
     'labels.dashboard': 'داشبورد',

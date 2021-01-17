@@ -199,8 +199,8 @@ class ProductImages extends Component {
 
                     <Text
                         style={{
-                            color: 'red',
-                            fontSize: 14,
+                            color: '#777777',
+                            fontSize: 16,
                             paddingHorizontal: 10,
                             direction: 'rtl'
                         }}

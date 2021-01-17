@@ -69,7 +69,7 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 0,
+            stepNumber: 4,
             showModal: false,
             subCategoryName: '',
             subCategoryId: null,
@@ -595,8 +595,6 @@ class RegisterProduct extends React.Component {
 
 
                         {stepNumber > 0 && <View style={{
-                            borderBottomColor: '#00C569',
-                            borderBottomWidth: 2,
                             paddingVertical: 10,
                             width: deviceWidth, marginVertical: 5,
                             flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
@@ -607,7 +605,7 @@ class RegisterProduct extends React.Component {
 
                                 alignItems: 'stretch',
                                 alignContent: 'center', alignSelf: 'center',
-                                width: deviceWidth - 80,
+                                width: deviceWidth - 40,
 
                             }}>
                                 {stepsArray.map((item, index) => {
@@ -617,13 +615,10 @@ class RegisterProduct extends React.Component {
                                                 style={{
                                                     textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
                                                     alignSelf: 'center', alignContent: 'center',
-                                                    shadowOffset: { width: 10, height: 10 },
-                                                    shadowColor: 'black',
-                                                    shadowOpacity: 1.0,
-                                                    elevation: 5,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                     textAlignVertical: 'center', borderColor: '#FFFFFF',
                                                     backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                    width: 26, height: 26, borderRadius: 13
+                                                    width: 20, height: 20, borderRadius: 10
 
                                                 }}
                                             >
@@ -631,7 +626,7 @@ class RegisterProduct extends React.Component {
                                             </Text>
                                             {index < stepsArray.length - 1 && <View
                                                 style={{
-                                                    height: 4,
+                                                    height: 2,
                                                     flex: 1,
                                                     alignSelf: 'center',
                                                     backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
