@@ -785,7 +785,7 @@ class Product extends PureComponent {
 
                 }}>
                     <Card transparent style={styles.cardWrapper}>
-                        <View style={[{ borderColor: active_pakage_type > 1 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
+                        <View style={[{ borderColor: active_pakage_type == 3 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
                             <TouchableOpacity
                                 onPress={() => {
                                     this.props.navigation.navigate('Profile', { user_name })
@@ -851,7 +851,7 @@ class Product extends PureComponent {
                                         {locales('labels.seeProfile')}
                                     </Text>}
                             </TouchableOpacity>
-                            {active_pakage_type > 1 && <Image
+                            {active_pakage_type == 3 && <Image
                                 style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
                                 source={require('../../../assets/icons/special-label.png')} />}
                             <TouchableOpacity

@@ -147,7 +147,8 @@ const RegisterRequestSuccessfully = props => {
 
                 <Card
                     style={{
-                        padding: 10, borderColor: active_pakage_type > 0 ? '#00C569' : '#bebebe',
+                        padding: 10,
+                        borderColor: active_pakage_type == 3 ? '#00C569' : '#bebebe',
                         borderTopWidth: 2,
                         borderBottomWidth: 2,
                         borderRightWidth: 2,

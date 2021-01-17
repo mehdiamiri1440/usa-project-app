@@ -330,7 +330,8 @@ class RegisterProductSuccessfully extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'white',
-                    width: deviceWidth
+                    width: deviceWidth,
+                    flexDirection: 'row-reverse',
                 }
                 }>
                 <Text
@@ -338,10 +339,16 @@ class RegisterProductSuccessfully extends Component {
                         this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
                     }} style={[styles.buttonText, {
                         color: '#1da6f4', marginTop: 50,
-                        paddingBottom: 50,
+                        paddingBottom: 50, width: '80%',
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }]}>
                     {locales('titles.otherRelatedBuyads')}</Text>
+                <FontAwesome5
+                    size={17}
+                    name='arrow-left'
+                    color='#1DA1F2'
+                />
+
             </View>
         )
     };
