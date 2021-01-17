@@ -38,6 +38,7 @@ let homeRoutes = [
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='white' />, name: 'Profile' },
+    { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SuggestedBuyers' },
     { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
@@ -57,17 +58,20 @@ class Home extends React.Component {
 
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
-            this.props.logOut().then(() => { })
+            return this.props.logOut().then(() => { })
         }
         if (name == 'Profile') {
             if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
-                this.props.navigation.navigate('MyBuskool', { screen: name, params: { user_name: this.props.userProfile.user_info.user_name } })
+                return this.props.navigation.navigate('MyBuskool', { screen: name, params: { user_name: this.props.userProfile.user_info.user_name } })
         }
         if (name == 'Messages') {
-            this.props.navigation.navigate("Messages")
+            return this.props.navigation.navigate("Messages", { screen: 'Messages', params: { tabIndex: 0 } })
+        }
+        if (name == 'SuggestedBuyers') {
+            return this.props.navigation.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
         }
         else {
-            this.props.navigation.navigate('MyBuskool', { screen: name })
+            return this.props.navigation.navigate('MyBuskool', { screen: name })
         }
 
     };
@@ -356,7 +360,8 @@ class Home extends React.Component {
                             (this.props.userProfile && this.props.userProfile.user_info && route.name == 'PromoteRegistration' &&
                                 this.props.userProfile.user_info.active_pakage_type == 3) ? null :
                                 (!is_seller && (route.name == 'PromoteRegistration' ||
-                                    route.name == 'Dashboard' || route.name == 'MyProducts')) ? null :
+                                    route.name == 'Dashboard' || route.name == 'MyProducts' ||
+                                    route.name == 'SuggestedBuyers')) ? null :
                                     route.name == 'MyRequests' && is_seller ? null :
                                         <TouchableOpacity
                                             onPress={() => this.handleRouteChange(route.name)}
@@ -408,7 +413,16 @@ class Home extends React.Component {
                                                             <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
 
                                                         </View>
-                                                        : null
+                                                        : route.name == 'SuggestedBuyers' ?
+                                                            <Text style={{
+                                                                fontSize: 18,
+                                                                backgroundColor: '#E41C38', color: 'white',
+                                                                borderRadius: 20, marginHorizontal: 10, textAlign: 'center',
+                                                                textAlignVertical: 'center', width: 60
+                                                            }}>
+                                                                {locales('titles.new')}
+                                                            </Text> :
+                                                            null
                                                 }
                                             </View>
                                         </TouchableOpacity>

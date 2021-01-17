@@ -363,7 +363,7 @@ class RegisterProductSuccessfully extends Component {
                 <Text
                     style={{
                         color: 'black',
-                        fontSize: 18,
+                        fontSize: 22,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     }}
                 >
@@ -373,7 +373,7 @@ class RegisterProductSuccessfully extends Component {
                 <Text
                     style={{
                         color: '#777777',
-                        fontSize: 17,
+                        fontSize: 16,
                         marginVertical: 10,
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     }}
@@ -381,7 +381,7 @@ class RegisterProductSuccessfully extends Component {
                     {locales('labels.suggestedBuyersForYou')} <Text
                         style={{
                             color: '#21AD93',
-                            fontSize: 17,
+                            fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
@@ -390,7 +390,7 @@ class RegisterProductSuccessfully extends Component {
                     <Text
                         style={{
                             color: '#777777',
-                            fontSize: 17,
+                            fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
@@ -431,14 +431,17 @@ class RegisterProductSuccessfully extends Component {
 
 
         return (
-            <ScrollView>
+            <ScrollView
+                style={{
+                    marginTop: -4
+                }}
+            >
                 <View
                     style={{
-                        marginVertical: 10,
                         backgroundColor: 'rgba(237,248,230,0.6)',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        padding: 20
+                        padding: 20,
                     }}
                 >
                     <View
@@ -474,6 +477,7 @@ class RegisterProductSuccessfully extends Component {
                         style={{
                             textAlign: 'center',
                             color: '#21AD93',
+                            paddingHorizontal: 10,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 16
                         }}

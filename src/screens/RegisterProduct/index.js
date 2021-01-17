@@ -69,7 +69,7 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 4,
+            stepNumber: 7,
             showModal: false,
             subCategoryName: '',
             subCategoryId: null,
@@ -594,7 +594,7 @@ class RegisterProduct extends React.Component {
                     >
 
 
-                        {stepNumber > 0 && <View style={{
+                        {stepNumber > 0 && stepNumber < 7 && <View style={{
                             paddingVertical: 10,
                             width: deviceWidth, marginVertical: 5,
                             flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',

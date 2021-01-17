@@ -216,15 +216,12 @@ class ProductImages extends Component {
                     </View> : null}
 
                     <View style={{
-                        width: deviceWidth,
+                        width: deviceWidth * 0.94,
                         flexDirection: 'row-reverse',
                         flexWrap: 'wrap',
                         justifyContent: 'flex-start',
                         alignItems: 'center',
-                        padding: 20,
-
                     }}>
-
                         {images.length ? images.map((image, index) => <TouchableOpacity
                             key={index}
                             onPress={() => this.chooseProductImage(index)}
@@ -303,18 +300,19 @@ class ProductImages extends Component {
                                 alignItems: 'center',
                             }}>
 
-                            <View style={{
-                                backgroundColor: "white", width: 20, height: 20,
-                                borderWidth: 1, borderColor: 'white',
-                                position: 'absolute', top: 50, right: 55, borderBottomLeftRadius: 2, zIndex: 10,
-                                justifyContent: 'center'
-                            }}>
-                                <FontAwesome color='#00C569' name="plus-square" size={18} />
+                            <View>
+                                <View style={{
+                                    backgroundColor: "white", width: 20, height: 20,
+                                    borderWidth: 1, borderColor: 'white',
+                                    position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
+                                    justifyContent: 'center'
+                                }}>
+                                    <FontAwesome color='#00C569' name="plus-square" size={18} />
+                                </View>
+                                <FontAwesome5
+                                    color='#323A42'
+                                    name='camera' size={35} />
                             </View>
-
-                            <FontAwesome5
-                                color='#323A42'
-                                name='camera' size={35} />
 
                             <Text
                                 style={{
@@ -323,8 +321,8 @@ class ProductImages extends Component {
                                 }}
                             >{locales('labels.addImage')}</Text>
                         </TouchableOpacity>
-
                     </View>
+
                     <View style={{
                         marginVertical: 20,
                         paddingRight: 15, flexDirection: 'row',
