@@ -23,8 +23,9 @@ const BuyAdList = props => {
                 padding: 20,
                 backgroundColor: index % 2 == 0 ? '#f9fcff' : '#FFFFFF',
                 width: '100%',
-                borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
+                borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
                 borderWidth: 0.8,
+                borderBottomWidth: item.is_golden ? 0.8 : 0
             }}
             key={item.id}
         >
@@ -35,6 +36,7 @@ const BuyAdList = props => {
                     position: 'absolute',
                     width: '100%',
                     height: '100%',
+                    marginTop: 13,
                     left: 0,
                     top: 0,
                     zIndex: 1
@@ -49,23 +51,24 @@ const BuyAdList = props => {
                     <View
                         style={{
                             alignItems: 'center',
-                            marginVertical: 10,
+                            marginVertical: 5,
                             right: -25,
                             position: 'absolute',
                             flexDirection: 'row-reverse'
                         }}
                     >
 
-                        <FontAwesome
+                        <FontAwesome5
+                            solid
                             name='user-circle'
                             color='#adadad'
-                            size={20}
+                            size={16}
                         />
                         <Text
                             style={{
                                 marginHorizontal: 5,
                                 color: '#adadad',
-                                fontSize: 16,
+                                fontSize: 15,
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}
                         >
@@ -76,7 +79,7 @@ const BuyAdList = props => {
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             position: 'absolute',
-                            top: 65,
+                            top: 48,
                             textAlign: 'center',
                             left: deviceWidth * 0.33,
                             fontSize: 20,
@@ -145,21 +148,22 @@ const BuyAdList = props => {
                 style={{
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                    marginTop: 10,
+                    marginTop: 0,
                     flexDirection: 'row-reverse'
                 }}
             >
 
-                <FontAwesome
+                <FontAwesome5
+                    solid
                     name='user-circle'
                     color='#adadad'
-                    size={20}
+                    size={16}
                 />
                 <Text
                     style={{
                         marginHorizontal: 5,
                         color: '#adadad',
-                        fontSize: 16,
+                        fontSize: 15,
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     }}
                 >
@@ -175,7 +179,7 @@ const BuyAdList = props => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexDirection: 'row-reverse',
-                        marginVertical: 5,
+                        marginVertical: -5,
                         minHeight: 70
                     }}
                 >
@@ -254,7 +258,7 @@ const BuyAdList = props => {
             }
 
             <View style={{
-                marginVertical: 10,
+                marginVertical: 5,
                 flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center'
             }}>
                 <View
@@ -298,7 +302,8 @@ const BuyAdList = props => {
                     }}
                     style={{
                         borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                        width: "80%", zIndex: 1000,
+                        width: deviceWidth * 0.7,
+                        zIndex: 1000,
                         position: 'relative',
                         alignSelf: 'center',
 
@@ -316,15 +321,15 @@ const BuyAdList = props => {
                             textAlign: 'center',
                             justifyContent: 'center',
                             borderRadius: 6,
-                            padding: 10,
-                            elevation: 2
+                            padding: 8,
+                            elevation: 0
                         }}
                     >
 
                         <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={20} />
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 20,
+                            fontSize: 18,
                             color: !item.is_golden ? 'white' : '#333',
                             paddingHorizontal: 3
                         }}>
