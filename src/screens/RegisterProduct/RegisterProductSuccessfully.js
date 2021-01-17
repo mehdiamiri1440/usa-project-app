@@ -33,10 +33,10 @@ class RegisterProductSuccessfully extends Component {
             <View
                 style={{
                     padding: 20,
-                    backgroundColor: index % 2 == 0 ? 'rgba(234,247,255,0.45)' : '#FFFFFF',
+                    backgroundColor: index % 2 == 0 ? '#F7FCFF' : '#FFFFFF',
                     width: '100%',
                     borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
-                    borderWidth: 0.8,
+                    borderWidth: 0.5,
                 }}
                 key={item.id}
             >
@@ -52,10 +52,9 @@ class RegisterProductSuccessfully extends Component {
                         zIndex: 1
                     }}>
 
-                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                        <Image source={require('../../../assets/images/blur-items-2.jpg')}
                             style={{
                                 width: deviceWidth,
-                                height: '100%'
                             }}
                         />
                         <View
@@ -88,7 +87,7 @@ class RegisterProductSuccessfully extends Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 position: 'absolute',
-                                top: 65,
+                                top: 50,
                                 textAlign: 'center',
                                 left: deviceWidth * 0.31,
                                 fontSize: 18,
@@ -273,7 +272,7 @@ class RegisterProductSuccessfully extends Component {
                                 alignItems: 'center',
                                 textAlign: 'center',
                                 justifyContent: 'center',
-                                height: 35,
+                                height: 45,
                                 borderRadius: 6,
                                 elevation: 2
                             }}
@@ -282,7 +281,7 @@ class RegisterProductSuccessfully extends Component {
                             <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={14} />
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 14,
+                                fontSize: 16,
                                 color: !item.is_golden ? 'white' : '#333',
                                 paddingHorizontal: 3
                             }}>
@@ -329,7 +328,9 @@ class RegisterProductSuccessfully extends Component {
                 style={{
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    width: deviceWidth
                 }
                 }>
                 <Text
@@ -395,11 +396,17 @@ class RegisterProductSuccessfully extends Component {
         )
     }
 
+    chooseBuyadsList = (buyAds, buyAdsFromParams) => {
+        let buyAdsList = [];
+        buyAdsList = buyAds.length ? [...buyAds] : [...buyAdsFromParams];
+        return buyAdsList
+    };
+
     render() {
 
         const {
             route = {},
-            buyAds = []
+            buyAds = [],
         } = this.props;
 
         const {
@@ -408,11 +415,13 @@ class RegisterProductSuccessfully extends Component {
 
         let {
             subCategoryId,
-            subCategoryName
+            subCategoryName,
+            buyAds: buyAdsFromParams = []
         } = params;
 
         subCategoryId = subCategoryId || this.props.subCategoryId;
         subCategoryName = subCategoryName || this.props.subCategoryName;
+
 
         return (
             <ScrollView>
@@ -466,11 +475,11 @@ class RegisterProductSuccessfully extends Component {
                     </Text>
                 </View>
 
-                {buyAds && buyAds.length ?
+                {this.chooseBuyadsList(buyAds, buyAdsFromParams).length ?
                     <FlatList
                         keyExtractor={item => item.id.toString()}
                         renderItem={this.renderItem}
-                        data={buyAds}
+                        data={this.chooseBuyadsList(buyAds, buyAdsFromParams)}
                         ListHeaderComponent={this.renderListHeaderComponent}
                         ListFooterComponent={this.renderListFooterComponent}
                     />

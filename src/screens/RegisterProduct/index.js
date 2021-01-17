@@ -505,7 +505,8 @@ class RegisterProduct extends React.Component {
         const {
             userProfile = {},
             addNewProductMessage = [],
-            addNewProductError
+            addNewProductError,
+            buyAds
         } = this.props;
         const {
             user_info = {}
@@ -520,7 +521,7 @@ class RegisterProduct extends React.Component {
                 {stepNumber == 7 && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
-                    routeParams={{ subCategoryId, subCategoryName }}
+                    routeParams={{ subCategoryId, subCategoryName, buyAds }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 /> : null}
