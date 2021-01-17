@@ -3,11 +3,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Text, View, StyleSheet, BackHandler, ActivityIndicator, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Button } from 'native-base';
-
-import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as productActions from '../../redux/registerProduct/actions';
 import * as profileActions from '../../redux/profile/actions';
@@ -24,7 +19,6 @@ import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
 import { deviceWidth, deviceHeight } from '../../utils';
 import Loading from '../Loading';
-import ChatModal from '../Messages/ChatModal';
 
 let stepsArray = [1, 2, 3, 4, 5, 6];
 class RegisterProduct extends React.Component {
@@ -69,17 +63,13 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 7,
+            stepNumber: 0,
             showModal: false,
             subCategoryName: '',
             subCategoryId: null,
 
             selectedButton: null,
-            modalFlag: false,
-            selectedBuyAdId: -1,
-            selectedContact: {},
             showDialog: false,
-            showGoldenModal: false
         }
     }
 
@@ -280,7 +270,7 @@ class RegisterProduct extends React.Component {
         let { stepNumber, category, subCategory, productType, images, description,
             minimumOrder, maximumPrice, minimumPrice, amount, city,
             province, subCategoryId, subCategoryName, selectedButton,
-            showGoldenModal, modalFlag, selectedBuyAdId, selectedContact } = this.state
+        } = this.state
 
         const {
             product,
@@ -332,106 +322,6 @@ class RegisterProduct extends React.Component {
             case 7: {
                 return (
                     <>
-
-
-
-                        <Portal
-                            style={{
-                                padding: 0,
-                                margin: 0
-
-                            }}>
-                            <Dialog
-                                visible={showGoldenModal}
-                                onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                                style={styles.dialogWrapper}
-                            >
-                                <Dialog.Actions
-                                    style={styles.dialogHeader}
-                                >
-                                    <Button
-                                        onPress={() => { this.setState({ showGoldenModal: false }) }}
-                                        style={styles.closeDialogModal}>
-                                        <FontAwesome5 name="times" color="#777" solid size={18} />
-                                    </Button>
-                                    <Paragraph style={styles.headerTextDialogModal}>
-                                        {locales('labels.goldenRequests')}
-                                    </Paragraph>
-                                </Dialog.Actions>
-
-
-
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        alignItems: 'center'
-                                    }}>
-
-                                    <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                        borderColor: '#facea8',
-                                    }]} />
-
-                                </View>
-                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                                    <Text style={styles.mainTextDialogModal}>
-                                        {locales('labels.accessToGoldensDeined')}
-                                    </Text>
-
-                                </Dialog.Actions>
-                                <Paragraph
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
-                                    {locales('labels.icreaseToSeeGoldens')}
-                                </Paragraph>
-                                <View style={{
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Button
-                                        style={[styles.modalButton, styles.greenButton]}
-                                        onPress={() => {
-                                            this.setState({ showGoldenModal: false })
-                                            this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                        }}
-                                    >
-
-                                        <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
-                                        </Text>
-                                    </Button>
-                                </View>
-
-
-
-
-                                <Dialog.Actions style={{
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    padding: 0
-                                }}>
-                                    <Button
-                                        style={styles.modalCloseButton}
-                                        onPress={() => this.setState({ showGoldenModal: false })}
-                                    >
-
-                                        <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                        </Text>
-                                    </Button>
-                                </Dialog.Actions>
-                            </Dialog>
-                        </Portal >
-
-
-
-                        {modalFlag && <ChatModal
-                            transparent={false}
-                            {...this.props}
-                            visible={modalFlag}
-                            buyAdId={selectedBuyAdId}
-                            contact={{ ...selectedContact }}
-                            onRequestClose={() => this.setState({ modalFlag: false })}
-                        />}
-
                         <RegisterProductSuccessfully
                             subCategoryId={subCategoryId}
                             product={product}
@@ -457,56 +347,13 @@ class RegisterProduct extends React.Component {
     };
 
 
-    openChat = (event, item) => {
-        let { userProfile = {} } = this.props;
-        const { user_info = {} } = userProfile;
-        const { active_pakage_type } = user_info;
-        event.stopPropagation()
-        event.preventDefault();
-        if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
-            this.setState({ selectedButton: item.id })
-            this.props.isUserAllowedToSendMessage(item.id).then(() => {
-                if (this.props.isUserAllowedToSendMessagePermission.permission) {
-                    if (!item.is_golden && item.id) {
-                        analytics().logEvent('chat_opened', {
-                            buyAd_id: item.id
-                        });
-                    }
-                    this.setState({
-                        modalFlag: true,
-                        selectedBuyAdId: item.id,
-                        selectedContact: {
-                            contact_id: item.myuser_id,
-                            first_name: item.first_name,
-                            last_name: item.last_name,
-                        }
-                    });
-                }
-                else {
-                    analytics().logEvent('permission_denied', {
-                        golden: false
-                    });
-                    this.setState({ showDialog: true })
-                }
-            })
-            // .catch(_ => this.setState({ showModal: true }));
-        }
-        else {
-            analytics().logEvent('permission_denied', {
-                golden: true
-            });
-            this.setState({ showGoldenModal: true });
-        }
-    };
-
-
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
         const {
             userProfile = {},
             addNewProductMessage = [],
             addNewProductError,
-            buyAds
+            buyAds = []
         } = this.props;
         const {
             user_info = {}
@@ -518,7 +365,7 @@ class RegisterProduct extends React.Component {
             <>
 
                 <Loading />
-                {stepNumber == 7 && active_pakage_type == 0 ? <PaymentModal
+                {stepNumber == 7 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
                     routeParams={{ subCategoryId, subCategoryName, buyAds }}

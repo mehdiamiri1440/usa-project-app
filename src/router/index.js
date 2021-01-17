@@ -315,6 +315,12 @@ const App = (props) => {
 
   const handleIncomingEvent = event => {
     switch ((event.url).split('://')[1]) {
+      case 'register-product-successfully':
+        console.log('here')
+        return RootNavigation.navigate('RegisterProductStack', {
+          screen: 'RegisterProductSuccessfully',
+          params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
+        });
       case 'pricing':
         return RootNavigation.navigate('MyBuskool', {
           screen: 'PromoteRegistration',

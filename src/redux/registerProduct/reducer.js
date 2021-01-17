@@ -24,6 +24,7 @@ const INITIAL_STATE = {
     buyAdsAfterPaymentFailed: false,
     buyAdsAfterPaymentError: false,
     buyAdsAfterPaymentMessage: [],
+    buyAdsAfterPaymentList: [],
 
     registerBuyAdRequestLoading: false,
     registerBuyAdRequestFailed: false,
@@ -308,19 +309,20 @@ export default (state = INITIAL_STATE, action) => {
                 buyAdsAfterPaymentFailed: false,
                 buyAdsAfterPaymentError: false,
                 buyAdsAfterPaymentMessage: [],
-                products: [],
+                buyAdsAfterPaymentList: [],
                 buyAdsAfterPayment: {}
             };
         };
         case actionTypes.BUYADS_AFTER_PAYMENT_SUCCESSFULLY: {
             let { msg = '', products = [] } = action.payload
+            console.log('conso', action.payload)
             return {
                 ...state,
                 buyAdsAfterPaymentLoading: false,
                 buyAdsAfterPaymentFailed: false,
                 buyAdsAfterPaymentError: false,
                 buyAdsAfterPaymentMessage: [],
-                products,
+                buyAdsAfterPaymentList: [...action.payload.buyAds],
                 buyAdsAfterPayment: { ...action.payload }
             };
         };
@@ -333,7 +335,7 @@ export default (state = INITIAL_STATE, action) => {
                 buyAdsAfterPaymentError: false,
                 buyAdsAfterPaymentMessage: [],
                 buyAdsAfterPayment: {},
-                products: []
+                buyAdsAfterPaymentList: []
             };
         };
         case actionTypes.BUYADS_AFTER_PAYMENT_REJECT: {
@@ -345,7 +347,7 @@ export default (state = INITIAL_STATE, action) => {
 
             return {
                 ...state,
-                products: [],
+                buyAdsAfterPaymentList: [],
                 buyAdsAfterPaymentLoading: false,
                 buyAdsAfterPaymentFailed: false,
                 buyAdsAfterPaymentError: true,

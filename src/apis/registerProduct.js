@@ -112,13 +112,12 @@ export const registerBuyAdRequest = requestObj => {
     });
 };
 
-export const fetchBuyAdsAfterPayment = requestObj => {
+export const fetchBuyAdsAfterPayment = _ => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `user/add_buyAd`,
+                route: `get_related_buyAds_to_my_product`,
                 method: 'POST',
-                data: requestObj,
                 withAuth: false,
             })
             .then(result => {

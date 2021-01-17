@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, BackHandler, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, BackHandler, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path } from "react-native-svg"
 import { Button, Input, Label, InputGroup } from 'native-base';
@@ -343,6 +343,14 @@ class SelectCategory extends Component {
                 >
                     {categoryIcon} {locales('labels.selectedProductCategory')}
                 </Text> : null}
+
+                {categoriesLoading ?
+                    <ActivityIndicator size={45} color='#00C569'
+                        style={{
+                            marginTop: deviceHeight * 0.2
+                        }}
+                        animating={categoriesLoading} />
+                    : null}
 
                 {!category ?
                     <FlatList
