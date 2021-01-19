@@ -213,7 +213,7 @@ class RegisterProductSuccessfully extends Component {
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     fontSize: 18,
-                                    color: '#556083',
+                                    color: '#e41c38',
                                     marginHorizontal: 2
                                 }}
                             >
