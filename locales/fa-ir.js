@@ -16,6 +16,7 @@ export default {
     'errors.mobileNumberInvalidFormat': 'فرمت شماره همراه صحیح نمی‌باشد',
     'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
     'errors.passwordShouldBe8AtLeast': 'کلمه‌عبور باید حداقل 8 کارکتر باشد',
+    'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
 
 
     "labels.man": "آقا",
@@ -297,9 +298,10 @@ export default {
     'titles.viewableBuyRequests': 'سقف روزانه تعداد پاسخ ها به درخواست های خرید',
     'titles.maximumPriceWithExample': 'مثلا : 30,000',
     'titles.productName': 'نام محصول',
-    'titles.enterAmount': 'میزان موجودی را وارد کنید',
+    'titles.qunatityAmount': 'میزان موجودی',
+    'titles.enterAmount': 'میزان موجودی محصول را وارد کنید',
     'titles.enterRequirment': 'میزان نیازمندی را وارد کنید',
-    'titles.enterMinOrder': 'حداقل سفارش را وارد کنید',
+    'titles.enterMinOrder': 'حداقل میزان فروش را وارد کنید',
     'titles.enterMaxPrice': 'حداکثر قیمت را وارد کنید',
     'titles.enterMinPrice': 'حداقل قیمت را وارد کنید',
     'titles.enterYours': 'خود را وارد کنید',
@@ -331,6 +333,7 @@ export default {
     'titles.stockQuantity': ' موجودی',
     'titles.minimumOrderWithExample': 'مثلا : 25,000',
     'titles.minimumOrder': 'حداقل میزان فروش (کیلوگرم)',
+    'titles.minimumOrderWithOutKilo': 'حداقل میزان فروش',
     'titles.writeYourFinalDescription': 'توضیحات نهایی محصول خود را بنویسید',
     "titles.repeatPassword": "تکرار کلمه عبور",
     "titles.signUpDoneSuccessfully": "ثبت‌نام با موفقیت انجام شد",
