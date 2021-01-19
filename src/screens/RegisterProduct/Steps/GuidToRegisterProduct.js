@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, StyleSheet, Animated } from 'react-native';
+import { View, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
@@ -330,29 +331,35 @@ class GuidToRegisterProduct extends React.Component {
                         <FontAwesome5
                             name='arrow-down'
                             size={30}
-                            color='#00C569'
+                            color='#20AE91'
                             style={{ marginTop: 20, marginBottom: 10 }}
                         />
                     </Animated.View>
-
-                    <Button
+                    <TouchableOpacity
+                        style={{ alignSelf: 'center' }}
+                        activeOpacity={1}
                         onPress={() => this.onSubmit()}
-                        style={[styles.loginButton, { width: 237 }]}
                     >
-                        <FontAwesome name='plus-square' size={25} color='white' style={{ marginHorizontal: 9 }} />
-                        <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
-                        <ActivityIndicator size="small" color="white"
-                            animating={!!userPermissionToRegisterProductLoading}
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 15,
-                                fontSize: 20,
-                                marginLeft: -30
-                            }}
-                        />
-
-                    </Button>
+                        <LinearGradient
+                            start={{ x: 0, y: 1 }}
+                            style={[styles.loginButton, { width: 240, height: 55 }]}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#21AD93', '#00C569']}
+                        >
+                            <FontAwesome name='plus-square' size={25} color='white' style={{ marginHorizontal: 9 }} />
+                            <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
+                            <ActivityIndicator size="small" color="white"
+                                animating={!!userPermissionToRegisterProductLoading}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    borderRadius: 15,
+                                    fontSize: 20,
+                                    marginLeft: -30
+                                }}
+                            />
+                        </LinearGradient>
+                    </TouchableOpacity>
 
                 </View>
             </>
