@@ -200,7 +200,7 @@ class ChooseCity extends React.Component {
     listFooterComponent = (isCity) => {
         return (
             <View
-                style={{ width: deviceWidth * 0.4, margin: 20, alignSelf: 'flex-end' }}
+                style={{ width: deviceWidth * 0.4, marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
@@ -235,7 +235,7 @@ class ChooseCity extends React.Component {
 
 
                 <Text style={styles.userText}>
-                    {locales('titles.selectOrigin')}
+                    {province ? locales('labels.selectCity') : locales('labels.selectProvince')}
                 </Text>
                 {!error && message && message.length &&
                     <View style={styles.loginFailedContainer}>
@@ -402,7 +402,6 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         textAlign: 'center',
         borderRadius: 5,
-        margin: 10,
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
         alignItems: 'center',
@@ -471,7 +470,6 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         paddingTop: '3%',
         fontSize: 20,
-        padding: 20,
         textAlign: 'right',
         color: '#7E7E7E'
     },

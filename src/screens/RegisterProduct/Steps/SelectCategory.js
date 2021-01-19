@@ -276,11 +276,11 @@ class SelectCategory extends Component {
         return (
 
             <View
-                style={{ width: deviceWidth * 0.4, marginVertical: 20, alignSelf: 'flex-end' }}
+                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => this.setState({ category: '' })}
-                    style={[styles.backButtonContainer, { elevation: 0, flex: 1 }]}
+                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '40%' }]}
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -311,6 +311,26 @@ class SelectCategory extends Component {
             </View> : null
         )
     };
+
+    handleProductTypeExample = _ => {
+        const {
+            selectedSvgName
+        } = this.state;
+
+        switch (selectedSvgName) {
+            case 'میوه': {
+                return locales('titles.mazafati');
+            };
+            case 'صیفی': {
+                return locales('titles.matinSaderati');
+            };
+            case 'غلات': {
+                return locales('titles.hendi1121');
+            };
+            default:
+                return locales('titles.mazafati');
+        }
+    }
 
 
     render() {
@@ -431,7 +451,7 @@ class SelectCategory extends Component {
                                     fontSize: 16
                                 }}
                             >
-                                {locales('titles.productTypeExample')}
+                                {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
                             </Text>
                             <InputGroup
                                 regular
@@ -494,7 +514,7 @@ class SelectCategory extends Component {
                                 </Button>
                                 <Button
                                     onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                    style={[styles.backButtonContainer, { width: '40%', elevation: 0, marginRight: 30 }]}
+                                    style={[styles.backButtonContainer, { width: '40%', elevation: 0, marginRight: 40 }]}
                                     rounded
                                 >
                                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -637,13 +657,11 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        marginVertical: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
         width: '40%',
         color: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-start',
         justifyContent: 'center'
     },
     loginButton: {
@@ -671,13 +689,11 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
         borderWidth: 1,
         borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
         justifyContent: 'center'
     },
     scrollContainer: {
