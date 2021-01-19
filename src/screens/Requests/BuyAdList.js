@@ -16,7 +16,6 @@ const BuyAdList = props => {
     const { item, index, selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
-
     return (
 
         <View
@@ -82,7 +81,7 @@ const BuyAdList = props => {
                             position: 'absolute',
                             top: 48,
                             textAlign: 'center',
-                            left: item.name ? deviceWidth * 0.18 : deviceWidth * 0.31,
+                            left: deviceWidth * 0.33,
                             fontSize: 20,
                             color: '#7e7e7e'
                         }}
@@ -97,32 +96,35 @@ const BuyAdList = props => {
                                 marginHorizontal: 2
                             }}
                         >
-                            {` ${item.subcategory_name} `}
+                            {` ${item.subcategory_name}`}
                         </Text>
-                        {item.name ? <>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 20,
-                                    marginHorizontal: 2,
-                                    textAlign: 'center',
-                                    color: '#7e7e7e'
-                                }}
-                            >
-                                {locales('labels.fromType')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#556083',
-                                    fontSize: 20,
-                                    textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    marginHorizontal: 2
-                                }}
-                            >
-                                {` ${item.name} `}
-                            </Text>
-                        </> : null
+                        {item.is_golden && active_pakage_type == 0 ?
+                            <Text> </Text>
+                            :
+                            item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        marginHorizontal: 2,
+                                        textAlign: 'center',
+                                        color: '#7e7e7e'
+                                    }}
+                                >
+                                    {locales('labels.fromType')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#556083',
+                                        fontSize: 20,
+                                        textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 2
+                                    }}
+                                >
+                                    {` ${item.name} `}
+                                </Text>
+                            </> : null
 
                         }
                         <Text
