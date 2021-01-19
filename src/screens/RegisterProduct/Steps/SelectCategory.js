@@ -258,8 +258,9 @@ class SelectCategory extends Component {
                     <Text
                         style={{
                             color: '#38485F',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 15
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            marginHorizontal: 15,
+                            fontSize: 18
                         }}
                     >
                         {item.category_name}
@@ -273,16 +274,17 @@ class SelectCategory extends Component {
 
     subCategoriesListFooterComponent = _ => {
         return (
+
             <View
-                style={{ width: deviceWidth * 0.4, margin: 20, alignSelf: 'flex-end' }}
+                style={{ width: deviceWidth * 0.4, marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => this.setState({ category: '' })}
-                    style={[styles.backButtonContainer, { flex: 1 }]}
+                    style={[styles.backButtonContainer, { elevation: 0, flex: 1 }]}
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
                 </Button>
             </View>
         )
@@ -332,17 +334,27 @@ class SelectCategory extends Component {
             >
 
 
-                {!category || !subCategory ? <Text
+                {!category || !subCategory ? <View
                     style={{
                         marginVertical: 10,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: '#666666',
-                        fontSize: 20,
-                        marginHorizontal: 10
+                        marginHorizontal: 10,
+                        flexDirection: 'row-reverse'
                     }}
                 >
-                    {categoryIcon} {locales('labels.selectedProductCategory')}
-                </Text> : null}
+                    {categoryIcon ? <Text style={{
+                        marginTop: 3,
+                        marginLeft: 8
+                    }}>
+                        {categoryIcon}
+                    </Text>
+                        : null
+                    }
+                    <Text style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: '#555',
+                        fontSize: 20,
+                    }}>{locales('labels.selectedProductCategory')}</Text>
+                </View> : null}
 
                 {categoriesLoading ?
                     <ActivityIndicator size={45} color='#00C569'
@@ -425,15 +437,23 @@ class SelectCategory extends Component {
                                 regular
                                 style={{
                                     borderRadius: 4,
-                                    borderWidth: 1,
-                                    borderColor: productType ? productTypeError ? '#f08c9a' : '#7ee0b2' :
-                                        submitButtonClick ? '#f08c9a' : '#000000'
-                                }}>
+                                    // borderWidth: 2,
+                                    borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
+                                        submitButtonClick ? '#E41C38' : '#666',
+                                    paddingHorizontal: 10,
+                                    backgroundColor: '#FBFBFB'
+                                }}
+                            >
                                 <FontAwesome5 name={
                                     productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
                                         ? 'times-circle' : 'edit'}
-                                    color={productType ? productTypeError ? '#f08c9a' : '#7ee0b2'
-                                        : submitButtonClick ? '#f08c9a' : '#000000'}
+                                    color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                        : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                    size={16}
+                                    solid
+                                    style={{
+                                        marginLeft: 10
+                                    }}
                                 />
                                 <Input
                                     autoCapitalize='none'
@@ -444,9 +464,9 @@ class SelectCategory extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                         height: 45,
-                                        backgroundColor: '#fff',
                                         direction: 'rtl',
-                                        textAlign: 'right'
+                                        borderRadius: 4,
+                                        textAlign: 'right',
                                     }}
                                     onChangeText={this.onProductTypeSubmit}
                                     value={productType}
@@ -459,7 +479,7 @@ class SelectCategory extends Component {
                                 {productTypeError}
                             </Label>}
                             <View style={{
-                                marginVertical: 20, paddingHorizontal: 10,
+                                marginVertical: 20,
                                 flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
                             }}>
                                 <Button
@@ -474,7 +494,7 @@ class SelectCategory extends Component {
                                 </Button>
                                 <Button
                                     onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                    style={[styles.backButtonContainer, { width: '40%', marginRight: 30 }]}
+                                    style={[styles.backButtonContainer, { width: '40%', elevation: 0, marginRight: 30 }]}
                                     rounded
                                 >
                                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -652,6 +672,8 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         textAlign: 'center',
         margin: 10,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,

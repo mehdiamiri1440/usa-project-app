@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
+import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 
 import { TabView, TabBar } from 'react-native-tab-view';
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -98,16 +99,31 @@ const Messages = props => {
                     flexDirection: 'row',
                     margin: 0,
                 }}>
-                    {route.key == 'requests' ?
-                        <Text
-                            style={{ color: 'white', backgroundColor: '#e41c38', borderRadius: 4, paddingHorizontal: 6, fontSize: 10, height: 20, paddingTop: 1, fontFamily: 'IRANSansWeb(FaNum)_Bold', right: 6, top: 1 }}
-                        >
-                            {locales('titles.new')}
-                        </Text>
-                        : null}
                     <Text style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {route.title}
                     </Text>
+                    {route.key == 'requests' ?
+                        <View style={{
+                            marginTop: 1,
+                            marginLeft: 7
+                        }}>
+                            <Svg
+
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="23" height="22.014" viewBox="0 0 23 22.014"
+                            >
+                                <Defs>
+                                    <LinearGradient id="grad" x2="0.864" y2="1">
+                                        <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
+                                        <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
+                                        <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
+
+                                    </LinearGradient>
+                                </Defs>
+                                <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
+                            </Svg>
+                        </View>
+                        : null}
                 </View>
 
 
