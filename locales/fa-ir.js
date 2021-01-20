@@ -17,6 +17,7 @@ export default {
     'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
     'errors.passwordShouldBe8AtLeast': 'کلمه‌عبور باید حداقل 8 کارکتر باشد',
     'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
+    'errors.canNotBeZero': '{fieldName} باید بزرگتر از صفر باشد',
 
 
     "labels.man": "آقا",

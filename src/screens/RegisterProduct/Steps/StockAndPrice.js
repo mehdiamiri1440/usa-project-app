@@ -71,6 +71,12 @@ class StockAndPrice extends Component {
                     amountClicked: true
                 }));
             }
+            if (field >= 1000000000 || field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
             if (!this.amountError) {
                 this.setState(() => ({
                     amountText: formatter.convertUnitsToText(field),
@@ -89,29 +95,57 @@ class StockAndPrice extends Component {
     };
 
     onMinimumPriceSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                minimumPrice: field,
-                minimumPriceError: '',
-                minPriceClicked: true
-            }));
+        this.setState(() => ({
+            minPriceError: '',
+            minPrice: field,
+            minPriceClicked: true
+        }));
+        if (field) {
+            if (validator.isNumber(field))
+                this.setState(() => ({
+                    minimumPrice: field,
+                    minimumPriceError: '',
+                    minPriceClicked: true
+                }));
+            if (field <= 0) {
+                this.setState(() => ({
+                    minimumPriceError: locales('errors.canNotBeZero', { fieldName: locales('titles.minPriceNeeded') }),
+                    minPriceClicked: true
+                }));
+            }
+        }
         else
             this.setState(() => ({
                 minimumPrice: '',
-                minPriceClicked: false
+                minPriceClicked: false,
+                minPriceError: '',
             }));
     };
 
     onMaximumPriceSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                maximumPrice: field,
-                maximumPriceError: '',
-                maxPriceClicked: true
-            }));
+        this.setState(() => ({
+            maxPriceError: '',
+            maxPrice: field,
+            maxPriceClicked: true
+        }));
+        if (field) {
+            if (validator.isNumber(field))
+                this.setState(() => ({
+                    maximumPrice: field,
+                    maximumPriceError: '',
+                    maxPriceClicked: true
+                }));
+            if (field <= 0) {
+                this.setState(() => ({
+                    maximumPriceError: locales('errors.canNotBeZero', { fieldName: locales('titles.maxPriceNeeded') }),
+                    maxPriceClicked: true
+                }));
+            }
+        }
         else
             this.setState(() => ({
                 maximumPrice: '',
+                maximumPriceError: '',
                 maxPriceClicked: false
             }));
     };
@@ -128,6 +162,12 @@ class StockAndPrice extends Component {
             if (!validator.isNumber(field)) {
                 this.setState(() => ({
                     minimumOrderError: "لطفا  فقط عدد وارد کنید",
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field >= 1000000000 || field <= 0) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderWithOutKilo') }),
                     minimumOrderClicked: true
                 }));
             }
