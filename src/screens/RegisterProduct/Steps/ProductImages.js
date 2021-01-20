@@ -55,7 +55,7 @@ class ProductImages extends Component {
             maxWidth: 1024,
             maxHeight: 1024,
             quality: 1,
-            title: 'عکس را انتخاب کنید',
+            title: 'تصویر را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -201,6 +201,7 @@ class ProductImages extends Component {
                         style={{
                             color: '#777777',
                             fontSize: 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             paddingHorizontal: 10,
                             direction: 'rtl'
                         }}

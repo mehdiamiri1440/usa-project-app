@@ -184,7 +184,8 @@ class ChooseCity extends React.Component {
                         style={{
                             color: '#38485F',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 15
+                            marginHorizontal: 15,
+                            fontSize: 18
                         }}
                     >
                         {item.cities ? item.province_name : item.city_name}
