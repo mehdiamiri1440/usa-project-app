@@ -79,11 +79,11 @@ class ProductDecription extends Component {
                                 alignItems: 'flex-start',
                                 borderRadius: 4,
                                 borderWidth: 1,
-                                borderColor: !description ? '#777777' : '#00C569'
+                                borderColor: !description ? '#666' : '#00C569'
                             }}>
                             <FontAwesome5
                                 name={!description ? 'edit' : 'check-circle'}
-                                color={!description ? '#777777' : '#00C569'}
+                                color={!description ? '#BDC4CC' : '#00C569'}
                                 style={{ position: 'absolute', top: 5, left: 5 }}
                             />
                             <Textarea

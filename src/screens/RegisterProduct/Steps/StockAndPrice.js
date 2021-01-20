@@ -267,17 +267,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: amount ? amountError ? '#f08c9a' : '#7ee0b2' :
-                                amountClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
+                                amountClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={amount ? amountError ? '#f08c9a' : '#7ee0b2'
-                                : amountClicked ? '#f08c9a' : '#000000'}
+                            color={amount ? amountError ? '#E41C38' : '#00C569'
+                                : amountClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -287,6 +293,7 @@ class StockAndPrice extends Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
+                                borderRadius: 4,
                                 height: 45,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
@@ -345,17 +352,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2' :
-                                minimumOrderClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: minimumOrder ? minimumOrderError ? '#E41C38' : '#00C569' :
+                                minimumOrderClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             minimumOrder ? minimumOrderError ? 'times-circle' : 'check-circle' : minimumOrderClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2'
-                                : minimumOrderClicked ? '#f08c9a' : '#000000'}
+                            color={minimumOrder ? minimumOrderError ? '#E41C38' : '#00C569'
+                                : minimumOrderClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -366,6 +379,7 @@ class StockAndPrice extends Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 height: 45,
+                                borderRadius: 4,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
                                 direction: 'rtl',
@@ -422,17 +436,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                minPriceClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: minimumPrice ? minimumPriceError ? '#E41C38' : '#00C569' :
+                                minPriceClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             minimumPrice ? minimumPriceError ? 'times-circle' : 'check-circle' : minPriceClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : minPriceClicked ? '#f08c9a' : '#000000'}
+                            color={minimumPrice ? minimumPriceError ? '#E41C38' : '#00C569'
+                                : minPriceClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -444,6 +464,7 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
+                                borderRadius: 4,
                                 textDecorationLine: 'none',
                                 direction: 'rtl',
                                 textAlign: 'right'
@@ -494,17 +515,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                maxPriceClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: maximumPrice ? maximumPriceError ? '#E41C38' : '#00C569' :
+                                maxPriceClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             maximumPrice ? maximumPriceError ? 'times-circle' : 'check-circle' : maxPriceClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : maxPriceClicked ? '#f08c9a' : '#000000'}
+                            color={maximumPrice ? maximumPriceError ? '#E41C38' : '#00C569'
+                                : maxPriceClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -514,6 +541,7 @@ class StockAndPrice extends Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
+                                borderRadius: 4,
                                 height: 45,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
