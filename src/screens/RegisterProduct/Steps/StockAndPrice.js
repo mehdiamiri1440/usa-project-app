@@ -71,6 +71,12 @@ class StockAndPrice extends Component {
                     amountClicked: true
                 }));
             }
+            if (field >= 1000000000 || field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
             if (!this.amountError) {
                 this.setState(() => ({
                     amountText: formatter.convertUnitsToText(field),
@@ -89,29 +95,57 @@ class StockAndPrice extends Component {
     };
 
     onMinimumPriceSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                minimumPrice: field,
-                minimumPriceError: '',
-                minPriceClicked: true
-            }));
+        this.setState(() => ({
+            minPriceError: '',
+            minPrice: field,
+            minPriceClicked: true
+        }));
+        if (field) {
+            if (validator.isNumber(field))
+                this.setState(() => ({
+                    minimumPrice: field,
+                    minimumPriceError: '',
+                    minPriceClicked: true
+                }));
+            if (field <= 0) {
+                this.setState(() => ({
+                    minimumPriceError: locales('errors.canNotBeZero', { fieldName: locales('titles.minPriceNeeded') }),
+                    minPriceClicked: true
+                }));
+            }
+        }
         else
             this.setState(() => ({
                 minimumPrice: '',
-                minPriceClicked: false
+                minPriceClicked: false,
+                minPriceError: '',
             }));
     };
 
     onMaximumPriceSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                maximumPrice: field,
-                maximumPriceError: '',
-                maxPriceClicked: true
-            }));
+        this.setState(() => ({
+            maxPriceError: '',
+            maxPrice: field,
+            maxPriceClicked: true
+        }));
+        if (field) {
+            if (validator.isNumber(field))
+                this.setState(() => ({
+                    maximumPrice: field,
+                    maximumPriceError: '',
+                    maxPriceClicked: true
+                }));
+            if (field <= 0) {
+                this.setState(() => ({
+                    maximumPriceError: locales('errors.canNotBeZero', { fieldName: locales('titles.maxPriceNeeded') }),
+                    maxPriceClicked: true
+                }));
+            }
+        }
         else
             this.setState(() => ({
                 maximumPrice: '',
+                maximumPriceError: '',
                 maxPriceClicked: false
             }));
     };
@@ -128,6 +162,12 @@ class StockAndPrice extends Component {
             if (!validator.isNumber(field)) {
                 this.setState(() => ({
                     minimumOrderError: "لطفا  فقط عدد وارد کنید",
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field >= 1000000000 || field <= 0) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderWithOutKilo') }),
                     minimumOrderClicked: true
                 }));
             }
@@ -155,10 +195,10 @@ class StockAndPrice extends Component {
         let minimumOrderError = '', maximumPriceError = '', minimumPriceError = '', amountError = '';
 
         if (!amount) {
-            amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
+            amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.qunatityAmount') })
         }
         else if (amount && (amount <= 0 || amount >= 1000000000)) {
-            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
+            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.qunatityAmount') })
         }
         else {
             amountError = '';
@@ -166,10 +206,10 @@ class StockAndPrice extends Component {
 
 
         if (!minimumOrder) {
-            minimumOrderError = locales('errors.fieldNeeded', { fieldName: locales('titles.minimumOrderNeeded') })
+            minimumOrderError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minimumOrderWithOutKilo') })
         }
         else if (minimumOrder && (minimumOrder <= 0 || minimumOrder >= 1000000000)) {
-            minimumOrderError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderNeeded') })
+            minimumOrderError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderWithOutKilo') })
         }
         else {
             minimumOrderError = '';
@@ -177,7 +217,7 @@ class StockAndPrice extends Component {
 
 
         if (!maximumPrice) {
-            maximumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.maxPriceNeeded') })
+            maximumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.maxPriceNeeded') })
         }
         else if (maximumPrice && maximumPrice <= 0) {
             maximumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.maxPriceNeeded') })
@@ -189,7 +229,7 @@ class StockAndPrice extends Component {
 
 
         if (!minimumPrice) {
-            minimumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.minPriceNeeded') })
+            minimumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minPriceNeeded') })
         }
         else if (minimumPrice && minimumPrice <= 0) {
             minimumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minPriceNeeded') })
@@ -267,17 +307,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: amount ? amountError ? '#f08c9a' : '#7ee0b2' :
-                                amountClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
+                                amountClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={amount ? amountError ? '#f08c9a' : '#7ee0b2'
-                                : amountClicked ? '#f08c9a' : '#000000'}
+                            color={amount ? amountError ? '#E41C38' : '#00C569'
+                                : amountClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -287,6 +333,7 @@ class StockAndPrice extends Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
+                                borderRadius: 4,
                                 height: 45,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
@@ -345,17 +392,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2' :
-                                minimumOrderClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: minimumOrder ? minimumOrderError ? '#E41C38' : '#00C569' :
+                                minimumOrderClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             minimumOrder ? minimumOrderError ? 'times-circle' : 'check-circle' : minimumOrderClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={minimumOrder ? minimumOrderError ? '#f08c9a' : '#7ee0b2'
-                                : minimumOrderClicked ? '#f08c9a' : '#000000'}
+                            color={minimumOrder ? minimumOrderError ? '#E41C38' : '#00C569'
+                                : minimumOrderClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -366,6 +419,7 @@ class StockAndPrice extends Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 height: 45,
+                                borderRadius: 4,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
                                 direction: 'rtl',
@@ -422,17 +476,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                minPriceClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: minimumPrice ? minimumPriceError ? '#E41C38' : '#00C569' :
+                                minPriceClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             minimumPrice ? minimumPriceError ? 'times-circle' : 'check-circle' : minPriceClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={minimumPrice ? minimumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : minPriceClicked ? '#f08c9a' : '#000000'}
+                            color={minimumPrice ? minimumPriceError ? '#E41C38' : '#00C569'
+                                : minPriceClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -444,6 +504,7 @@ class StockAndPrice extends Component {
                                 fontSize: 14,
                                 height: 45,
                                 flexDirection: 'row',
+                                borderRadius: 4,
                                 textDecorationLine: 'none',
                                 direction: 'rtl',
                                 textAlign: 'right'
@@ -494,17 +555,23 @@ class StockAndPrice extends Component {
                         regular
                         style={{
                             borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2' :
-                                maxPriceClicked ? '#f08c9a' : '#000000'
+                            // borderWidth: 2,
+                            borderColor: maximumPrice ? maximumPriceError ? '#E41C38' : '#00C569' :
+                                maxPriceClicked ? '#E41C38' : '#666',
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB'
                         }}
                     >
                         <FontAwesome5 name={
                             maximumPrice ? maximumPriceError ? 'times-circle' : 'check-circle' : maxPriceClicked
                                 ? 'times-circle' : 'edit'}
-                            style={{ paddingHorizontal: 4 }}
-                            color={maximumPrice ? maximumPriceError ? '#f08c9a' : '#7ee0b2'
-                                : maxPriceClicked ? '#f08c9a' : '#000000'}
+                            color={maximumPrice ? maximumPriceError ? '#E41C38' : '#00C569'
+                                : maxPriceClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 10
+                            }}
                         />
                         <Input
                             autoCapitalize='none'
@@ -514,6 +581,7 @@ class StockAndPrice extends Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
+                                borderRadius: 4,
                                 height: 45,
                                 flexDirection: 'row',
                                 textDecorationLine: 'none',
@@ -551,7 +619,7 @@ class StockAndPrice extends Component {
                             ? styles.disableLoginButton : styles.loginButton}
                         rounded
                     >
-                        <AntDesign name='arrowleft' size={25} color='white' />
+                        <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                         <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                     </Button>
                     <Button
@@ -560,7 +628,7 @@ class StockAndPrice extends Component {
                         rounded
                     >
                         <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                        <FontAwesome5 name='arrow-right' size={14} style={{ marginLeft: 10 }} color='#7E7E7E' />
                     </Button>
                 </View>
 
@@ -586,13 +654,15 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -601,6 +671,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#B5B5B5',
         width: deviceWidth * 0.4,
         color: 'white',
+        elevation: 0,
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'
@@ -611,6 +682,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#00C569',
         borderRadius: 5,
         width: deviceWidth * 0.4,
+        elevation: 0,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

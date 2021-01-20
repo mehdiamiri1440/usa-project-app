@@ -8,7 +8,7 @@ export const requestCameraPermission = () => {
                 {
                     title: "مجوز دسترسی به دوربین",
                     message:
-                        "باسکول برای انتخاب عکس نیاز به دسترسی دوربین دارد. اجازه می‌دهید ؟",
+                        "باسکول برای انتخاب تصویر نیاز به دسترسی دوربین دارد. اجازه می‌دهید ؟",
                     buttonNeutral: "بعدا دوباره بپرس",
                     buttonNegative: "خیر",
                     buttonPositive: "مجاز است"

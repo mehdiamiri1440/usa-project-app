@@ -241,10 +241,7 @@ class ProductMoreDetails extends Component {
         return (
             <>
                 <ScrollView>
-                    {!!this.props.addNewProductMessage &&
-                        this.props.addNewProductMessage.length ? <View style={styles.loginFailedContainer}>
-                            <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                        </View> : null}
+
                     <View
                         style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                         <Text
@@ -264,6 +261,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -272,6 +270,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -279,10 +278,14 @@ class ProductMoreDetails extends Component {
                                 </Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{
+                                flexDirection: 'row-reverse', width: deviceWidth * 0.6,
+                                alignItems: 'center', justifyContent: 'center'
+                            }}>
                                 <Text
                                     style={{
                                         color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -291,6 +294,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -428,6 +432,7 @@ class ProductMoreDetails extends Component {
                                 onPress={() => this.addMoreRow()}
                                 style={[styles.addMoreButton, {
                                     borderWidth: 1,
+                                    elevation: 0,
                                     borderColor: '#00C569'
                                 }]}
                                 rounded
@@ -440,7 +445,7 @@ class ProductMoreDetails extends Component {
 
                             <Button
                                 onPress={() => this.onSubmit()}
-                                style={[styles.loginButton, { flex: 1 }]}
+                                style={[styles.loginButton]}
                                 rounded
                             >
                                 <ActivityIndicator size="small" color="white"
@@ -458,11 +463,11 @@ class ProductMoreDetails extends Component {
                             </Button>
                             <Button
                                 onPress={() => this.props.changeStep(5)}
-                                style={[styles.backButtonContainer, { flex: 1 }]}
+                                style={[styles.backButtonContainer]}
                                 rounded
                             >
                                 <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                                <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                             </Button>
                         </View>
 
@@ -504,18 +509,22 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         backgroundColor: '#B5B5B5',
         borderRadius: 5,
         alignSelf: 'flex-start',
@@ -524,10 +533,12 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        width: deviceWidth * 0.4,
         backgroundColor: '#00C569',
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
@@ -536,7 +547,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        width: deviceWidth * 0.45,
+        width: deviceWidth * 0.4,
         color: '#00C569',
         alignItems: 'center',
         alignSelf: 'flex-start',

@@ -184,7 +184,8 @@ class ChooseCity extends React.Component {
                         style={{
                             color: '#38485F',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 15
+                            marginHorizontal: 15,
+                            fontSize: 18
                         }}
                     >
                         {item.cities ? item.province_name : item.city_name}
@@ -200,7 +201,7 @@ class ChooseCity extends React.Component {
     listFooterComponent = (isCity) => {
         return (
             <View
-                style={{ width: deviceWidth * 0.4, margin: 20, alignSelf: 'flex-end' }}
+                style={{ width: deviceWidth * 0.4, marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
@@ -208,7 +209,7 @@ class ChooseCity extends React.Component {
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                 </Button>
             </View>
         )
@@ -235,7 +236,7 @@ class ChooseCity extends React.Component {
 
 
                 <Text style={styles.userText}>
-                    {locales('titles.selectOrigin')}
+                    {province ? locales('labels.selectCity') : locales('labels.selectProvince')}
                 </Text>
                 {!error && message && message.length &&
                     <View style={styles.loginFailedContainer}>
@@ -401,19 +402,21 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
     },
     disableLoginButton: {
         textAlign: 'center',
         marginVertical: 10,
         width: deviceWidth * 0.4,
         borderRadius: 5,
+        elevation: 0,
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
@@ -424,6 +427,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginVertical: 10,
         backgroundColor: '#00C569',
+        elevation: 0,
         borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
@@ -471,7 +475,6 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         paddingTop: '3%',
         fontSize: 20,
-        padding: 20,
         textAlign: 'right',
         color: '#7E7E7E'
     },

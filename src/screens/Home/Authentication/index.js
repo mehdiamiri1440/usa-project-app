@@ -71,7 +71,7 @@ const Authentication = props => {
             maxWidth: 1024,
             maxHeight: 1024,
             quality: 1,
-            title: 'عکس را انتخاب کنید',
+            title: 'تصویر را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',

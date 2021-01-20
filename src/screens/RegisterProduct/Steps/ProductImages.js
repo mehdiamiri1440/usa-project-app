@@ -55,7 +55,7 @@ class ProductImages extends Component {
             maxWidth: 1024,
             maxHeight: 1024,
             quality: 1,
-            title: 'عکس را انتخاب کنید',
+            title: 'تصویر را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -201,6 +201,7 @@ class ProductImages extends Component {
                         style={{
                             color: '#777777',
                             fontSize: 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             paddingHorizontal: 10,
                             direction: 'rtl'
                         }}
@@ -333,7 +334,7 @@ class ProductImages extends Component {
                             style={!images.length ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
-                            <AntDesign name='arrowleft' size={25} color='white' />
+                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
@@ -342,7 +343,7 @@ class ProductImages extends Component {
                             rounded
                         >
                             <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                         </Button>
                     </View>
                 </ScrollView>
@@ -378,17 +379,20 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.4,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        elevation: 0,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
@@ -400,6 +404,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        elevation: 0,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
         borderRadius: 5,
