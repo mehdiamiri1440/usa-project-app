@@ -488,6 +488,7 @@ class SelectCategory extends Component {
                                         borderRadius: 4,
                                         textAlign: 'right',
                                     }}
+                                    onSubmitEditing={this.onSubmit}
                                     onChangeText={this.onProductTypeSubmit}
                                     value={productType}
                                     placeholderTextColor="#BEBEBE"

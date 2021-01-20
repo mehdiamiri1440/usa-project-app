@@ -7,7 +7,7 @@ export default {
     'errors.error': 'خطا',
     'errors.imageTooLarge': 'حجم تصویر بزرگ می‌باشد.',
     'errors.filedShouldBeGreaterThanZero': 'فیلد {fieldName} باید مقدار بزرگتر از صفر و کوچکتر از 1،000،000تن  داشته باشد.',
-    'errors.filedShouldBeLessThanMillion': 'فیلد {fieldName} باید مقدار کوچکتر از 1،000،000تن داشته باشد.',
+    'errors.filedShouldBeLessThanMillion': 'فیلد {fieldName} باید کوچکتر باشد',
     'errors.fieldNeeded': '{fieldName} الزامی است',
     'errors.invalidFormat': 'فرمت {fieldName} اشتباه است',
     'errors.imageSizeError': 'حجم تصویر نباید از 5مگابایت بیشتر و از 20 کیلوبایت کمتر باشد',
