@@ -509,7 +509,7 @@ class SelectCategory extends Component {
                                         ? styles.disableLoginButton : styles.loginButton}
                                     rounded
                                 >
-                                    <AntDesign name='arrowleft' size={25} color='white' />
+                                    <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                                     <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                                 </Button>
                                 <Button
@@ -518,7 +518,7 @@ class SelectCategory extends Component {
                                     rounded
                                 >
                                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                                    <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} s color='#7E7E7E' />
                                 </Button>
                             </View>
 
@@ -655,6 +655,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
+    backButtonContainer: {
+        textAlign: 'center',
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
+        backgroundColor: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        justifyContent: 'center'
+    },
     disableLoginButton: {
         textAlign: 'center',
         borderRadius: 5,
@@ -667,7 +676,6 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         borderRadius: 5,
-        marginVertical: 10,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
         color: 'white',
@@ -686,15 +694,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderWidth: 1,
-        borderColor: '#BDC4CC',
-        backgroundColor: 'white',
-        alignItems: 'center',
-        borderRadius: 5,
-        justifyContent: 'center'
     },
     scrollContainer: {
         flex: 1,

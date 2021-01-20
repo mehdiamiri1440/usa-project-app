@@ -241,10 +241,7 @@ class ProductMoreDetails extends Component {
         return (
             <>
                 <ScrollView>
-                    {!!this.props.addNewProductMessage &&
-                        this.props.addNewProductMessage.length ? <View style={styles.loginFailedContainer}>
-                            <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                        </View> : null}
+
                     <View
                         style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
                         <Text
@@ -440,7 +437,7 @@ class ProductMoreDetails extends Component {
 
                             <Button
                                 onPress={() => this.onSubmit()}
-                                style={[styles.loginButton, { flex: 1 }]}
+                                style={[styles.loginButton]}
                                 rounded
                             >
                                 <ActivityIndicator size="small" color="white"
@@ -458,11 +455,11 @@ class ProductMoreDetails extends Component {
                             </Button>
                             <Button
                                 onPress={() => this.props.changeStep(5)}
-                                style={[styles.backButtonContainer, { flex: 1 }]}
+                                style={[styles.backButtonContainer]}
                                 rounded
                             >
                                 <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                                <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                             </Button>
                         </View>
 
@@ -504,12 +501,15 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -524,6 +524,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        width: deviceWidth * 0.4,
         backgroundColor: '#00C569',
         borderRadius: 5,
         color: 'white',

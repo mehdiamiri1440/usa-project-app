@@ -208,7 +208,7 @@ class ChooseCity extends React.Component {
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                 </Button>
             </View>
         )
@@ -401,12 +401,14 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
-        width: deviceWidth * 0.4,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
     },
     disableLoginButton: {
         textAlign: 'center',

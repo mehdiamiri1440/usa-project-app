@@ -136,7 +136,7 @@ class ProductDecription extends Component {
                             style={styles.loginButton}
                             rounded
                         >
-                            <AntDesign name='arrowleft' size={25} color='white' />
+                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
@@ -145,7 +145,7 @@ class ProductDecription extends Component {
                             rounded
                         >
                             <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                         </Button>
                     </View>
 
@@ -181,13 +181,15 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.4,
-        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: deviceWidth * 0.4,
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
