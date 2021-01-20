@@ -6,7 +6,6 @@ import { Body, Card, CardItem, Label, InputGroup, Input, Button } from 'native-b
 import Svg, { Path } from "react-native-svg"
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
@@ -94,6 +93,8 @@ class RegisterRequest extends Component {
             loaded: false,
             categoriesList: [],
             subCategoriesList: [],
+            amountClicked: false,
+            productTypeClicked: false,
             showModal: false,
             selectedSvgName: 0
         }
@@ -164,6 +165,8 @@ class RegisterRequest extends Component {
             amount: '',
             amountText: '',
             category: '',
+            amountClicked: false,
+            productTypeClicked: false,
             subCategory: '',
             productTypeError: '',
             categoryError: '',
@@ -201,36 +204,49 @@ class RegisterRequest extends Component {
 
     onAmountSubmit = field => {
         this.setState(() => ({
-            submitButtonClick: false,
+            amountError: '',
             amount: field,
-            amountError: (!field || validator.isNumber(field)) ?
-                '' : locales('errors.invalidFormat', { fieldName: locales('titles.amount') })
+            amountClicked: true
         }));
-        // if (field) {
-        //     if (!validator.isNumber(field)) {
-        //         this.setState(() => ({
-        //             amountError: "لطفا  فقط عدد وارد کنید"
-        //         }));
-        //     }
-        //     if (!this.amountError) {
-        //         this.setState(() => ({
-        //             amountText: formatter.convertUnitsToText(field)
-        //         }));
-        //     }
-        // } else {
-        //     this.setState(() => ({
-        //         amount: '',
-        //         amountText: ''
-        //     }));
-        // }
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    amountError: "لطفا  فقط عدد وارد کنید",
+                    amountClicked: true
+                }));
+            }
+            if (field >= 1000000000) {
+                this.setState(() => ({
+                    amountError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (!this.amountError) {
+                this.setState(() => ({
+                    amountText: formatter.convertUnitsToText(field),
+                    amountClicked: true
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                amount: '',
+                amountText: '',
+                amountClicked: false
+            }));
+        }
+    }
 
-
-    };
 
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
-            submitButtonClick: false,
+            productTypeClicked: !!field,
             productType: field,
             productTypeError: (!field || validator.isPersianNameWithDigits(field)) ?
                 '' : locales('titles.productTypeInvalid')
@@ -276,7 +292,7 @@ class RegisterRequest extends Component {
         else {
             subCategoryError = '';
         }
-        this.setState({ productTypeError, subCategoryError, categoryError, productTypeError, amountError })
+        this.setState({ productTypeError, subCategoryError, categoryError, productTypeError, amountError, amountClicked: true })
         if (!categoryError && !subCategoryError && !amountError && !productTypeError) {
             let requestObj = {
                 name: productType,
@@ -407,7 +423,7 @@ class RegisterRequest extends Component {
             subCategoryError, categoryError, productTypeError,
             amountError,
             showModal, subCategoriesList, categoriesList,
-            amount, submitButtonClick, selectedSvgName,
+            amount, productTypeClicked, amountClicked, selectedSvgName,
             amountText
         } = this.state;
 
@@ -603,15 +619,15 @@ class RegisterRequest extends Component {
                                             style={{
                                                 borderRadius: 4,
                                                 borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
-                                                    submitButtonClick ? '#E41C38' : '#666',
+                                                    productTypeClicked ? '#E41C38' : '#666',
                                                 paddingHorizontal: 10,
                                                 backgroundColor: '#FBFBFB'
                                             }}>
                                             <FontAwesome5 name={
-                                                productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                                productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
                                                     ? 'times-circle' : 'edit'}
                                                 color={productType ? productTypeError ? '#E41C38' : '#00C569'
-                                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                                    : productTypeClicked ? '#E41C38' : '#BDC4CC'}
                                                 size={16}
                                                 solid
                                                 style={{
@@ -672,16 +688,16 @@ class RegisterRequest extends Component {
 
                                                 borderRadius: 4,
                                                 borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
-                                                    submitButtonClick ? '#E41C38' : '#666',
+                                                    amountClicked ? '#E41C38' : '#666',
                                                 paddingHorizontal: 10,
                                                 backgroundColor: '#FBFBFB'
                                             }}>
                                             <FontAwesome5 name={
 
-                                                amount ? amountError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                                amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
                                                     ? 'times-circle' : 'edit'}
                                                 color={amount ? amountError ? '#E41C38' : '#00C569'
-                                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                                    : amountClicked ? '#E41C38' : '#BDC4CC'}
                                                 size={16}
                                                 solid
                                                 style={{
@@ -701,7 +717,7 @@ class RegisterRequest extends Component {
                                                     fontSize: 14,
                                                     height: 45,
                                                     direction: 'rtl',
-                                                    textAlign: 'right'
+                                                    textAlign: 'right',
                                                 }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}
@@ -711,8 +727,18 @@ class RegisterRequest extends Component {
 
                                             />
                                         </InputGroup>
-                                        <Label style={{ height: 25, fontSize: 14, color: '#D81A1A' }}>
-                                            {!!amountError && amountError}
+                                        <Label style={{
+                                            height: 25,
+                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                        }}>
+
+                                            {!!amountError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
+                                            {!amountError && amount.length ? <Text style={{
+                                                fontSize: 14, color: '#1DA1F2',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            }}>
+                                                {amountText}</Text> : null}
+
                                         </Label>
 
                                         <View style={{
