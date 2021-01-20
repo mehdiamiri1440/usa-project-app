@@ -69,9 +69,15 @@ class StockAndPrice extends Component {
                     amountClicked: true
                 }));
             }
-            if (field >= 1000000000 || field <= 0) {
+            if (field >= 1000000000) {
                 this.setState(() => ({
-                    amountError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') }),
                     amountClicked: true
                 }));
             }
@@ -163,9 +169,15 @@ class StockAndPrice extends Component {
                     minimumOrderClicked: true
                 }));
             }
-            if (field >= 1000000000 || field <= 0) {
+            if (field >= 1000000000) {
                 this.setState(() => ({
-                    minimumOrderError: locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderWithOutKilo') }),
+                    minimumOrderError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minimumOrderWithOutKilo') }),
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.canNotBeZero', { fieldName: locales('titles.minimumOrderWithOutKilo') }),
                     minimumOrderClicked: true
                 }));
             }
@@ -195,8 +207,11 @@ class StockAndPrice extends Component {
         if (!amount) {
             amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.qunatityAmount') })
         }
-        else if (amount && (amount <= 0 || amount >= 1000000000)) {
-            amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.qunatityAmount') })
+        else if (amount && amount >= 1000000000) {
+            amountError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') })
+        }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') })
         }
         else {
             amountError = '';
@@ -206,8 +221,11 @@ class StockAndPrice extends Component {
         if (!minimumOrder) {
             minimumOrderError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minimumOrderWithOutKilo') })
         }
-        else if (minimumOrder && (minimumOrder <= 0 || minimumOrder >= 1000000000)) {
-            minimumOrderError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minimumOrderWithOutKilo') })
+        else if (minimumOrder && minimumOrder >= 1000000000) {
+            minimumOrderError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minimumOrderWithOutKilo') })
+        }
+        else if (minimumOrder && minimumOrder <= 0) {
+            minimumOrderError = locales('errors.canNotBeZero', { fieldName: locales('titles.minimumOrderWithOutKilo') })
         }
         else {
             minimumOrderError = '';
@@ -391,7 +409,11 @@ class StockAndPrice extends Component {
                     }}>
 
                         {!!amountError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
-                        {!amountError && amount.length ? <Text style={{ fontSize: 14, color: '#1DA1F2', fontFamily: 'IRANSansWeb(FaNum)_Medium', }}> {amountText}</Text> : null}
+                        {!amountError && amount.length ? <Text style={{
+                            fontSize: 14, color: '#1DA1F2',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}>
+                            {amountText}</Text> : null}
 
                     </Label>
 
@@ -416,7 +438,8 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.minimumOrder')} <Text
                             style={{
-                                color: '#D44546'
+                                color: '#D44546',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
                             }}
                         >*</Text>
                     </Label>
@@ -480,11 +503,15 @@ class StockAndPrice extends Component {
 
                     <Label style={{
                         height: 25,
-                        textAlign: !amountError && amount.length ? 'left' : 'right'
+                        textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
                     }}>
 
-                        {!!minimumOrderError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
-                        {!minimumOrderError && minimumOrder.length ? <Text style={{ fontSize: 14, color: '#1DA1F2', fontFamily: 'IRANSansWeb(FaNum)_Medium', }}> {minimumOrderText}</Text> : null}
+                        {!!minimumOrderError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {minimumOrderError}</Text>}
+                        {!minimumOrderError && minimumOrder.length ? <Text style={{
+                            fontSize: 14, color: '#1DA1F2',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}>
+                            {minimumOrderText}</Text> : null}
 
                     </Label>
                     {/* <OutlinedTextField
@@ -506,7 +533,8 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.minimumPrice')} <Text
                             style={{
-                                color: '#D44546'
+                                color: '#D44546',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
                             }}
                         >*</Text>
                     </Label>
@@ -588,7 +616,8 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.maximumPrice')} <Text
                             style={{
-                                color: '#D44546'
+                                color: '#D44546',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
                             }}
                         >*</Text>
                     </Label>
