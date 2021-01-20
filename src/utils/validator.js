@@ -22,6 +22,12 @@ export const isInt = value => {
 }
 
 
+export const isValidDescription = text => {
+  const re = /^[\u0600-\u06FF\s_,.:/;()+-\d]+$/;
+  return re.test(text);
+};
+
+
 export const isWebsiteUrl = text => {
   const re = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
   return re.test(text);
@@ -29,11 +35,6 @@ export const isWebsiteUrl = text => {
 
 export const isValidInstagramUserName = text => {
   return /^[A-Za-z_\-]{1,30}$/.test(text);
-};
-
-
-export const isValidDescription = text => {
-  return /^(?!.*[(@#!%$&*)])[s\u{0600}-\u{06FF}\u{060C}\u{061B}\u{061F}\u{0640}\u{066A}\u{066B}\u{066C}\u{0E}_.-،:()A-Za-z0-9 ]+$/u.test(text);
 };
 
 export const isNumber = text => {

@@ -853,7 +853,7 @@ class Product extends PureComponent {
                                     </Text>}
                             </TouchableOpacity>
                             {active_pakage_type == 3 && <Svg
-                                style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
+                                style={{ position: 'absolute', left: 5, top: 56, zIndex: 1 }}
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="27"
                                 height="37.007"
