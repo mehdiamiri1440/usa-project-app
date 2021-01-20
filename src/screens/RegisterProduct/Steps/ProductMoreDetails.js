@@ -261,6 +261,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -269,6 +270,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -276,10 +278,14 @@ class ProductMoreDetails extends Component {
                                 </Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{
+                                flexDirection: 'row-reverse', width: deviceWidth * 0.6,
+                                alignItems: 'center', justifyContent: 'center'
+                            }}>
                                 <Text
                                     style={{
                                         color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -288,6 +294,7 @@ class ProductMoreDetails extends Component {
                                 <Text
                                     style={{
                                         color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
                                     }}
                                 >
@@ -425,6 +432,7 @@ class ProductMoreDetails extends Component {
                                 onPress={() => this.addMoreRow()}
                                 style={[styles.addMoreButton, {
                                     borderWidth: 1,
+                                    elevation: 0,
                                     borderColor: '#00C569'
                                 }]}
                                 rounded
@@ -516,6 +524,7 @@ const styles = StyleSheet.create({
         margin: 10,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         backgroundColor: '#B5B5B5',
         borderRadius: 5,
         alignSelf: 'flex-start',
@@ -529,6 +538,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
@@ -537,7 +547,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        width: deviceWidth * 0.45,
+        width: deviceWidth * 0.4,
         color: '#00C569',
         alignItems: 'center',
         alignSelf: 'flex-start',

@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
+        elevation: 0,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        elevation: 0,
         backgroundColor: '#00C569',
         borderRadius: 5,
         width: deviceWidth * 0.4,

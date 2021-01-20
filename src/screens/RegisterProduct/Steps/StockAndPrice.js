@@ -671,6 +671,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#B5B5B5',
         width: deviceWidth * 0.4,
         color: 'white',
+        elevation: 0,
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'
@@ -681,6 +682,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#00C569',
         borderRadius: 5,
         width: deviceWidth * 0.4,
+        elevation: 0,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

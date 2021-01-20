@@ -657,6 +657,7 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
+        elevation: 0,
         borderWidth: 1,
         borderColor: '#BDC4CC',
         backgroundColor: 'white',
@@ -667,6 +668,7 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         borderRadius: 5,
+        elevation: 0,
         backgroundColor: '#B5B5B5',
         width: '40%',
         color: 'white',
@@ -675,6 +677,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
+        elevation: 0,
         borderRadius: 5,
         backgroundColor: '#00C569',
         width: deviceWidth * 0.4,
