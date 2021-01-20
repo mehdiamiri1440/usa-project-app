@@ -169,8 +169,7 @@ class ChooseCity extends React.Component {
                     borderBottomWidth: 1,
                     borderBottomColor: '#E0E0E0',
                     justifyContent: 'space-between',
-                    paddingHorizontal: 30,
-                    paddingVertical: 20,
+                    padding: 20,
                     flexDirection: 'row-reverse'
                 }}
                 onPress={_ => this.setSelectedLocation(item.id, !item.cities)}
@@ -183,7 +182,7 @@ class ChooseCity extends React.Component {
                     <Text
                         style={{
                             color: '#38485F',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             marginHorizontal: 15,
                             fontSize: 18
                         }}
@@ -201,7 +200,7 @@ class ChooseCity extends React.Component {
     listFooterComponent = (isCity) => {
         return (
             <View
-                style={{ width: deviceWidth * 0.4, marginVertical: 20, alignSelf: 'flex-end' }}
+                style={{ margin: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
@@ -245,8 +244,11 @@ class ChooseCity extends React.Component {
                         </Text>
                     </View>
                 }
-
-                <ActivityIndicator size='large' color='#00C569' animating={loading} />
+                {loading && <View style={{
+                    marginVertical: 30
+                }}>
+                    <ActivityIndicator size='large' color='#00C569' animating={loading} />
+                </View>}
 
                 {!province ?
                     <FlatList
@@ -471,16 +473,15 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     userText: {
-        flexWrap: 'wrap',
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        paddingTop: '3%',
+        color: '#555',
         fontSize: 20,
-        textAlign: 'right',
-        color: '#7E7E7E'
+        paddingHorizontal: 20
+
     },
     labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
+        // paddingVertical: 5,
+        // paddingHorizontal: 20
     },
     container: {
         flex: 1,

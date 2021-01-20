@@ -5,7 +5,6 @@ import { Button, Item, Input, Label } from 'native-base';
 import { View, Text, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -323,7 +322,7 @@ class ProductMoreDetails extends Component {
                                             height: 45,
                                             width: 30
                                         }}>
-                                        <FontAwesome5 name='trash' color='#E41C38' size={20} />
+                                        <FontAwesome5 name='trash' color='#E41C38' size={16} />
                                     </TouchableOpacity>
 
                                     <View style={{
@@ -346,7 +345,9 @@ class ProductMoreDetails extends Component {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={18} style={{
+                                                        top: 3
+                                                    }} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
                                                     style={styles}
@@ -438,7 +439,7 @@ class ProductMoreDetails extends Component {
                                 rounded
                             >
                                 <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                                <AntDesign name='plus' size={25} color='#00C569' />
+                                <FontAwesome5 name='plus' size={14} color='#00C569' />
                             </Button>
                         </View>
                         <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -493,14 +494,14 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        width: '60%',
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     addMoreButtonText: {
         color: '#00C569',
-        width: '60%',
-        textAlign: 'center'
+        marginRight: 5,
+        textAlign: 'center',
+        fontSize: 13
     },
     backButtonText: {
         color: '#7E7E7E',
@@ -515,7 +516,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center',
-        width: deviceWidth * 0.4,
+        width: '37%',
         elevation: 0,
         margin: 10,
     },
@@ -533,7 +534,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        width: deviceWidth * 0.4,
+        width: '37%',
         backgroundColor: '#00C569',
         borderRadius: 5,
         color: 'white',
@@ -547,7 +548,8 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: 'white',
         borderRadius: 5,
-        width: deviceWidth * 0.4,
+        paddingHorizontal: 10,
+        // width: '30%',
         color: '#00C569',
         alignItems: 'center',
         alignSelf: 'flex-start',

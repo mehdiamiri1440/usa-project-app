@@ -76,15 +76,20 @@ class ProductDecription extends Component {
                         <InputGroup
                             regular
                             style={{
-                                alignItems: 'flex-start',
+
                                 borderRadius: 4,
-                                borderWidth: 1,
-                                borderColor: !description ? '#666' : '#00C569'
+                                // borderWidth: 2,
+                                borderColor: !description ? '#666' : '#00C569',
+                                paddingHorizontal: 10,
+                                paddingLeft: 15,
+                                backgroundColor: '#FBFBFB',
                             }}>
                             <FontAwesome5
                                 name={!description ? 'edit' : 'check-circle'}
                                 color={!description ? '#BDC4CC' : '#00C569'}
-                                style={{ position: 'absolute', top: 5, left: 5 }}
+                                size={16}
+                                solid
+                                style={{ position: 'absolute', top: 10, left: 10 }}
                             />
                             <Textarea
                                 onChangeText={this.onDescriptionSubmit}
@@ -98,7 +103,10 @@ class ProductDecription extends Component {
                                 ref={this.descriptionRef}
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    paddingTop: 10
+                                    paddingTop: 10,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%'
                                 }}
                                 rowSpan={5}
                             />
@@ -187,7 +195,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center',
-        width: deviceWidth * 0.4,
+        width: '37%',
         elevation: 0,
         margin: 10,
     },
@@ -195,7 +203,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         elevation: 0,
-        width: deviceWidth * 0.4,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
@@ -209,7 +217,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.4,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

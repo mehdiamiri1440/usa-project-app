@@ -417,7 +417,7 @@ class SelectCategory extends Component {
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                 }}
                             >
-                                {`${locales('titles.productType')} `}
+                                {`${locales('titles.type')} `}
                                 <Text
                                     style={{
                                         color: '#21AD93', paddingHorizontal: 50,
@@ -432,13 +432,14 @@ class SelectCategory extends Component {
                                 </Text>
                                 <Text
                                     style={{
-                                        marginHorizontal: 10, color: '#555555',
+                                        marginHorizontal: 10, color: '#333',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                     }}
                                 >
                                     {` ${locales('titles.enterYours')}`} <Text
                                         style={{
-                                            color: '#D44546'
+                                            color: '#D44546',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         }}
                                     >*</Text>
                                 </Text>
@@ -447,7 +448,7 @@ class SelectCategory extends Component {
                                 style={{
                                     marginVertical: 10,
                                     color: '#777777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     fontSize: 16
                                 }}
                             >
@@ -495,11 +496,13 @@ class SelectCategory extends Component {
                                     ref={this.productTypeRef}
                                 />
                             </InputGroup>
-                            {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>
-                                {productTypeError}
-                            </Label>}
+                            <Label style={{ height: 30 }}>
+                                {!!productTypeError && <Text style={{ fontSize: 14, color: '#D81A1A', }}>
+                                    {productTypeError}
+                                </Text>}
+                            </Label>
                             <View style={{
-                                marginVertical: 20,
+                                marginTop: 50,
                                 flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
                             }}>
                                 <Button
@@ -514,7 +517,7 @@ class SelectCategory extends Component {
                                 </Button>
                                 <Button
                                     onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                    style={[styles.backButtonContainer, { width: '40%', elevation: 0, marginRight: 40 }]}
+                                    style={[styles.backButtonContainer, { width: '37%', elevation: 0, marginRight: 40 }]}
                                     rounded
                                 >
                                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -670,7 +673,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         elevation: 0,
         backgroundColor: '#B5B5B5',
-        width: '40%',
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         justifyContent: 'center'
@@ -680,7 +683,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         borderRadius: 5,
         backgroundColor: '#00C569',
-        width: deviceWidth * 0.4,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 
-import Entypo from 'react-native-vector-icons/dist/Entypo';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -184,7 +183,7 @@ class ProductImages extends Component {
                     <Text
                         style={{
                             marginVertical: 10,
-                            color: '#666666',
+                            color: '#333',
                             fontSize: 20,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             paddingHorizontal: 10
@@ -192,6 +191,7 @@ class ProductImages extends Component {
                     >
                         {locales('labels.addProductImages')} <Text
                             style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 color: '#D44546'
                             }}
                         >*</Text>
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center',
-        width: deviceWidth * 0.4,
+        width: '37%',
         elevation: 0,
         margin: 10,
     },
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         elevation: 0,
-        width: deviceWidth * 0.4,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
         margin: 10,
         elevation: 0,
         backgroundColor: '#00C569',
-        width: deviceWidth * 0.4,
+        width: '37%',
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',

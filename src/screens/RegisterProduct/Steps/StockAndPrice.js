@@ -272,7 +272,7 @@ class StockAndPrice extends Component {
             >
 
 
-                <Text
+                {/* <Text
                     style={{
                         marginVertical: 10,
                         color: '#666666',
@@ -282,13 +282,14 @@ class StockAndPrice extends Component {
                     }}
                 >
                     {locales('titles.stockAndPrice')}
-                </Text>
+                </Text> */}
 
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                    <Label style={{ color: '#333', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.amount')} <Text
                             style={{
-                                color: '#D44546'
+                                color: '#D44546',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
                             }}
                         >*</Text>
                     </Label>
@@ -348,11 +349,16 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
-                    {!amountError && amount.length ? <Label style={{
-                        fontSize: 14, color: '#1DA1F2',
-                        textAlign: 'left', fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                    }}>{amountText}</Label> : null}
+                    <Label style={{
+                        height: 25,
+                        textAlign: !amountError && amount.length ? 'left' : 'right'
+                    }}>
+
+                        {!!amountError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
+                        {!amountError && amount.length ? <Text style={{ fontSize: 14, color: '#1DA1F2', fontFamily: 'IRANSansWeb(FaNum)_Medium', }}> {amountText}</Text> : null}
+
+                    </Label>
+
 
                     {/* <OutlinedTextField
                         placeholder={(this.state.isAmountFocused || amount.length) ? locales('titles.amountWithExample') : ''}
@@ -433,12 +439,17 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    {!!minimumOrderError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label>}
-                    {!minimumOrderError && minimumOrder.length ? <Label style={{
-                        fontSize: 14, color: '#1DA1F2',
-                        textAlign: 'left', fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                    }}>{minimumOrderText}</Label> : null}
 
+
+                    <Label style={{
+                        height: 25,
+                        textAlign: !amountError && amount.length ? 'left' : 'right'
+                    }}>
+
+                        {!!minimumOrderError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
+                        {!minimumOrderError && minimumOrder.length ? <Text style={{ fontSize: 14, color: '#1DA1F2', fontFamily: 'IRANSansWeb(FaNum)_Medium', }}> {minimumOrderText}</Text> : null}
+
+                    </Label>
                     {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMinimumOrderSubmit}
@@ -517,7 +528,9 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    {!!minimumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumPriceError}</Label>}
+                    <Label style={{ fontSize: 14, color: '#D81A1A', height: 25 }}>
+                        {!!minimumPriceError ? minimumPriceError : null}
+                    </Label>
                     {/* <OutlinedTextField
                         baseColor={minimumPrice.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMinimumPriceSubmit}
@@ -597,7 +610,9 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    {!!maximumPriceError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{maximumPriceError}</Label>}
+                    <Label style={{ fontSize: 14, color: '#D81A1A', height: 25 }}>
+                        {!!maximumPriceError ? maximumPriceError : null}
+                    </Label>
                     {/* <OutlinedTextField
                         baseColor={maximumPrice.length ? '#00C569' : '#a8a8a8'}
                         onChangeText={this.onMaximumPriceSubmit}
@@ -612,7 +627,7 @@ class StockAndPrice extends Component {
                             locales('titles.maximumPriceWithExample')}
                     /> */}
                 </View>
-                <View style={{ flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between', width: '100%' }}>
+                <View style={{ flexDirection: 'row', marginTop: 15, marginBottom: 30, width: deviceWidth, justifyContent: 'space-between', width: '100%' }}>
                     <Button
                         onPress={() => this.onSubmit()}
                         style={!minimumOrder.length || !amount.length || !maximumPrice || !minimumPrice
@@ -639,7 +654,8 @@ class StockAndPrice extends Component {
 
 const styles = StyleSheet.create({
     textInputPadding: {
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingTop: 5
     },
     buttonText: {
         color: 'white',
@@ -660,7 +676,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center',
-        width: deviceWidth * 0.4,
+        width: '37%',
+
         elevation: 0,
         margin: 10,
     },
@@ -669,7 +686,8 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.4,
+        width: '37%',
+
         color: 'white',
         elevation: 0,
         alignItems: 'center',
@@ -681,7 +699,8 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.4,
+        width: '37%',
+
         elevation: 0,
         color: 'white',
         alignItems: 'center',
@@ -689,8 +708,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
+        // paddingVertical: 5,
+        paddingHorizontal: 10
     }
 })
 
