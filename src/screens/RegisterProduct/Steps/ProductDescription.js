@@ -85,10 +85,10 @@ class ProductDecription extends Component {
                                 backgroundColor: '#FBFBFB',
                             }}>
                             <FontAwesome5
+                                solid
                                 name={!description ? 'edit' : 'check-circle'}
                                 color={!description ? '#BDC4CC' : '#00C569'}
                                 size={16}
-                                solid
                                 style={{ position: 'absolute', top: 10, left: 10 }}
                             />
                             <Textarea

@@ -46,7 +46,6 @@ class StockAndPrice extends Component {
         this.maximumPriceRef.current.value = maximumPrice;
         this.minimumOrderRef.current.value = minimumOrder;
         this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
-
         BackHandler.addEventListener('hardwareBackPress', _ => {
             this.props.changeStep(1)
             return true;
@@ -63,7 +62,6 @@ class StockAndPrice extends Component {
             amount: field,
             amountClicked: true
         }));
-
         if (field) {
             if (!validator.isNumber(field)) {
                 this.setState(() => ({
@@ -247,6 +245,43 @@ class StockAndPrice extends Component {
         }
     }
 
+    handleAutoFocus = _ => {
+
+        const {
+            amount,
+            amountError,
+            minimumOrder,
+            minimumOrderError,
+            minPrice,
+            minPriceError,
+            maximumPrice,
+            maxPriceError
+        } = this.state;
+
+        if (!amount || amountError) {
+            this.amountRef.current._root.focus()
+            return;
+        }
+
+        if (!minimumOrder || minimumOrderError) {
+            this.minimumOrderRef.current._root.focus()
+            return;
+        }
+
+        if (!minPrice || minPriceError) {
+            this.minimumPriceRef.current._root.focus()
+            return;
+        }
+
+        if (!maximumPrice || maxPriceError) {
+            this.maximumPriceRef.current._root.focus()
+            return;
+        }
+
+        return this.onSubmit();
+
+    }
+
     render() {
 
         let {
@@ -327,6 +362,7 @@ class StockAndPrice extends Component {
                             }}
                         />
                         <Input
+                            onSubmitEditing={this.handleAutoFocus}
                             autoCapitalize='none'
                             autoCorrect={false}
                             keyboardType='number-pad'
@@ -419,6 +455,7 @@ class StockAndPrice extends Component {
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
+                            onSubmitEditing={this.handleAutoFocus}
                             autoCompleteType='off'
                             keyboardType='number-pad'
                             style={{
@@ -507,6 +544,7 @@ class StockAndPrice extends Component {
                         />
                         <Input
                             autoCapitalize='none'
+                            onSubmitEditing={this.handleAutoFocus}
                             autoCorrect={false}
                             keyboardType='number-pad'
                             autoCompleteType='off'
@@ -587,6 +625,7 @@ class StockAndPrice extends Component {
                             }}
                         />
                         <Input
+                            onSubmitEditing={this.handleAutoFocus}
                             autoCapitalize='none'
                             autoCorrect={false}
                             autoCompleteType='off'
