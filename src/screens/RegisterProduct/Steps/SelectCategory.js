@@ -280,7 +280,7 @@ class SelectCategory extends Component {
             >
                 <Button
                     onPress={() => this.setState({ category: '' })}
-                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '40%' }]}
+                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -432,7 +432,7 @@ class SelectCategory extends Component {
                                 </Text>
                                 <Text
                                     style={{
-                                        marginHorizontal: 10, color: '#333',
+                                        marginHorizontal: 10, color: '#555555',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                     }}
                                 >
@@ -458,7 +458,6 @@ class SelectCategory extends Component {
                                 regular
                                 style={{
                                     borderRadius: 4,
-                                    // borderWidth: 2,
                                     borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
                                         submitButtonClick ? '#E41C38' : '#666',
                                     paddingHorizontal: 10,

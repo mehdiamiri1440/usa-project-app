@@ -340,8 +340,9 @@ class RegisterRequest extends Component {
                     <Text
                         style={{
                             color: '#38485F',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 15
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            marginHorizontal: 15,
+                            fontSize: 18
                         }}
                     >
                         {item.category_name}
@@ -356,15 +357,15 @@ class RegisterRequest extends Component {
     subCategoriesListFooterComponent = _ => {
         return (
             <View
-                style={{ width: deviceWidth * 0.4, margin: 20, alignSelf: 'flex-end' }}
+                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
                     onPress={() => this.setState({ category: '' })}
-                    style={[styles.backButtonContainer, { flex: 1 }]}
+                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
                     <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
                 </Button>
             </View>
         )
@@ -495,7 +496,7 @@ class RegisterRequest extends Component {
                         </View>
 
 
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                        <View style={{ padding: 0 }}>
                             {!category || !subCategory ? <>
                                 <Text style={{
                                     borderBottomColor: '#CCC',
@@ -504,23 +505,26 @@ class RegisterRequest extends Component {
                                     width: '100%',
                                     fontSize: 18,
                                     color: '#555555',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                 }}>
                                     {locales('titles.registerBuyAdRequest')}
                                 </Text>
-                                <Text
+                                <View
                                     style={{
                                         padding: 2,
                                         marginVertical: 20,
-                                        width: '95%',
-                                        fontSize: 20,
-                                        color: '#555555',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                        paddingHorizontal: 10,
+                                        flexDirection: 'row-reverse'
                                     }}
                                 >
-                                    {categoryIcon}
-                                    {locales('labels.chooseProductCategory')}
-                                </Text>
+                                    <Text>{categoryIcon}</Text>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        color: '#333',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                    }}>  {locales('labels.chooseProductCategory')}</Text>
+
+                                </View>
                             </> : null}
 
                             {!category ?
@@ -550,16 +554,18 @@ class RegisterRequest extends Component {
                             {
                                 category && subCategory ?
                                     <View style={{
-                                        paddingHorizontal: 20
+                                        paddingHorizontal: 15
                                     }}
                                     >
                                         <Text
                                             style={{
-                                                color: '#555555', marginVertical: 20, marginHorizontal: 15,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
+                                                color: '#333',
+                                                marginTop: 20,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 18
                                             }}
                                         >
-                                            {`${locales('titles.productType')} `}
+                                            {`${locales('titles.type')} `}
                                             <Text
                                                 style={{
                                                     color: '#21AD93', paddingHorizontal: 50,
@@ -574,20 +580,19 @@ class RegisterRequest extends Component {
                                             </Text>
                                             <Text
                                                 style={{
-                                                    marginHorizontal: 10, color: '#555555',
+                                                    marginHorizontal: 10, color: '#333',
                                                     fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                                 }}
                                             >
-                                                {` ${locales('titles.enterYours')}`}
+                                                {` ${locales('titles.enterYouNeed')}`}
                                             </Text>
                                         </Text>
 
                                         <Text
                                             style={{
                                                 marginVertical: 10,
-                                                color: '#777777',
-                                                marginHorizontal: 15,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                color: '#777',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 fontSize: 16
                                             }}
                                         >
@@ -597,16 +602,21 @@ class RegisterRequest extends Component {
                                             regular
                                             style={{
                                                 borderRadius: 4,
-                                                borderWidth: 1,
-                                                marginHorizontal: 15,
-                                                borderColor: productType ? productTypeError ? '#f08c9a' : '#7ee0b2' :
-                                                    submitButtonClick ? '#f08c9a' : '#000000'
+                                                borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
+                                                    submitButtonClick ? '#E41C38' : '#666',
+                                                paddingHorizontal: 10,
+                                                backgroundColor: '#FBFBFB'
                                             }}>
                                             <FontAwesome5 name={
                                                 productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
                                                     ? 'times-circle' : 'edit'}
-                                                color={productType ? productTypeError ? '#f08c9a' : '#7ee0b2'
-                                                    : submitButtonClick ? '#f08c9a' : '#000000'}
+                                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                                size={16}
+                                                solid
+                                                style={{
+                                                    marginLeft: 10
+                                                }}
                                             />
                                             <Input
                                                 autoCapitalize='none'
@@ -624,22 +634,20 @@ class RegisterRequest extends Component {
                                                 onChangeText={this.onProductTypeSubmit}
                                                 value={productType}
                                                 placeholderTextColor="#BEBEBE"
-                                                placeholder={locales('titles.enterYourProductType')}
+                                                placeholder={locales('titles.enterYouNeedProduct')}
                                                 ref={this.productTypeRef}
                                             />
                                         </InputGroup>
-                                        {!!productTypeError && <Label style={{ fontSize: 14, marginHorizontal: 12, color: '#D81A1A' }}>
-                                            {productTypeError}
-                                        </Label>}
-
+                                        <Label style={{ height: 20, fontSize: 14, marginHorizontal: 12, color: '#D81A1A' }}>
+                                            {!!productTypeError && productTypeError}
+                                        </Label>
 
                                         <Text
                                             style={{
-                                                marginTop: 30,
-                                                color: '#777777',
-                                                marginHorizontal: 15,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 20
+                                                marginTop: 10,
+                                                color: '#333',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 18
                                             }}
                                         >
                                             {locales('titles.amountNeeded')} ({locales('labels.kiloGram')}) <Text
@@ -650,11 +658,9 @@ class RegisterRequest extends Component {
                                         </Text>
                                         <Text
                                             style={{
-                                                marginTop: 20,
                                                 marginBottom: 10,
                                                 color: '#777777',
-                                                marginHorizontal: 15,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 fontSize: 16
                                             }}
                                         >
@@ -663,17 +669,24 @@ class RegisterRequest extends Component {
                                         <InputGroup
                                             regular
                                             style={{
+
                                                 borderRadius: 4,
-                                                borderWidth: 1,
-                                                marginHorizontal: 15,
-                                                borderColor: amount ? amountError ? '#f08c9a' : '#7ee0b2' :
-                                                    submitButtonClick ? '#f08c9a' : '#000000'
+                                                borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
+                                                    submitButtonClick ? '#E41C38' : '#666',
+                                                paddingHorizontal: 10,
+                                                backgroundColor: '#FBFBFB'
                                             }}>
                                             <FontAwesome5 name={
+
                                                 amount ? amountError ? 'times-circle' : 'check-circle' : submitButtonClick
                                                     ? 'times-circle' : 'edit'}
-                                                color={amount ? amountError ? '#f08c9a' : '#7ee0b2'
-                                                    : submitButtonClick ? '#f08c9a' : '#000000'}
+                                                color={amount ? amountError ? '#E41C38' : '#00C569'
+                                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                                size={16}
+                                                solid
+                                                style={{
+                                                    marginLeft: 10
+                                                }}
                                             />
                                             <Input
                                                 autoCapitalize='none'
@@ -972,11 +985,12 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
+        elevation: 0,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
         justifyContent: 'center'
     },
     labelInputPadding: {

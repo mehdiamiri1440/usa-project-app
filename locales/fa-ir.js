@@ -306,6 +306,8 @@ export default {
     'titles.enterMaxPrice': 'حداکثر قیمت را وارد کنید',
     'titles.enterMinPrice': 'حداقل قیمت را وارد کنید',
     'titles.enterYours': 'خود را وارد کنید',
+    'titles.enterYouNeed': 'مورد نیاز خود را وارد کنید',
+    'titles.enterYouNeedProduct': 'نوع محصول مورد نیاز  را وارد کنید',
     'titles.requestQuantity': 'میزان نیازمندی(کیلوگرم)',
 
     'titles.selectProductName': 'انتخاب نام محصول',
