@@ -78,13 +78,16 @@ class ProductDecription extends Component {
                             style={{
                                 alignItems: 'flex-start',
                                 borderRadius: 4,
+                                backgroundColor: '#FBFBFB',
                                 borderWidth: 1,
                                 borderColor: !description ? '#666' : '#00C569'
                             }}>
                             <FontAwesome5
+                                solid
                                 name={!description ? 'edit' : 'check-circle'}
                                 color={!description ? '#BDC4CC' : '#00C569'}
-                                style={{ position: 'absolute', top: 5, left: 5 }}
+                                style={{ position: 'absolute', top: 13, left: 5 }}
+                                size={16}
                             />
                             <Textarea
                                 onChangeText={this.onDescriptionSubmit}
