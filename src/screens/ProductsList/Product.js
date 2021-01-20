@@ -3,6 +3,7 @@ import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking,
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, Input, Label, Item, Toast, Button } from 'native-base';
+import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Navigation } from 'react-native-navigation';
@@ -851,9 +852,48 @@ class Product extends PureComponent {
                                         {locales('labels.seeProfile')}
                                     </Text>}
                             </TouchableOpacity>
-                            {active_pakage_type == 3 && <Image
+                            {active_pakage_type == 3 && <Svg
                                 style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
-                                source={require('../../../assets/icons/special-label.png')} />}
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="27"
+                                height="37.007"
+                                viewBox="0 0 27 37.007"
+                            >
+                                <G data-name="Group 145" transform="translate(-261 -703.993)">
+                                    <Path
+                                        fill="#00c569"
+                                        d="M0 0l27-.016v36.989l-13.741-5.989-13.259 6z"
+                                        data-name="Path 1"
+                                        transform="translate(261 704.016)"
+                                    ></Path>
+                                    <Path
+                                        fill="#00b761"
+                                        d="M0 0H27V1.072H0z"
+                                        data-name="Rectangle 6"
+                                        transform="translate(261 703.993)"
+                                    ></Path>
+                                    <G fill="#fff" data-name="Group 23" transform="translate(266 707)">
+                                        <Path
+                                            d="M8.511 15.553A8.529 8.529 0 013.444.175l2.162 2.166a5.455 5.455 0 108.3 5.4l1.488-1.466 1.594 1.57a8.518 8.518 0 01-8.473 7.707zM17 6.384l-1.609-1.59-1.477 1.46a5.476 5.476 0 00-2.759-4.069L13.336 0A8.49 8.49 0 0117 6.382z"
+                                            data-name="Subtraction 1"
+                                            transform="translate(0 5.447)"
+                                        ></Path>
+                                        <G data-name="Group 24" transform="translate(3.292)">
+                                            <Path
+                                                d="M3 0h3.656v3.853H0V3a3 3 0 013-3z"
+                                                data-name="Rectangle 12"
+                                                transform="rotate(45 -.73 4.156)"
+                                            ></Path>
+                                            <Path
+                                                d="M0 0h9.459v3.5H3.5A3.5 3.5 0 010 0z"
+                                                data-name="Rectangle 13"
+                                                transform="rotate(135 5.244 3.623)"
+                                            ></Path>
+                                        </G>
+                                    </G>
+                                </G>
+                            </Svg>
+                            }
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
