@@ -233,7 +233,7 @@ const RegisterRequestSuccessfully = props => {
                                 {is_verified ? <ValidatedUserIcon {...props} /> : null}
                             </View>
                         </View>
-                        {active_pakage_type >= 0 && <Svg
+                        {active_pakage_type > 1 && <Svg
                             style={{ position: 'absolute', left: 5, top: 42, zIndex: 1 }}
                             xmlns="http://www.w3.org/2000/svg"
                             width="27"
