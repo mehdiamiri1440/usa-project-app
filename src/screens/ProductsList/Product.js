@@ -830,11 +830,21 @@ class Product extends PureComponent {
                                                 }}>
                                                 {`${first_name} ${last_name}`}
                                             </Text>
-                                            {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
+                                            {is_verified ? <View
+                                                style={{
+                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 9
+                                                }}
+                                            >
+                                                <ValidatedUserIcon {...this.props} />
+                                            </View>
+                                                : null}
                                         </View>
                                         {response_rate > 0 && loggedInUserId != myuser_id &&
                                             <Text style={{ color: '#BEBEBE', fontSize: 12, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                                {locales('labels.responseRate')} <Text style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                }}>%{response_rate}</Text>
                                             </Text>}
                                     </View>
 
@@ -853,7 +863,7 @@ class Product extends PureComponent {
                                     </Text>}
                             </TouchableOpacity>
                             {active_pakage_type == 3 && <Svg
-                                style={{ position: 'absolute', left: 5, top: 56, zIndex: 1 }}
+                                style={{ position: 'absolute', left: 5, top: 53, zIndex: 1 }}
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="27"
                                 height="37.007"
@@ -954,8 +964,8 @@ class Product extends PureComponent {
                                     </View>
 
                                     <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
-                                        <Text style={{ textAlign: 'right', marginLeft: 5 }}>
-                                            <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
+                                        <Text style={{ textAlign: 'right', marginLeft: 9 }}>
+                                            <FontAwesome5 name='box-open' size={18} color='#BEBEBE' />
                                         </Text>
                                         <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
                                             {formatter.convertedNumbersToTonUnit(stock)}
@@ -978,8 +988,8 @@ class Product extends PureComponent {
                                         style={[styles.loginButton, { flex: 1 }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 4 }]}>
-                                                <FontAwesome name='envelope' size={23} />
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 5 }]}>
+                                                <FontAwesome5 solid name='envelope' size={20} />
                                             </Text>
                                             <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
                                                 {locales('titles.achiveSaleStatus')}

@@ -29,9 +29,9 @@ const ValidatedUserIcon = props => {
                     event.preventDefault();
                     refRBSheet.current.open()
                 }}
-                style={{ marginTop: 3, alignItems: 'center', justifyContent: 'center' }}>
-                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+                style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <FontAwesome5 name='certificate' color='#1DA1F2' size={20} />
+                <FontAwesome5 color='white' name='check' size={11} style={{ position: 'absolute' }} />
 
             </TouchableOpacity>
 

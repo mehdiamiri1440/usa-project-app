@@ -16,6 +16,7 @@ export default {
     'errors.mobileNumberInvalidFormat': 'فرمت شماره همراه صحیح نمی‌باشد',
     'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
     'errors.passwordShouldBe8AtLeast': 'کلمه‌عبور باید حداقل 8 کارکتر باشد',
+    'errors.invalidDescription': 'توضیحات شامل حروف غیر مجاز است',
     'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
     'errors.canNotBeZero': '{fieldName} باید بزرگتر از صفر باشد',
 
@@ -278,7 +279,7 @@ export default {
     "titles.description": 'توضیحات محصول خود را بنویسید',
     'titles.descriptionWithExample': 'در مورد کیفیت و نوع بسته بندی محصول خود توضیح دهید',
     'titles.requestTooOld': ' این درخواست‌ها کمی قدیمی است',
-    'titles.productTypeEmpty': 'نوع محصول وارد نشده است',
+    'titles.productTypeEmpty': 'لطفا نوع محصول را وارد کنید',
     'titles.moreDetails': 'اطلاعات بیشتر',
     'titles.subCategoryError': 'انتخاب زیر دسته‌بندی الزامی است',
     'titles.categoryError': 'انتخاب دسته‌بندی الزامی است',
@@ -296,6 +297,7 @@ export default {
     'titles.rollChangedSuccessfully': 'تغییر کاربری شما به {fieldName} با موفقیت اعمال گردید.',
     'titles.minimumPriceWithExample': 'مثلا : 15,000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',
+    'titles.kiloInToman': 'هر کیلو به تومان',
     'titles.viewableBuyRequests': 'سقف روزانه تعداد پاسخ ها به درخواست های خرید',
     'titles.maximumPriceWithExample': 'مثلا : 30,000',
     'titles.productName': 'نام محصول',
@@ -307,7 +309,7 @@ export default {
     'titles.enterMinPrice': 'حداقل قیمت را وارد کنید',
     'titles.enterYours': 'خود را وارد کنید',
     'titles.enterYouNeed': 'مورد نیاز خود را وارد کنید',
-    'titles.enterYouNeedProduct': 'نوع محصول مورد نیاز  را وارد کنید',
+    'titles.enterYouNeedProduct': 'نوع محصول مورد نیاز خود را وارد کنید',
     'titles.requestQuantity': 'میزان نیازمندی(کیلوگرم)',
 
     'titles.selectProductName': 'انتخاب نام محصول',

@@ -326,8 +326,9 @@ class ProductImages extends Component {
 
                     <View style={{
                         marginVertical: 20,
-                        paddingRight: 15, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between'
+                        paddingLeft: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
                     }}>
                         <Button
                             onPress={() => this.onSubmit()}

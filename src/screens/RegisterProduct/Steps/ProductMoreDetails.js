@@ -312,7 +312,6 @@ class ProductMoreDetails extends Component {
                                         paddingBottom: 0,
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        marginVertical: 7
                                     }}>
                                     <TouchableOpacity
                                         onPress={() => this.deleteRow(index)}
@@ -417,7 +416,11 @@ class ProductMoreDetails extends Component {
                                 label={locales('titles.writeDescription')}
                             /> */}
                                 </View>}
-                                {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                                <Label style={{
+                                    fontSize: 14, marginTop: -8, marginRight: 2,
+                                    height: 20,
+                                    color: '#D81A1A', width: deviceWidth * 0.9
+                                }}>{!!detail.error && detail.error.length && detail.error}</Label>
                             </>
                         )
                         )}
@@ -546,6 +549,7 @@ const styles = StyleSheet.create({
     addMoreButton: {
         textAlign: 'center',
         margin: 10,
+        height: 35,
         backgroundColor: 'white',
         borderRadius: 5,
         paddingHorizontal: 10,

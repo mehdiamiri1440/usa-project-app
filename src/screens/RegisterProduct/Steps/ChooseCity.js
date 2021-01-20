@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         justifyContent: 'center',
-        width: deviceWidth * 0.4,
+        width: '37%',
         elevation: 0,
     },
     disableLoginButton: {

@@ -1,6 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button, Textarea, InputGroup } from 'native-base';
+import { Button, Textarea, InputGroup, Label } from 'native-base';
 import { View, Text, StyleSheet, Linking, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -10,13 +10,16 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { validator } from '../../../utils';
 
 class ProductDecription extends Component {
     constructor(props) {
         super(props);
         this.state = {
             description: '',
-            isDescriptionFocused: false
+            isDescriptionFocused: false,
+            descriptionError: '',
+            descriptionClicked: false
         }
     }
 
@@ -41,7 +44,10 @@ class ProductDecription extends Component {
 
     onDescriptionSubmit = field => {
         this.setState(() => ({
-            description: field
+            description: field,
+            descriptionClicked: !!field,
+            descriptionError: (!field || validator.isValidDescription(field)) ?
+                '' : locales('errors.invalidDescription')
         }));
     };
 
@@ -51,7 +57,7 @@ class ProductDecription extends Component {
 
 
     render() {
-        let { description, isDescriptionFocused } = this.state;
+        let { description, descriptionError, descriptionClicked } = this.state;
 
         return (
             <ScrollView>
@@ -76,19 +82,20 @@ class ProductDecription extends Component {
                         <InputGroup
                             regular
                             style={{
-
                                 borderRadius: 4,
-                                // borderWidth: 2,
-                                borderColor: !description ? '#666' : '#00C569',
-                                paddingHorizontal: 10,
+                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#666',
                                 paddingLeft: 15,
-                                backgroundColor: '#FBFBFB',
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB'
                             }}>
-                            <FontAwesome5
-                                solid
-                                name={!description ? 'edit' : 'check-circle'}
-                                color={!description ? '#BDC4CC' : '#00C569'}
+                            <FontAwesome5 name={
+                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                    ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
                                 size={16}
+                                solid
                                 style={{ position: 'absolute', top: 10, left: 10 }}
                             />
                             <Textarea
@@ -111,6 +118,9 @@ class ProductDecription extends Component {
                                 rowSpan={5}
                             />
                         </InputGroup>
+                        <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
+                            {!!descriptionError && descriptionError}
+                        </Label>
                     </View>
 
                     {/* 
@@ -140,8 +150,8 @@ class ProductDecription extends Component {
                         justifyContent: 'space-between'
                     }}>
                         <Button
-                            onPress={() => this.onSubmit()}
-                            style={styles.loginButton}
+                            onPress={() => !descriptionError && this.onSubmit()}
+                            style={descriptionError ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />

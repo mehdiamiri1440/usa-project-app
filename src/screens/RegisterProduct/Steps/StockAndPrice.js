@@ -339,12 +339,15 @@ class StockAndPrice extends Component {
 
                 <View style={styles.textInputPadding}>
                     <Label style={{ color: '#333', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                        {locales('titles.amount')} <Text
+                        {locales('titles.qunatityAmount')} <Text
                             style={{
-                                color: '#D44546',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                            }}
-                        >*</Text>
+                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                            }}>({locales('labels.kiloGram')})</Text><Text
+                                style={{
+                                    color: '#D44546',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                            >*</Text>
                     </Label>
                     <Text
                         style={{
@@ -530,13 +533,16 @@ class StockAndPrice extends Component {
                     /> */}
                 </View>
                 <View style={styles.textInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                        {locales('titles.minimumPrice')} <Text
+                    <Label style={{ color: '#333', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                        {locales('titles.minPriceNeeded')} <Text
                             style={{
-                                color: '#D44546',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                            }}
-                        >*</Text>
+                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                            }}>({locales('titles.kiloInToman')})</Text><Text
+                                style={{
+                                    color: '#D44546',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                            >*</Text>
                     </Label>
                     <Text
                         style={{
@@ -614,12 +620,15 @@ class StockAndPrice extends Component {
                 </View>
                 <View style={styles.textInputPadding}>
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                        {locales('titles.maximumPrice')} <Text
+                        {locales('titles.maxPriceNeeded')} <Text
                             style={{
-                                color: '#D44546',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                            }}
-                        >*</Text>
+                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                            }}>({locales('titles.kiloInToman')})</Text><Text
+                                style={{
+                                    color: '#D44546',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                            >*</Text>
                     </Label>
                     <Text
                         style={{

@@ -96,7 +96,7 @@ class RegisterRequest extends Component {
             amountClicked: false,
             productTypeClicked: false,
             showModal: false,
-            selectedSvgName: 0
+            selectedSvgName: ''
         }
     }
 
@@ -175,7 +175,7 @@ class RegisterRequest extends Component {
             isFocused: false,
             loaded: false,
             showModal: false,
-            selectedSvgName: 0
+            selectedSvgName: ''
         })
     }
 
@@ -259,7 +259,7 @@ class RegisterRequest extends Component {
         let productTypeError = '', categoryError = '', subCategoryError = '', amountError = '';
 
         if (!amount) {
-            amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
+            amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.amountNeeded') })
         }
         else if (amount && (amount <= 0 || amount >= 1000000000)) {
             amountError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') })
@@ -410,6 +410,26 @@ class RegisterRequest extends Component {
         )
     };
 
+
+    handleProductTypeExample = _ => {
+        const {
+            selectedSvgName
+        } = this.state;
+
+        switch (selectedSvgName) {
+            case 'میوه': {
+                return locales('titles.mazafati');
+            };
+            case 'صیفی': {
+                return locales('titles.matinSaderati');
+            };
+            case 'غلات': {
+                return locales('titles.hendi1121');
+            };
+            default:
+                return locales('titles.mazafati');
+        }
+    }
 
 
     render() {
@@ -600,19 +620,19 @@ class RegisterRequest extends Component {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                                 }}
                                             >
-                                                {` ${locales('titles.enterYouNeed')}`}
+                                                {` ${locales('titles.enterYouNeed')}.`}
                                             </Text>
                                         </Text>
 
                                         <Text
                                             style={{
                                                 marginVertical: 10,
-                                                color: '#777',
+                                                color: '#777777',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 fontSize: 16
                                             }}
                                         >
-                                            {locales('titles.productTypeInRequestExample')}
+                                            {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
                                         </Text>
                                         <InputGroup
                                             regular
@@ -666,9 +686,18 @@ class RegisterRequest extends Component {
                                                 fontSize: 18
                                             }}
                                         >
-                                            {locales('titles.amountNeeded')} ({locales('labels.kiloGram')}) <Text
+                                            {locales('titles.amountNeeded')} <Text
                                                 style={{
-                                                    color: '#D44546'
+                                                    marginTop: 10,
+                                                    color: '#333',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 16
+                                                }}
+                                            >({locales('labels.kiloGram')}) </Text><Text
+                                                style={{
+                                                    color: '#D44546',
+                                                    fontSize: 16,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                                 }}
                                             >*</Text>
                                         </Text>

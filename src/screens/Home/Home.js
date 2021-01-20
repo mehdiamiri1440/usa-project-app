@@ -428,26 +428,25 @@ class Home extends React.Component {
                                                         : route.name == 'SuggestedBuyers' ?
 
 
-                                                            <View style={{
-                                                                marginTop: 5,
-                                                                marginLeft: 15
-                                                            }}>
-                                                                <Svg
 
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="23" height="22.014" viewBox="0 0 23 22.014"
-                                                                >
-                                                                    <Defs>
-                                                                        <LinearGradient id="grad" x2="0.864" y2="1">
-                                                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
-                                                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
-                                                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
+                                                            <Svg
+                                                                style={{
+                                                                    marginTop: '12%',
+                                                                    marginLeft: 15
+                                                                }}
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="23" height="22.014" viewBox="0 0 23 22.014"
+                                                            >
+                                                                <Defs>
+                                                                    <LinearGradient id="grad" x2="0.864" y2="1">
+                                                                        <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
+                                                                        <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
+                                                                        <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
 
-                                                                        </LinearGradient>
-                                                                    </Defs>
-                                                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
-                                                                </Svg>
-                                                            </View>
+                                                                    </LinearGradient>
+                                                                </Defs>
+                                                                <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
+                                                            </Svg>
 
                                                             :
                                                             null
