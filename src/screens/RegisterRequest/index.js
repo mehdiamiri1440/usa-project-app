@@ -638,7 +638,7 @@ class RegisterRequest extends Component {
                                                 ref={this.productTypeRef}
                                             />
                                         </InputGroup>
-                                        <Label style={{ height: 20, fontSize: 14, marginHorizontal: 12, color: '#D81A1A' }}>
+                                        <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
                                             {!!productTypeError && productTypeError}
                                         </Label>
 
@@ -711,13 +711,16 @@ class RegisterRequest extends Component {
 
                                             />
                                         </InputGroup>
-                                        {!!amountError && <Label style={{ fontSize: 14, marginHorizontal: 15, color: '#D81A1A' }}>
-                                            {amountError}
-                                        </Label>}
+                                        <Label style={{ height: 25, fontSize: 14, color: '#D81A1A' }}>
+                                            {!!amountError && amountError}
+                                        </Label>
 
                                         <View style={{
-                                            marginVertical: 20, paddingHorizontal: 10,
-                                            flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
+                                            marginTop: 20,
+                                            marginBottom: 20,
+                                            // marginHorizontal: 10,
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between'
                                         }}>
                                             <Button
                                                 onPress={() => this.onSubmit()}
@@ -735,7 +738,7 @@ class RegisterRequest extends Component {
                                             </Button>
                                             <Button
                                                 onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                                style={[styles.backButtonContainer, { width: '40%' }]}
+                                                style={[styles.backButtonContainer, { width: '37%' }]}
                                                 rounded
                                             >
                                                 <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
@@ -958,23 +961,21 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        marginVertical: 10,
         borderRadius: 5,
         backgroundColor: '#B5B5B5',
         width: '40%',
-        maxWidth: 200,
         color: 'white',
+        elevation: 0,
         justifyContent: 'center',
         alignItems: 'center'
     },
     loginButton: {
         textAlign: 'center',
         borderRadius: 5,
-        marginVertical: 10,
         backgroundColor: '#00C569',
         width: '40%',
-        maxWidth: 200,
         color: 'white',
+        elevation: 0,
         justifyContent: 'center',
         alignItems: 'center'
     },
