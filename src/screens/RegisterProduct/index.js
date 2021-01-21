@@ -70,12 +70,16 @@ class RegisterProduct extends React.Component {
 
             selectedButton: null,
             showDialog: false,
+            loaded: false
         }
     }
 
     mainContainer = React.createRef();
 
     componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && this.props.route && this.props.route.params && this.props.route.params.stepNumber) {
+            this.setState({ loaded: true, stepNumber: this.props.route.params.stepNumber })
+        }
         if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
 
@@ -329,6 +333,7 @@ class RegisterProduct extends React.Component {
                             subCategoryId={subCategoryId}
                             product={product}
                             buyAds={buyAds}
+                            changeStep={this.changeStep}
                             subCategoryName={subCategoryName}
                             openChat={this.openChat}
                             selectedButton={selectedButton}
@@ -371,7 +376,7 @@ class RegisterProduct extends React.Component {
                 {stepNumber == 7 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
-                    routeParams={{ subCategoryId, subCategoryName, buyAds }}
+                    routeParams={{ subCategoryId, subCategoryName, buyAds, changeStep: this.changeStep }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 /> : null}

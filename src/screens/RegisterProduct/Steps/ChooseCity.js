@@ -23,28 +23,16 @@ class ChooseCity extends React.Component {
             loaded: false,
             provinces: [],
             cities: [],
+            loaded: false
         }
     }
     provinceRef = React.createRef();
     cityRef = React.createRef();
 
     componentDidMount() {
-        this.props.fetchAllProvinces().then(_ => {
-
-            const {
-                province,
-                provinces
-            } = this.props;
-
-            this.setState({
-                province,
-                provinces,
-                cities: province && provinces && provinces.length ?
-                    Object.values(provinces.find(item => item.id == province).cities)
-                    : []
-            })
-        }
-        )
+        this.fetchLocations(false)
+        // }
+        // )
         // if (!I18nManager.isRTL) {
         //     RNRestart.Restart();
         //     console.warn('here')
@@ -74,6 +62,12 @@ class ChooseCity extends React.Component {
         });
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && (!this.props.provinces || !this.props.provinces.length)) {
+            this.setState({ loaded: true });
+            this.props.fetchAllProvinces().then(_ => this.fetchLocations(true))
+        }
+    }
 
     componentWillUnmount() {
         BackHandler.removeEventListener();
@@ -82,6 +76,21 @@ class ChooseCity extends React.Component {
         // }
     }
 
+    fetchLocations = isFromUpdate => {
+        // this.props.fetchAllProvinces().then(_ => {
+        const {
+            province,
+            provinces
+        } = this.props;
+
+        this.setState({
+            province: !isFromUpdate ? '' : province,
+            provinces,
+            cities: province && provinces && provinces.length ?
+                Object.values(provinces.find(item => item.id == province).cities)
+                : [],
+        })
+    };
 
     onSubmit = () => {
         let { city, province } = this.state;

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, BackHandler } from 'react-native';
 import { Button, Input, Label, InputGroup } from 'native-base';
+import { connect } from 'react-redux';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import { deviceWidth, validator, formatter } from '../../../utils';
+import * as locationActions from '../../../redux/locations/actions';
 
 class StockAndPrice extends Component {
     constructor(props) {
@@ -45,11 +46,20 @@ class StockAndPrice extends Component {
         this.minimumPriceRef.current.value = minimumPrice;
         this.maximumPriceRef.current.value = maximumPrice;
         this.minimumOrderRef.current.value = minimumOrder;
-        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, loaded: true });
+        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount });
         BackHandler.addEventListener('hardwareBackPress', _ => {
             this.props.changeStep(1)
             return true;
-        })
+        });
+        this.props.fetchAllProvinces()
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loaded == false && (!this.props.provinces || !this.props.provinces.length)) {
+            this.setState({ loaded: true });
+            this.props.fetchAllProvinces()
+        }
     }
 
     componentWillUnmount() {
@@ -790,6 +800,21 @@ const styles = StyleSheet.create({
     }
 })
 
-export default StockAndPrice;
+const mapStateToProps = state => {
+    return {
+        loading: state.locationsReducer.fetchAllProvincesLoading,
+        error: state.locationsReducer.fetchAllProvincesError,
+        failed: state.locationsReducer.fetchAllProvincesFailed,
+        message: state.locationsReducer.fetchAllProvincesMessage,
+        provinces: state.locationsReducer.provinces,
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        fetchAllProvinces: _ => dispatch(locationActions.fetchAllProvinces(undefined, true)),
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(StockAndPrice)
 
 

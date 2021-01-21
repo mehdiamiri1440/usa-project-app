@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, ScrollView } from 'react-native';
+import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, ScrollView, BackHandler } from 'react-native';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
@@ -33,8 +33,14 @@ class RegisterProductSuccessfully extends Component {
         if (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
             this.props.fetchBuyAdsAfterPayment();
         }
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.props.navigation.navigate('RegisterProduct', { params: { stepNumber: 0 } })
+        });
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress');
+    }
     // componentDidUpdate(prevProps, prevState) {
     //     console.log('the', this.state.loaded, prevState.loaded)
     //     if (this.state.loaded == false && this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
