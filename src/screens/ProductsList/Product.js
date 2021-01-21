@@ -1090,11 +1090,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     cardItemStyle: {
-        borderRadius: 5,
+        borderRadius: 7,
         width: '100%',
         backgroundColor: '#fff',
-        elevation: 2,
-        borderWidth: 1,
+        elevation: 0,
+        borderWidth: 2,
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
