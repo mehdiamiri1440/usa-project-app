@@ -68,7 +68,7 @@ const RegisterRequestSuccessfully = props => {
                     {locales('labels.suggestedSellersForYou')}
                     <Text
                         style={{
-                            color: '#00C569',
+                            color: '#21AD93',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >{` ${locales('titles.buskool')}`}</Text>
@@ -78,7 +78,7 @@ const RegisterRequestSuccessfully = props => {
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
-                        {locales('labels.forYourRequest')}
+                        {locales('labels.forYourRequest')}.
                     </Text>
                 </Text>
             </View>
@@ -109,9 +109,9 @@ const RegisterRequestSuccessfully = props => {
                 </Text>
                 <FontAwesome5
                     size={20}
-                    style={{ padding: 10 }}
+                    style={{ color: '#1DA1F2', padding: 10 }}
                     name='arrow-left'
-                    color='#1DA1F2'
+                    color='# '
                 />
             </View>
         )
@@ -233,8 +233,9 @@ const RegisterRequestSuccessfully = props => {
                                 {is_verified ? <ValidatedUserIcon {...props} /> : null}
                             </View>
                         </View>
-                        {active_pakage_type > 1 && <Svg
-                            style={{ position: 'absolute', left: 5, top: 42, zIndex: 1 }}
+
+                        {active_pakage_type == 3 && <Svg
+                            style={{ position: 'absolute', left: 5, top: 37, zIndex: 1 }}
                             xmlns="http://www.w3.org/2000/svg"
                             width="27"
                             height="37.007"
@@ -323,7 +324,7 @@ const RegisterRequestSuccessfully = props => {
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 16,
-                                                color: '#000',
+                                                color: '#474747',
                                             }}
                                         >
                                             {` ${product_name}`}
@@ -346,7 +347,7 @@ const RegisterRequestSuccessfully = props => {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 16,
                                             marginHorizontal: 2,
-                                            color: '#000',
+                                            color: '#474747',
                                             width: '65%'
                                         }}
                                     >
@@ -474,7 +475,7 @@ const RegisterRequestSuccessfully = props => {
                 </View>
             </View>
 
-            <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+            <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
                 <View
                     style={{
                         backgroundColor: '#edf8e6',
@@ -516,53 +517,37 @@ const RegisterRequestSuccessfully = props => {
 
                     {products && products.length ? <Text
                         style={{
-                            paddingHorizontal: 10,
                             textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            fontSize: 18,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
                             color: '#21AD93'
                         }}>
                         {locales('titles.registerRequestDescription')}
-                        <Text
-                            style={{
-                                paddingHorizontal: 10,
-                                textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                fontSize: 18,
-                                color: '#00C569'
-                            }}>
-                            {` ${locales('titles.buskool')}`}،
-                                </Text>
-                        <Text
-                            style={{
-                                paddingHorizontal: 10,
-                                textAlign: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                fontSize: 18,
-                                color: '#21AD93'
-                            }}>
-                            {` ${locales('titles.willBeSentToBuyers')}`}
-                        </Text>
+                        {` ${locales('titles.buskool')}`}،
+                        {` ${locales('titles.willBeSentToBuyers')}`}
+
                     </Text> : null}
 
                 </View>
+
 
                 {!products || !products.length ? <Text
                     style={{
                         paddingHorizontal: 10,
                         textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        fontSize: 18,
-                        color: '#777777'
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 15,
+                        color: '#777777',
+                        marginTop: 40
                     }}>
                     {locales('titles.registerRequestDescription')}
                     <Text
                         style={{
                             paddingHorizontal: 10,
                             textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            fontSize: 18,
-                            color: '#00C569'
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: '#21ad93'
                         }}>
                         {` ${locales('titles.buskool')}`}،
                                 </Text>
@@ -570,8 +555,8 @@ const RegisterRequestSuccessfully = props => {
                         style={{
                             paddingHorizontal: 10,
                             textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            fontSize: 18,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
                             color: '#777777'
                         }}>
                         {` ${locales('titles.willBeSentToBuyers')}`}
@@ -590,6 +575,7 @@ const RegisterRequestSuccessfully = props => {
                         alignItems: 'center',
                         alignSelf: 'center',
                         justifyContent: 'center',
+                        elevation: 0,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold'
                     }}
                     rounded
@@ -598,6 +584,7 @@ const RegisterRequestSuccessfully = props => {
                         color: 'white',
                         width: '100%',
                         textAlign: 'center',
+                        fontSize: 16,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold'
                     }}>{locales('labels.productsList')}</Text>
                 </Button> : null}
