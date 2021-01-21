@@ -77,22 +77,31 @@ class RegisterProduct extends React.Component {
     mainContainer = React.createRef();
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.loaded == false && this.props.route && this.props.route.params && this.props.route.params.stepNumber) {
-            this.setState({ loaded: true, stepNumber: this.props.route.params.stepNumber })
-        }
+
+        const { stepNumber } = this.state;
+
         if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
 
+        if (this.props.resetTab) {
+            this.props.resetRegisterProduct(false);
+            this.changeStep(0);
+        }
+
+        if (this.props.resetTab && stepNumber == 7) {
+            this.props.resetRegisterProduct(false);
+            this.setState({ stepNumber: 0 })
+        }
     }
 
     componentDidMount() {
         analytics().logEvent('register_product');
         this.props.fetchUserProfile();
-        global.resetRegisterProduct = data => {
-            if (data) {
-                this.changeStep(0);
-            }
-        }
+        // global.resetRegisterProduct = data => {
+        //     if (data) {
+        //         this.changeStep(0);
+        //     }
+        // }
         if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
         BackHandler.addEventListener('hardwareBackPress', () => {
@@ -100,6 +109,7 @@ class RegisterProduct extends React.Component {
                 this.setState({ stepNumber: this.state.stepNumber - 1 })
                 return true;
             }
+            return this.props.navigation.goBack();
         })
         if (this.props.resetTab) {
             this.changeStep(0);

@@ -141,3 +141,5 @@ export const fetchBuyAdsAfterPayment = _ => {
 
 export const setSubCategoryIdFromRegisterProduct = (id, name) => dispatch => dispatch(action(actionTypes.SET_PRODUCT_ID_FROM_REGISTER_PRODUCT, { id, name }));
 
+export const resetRegisterProduct = resetTab => dispatch => dispatch(action(actionTypes.RESET_REGISTER_PRODUCT_TAB, { resetTab }));
+
