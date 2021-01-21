@@ -114,30 +114,28 @@ class SelectCategory extends Component {
 
         });
 
-        BackHandler.addEventListener('hardwareBackPress', _ => {
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-            const {
-                category,
-                subCategory,
-            } = this.state;
+        //     const {
+        //         category,
+        //         subCategory,
+        //     } = this.state;
 
-            if (subCategory && category) {
-                this.setState({ subCategory: '' })
-                return true;
-            }
+        //     if (subCategory && category) {
+        //         this.setState({ subCategory: '' })
+        //     }
 
-            if (category) {
-                this.setState({ category: '' })
-                return true;
-            }
-            return false;
-        });
+        //     else if (category) {
+        //         this.setState({ category: '' })
+        //     }
+        //     return true;
+        // });
 
     }
 
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        // BackHandler.removeEventListener('hardwareBackPress');
     }
 
     // setCategory = (id) => {

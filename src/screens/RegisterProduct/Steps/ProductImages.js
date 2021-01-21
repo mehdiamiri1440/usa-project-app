@@ -29,14 +29,14 @@ class ProductImages extends Component {
     componentDidMount() {
         const { images } = this.props;
         this.setState({ images, loaded: true });
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.changeStep(3)
-            return true;
-        })
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(3)
+        //     return false;
+        // })
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener()
+        // BackHandler.removeEventListener()
     }
 
 
