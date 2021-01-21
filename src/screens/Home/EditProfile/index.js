@@ -244,16 +244,15 @@ class EditProfile extends Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-                        elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
                     }}>
-                        <ActivityIndicator size="large"
+                        <ActivityIndicator size={70}
                             style={{
-                                position: 'absolute', left: '44%', top: '40%',
-                                elevation: 5,
+                                position: 'absolute', left: '42%', top: '40%',
+                                elevation: 0,
                                 borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                                backgroundColor: 'white', borderRadius: 25
                             }}
                             color="#00C569"
 

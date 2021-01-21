@@ -454,18 +454,19 @@ const App = (props) => {
           borderColor: 'black',
           backgroundColor: 'white',
         }}>
-          <ActivityIndicator size="large"
+          <ActivityIndicator size={70}
             style={{
-              position: 'absolute', left: '44%', top: '40%',
+              position: 'absolute', left: '42%', top: '40%',
 
-              elevation: 5,
+              elevation: 0,
               borderColor: 'black',
-              backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+              backgroundColor: 'white', borderRadius: 25
             }}
             color="#00C569"
 
           />
-        </View> : null}
+        </View>
+        : null}
       <AppNavigator
         initialRoute={initialRoute}
         {...props}
