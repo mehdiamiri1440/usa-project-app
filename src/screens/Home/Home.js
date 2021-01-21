@@ -366,6 +366,7 @@ class Home extends React.Component {
                                     route.name == 'MyRequests' && is_seller ? null :
                                         route.name === 'PromoteRegistration' ? <BgLinearGradient
                                             start={{ x: 0, y: 1 }}
+                                            key={index}
                                             end={{ x: 0.8, y: 0.2 }}
                                             colors={['#00C569', '#21AD93']}
                                             style={{
