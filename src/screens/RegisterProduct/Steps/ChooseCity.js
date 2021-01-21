@@ -227,6 +227,7 @@ class ChooseCity extends React.Component {
         let {
             message,
             loading,
+            citiesLoading,
             error,
         } = this.props;
 
@@ -262,7 +263,7 @@ class ChooseCity extends React.Component {
                 {!province ?
                     <FlatList
                         data={provinces}
-                        ListEmptyComponent={!loading && this.renderListEmptyComponent}
+                        ListEmptyComponent={!loading && !citiesLoading && this.renderListEmptyComponent}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                         ListFooterComponent={_ => this.listFooterComponent(false)}
@@ -273,7 +274,7 @@ class ChooseCity extends React.Component {
                     !city && province ?
                         <FlatList
                             data={cities}
-                            ListEmptyComponent={!loading && this.renderListEmptyComponent}
+                            ListEmptyComponent={!loading && !citiesLoading && this.renderListEmptyComponent}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={this.renderItem}
                             ListFooterComponent={_ => this.listFooterComponent(true)}
@@ -534,6 +535,7 @@ const mapStateToProps = state => {
         failed: state.locationsReducer.fetchAllProvincesFailed,
         message: state.locationsReducer.fetchAllProvincesMessage,
         provinces: state.locationsReducer.provinces,
+        citiesLoading: state.locationsReducer.fetchAllCitiesLoading
     }
 }
 const mapDispatchToProps = (dispatch) => {

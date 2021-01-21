@@ -27,9 +27,10 @@ import {
 }
     from './tabs';
 import { deviceWidth, deviceHeight } from '../utils';
-
+import * as productActions from '../redux/registerProduct/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 
+let currentRoute = '';
 
 const routes = props => {
 
@@ -104,6 +105,11 @@ const routes = props => {
 
                         <Tab.Screen
                             key={'Home'}
+                            listeners={{
+                                tabPress: e => {
+                                    currentRoute = e.target;
+                                }
+                            }}
                             options={{
                                 tabBarBadge: false,
                                 tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
@@ -123,6 +129,11 @@ const routes = props => {
                             }}
                             name={'Requests'}
                             component={Requests}
+                            listeners={{
+                                tabPress: e => {
+                                    currentRoute = e.target;
+                                }
+                            }}
                         />
                             :
                             <Tab.Screen
@@ -134,6 +145,11 @@ const routes = props => {
                                 }}
                                 name={'SpecialProducts'}
                                 component={SpecialProductsStack}
+                                listeners={{
+                                    tabPress: e => {
+                                        currentRoute = e.target;
+                                    }
+                                }}
                             />}
 
 
@@ -142,6 +158,12 @@ const routes = props => {
                             key={'RegisterProduct'}
                             listeners={{
                                 tabPress: e => {
+                                    if (currentRoute.includes('RegisterProductStack')) {
+                                        props.resetRegisterProduct(true);
+                                    }
+
+                                    currentRoute = e.target;
+
                                     if (!!global.resetRegisterProduct)
                                         global.resetRegisterProduct(true)
                                 },
@@ -168,6 +190,7 @@ const routes = props => {
                                     tabPress: e => {
                                         if (!!global.resetRegisterRequest)
                                             global.resetRegisterRequest(true)
+                                        currentRoute = e.target;
                                     },
                                 }}
                                 options={{
@@ -191,6 +214,7 @@ const routes = props => {
                             listeners={{
                                 tabPress: e => {
                                     e.preventDefault();
+                                    currentRoute = e.target;
                                     if (is_seller)
                                         return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 0 } });
                                     return navigationRef.current.navigate('Messages');
@@ -208,6 +232,7 @@ const routes = props => {
                         <Tab.Screen
                             listeners={{
                                 tabPress: e => {
+                                    currentRoute = e.target;
                                     navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
                                 },
                             }}
@@ -249,4 +274,10 @@ const mapStateToProps = (state) => {
         newMessage: state.messagesReducer.newMessage,
     }
 };
-export default connect(mapStateToProps)(routes)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(routes)

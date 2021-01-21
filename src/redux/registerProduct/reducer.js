@@ -364,6 +364,13 @@ export default (state = INITIAL_STATE, action) => {
                 subCategoryName: action.payload.name
             }
         }
+
+        case actionTypes.RESET_REGISTER_PRODUCT_TAB: {
+            return {
+                ...state,
+                resetTab: action.payload.resetTab
+            }
+        }
         default:
             return state
     }

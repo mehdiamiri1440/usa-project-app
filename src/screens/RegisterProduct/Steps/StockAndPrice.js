@@ -51,7 +51,7 @@ class StockAndPrice extends Component {
             this.props.changeStep(1)
             return true;
         });
-        this.props.fetchAllProvinces()
+        this.props.fetchAllProvinces();
     }
 
 

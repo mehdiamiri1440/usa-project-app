@@ -12,6 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 
 import { formatter } from '../../utils';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import * as productActions from '../../redux/registerProduct/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import ChatModal from '../Messages/ChatModal';
 
@@ -34,7 +35,8 @@ class RegisterProductSuccessfully extends Component {
             this.props.fetchBuyAdsAfterPayment();
         }
         BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.navigation.navigate('RegisterProduct', { params: { stepNumber: 0 } })
+            this.props.resetRegisterProduct(true)
+            return true;
         });
     }
 
@@ -871,7 +873,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchBuyAdsAfterPayment: _ => dispatch(registerProductActions.fetchBuyAdsAfterPayment())
+        fetchBuyAdsAfterPayment: _ => dispatch(registerProductActions.fetchBuyAdsAfterPayment()),
+        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
     }
 };
 const mapStateToProps = (state) => {
