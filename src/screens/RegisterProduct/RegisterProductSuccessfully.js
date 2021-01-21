@@ -34,14 +34,14 @@ class RegisterProductSuccessfully extends Component {
         if (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
             this.props.fetchBuyAdsAfterPayment();
         }
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.resetRegisterProduct(true)
-            return true;
-        });
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.resetRegisterProduct(true)
+        //     return false;
+        // });
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress');
+        // BackHandler.removeEventListener('hardwareBackPress');
     }
     // componentDidUpdate(prevProps, prevState) {
     //     console.log('the', this.state.loaded, prevState.loaded)

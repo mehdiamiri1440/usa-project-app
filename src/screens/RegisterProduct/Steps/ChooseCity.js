@@ -38,28 +38,28 @@ class ChooseCity extends React.Component {
         //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
-        BackHandler.addEventListener('hardwareBackPress', _ => {
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-            const {
-                province,
-                city,
-            } = this.state;
-            console.log('prvo', province, 'city', city)
+        //     const {
+        //         province,
+        //         city,
+        //     } = this.state;
+        //     console.log('prvo', province, 'city', city)
 
-            if (city && province) {
-                this.setState({ city: '', province })
-                return true;
-            }
+        //     if (city && province) {
+        //         this.setState({ city: '', province })
+        //         return true;
+        //     }
 
-            if (!city && province) {
-                this.setState({ province: '' })
-                return true;
-            }
-            if (!city && !province) {
-                this.props.changeStep(2);
-                return true;
-            }
-        });
+        //     if (!city && province) {
+        //         this.setState({ province: '' })
+        //         return true;
+        //     }
+        //     if (!city && !province) {
+        //         this.props.changeStep(2);
+        //         return true;
+        //     }
+        // });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -70,7 +70,7 @@ class ChooseCity extends React.Component {
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        // BackHandler.removeEventListener();
         // if (I18nManager.isRTL) {
         //     I18nManager.forceRTL(false);
         // }
