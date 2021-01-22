@@ -23,7 +23,7 @@ export const isInt = value => {
 
 
 export const isValidDescription = text => {
-  const re = /^[\u0600-\u06FF\s_,.:/;()+-\d]+$/;
+  const re = /^[\u0600-\u06FF\a-zA-Z\s_,.:/;()+-\d]+$/;
   return re.test(text);
 };
 

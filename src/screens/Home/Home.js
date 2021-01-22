@@ -35,6 +35,7 @@ let homeRoutes = [
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SuggestedBuyers' },
     { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
+    { label: 'labels.suggestedSellers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SpecialProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
@@ -42,7 +43,7 @@ let homeRoutes = [
 
     { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='white' />, name: 'Profile' },
     { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
-    { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='#00C569' />, name: 'PromoteRegistration' },
+    { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
 ];
@@ -363,70 +364,8 @@ class Home extends React.Component {
                                 (!is_seller && (route.name == 'PromoteRegistration' ||
                                     route.name == 'Dashboard' || route.name == 'MyProducts' ||
                                     route.name == 'SuggestedBuyers')) ? null :
-                                    route.name == 'MyRequests' && is_seller ? null :
-                                        route.name === 'PromoteRegistration' ? <BgLinearGradient
-                                            start={{ x: 0, y: 1 }}
-                                            key={index}
-                                            end={{ x: 0.8, y: 0.2 }}
-                                            colors={['#00C569', '#21AD93']}
-                                            style={{
-                                                borderRadius: 5,
-                                                marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                                paddingVertical: 10,
-                                                elevation: 0,
-                                                paddingHorizontal: 20,
-                                                marginVertical: 10,
-                                                marginHorizontal: 20,
-
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() => this.handleRouteChange(route.name)}
-                                                style={{
-                                                    width: '100%',
-                                                    alignContent: 'center',
-                                                    flexDirection: 'row-reverse',
-                                                }}
-                                                key={index}>
-
-                                                <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                                    <View style={{
-                                                        borderRadius: 5,
-                                                        backgroundColor: '#fff',
-                                                        padding: 5,
-                                                        width: deviceWidth * 0.1,
-                                                        height: deviceWidth * 0.1,
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        {route.icon}
-                                                    </View>
-                                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#fff' }}>
-                                                        {locales(route.label)}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ width: '20%', flexDirection: 'row' }}>
-                                                    <Text style={{ textAlignVertical: 'center' }}>
-                                                        <FontAwesome5 color={'#fff'} size={25} name='angle-left' />
-                                                    </Text>
-                                                    <Text style={{
-                                                        fontSize: 14,
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        backgroundColor: '#E41C38',
-                                                        color: 'white',
-                                                        borderRadius: 20,
-                                                        marginLeft: 10,
-                                                        textAlign: 'center',
-                                                        textAlignVertical: 'center',
-                                                        marginTop: 4,
-                                                        width: 50,
-                                                        height: 30
-                                                    }}>
-                                                        {locales('labels.special')}
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </BgLinearGradient>
-                                            :
+                                    route.name == 'MyRequests' && is_seller || route.name == 'SpecialProducts' && is_seller ? null :
+                                        route.name === 'PromoteRegistration' ?
                                             <TouchableOpacity
                                                 onPress={() => this.handleRouteChange(route.name)}
                                                 style={{
@@ -446,73 +385,135 @@ class Home extends React.Component {
                                                 key={index}>
 
                                                 <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                                    <View style={{
-                                                        borderRadius: 5,
-                                                        backgroundColor: route.name === 'PromoteRegistration' ? '#00C569' : '#777',
-                                                        padding: 5,
-                                                        width: deviceWidth * 0.1,
-                                                        height: deviceWidth * 0.1,
-                                                        alignItems: 'center'
-                                                    }}>
+                                                    <BgLinearGradient
+                                                        start={{ x: 0, y: 1 }}
+                                                        end={{ x: 0.8, y: 0.2 }}
+                                                        colors={['#00C569', '#21AD93']}
+                                                        style={{
+                                                            borderRadius: 5,
+                                                            padding: 5,
+                                                            width: deviceWidth * 0.1,
+                                                            height: deviceWidth * 0.1,
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
                                                         {route.icon}
-                                                    </View>
+
+                                                    </BgLinearGradient>
                                                     <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444' }}>
                                                         {locales(route.label)}
                                                     </Text>
                                                 </View>
                                                 <View style={{ width: '20%', flexDirection: 'row' }}>
                                                     <Text style={{ textAlignVertical: 'center' }}>
-                                                        <FontAwesome5 color={route.name === 'PromoteRegistration' ? '#00C569' : '#666666'} size={25} name='angle-left' />
+                                                        <FontAwesome5 color={'#21AD93'} size={25} name='angle-left' />
                                                     </Text>
-                                                    {route.name == 'PromoteRegistration' ?
-                                                        <Text style={{
-                                                            fontSize: 14,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                            backgroundColor: '#E41C38',
-                                                            color: 'white',
-                                                            borderRadius: 20,
-                                                            marginLeft: 10,
-                                                            textAlign: 'center',
-                                                            textAlignVertical: 'center',
-                                                            marginTop: 4,
-                                                            width: 50,
-                                                            height: 30
+                                                    <Text style={{
+                                                        fontSize: 14,
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        backgroundColor: '#E41C38',
+                                                        color: 'white',
+                                                        borderRadius: 20,
+                                                        marginLeft: 10,
+                                                        textAlign: 'center',
+                                                        textAlignVertical: 'center',
+                                                        marginTop: 4,
+                                                        width: 50,
+                                                        height: 30
+                                                    }}>
+                                                        {locales('labels.special')}
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity
+                                                onPress={() => this.handleRouteChange(route.name)}
+                                                style={{
+                                                    alignContent: 'center',
+                                                    backgroundColor: 'white',
+                                                    borderRadius: 5,
+                                                    marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
+                                                    borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#ccc',
+                                                    borderWidth: 1,
+                                                    paddingVertical: 10,
+                                                    elevation: 0,
+                                                    paddingHorizontal: 20,
+                                                    marginVertical: 10,
+                                                    marginHorizontal: 20,
+                                                    flexDirection: 'row-reverse',
+                                                }}
+                                                key={index}>
+
+                                                <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
+                                                    {route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                                                        <BgLinearGradient
+                                                            start={{ x: 0, y: 1 }}
+                                                            end={{ x: 2.5, y: 0.2 }}
+                                                            colors={['#c7a84f', '#f4eb97', '#c7a84f']}
+                                                            style={{
+                                                                borderRadius: 5,
+                                                                backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
+                                                                padding: 5,
+                                                                width: deviceWidth * 0.1,
+                                                                height: deviceWidth * 0.1,
+                                                                alignItems: 'center'
+                                                            }}
+                                                        >
+                                                            {route.icon}
+
+                                                        </BgLinearGradient> :
+                                                        <View style={{
+                                                            borderRadius: 5,
+                                                            backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
+                                                            padding: 5,
+                                                            width: deviceWidth * 0.1,
+                                                            height: deviceWidth * 0.1,
+                                                            alignItems: 'center'
                                                         }}>
-                                                            {locales('labels.special')}
-                                                        </Text>
-                                                        : route.name == 'Authentication' ?
+                                                            {route.icon}
+                                                        </View>
+                                                    }
+                                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444' }}>
+                                                        {locales(route.label)}
+                                                    </Text>
+                                                </View>
+                                                <View style={{ width: '20%', flexDirection: 'row' }}>
+                                                    <Text style={{ textAlignVertical: 'center' }}>
+                                                        <FontAwesome5 color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'} size={25} name='angle-left' />
+                                                    </Text>
+                                                    {route.name == 'Authentication' ?
 
-                                                            <View
-                                                                style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
-                                                                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                                                                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+                                                        <View
+                                                            style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
+                                                            <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
+                                                            <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
 
-                                                            </View>
-                                                            : route.name == 'SuggestedBuyers' ?
+                                                        </View>
+                                                        : route.name == 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
 
 
 
-                                                                <Svg
-                                                                    style={{
-                                                                        marginTop: '12%',
-                                                                        marginLeft: 15
-                                                                    }}
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="23" height="22.014" viewBox="0 0 23 22.014"
-                                                                >
-                                                                    <Defs>
-                                                                        <LinearGradient id="grad" x2="0.864" y2="1">
-                                                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
-                                                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
-                                                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
+                                                            <Svg
+                                                                style={{
+                                                                    marginTop: '12%',
+                                                                    marginLeft: 15
+                                                                }}
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="23" height="22.014" viewBox="0 0 23 22.014"
+                                                            >
+                                                                <Defs>
+                                                                    <LinearGradient id="grad" x2="0.864" y2="1">
+                                                                        <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
+                                                                        <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
+                                                                        <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
 
-                                                                        </LinearGradient>
-                                                                    </Defs>
-                                                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
-                                                                </Svg>
+                                                                    </LinearGradient>
+                                                                </Defs>
+                                                                <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
+                                                            </Svg>
 
-                                                                :
-                                                                null
+                                                            :
+                                                            null
                                                     }
                                                 </View>
                                             </TouchableOpacity>
