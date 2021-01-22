@@ -268,7 +268,8 @@ class Product extends PureComponent {
             stock,
             sub_category_id,
             sub_category_name,
-            updated_at
+            updated_at,
+            photos_count
         } = main;
 
         const {
@@ -933,14 +934,14 @@ class Product extends PureComponent {
                                         require('../../../assets/icons/user.png')
                                     } />
 
-                                {photos.length > 0 && <View
+                                {photos_count > 0 && <View
                                     style={{
                                         flexDirection: 'row-reverse',
                                         backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
                                         left: 10, bottom: 0, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
                                     }}>
                                     <Entypo name='images' size={20} color='white' />
-                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
+                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos_count <= 9 ? photos_count : '9+'}</Text>
                                 </View>}
 
                                 <View style={{ width: '60%', justifyContent: 'space-between' }}>
