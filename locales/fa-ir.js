@@ -22,6 +22,8 @@ export default {
 
 
     "labels.man": "آقا",
+    'labels.suggestedSellers': 'فروشندگان پیشنهادی',
+    'labels.suggested': 'پیشنهادی',
     'labels.gender': 'جنسیت',
     'labels.idCardWithOwner': 'تصویر کارت ملی در کنار تصویر شما',
     'labels.idCard': 'تصویر کارت ملی',
@@ -90,7 +92,6 @@ export default {
     'labels.products': 'محصولات',
     'labels.selectSubCategory': 'انتخاب زیر دسته‌بندی',
     'labels.subCategory': 'زیردسته‌بندی',
-    'labels.suggestedSellers': 'فروشندگان پیشنهادی',
     'labels.suggestedProducts': 'محصولات پیشنهادی',
     'labels.myProfile': "پروفایل من",
     'labels.uploadIdCard': 'تصویر کارت ملی خود را اینجا بارگذاری کنید',

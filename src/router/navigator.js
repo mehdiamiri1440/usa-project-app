@@ -140,7 +140,7 @@ const routes = props => {
                                 key={'SpecialProducts'}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.specialProducts')}</Text>,
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.suggested')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
                                 name={'SpecialProducts'}
