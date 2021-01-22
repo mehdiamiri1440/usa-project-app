@@ -35,7 +35,7 @@ let homeRoutes = [
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
     { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SuggestedBuyers' },
     { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
-    { label: 'labels.suggestedSellers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SpecialProducts' },
+    { label: 'labels.suggested', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SpecialProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
