@@ -792,10 +792,10 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    borderRadius: 18, marginTop: 7, marginBottom: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {locales('labels.sort')}
                                 </Text>
                                 <FontAwesome name='sort-amount-desc' size={12} color='#fff' />

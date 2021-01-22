@@ -32,14 +32,14 @@ class ProductDecription extends Component {
             this.descriptionRef.current.value = description;
             this.setState({ description })
         }
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.changeStep(4)
-            return true;
-        })
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(4)
+        //     return false;
+        // })
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        // BackHandler.removeEventListener();
     }
 
     onDescriptionSubmit = field => {

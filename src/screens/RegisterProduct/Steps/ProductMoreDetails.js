@@ -129,14 +129,14 @@ class ProductMoreDetails extends Component {
     pickerRef = React.createRef();
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.changeStep(5)
-            return true;
-        })
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(5)
+        //     return false;
+        // })
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        // BackHandler.removeEventListener();
     }
 
 

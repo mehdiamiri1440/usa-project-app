@@ -47,10 +47,10 @@ class StockAndPrice extends Component {
         this.maximumPriceRef.current.value = maximumPrice;
         this.minimumOrderRef.current.value = minimumOrder;
         this.setState({ minimumOrder, maximumPrice, minimumPrice, amount });
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.props.changeStep(1)
-            return true;
-        });
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(1);
+        //     return true;
+        // });
         this.props.fetchAllProvinces();
     }
 
@@ -63,7 +63,7 @@ class StockAndPrice extends Component {
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener()
+        // BackHandler.removeEventListener()
     }
 
     onAmountSubmit = field => {

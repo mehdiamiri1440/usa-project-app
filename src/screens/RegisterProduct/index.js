@@ -104,13 +104,14 @@ class RegisterProduct extends React.Component {
         // }
         if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
+
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.state.stepNumber > 1) {
                 this.setState({ stepNumber: this.state.stepNumber - 1 })
                 return true;
             }
-            return this.props.navigation.goBack();
         })
+
         if (this.props.resetTab) {
             this.changeStep(0);
             this.props.resetRegisterProduct(false);

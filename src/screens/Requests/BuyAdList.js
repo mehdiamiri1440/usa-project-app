@@ -21,7 +21,7 @@ const BuyAdList = props => {
         <View
             style={{
                 padding: 20,
-                backgroundColor: index % 2 == 0 ? '#f9fcff' : '#FFFFFF',
+                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#f9fcff' : '#FFFFFF',
                 width: '100%',
                 borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
                 borderWidth: 0.8,
@@ -44,10 +44,14 @@ const BuyAdList = props => {
 
                     <Image source={require('../../../assets/images/blur-items.jpg')}
                         style={{
-                            width: deviceWidth,
+                            width: deviceWidth * 0.9,
+                            marginTop: -33,
+                            marginLeft: deviceWidth * 0.05,
+
                             height: '100%'
                         }}
                     />
+
                     <View
                         style={{
                             alignItems: 'center',
