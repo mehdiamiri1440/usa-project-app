@@ -7,7 +7,9 @@ import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
+
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as requestActions from '../../redux/buyAdRequest/actions';
@@ -221,30 +223,37 @@ class RequestsTab extends Component {
                 <View style={{
                     paddingVertical: 5,
                     paddingHorizontal: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#F2F2F2',
                     alignSelf: 'center',
                     width: '100%',
                     backgroundColor: 'white',
                     flexDirection: 'row-reverse'
                 }}
                 >
-                    <Image
+                    <View
                         style={{
-                            borderRadius: deviceWidth * 0.06,
-                            width: 40,
-                            height: 40
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            marginVertical: 10,
+                            flexDirection: 'row-reverse'
                         }}
-                        source={require('../../../assets/icons/user.png')} />
-                    <Text
-                        style={{
-                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E',
-                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 16
-                        }}
-                        numberOfLines={1}
                     >
-                        {item.first_name} {item.last_name}
-                    </Text>
+
+                        <FontAwesome
+                            name='user-circle'
+                            color='#adadad'
+                            size={20}
+                        />
+                        <Text
+                            style={{
+                                marginHorizontal: 5,
+                                color: '#adadad',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {`${item.first_name} ${item.last_name}`}
+                        </Text>
+                    </View>
                 </View>
 
                 { active_pakage_type > 0 ?
@@ -525,8 +534,6 @@ class RequestsTab extends Component {
             <View
                 style={{ backgroundColor: 'white', width: deviceWidth, borderBottomWidth: 2, borderBottomColor: '#EFEFEF' }}>
                 <View style={{
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#F2F2F2',
                     paddingVertical: 5,
                     paddingHorizontal: 15,
                     alignSelf: 'center',
@@ -535,22 +542,31 @@ class RequestsTab extends Component {
                     flexDirection: 'row-reverse'
                 }}
                 >
-                    <Image
+                    <View
                         style={{
-                            borderRadius: deviceWidth * 0.06,
-                            width: 40,
-                            height: 40
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            marginVertical: 10,
+                            flexDirection: 'row-reverse'
                         }}
-                        source={require('../../../assets/icons/user.png')} />
-                    <Text
-                        style={{
-                            width: '90%', fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E',
-                            textAlignVertical: 'center', marginHorizontal: 10, fontSize: 16
-                        }}
-                        numberOfLines={1}
                     >
-                        {item.first_name} {item.last_name}
-                    </Text>
+
+                        <FontAwesome
+                            name='user-circle'
+                            color='#adadad'
+                            size={20}
+                        />
+                        <Text
+                            style={{
+                                marginHorizontal: 5,
+                                color: '#adadad',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {`${item.first_name} ${item.last_name}`}
+                        </Text>
+                    </View>
                 </View>
 
                 <View
