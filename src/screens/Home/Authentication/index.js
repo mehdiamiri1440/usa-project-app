@@ -415,7 +415,7 @@ const Authentication = props => {
                         }}
                     >
                         1- {locales('titles.idCardSample')}
-                        <Text style={{ color: 'red', marginBottom: 10 }}>*</Text>
+                        <Text style={{ color: '#e41c38', marginBottom: 10 }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -464,7 +464,7 @@ const Authentication = props => {
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 20,
                         marginTop: 15
                     }}>
@@ -478,7 +478,7 @@ const Authentication = props => {
                         }}
                     >
                         2- {locales('titles.idCardSampleWithOwner')}
-                        <Text style={{ color: 'red' }}>*</Text>
+                        <Text style={{ color: '#e41c38' }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -523,7 +523,7 @@ const Authentication = props => {
                             <Image
                                 resizeMode='cover'
                                 style={{
-                                    backgroundColor: 'red',
+                                    backgroundColor: '#e41c38',
                                     width: '100%',
                                     maxWidth: 320,
                                     height: deviceHeight * 1 - 255,
@@ -533,7 +533,7 @@ const Authentication = props => {
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 18,
                         marginTop: 15
                     }}>
@@ -547,7 +547,7 @@ const Authentication = props => {
                         }}
                     >
                         3- {locales('titles.evidencePhotos')}
-                        <Text style={{ color: 'red', marginBottom: 10 }}>*</Text>
+                        <Text style={{ color: '#e41c38', marginBottom: 10 }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -587,14 +587,14 @@ const Authentication = props => {
                                     width: deviceWidth,
                                     maxWidth: 320,
                                     height: deviceHeight * 0.3,
-                                    backgroundColor: 'red',
+                                    backgroundColor: '#e41c38',
                                     borderRadius: 5
                                 }}
                                 source={{ uri: evidence.uri }} />
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 20,
                         marginVertical: 30
                     }}>

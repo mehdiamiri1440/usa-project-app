@@ -71,7 +71,7 @@ class Home extends React.Component {
             return this.props.navigation.navigate("Messages", { screen: 'Messages', params: { tabIndex: 0 } })
         }
         if (name == 'SuggestedBuyers') {
-            return this.props.navigation.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
+            return this.props.navigation.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1, fromMyBuskool: true } });
         }
         else {
             return this.props.navigation.navigate('MyBuskool', { screen: name })

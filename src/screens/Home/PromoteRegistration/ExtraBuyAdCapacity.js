@@ -287,7 +287,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                         <InputGroup
                                             regular
                                             style={{
-                                                backgroundColor: 'red',
+                                                backgroundColor: '#e41c38',
                                                 flexDirection: 'row-reverse',
                                                 justifyContent: "space-between",
                                                 paddingLeft: 0,

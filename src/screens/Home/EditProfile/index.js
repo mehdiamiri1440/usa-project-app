@@ -418,7 +418,7 @@ class EditProfile extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 13,
                                         textAlign: 'center',
-                                        color: 'red',
+                                        color: '#e41c38',
                                     }}>
                                     {locales('labels.youAreNotAuthorized')}
                                 </Text>

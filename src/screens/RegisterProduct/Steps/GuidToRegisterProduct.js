@@ -164,7 +164,7 @@ class GuidToRegisterProduct extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
                                 fontSize: 14,
-                                color: 'red',
+                                color: '#e41c38',
                                 paddingHorizontal: 15,
                                 width: '100%'
                             }}>
@@ -270,7 +270,7 @@ class GuidToRegisterProduct extends React.Component {
 
                             style={{
                                 textAlignVertical: 'center',
-                                color: 'red',
+                                color: '#e41c38',
                                 paddingHorizontal: 5,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',

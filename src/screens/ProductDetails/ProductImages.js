@@ -16,7 +16,7 @@ const ProductImages = props => {
             sliderBoxHeight={400}
             dotStyle={{ bottom: -30, width: 9, height: 9, borderRadius: 5, marginHorizontal: -10 }}
             images={photosWithCompletePath}
-            imageLoadingColor='red'
+            imageLoadingColor='#e41c38'
             resizeMode='cover'
             resizeMethod='resize'
             onCurrentImagePressed={index => props.showFullSizeImage(index)}

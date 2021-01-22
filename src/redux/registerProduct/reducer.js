@@ -303,6 +303,7 @@ export default (state = INITIAL_STATE, action) => {
 
 
         case actionTypes.BUYADS_AFTER_PAYMENT_LOADING: {
+            console.log('conso1111', action.payload)
             return {
                 ...state,
                 buyAdsAfterPaymentLoading: true,
@@ -328,6 +329,7 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.BUYADS_AFTER_PAYMENT_FAILED: {
             let { msg = '' } = action.payload
+            console.log('conso222', action.payload)
             return {
                 ...state,
                 buyAdsAfterPaymentLoading: false,
@@ -339,7 +341,7 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.BUYADS_AFTER_PAYMENT_REJECT: {
-
+            console.log('conso3333', action.payload)
             const { response = {} } = action.payload;
             const { data = {} } = response;
             const { errors = {} } = data;

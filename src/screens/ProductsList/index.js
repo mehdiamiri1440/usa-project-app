@@ -714,7 +714,7 @@ class ProductsList extends PureComponent {
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
-                                    color: 'red'
+                                    color: '#e41c38'
                                 }}>
                                 {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
                                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>

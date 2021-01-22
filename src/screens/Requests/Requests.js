@@ -348,7 +348,7 @@ class Requests extends PureComponent {
 
                         </Dialog.Actions>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {locales('titles.icreaseYouRegisterRequstCapacity')}
                         </Paragraph>
                         <View style={{
@@ -438,7 +438,7 @@ class Requests extends PureComponent {
 
                         </Dialog.Actions>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {locales('labels.icreaseToSeeGoldens')}
                         </Paragraph>
                         <View style={{
