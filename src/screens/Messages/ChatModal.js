@@ -159,9 +159,7 @@ class ChatModal extends Component {
                         this.scrollViewRef.current != undefined &&
                         result.payload.message && this.state.userChatHistory.length > 0 &&
                         !this.props.userChatHistoryLoading)
-                        setTimeout(() => {
-                            this.scrollViewRef?.current.scrollToIndex({ animated: true, index: 0 });
-                        }, 200);
+                        this.scrollViewRef?.current.scrollToIndex({ animated: true, index: 0 });
                 }, 10);
                 // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
                 //     .then(() => {

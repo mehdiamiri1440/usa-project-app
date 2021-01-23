@@ -140,6 +140,7 @@ class Login extends React.Component {
                                         autoCapitalize='none'
                                         autoCorrect={false}
                                         autoCompleteType='off'
+                                        onSubmitEditing={this.onLogin}
                                         keyboardType='number-pad'
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
