@@ -41,7 +41,8 @@ class ChooseCity extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.allCitiesObject &&
             Object.entries(this.props.allCitiesObject).length &&
-            this.props.allCitiesObject.cities.length && this.props.city) {
+            this.props.allCitiesObject.cities && this.props.allCitiesObject.cities.length
+            && this.props.city) {
             const { province, city } = this.props;
             this.setState({ province, city, loaded: true })
         }
@@ -78,7 +79,9 @@ class ChooseCity extends React.Component {
 
         if (isProvinceValid && isCityValid) {
             const provinceName = this.props.allProvincesObject.provinces.find(item => item.id == province).province_name;
-            const cityName = this.props.allCitiesObject.cities.find(item => item.id == city).city_name;
+            const cityName = this.props.allCitiesObject &&
+                Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities
+                ? this.props.allCitiesObject.cities.find(item => item.id == city).city_name : '';
             this.props.setCityAndProvice(city, province, provinceName, cityName);
         }
         else {
@@ -126,8 +129,7 @@ class ChooseCity extends React.Component {
         let cities = [];
 
         provinces = provinces.map(item => ({ ...item, value: item.province_name }));
-
-        if (allCitiesObject && Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length && allCitiesObject.cities) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
         }
 
@@ -415,7 +417,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, false)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
     }
 }

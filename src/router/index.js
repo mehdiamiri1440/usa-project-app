@@ -159,27 +159,7 @@ const App = (props) => {
 
 
   useEffect(() => {
-    getAppstoreAppMetadata("com.buskool") //put any apps packageId here
-      .then(metadata => {
-        if (
-          DeviceInfo.getVersion() != metadata.version
-        ) {
-          const versionParts = metadata.version.split('.');
-          if (versionParts[versionParts.length - 1] == '1') {
-            setIsForceUpdate(true);
-          }
-          else {
-            setIsForceUpdate(false);
-          }
-          setUpdateModalFlag(true);
-        }
-        else {
-          setUpdateModalFlag(false);
-        }
-      })
-      .catch(err => {
-        console.log("error occurred", err);
-      });
+    checkForUpdate()
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
@@ -309,9 +289,38 @@ const App = (props) => {
 
   }, [initialRoute, is_seller, props.loggedInUserId]);
 
+  const checkForUpdate = _ => {
+    getAppstoreAppMetadata("com.buskool") //put any apps packageId here
+      .then(metadata => {
+        if (
+          DeviceInfo.getVersion() != metadata.version
+        ) {
+          const versionParts = metadata.version.split('.');
+          if (versionParts[versionParts.length - 1] == '1') {
+            setIsForceUpdate(true);
+          }
+          else {
+            setIsForceUpdate(false);
+          }
+          setUpdateModalFlag(true);
+        }
+        else {
+          setUpdateModalFlag(false);
+        }
+      })
+      .catch(err => {
+        console.log("error occurred", err);
+      });
+  }
 
   const handleIncomingEvent = event => {
     switch ((event.url).split('://')[1]) {
+      case 'register-product-successfully':
+        console.log('here')
+        return RootNavigation.navigate('RegisterProductStack', {
+          screen: 'RegisterProductSuccessfully',
+          params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
+        });
       case 'pricing':
         return RootNavigation.navigate('MyBuskool', {
           screen: 'PromoteRegistration',
@@ -445,18 +454,19 @@ const App = (props) => {
           borderColor: 'black',
           backgroundColor: 'white',
         }}>
-          <ActivityIndicator size="large"
+          <ActivityIndicator size={70}
             style={{
-              position: 'absolute', left: '44%', top: '40%',
+              position: 'absolute', left: '42%', top: '40%',
 
-              elevation: 5,
+              elevation: 0,
               borderColor: 'black',
-              backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+              backgroundColor: 'white', borderRadius: 25
             }}
             color="#00C569"
 
           />
-        </View> : null}
+        </View>
+        : null}
       <AppNavigator
         initialRoute={initialRoute}
         {...props}

@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, Image, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import analytics from '@react-native-firebase/analytics';
-
 
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import * as homeActions from '../../../redux/home/actions';
@@ -18,12 +20,12 @@ class GuidToRegisterProduct extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false
+            showModal: false,
+            animation: new Animated.Value(0)
         }
     }
 
     componentDidMount() {
-
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -36,6 +38,7 @@ class GuidToRegisterProduct extends React.Component {
             screen_name: "GuidToRegisterProduct",
             screen_class: "GuidToRegisterProduct",
         });
+        this.animateTheArrow();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -50,6 +53,29 @@ class GuidToRegisterProduct extends React.Component {
             this.props.fetchUserProfile()
         }
     }
+
+
+    animateTheArrow = _ => {
+        const { animation } = this.state;
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(animation, {
+                    toValue: 10,
+                    useNativeDriver: true,
+                    duration: 500,
+                    tension: 1,
+                    friction: 1
+                }),
+                Animated.timing(animation, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                    tension: 1,
+                    friction: 1
+                })
+            ]),
+        ).start();
+    };
 
     onSubmit = () => {
         let { checkUserPermissionToRegisterProduct, changeStep } = this.props;
@@ -70,6 +96,11 @@ class GuidToRegisterProduct extends React.Component {
     hideDialog = () => this.setState({ showModal: false });
 
     render() {
+        const animationStyles = {
+            transform: [
+                { translateY: this.state.animation }
+            ]
+        };
 
         let {
             userPermissionToRegisterProductLoading,
@@ -133,7 +164,7 @@ class GuidToRegisterProduct extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
                                 fontSize: 14,
-                                color: 'red',
+                                color: '#e41c38',
                                 paddingHorizontal: 15,
                                 width: '100%'
                             }}>
@@ -239,7 +270,7 @@ class GuidToRegisterProduct extends React.Component {
 
                             style={{
                                 textAlignVertical: 'center',
-                                color: 'red',
+                                color: '#e41c38',
                                 paddingHorizontal: 5,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
@@ -285,36 +316,50 @@ class GuidToRegisterProduct extends React.Component {
 
                         </Text>
 
-                        <View style={{
+                        {/* <View style={{
                             textAlign: 'left',
                             alignItems: 'flex-start',
                             width: deviceWidth - 50,
                         }}>
                             <Image source={require('../../../../assets/images/arrow-mobile.png')} />
 
-                        </View>
+                        </View> */}
                     </View>
+                    <Animated.View useNativeDriver style={[animationStyles]}
 
-
-
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={[styles.loginButton, { marginTop: -20, width: 192 }]}
                     >
-
-                        <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
-                        <ActivityIndicator size="small" color="white"
-                            animating={!!userPermissionToRegisterProductLoading}
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 15,
-                                fontSize: 20,
-                                marginLeft: -30
-                            }}
+                        <FontAwesome5
+                            name='arrow-down'
+                            size={30}
+                            color='#20AE91'
+                            style={{ marginTop: 20, marginBottom: 10 }}
                         />
-
-                    </Button>
+                    </Animated.View>
+                    <TouchableOpacity
+                        style={{ alignSelf: 'center' }}
+                        activeOpacity={1}
+                        onPress={() => this.onSubmit()}
+                    >
+                        <LinearGradient
+                            start={{ x: 0, y: 1 }}
+                            style={[styles.loginButton, { width: 240, height: 55 }]}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#21AD93', '#00C569']}
+                        >
+                            <FontAwesome name='plus-square' size={25} color='white' style={{ marginHorizontal: 9 }} />
+                            <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
+                            <ActivityIndicator size="small" color="white"
+                                animating={!!userPermissionToRegisterProductLoading}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    borderRadius: 15,
+                                    fontSize: 20,
+                                    marginLeft: -30
+                                }}
+                            />
+                        </LinearGradient>
+                    </TouchableOpacity>
 
                 </View>
             </>

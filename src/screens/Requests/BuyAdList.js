@@ -3,110 +3,271 @@ import React, { memo } from 'react';
 import { View, Image, Text, ActivityIndicator } from 'react-native';
 import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
-import { locale } from 'moment';
+import { deviceWidth } from '../../utils/deviceDimenssions';
 
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, buyAdRequestsList, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
+    const { item, index, selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
     return (
+
         <View
             style={{
-                padding: 10,
-                backgroundColor: '#FFFFFF',
+                padding: 20,
+                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#f9fcff' : '#FFFFFF',
                 width: '100%',
-                borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
-                borderWidth: 1,
-                borderColor: '#ddd'
+                borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
+                borderWidth: 0.8,
+                borderBottomWidth: item.is_golden ? 0.8 : 0
             }}
             key={item.id}
         >
 
-            <View >
-                {/* blur items */}
-                {item.is_golden && active_pakage_type == 0 ?
-
-                    <View style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        left: 0,
-                        top: 0,
-                        zIndex: 1
-                    }}>
-                        <Image source={require('../../../assets/images/blur-items.jpg')}
-                            style={{
-                                width: '100%',
-                                height: '100%'
-                            }}
-                        />
-                        <Text style={{
-                            position: 'absolute',
-                            width: '100%',
-                            top: 50,
-                            fontSize: 23,
-                            textAlign: 'center',
-                            // backgroundColor: 'red',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            zIndex: 2
-                        }}>
-                            {item.subcategory_name}
-                        </Text>
-                    </View>
-
-                    : null}
-                <View>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            marginVertical: 5,
-                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                        }}
-                    >
-                        {item.is_golden && active_pakage_type == 0 ? `${item.subcategory_name} | ${item.subcategory_name} ` : `${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
-                </View>
-
-
-                <View>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            marginVertical: 5,
-                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                        }}
-                    >
-
-                        {item.is_golden && active_pakage_type == 0 ? `${locales('titles.requirementQuantity')} : نامشخص` : `${locales('titles.requirementQuantity')} : ${formatter.convertedNumbersToTonUnit(item.requirement_amount)}`}
-                    </Text>
-                </View>
-
-                <View>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            marginVertical: 5,
-                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                        }}
-                    >
-                        {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : item.register_date}
-                    </Text>
-                </View>
-
-
+            {item.is_golden && active_pakage_type == 0 ?
 
                 <View style={{
-                    marginVertical: 5,
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    marginTop: 13,
+                    left: 0,
+                    top: 0,
+                    zIndex: 1
                 }}>
-                    <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
+
+                    <Image source={require('../../../assets/images/blur-items.jpg')}
+                        style={{
+                            width: deviceWidth * 0.9,
+                            marginTop: -33,
+                            marginLeft: deviceWidth * 0.05,
+
+                            height: '100%'
+                        }}
+                    />
+
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            marginVertical: 5,
+                            right: -25,
+                            position: 'absolute',
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+
+                        <FontAwesome5
+                            solid
+                            name='user-circle'
+                            color='#adadad'
+                            size={16}
+                        />
+                        <Text
+                            style={{
+                                marginHorizontal: 5,
+                                color: '#adadad',
+                                fontSize: 15,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {`${item.first_name} ${item.last_name}`}
+                        </Text>
+                    </View>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            position: 'absolute',
+                            top: 48,
+                            textAlign: 'center',
+                            left: deviceWidth * 0.33,
+                            fontSize: 20,
+                            color: '#7e7e7e'
+                        }}
+                    >
+                        {locales('labels.buyer')}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 20,
+                                textAlign: 'center',
+                                color: '#556083',
+                                marginHorizontal: 2
+                            }}
+                        >
+                            {` ${item.subcategory_name}`}
+                        </Text>
+                        {item.is_golden && active_pakage_type == 0 ?
+                            <Text> </Text>
+                            :
+                            item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        marginHorizontal: 2,
+                                        textAlign: 'center',
+                                        color: '#7e7e7e'
+                                    }}
+                                >
+                                    {locales('labels.fromType')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#556083',
+                                        fontSize: 20,
+                                        textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 2
+                                    }}
+                                >
+                                    {` ${item.name} `}
+                                </Text>
+                            </> : null
+
+                        }
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 18,
+                                marginHorizontal: 2,
+                                color: '#7e7e7e'
+                            }}
+                        >
+                            {locales('labels.is')}
+                        </Text>
+                    </Text>
+
+                </View>
+
+                : null}
+
+            <View
+                style={{
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    marginTop: 0,
+                    flexDirection: 'row-reverse'
+                }}
+            >
+
+                <FontAwesome5
+                    solid
+                    name='user-circle'
+                    color='#adadad'
+                    size={16}
+                />
+                <Text
+                    style={{
+                        marginHorizontal: 5,
+                        color: '#adadad',
+                        fontSize: 15,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {`${item.first_name} ${item.last_name}`}
+                </Text>
+            </View>
+
+            {item.is_golden && active_pakage_type == 0 ?
+                <Text style={{ textAlign: 'center' }}>...</Text>
+                :
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row-reverse',
+                        marginVertical: -5,
+                        minHeight: 70
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            textAlign: 'center',
+                            fontSize: 18,
+                            color: '#7e7e7e'
+                        }}
+                    >
+                        {locales('labels.buyer')}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 18,
+                                color: '#e41c38',
+                                marginHorizontal: 2
+                            }}
+                        >
+                            {` ${formatter.convertedNumbersToTonUnit(item.requirement_amount)}`} <Text
+                                style={{
+                                    color: '#556083',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    marginHorizontal: 2
+                                }}
+                            >
+                                {`${item.subcategory_name} `}
+                            </Text>
+                        </Text>
+                        {item.is_golden && active_pakage_type == 0 ?
+                            <Text> </Text>
+                            :
+                            item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 18,
+                                        textAlign: 'center',
+                                        marginHorizontal: 2,
+                                        color: '#7e7e7e'
+                                    }}
+                                >
+                                    {locales('labels.fromType')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#556083',
+                                        textAlign: 'center',
+                                        fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 2
+                                    }}
+                                >
+                                    {` ${item.name} `}
+                                </Text>
+                            </> : null
+
+                        }
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                marginHorizontal: 2,
+                                color: '#7e7e7e'
+                            }}
+                        >
+                            {locales('labels.is')}
+                        </Text>
+                    </Text>
+
+                </View>
+            }
+
+            <View style={{
+                marginVertical: 5,
+                flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center'
+            }}>
+                <View
+                    style={{ flexDirection: 'row-reverse', marginHorizontal: 30 }}
+                >
                     <MaterialCommunityIcons
                         onPress={() => {
                             return Toast.show({
@@ -119,18 +280,34 @@ const BuyAdList = props => {
                         }
                         }
                         name='comment-alert' size={25} color={'#777777'} />
+                    <Text style={{ color: '#556083', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
                 </View>
-
+                <View>
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            marginVertical: 5, marginRight: 60,
+                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
+                            color: '#556083',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16,
+                        }}
+                    >
+                        {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : item.register_date}
+                    </Text>
+                </View>
             </View>
-
-            <View style={{ marginVertical: 5 }}>
+            <View style={{ marginVertical: 15 }}>
 
                 <Button
                     small
-                    onPress={event => props.openChat(event, item)}
+                    onPress={event => {
+                        event.stopPropagation()
+                        props.openChat(event, item)
+                    }}
                     style={{
                         borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                        width: "80%",
+                        width: deviceWidth * 0.7,
+                        zIndex: 1000,
                         position: 'relative',
                         alignSelf: 'center',
 
@@ -147,16 +324,16 @@ const BuyAdList = props => {
                             alignItems: 'center',
                             textAlign: 'center',
                             justifyContent: 'center',
-                            height: 35,
                             borderRadius: 6,
-                            elevation: 2
+                            padding: 8,
+                            elevation: 0
                         }}
                     >
 
-                        <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={14} />
+                        <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={20} />
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 14,
+                            fontSize: 18,
                             color: !item.is_golden ? 'white' : '#333',
                             paddingHorizontal: 3
                         }}>
@@ -186,7 +363,11 @@ const BuyAdList = props => {
 
 const arePropsEqual = (prevProps, nextProps) => {
     // console.log('prevprops', prevProps, 'nextPRops', nextProps)
-    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList || prevProps.item == nextProps.item || !nextProps.buyAdRequestsList || !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length || !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading || prevProps.isUserAllowedToSendMessageLoading)
+    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
+        prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
+        !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||
+        !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading
+        || prevProps.isUserAllowedToSendMessageLoading)
         return false
     return true;
 }

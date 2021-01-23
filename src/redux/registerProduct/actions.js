@@ -116,6 +116,30 @@ export const registerBuyAdRequest = requestObj => {
     return request();
 };
 
+export const fetchBuyAdsAfterPayment = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.registerProduct
+                .fetchBuyAdsAfterPayment()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.BUYADS_AFTER_PAYMENT_FAILED,
+                        reject: actionTypes.BUYADS_AFTER_PAYMENT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.BUYADS_AFTER_PAYMENT_LOADING);
+    const success = res => action(actionTypes.BUYADS_AFTER_PAYMENT_SUCCESSFULLY, res);
+
+    return request();
+};
+
 
 export const setSubCategoryIdFromRegisterProduct = (id, name) => dispatch => dispatch(action(actionTypes.SET_PRODUCT_ID_FROM_REGISTER_PRODUCT, { id, name }));
+
+export const resetRegisterProduct = resetTab => dispatch => dispatch(action(actionTypes.RESET_REGISTER_PRODUCT_TAB, { resetTab }));
 

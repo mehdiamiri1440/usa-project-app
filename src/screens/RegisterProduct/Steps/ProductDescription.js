@@ -1,18 +1,25 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button, Textarea, Label } from 'native-base';
-import { View, Text, StyleSheet, Linking } from "react-native";
+import { Button, Textarea, InputGroup, Label } from 'native-base';
+import { View, Text, StyleSheet, Linking, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { validator } from '../../../utils';
 
 class ProductDecription extends Component {
     constructor(props) {
         super(props);
         this.state = {
             description: '',
-            isDescriptionFocused: false
+            isDescriptionFocused: false,
+            descriptionError: '',
+            descriptionClicked: false
         }
     }
 
@@ -25,11 +32,22 @@ class ProductDecription extends Component {
             this.descriptionRef.current.value = description;
             this.setState({ description })
         }
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(4)
+        //     return false;
+        // })
+    }
+
+    componentWillUnmount() {
+        // BackHandler.removeEventListener();
     }
 
     onDescriptionSubmit = field => {
         this.setState(() => ({
-            description: field
+            description: field,
+            descriptionClicked: !!field,
+            descriptionError: (!field || validator.isValidDescription(field)) ?
+                '' : locales('errors.invalidDescription')
         }));
     };
 
@@ -39,15 +57,15 @@ class ProductDecription extends Component {
 
 
     render() {
-        let { description, isDescriptionFocused } = this.state;
+        let { description, descriptionError, descriptionClicked } = this.state;
 
         return (
             <ScrollView>
                 <View
-                    style={[{ backgroundColor: 'white' },]}>
+                    style={[{ backgroundColor: 'white' }]}>
                     <Text
                         style={{
-                            marginVertical: 10,
+                            margin: 10,
                             color: '#666666',
                             fontSize: 20,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -58,27 +76,54 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('titles.description')}
-                        </Label>
-                        <Textarea
-                            onChangeText={this.onDescriptionSubmit}
-                            error=''
-                            value={description}
-                            autoCapitalize='none'
-                            autoCompleteType='off'
-                            autoCorrect={false}
-                            placeholder={locales('titles.descriptionWithExample')}
-                            ref={this.descriptionRef}
+                        {/* <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, fontSize: 15, marginVertical: 5 }}>
+                            {locales('titles.writeYourFinalDescription')}
+                        </Label> */}
+                        <InputGroup
+                            regular
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Light', borderRadius: 5,
-                                borderColor: description.length ? '#00C569' : '#a8a8a8'
-                            }}
-                            rowSpan={5} bordered
-                        />
+                                borderRadius: 4,
+                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#666',
+                                paddingLeft: 15,
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB'
+                            }}>
+                            <FontAwesome5 name={
+                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                    ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{ position: 'absolute', top: 10, left: 10 }}
+                            />
+                            <Textarea
+                                onChangeText={this.onDescriptionSubmit}
+                                error=''
+                                value={description}
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                placeholderTextColor='#777777'
+                                placeholder={locales('titles.descriptionWithExample')}
+                                ref={this.descriptionRef}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    paddingTop: 10,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%'
+                                }}
+                                rowSpan={5}
+                            />
+                        </InputGroup>
+                        <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
+                            {!!descriptionError && descriptionError}
+                        </Label>
                     </View>
 
-
+                    {/* 
                     <Text
                         style={{
                             marginVertical: 10,
@@ -95,8 +140,8 @@ class ProductDecription extends Component {
                                     }
                                 });
                             }}
-                            style={{ color: '#00C569' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
-                    </Text>
+                            style={{ color: '#1DA1F2' }}> قوانین و شرایط باسکول</Text> اعلام می کنید
+                    </Text> */}
 
                     <View style={{
                         marginVertical: 20,
@@ -105,11 +150,11 @@ class ProductDecription extends Component {
                         justifyContent: 'space-between'
                     }}>
                         <Button
-                            onPress={() => this.onSubmit()}
-                            style={styles.loginButton}
+                            onPress={() => !descriptionError && this.onSubmit()}
+                            style={descriptionError ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
-                            <AntDesign name='arrowleft' size={25} color='white' />
+                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
@@ -118,7 +163,7 @@ class ProductDecription extends Component {
                             rounded
                         >
                             <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                            <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
                         </Button>
                     </View>
 
@@ -154,18 +199,21 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.4,
-        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: '37%',
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
-        width: deviceWidth * 0.4,
+        elevation: 0,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
@@ -176,9 +224,10 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        elevation: 0,
         backgroundColor: '#00C569',
         borderRadius: 5,
-        width: deviceWidth * 0.4,
+        width: '37%',
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

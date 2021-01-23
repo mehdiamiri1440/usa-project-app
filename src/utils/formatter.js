@@ -52,9 +52,9 @@ export const convertedNumbersToTonUnit = (number) => {
   if (number || typeof number === "number") {
     let data = number / 1000;
     if (number < 1000) {
-      return number + " " + locales('labels.kiloGram');
+      return numberWithCommas(number) + " " + locales('labels.kiloGram');
     } else {
-      return data + " " + locales('labels.ton');
+      return numberWithCommas(data) + " " + locales('labels.ton');
     }
   } else return "";
 }
@@ -63,7 +63,7 @@ export const convertUnitsToText = (number) => {
   let data = number / 1000;
   let text = "";
   if (number < 1000) {
-    return number + " " + locales('labels.kiloGram');
+    return numberWithCommas(number) + " " + locales('labels.kiloGram');
   } else {
     let ton = data.toString().split(".")[0];
     let kg = number.toString().substr(ton.length);
@@ -77,7 +77,7 @@ export const convertUnitsToText = (number) => {
       text = ton;
     }
 
-    return text;
+    return numberWithCommas(text);
   }
 }
 validateRegx = (input, regx) => {

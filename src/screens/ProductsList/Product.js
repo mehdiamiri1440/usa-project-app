@@ -3,6 +3,7 @@ import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking,
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, Input, Label, Item, Toast, Button } from 'native-base';
+import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Navigation } from 'react-native-navigation';
@@ -71,10 +72,10 @@ class Product extends PureComponent {
         if (prevState.loaded == false && this.props.productItem
             && Object.entries(this.props.productItem).length) {
             const {
-                max_sale_price,
-                min_sale_price,
-                stock,
-                min_sale_amount
+                max_sale_price = '',
+                min_sale_price = '',
+                stock = '',
+                min_sale_amount = ''
             } = this.props.productItem.main;
 
             this.setState({
@@ -267,7 +268,8 @@ class Product extends PureComponent {
             stock,
             sub_category_id,
             sub_category_name,
-            updated_at
+            updated_at,
+            photos_count
         } = main;
 
         const {
@@ -785,7 +787,7 @@ class Product extends PureComponent {
 
                 }}>
                     <Card transparent style={styles.cardWrapper}>
-                        <View style={[{ borderColor: active_pakage_type > 1 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
+                        <View style={[{ borderColor: active_pakage_type == 3 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
                             <TouchableOpacity
                                 onPress={() => {
                                     this.props.navigation.navigate('Profile', { user_name })
@@ -829,11 +831,21 @@ class Product extends PureComponent {
                                                 }}>
                                                 {`${first_name} ${last_name}`}
                                             </Text>
-                                            {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
+                                            {is_verified ? <View
+                                                style={{
+                                                    marginTop: response_rate > 0 && loggedInUserId !== myuser_id ? 0 : 9
+                                                }}
+                                            >
+                                                <ValidatedUserIcon {...this.props} />
+                                            </View>
+                                                : null}
                                         </View>
                                         {response_rate > 0 && loggedInUserId != myuser_id &&
                                             <Text style={{ color: '#BEBEBE', fontSize: 12, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                                {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                                {locales('labels.responseRate')} <Text style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                }}>%{response_rate}</Text>
                                             </Text>}
                                     </View>
 
@@ -851,9 +863,48 @@ class Product extends PureComponent {
                                         {locales('labels.seeProfile')}
                                     </Text>}
                             </TouchableOpacity>
-                            {active_pakage_type > 1 && <Image
-                                style={{ position: 'absolute', left: 5, top: 54, zIndex: 1 }}
-                                source={require('../../../assets/icons/special-label.png')} />}
+                            {active_pakage_type == 3 && <Svg
+                                style={{ position: 'absolute', left: 5, top: 53, zIndex: 1 }}
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="27"
+                                height="37.007"
+                                viewBox="0 0 27 37.007"
+                            >
+                                <G data-name="Group 145" transform="translate(-261 -703.993)">
+                                    <Path
+                                        fill="#00c569"
+                                        d="M0 0l27-.016v36.989l-13.741-5.989-13.259 6z"
+                                        data-name="Path 1"
+                                        transform="translate(261 704.016)"
+                                    ></Path>
+                                    <Path
+                                        fill="#00b761"
+                                        d="M0 0H27V1.072H0z"
+                                        data-name="Rectangle 6"
+                                        transform="translate(261 703.993)"
+                                    ></Path>
+                                    <G fill="#fff" data-name="Group 23" transform="translate(266 707)">
+                                        <Path
+                                            d="M8.511 15.553A8.529 8.529 0 013.444.175l2.162 2.166a5.455 5.455 0 108.3 5.4l1.488-1.466 1.594 1.57a8.518 8.518 0 01-8.473 7.707zM17 6.384l-1.609-1.59-1.477 1.46a5.476 5.476 0 00-2.759-4.069L13.336 0A8.49 8.49 0 0117 6.382z"
+                                            data-name="Subtraction 1"
+                                            transform="translate(0 5.447)"
+                                        ></Path>
+                                        <G data-name="Group 24" transform="translate(3.292)">
+                                            <Path
+                                                d="M3 0h3.656v3.853H0V3a3 3 0 013-3z"
+                                                data-name="Rectangle 12"
+                                                transform="rotate(45 -.73 4.156)"
+                                            ></Path>
+                                            <Path
+                                                d="M0 0h9.459v3.5H3.5A3.5 3.5 0 010 0z"
+                                                data-name="Rectangle 13"
+                                                transform="rotate(135 5.244 3.623)"
+                                            ></Path>
+                                        </G>
+                                    </G>
+                                </G>
+                            </Svg>
+                            }
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => {
@@ -883,14 +934,14 @@ class Product extends PureComponent {
                                         require('../../../assets/icons/user.png')
                                     } />
 
-                                {photos.length > 0 && <View
+                                {photos_count > 0 && <View
                                     style={{
                                         flexDirection: 'row-reverse',
                                         backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
                                         left: 10, bottom: 0, borderBottomRightRadius: 4, borderTopLeftRadius: 4, padding: 3
                                     }}>
                                     <Entypo name='images' size={20} color='white' />
-                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos.length <= 9 ? photos.length : '9+'}</Text>
+                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>{photos_count <= 9 ? photos_count : '9+'}</Text>
                                 </View>}
 
                                 <View style={{ width: '60%', justifyContent: 'space-between' }}>
@@ -914,8 +965,8 @@ class Product extends PureComponent {
                                     </View>
 
                                     <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
-                                        <Text style={{ textAlign: 'right', marginLeft: 5 }}>
-                                            <FontAwesome5 name='box-open' size={20} color='#BEBEBE' />
+                                        <Text style={{ textAlign: 'right', marginLeft: 9 }}>
+                                            <FontAwesome5 name='box-open' size={18} color='#BEBEBE' />
                                         </Text>
                                         <Text style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
                                             {formatter.convertedNumbersToTonUnit(stock)}
@@ -938,8 +989,8 @@ class Product extends PureComponent {
                                         style={[styles.loginButton, { flex: 1 }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 4 }]}>
-                                                <FontAwesome name='envelope' size={23} />
+                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 5 }]}>
+                                                <FontAwesome5 solid name='envelope' size={20} />
                                             </Text>
                                             <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
                                                 {locales('titles.achiveSaleStatus')}
@@ -1040,11 +1091,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     cardItemStyle: {
-        borderRadius: 5,
+        borderRadius: 7,
         width: '100%',
         backgroundColor: '#fff',
-        elevation: 2,
-        borderWidth: 1,
+        elevation: 0,
+        borderWidth: 2,
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',

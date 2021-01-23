@@ -630,7 +630,7 @@ class SpecialProducts extends PureComponent {
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
-                                    color: 'red'
+                                    color: '#e41c38'
                                 }}>
                                 {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
                                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
@@ -792,10 +792,10 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    borderRadius: 18, marginTop: 7, marginBottom: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
+                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {locales('labels.sort')}
                                 </Text>
                                 <FontAwesome name='sort-amount-desc' size={12} color='#fff' />

@@ -111,3 +111,23 @@ export const registerBuyAdRequest = requestObj => {
             });
     });
 };
+
+export const fetchBuyAdsAfterPayment = _ => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_related_buyAds_to_my_product`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                // if (err && !err.response)
+                // return reject(err.response);
+                return reject(err);
+
+            });
+    });
+};

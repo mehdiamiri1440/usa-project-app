@@ -158,7 +158,7 @@ class PromoteRegistration extends React.Component {
 
                                 </Text>
                                 <Text style={{
-                                    color: 'red'
+                                    color: '#e41c38'
                                 }}>
                                     {locales('titles.promoteDescriptionTextSecend')}
                                 </Text>

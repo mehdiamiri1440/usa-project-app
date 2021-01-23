@@ -71,7 +71,7 @@ const Authentication = props => {
             maxWidth: 1024,
             maxHeight: 1024,
             quality: 1,
-            title: 'عکس را انتخاب کنید',
+            title: 'تصویر را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -368,18 +368,15 @@ const Authentication = props => {
                 <View style={{
                     backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                     position: 'absolute',
-
-                    elevation: 5,
                     borderColor: 'black',
                     backgroundColor: 'white',
                 }}>
-                    <ActivityIndicator size="large"
+                    <ActivityIndicator size={70}
                         style={{
-                            position: 'absolute', left: '44%', top: '40%',
-
-                            elevation: 5,
+                            position: 'absolute', left: '42%', top: '40%',
+                            elevation: 0,
                             borderColor: 'black',
-                            backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                            backgroundColor: 'white', borderRadius: 25
                         }}
                         color="#00C569"
 
@@ -418,7 +415,7 @@ const Authentication = props => {
                         }}
                     >
                         1- {locales('titles.idCardSample')}
-                        <Text style={{ color: 'red', marginBottom: 10 }}>*</Text>
+                        <Text style={{ color: '#e41c38', marginBottom: 10 }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -467,7 +464,7 @@ const Authentication = props => {
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 20,
                         marginTop: 15
                     }}>
@@ -481,7 +478,7 @@ const Authentication = props => {
                         }}
                     >
                         2- {locales('titles.idCardSampleWithOwner')}
-                        <Text style={{ color: 'red' }}>*</Text>
+                        <Text style={{ color: '#e41c38' }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -526,7 +523,7 @@ const Authentication = props => {
                             <Image
                                 resizeMode='cover'
                                 style={{
-                                    backgroundColor: 'red',
+                                    backgroundColor: '#e41c38',
                                     width: '100%',
                                     maxWidth: 320,
                                     height: deviceHeight * 1 - 255,
@@ -536,7 +533,7 @@ const Authentication = props => {
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 18,
                         marginTop: 15
                     }}>
@@ -550,7 +547,7 @@ const Authentication = props => {
                         }}
                     >
                         3- {locales('titles.evidencePhotos')}
-                        <Text style={{ color: 'red', marginBottom: 10 }}>*</Text>
+                        <Text style={{ color: '#e41c38', marginBottom: 10 }}>*</Text>
                     </Text>
                     <Image
                         resizeMode='contain'
@@ -590,14 +587,14 @@ const Authentication = props => {
                                     width: deviceWidth,
                                     maxWidth: 320,
                                     height: deviceHeight * 0.3,
-                                    backgroundColor: 'red',
+                                    backgroundColor: '#e41c38',
                                     borderRadius: 5
                                 }}
                                 source={{ uri: evidence.uri }} />
                         </TouchableOpacity>
                     }
                     <Text style={{
-                        color: 'red',
+                        color: '#e41c38',
                         fontSize: 20,
                         marginVertical: 30
                     }}>

@@ -49,3 +49,47 @@ export const fetchRelatedRequests = () => {
 
     return request();
 };
+
+export const fetchMyRequests = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.buyAdRequest
+                .fetchMyRequests()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_MY_REQUESTS_FAILED,
+                        reject: actionTypes.FETCH_MY_REQUESTS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_MY_REQUESTS_LOADING);
+    const success = res => action(actionTypes.FETCH_MY_REQUESTS_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const deleteBuyAd = (id) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.buyAdRequest
+                .deleteBuyAd(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.DELETE_BUYAD_FAILED,
+                        reject: actionTypes.DELETE_BUYAD_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.DELETE_BUYAD_LOADING);
+    const success = res => action(actionTypes.DELETE_BUYAD_SUCCESSFULLY, res);
+
+    return request();
+};

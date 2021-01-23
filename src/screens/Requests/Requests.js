@@ -148,6 +148,7 @@ class Requests extends PureComponent {
         const { active_pakage_type } = user_info;
 
         event.preventDefault();
+        event.stopPropagation();
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
@@ -347,7 +348,7 @@ class Requests extends PureComponent {
 
                         </Dialog.Actions>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {locales('titles.icreaseYouRegisterRequstCapacity')}
                         </Paragraph>
                         <View style={{
@@ -437,7 +438,7 @@ class Requests extends PureComponent {
 
                         </Dialog.Actions>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: 'red', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {locales('labels.icreaseToSeeGoldens')}
                         </Paragraph>
                         <View style={{

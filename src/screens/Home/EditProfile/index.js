@@ -128,7 +128,7 @@ class EditProfile extends Component {
             maxWidth: 1024,
             maxHeight: 1024,
             quality: 1,
-            title: 'عکس را انتخاب کنید',
+            title: 'تصویر را انتخاب کنید',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -244,16 +244,15 @@ class EditProfile extends Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-                        elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
                     }}>
-                        <ActivityIndicator size="large"
+                        <ActivityIndicator size={70}
                             style={{
-                                position: 'absolute', left: '44%', top: '40%',
-                                elevation: 5,
+                                position: 'absolute', left: '42%', top: '40%',
+                                elevation: 0,
                                 borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                                backgroundColor: 'white', borderRadius: 25
                             }}
                             color="#00C569"
 
@@ -419,7 +418,7 @@ class EditProfile extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 13,
                                         textAlign: 'center',
-                                        color: 'red',
+                                        color: '#e41c38',
                                     }}>
                                     {locales('labels.youAreNotAuthorized')}
                                 </Text>
