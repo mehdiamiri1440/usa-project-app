@@ -24,6 +24,7 @@ const RegisterRequestSuccessfully = props => {
     } = props;
 
     const [modalFlag, setModalFlag] = useState(false);
+    const [selectedContact, setSelectedContact] = useState({});
 
     const handleBack = () => {
         if (props.route && props.route.params) {
@@ -144,22 +145,8 @@ const RegisterRequestSuccessfully = props => {
             photo
         } = item;
 
-        const selectedContact = {
-            first_name,
-            last_name,
-            is_verified,
-            contact_id: myuser_id,
-        }
         return (
             <>
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    {...props}
-                    visible={modalFlag}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => setModalFlag(false)}
-                />}
-
                 <Card
                     style={{
                         paddingVertical: 5,
@@ -391,6 +378,12 @@ const RegisterRequestSuccessfully = props => {
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
+                                        setSelectedContact({
+                                            first_name,
+                                            last_name,
+                                            is_verified,
+                                            contact_id: myuser_id
+                                        });
                                         setModalFlag(true);
                                     }}
                                     style={{
@@ -446,6 +439,13 @@ const RegisterRequestSuccessfully = props => {
     return (
 
         <>
+            {modalFlag && <ChatModal
+                transparent={false}
+                {...props}
+                visible={modalFlag}
+                contact={{ ...selectedContact }}
+                onRequestClose={() => setModalFlag(false)}
+            />}
 
             <View style={{
                 backgroundColor: 'white',

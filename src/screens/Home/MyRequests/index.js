@@ -450,7 +450,7 @@ const MyRequests = props => {
             }}
         >
             <View style={{
-                backgroundColor: '#F6FBFF',
+                backgroundColor: '#FFF',
                 flexDirection: 'row',
                 alignContent: 'center',
                 alignItems: 'center',
