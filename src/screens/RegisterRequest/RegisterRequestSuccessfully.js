@@ -111,7 +111,7 @@ const RegisterRequestSuccessfully = props => {
                     size={20}
                     style={{ color: '#1DA1F2', padding: 10 }}
                     name='arrow-left'
-                    color='# '
+                    color='#1DA1F2'
                 />
             </View>
         )
