@@ -152,6 +152,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 addNewProductLoading: true,
                 addNewProductFailed: false,
+                buyAdsAfterPaymentList: [],
                 addNewProductError: false,
                 addNewProductMessage: [],
                 product: {},
@@ -166,6 +167,7 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductFailed: false,
                 addNewProductError: false,
                 addNewProductMessage: [],
+                buyAdsAfterPaymentList: [],
                 product,
                 buyAds
             };
@@ -178,6 +180,7 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductFailed: true,
                 addNewProductError: false,
                 addNewProductMessage: [],
+                buyAdsAfterPaymentList: [],
                 product: {},
                 buyAds: []
             };
@@ -190,6 +193,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 addNewProductLoading: false,
+                buyAdsAfterPaymentList: [],
                 addNewProductFailed: false,
                 addNewProductError: true,
                 addNewProductMessage: errorsArray && errorsArray.length ? errorsArray : ['خطای سرور'],
