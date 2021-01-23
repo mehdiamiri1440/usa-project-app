@@ -82,10 +82,15 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.FETCH_RELATED_BUYAD_REQUESTS_SUCCESSFULLY: {
             let { msg = '' } = action.payload
+            let goldens = [];
+            if (!Array.isArray(action.payload.golden_buyAds))
+                goldens = Object.values(action.payload.golden_buyAds);
+            else
+                goldens = action.payload.golden_buyAds
             return {
                 ...state,
                 relatedBuyAdRequestsList: [...action.payload.buyAds],
-                goldenBuyAdsList: [...action.payload.golden_buyAds] || [],
+                goldenBuyAdsList: [...goldens] || [],
                 relatedBuyAdRequests: { ...action.payload },
                 relatedBuyAdRequestsLoading: false,
                 relatedBuyAdRequestsFailed: false,
