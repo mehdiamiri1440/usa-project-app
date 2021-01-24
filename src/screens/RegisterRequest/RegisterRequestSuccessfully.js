@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image } from 'react-native'
+import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, Button } from 'native-base'
@@ -25,6 +25,7 @@ const RegisterRequestSuccessfully = props => {
 
     const [modalFlag, setModalFlag] = useState(false);
     const [selectedContact, setSelectedContact] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleBack = () => {
         if (props.route && props.route.params) {
@@ -353,7 +354,17 @@ const RegisterRequestSuccessfully = props => {
                             onPress={event => {
                                 event.stopPropagation();
                                 event.preventDefault();
-                                setModalFlag(true);
+                                setLoading(true);
+                                setSelectedContact({
+                                    first_name,
+                                    last_name,
+                                    is_verified,
+                                    contact_id: myuser_id
+                                });
+                                setTimeout(() => {
+                                    setLoading(false);
+                                    setModalFlag(true);
+                                }, 1000);
                             }}
                             style={{
                                 textAlign: 'center',
@@ -373,18 +384,30 @@ const RegisterRequestSuccessfully = props => {
                             rounded
                         >
                             <View
-                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                                style={{
+                                    flexDirection: 'row', justifyContent: 'center',
+                                    alignItems: 'center', width: '100%'
+                                }}>
+                                <ActivityIndicator
+                                    size="small"
+                                    animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
+                                    color="white"
+                                />
                                 <Text
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
+                                        setLoading(true);
                                         setSelectedContact({
                                             first_name,
                                             last_name,
                                             is_verified,
                                             contact_id: myuser_id
                                         });
-                                        setModalFlag(true);
+                                        setTimeout(() => {
+                                            setLoading(false);
+                                            setModalFlag(true);
+                                        }, 1000);
                                     }}
                                     style={{
                                         color: 'white',
@@ -397,7 +420,17 @@ const RegisterRequestSuccessfully = props => {
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
-                                        setModalFlag(true);
+                                        setLoading(true);
+                                        setSelectedContact({
+                                            first_name,
+                                            last_name,
+                                            is_verified,
+                                            contact_id: myuser_id
+                                        });
+                                        setTimeout(() => {
+                                            setLoading(false);
+                                            setModalFlag(true);
+                                        }, 1000);
                                     }} />
                             </View>
                         </Button>
