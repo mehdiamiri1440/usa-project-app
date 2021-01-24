@@ -15,6 +15,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as productActions from '../../redux/registerProduct/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import ChatModal from '../Messages/ChatModal';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class RegisterProductSuccessfully extends Component {
     constructor(props) {
@@ -377,32 +378,40 @@ class RegisterProductSuccessfully extends Component {
         } = params;
 
         return (
-            <View
-                style={{
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'white',
-                    width: deviceWidth,
-                    flexDirection: 'row-reverse',
-                }
-                }>
-                <Text
-                    onPress={() => {
-                        this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
-                    }} style={[styles.buttonText, {
-                        color: '#1da6f4', marginTop: 50,
-                        paddingBottom: 50, width: '80%',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                    }]}>
-                    {locales('titles.otherRelatedBuyads')}</Text>
-                <FontAwesome5
-                    size={17}
-                    name='arrow-left'
-                    color='#1DA1F2'
-                />
 
-            </View>
+            <TouchableOpacity
+                onPress={() => {
+                    this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
+                }} style={{
+                    marginTop: 50,
+                    paddingBottom: 50,
+                    flexDirection: 'row-reverse',
+                    width: deviceWidth,
+                    justifyContent: 'center',
+                    backgroundColor: 'white',
+
+                }}>
+                <Text style={{
+                    color: '#1da6f4',
+                    fontSize: 16,
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    marginLeft: 5,
+                }}>
+                    {locales('titles.otherRelatedBuyads')}
+
+                </Text>
+                <Text style={{
+                    top: 3
+                }}>
+                    <FontAwesome5
+                        size={15}
+                        name='arrow-left'
+                        color='#1DA1F2'
+
+                    />
+                </Text>
+            </TouchableOpacity>
+
         )
     };
 
