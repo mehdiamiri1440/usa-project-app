@@ -12,7 +12,7 @@ export const getUrl = (route) => {
     // }
     // return `http://192.168.1.102:3030/${route}`;
 
-    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
+    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
 
 };
 
@@ -81,7 +81,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 headers,
                 data,
                 params,
-                withCredentials: withAuth,
+                // withCredentials: withAuth,
                 timeout: 5000,
             })
             .then(result => {
