@@ -81,6 +81,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 headers,
                 data,
                 params,
+                withCredentials: withAuth,
                 timeout: 5000,
             })
             .then(result => {
