@@ -67,7 +67,7 @@ class ChatModal extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            console.warn('end reached in updated', this.state.loaded)
+            // console.warn('end reached in updated', this.state.loaded)
             this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
                 // if (!this.state.isFirstLoad)
@@ -229,6 +229,7 @@ class ChatModal extends Component {
             contact={this.props.contact}
             index={index}
             separators={separators}
+            prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
         />;
     };
 

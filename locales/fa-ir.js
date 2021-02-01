@@ -23,6 +23,8 @@ export default {
 
     "labels.man": "آقا",
     'labels.suggestedSellers': 'فروشندگان پیشنهادی',
+    'labels.yesterday': 'دیروز',
+    'labels.today': 'امروز',
     'labels.suggested': 'پیشنهادی',
     'labels.gender': 'جنسیت',
     'labels.idCardWithOwner': 'تصویر کارت ملی در کنار تصویر شما',
