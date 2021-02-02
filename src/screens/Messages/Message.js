@@ -48,11 +48,11 @@ const Message = props => {
         let text = '';
         const currentMessageDate = item.created_at.split('-')[2].split(' ')[0];
         const prevMessageDate = prevMessage.created_at.split('-')[2].split(' ')[0];
-        const diffFromToday = moment().diff(moment(prevMessage.created_at), 'hours');
         const diffBetweenMessages = Math.abs(prevMessageDate - currentMessageDate);
-        if (diffBetweenMessages >= 1 && diffFromToday <= 24)
+
+        if (diffBetweenMessages >= 1 && prevMessageDate - (new Date().getDay()) == 0)
             text = locales('labels.today');
-        else if (diffBetweenMessages >= 1 && moment().diff(prevMessage.created_at, 'days') == 1)
+        else if (diffBetweenMessages >= 1 && prevMessageDate - (new Date().getDay()) <= 1)
             text = locales('labels.yesterday');
         else if (diffBetweenMessages >= 1)
             text = Jmoment(prevMessage.created_at).format('jYYYY/jMM/jDD')
