@@ -272,6 +272,7 @@ class Profile extends PureComponent {
             last_name: lastNameFromByUserName,
             is_verified
         }
+        console.log('in priofile', userIdFromByUserName)
 
         return (
             <>
@@ -770,7 +771,9 @@ class Profile extends PureComponent {
 
                         </View>
                         <Rating />
-                        <Comments />
+                        <Comments
+                            userId={userIdFromByUserName}
+                        />
                         <View style={{
                             width: deviceWidth, alignSelf: 'center', alignItems: 'center',
                             justifyContent: 'center', marginVertical: 10, padding: 5,
