@@ -1,15 +1,13 @@
 // import react-native element
 import React, { Component } from 'react';
 import { Button, Textarea, InputGroup, Label } from 'native-base';
-import { View, Text, StyleSheet, Linking, BackHandler } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
-import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { validator } from '../../../utils';
 
 class ProductDecription extends Component {

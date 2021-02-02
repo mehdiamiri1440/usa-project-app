@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { validator } from '../../utils';
 
-class Rating extends React.Component {
+class StarRating extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -94,4 +94,4 @@ class Rating extends React.Component {
         )
     }
 }
-export default Rating
+export default StarRating

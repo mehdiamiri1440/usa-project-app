@@ -1,15 +1,13 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import {
-    Text, View, TouchableOpacity, ScrollView, SafeAreaView, Image, StyleSheet, RefreshControl, ActivityIndicator,
-    Share, FlatList, Modal
+    Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal
 } from 'react-native';
-import { Button, CardItem, Card, Body } from 'native-base';
+import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -25,6 +23,8 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import NoConnection from '../../components/noConnectionError';
 import RelatedPhotos from './RelatedPhotos';
 import Certificates from './certificates';
+import Rating from './Rating';
+import Comments from './Comments';
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -756,7 +756,10 @@ class Profile extends PureComponent {
                                 </Text>
                             </View>
 
-                            <View style={{ marginVertical: 10, width: '95%', alignItems: 'flex-end' }}>
+                            <View style={{
+                                marginVertical: 10, width: '95%', alignItems: 'flex-end',
+                                borderBottomWidth: 1, borderBottomColor: '#F2F2F2'
+                            }}>
                                 <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
@@ -766,6 +769,8 @@ class Profile extends PureComponent {
                             </View>
 
                         </View>
+                        <Rating />
+                        <Comments />
                         <View style={{
                             width: deviceWidth, alignSelf: 'center', alignItems: 'center',
                             justifyContent: 'center', marginVertical: 10, padding: 5,
