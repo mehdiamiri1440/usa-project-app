@@ -1,19 +1,40 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button, Textarea, InputGroup, Label } from 'native-base';
 import { connect } from 'react-redux';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
+import { validator } from '../../utils';
 
 const Rating = props => {
+
+    const {
+        userId,
+
+        userAuthorityToPostCommentLoading,
+        userAuthorityToPostCommentFailed,
+        userAuthorityToPostCommentError,
+        userAuthorityToPostCommentMessage,
+        userAuthorityToPostCommentAndRatings,
+
+        rateSubmissionAndRatings,
+        rateSubmissionLoading,
+        rateSubmissionFailed,
+        rateSubmissionError,
+        rateSubmissionMessage
+    } = props;
 
     const descriptionRef = useRef();
 
     const [description, setDescription] = useState('');
     const [descriptionError, setDescriptionError] = useState('');
+    const [descriptionClicked, setDescriptionClicked] = useState(false);
+    const [descriptionVisibility, setDescriptionVisibility] = useState(false);
 
+    const [selectedStar, setSelectedStar] = useState({});
     const [stars, setStars] = useState(
         [
             {
@@ -48,18 +69,28 @@ const Rating = props => {
                 item.color = '#BDC4CC';
         });
         setStars(tempStars);
+        setSelectedStar(selectedItem);
+        setDescriptionVisibility(true);
     };
 
 
     const onDescriptionSubmit = field => {
-        this.setState(() => ({
-            description: field,
-            descriptionClicked: !!field,
-            descriptionError: (!field || validator.isValidDescription(field)) ?
-                '' : locales('errors.invalidDescription')
-        }));
+        setDescription(field);
+        setDescriptionClicked(!!field);
+        setDescriptionError(!field || validator.isValidDescription(field) ? '' : locales('errors.invalidDescription'));
     };
 
+
+    const submitRating = _ => {
+        const rateObj = {
+            user_id: userId,
+            text: description,
+            rating_score: selectedStar.number
+        }
+        props.checkUserAutorityToPostComment(userId).then(_ => {
+            props.submitRating(rateObj)
+        });
+    };
 
     return (
         <View
@@ -136,95 +167,105 @@ const Rating = props => {
                 )
                 }
             </View>
-
-            <View style={styles.textInputPadding, { width: '100%', marginTop: 20 }}>
-                <Label style={{
-                    color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    fontSize: 15, marginVertical: 5
-                }}
-                >
-                    {locales('titles.headerDescription')}
-                </Label>
-                <InputGroup
-                    regular
-                    style={{
-                        borderRadius: 4,
-                        borderColor: descriptionError ? '#E41C38' : '#00C569',
-                        paddingLeft: 15,
-                        paddingHorizontal: 10,
-                        backgroundColor: '#FBFBFB'
-                    }}>
-                    <FontAwesome5 name={descriptionError ? 'times-circle' : 'check-circle'}
-                        color={descriptionError ? '#E41C38' : '#00C569'}
-                        size={16}
-                        solid
-                        style={{ position: 'absolute', top: 10, left: 10 }}
-                    />
-                    <Textarea
-                        onChangeText={onDescriptionSubmit}
-                        error=''
-                        value={description}
-                        autoCapitalize='none'
-                        autoCompleteType='off'
-                        autoCorrect={false}
-                        // placeholderTextColor='#777777'
-                        // placeholder={locales('titles.descriptionWithExample')}
-                        ref={descriptionRef}
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            paddingTop: 10,
-                            direction: 'rtl',
-                            textAlign: 'right',
-                            width: '100%'
+            {descriptionVisibility ?
+                <>
+                    <View style={styles.textInputPadding, { width: '100%', marginTop: 20 }}>
+                        <Label style={{
+                            color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 15, marginVertical: 5
                         }}
-                        rowSpan={5}
-                    />
-                </InputGroup>
-                <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
-                    {!!descriptionError && descriptionError}
-                </Label>
-            </View>
-            <Button
-                style={{
-                    textAlign: 'center',
-                    zIndex: 10005,
-                    borderRadius: 5,
-                    elevation: 0,
-                    padding: 25,
-                    marginBottom: 10,
-                    backgroundColor: '#00C886',
-                    width: '40%',
-                    color: 'white',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                }}
-                rounded
-            >
-                <View
-                    style={{
-                        flexDirection: 'row', justifyContent: 'center',
-                        alignItems: 'center', width: '100%'
-                    }}>
-                    <Text
+                        >
+                            {locales('titles.headerDescription')}
+                        </Label>
+                        <InputGroup
+                            regular
+                            style={{
+                                borderRadius: 4,
+                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#666',
+                                paddingLeft: 15,
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB'
+                            }}>
+                            <FontAwesome5 name={
+                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                    ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{ position: 'absolute', top: 10, left: 10 }}
+                            />
+                            <Textarea
+                                onChangeText={onDescriptionSubmit}
+                                error=''
+                                value={description}
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                // placeholderTextColor='#777777'
+                                // placeholder={locales('titles.descriptionWithExample')}
+                                ref={descriptionRef}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    paddingTop: 10,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%'
+                                }}
+                                rowSpan={5}
+                            />
+                        </InputGroup>
+                        <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
+                            {!!descriptionError && descriptionError}
+                        </Label>
+                    </View>
+                    <Button
+                        onPress={submitRating}
                         style={{
-                            color: 'white',
                             textAlign: 'center',
-                            fontSize: 20,
-                            marginHorizontal: 3,
-                            marginTop: 2,
+                            zIndex: 10005,
+                            borderRadius: 5,
+                            elevation: 0,
+                            padding: 25,
+                            marginBottom: 10,
+                            backgroundColor: '#00C886',
+                            width: '40%',
+                            color: 'white',
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                        }}>{locales('titles.postComment')}</Text>
-                    <FontAwesome5
-                        name='star'
-                        color='#FFBB00'
-                        size={22}
-                        solid
-                    />
-                </View>
-            </Button>
-
+                        }}
+                        rounded
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row', justifyContent: 'center',
+                                alignItems: 'center', width: '100%'
+                            }}>
+                            {rateSubmissionLoading || userAuthorityToPostCommentLoading ?
+                                <ActivityIndicator size="small" color="white" animating={rateSubmissionLoading || userAuthorityToPostCommentLoading} />
+                                : null}
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    fontSize: 20,
+                                    marginHorizontal: 3,
+                                    marginTop: 2,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}>{locales('titles.postComment')}</Text>
+                            <FontAwesome5
+                                name='star'
+                                color='#FFBB00'
+                                size={22}
+                                solid
+                            />
+                        </View>
+                    </Button>
+                </>
+                : null}
         </View>
     )
 };
@@ -341,11 +382,38 @@ const styles = StyleSheet.create({
 
 
 const mapStateToProps = (state) => {
+    const {
+        rateSubmissionAndRatings,
+        rateSubmissionLoading,
+        rateSubmissionFailed,
+        rateSubmissionError,
+        rateSubmissionMessage,
+
+        userAuthorityToPostCommentLoading,
+        userAuthorityToPostCommentFailed,
+        userAuthorityToPostCommentError,
+        userAuthorityToPostCommentMessage,
+        userAuthorityToPostCommentAndRatings
+    } = state.commentsAndRatingsReducer;
+
     return {
+        rateSubmissionAndRatings,
+        rateSubmissionLoading,
+        rateSubmissionFailed,
+        rateSubmissionError,
+        rateSubmissionMessage,
+
+        userAuthorityToPostCommentLoading,
+        userAuthorityToPostCommentFailed,
+        userAuthorityToPostCommentError,
+        userAuthorityToPostCommentMessage,
+        userAuthorityToPostCommentAndRatings
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
+        submitRating: (rateObj) => dispatch(CommentsAndRatingsActions.submitRating(rateObj)),
+        checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Rating);

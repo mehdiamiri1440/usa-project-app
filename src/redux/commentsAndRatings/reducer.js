@@ -7,6 +7,18 @@ const INITIAL_STATE = {
     commentsList: [],
     commentsAndRatings: {},
 
+    rateSubmissionLoading: false,
+    rateSubmissionFailed: false,
+    rateSubmissionError: false,
+    rateSubmissionMessage: null,
+    rateSubmissionAndRatings: {},
+
+    userAuthorityToPostCommentLoading: false,
+    userAuthorityToPostCommentFailed: false,
+    userAuthorityToPostCommentError: false,
+    userAuthorityToPostCommentMessage: null,
+    userAuthorityToPostCommentAndRatings: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -58,6 +70,96 @@ export default (state = INITIAL_STATE, action) => {
                 commentsMessage: ''
             };
         };
+
+
+        case actionTypes.SUBMIT_RATING_LOADING: {
+            return {
+                ...state,
+                rateSubmissionAndRatings: {},
+                rateSubmissionLoading: true,
+                rateSubmissionFailed: false,
+                rateSubmissionError: false,
+                rateSubmissionMessage: null
+            };
+        };
+        case actionTypes.SUBMIT_RATING_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                rateSubmissionAndRatings: { ...action.payload },
+                rateSubmissionLoading: false,
+                rateSubmissionFailed: false,
+                rateSubmissionError: false,
+                rateSubmissionMessage: msg,
+            };
+        };
+        case actionTypes.SUBMIT_RATING_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                rateSubmissionAndRatings: {},
+                rateSubmissionLoading: false,
+                rateSubmissionFailed: true,
+                rateSubmissionError: false,
+                rateSubmissionMessage: msg
+            };
+        };
+        case actionTypes.SUBMIT_RATING_REJECT: {
+            return {
+                ...state,
+                rateSubmissionAndRatings: {},
+                rateSubmissionLoading: false,
+                rateSubmissionFailed: false,
+                rateSubmissionError: true,
+                rateSubmissionMessage: ''
+            };
+        };
+
+
+        case actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_LOADING: {
+            return {
+                ...state,
+                userAuthorityToPostCommentAndRatings: {},
+                userAuthorityToPostCommentLoading: true,
+                userAuthorityToPostCommentFailed: false,
+                userAuthorityToPostCommentError: false,
+                userAuthorityToPostCommentMessage: null
+            };
+        };
+        case actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                userAuthorityToPostCommentAndRatings: { ...action.payload },
+                userAuthorityToPostCommentLoading: false,
+                userAuthorityToPostCommentFailed: false,
+                userAuthorityToPostCommentError: false,
+                userAuthorityToPostCommentMessage: msg,
+            };
+        };
+        case actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                userAuthorityToPostCommentAndRatings: {},
+                userAuthorityToPostCommentLoading: false,
+                userAuthorityToPostCommentFailed: true,
+                userAuthorityToPostCommentError: false,
+                userAuthorityToPostCommentMessage: msg
+            };
+        };
+        case actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_REJECT: {
+            return {
+                ...state,
+                userAuthorityToPostCommentAndRatings: {},
+                userAuthorityToPostCommentLoading: false,
+                userAuthorityToPostCommentFailed: false,
+                userAuthorityToPostCommentError: true,
+                userAuthorityToPostCommentMessage: ''
+            };
+        };
+
+
         default:
             return state
     }

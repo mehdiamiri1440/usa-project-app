@@ -17,14 +17,6 @@ const Comments = props => {
             props.fetchAllComments(userId);
     }, [userId]);
 
-    const renderListEmptyComponent = _ => {
-        return (
-            <Text>
-                list empty
-            </Text>
-        )
-    };
-
     const renderItem = (({ item, index }) => {
 
         return (
@@ -40,7 +32,6 @@ const Comments = props => {
         <View>
             <FlatList
                 renderItem={renderItem}
-                ListEmptyComponent={renderListEmptyComponent}
                 data={commentsList}
                 keyExtractor={(_, index) => index.toString()}
             />

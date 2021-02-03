@@ -27,3 +27,47 @@ export const fetchAllComments = userId => {
 
     return request();
 };
+
+export const submitRating = submitRating => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.commentsAndRatings
+                .submitRating(submitRating)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.SUBMIT_RATING_FAILED,
+                        reject: actionTypes.SUBMIT_RATING_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.SUBMIT_RATING_LOADING);
+    const success = res => action(actionTypes.SUBMIT_RATING_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const checkUserAuthorityToPostComment = userId => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.commentsAndRatings
+                .checkUserAuthorityToPostComment(userId)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_FAILED,
+                        reject: actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_LOADING);
+    const success = res => action(actionTypes.CHECK_USER_AUTHORITY_TO_POST_COMMENT_SUCCESSFULLY, res);
+
+    return request();
+};
