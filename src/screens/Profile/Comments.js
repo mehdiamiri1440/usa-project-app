@@ -22,6 +22,7 @@ const Comments = props => {
         userName = '',
 
         deleteCommentLoading,
+        commentsLoading
     } = props;
 
     const [commentsList, setCommentsList] = useState([]);
@@ -125,7 +126,6 @@ const Comments = props => {
     };
 
     const renderItem = ({ item }) => {
-
         return (
             <View
                 style={{
@@ -279,6 +279,9 @@ const Comments = props => {
             </View>
         )
     };
+
+    if (commentsLoading)
+        return (<ActivityIndicator size={50} color='#00C569' style={{ marginTop: 50 }} />)
 
     return (
         <View>
