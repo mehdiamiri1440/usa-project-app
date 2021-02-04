@@ -62,3 +62,45 @@ export const checkUserAuthorityToPostComment = userId => {
             });
     });
 };
+
+export const likeOrDisLikeComment = likingObj => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `profile/do-like`,
+                method: 'POST',
+                data: likingObj,
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
+export const deleteComment = id => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `profile/delete-user-comment`,
+                method: 'POST',
+                data: { c_id: id },
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};

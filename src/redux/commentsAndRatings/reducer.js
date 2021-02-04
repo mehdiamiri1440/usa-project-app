@@ -19,6 +19,18 @@ const INITIAL_STATE = {
     userAuthorityToPostCommentMessage: null,
     userAuthorityToPostCommentAndRatings: {},
 
+    likeOrDislikeCommentLoading: false,
+    likeOrDislikeCommentFailed: false,
+    likeOrDislikeCommentError: false,
+    likeOrDislikeCommentMessage: null,
+    likeOrDislikeComment: {},
+
+    deleteCommentLoading: false,
+    deleteCommentFailed: false,
+    deleteCommentError: false,
+    deleteCommentMessage: null,
+    deleteComment: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -156,6 +168,94 @@ export default (state = INITIAL_STATE, action) => {
                 userAuthorityToPostCommentFailed: false,
                 userAuthorityToPostCommentError: true,
                 userAuthorityToPostCommentMessage: ''
+            };
+        };
+
+
+        case actionTypes.LIKE_OR_DISLIKE_COMMENT_LOADING: {
+            return {
+                ...state,
+                likeOrDislikeComment: {},
+                likeOrDislikeCommentLoading: true,
+                likeOrDislikeCommentFailed: false,
+                likeOrDislikeCommentError: false,
+                likeOrDislikeCommentMessage: null
+            };
+        };
+        case actionTypes.LIKE_OR_DISLIKE_COMMENT_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                likeOrDislikeComment: { ...action.payload },
+                likeOrDislikeCommentLoading: false,
+                likeOrDislikeCommentFailed: false,
+                likeOrDislikeCommentError: false,
+                likeOrDislikeCommentMessage: msg,
+            };
+        };
+        case actionTypes.LIKE_OR_DISLIKE_COMMENT_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                likeOrDislikeComment: {},
+                likeOrDislikeCommentLoading: false,
+                likeOrDislikeCommentFailed: true,
+                likeOrDislikeCommentError: false,
+                likeOrDislikeCommentMessage: msg
+            };
+        };
+        case actionTypes.LIKE_OR_DISLIKE_COMMENT_REJECT: {
+            return {
+                ...state,
+                likeOrDislikeComment: {},
+                likeOrDislikeCommentLoading: false,
+                likeOrDislikeCommentFailed: false,
+                likeOrDislikeCommentError: true,
+                likeOrDislikeCommentMessage: ''
+            };
+        };
+
+
+        case actionTypes.DELETE_COMMENT_LOADING: {
+            return {
+                ...state,
+                deleteComment: {},
+                deleteCommentLoading: true,
+                deleteCommentFailed: false,
+                deleteCommentError: false,
+                deleteCommentMessage: null
+            };
+        };
+        case actionTypes.DELETE_COMMENT_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                deleteComment: { ...action.payload },
+                deleteCommentLoading: false,
+                deleteCommentFailed: false,
+                deleteCommentError: false,
+                deleteCommentMessage: msg,
+            };
+        };
+        case actionTypes.DELETE_COMMENT_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                deleteComment: {},
+                deleteCommentLoading: false,
+                deleteCommentFailed: true,
+                deleteCommentError: false,
+                deleteCommentMessage: msg
+            };
+        };
+        case actionTypes.DELETE_COMMENT_REJECT: {
+            return {
+                ...state,
+                deleteComment: {},
+                deleteCommentLoading: false,
+                deleteCommentFailed: false,
+                deleteCommentError: true,
+                deleteCommentMessage: ''
             };
         };
 

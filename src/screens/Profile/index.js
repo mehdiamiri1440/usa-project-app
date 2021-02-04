@@ -774,6 +774,8 @@ class Profile extends PureComponent {
                         />
                         <Comments
                             userId={userIdFromByUserName}
+                            userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
+                            fullName={`${firstNameFromByUserName} ${lastNameFromByUserName}`}
                         />
                         <View style={{
                             width: deviceWidth, alignSelf: 'center', alignItems: 'center',

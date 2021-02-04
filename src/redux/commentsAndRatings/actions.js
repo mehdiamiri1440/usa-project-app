@@ -71,3 +71,47 @@ export const checkUserAuthorityToPostComment = userId => {
 
     return request();
 };
+
+export const likeOrDisLikeComment = likingObj => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.commentsAndRatings
+                .likeOrDisLikeComment(likingObj)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.LIKE_OR_DISLIKE_COMMENT_FAILED,
+                        reject: actionTypes.LIKE_OR_DISLIKE_COMMENT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.LIKE_OR_DISLIKE_COMMENT_LOADING);
+    const success = res => action(actionTypes.LIKE_OR_DISLIKE_COMMENT_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const deleteComment = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.commentsAndRatings
+                .deleteComment(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.DELETE_COMMENT_FAILED,
+                        reject: actionTypes.DELETE_COMMENT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.DELETE_COMMENT_LOADING);
+    const success = res => action(actionTypes.DELETE_COMMENT_SUCCESSFULLY, res);
+
+    return request();
+};
