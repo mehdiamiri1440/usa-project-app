@@ -1,6 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import { View, Text, TouchableOpacity } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { validator } from '../../utils';
 
 class StarRating extends React.Component {
@@ -46,13 +46,13 @@ class StarRating extends React.Component {
                     state.names.push('star')
                 }
                 else if (index == hoveredIndex && this.state.half) {
-                    state.names.push('star-half-o')
+                    state.names.push('star-half-alt')
                 }
                 else if (index == hoveredIndex && !this.state.half) {
-                    state.names.push('star-o')
+                    state.names.push('star')
                 }
                 else {
-                    state.names.push('star-o')
+                    state.names.push('star')
                 }
             }
             return '';
@@ -65,7 +65,8 @@ class StarRating extends React.Component {
         let {
             starsCount = 5,
             size = 25,
-            disable = true
+            disable = true,
+            showNumbers = false
         } = this.props;
 
         let { iconName, color = '#FFBB00', names } = this.state;
@@ -79,15 +80,35 @@ class StarRating extends React.Component {
             <View style={{ flexDirection: 'row-reverse' }}>
                 {
                     stars.map((_, index) => (
-                        <FontAwesome
-                            name={names[index]}
-                            style={{ transform: names[index] == 'star-half-o' ? [{ scaleX: -1 }] : [{ rotate: '0deg' }] }}
-                            key={index}
-                            color={index < this.state.hoveredIndex ? color : '#BEBEBE'}
-                            size={size}
-                            onProgress={() => !disable && this.handleStarClick(index)}
-                        />
-
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            style={{ marginHorizontal: 1 }}
+                        >
+                            <FontAwesome5
+                                name={names[index]}
+                                style={{ transform: names[index] == 'star-half-alt' ? [{ scaleX: -1 }] : [{ rotate: '0deg' }] }}
+                                key={index}
+                                color={index < this.state.hoveredIndex ? color : '#BEBEBE'}
+                                size={size}
+                                solid
+                                style={{
+                                    transform: [{ rotateY: '180deg' }]
+                                }}
+                                onProgress={() => !disable && this.handleStarClick(index)}
+                            />
+                            {showNumbers ? <Text
+                                style={{
+                                    position: 'absolute',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 11,
+                                    color: '#777777',
+                                    left: 11,
+                                    top: 7
+                                }}
+                            >
+                                {index + 1}
+                            </Text> : null}
+                        </TouchableOpacity>
                     ))
                 }
             </View>
