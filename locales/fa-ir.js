@@ -262,6 +262,7 @@ export default {
     'titles.messanger': 'پیام ‌رسان',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
+    'titles.showAllComments': 'مشاهده همه نظرات',
     'titles.remianedCapacityToSendMessageToBuyer': 'ظرفیت باقی‌مانده برای ارسال پیام به خریدار این محصول',
     'titles.sendMessage': 'ارسال پیام',
     'titles.update': 'بروز رسانی',

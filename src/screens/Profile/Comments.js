@@ -73,21 +73,29 @@ const Comments = props => {
                 <TouchableOpacity
                     onPress={handleShowMore}
                     style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        marginTop: 50,
+                        paddingBottom: 50,
+                        flexDirection: 'row-reverse',
                         width: deviceWidth,
-                        padding: 20,
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 18,
-                            color: '#666666'
-                        }}
-                    >
-                        {commentsListSliceToShow != commentsList.length ? locales('titles.showMore') : locales('titles.showLess')}
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+
+                    }}>
+                    <Text style={{
+                        color: '#1da6f4',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        marginLeft: 5,
+                    }}>
+                        {commentsListSliceToShow != commentsList.length ? locales('titles.showAllComments') : locales('titles.close')}
                     </Text>
+                    <FontAwesome5
+                        size={15}
+                        style={{ top: 3 }}
+                        name={commentsListSliceToShow != commentsList.length ? 'arrow-down' : 'arrow-up'}
+                        color='#1DA1F2'
+
+                    />
                 </TouchableOpacity>
             )
         return null;
