@@ -771,6 +771,7 @@ class Profile extends PureComponent {
                         </View>
                         <Rating
                             userId={userIdFromByUserName}
+                            userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
                         />
                         <Comments
                             userId={userIdFromByUserName}
