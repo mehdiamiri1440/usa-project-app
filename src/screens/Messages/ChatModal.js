@@ -10,6 +10,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -341,6 +342,22 @@ class ChatModal extends Component {
                                 {`${firstName} ${lastName}`}
                             </Text>
                             {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
+                            <Text
+                                style={{
+                                    color: '#21AD93',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    marginHorizontal: 3
+                                }}
+                            >
+                                {locales('labels.usersComment')}
+                            </Text>
+                            <FontAwesome5
+                                style={{ marginTop: 5 }}
+                                size={13}
+                                name='arrow-left'
+                                color='#21AD93'
+                            />
                         </View>
                     </TouchableOpacity>
                 </View>

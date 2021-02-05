@@ -183,6 +183,7 @@ export default {
     "labels.one": 'یک',
     'labels.deleteThisRequest': 'حذف این درخواست',
     'labels.deleteBuyAd': 'حذف درخواست',
+    'labels.usersComment': 'نظر کاربران',
     'labels.deleteProduct': 'حذف محصول',
     "labels.product": 'محصول',
     'labels.deleteFilter': 'حذف فیلتر',
