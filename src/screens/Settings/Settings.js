@@ -2,13 +2,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
+import AsyncStorage from '@react-native-community/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import * as authReducer from '../../redux/auth/actions';
-import { deviceWidth } from '../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 
@@ -29,10 +28,14 @@ class Settings extends React.Component {
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
             this.setState({ loading: true })
-            messaging()
-                .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
-                    this.props.logOut();
+            AsyncStorage.removeItem('@openedChatIds').then(_ => {
+                AsyncStorage.removeItem('@isGuidShown').then(_ => {
+                    messaging()
+                        .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
+                            this.props.logOut();
+                        })
                 })
+            })
         }
         else {
             this.props.navigation.navigate(name)

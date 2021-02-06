@@ -201,6 +201,8 @@ export default {
     'titles.countOfDeletedComments': 'نظرات {count} کاربر توسط {name} حذف شده است',
     'titles.sendComment': 'ارسال نظر',
     'titles.sendCommentDescription': 'نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد',
+    'titles.commentsGuidDescription': 'در مورد این کاربر نظر دهید و نظرات دیگران را ببینید .',
+    'titles.reportViolation': 'گزارش تخلف',
     "titles.startIt": "شروع کنید",
     'titles.commentDescriptionWithExample': 'نظرتان درباره این کاربر را با بقیه به اشتراک بگذارید',
     'titles.putyourCommentHere': 'نظر خود را اینجا بنویسید',

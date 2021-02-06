@@ -14,7 +14,6 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import Feather from 'react-native-vector-icons/dist/Feather';
