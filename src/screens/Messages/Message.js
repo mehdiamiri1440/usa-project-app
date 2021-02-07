@@ -47,12 +47,15 @@ const Message = props => {
 
         let text = '';
         const currentMessageDate = item.created_at.split('-')[2].split(' ')[0];
-        const prevMessageDate = prevMessage.created_at.split('-')[2].split(' ')[0];
-        const diffBetweenMessages = Math.abs(prevMessageDate - currentMessageDate);
+        const prevMessageDay = prevMessage.created_at.split('-')[2].split(' ')[0];
+        const prevMessageMonth = prevMessage.created_at.split('-')[1];
+        const prevMessageYear = prevMessage.created_at.split('-')[0];
+        const diffBetweenMessages = Math.abs(prevMessageDay - currentMessageDate);
 
-        if (diffBetweenMessages >= 1 && prevMessageDate - (new Date().getDay()) == 0)
+        if (diffBetweenMessages >= 1 && Math.abs(prevMessageDay - (new Date().getDate())) == 0 && (prevMessageYear == new Date().getFullYear()) && (prevMessageMonth == (new Date().getMonth() + 1)))
             text = locales('labels.today');
-        else if (diffBetweenMessages >= 1 && prevMessageDate - (new Date().getDay()) <= 1)
+
+        else if (diffBetweenMessages >= 1 && Math.abs((new Date().getDate()) - prevMessageDay) <= 1 && (prevMessageYear == new Date().getFullYear()) && (prevMessageMonth == (new Date().getMonth() + 1)))
             text = locales('labels.yesterday');
         else if (diffBetweenMessages >= 1)
             text = Jmoment(prevMessage.created_at).format('jYYYY/jMM/jDD')
