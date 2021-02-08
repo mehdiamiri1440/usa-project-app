@@ -68,7 +68,7 @@ const Message = props => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor: '#deeff7',
-                        width: deviceWidth * 0.25,
+                        width: deviceWidth * 0.3,
                         borderRadius: 7.6,
                         padding: 3,
                         margin: 5,

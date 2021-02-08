@@ -21,6 +21,7 @@ import MessagesContext from './MessagesContext';
 import { formatter, validator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import ViolationReport from './ViolationReport';
 
 let unsubscribe;
 class ChatModal extends Component {
@@ -35,7 +36,8 @@ class ChatModal extends Component {
             userChatHistory: [],
             prevScrollPosition: 0,
             loaded: false,
-            showGuid: false
+            showGuid: false,
+            showViolationReportFlag: false,
         };
         Jmoment.locale('en')
     }
@@ -300,7 +302,7 @@ class ChatModal extends Component {
     render() {
         let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp, showGuid } = this.state;
+        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
         return (
             <Modal
                 animationType="slide"
@@ -321,6 +323,11 @@ class ChatModal extends Component {
                     height: '100%',
                 }} />
 
+                {showViolationReportFlag ? <ViolationReport
+                    {...this.props}
+                    visible={showViolationReportFlag}
+                    onRequestToClose={_ => this.setState({ visible: true, showViolationReportFlag: false })}
+                /> : null}
                 {showGuid ? <TouchableOpacity
                     onPress={_ => this.setState({ showGuid: false })}
                     activeOpacity={1}
@@ -499,9 +506,10 @@ class ChatModal extends Component {
                             </> : null}
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity
+
+                    {/* <TouchableOpacity
                         style={{ flexDirection: 'row-reverse' }}
-                        onPress={_ => { }}
+                        onPress={_ => this.setState({ showViolationReportFlag: true })}
                     >
                         <FontAwesome5
                             size={13}
@@ -518,7 +526,8 @@ class ChatModal extends Component {
                         >
                             {locales('titles.reportViolation')}
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+
                 </View>
 
                 {(isFirstLoad && userChatHistoryLoading && !this.state.loaded) ?
