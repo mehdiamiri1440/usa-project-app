@@ -88,7 +88,7 @@ class StarRating extends React.Component {
                                 name={names[index]}
                                 style={{ transform: names[index] == 'star-half-alt' ? [{ scaleX: -1 }] : [{ rotate: '0deg' }] }}
                                 key={index}
-                                color={index < this.state.hoveredIndex ? color : '#BEBEBE'}
+                                color={index <= this.state.hoveredIndex ? color : '#BEBEBE'}
                                 size={size}
                                 solid
                                 style={{
