@@ -450,7 +450,7 @@ const PaymentModal = props => {
                                     color: '#666666', fontSize: 16,
                                     textAlign: 'center',
                                     textAlignVertical: 'center'
-                                }}>/ {locales('titles.monthly')}</Text>
+                                }}>/ {locales('titles.threeMonths')}</Text>
                             </View>
 
 

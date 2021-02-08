@@ -187,40 +187,49 @@ class PromoteRegistration extends React.Component {
                             borderRadius: 5,
                             elevation: 2
                         }}>
-                            <LinearGradient
+                            {/* <LinearGradient
                                 start={{ x: 0, y: 1 }}
                                 end={{ x: 0.8, y: 0.2 }}
                                 colors={['#00C569', '#21AD93']}
-                            >
-                                <Text style={{
-                                    fontSize: 18,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    backgroundColor: '#E41C38',
-                                    color: 'white',
-                                    paddingBottom: 4,
-                                    transform: [{ rotate: '-45deg' }],
-                                    marginHorizontal: 6,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    width: 120,
-                                    position: 'absolute',
-                                    left: -45,
-                                    top: 7,
-                                    elevation: 4
-                                }}>
-                                    {locales('labels.special')}
-                                </Text>
-                                <Text style={{
-                                    color: '#fff',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginVertical: 7
-                                }}>
-                                    {locales('titles.annualSpecialRegistration')}
-                                </Text>
-                            </LinearGradient>
+                            > */}
+                            <Text style={{
+                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                backgroundColor: '#E41C38',
+                                color: 'white',
+                                paddingBottom: 4,
+                                transform: [{ rotate: '-45deg' }],
+                                marginHorizontal: 6,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                width: 120,
+                                position: 'absolute',
+                                left: -45,
+                                top: 7,
+                                elevation: 4
+                            }}>
+                                {locales('labels.special')}
+                            </Text>
+                            <Text style={{
+                                color: '#21AD93',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginVertical: 7
+                            }}>
+                                {locales('titles.specialRegistration')}
+                            </Text>
+                            <Text style={{
+                                color: '#808C9B',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                            }}>
+                                {locales('titles.monthly')} : 189,000 {locales('titles.toman')}
+                            </Text>
+                            {/* </LinearGradient> */}
 
 
                             <View style={{
@@ -504,7 +513,7 @@ class PromoteRegistration extends React.Component {
                                         color: '#666666', fontSize: 16,
                                         textAlign: 'center',
                                         textAlignVertical: 'center'
-                                    }}>/ {locales('titles.monthly')}</Text>
+                                    }}>/ {locales('titles.threeMonths')}</Text>
                                 </View>
 
 
