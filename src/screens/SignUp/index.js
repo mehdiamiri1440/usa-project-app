@@ -19,7 +19,7 @@ import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
 
 
-let stepsArray = [1, 2, 3, 4, 5, 6]
+let stepsArray = [1, 2, 3, 4, 5]
 class SignUp extends React.Component {
     constructor(props) {
         super(props)
@@ -194,10 +194,10 @@ class SignUp extends React.Component {
             case 4: {
                 return <ChooseCity province={province} city={city} {...this.props} changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice} />
             }
+            // case 5: {
+            //     return <UserAuthority password={password} changeStep={this.changeStep} setUserAuthorities={this.setUserAuthorities} {...this.props} />
+            // }
             case 5: {
-                return <UserAuthority password={password} changeStep={this.changeStep} setUserAuthorities={this.setUserAuthorities} {...this.props} />
-            }
-            case 6: {
                 return <UserActivity activityType={activityType} activityZone={activityZone} changeStep={this.changeStep} setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             default:
