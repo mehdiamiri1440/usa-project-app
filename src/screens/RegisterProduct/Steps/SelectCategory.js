@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, BackHandler, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import Svg, { Path } from "react-native-svg"
+import Svg, { Path, G, Circle } from "react-native-svg"
 import { Button, Input, Label, InputGroup } from 'native-base';
 
 import { deviceWidth, validator } from '../../../utils';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
 
@@ -66,7 +65,314 @@ const CategoriesIcons = [
                 d="M13.888 3a.543.543 0 00.542-.542V.542a.542.542 0 10-1.085 0v1.92a.543.543 0 00.543.538zm0 0M4.015 6.83a.543.543 0 00.542-.542v-1.92a.542.542 0 00-1.085 0v1.919a.542.542 0 00.543.543zm0 0M23.762 6.83a.543.543 0 00.542-.542v-1.92a.542.542 0 00-1.085 0v1.919a.542.542 0 00.543.543zm0 0M13.512 23.808a.542.542 0 10.383-.159.545.545 0 00-.383.159zm0 0"
             ></Path>
         </Svg>
-    }
+    },
+    {
+        name: 'خشکبار',
+        svg: <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="92.359"
+            height="94.212"
+            viewBox="0 0 92.359 94.212"
+        >
+            <G stroke="#556080" transform="translate(-68.24 -3.479)">
+                <G
+                    data-name="mini pistacho"
+                    transform="scale(-1) rotate(-85.99 -88.505 39.14)"
+                >
+                    <Path
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M19.95 47.36s11.96-8.853 16.305-19.157.565-20.084-7.06-22.846-15.93.493-20.133 10.76-3.649 24.73-3.649 24.73l21.08-28.883z"
+                        data-name="Path 320"
+                    ></Path>
+                    <Path
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M33.618 21.986a20.914 20.914 0 00-.346-4.823 14.7 14.7 0 00-1.281-2.53"
+                        data-name="Path 321"
+                    ></Path>
+                    <G
+                        fill="#fff"
+                        strokeWidth="1"
+                        data-name="Ellipse 42"
+                        transform="translate(32.394 24.402)"
+                    >
+                        <Circle cx="0.688" cy="0.688" r="0.688" stroke="none"></Circle>
+                        <Circle cx="0.688" cy="0.688" r="0.188" fill="none"></Circle>
+                    </G>
+                    <G
+                        fill="#fff"
+                        strokeWidth="1"
+                        data-name="Ellipse 43"
+                        transform="translate(31.295 27.15)"
+                    >
+                        <Circle cx="0.688" cy="0.688" r="0.688" stroke="none"></Circle>
+                        <Circle cx="0.688" cy="0.688" r="0.188" fill="none"></Circle>
+                    </G>
+                    <Path
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeWidth="1.5"
+                        d="M10.047 35.304s.986 6.484 4.147 7.378 6.74-2.461 6.74-2.461"
+                        data-name="Path 322"
+                    ></Path>
+                </G>
+                <G data-name="big pistacho" transform="translate(-123 2)">
+                    <Path
+                        fill="#fff"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M240.36 8.229s21.757 16.108 29.661 34.857 1.028 36.542-12.847 41.565-28.981-.895-36.627-19.575-6.637-44.995-6.637-44.995l38.351 52.546z"
+                        data-name="Path 320"
+                    ></Path>
+                    <Path
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M265.227 54.4s.188 6.512-.63 8.774a26.756 26.756 0 01-2.331 4.6"
+                        data-name="Path 321"
+                    ></Path>
+                    <G
+                        fill="#fff"
+                        strokeWidth="1"
+                        data-name="Ellipse 42"
+                        transform="translate(263 48)"
+                    >
+                        <Circle cx="1" cy="1" r="1" stroke="none"></Circle>
+                        <Circle cx="1" cy="1" r="0.5" fill="none"></Circle>
+                    </G>
+                    <G
+                        fill="#fff"
+                        strokeWidth="1"
+                        data-name="Ellipse 43"
+                        transform="translate(261 43)"
+                    >
+                        <Circle cx="1" cy="1" r="1" stroke="none"></Circle>
+                        <Circle cx="1" cy="1" r="0.5" fill="none"></Circle>
+                    </G>
+                    <Path
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeWidth="2"
+                        d="M222.34 30.164s1.794-11.8 7.547-13.425 12.264 4.478 12.264 4.478"
+                        data-name="Path 322"
+                    ></Path>
+                </G>
+            </G>
+        </Svg>
+    },
+    {
+        name: 'ادویه‌جات',
+        svg: <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="73.294"
+            height="75.163"
+            viewBox="0 0 73.294 75.163"
+        >
+            <G transform="translate(-223.566 -106.837)">
+                <G
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    data-name="Path 333"
+                >
+                    <Path
+                        d="M5253.566 13937.394c4.395-1.9 36.212-7.03 69.294.43-1.331 20.542-14.746 29.009-14.746 29.009h-39.672s-14.156-8.596-14.876-29.439z"
+                        transform="translate(-5028 -13793)"
+                    ></Path>
+                    <Path
+                        fill="#556080"
+                        d="M5285.99 13933.902c-17.004 0-29.758 2.342-32.424 3.492.72 20.843 14.876 29.438 14.876 29.438h39.672s13.416-8.467 14.746-29.009c-13.017-2.935-25.838-3.92-36.87-3.92m0-2c13.076 0 25.63 1.335 37.31 3.97a2 2 0 011.556 2.08c-.317 4.892-1.326 9.534-3 13.8a40.227 40.227 0 01-5.269 9.48c-3.698 4.921-7.255 7.196-7.405 7.29-.32.202-.69.309-1.068.309h-39.672c-.366 0-.725-.1-1.038-.29-.158-.096-3.906-2.402-7.72-7.4a38.553 38.553 0 01-5.358-9.641c-1.659-4.34-2.587-9.063-2.759-14.038a2.001 2.001 0 011.207-1.906c1.747-.753 6.104-1.644 11.371-2.324 4.703-.607 12.31-1.33 21.845-1.33z"
+                        transform="translate(-5028 -13793)"
+                    ></Path>
+                </G>
+                <Path
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeWidth="2"
+                    d="M256.543 108.162s-1.269 2.771 3.318 5.76"
+                    data-name="Path 334"
+                ></Path>
+                <Path
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeWidth="2"
+                    d="M251.24 117.071s-.962-2.892-6.355-1.95"
+                    data-name="Path 336"
+                ></Path>
+                <Path
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeWidth="2"
+                    d="M256.402 122.19s5.32.338 9.655-5.896"
+                    data-name="Path 335"
+                ></Path>
+                <Path
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M285.665 137.489s8.75-16.264 8.933-16.971.7-3.183-1.27-4.51a3.925 3.925 0 00-4.67.441c-.591.557-17.488 19.61-17.488 19.61"
+                    data-name="Path 337"
+                ></Path>
+                <G
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    data-name="Rectangle 182"
+                    transform="translate(241 177)"
+                >
+                    <Path stroke="none" d="M0 0H39V3H0z"></Path>
+                    <Path d="M-1 -1H40V4H-1z"></Path>
+                </G>
+                <G
+                    fill="#556080"
+                    stroke="#556080"
+                    strokeWidth="1"
+                    data-name="Ellipse 45"
+                    transform="translate(276 153)"
+                >
+                    <Circle cx="2" cy="2" r="2" stroke="none"></Circle>
+                    <Circle cx="2" cy="2" r="1.5" fill="none"></Circle>
+                </G>
+                <G
+                    fill="#556080"
+                    stroke="#556080"
+                    strokeWidth="1"
+                    data-name="Ellipse 46"
+                    transform="translate(283 157)"
+                >
+                    <Circle cx="2" cy="2" r="2" stroke="none"></Circle>
+                    <Circle cx="2" cy="2" r="1.5" fill="none"></Circle>
+                </G>
+                <G
+                    fill="#556080"
+                    stroke="#556080"
+                    strokeWidth="1"
+                    data-name="Ellipse 47"
+                    transform="translate(277 164)"
+                >
+                    <Circle cx="2" cy="2" r="2" stroke="none"></Circle>
+                    <Circle cx="2" cy="2" r="1.5" fill="none"></Circle>
+                </G>
+                <G
+                    fill="#556080"
+                    stroke="#556080"
+                    strokeWidth="1"
+                    data-name="Ellipse 48"
+                    transform="translate(269 158)"
+                >
+                    <Circle cx="2" cy="2" r="2" stroke="none"></Circle>
+                    <Circle cx="2" cy="2" r="1.5" fill="none"></Circle>
+                </G>
+                <G
+                    fill="#556080"
+                    stroke="#556080"
+                    strokeWidth="1"
+                    data-name="Ellipse 49"
+                    transform="translate(266 167)"
+                >
+                    <Circle cx="2" cy="2" r="2" stroke="none"></Circle>
+                    <Circle cx="2" cy="2" r="1.5" fill="none"></Circle>
+                </G>
+                <Path
+                    fill="none"
+                    stroke="#556080"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M242.989 122.814s7.54-1.746 10.552 4.391 5.218 6.729 5.218 6.729-22.191 4.157-18.331-9.054c5.487 3.615 8.543 5.19 8.543 5.19s-9.46-6.035-11.062-8.18"
+                    data-name="Path 338"
+                ></Path>
+            </G>
+        </Svg>
+    },
+    {
+        name: 'دامداری',
+        svg: <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="70.101"
+            height="57.463"
+            viewBox="0 0 70.101 57.463"
+        >
+            <G transform="translate(-106.949 -122.799)">
+                <G fill="#fff">
+                    <Path
+                        d="M10.528 51.021a51.336 51.336 0 01-5.256-6.997C3.561 41.286 2.198 38.52 1.223 35.8c-1.209-3.37-1.822-6.676-1.822-9.824 0-6.402 5.127-17.318 5.179-17.427l.124-.263-.036-.288c-.004-.038-.45-3.963 1.605-6.282C7.297.563 8.818-.023 10.795-.023c2.28 0 4.02.654 5.171 1.943 2.08 2.329 1.684 6.05 1.68 6.087l-.031.272.112.252c.048.108 4.835 10.869 4.835 17.446 0 3.148-.664 6.454-1.974 9.827-1.056 2.722-2.532 5.491-4.385 8.231a51.789 51.789 0 01-5.675 6.986z"
+                        transform="translate(131 127.807)"
+                    ></Path>
+                    <Path
+                        fill="#556080"
+                        d="M10.795.978c-1.699 0-2.931.457-3.768 1.397-1.454 1.633-1.48 4.521-1.366 5.503l.075.566-.252.533a81.763 81.763 0 00-2.566 6.243C1.272 19.748.401 23.468.401 25.977c0 3.024.59 6.207 1.754 9.46.947 2.647 2.272 5.343 3.94 8.015a51.115 51.115 0 004.462 6.087c3.26-3.518 11.005-12.992 11.005-23.562 0-6.36-4.7-16.931-4.748-17.037l-.226-.504.065-.548c.004-.033.335-3.313-1.427-5.295-.966-1.087-2.415-1.615-4.43-1.615m0-2c8.922 0 7.843 9.144 7.843 9.144s4.923 10.983 4.923 17.855c0 14.346-13.062 26.478-13.062 26.478S-1.599 40.323-1.599 25.977c0-6.7 5.275-17.855 5.275-17.855s-1.137-9.144 7.12-9.144z"
+                        transform="translate(131 127.807)"
+                    ></Path>
+                </G>
+                <G fill="none" stroke="#556080" strokeLinecap="round" strokeWidth="2">
+                    <Path
+                        d="M9 0L0 0"
+                        data-name="Line 33"
+                        transform="translate(137.5 153.5)"
+                    ></Path>
+                    <Path
+                        d="M19 0L0 0"
+                        data-name="Line 34"
+                        transform="translate(132.5 162.5)"
+                    ></Path>
+                    <Path
+                        d="M11 0L0 0"
+                        data-name="Line 35"
+                        transform="translate(136.5 170.5)"
+                        G            ></Path>
+                </G>
+                <G fill="none" stroke="#556080" strokeLinecap="round" strokeWidth="1.2">
+                    <Path
+                        d="M142.157 126.99s.01-4.575 7.88-3.394"
+                        data-name="Path 342"
+                    ></Path>
+                    <Path
+                        d="M142.037 126.99s-.01-4.575-7.88-3.394"
+                        data-name="Path 343"
+                    ></Path>
+                </G>
+                <G fill="#fff">
+                    <G data-name="Path 340">
+                        <Path
+                            d="M9.492 35.833c-1.035 0-2.371-.453-3.666-1.244-1.526-.932-2.903-2.26-3.981-3.837C.415 28.66-.437 26.24-.686 23.557c-.298-3.199.28-6.69 1.716-10.38l.004-.01.004-.01.083-.223C3.24 7.134 7.91 2.42 9.71.752c2.176 2.546 9.098 11.068 10.06 17.463l.008.056.015.054c1.67 6.219-.157 10.365-1.985 12.747a13.112 13.112 0 01-4.24 3.587c-1.41.746-2.896 1.174-4.077 1.174z"
+                            transform="rotate(-45.97 236.915 -88.17)"
+                        ></Path>
+                        <Path
+                            fill="#556080"
+                            d="M9.632 2.209C7.576 4.229 3.86 8.35 2.062 13.272l-.002.005-.002.004-.08.217-.008.021-.008.022C.582 17.083.026 20.42.309 23.464c.234 2.512 1.029 4.774 2.361 6.723 2.314 3.385 5.412 4.646 6.822 4.646 1.023 0 2.338-.385 3.609-1.058a12.105 12.105 0 003.915-3.311c1.69-2.204 3.377-6.055 1.812-11.88l-.03-.109-.016-.112c-.442-2.94-2.365-6.903-5.56-11.46a74.54 74.54 0 00-3.59-4.694m.17-2.876s9.761 10.775 10.958 18.733c3.35 12.473-6.298 18.767-11.268 18.767-4.971 0-15.522-8.29-9.393-24.018l.084-.229C2.948 5.02 9.801-.667 9.801-.667z"
+                            transform="rotate(-45.97 236.915 -88.17)"
+                        ></Path>
+                    </G>
+                    <G data-name="Path 341">
+                        <Path
+                            d="M11.474 36.082a39.396 39.396 0 01-2.954-3.057c-1.814-2.09-4.264-5.37-5.635-9.121a98.48 98.48 0 01-.085-.228l-.003-.01-.004-.01c-1.437-3.689-2.015-7.181-1.717-10.38.25-2.683 1.102-5.103 2.531-7.194C4.686 4.504 6.063 3.177 7.59 2.244 8.883 1.454 10.22 1 11.254 1c1.181 0 2.667.428 4.077 1.174a13.112 13.112 0 014.241 3.587c1.827 2.383 3.655 6.528 1.985 12.747l-.015.055-.008.056c-.963 6.4-7.885 14.919-10.06 17.463z"
+                            transform="rotate(-134.03 97.659 59.05)"
+                        ></Path>
+                        <Path
+                            fill="#556080"
+                            d="M11.397 34.623a74.506 74.506 0 003.56-4.655c3.212-4.573 5.144-8.55 5.588-11.498l.017-.112.029-.11c1.564-5.824-.122-9.674-1.812-11.879a12.105 12.105 0 00-3.915-3.311C13.594 2.386 12.278 2 11.254 2c-1.41 0-4.508 1.261-6.821 4.646-1.333 1.95-2.127 4.211-2.361 6.723-.284 3.043.273 6.381 1.653 9.923l.008.022.007.02.081.218.002.004.001.005c1.792 4.902 5.514 9.035 7.573 11.062m.167 2.877S4.71 31.813 1.946 24.247l-.085-.229C-4.267 8.29 6.284 0 11.254 0c4.97 0 14.619 6.294 11.269 18.767C21.326 26.725 11.564 37.5 11.564 37.5z"
+                            transform="rotate(-134.03 97.659 59.05)"
+                        ></Path>
+                    </G>
+                </G>
+            </G>
+        </Svg>
+    },
 ];
 
 class SelectCategory extends Component {
