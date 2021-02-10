@@ -50,7 +50,7 @@ class ChatModal extends Component {
             let ids = JSON.parse(result);
             // const isGuidDisappeard = JSON.parse(result[1][1]);
             if (!ids || ids.length == 0) {
-                this.setState({ showGuid: true })
+                this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
             }
             else {
                 if (this.props.contact && this.props.contact.contact_id &&
@@ -66,7 +66,7 @@ class ChatModal extends Component {
                         // AsyncStorage.setItem('@isGuidDisappeard', JSON.stringify(true))
                     }
                     else {
-                        this.setState({ showGuid: true })
+                        this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
                     }
                 }
             }
