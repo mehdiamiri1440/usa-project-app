@@ -45,17 +45,34 @@ class ChatModal extends Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
-        this.checkForShowingCommentsGuid().then(_ => {
-            AsyncStorage.multiGet(['@openedChatIds', '@isGuidShown']).then(result => {
-                let ids = JSON.parse(result[0][1]);
-                const isGuidShown = JSON.parse(result[1][1]);
-                if (ids && ids.length && ids.length >= 2 && isGuidShown != true) {
-                    this.setState({ showGuid: true });
-                    AsyncStorage.removeItem('@openChatIds');
-                    AsyncStorage.setItem('@isGuidShown', JSON.stringify(true))
+
+        AsyncStorage.getItem('@openedChatIds').then(result => {
+            let ids = JSON.parse(result);
+            // const isGuidDisappeard = JSON.parse(result[1][1]);
+            if (!ids || ids.length == 0) {
+                this.setState({ showGuid: true })
+            }
+            else {
+                if (this.props.contact && this.props.contact.contact_id &&
+                    ids.some(item => item == this.props.contact.contact_id)
+                ) {
+                    this.setState({ showGuid: false })
                 }
-            });
+                else {
+                    if (ids && ids.length && ids.length >= 20) {
+                        this.setState({
+                            showGuid: false
+                        });
+                        // AsyncStorage.setItem('@isGuidDisappeard', JSON.stringify(true))
+                    }
+                    else {
+                        this.setState({ showGuid: true })
+                    }
+                }
+            }
+            this.checkForShowingCommentsGuid(ids, this.props.contact);
         });
+
         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
         // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
         //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
@@ -112,33 +129,26 @@ class ChatModal extends Component {
 
 
     componentWillUnmount() {
-
+        // AsyncStorage.removeItem('@openedChatIds');
+        // AsyncStorage.removeItem('@isGuidDisappeard');
     }
 
-    checkForShowingCommentsGuid = _ => {
-        return new Promise((resolve) => {
-            const {
-                contact = {}
-            } = this.props;
-            if (contact && contact.contact_id) {
-                AsyncStorage.getItem('@openedChatIds').then(result => {
-                    result = JSON.parse(result);
-                    if (result && result.length) {
-                        const foundIndex = result.findIndex(item => item == contact.contact_id);
-                        if (foundIndex < 0) {
-                            result.push(contact.contact_id)
-                            result = [...(new Set(result))]
-                        }
-                    }
-                    else {
-                        result = [];
-                        result.push(contact.contact_id)
-                        result = [...(new Set(result))]
-                    }
-                    AsyncStorage.setItem('@openedChatIds', JSON.stringify(result)).then(_ => resolve(result));
-                });
+    checkForShowingCommentsGuid = (result, contact) => {
+        if (contact && contact.contact_id) {
+            if (result && result.length) {
+                const foundIndex = result.findIndex(item => item == contact.contact_id);
+                if (foundIndex < 0) {
+                    result.push(contact.contact_id)
+                    result = [...(new Set(result))]
+                }
             }
-        });
+            else {
+                result = [];
+                result.push(contact.contact_id)
+                result = [...(new Set(result))]
+            }
+            AsyncStorage.setItem('@openedChatIds', JSON.stringify(result));
+        }
     }
 
 

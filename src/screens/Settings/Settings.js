@@ -29,12 +29,10 @@ class Settings extends React.Component {
         if (name == 'SignOut') {
             this.setState({ loading: true })
             AsyncStorage.removeItem('@openedChatIds').then(_ => {
-                AsyncStorage.removeItem('@isGuidShown').then(_ => {
-                    messaging()
-                        .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
-                            this.props.logOut();
-                        })
-                })
+                messaging()
+                    .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
+                        this.props.logOut();
+                    })
             })
         }
         else {
