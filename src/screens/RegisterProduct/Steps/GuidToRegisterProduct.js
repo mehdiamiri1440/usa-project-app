@@ -110,15 +110,10 @@ class GuidToRegisterProduct extends React.Component {
 
         return (
             <>
-
-
-
-
-                < Portal
+                <Portal
                     style={{
                         padding: 0,
                         margin: 0
-
                     }}>
                     <Dialog
                         visible={showModal}

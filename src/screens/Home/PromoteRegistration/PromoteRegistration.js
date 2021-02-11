@@ -62,7 +62,9 @@ class PromoteRegistration extends React.Component {
     render() {
 
         let {
-            dashboard
+            dashboard,
+            isUsedAsComponent = false,
+            showBothPackages = true,
         } = this.props;
 
         let {
@@ -322,7 +324,7 @@ class PromoteRegistration extends React.Component {
                 />
 
 
-                <View style={{
+                {!isUsedAsComponent ? <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row',
                     alignContent: 'center',
@@ -348,7 +350,7 @@ class PromoteRegistration extends React.Component {
                             {locales('labels.promoteRegistration')}
                         </Text>
                     </View>
-                </View>
+                </View> : null}
 
                 <ScrollView
                     ref={this.wrapperRef}
@@ -796,11 +798,24 @@ class PromoteRegistration extends React.Component {
                                 </View>
 
 
-                                {activePackageType == 3 ? <Text style={{
-                                    color: '#00C569', fontSize: 20,
-                                    width: '100%', textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>{locales('labels.inUse')}</Text>
+                                {activePackageType == 3 ? <View
+                                    style={{
+                                        backgroundColor: '#f6f6f6',
+                                        width: deviceWidth * 0.45,
+                                        padding: 10,
+                                        alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        margin: 10,
+                                        borderRadius: 5
+                                    }}
+                                >
+                                    <Text style={{
+                                        color: '#000', fontSize: 20,
+                                        width: '100%', textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                    }}>{locales('labels.inUse')}</Text>
+                                </View>
                                     :
                                     <LinearGradient
                                         start={{ x: 0, y: 1 }}
@@ -821,7 +836,7 @@ class PromoteRegistration extends React.Component {
                         </View>
                     </Card>
 
-                    <Card transparent>
+                    {showBothPackages ? <Card transparent>
                         <View style={{
                             backgroundColor: '#fff',
                             overflow: 'hidden',
@@ -1000,11 +1015,24 @@ class PromoteRegistration extends React.Component {
                                     </Text>
                                 </View>
 
-                                {activePackageType == 1 ? <Text style={{
-                                    color: '#00C569', fontSize: 20,
-                                    width: '100%', textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}>{locales('labels.inUse')}</Text>
+                                {activePackageType == 1 ? <View
+                                    style={{
+                                        backgroundColor: '#f6f6f6',
+                                        width: deviceWidth * 0.45,
+                                        padding: 10,
+                                        alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        margin: 10,
+                                        borderRadius: 5
+                                    }}
+                                >
+                                    <Text style={{
+                                        color: '#000', fontSize: 20,
+                                        width: '100%', textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                    }}>{locales('labels.inUse')}</Text>
+                                </View>
                                     :
                                     <Button
                                         style={[styles.loginButton, {
@@ -1022,13 +1050,14 @@ class PromoteRegistration extends React.Component {
                             </View>
                         </View>
                     </Card>
-
+                        : null}
                     <View
                         style={{
                             width: deviceWidth * 0.96,
                             alignSelf: 'center',
                             elevation: 5,
-                            marginBottom: 10
+                            marginBottom: 20,
+                            marginTop: !showBothPackages ? 20 : 0
                         }}
                     >
                         <View style={{

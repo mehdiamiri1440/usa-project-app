@@ -10,7 +10,8 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
-import { formatter } from '../../../utils'
+import { formatter } from '../../../utils';
+import PromoteRegistration from './PromoteRegistration';
 
 class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
@@ -146,7 +147,6 @@ class ExtraBuyAdCapacity extends React.Component {
                     }
                     style={{
                         paddingVertical: 30,
-                        paddingHorizontal: 15
                     }}
                 >
 
@@ -408,7 +408,7 @@ class ExtraBuyAdCapacity extends React.Component {
                             </View>
                         </Card>
 
-
+                        <PromoteRegistration isUsedAsComponent={true} showBothPackages={false} {...this.props} />
                     </View>
                 </ScrollView>
             </>

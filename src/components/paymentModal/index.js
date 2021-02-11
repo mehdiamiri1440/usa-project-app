@@ -10,6 +10,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as homeActions from '../../redux/home/actions';
+import PromoteRegistration from '../../screens/Home/PromoteRegistration/PromoteRegistration';
 
 
 const PaymentModal = props => {
@@ -97,8 +98,8 @@ const PaymentModal = props => {
                     </Text>
                 </View>
             </View>
-
-            <ScrollView
+            <PromoteRegistration isUsedAsComponent showBothPackages {...props} />
+            {/* <ScrollView
                 contentContainerStyle={{ backgroundColor: '#F6F6F6' }}
                 ref={wrapperRef}
                 style={{
@@ -269,7 +270,7 @@ const PaymentModal = props => {
                                     color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
                                     textAlignVertical: 'center'
                                 }}>
-                                    689,000
+                                    979,000
                                     </Text>
                                 <Text style={{
                                     color: '#666666', fontSize: 16,
@@ -435,7 +436,7 @@ const PaymentModal = props => {
                                     color: '#00C569', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 22, textAlign: 'center',
                                     textAlignVertical: 'center'
                                 }}>
-                                    249,000
+                                    297,000
                                     </Text>
                                 <Text style={{
                                     color: '#666666', fontSize: 16,
@@ -521,6 +522,7 @@ const PaymentModal = props => {
                 </Card>
 
             </ScrollView>
+    */}
         </Modal>
     )
 }
