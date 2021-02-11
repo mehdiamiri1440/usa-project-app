@@ -63,7 +63,6 @@ class UserActivity extends React.Component {
         }
 
         if (isActivityTypeValid && isActivityZoneValid) {
-
             this.props.setActivityZoneAndType(selectedCategoryId, activityType, false);
         }
         else {

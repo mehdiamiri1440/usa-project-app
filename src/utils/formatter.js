@@ -80,6 +80,17 @@ export const convertUnitsToText = (number) => {
     return numberWithCommas(text);
   }
 }
+
+export const makeRandomString = (length) => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 validateRegx = (input, regx) => {
   return regx.test(input);
 }

@@ -13,7 +13,7 @@ import UserActivity from './Steps/userActivity';
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { deviceHeight, deviceWidth } from '../../utils';
+import { deviceHeight, deviceWidth, formatter } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
@@ -105,7 +105,7 @@ class SignUp extends React.Component {
     };
 
     setActivityZoneAndType = (activityZone, activityType, fromBack) => {
-        this.setState({ activityZone, activityType }, () => { if (!fromBack) this.submitRegister() });
+        this.setState({ activityZone, activityType, password: formatter.makeRandomString(8) }, () => { if (!fromBack) this.submitRegister() });
     };
 
     submitRegister = () => {
@@ -115,7 +115,7 @@ class SignUp extends React.Component {
             lastName,
             gender,
             userName,
-            password,
+            password = '',
             activityZone,
             activityType,
             city,

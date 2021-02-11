@@ -70,8 +70,8 @@ const CategoriesIcons = [
         name: 'خشکبار',
         svg: <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width="92.359"
-            height="94.212"
+            width="45.32"
+            height="35.469"
             viewBox="0 0 92.359 94.212"
         >
             <G stroke="#556080" transform="translate(-68.24 -3.479)">
@@ -168,11 +168,11 @@ const CategoriesIcons = [
         </Svg>
     },
     {
-        name: 'ادویه‌جات',
+        name: 'ادویه',
         svg: <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width="73.294"
-            height="75.163"
+            width="40.32"
+            height="30.469"
             viewBox="0 0 73.294 75.163"
         >
             <G transform="translate(-223.566 -106.837)">
@@ -300,11 +300,11 @@ const CategoriesIcons = [
         </Svg>
     },
     {
-        name: 'دامداری',
+        name: 'دامپروری',
         svg: <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width="70.101"
-            height="57.463"
+            width="40.32"
+            height="30.469"
             viewBox="0 0 70.101 57.463"
         >
             <G transform="translate(-106.949 -122.799)">
@@ -676,6 +676,7 @@ class SelectCategory extends Component {
                     <Text style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: '#555',
+                        marginTop: 5,
                         fontSize: 20,
                     }}>{locales('labels.selectedProductCategory')}</Text>
                 </View> : null}
