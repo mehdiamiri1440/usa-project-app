@@ -399,23 +399,21 @@ class PromoteRegistration extends React.Component {
                                     marginVertical: 10,
                                     borderBottomWidth: 1,
                                     borderBottomColor: '#F2F2F2',
-                                    alignItems: 'center',
                                     justifyContent: 'space-around',
                                 }}
                             >
                                 <View
-                                    style={{}}
                                 >
                                     <FontAwesome5
                                         name='frown-open'
-                                        size={56}
-                                        style={{ paddingRight: 15 }}
+                                        size={48}
+                                        style={{ paddingRight: 7, paddingTop: 15 }}
                                         color='#E41C38'
                                         solid
                                     />
                                 </View>
                                 <View
-                                    style={{ marginRight: 20, marginLeft: 13 }}
+                                    style={{ marginRight: 20, marginLeft: 13, maxWidth: '85%' }}
                                 >
 
                                     <Text style={{
@@ -448,7 +446,7 @@ class PromoteRegistration extends React.Component {
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 18
                                             }}>
-                                            {` ${locales('titles.promoteDescriptionTextThird')} `}
+                                            {`${locales('titles.promoteDescriptionTextThird')}`}
                                         </Text>
                                         <Text style={{
                                             color: '#707070',
@@ -465,7 +463,6 @@ class PromoteRegistration extends React.Component {
                                     flexDirection: 'row-reverse',
                                     alignSelf: 'center',
                                     marginVertical: 10,
-                                    alignItems: 'center',
                                     justifyContent: 'space-around',
                                 }}
                             >
@@ -474,14 +471,14 @@ class PromoteRegistration extends React.Component {
                                 >
                                     <FontAwesome5
                                         name='grin'
-                                        size={56}
-                                        style={{ paddingRight: 15 }}
+                                        size={48}
+                                        style={{ paddingRight: 7, paddingTop: 15 }}
                                         color='#00C569'
                                         solid
                                     />
                                 </View>
                                 <View
-                                    style={{ marginRight: 20, marginLeft: 13 }}
+                                    style={{ marginRight: 20, marginLeft: 13, maxWidth: '85%' }}
                                 >
 
                                     <Text style={{
@@ -506,7 +503,7 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
                                         }}>
-                                            {` ${locales('titles.buskoolMarket')} `}
+                                            {` ${locales('titles.buskoolMarket')}`}
                                         </Text>
                                         <Text
                                             style={{
@@ -514,7 +511,7 @@ class PromoteRegistration extends React.Component {
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 18
                                             }}>
-                                            {` ${locales('titles.promoteDescriptionTextFifth')} `}
+                                            {`${locales('titles.promoteDescriptionTextFifth')}`}
                                         </Text>
                                         <Text style={{
                                             color: '#707070',

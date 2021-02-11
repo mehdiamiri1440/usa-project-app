@@ -547,7 +547,7 @@ class ChatModal extends Component {
                             shadowOffset: { width: 20, height: 20 },
                             shadowColor: 'black',
                             shadowOpacity: 1.0,
-                            elevation: 5,
+                            elevation: showGuid ? 0 : 5,
                             borderColor: 'black',
                             backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                         }}

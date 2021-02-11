@@ -87,11 +87,14 @@ const Rating = props => {
 
 
     const submitRating = _ => {
-        const rateObj = {
+        let rateObj = {
             user_id: userId,
-            text: description,
             rating_score: selectedStar.number
         }
+
+        if (description && description.length)
+            rateObj.text = description;
+
         props.submitRating(rateObj).then(_ => {
             setShowModal(true);
         })
