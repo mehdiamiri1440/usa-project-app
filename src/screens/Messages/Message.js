@@ -46,6 +46,19 @@ const Message = props => {
     const showDate = _ => {
 
         let text = '';
+
+        if (!item.created_at)
+            item.created_at = moment(new Date()).format('YYYY-MM-DD HH:mm');
+
+        if (!prevMessage.created_at)
+            prevMessage.created_at = moment(new Date()).format('YYYY-MM-DD HH:mm');
+
+
+        if (!prevMessage.created_at || !item.created_at || typeof item.created_at !== 'string'
+            || typeof prevMessage.created_at !== 'string' ||
+            !item.created_at.length || !prevMessage.created_at.length)
+            return text;
+
         const currentMessageDate = item.created_at.split('-')[2].split(' ')[0];
         const prevMessageDay = prevMessage.created_at.split('-')[2].split(' ')[0];
         // const prevMessageMonth = prevMessage.created_at.split('-')[1];

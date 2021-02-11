@@ -192,7 +192,7 @@ class ChatModal extends Component {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(this.props.contact.contact_id),
             text: formatter.toStandard(messageText),
-            created_at: moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
+            created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
         }
 
         if (messageText && messageText.length && messageText.trim()) {
