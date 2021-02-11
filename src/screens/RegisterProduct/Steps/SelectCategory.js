@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import Svg, { Path, G, Circle } from "react-native-svg"
+import Svg, { Path, G, Circle } from "react-native-svg";
 import { Button, Input, Label, InputGroup } from 'native-base';
 
 import { deviceWidth, validator } from '../../../utils';
