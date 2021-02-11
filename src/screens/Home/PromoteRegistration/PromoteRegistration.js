@@ -368,7 +368,7 @@ class PromoteRegistration extends React.Component {
                     }}
                 >
 
-                    <View
+                    {!isUsedAsComponent ? <View
                         style={{
                             width: deviceWidth * 0.96,
                             alignSelf: 'center',
@@ -537,6 +537,7 @@ class PromoteRegistration extends React.Component {
                             </Text>
                         </View>
                     </View>
+                        : null}
 
                     <Card transparent>
                         <View style={{
@@ -1060,7 +1061,7 @@ class PromoteRegistration extends React.Component {
                             marginTop: !showBothPackages ? 20 : 0
                         }}
                     >
-                        <View style={{
+                        {!isUsedAsComponent ? <View style={{
                             backgroundColor: '#fff',
                             overflow: 'hidden',
                             borderRadius: 5,
@@ -1120,6 +1121,7 @@ class PromoteRegistration extends React.Component {
                                 </View>
                             </View>
                         </View>
+                            : null}
                     </View>
 
                 </ScrollView>
