@@ -23,6 +23,7 @@ const Rating = props => {
         rateSubmissionLoading,
 
         userName = '',
+        fullName = locales('labels.thisUser')
     } = props;
 
     const descriptionRef = useRef();
@@ -252,6 +253,25 @@ const Rating = props => {
                                 }}
                                 >
                                     {locales('titles.putyourCommentHere')}
+                                    <Text
+                                        style={{
+                                            fontSize: 17,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            color: '#00C886'
+                                        }}
+                                    >
+                                        {` ${fullName} `}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+
+                                            color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                        }}
+                                    >
+                                        {locales('titles.writeHere')}
+                                    </Text>
                                 </Label>
                                 <InputGroup
                                     regular
