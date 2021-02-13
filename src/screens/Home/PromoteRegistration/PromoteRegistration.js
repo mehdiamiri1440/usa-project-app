@@ -436,7 +436,7 @@ class PromoteRegistration extends React.Component {
                                             {locales('titles.promoteDescriptionTextFirst')}
                                         </Text>
                                         <Text style={{
-                                            color: '#313A43',
+                                            color: '#E41C38',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
                                         }}>
@@ -444,19 +444,20 @@ class PromoteRegistration extends React.Component {
                                         </Text>
                                         <Text
                                             style={{
-                                                color: '#E41C38',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18
+                                                width: '100%',
+                                                fontSize: 16,
+                                                color: '#707070',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             }}>
                                             {`${locales('titles.promoteDescriptionTextThird')}`}
                                         </Text>
-                                        <Text style={{
+                                        {/* <Text style={{
                                             color: '#707070',
                                             fontSize: 16,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                         }}>
                                             {` ${locales('titles.extraBuyAdRequestDescriptionTextThird')} `}
-                                        </Text>
+                                        </Text> */}
                                     </Text>
                                 </View>
                             </View>
@@ -498,22 +499,14 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
 
                                         }}>
-                                            {locales('titles.promoteDescriptionTextFirst')}
+                                            {locales('titles.promoteDescriptionTextFifth')}
                                         </Text>
                                         <Text style={{
-                                            color: '#313A43',
+                                            color: '#00C569',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
                                         }}>
-                                            {` ${locales('titles.buskoolMarket')}`}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: '#00C569',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18
-                                            }}>
-                                            {`${locales('titles.promoteDescriptionTextFifth')}`}
+                                            {` ${locales('titles.realBuyer')}`}
                                         </Text>
                                         <Text style={{
                                             color: '#707070',
@@ -521,6 +514,20 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                         }}>
                                             {` ${locales('titles.extraBuyAdRequestDescriptionTextThird')} `}
+                                        </Text>
+                                        <Text style={{
+                                            color: '#313A43',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 18
+                                        }}>
+                                            {`${locales('titles.buskoolSpecialSellers')}`}
+                                        </Text>
+                                        <Text style={{
+                                            color: '#707070',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}>
+                                            {` ${locales('titles.join')} `}
                                         </Text>
                                     </Text>
                                 </View>
@@ -588,7 +595,7 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}>
-                                {locales('titles.monthly')} : <Text
+                                {locales('titles.monthly')} <Text
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -870,7 +877,7 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}>
-                                {locales('titles.monthly')} : <Text
+                                {locales('titles.monthly')} <Text
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',

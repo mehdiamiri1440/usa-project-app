@@ -482,19 +482,23 @@ class ChatModal extends Component {
                         }}
                         style={{
                             paddingHorizontal: 10,
-                            width: deviceWidth * 0.53,
+                            width: deviceWidth * 0.6,
                             alignItems: 'flex-end',
                         }}>
                         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 18, marginHorizontal: 5, maxWidth: '55%',
-                                }}
+                            <View
+                                style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '96%' }}
                             >
-                                {`${firstName} ${lastName}`}
-                            </Text>
-                            {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 18, marginHorizontal: 5
+                                    }}
+                                >
+                                    {`${firstName} ${lastName}`}
+                                </Text>
+                                {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
+                            </View>
                             {!showGuid ? <>
                                 <Text
                                     style={{
@@ -507,12 +511,12 @@ class ChatModal extends Component {
                                 >
                                     {locales('labels.usersComment')}
                                 </Text>
-                                <FontAwesome5
+                                {/* <FontAwesome5
                                     style={{ marginTop: 5 }}
                                     size={13}
                                     name='arrow-left'
                                     color='#21AD93'
-                                />
+                                /> */}
                             </> : null}
                         </View>
                     </TouchableOpacity>
