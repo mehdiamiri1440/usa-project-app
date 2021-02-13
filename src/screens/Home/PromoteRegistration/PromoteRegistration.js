@@ -560,6 +560,19 @@ class PromoteRegistration extends React.Component {
                                 end={{ x: 0.8, y: 0.2 }}
                                 colors={['#00C569', '#21AD93']}
                             > */}
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    fontSize: 17,
+                                    padding: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    backgroundColor: '#21AD93'
+                                }}
+                            >
+                                {locales('titles.suggesstionForYou')}
+                            </Text>
                             <Text style={{
                                 fontSize: 18,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',

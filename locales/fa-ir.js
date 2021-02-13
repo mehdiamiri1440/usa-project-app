@@ -435,6 +435,7 @@ export default {
     'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
     'titles.promoteDescriptionTitle': 'چرا ارتقا عضویت؟',
     'titles.didYouKnow': 'آیا می‌دانستید',
+    'titles.suggesstionForYou': 'پیشنهادی به شما',
     'titles.promoteDescriptionTextFirst': 'شما سالانه',
     'titles.promoteDescriptionTextSecend': '10 ها میلیون تومان پول',
     'titles.oneMonthFree': 'یک ماه رایگان',
