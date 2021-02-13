@@ -551,7 +551,7 @@ class PromoteRegistration extends React.Component {
                             backgroundColor: '#fff',
                             overflow: 'hidden',
                             borderRadius: 5,
-                            borderWidth: 1,
+                            borderWidth: 2,
                             borderColor: '#21AD93',
                             elevation: 2
                         }}>
