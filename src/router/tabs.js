@@ -29,7 +29,8 @@ import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCa
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
-import MyRequests from '../screens/Home/MyRequests'
+import MyRequests from '../screens/Home/MyRequests';
+import Channel from '../screens/Messages/Channel';
 
 
 const Stack = createStackNavigator();
@@ -331,6 +332,15 @@ export const MessagesStack = _ => (
             })}
             name={`Profile`}
             component={Profile}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`Channel`}
+            component={Channel}
         />
     </Stack.Navigator>
 )
