@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
-
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
