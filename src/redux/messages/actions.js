@@ -121,6 +121,29 @@ export const fetchTotalUnreadMessages = () => {
 };
 
 
+export const fetchChannelData = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .fetchChannelData()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_CHANNEL_DATA_FAILED,
+                        reject: actionTypes.FETCH_CHANNEL_DATA_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_CHANNEL_DATA_LOADING);
+    const success = res => action(actionTypes.FETCH_CHANNEL_DATA_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
 export const newMessageReceived = (message) => {
     return dispatch => dispatch(action(actionTypes.NEW_MESSAGE_RECEIVED, message));
 };

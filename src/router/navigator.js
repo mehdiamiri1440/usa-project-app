@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 
@@ -45,10 +45,16 @@ const routes = props => {
     is_seller = is_seller == 0 ? false : true;
 
     const Stack = createStackNavigator();
-    const Tab = createMaterialBottomTabNavigator();
+    const Tab = createBottomTabNavigator();
 
     const linking = {
         prefixes: ['buskool://Home'],
+    };
+
+
+    const isTabBarVisible = route => {
+        const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+        return routeName != 'Channel';
     };
 
     return (
@@ -95,10 +101,16 @@ const routes = props => {
                     <Tab.Navigator
                         initialRouteName={initialRoute}
                         shifting={false}
-                        activeColor="#00C569"
-                        inactiveColor="#FFFFFF"
-                        barStyle={{ backgroundColor: '#313A43' }
-                        }
+                        // activeColor="#00C569"
+                        // inactiveColor="#FFFFFF"
+                        // barStyle={{ backgroundColor: '#313A43' }}
+                        tabBarOptions={{
+                            style: {
+                                backgroundColor: '#313A43',
+                            },
+                            activeTintColor: "#00C569",
+                            inactiveTintColor: '#FFFFFF'
+                        }}
                     >
 
 
@@ -111,8 +123,8 @@ const routes = props => {
                                 }
                             }}
                             options={{
-                                tabBarBadge: false,
-                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
+                                tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.home')}</Text>,
+
                                 tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
 
                             }}
@@ -123,8 +135,7 @@ const routes = props => {
                         {is_seller ? <Tab.Screen
                             key={'Requests'}
                             options={{
-                                tabBarBadge: false,
-                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
+                                tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.requests')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                             }}
                             name={'Requests'}
@@ -139,8 +150,7 @@ const routes = props => {
                             <Tab.Screen
                                 key={'SpecialProducts'}
                                 options={{
-                                    tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.suggested')}</Text>,
+                                    tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.suggested')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
                                 name={'SpecialProducts'}
@@ -168,18 +178,26 @@ const routes = props => {
                                         global.resetRegisterProduct(true)
                                 },
                             }}
-                            options={{
-                                tabBarBadge: false,
-                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerProduct')}</Text>,
+                            options={({ route }) => ({
+                                tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.registerProduct')}</Text>,
                                 tabBarIcon: ({ focused, color }) => <View
                                     style={{
-                                        backgroundColor: color, height: 30, width: 30,
-                                        top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
+                                        backgroundColor: '#00C569',
+                                        borderRadius: 10,
+                                        top: isTabBarVisible(route) ? -18 : 100,
+                                        width: 45,
+                                        height: 45,
+                                        position: 'absolute',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                     }}
                                 >
-                                    <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                    <FontAwesome5 size={25} name='plus'
+                                        solid
+                                        color={'#FFF'}
+                                    />
                                 </View>,
-                            }}
+                            })}
                             name={'RegisterProductStack'}
                             component={RegisterProductStack}
                         />
@@ -194,15 +212,8 @@ const routes = props => {
                                     },
                                 }}
                                 options={{
-                                    tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerRequest')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <View style={{
-                                        backgroundColor: color, height: 30,
-                                        width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
-                                    }}
-                                    >
-                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
-                                    </View>,
+                                    tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.registerRequest')}</Text>,
+                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={25} name='plus' solid color={color} />
                                 }}
                                 name={'RegisterRequest'}
                                 component={RegisterRequestStack}
@@ -220,11 +231,16 @@ const routes = props => {
                                     return navigationRef.current.navigate('Messages');
                                 },
                             }}
-                            options={{
-                                tabBarBadge: newMessage > 0 ? newMessage : false,
-                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.messages')}</Text>,
+                            options={({ route }) => ({
+                                tabBarBadge: newMessage > 0 ? newMessage : undefined,
+                                tabBarBadgeStyle: { maxWidth: 7, maxHeight: 7, borderRadius: 5 },
+                                tabBarLabel: ({ _, color }) => <Text
+                                    style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>
+                                    {locales('labels.messages')}
+                                </Text>,
                                 tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
-                            }}
+                                tabBarVisible: isTabBarVisible(route)
+                            })}
                             name='Messages'
                             component={MessagesStack}
                         />
@@ -238,8 +254,7 @@ const routes = props => {
                             }}
                             key={'MyBuskool'}
                             options={{
-                                tabBarBadge: false,
-                                tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.myBuskool')}</Text>,
+                                tabBarLabel: ({ _, color }) => <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium", color }}>{locales('labels.myBuskool')}</Text>,
                                 tabBarIcon: ({ focused, color }) => (
                                     <Image
                                         style={{

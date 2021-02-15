@@ -27,11 +27,11 @@ const INITIAL_STATE = {
     userProfilePhotoMessage: null,
 
 
-    totalUnreadMessagesLoading: false,
-    totalUnreadMessagesFailed: false,
-    totalUnreadMessagesError: false,
-    totalUnreadMessagesMessage: null,
-    totalUnreadMessages: {},
+    channelDataLoading: false,
+    channelDataFailed: false,
+    channelDataError: false,
+    channelDataMessage: null,
+    channelData: {},
 
     messageFromOutSide: false,
     newMessage: false
@@ -250,6 +250,52 @@ export default (state = INITIAL_STATE, action) => {
                 totalUnreadMessagesError: true,
                 totalUnreadMessagesMessage: null,
                 totalUnreadMessages: {},
+            };
+        };
+
+
+
+
+
+
+        case actionTypes.FETCH_CHANNEL_DATA_LOADING: {
+            return {
+                ...state,
+                channelDataLoading: true,
+                channelDataFailed: false,
+                channelDataError: false,
+                channelDataMessage: null,
+                channelData: {}
+            };
+        };
+        case actionTypes.FETCH_CHANNEL_DATA_SUCCESSFULLY: {
+            return {
+                ...state,
+                channelDataLoading: false,
+                channelDataFailed: false,
+                channelDataError: false,
+                channelDataMessage: null,
+                channelData: { ...action.payload },
+            };
+        };
+        case actionTypes.FETCH_CHANNEL_DATA_FAILED: {
+            return {
+                ...state,
+                channelDataLoading: false,
+                channelDataFailed: true,
+                channelDataError: false,
+                channelDataMessage: null,
+                channelData: {},
+            };
+        };
+        case actionTypes.FETCH_CHANNEL_DATA_REJECT: {
+            return {
+                ...state,
+                channelDataLoading: false,
+                channelDataFailed: false,
+                channelDataError: true,
+                channelDataMessage: null,
+                channelData: {},
             };
         };
 

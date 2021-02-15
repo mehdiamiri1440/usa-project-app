@@ -245,3 +245,25 @@ export const fetchTotalUnreadMessages = () => {
     });
 };
 
+
+
+export const fetchChannelData = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_total_unread_messages_for_current_user`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
