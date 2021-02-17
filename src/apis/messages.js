@@ -247,12 +247,15 @@ export const fetchTotalUnreadMessages = () => {
 
 
 
-export const fetchChannelData = () => {
+export const fetchChannelData = (page = 1) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `get_total_unread_messages_for_current_user`,
+                route: `get_channel_contents`,
                 method: 'POST',
+                data: {
+                    page
+                },
                 withAuth: false,
             })
             .then(result => {

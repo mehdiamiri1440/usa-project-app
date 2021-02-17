@@ -121,12 +121,12 @@ export const fetchTotalUnreadMessages = () => {
 };
 
 
-export const fetchChannelData = () => {
+export const fetchChannelData = (page) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.messages
-                .fetchChannelData()
+                .fetchChannelData(page)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

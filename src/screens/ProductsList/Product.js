@@ -964,7 +964,7 @@ class Product extends PureComponent {
                                         </Text>
                                     </View>
 
-                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3 }}>
+                                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3, marginTop: 10 }}>
                                         <Text style={{ textAlign: 'right', marginLeft: 9 }}>
                                             <FontAwesome5 name='box-open' size={18} color='#BEBEBE' />
                                         </Text>
