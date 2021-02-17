@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, AppState, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, AppState, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -9,6 +9,7 @@ import messaging from '@react-native-firebase/messaging';
 import { Card, CardItem, Body, Icon, InputGroup, Input, Button } from 'native-base';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as messagesActions from '../../redux/messages/actions';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
@@ -16,6 +17,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 import ChatModal from './ChatModal';
 import Contact from './Contact';
+import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 let unsubscribe;
 
@@ -175,22 +177,43 @@ class ContactsList extends Component {
     renderListHeaderComponent = _ => {
         return (
             <TouchableOpacity
-                activeOpacity={1}
-                onPress={_ => this.props.navigation.navigate('Channel')}
+                onPress={() => this.props.navigation.navigate('Channel')}
                 style={{
-                    width: deviceWidth,
-                    padding: 10,
+                    backgroundColor: 'white',
+                    flexDirection: 'row-reverse',
+                    alignContent: 'center',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    height: 65,
+                    paddingHorizontal: 15,
                     borderBottomWidth: 1,
-                    borderBottomColor: '#BEBEBE'
-                }}
-            >
-                <Text
-                    style={{
-                        textAlign: 'center'
-                    }}
-                >
-                    کانال باسکول
-                </Text>
+                    borderBottomColor: '#e5e5e5',
+                }}>
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                    <Image
+                        style={{
+                            borderRadius: 23,
+                            width: 46, height: 46
+                        }}
+                        source={require('../../../assets/icons/buskool-logo.png')}
+                    />
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            fontSize: 18, marginHorizontal: 5
+                        }}
+                    >
+                        {locales('titles.buskoolOfficialChannel')}
+                    </Text>
+                    <ValidatedUserIcon  {...this.props} />
+                </View>
+                <FontAwesome5
+                    name='bell'
+                    solid
+                    color='#AEB5BC'
+                    size={20}
+                    style={{}}
+                />
             </TouchableOpacity>
         )
     };

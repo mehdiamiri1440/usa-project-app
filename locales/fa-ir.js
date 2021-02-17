@@ -483,6 +483,8 @@ export default {
     "titles.referralShareButton": "اشتراک گذاری",
     "titles.referralToFree": " تا آزاد سازی ",
     "titles.copy": "کپی",
+    'titles.buskoolOfficialChannel': 'کانال رسمی باسکول',
+    'titles.sendToFriends': 'ارسال برای دوستان',
     'titles.total': 'مجموع',
     'titles.dosentHave': 'ندارد',
     'titles.buskoolMarket': 'بازار باسکول',
