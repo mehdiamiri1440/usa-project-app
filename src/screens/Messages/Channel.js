@@ -1,71 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, View, Text, Image, TouchableOpacity, Share } from 'react-native';
+import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator } from 'react-native';
 import { connect } from "react-redux";
-import moment from 'moment';
 import Jmoment from 'moment-jalaali';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as messagesActions from '../../redux/messages/actions';
-import { deviceHeight, deviceWidth, dataGenerator, parser } from '../../utils';
+import { deviceHeight, deviceWidth, dataGenerator, parser, formatter } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 const Channel = props => {
 
+    let onEndReachedCalledDuringMomentum = true;
+
     const ChannelContainerRef = useRef();
+    const [page, setPage] = useState(1);
+    const [contents, setContents] = useState([]);
+
 
     useEffect(_ => {
-        props.fetchChannelData();
+        props.fetchChannelData(page).then(result => {
+            setContents([...result.payload.contents])
+        });
     }, []);
 
     const {
-        channelData = {},
+        channelDataLoading
     } = props;
 
-    let {
-        messages = [
-
-            {
-                id: 9,
-                text: 'شس',
-                created_at: '2021-02-03 12:34:10'
-            },
-            {
-                id: 2,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                file_path: require('../../../assets/images/earth.png'),
-                created_at: '2021-02-05 12:34:10'
-            },
-            {
-                id: 3,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                file_path: require('../../../assets/images/earth.png'),
-                created_at: '2021-02-20 10:10:51'
-            },
-            {
-                id: 4,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                file_path: require('../../../assets/images/earth.png'),
-                created_at: '2021-02-21 17:22:11'
-            },
-            {
-                id: 5,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                created_at: '2021-02-22 17:22:11'
-            },
-            {
-                id: 6,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                created_at: '2021-02-22 17:54:39'
-            },
-            {
-                id: 7,
-                text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
-                created_at: '2021-02-22 20:12:11'
-            },
-        ]
-    } = channelData;
 
     const renderListEmptyComponent = _ => {
         return (
@@ -118,15 +82,113 @@ const Channel = props => {
         }
     };
 
+    const redirectToProduct = (product_id = '') => props.navigation.navigate('Home', { screen: 'ProductDetails', params: { productId: product_id } })
+
+    const renderMessageWithProductDesign = ({ text = '', file_path = '', product_id = '', created_at = '' }) => {
+
+        const firstText = text.split('\n')[0];
+        const secondText = text.split('\n')[1];
+
+        const firstTextFirstPart = firstText.split('|')[0];
+        const firstTextSecondPart = firstText.split('|')[1];
+
+        const secondTextNumberPart = secondText.split(' ')[2];
+
+        return (
+            <TouchableOpacity
+                onPress={_ => redirectToProduct(product_id)}
+                style={{
+                    backgroundColor: 'white',
+                    minHeight: 50,
+                    width: '70%',
+                    padding: 10,
+                    borderRadius: 6,
+                    flexDirection: 'row-reverse'
+                }}
+            >
+                <Image
+                    source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
+                    style={{
+                        resizeMode: 'cover',
+                        width: deviceWidth * 0.27,
+                        height: deviceWidth * 0.27,
+                        borderRadius: 4
+                    }}
+                />
+                <View
+                    style={{
+                        marginHorizontal: 10,
+                        justifyContent: 'space-around',
+                        alignItems: 'flex-end',
+                        maxWidth: '55%',
+                    }}
+                >
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: '#474747',
+                            fontSize: 15
+                        }}
+                    >
+                        {firstTextFirstPart} | <Text
+                            numberOfLines={1}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#777777',
+                                fontSize: 15
+                            }}
+                        >
+                            {firstTextSecondPart}
+                        </Text>
+                    </Text>
+                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3, width: '85%' }}>
+                        <Text
+                            numberOfLines={1}
+                            style={{ textAlign: 'right', marginLeft: 9 }}>
+                            <FontAwesome5 name='box-open' size={18} color='#BEBEBE' />
+                        </Text>
+                        <Text
+                            numberOfLines={1}
+                            style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
+                            {formatter.convertedNumbersToTonUnit(secondTextNumberPart)}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: '#B2B2B2',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                fontSize: 13
+                            }}
+                        >
+                            {Jmoment(created_at).format('jYYYY/jMM/jDD , HH:mm')}
+                        </Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
+    };
+
     const renderItem = ({ item, index }) => {
+
         const {
             text = '',
             file_path = '',
-            created_at = ''
+            created_at = '',
+            is_product = false,
+            is_sharable = false,
         } = item;
+
         return (
             <View>
-                {parser.showDate(messages[index], messages[index > 0 ? index - 1 : 0])}
+                {parser.showDate(contents[index], contents[index > 0 ? index - 1 : 0])}
 
                 <View
                     style={{
@@ -138,7 +200,7 @@ const Channel = props => {
                         flexDirection: 'row-reverse'
                     }}
                 >
-                    <TouchableOpacity
+                    {!!is_sharable ? <TouchableOpacity
                         onPress={forwardMessage}
                         style={{
                             backgroundColor: 'rgba(102,102,102,0.44)',
@@ -152,8 +214,9 @@ const Channel = props => {
                         }}
                     >
                         <FontAwesome5 name='share' color='white' size={20} />
-                    </TouchableOpacity>
-                    <View
+                    </TouchableOpacity> : null}
+
+                    {!is_product ? <View
                         style={{
                             backgroundColor: 'white',
                             minHeight: 50,
@@ -163,7 +226,7 @@ const Channel = props => {
                         }}
                     >
                         {file_path ? <Image
-                            source={file_path}
+                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
                             style={{
                                 maxWidth: 270,
                                 width: '100%',
@@ -216,9 +279,10 @@ const Channel = props => {
                             </Text>
                         </View>
                     </View>
+                        : renderMessageWithProductDesign(item)}
 
                 </View>
-                <TouchableOpacity
+                {!!is_sharable ? <TouchableOpacity
                     onPress={_ => forwardMessage()}
                     style={{
                         flexDirection: 'row-reverse',
@@ -242,7 +306,7 @@ const Channel = props => {
                         {locales('titles.sendToFriends')}
                     </Text>
                     <FontAwesome5 name='share' color='white' size={15} />
-                </TouchableOpacity>
+                </TouchableOpacity> : null}
             </View>
 
         )
@@ -251,7 +315,13 @@ const Channel = props => {
     const renderKeyExtractor = item => item.id.toString();
 
     const onEndReached = _ => {
-
+        if (!onEndReachedCalledDuringMomentum) {
+            let tempPage = page;
+            tempPage = tempPage + 1;
+            setPage(tempPage);
+            props.fetchChannelData(tempPage).then(result => setContents([...contents, ...result.payload.contents]));
+            onEndReachedCalledDuringMomentum = true;
+        }
     };
 
     return (
@@ -325,26 +395,48 @@ const Channel = props => {
                     height: '100%',
                 }}
             />
+
+            {channelDataLoading ? <ActivityIndicator
+                size="large"
+                color="#00C569"
+                style={{
+                    shadowOffset: { width: 20, height: 20 },
+                    shadowColor: 'black',
+                    shadowOpacity: 1.0,
+                    elevation: 5,
+                    alignSelf: 'center',
+                    borderColor: 'black',
+                    backgroundColor: 'white',
+                    width: 50,
+                    position: 'absolute',
+                    left: '44%',
+                    top: '10%',
+                    height: 50,
+                    borderRadius: 25
+
+                }}
+            /> : null}
+
             <FlatList
                 ListEmptyComponent={renderListEmptyComponent}
                 ref={ChannelContainerRef}
-                refreshing={false}
                 keyExtractor={renderKeyExtractor}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={renderListHeaderComponent}
-                inverted={!!messages && !!messages.length}
+                inverted={!!contents && !!contents.length}
                 renderItem={renderItem}
-                maxToRenderPerBatch={3}
+                onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
                 initialNumToRender={3}
                 windowSize={10}
                 onEndReached={onEndReached}
-                onEndReachedThreshold={0.5}
-                data={[...messages.reverse(), {
-                    id: 1,
-                    text: 'سلام، به کانال باسکول خوش آمدید این کانال در جهت اطلاع رسانی برای شما عزیز',
+                onEndReachedThreshold={0.1}
+                data={[...contents.reverse(), {
+                    id: dataGenerator.generateKey('channel_message'),
+                    text: 'سلام، به کانال باسکول خوش آمدید . این کانال در جهت اطلاع رسانی برای شما عزیزان می‌باشد .',
                     created_at: '2021-01-10 10:54:10'
                 }]}
             />
+
             <View
                 style={{
                     width: deviceWidth,
@@ -389,7 +481,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-        fetchChannelData: _ => dispatch(messagesActions.fetchChannelData())
+        fetchChannelData: page => dispatch(messagesActions.fetchChannelData(page))
     }
 };
 
