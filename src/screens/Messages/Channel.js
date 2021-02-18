@@ -8,12 +8,13 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as messagesActions from '../../redux/messages/actions';
-import { deviceHeight, deviceWidth, dataGenerator, parser, formatter } from '../../utils';
+import { deviceWidth, parser, formatter } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 const Channel = props => {
 
     let onEndReachedCalledDuringMomentum = true;
+    let firstLoad = true;
 
     const ChannelContainerRef = useRef();
     const [page, setPage] = useState(1);
@@ -21,36 +22,18 @@ const Channel = props => {
 
 
     useEffect(_ => {
-        props.fetchChannelData(page).then(result => {
-            setContents([...result.payload.contents])
-        });
+        if (firstLoad) {
+            props.fetchChannelData(page).then(result => {
+                setContents([...result.payload.contents])
+            });
+            firstLoad = false;
+        }
     }, []);
 
     const {
         channelDataLoading
     } = props;
 
-
-    const renderListEmptyComponent = _ => {
-        return (
-            <View
-                style={{
-                    height: deviceHeight,
-                    width: deviceWidth,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Text
-                    style={{
-                        textAlign: 'center'
-                    }}
-                >
-                    پیامی در کانال موجود نیست
-                </Text>
-            </View>
-        )
-    };
 
     const renderListHeaderComponent = _ => {
         return (
@@ -189,7 +172,6 @@ const Channel = props => {
         return (
             <View>
                 {parser.showDate(contents[index], contents[index > 0 ? index - 1 : 0])}
-
                 <View
                     style={{
                         width: deviceWidth,
@@ -319,7 +301,7 @@ const Channel = props => {
             let tempPage = page;
             tempPage = tempPage + 1;
             setPage(tempPage);
-            props.fetchChannelData(tempPage).then(result => setContents([...contents, ...result.payload.contents]));
+            props.fetchChannelData(tempPage).then(result => setContents([...result.payload.contents.reverse(), ...contents]));
             onEndReachedCalledDuringMomentum = true;
         }
     };
@@ -418,23 +400,20 @@ const Channel = props => {
             /> : null}
 
             <FlatList
-                ListEmptyComponent={renderListEmptyComponent}
                 ref={ChannelContainerRef}
                 keyExtractor={renderKeyExtractor}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={renderListHeaderComponent}
                 inverted={!!contents && !!contents.length}
                 renderItem={renderItem}
+                removeClippedSubviews
+                legacyImplementation
+                windowSize={8}
+                maxToRenderPerBatch={3}
                 onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
-                initialNumToRender={3}
-                windowSize={10}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.1}
-                data={[...contents.reverse(), {
-                    id: dataGenerator.generateKey('channel_message'),
-                    text: 'سلام، به کانال باسکول خوش آمدید . این کانال در جهت اطلاع رسانی برای شما عزیزان می‌باشد .',
-                    created_at: '2021-01-10 10:54:10'
-                }]}
+                data={[...contents.reverse()]}
             />
 
             <View
