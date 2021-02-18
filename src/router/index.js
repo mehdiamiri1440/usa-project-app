@@ -216,8 +216,8 @@ const App = (props) => {
     else {
       SplashScreen.hide();
     }
-
-    Linking.addEventListener('url', handleIncomingEvent)
+    // Linking.getInitialURL().then(url => handleIncomingEvent(undefined, url))
+    // Linking.addEventListener('url', event => handleIncomingEvent(event, undefined))
     if (I18nManager.isRTL) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
@@ -313,8 +313,16 @@ const App = (props) => {
       });
   }
 
-  const handleIncomingEvent = event => {
-    switch ((event.url).split('://')[1]) {
+  const handleIncomingEvent = (event, url) => {
+    if (!url) {
+      url = (event.url).split('://')[1].includes('www') ? (event.url).split('://')[1].split('/')[1]
+        : (event.url).split('://')[1]
+    }
+    else {
+      console.log('url', url)
+      url = url.split('/')[3]
+    }
+    switch (url) {
       case 'register-product-successfully':
         console.log('here')
         return RootNavigation.navigate('RegisterProductStack', {
@@ -350,7 +358,11 @@ const App = (props) => {
           }
           return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
         })
-      }
+      };
+      case 'public-channel':
+        return navigationRef.current.navigate('Messages', {
+          screen: 'Channel',
+        });
       default:
         break;
     }

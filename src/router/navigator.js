@@ -29,6 +29,7 @@ import {
 import { deviceWidth, deviceHeight } from '../utils';
 import * as productActions from '../redux/registerProduct/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
+import linking from './linking';
 
 let currentRoute = '';
 
@@ -47,9 +48,7 @@ const routes = props => {
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
 
-    const linking = {
-        prefixes: ['buskool://Home'],
-    };
+
 
     return (
         <NavigationContainer
