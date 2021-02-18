@@ -213,7 +213,7 @@ class ContactsList extends Component {
                     solid
                     color='#AEB5BC'
                     size={20}
-                    style={{}}
+                    style={{ marginLeft: 45 }}
                 />
             </TouchableOpacity>
         )

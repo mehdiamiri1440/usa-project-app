@@ -6,6 +6,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import * as messagesActions from '../../redux/messages/actions';
 import { deviceWidth, parser, formatter, deviceHeight } from '../../utils';
@@ -34,9 +35,13 @@ const Channel = props => {
     }, []);
 
     const {
-        channelDataLoading
+        channelDataLoading,
+        channelData = {}
     } = props;
 
+    const {
+        total_records = 3
+    } = channelData;
 
     const renderListHeaderComponent = _ => {
         return (
@@ -187,131 +192,133 @@ const Channel = props => {
         } = item;
 
         return (
-            <View>
+            <>
                 {parser.showDate(contents[index], contents[index > 0 ? index - 1 : 0])}
-                <View
-                    style={{
-                        width: deviceWidth,
-                        margin: 18,
-                        marginBottom: 8,
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        flexDirection: 'row-reverse'
-                    }}
-                >
+                <View>
+                    <View
+                        style={{
+                            width: deviceWidth,
+                            margin: 18,
+                            marginBottom: 8,
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+                        {!!is_sharable ? <TouchableOpacity
+                            onPress={_ => forwardMessage(id)}
+                            style={{
+                                backgroundColor: 'rgba(102,102,102,0.44)',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
+                                padding: 10,
+                                margin: 10
+                            }}
+                        >
+                            <FontAwesome5 name='share' color='white' size={20} />
+                        </TouchableOpacity> : null}
+
+                        {!is_product ? <View
+                            style={{
+                                backgroundColor: 'white',
+                                minHeight: 50,
+                                width: '70%',
+                                padding: 10,
+                                borderRadius: 6
+                            }}
+                        >
+                            {file_path ? <TouchableOpacity
+                                onPress={_ => setSelectedItem(item)}
+                                activeOpacity={1}
+                            >
+                                <Image
+                                    source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
+                                    style={{
+                                        maxWidth: 270,
+                                        width: '100%',
+                                        minWidth: 200,
+                                        height: 300,
+                                        maxHeight: 350,
+                                        minHeight: 250,
+                                        resizeMode: 'cover',
+                                    }}
+                                />
+                            </TouchableOpacity>
+                                : null}
+                            <View
+                                style={{
+                                    width: 10,
+                                    height: 10,
+                                    backgroundColor: 'white',
+                                    position: 'absolute',
+                                    left: -6,
+                                    top: 0,
+                                    borderBottomLeftRadius: 50,
+                                }}
+                            >
+
+                            </View>
+                            <Text
+                                style={{
+                                    width: '100%',
+                                    marginTop: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    color: '#313A43',
+                                }}
+                            >
+                                {text}
+                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: '#B2B2B2',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontSize: 13
+                                    }}
+                                >
+                                    {Jmoment(created_at).format('jYYYY/jMM/jDD , HH:mm')}
+                                </Text>
+                            </View>
+                        </View>
+                            : renderMessageWithProductDesign(item)}
+
+                    </View>
                     {!!is_sharable ? <TouchableOpacity
                         onPress={_ => forwardMessage(id)}
                         style={{
-                            backgroundColor: 'rgba(102,102,102,0.44)',
-                            alignItems: 'center',
+                            flexDirection: 'row-reverse',
                             justifyContent: 'center',
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
+                            backgroundColor: 'rgba(0,0,0,0.4)',
+                            marginRight: 12,
+                            marginBottom: 10,
+                            width: deviceWidth * 0.72,
                             padding: 10,
-                            margin: 10
-                        }}
-                    >
-                        <FontAwesome5 name='share' color='white' size={20} />
-                    </TouchableOpacity> : null}
-
-                    {!is_product ? <View
-                        style={{
-                            backgroundColor: 'white',
-                            minHeight: 50,
-                            width: '70%',
-                            padding: 10,
-                            borderRadius: 6
-                        }}
-                    >
-                        {file_path ? <TouchableOpacity
-                            onPress={_ => setSelectedItem(item)}
-                            activeOpacity={1}
-                        >
-                            <Image
-                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
-                                style={{
-                                    maxWidth: 270,
-                                    width: '100%',
-                                    minWidth: 200,
-                                    height: 300,
-                                    maxHeight: 350,
-                                    minHeight: 250,
-                                    resizeMode: 'cover',
-                                }}
-                            />
-                        </TouchableOpacity>
-                            : null}
-                        <View
-                            style={{
-                                width: 10,
-                                height: 10,
-                                backgroundColor: 'white',
-                                position: 'absolute',
-                                left: -6,
-                                top: 0,
-                                borderBottomLeftRadius: 50,
-                            }}
-                        >
-
-                        </View>
+                            borderRadius: 6,
+                            alignItems: 'center'
+                        }}>
                         <Text
                             style={{
-                                width: '100%',
-                                marginTop: 5,
+                                color: 'white',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                color: '#313A43',
+                                marginHorizontal: 3,
+                                fontSize: 16
                             }}
                         >
-                            {text}
+                            {locales('titles.sendToFriends')}
                         </Text>
-                        <View
-                            style={{
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: '#B2B2B2',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    fontSize: 13
-                                }}
-                            >
-                                {Jmoment(created_at).format('jYYYY/jMM/jDD , HH:mm')}
-                            </Text>
-                        </View>
-                    </View>
-                        : renderMessageWithProductDesign(item)}
-
+                        <FontAwesome5 name='share' color='white' size={15} />
+                    </TouchableOpacity> : null}
                 </View>
-                {!!is_sharable ? <TouchableOpacity
-                    onPress={_ => forwardMessage(id)}
-                    style={{
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0,0,0,0.4)',
-                        marginRight: 12,
-                        marginBottom: 10,
-                        width: deviceWidth * 0.72,
-                        padding: 10,
-                        borderRadius: 6,
-                        alignItems: 'center'
-                    }}>
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            marginHorizontal: 3,
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('titles.sendToFriends')}
-                    </Text>
-                    <FontAwesome5 name='share' color='white' size={15} />
-                </TouchableOpacity> : null}
-            </View>
+            </>
 
         )
     };
@@ -319,7 +326,7 @@ const Channel = props => {
     const renderKeyExtractor = item => item.id.toString();
 
     const onEndReached = _ => {
-        if (!onEndReachedCalledDuringMomentum) {
+        if (!onEndReachedCalledDuringMomentum && contents.length < total_records) {
             let tempPage = page;
             tempPage = tempPage + 1;
             setPage(tempPage);
@@ -351,6 +358,26 @@ const Channel = props => {
                 transparent={false}
             >
                 <TouchableOpacity
+                    style={{
+                        flexDirection: 'row-reverse',
+                        height: 40,
+                        position: 'absolute',
+                        zIndex: 1,
+                        right: 0
+                    }}
+                    onPress={() => setSelectedItem(null)}
+                >
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-end', paddingHorizontal: 10
+                        }}
+                    >
+                        <FontAwesome5 name='times-circle' size={35} solid color='white' />
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                     activeOpacity={1}
                     onPress={_ => {
                         !caption ? fadeIn() : fadeOut();
@@ -359,6 +386,7 @@ const Channel = props => {
                     style={{
                         width: deviceWidth,
                         height: deviceHeight,
+                        backgroundColor: 'black'
                     }}
                 >
 
@@ -366,8 +394,9 @@ const Channel = props => {
                         source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${selectedItem?.file_path}` }}
                         style={{
                             resizeMode: 'contain',
-                            width: '100%',
-                            height: '100%',
+                            width: deviceWidth,
+                            alignSelf: 'center',
+                            height: deviceHeight,
                             borderRadius: 4
                         }}
                     />
@@ -378,7 +407,7 @@ const Channel = props => {
                         position: 'absolute',
                         bottom: 0,
                         translateY,
-                        backgroundColor: 'rgba(0,0,0,0.4)',
+                        backgroundColor: 'rgba(255,255,255,0.4)',
                         maxHeight: 200,
                         padding: 10,
 
@@ -509,17 +538,23 @@ const Channel = props => {
                 onPress={shareApp}
                 style={{
                     width: deviceWidth,
+                    flexDirection: 'row-reverse',
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#00C569',
                     padding: 10
                 }}
             >
+                <FontAwesome
+                    name='android'
+                    color='white'
+                    size={25}
+                />
                 <Text
                     style={{
                         color: 'white',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        marginHorizontal: 3,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        marginHorizontal: 5,
                         fontSize: 16
                     }}
                 >
