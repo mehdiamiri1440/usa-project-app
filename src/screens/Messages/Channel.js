@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator } from 'react-native';
+import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator, Modal, Animated } from 'react-native';
 import { connect } from "react-redux";
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as messagesActions from '../../redux/messages/actions';
-import { deviceWidth, parser, formatter } from '../../utils';
+import { deviceWidth, parser, formatter, deviceHeight } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 const Channel = props => {
@@ -18,6 +18,9 @@ const Channel = props => {
 
     const ChannelContainerRef = useRef();
     const [page, setPage] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [caption, setCaption] = useState(true);
+    let translateY = useState(new Animated.Value(0))[0];
     const [contents, setContents] = useState([]);
 
 
@@ -167,6 +170,7 @@ const Channel = props => {
             created_at = '',
             is_product = false,
             is_sharable = false,
+            id = ''
         } = item;
 
         return (
@@ -207,18 +211,23 @@ const Channel = props => {
                             borderRadius: 6
                         }}
                     >
-                        {file_path ? <Image
-                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
-                            style={{
-                                maxWidth: 270,
-                                width: '100%',
-                                minWidth: 200,
-                                height: 300,
-                                maxHeight: 350,
-                                minHeight: 250,
-                                resizeMode: 'cover',
-                            }}
-                        />
+                        {file_path ? <TouchableOpacity
+                            onPress={_ => setSelectedItem(item)}
+                            activeOpacity={1}
+                        >
+                            <Image
+                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
+                                style={{
+                                    maxWidth: 270,
+                                    width: '100%',
+                                    minWidth: 200,
+                                    height: 300,
+                                    maxHeight: 350,
+                                    minHeight: 250,
+                                    resizeMode: 'cover',
+                                }}
+                            />
+                        </TouchableOpacity>
                             : null}
                         <View
                             style={{
@@ -265,7 +274,7 @@ const Channel = props => {
 
                 </View>
                 {!!is_sharable ? <TouchableOpacity
-                    onPress={_ => forwardMessage()}
+                    onPress={forwardMessage}
                     style={{
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
@@ -305,9 +314,75 @@ const Channel = props => {
             onEndReachedCalledDuringMomentum = true;
         }
     };
+    const fadeIn = _ => {
+        return Animated.timing(translateY, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const fadeOut = _ => {
+        return Animated.timing(translateY, {
+            toValue: 300,
+            duration: 300,
+            useNativeDriver: true
+        }).start()
+    };
 
     return (
         <>
+            <Modal
+                visible={!!selectedItem}
+                onRequestClose={_ => setSelectedItem(null)}
+                transparent={false}
+            >
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={_ => {
+                        !caption ? fadeIn() : fadeOut();
+                        setCaption(!caption)
+                    }}
+                    style={{
+                        width: deviceWidth,
+                        height: deviceHeight,
+                    }}
+                >
+
+                    <Image
+                        source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${selectedItem?.file_path}` }}
+                        style={{
+                            resizeMode: 'contain',
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 4
+                        }}
+                    />
+                </TouchableOpacity>
+                <Animated.View
+                    style={{
+                        width: '100%',
+                        position: 'absolute',
+                        bottom: 0,
+                        translateY,
+                        backgroundColor: 'rgba(0,0,0,0.4)',
+                        maxHeight: 200,
+                        padding: 10,
+
+                    }}
+                >
+                    <Animated.Text
+                        style={{
+                            textAlign: 'center',
+                            width: '100%',
+                            color: 'white'
+                        }}
+                    >
+                        {selectedItem?.text}
+                    </Animated.Text>
+                </Animated.View>
+
+            </Modal>
 
             <View
                 style={{
