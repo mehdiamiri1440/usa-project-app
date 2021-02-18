@@ -184,8 +184,7 @@ class ContactsList extends Component {
                     alignContent: 'center',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    height: 65,
-                    paddingHorizontal: 15,
+                    height: 75,
                     borderBottomWidth: 1,
                     borderBottomColor: '#e5e5e5',
                 }}>
@@ -200,7 +199,9 @@ class ContactsList extends Component {
                     <Text
                         numberOfLines={1}
                         style={{
-                            fontSize: 18, marginHorizontal: 5
+                            fontSize: 18, marginHorizontal: 5,
+                            color: '#666666',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
                         {locales('titles.buskoolOfficialChannel')}
@@ -208,7 +209,7 @@ class ContactsList extends Component {
                     <ValidatedUserIcon  {...this.props} />
                 </View>
                 <FontAwesome5
-                    name='bell'
+                    name='bullhorn'
                     solid
                     color='#AEB5BC'
                     size={20}
