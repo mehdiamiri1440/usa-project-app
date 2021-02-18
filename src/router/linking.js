@@ -1,6 +1,6 @@
 import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { navigationRef } from './rootNavigation';
+import { navigationRef, RootNavigation } from './rootNavigation';
 import { dataGenerator } from '../utils';
 
 const config = {

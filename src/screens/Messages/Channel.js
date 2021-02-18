@@ -40,7 +40,7 @@ const Channel = props => {
     } = props;
 
     const {
-        total_records = 3
+        total
     } = channelData;
 
     const renderListHeaderComponent = _ => {
@@ -326,7 +326,7 @@ const Channel = props => {
     const renderKeyExtractor = item => item.id.toString();
 
     const onEndReached = _ => {
-        if (!onEndReachedCalledDuringMomentum && contents.length < total_records) {
+        if (!onEndReachedCalledDuringMomentum && contents.length < total) {
             let tempPage = page;
             tempPage = tempPage + 1;
             setPage(tempPage);
