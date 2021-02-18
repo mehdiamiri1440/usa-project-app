@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator, Modal, Animated } from 'react-native';
+import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator, Modal, Animated, Linking } from 'react-native';
 import { connect } from "react-redux";
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -46,12 +46,10 @@ const Channel = props => {
         )
     };
 
-    const forwardMessage = async _ => {
+    const shareApp = async _ => {
         try {
             const result = await Share.share({
-                message: 'https://www.buskool.com/public-channel',
-                title: 'pricing',
-
+                message: `https://play.google.com/store/apps/details?id=com.buskool`,
             });
 
             if (result.action === Share.sharedAction) {
@@ -66,6 +64,21 @@ const Channel = props => {
         } catch (error) {
             alert(error.message);
         }
+    };
+
+    const forwardMessage = (id) => {
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/public-channel/${id}`;
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
+            }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
+
     };
 
     const redirectToProduct = (product_id = '') => props.navigation.navigate('Home', { screen: 'ProductDetails', params: { productId: product_id } })
@@ -187,7 +200,7 @@ const Channel = props => {
                     }}
                 >
                     {!!is_sharable ? <TouchableOpacity
-                        onPress={forwardMessage}
+                        onPress={_ => forwardMessage(id)}
                         style={{
                             backgroundColor: 'rgba(102,102,102,0.44)',
                             alignItems: 'center',
@@ -274,7 +287,7 @@ const Channel = props => {
 
                 </View>
                 {!!is_sharable ? <TouchableOpacity
-                    onPress={forwardMessage}
+                    onPress={_ => forwardMessage(id)}
                     style={{
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
@@ -491,12 +504,14 @@ const Channel = props => {
                 data={[...contents.reverse()]}
             />
 
-            <View
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={shareApp}
                 style={{
                     width: deviceWidth,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#1DA1F2',
+                    backgroundColor: '#00C569',
                     padding: 10
                 }}
             >
@@ -510,7 +525,7 @@ const Channel = props => {
                 >
                     {locales('titles.referralShareButton')}
                 </Text>
-            </View>
+            </TouchableOpacity>
         </>
     )
 };
