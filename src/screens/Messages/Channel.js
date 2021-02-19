@@ -23,15 +23,15 @@ const Channel = props => {
     const ChannelContainerRef = useRef();
     const [page, setPage] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [caption, setCaption] = useState(true);
     let translateY = useState(new Animated.Value(0))[0];
+    const [caption, setCaption] = useState(true);
     const [contents, setContents] = useState([]);
 
 
     useEffect(_ => {
         if (firstLoad) {
             props.fetchChannelData(page).then(result => {
-                setContents([...result.payload.contents])
+                setContents([...result.payload.contents.reverse()])
             });
             firstLoad = false;
         }
@@ -537,7 +537,7 @@ const Channel = props => {
                 onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.1}
-                data={[...contents.reverse()]}
+                data={contents}
             />
 
             <TouchableOpacity

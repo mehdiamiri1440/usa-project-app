@@ -46,32 +46,35 @@ class ChatModal extends Component {
 
     componentDidMount() {
 
-        AsyncStorage.getItem('@openedChatIds').then(result => {
-            let ids = JSON.parse(result);
-            // const isGuidDisappeard = JSON.parse(result[1][1]);
-            if (!ids || ids.length == 0) {
-                this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
-            }
-            else {
-                if (this.props.contact && this.props.contact.contact_id &&
-                    ids.some(item => item == this.props.contact.contact_id)
-                ) {
-                    this.setState({ showGuid: false })
+        const { buyAdId } = this.props;
+        if (!buyAdId) {
+            AsyncStorage.getItem('@openedChatIds').then(result => {
+                let ids = JSON.parse(result);
+                // const isGuidDisappeard = JSON.parse(result[1][1]);
+                if (!ids || ids.length == 0) {
+                    this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
                 }
                 else {
-                    if (ids && ids.length && ids.length >= 20) {
-                        this.setState({
-                            showGuid: false
-                        });
-                        // AsyncStorage.setItem('@isGuidDisappeard', JSON.stringify(true))
+                    if (this.props.contact && this.props.contact.contact_id &&
+                        ids.some(item => item == this.props.contact.contact_id)
+                    ) {
+                        this.setState({ showGuid: false })
                     }
                     else {
-                        this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
+                        if (ids && ids.length && ids.length >= 20) {
+                            this.setState({
+                                showGuid: false
+                            });
+                            // AsyncStorage.setItem('@isGuidDisappeard', JSON.stringify(true))
+                        }
+                        else {
+                            this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
+                        }
                     }
                 }
-            }
-            this.checkForShowingCommentsGuid(ids, this.props.contact);
-        });
+                this.checkForShowingCommentsGuid(ids, this.props.contact);
+            });
+        }
 
         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount);
         // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
@@ -310,9 +313,12 @@ class ChatModal extends Component {
     }
 
     render() {
-        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified } = this.props;
+        let { visible, onRequestClose, transparent, contact, userChatHistoryLoading, profile_photo, isSenderVerified, buyAdId } = this.props;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
         let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
+
+        const detecToShowCommentAndGuid = showGuid && !buyAdId;
+
         return (
             <Modal
                 animationType="slide"
@@ -338,7 +344,7 @@ class ChatModal extends Component {
                     visible={showViolationReportFlag}
                     onRequestToClose={_ => this.setState({ visible: true, showViolationReportFlag: false })}
                 /> : null}
-                {showGuid ? <TouchableOpacity
+                {detecToShowCommentAndGuid ? <TouchableOpacity
                     onPress={_ => this.setState({ showGuid: false })}
                     activeOpacity={1}
                     style={{
@@ -349,7 +355,6 @@ class ChatModal extends Component {
                         flex: 1,
                         zIndex: 1,
                         padding: 20,
-                        paddingTop: 90,
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}
@@ -360,8 +365,8 @@ class ChatModal extends Component {
                             height: 100,
                             borderRadius: 50,
                             backgroundColor: 'rgba(255,255,255,0.78)',
-                            top: -100,
-                            left: -55,
+                            top: -30,
+                            left: -125,
                             zIndex: 10,
                             borderWidth: 0.8,
                             borderColor: '#313A43'
@@ -396,7 +401,7 @@ class ChatModal extends Component {
                         width="122.37"
                         height="122.37"
                         viewBox="0 0 122.37 122.37"
-                        style={{ left: -110 }}
+                        style={{ left: -165 }}
                     >
                         <Defs>
                             <Pattern
@@ -443,7 +448,7 @@ class ChatModal extends Component {
                         shadowOffset: { width: 20, height: 20 },
                         shadowColor: 'black',
                         shadowOpacity: 1.0,
-                        elevation: showGuid ? 0 : 5,
+                        elevation: detecToShowCommentAndGuid ? 0 : 5,
                     }}>
                     <TouchableOpacity
                         style={{ flexDirection: 'row-reverse' }}
@@ -499,25 +504,19 @@ class ChatModal extends Component {
                                 </Text>
                                 {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                             </View>
-                            {!showGuid ? <>
-                                <Text
-                                    style={{
-                                        color: '#21AD93',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        fontSize: 14,
-                                        marginRight: 12,
-                                        marginLeft: 3
-                                    }}
-                                >
-                                    {locales('labels.usersComment')}
-                                </Text>
-                                {/* <FontAwesome5
-                                    style={{ marginTop: 5 }}
-                                    size={13}
-                                    name='arrow-left'
-                                    color='#21AD93'
-                                /> */}
-                            </> : null}
+                            {!showGuid && !this.props.buyAdId ? <Text
+                                style={{
+                                    color: '#21AD93',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    marginRight: 12,
+                                    marginLeft: 3,
+                                }}
+                            >
+                                {locales('labels.usersComment')}
+                            </Text>
+
+                                : null}
                         </View>
                     </TouchableOpacity>
 
@@ -551,7 +550,7 @@ class ChatModal extends Component {
                             shadowOffset: { width: 20, height: 20 },
                             shadowColor: 'black',
                             shadowOpacity: 1.0,
-                            elevation: showGuid ? 0 : 5,
+                            elevation: detecToShowCommentAndGuid ? 0 : 5,
                             borderColor: 'black',
                             backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                         }}
@@ -589,7 +588,7 @@ class ChatModal extends Component {
                 <View
                     style={{
                         position: 'absolute', bottom: 0, paddingTop: 3,
-                        zIndex: showGuid ? 0 : 1,
+                        zIndex: detecToShowCommentAndGuid ? 0 : 1,
                         width: deviceWidth, paddingBottom: 10,
                         flexDirection: 'row-reverse',
                     }}
