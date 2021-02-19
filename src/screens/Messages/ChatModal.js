@@ -487,12 +487,12 @@ class ChatModal extends Component {
                         }}
                         style={{
                             paddingHorizontal: 10,
-                            width: deviceWidth * 0.6,
+                            width: deviceWidth * 0.75,
                             alignItems: 'flex-end',
                         }}>
                         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
                             <View
-                                style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '96%' }}
+                                style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '70%' }}
                             >
                                 <Text
                                     numberOfLines={1}
@@ -506,6 +506,8 @@ class ChatModal extends Component {
                             </View>
                             {!showGuid && !this.props.buyAdId ? <Text
                                 style={{
+                                    width: '30%',
+                                    textAlign: 'left',
                                     color: '#21AD93',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     fontSize: 14,

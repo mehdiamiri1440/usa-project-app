@@ -31,7 +31,8 @@ const Channel = props => {
     useEffect(_ => {
         if (firstLoad) {
             props.fetchChannelData(page).then(result => {
-                setContents([...result.payload.contents.reverse()])
+                console.log('first load', result)
+                setContents([...result.payload.contents])
             });
             firstLoad = false;
         }
@@ -89,7 +90,7 @@ const Channel = props => {
 
     };
 
-    const redirectToProduct = (product_id = '') => props.navigation.navigate('Home', { screen: 'ProductDetails', params: { productId: product_id } })
+    const redirectToProduct = (product_id = '') => props.navigation.navigate('ProductDetails', { productId: product_id })
 
     const renderMessageWithProductDesign = ({ text = '', file_path = '', product_id = '', created_at = '' }) => {
 
@@ -333,7 +334,10 @@ const Channel = props => {
             let tempPage = page;
             tempPage = tempPage + 1;
             setPage(tempPage);
-            props.fetchChannelData(tempPage).then(result => setContents([...result.payload.contents.reverse(), ...contents]));
+            props.fetchChannelData(tempPage).then(result => {
+                console.log('end reached', result);
+                setContents([...contents, ...result.payload.contents])
+            });
             onEndReachedCalledDuringMomentum = true;
         }
     };
