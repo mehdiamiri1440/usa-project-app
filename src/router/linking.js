@@ -54,7 +54,6 @@ const linking = {
     getInitialURL: async _ => {
         // Check if app was opened from a deep link
         const url = await Linking.getInitialURL();
-        console.log('url11', url)
         if (url != null) {
             handleIncomingEvent(url)
             return url;
@@ -62,7 +61,6 @@ const linking = {
     },
     subscribe: (listener) => {
         const onReceiveURL = ({ url }) => {
-            console.log('ur2222', url)
             handleIncomingEvent(url)
             return listener(url)
         };
