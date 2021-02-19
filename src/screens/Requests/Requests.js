@@ -609,7 +609,9 @@ class Requests extends PureComponent {
                         ref={this.props.requestsRef}
                         refreshing={false}
                         onRefresh={() => {
-                            this.props.fetchAllBuyAdRequests();
+                            this.props.fetchAllBuyAdRequests().then(result => {
+                                this.setState({ buyAdRequestsList: result.payload.buyAds })
+                            });
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
