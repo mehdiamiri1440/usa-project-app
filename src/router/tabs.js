@@ -341,6 +341,16 @@ export const MessagesStack = _ => (
             name={`Channel`}
             component={Channel}
         />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`ProductDetails`}
+            component={ProductDetails}
+        />
+
     </Stack.Navigator>
 )
 
