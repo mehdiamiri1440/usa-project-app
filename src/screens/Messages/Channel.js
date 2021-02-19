@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, View, Text, Image, TouchableOpacity, Share, ActivityIndicator, Modal, Animated, Linking } from 'react-native';
+import {
+    FlatList, View, Text, Image, TouchableOpacity, Share,
+    ActivityIndicator, Modal, Animated, Linking
+} from 'react-native';
 import { connect } from "react-redux";
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -414,6 +417,10 @@ const Channel = props => {
                     }}
                 >
                     <Animated.Text
+                        onPress={_ => {
+                            !caption ? fadeIn() : fadeOut();
+                            setCaption(!caption)
+                        }}
                         style={{
                             textAlign: 'center',
                             width: '100%',
