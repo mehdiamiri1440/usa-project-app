@@ -393,7 +393,7 @@ const Channel = props => {
                     style={{
                         width: deviceWidth,
                         height: deviceHeight,
-                        backgroundColor: 'black'
+                        backgroundColor: 'rgba(0,0,0,1)'
                     }}
                 >
 
@@ -414,13 +414,13 @@ const Channel = props => {
                         position: 'absolute',
                         bottom: 0,
                         translateY,
-                        backgroundColor: 'rgba(255,255,255,0.4)',
-                        maxHeight: 200,
+                        backgroundColor: 'rgba(0,0,0,0.6)',
                         padding: 10,
 
                     }}
                 >
                     <Animated.Text
+                        numberOfLines={8}
                         onPress={_ => {
                             !caption ? fadeIn() : fadeOut();
                             setCaption(!caption)

@@ -377,6 +377,9 @@ class RegisterProductSuccessfully extends Component {
             subCategoryName
         } = params;
 
+        subCategoryId = subCategoryId || this.props.subCategoryId;
+        subCategoryName = subCategoryName || this.props.subCategoryName;
+
         return (
 
             <TouchableOpacity

@@ -306,7 +306,7 @@ const MyRequests = props => {
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         color: '#777777',
-                                        width: '50%',
+                                        width: '70%',
                                         textAlign: 'right'
                                     }}
                                     numberOfLines={1}
@@ -318,8 +318,8 @@ const MyRequests = props => {
                                         fontSize: 16,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         color: '#374761',
-                                        width: '50%',
-                                        textAlign: 'center'
+                                        width: '30%',
+                                        textAlign: 'right'
                                     }}
                                     numberOfLines={1}
                                 >

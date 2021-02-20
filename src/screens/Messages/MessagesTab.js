@@ -221,11 +221,19 @@ class ContactsList extends Component {
 
     renderListEmptyComponent = () => {
         const {
-            contactsListLoading
+            contactsListLoading,
+            userProfile = {}
         } = this.props;
         const {
             searchText
         } = this.state;
+
+        const {
+            user_info = {}
+        } = userProfile
+        const {
+            is_seller
+        } = user_info
 
         return contactsListLoading ?
             [1, 2, 3, 4, 5].map((_, index) =>
@@ -252,25 +260,25 @@ class ContactsList extends Component {
 
 
             : searchText ?
-                <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ marginTop: 30, flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
                     <AntDesign size={135} name='contacts' color='#BEBEBE' />
                     <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>
                         {locales('labels.noContactFound')}
                     </Text>
                 </View> :
-                <View style={{ flex: 1, height: deviceHeight, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 1, alignSelf: 'center', marginTop: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <Entypo size={135} name='message' color='#BEBEBE' />
                     <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>
                         {locales('labels.noChatFound')}
                     </Text>
                     <Button
-                        onPress={() => this.props.navigation.navigate('Requests')}
+                        onPress={() => this.props.navigation.navigate(is_seller ? 'Requests' : 'Home')}
                         style={[styles.loginButton]}
                     >
                         <View style={[styles.textCenterView, styles.buttonText]}>
                             <Text style={[styles.textWhite, styles.textBold,
                             styles.textSize18, { marginTop: 3 }]}>
-                                {locales('titles.seeBuyAds')}
+                                {is_seller ? locales('titles.seeBuyAds') : locales('labels.seeProductsList')}
                             </Text>
                         </View>
 
@@ -569,6 +577,7 @@ const mapStateToProps = (state) => {
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
 
+        userProfile: state.profileReducer.userProfile,
         // newMessage: state.messagesReducer.newMessage,
         // messageFromOutSide: state.messagesReducer.messageFromOutSide,
 

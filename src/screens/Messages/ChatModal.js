@@ -366,7 +366,7 @@ class ChatModal extends Component {
                             borderRadius: 50,
                             backgroundColor: 'rgba(255,255,255,0.78)',
                             top: -30,
-                            left: -125,
+                            left: -140,
                             zIndex: 10,
                             borderWidth: 0.8,
                             borderColor: '#313A43'
@@ -378,13 +378,13 @@ class ChatModal extends Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 top: 26,
-                                right: 4,
+                                right: 8,
                                 marginHorizontal: 10
                             }}
                         >
                             {locales('labels.usersComment')}
                         </Text>
-                        <FontAwesome5
+                        {/* <FontAwesome5
                             style={{
                                 marginTop: 5,
                                 top: 5,
@@ -393,7 +393,7 @@ class ChatModal extends Component {
                             size={13}
                             name='arrow-left'
                             color='#21AD93'
-                        />
+                        /> */}
                     </View>
                     <Svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -492,7 +492,7 @@ class ChatModal extends Component {
                         }}>
                         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
                             <View
-                                style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '70%' }}
+                                style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '63%', }}
                             >
                                 <Text
                                     numberOfLines={1}

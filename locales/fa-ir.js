@@ -169,6 +169,7 @@ export default {
     'labels.request': 'درخواست',
     'labels.fromType': 'از نوع',
     'labels.lookAllProducts': 'مشاهده همه محصولات',
+    'labels.seeProductsList': 'مشاهده لیست محصولات',
     'labels.requestsBlurDate': '۱۳ تیر , ۱۳۰۴',
     'labels.noRelateRequstFoundFirst': 'به دنبال',
     'labels.noRelateRequstFoundSecond': 'برای محصول خود هستید؟',
