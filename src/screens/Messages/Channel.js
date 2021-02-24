@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    FlatList, View, Text, Image, TouchableOpacity, Share,
+    FlatList, View, Text, Image, TouchableOpacity,
     ActivityIndicator, Modal, Animated, Linking
 } from 'react-native';
 import { connect } from "react-redux";
+import Svg, { Path, G } from "react-native-svg"
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
@@ -61,23 +62,18 @@ const Channel = props => {
             user_name
         } = user_info;
 
-        try {
-            const result = await Share.share({
-                message:
-                    `${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`,
-            });
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                } else {
-                    // shared
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
             }
-        } catch (error) {
-            console.log(error.message);
-        }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
     };
 
     const forwardMessage = (id) => {
@@ -92,7 +88,6 @@ const Channel = props => {
             .catch(() => {
                 Linking.openURL(url)
             })
-
     };
 
     const redirectToProduct = (product_id = '') => props.navigation.navigate('ProductDetails', { productId: product_id })
@@ -115,25 +110,81 @@ const Channel = props => {
                     minHeight: 50,
                     width: '70%',
                     padding: 10,
-                    borderRadius: 6,
-                    flexDirection: 'row-reverse'
+                    borderRadius: 7,
+                    borderWidth: 2,
+                    borderColor: '#00C569'
                 }}
             >
+                <Svg
+                    style={{ position: 'absolute', left: 5, top: 0, zIndex: 1 }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="27"
+                    height="37.007"
+                    viewBox="0 0 27 37.007"
+                >
+                    <G data-name="Group 145" transform="translate(-261 -703.993)">
+                        <Path
+                            fill="#00c569"
+                            d="M0 0l27-.016v36.989l-13.741-5.989-13.259 6z"
+                            data-name="Path 1"
+                            transform="translate(261 704.016)"
+                        ></Path>
+                        <Path
+                            fill="#00b761"
+                            d="M0 0H27V1.072H0z"
+                            data-name="Rectangle 6"
+                            transform="translate(261 703.993)"
+                        ></Path>
+                        <G fill="#fff" data-name="Group 23" transform="translate(266 707)">
+                            <Path
+                                d="M8.511 15.553A8.529 8.529 0 013.444.175l2.162 2.166a5.455 5.455 0 108.3 5.4l1.488-1.466 1.594 1.57a8.518 8.518 0 01-8.473 7.707zM17 6.384l-1.609-1.59-1.477 1.46a5.476 5.476 0 00-2.759-4.069L13.336 0A8.49 8.49 0 0117 6.382z"
+                                data-name="Subtraction 1"
+                                transform="translate(0 5.447)"
+                            ></Path>
+                            <G data-name="Group 24" transform="translate(3.292)">
+                                <Path
+                                    d="M3 0h3.656v3.853H0V3a3 3 0 013-3z"
+                                    data-name="Rectangle 12"
+                                    transform="rotate(45 -.73 4.156)"
+                                ></Path>
+                                <Path
+                                    d="M0 0h9.459v3.5H3.5A3.5 3.5 0 010 0z"
+                                    data-name="Rectangle 13"
+                                    transform="rotate(135 5.244 3.623)"
+                                ></Path>
+                            </G>
+                        </G>
+                    </G>
+                </Svg>
+                <Text
+                    style={{
+                        color: '#474747',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 16,
+                        textAlign: 'right'
+                    }}
+                >
+                    {locales('labels.suggesstedProduct')}
+                </Text>
                 <Image
                     source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
                     style={{
-                        resizeMode: 'cover',
-                        width: deviceWidth * 0.27,
-                        height: deviceWidth * 0.27,
-                        borderRadius: 4
+                        resizeMode: 'contain',
+                        width: '100%',
+                        alignSelf: 'center',
+                        marginTop: 10,
+                        borderWidth: 1,
+                        borderColor: '#EEEEEE',
+                        height: deviceWidth * 0.57,
+                        borderRadius: 5
                     }}
                 />
                 <View
                     style={{
-                        marginHorizontal: 10,
-                        justifyContent: 'space-around',
+                        justifyContent: 'flex-end',
                         alignItems: 'flex-end',
-                        maxWidth: '55%',
+                        width: '100%',
+                        marginTop: 10
                     }}
                 >
                     <Text
@@ -155,15 +206,27 @@ const Channel = props => {
                             {firstTextSecondPart}
                         </Text>
                     </Text>
-                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3, width: '85%' }}>
+                    <View style={{ flexDirection: 'row-reverse', paddingVertical: 3, width: '100%' }}>
+                        <FontAwesome5
+                            name='box-open'
+                            size={18}
+                            color='#BEBEBE'
+                            style={{ marginTop: 2 }}
+                        />
                         <Text
-                            numberOfLines={1}
-                            style={{ textAlign: 'right', marginLeft: 9 }}>
-                            <FontAwesome5 name='box-open' size={18} color='#BEBEBE' />
+                            style={{
+                                color: '#474747',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                marginHorizontal: 3
+
+                            }}
+                        >
+                            {locales('titles.stockQuantity')} :
                         </Text>
                         <Text
                             numberOfLines={1}
-                            style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14 }}>
+                            style={{ color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14, marginTop: 2 }}>
                             {formatter.convertedNumbersToTonUnit(secondTextNumberPart)}
                         </Text>
                     </View>

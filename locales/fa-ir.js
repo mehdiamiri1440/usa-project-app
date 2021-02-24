@@ -130,6 +130,7 @@ export default {
     'labels.inUse': 'درحال استفاده',
     'labels.elevatorCount': 'تعداد نردبان',
     'labels.showInSpecialProductsList': 'نمایش در لیست محصولات ویژه',
+    'labels.suggesstedProduct': 'محصول پیشنهادی',
     'labels.uploadProductImages': 'لطفا فقط تصاویر مرتبط با محصول خود را ثبت کنید.',
     'labels.terms': 'قوانین',
     'labels.registerProduct': 'ثبت ‌محصول',

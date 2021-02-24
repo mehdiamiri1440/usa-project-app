@@ -42,13 +42,15 @@
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" />
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/public-channel" />
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/shared-profile" />
+        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" />
 
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/product-list" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/buyAd-requests" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/public-channel" />
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/shared-profilel" />
+        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/shared-profile" />
+        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/pricing" />
 
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/product-list" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyAd-requests" />
@@ -56,6 +58,7 @@
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/public-channel" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/shared-profile" />
+        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" />
 
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/product-list" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/buyAd-requests" />
@@ -63,6 +66,7 @@
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/public-channel" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/shared-profile" />
+        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/pricing" />
         
         <!-- note that the leading "/" is required for pathPrefix-->
       </intent-filter>
@@ -82,6 +86,7 @@
         <data android:scheme="buskool" android:host="register-product" />
         <data android:scheme="buskool" android:host="register-product-successfully" />
         <data android:scheme="buskool" android:host="public-channel" />
+        <data android:scheme="buskool" android:host="pricing" />
         <data android:scheme="buskool" android:host="shared-profile" />
       </intent-filter>
     </activity>

@@ -171,7 +171,7 @@ class RequestsTab extends Component {
                     </Text>
                 </View>
                 <Button
-                    onPress={_ => this.props.navigation.navigate('RegisterProduct')}
+                    onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
                     style={{
                         alignSelf: 'center',
                         backgroundColor: '#00C569',
