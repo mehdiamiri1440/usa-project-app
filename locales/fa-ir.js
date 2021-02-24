@@ -171,6 +171,7 @@ export default {
     'labels.lookAllProducts': 'مشاهده همه محصولات',
     'labels.seeProductsList': 'مشاهده لیست محصولات',
     'labels.requestsBlurDate': '۱۳ تیر , ۱۳۰۴',
+    'labels.sendYourProfileToYourFriends': 'ارسال پروفایل تجاری شما به دوستان',
     'labels.noRelateRequstFoundFirst': 'به دنبال',
     'labels.noRelateRequstFoundSecond': 'برای محصول خود هستید؟',
     'labels.messengerNoRelateRequstFoundFirst': 'در حال حاضر پیشنهادی برای شما وجود ندارد',

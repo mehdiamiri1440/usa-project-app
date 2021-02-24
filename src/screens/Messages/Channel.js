@@ -556,7 +556,7 @@ const Channel = props => {
                     flexDirection: 'row-reverse',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#21AD93',
+                    backgroundColor: '#4eb9fb',
                     padding: 10
                 }}
             >
