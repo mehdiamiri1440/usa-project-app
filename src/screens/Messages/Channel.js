@@ -35,6 +35,7 @@ const Channel = props => {
             });
             firstLoad = false;
         }
+        return _ => props.fetchAllContactsList()
     }, []);
 
     const {
@@ -605,7 +606,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-        fetchChannelData: page => dispatch(messagesActions.fetchChannelData(page))
+        fetchChannelData: page => dispatch(messagesActions.fetchChannelData(page)),
+        fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
     }
 };
 

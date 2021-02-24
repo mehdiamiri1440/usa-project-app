@@ -30,6 +30,7 @@ class ContactsList extends Component {
             modalFlag: false,
             searchText: '',
             contactsList: [],
+            contactsListData: {},
             from: 0,
             to: 15,
             contactsListUpdated: false,
@@ -93,14 +94,14 @@ class ContactsList extends Component {
 
         if (prevState.loaded == false && this.props.contactsList.length) {
             // console.warn('wear', prevState.loaded)
-            this.setState({ contactsList: this.props.contactsList, loaded: true }, () => {
+            this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true }, () => {
                 if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
                     this.props.newMessageReceived(false);
                 }
             })
         }
         if (prevProps.refresh != this.props.refresh) {
-            this.setState({ contactsList: this.props.contactsList, loaded: true })
+            this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true })
         }
         if (this.props.searchText != this.state.searchText) {
             this.handleSearch(this.props.searchText)
@@ -252,11 +253,11 @@ class ContactsList extends Component {
     renderKeyExtractor = item => item.contact_id.toString();
 
     render() {
-        const {
-            contactsListData = {}
-        } = this.props;
 
+
+        let { modalFlag, selectedContact, contactsList, contactsListData } = this.state;
         const { channel_info = {} } = contactsListData;
+
 
         const {
             last_content_title,
@@ -264,7 +265,6 @@ class ContactsList extends Component {
             unread_contents
         } = channel_info;
 
-        let { modalFlag, selectedContact, contactsList, } = this.state;
         return (
             <>
 

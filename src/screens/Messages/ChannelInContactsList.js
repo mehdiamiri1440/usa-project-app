@@ -90,7 +90,7 @@ const ChannelInContactsList = ({
                             style={{
                                 fontSize: 16,
                                 color: '#666666',
-                                width: '75%',
+                                width: '73%',
                                 marginHorizontal: 5,
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}
