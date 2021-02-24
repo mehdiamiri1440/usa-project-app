@@ -99,7 +99,7 @@ class Requests extends PureComponent {
         if ((this.props.route && this.props.route.params && this.props.route.params.subCategoryId >= 0 &&
             prevProps.route && !prevProps.route.params)
             || (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
-                this.props.route.params.subCategoryId != prevProps.route.params.subCategoryId)) {
+                this.props.route?.params?.subCategoryId != prevProps.route?.params?.subCategoryId)) {
             this.checkForFiltering()
         }
     }
@@ -113,13 +113,13 @@ class Requests extends PureComponent {
     checkForFiltering = async () => {
         let isFilter = await this.checkForFilterParamsAvailability();
         if (isFilter) {
-            this.selectedFilter(this.props.route.params.subCategoryId, this.props.route.params.subCategoryName)
+            this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
         }
     }
 
     checkForFilterParamsAvailability = () => {
         return new Promise((resolve, reject) => {
-            if (this.props.route.params.subCategoryId >= 0 && this.props.route.params.subCategoryName) {
+            if (this.props.route?.params?.subCategoryId >= 0 && this.props.route?.params?.subCategoryName) {
                 resolve(true)
             }
             else {
