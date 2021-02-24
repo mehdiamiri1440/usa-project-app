@@ -43,6 +43,16 @@ const config = {
         RegisterProductSuccessfully: {
             path: "register-product-successfully",
         },
+        Messages: {
+            screens: {
+                Profile: {
+                    path: "shared-profile/:user_name",
+                    parse: {
+                        user_name: user_name => `${user_name}`
+                    }
+                }
+            }
+        },
     },
 };
 

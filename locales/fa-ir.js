@@ -172,6 +172,7 @@ export default {
     'labels.seeProductsList': 'مشاهده لیست محصولات',
     'labels.requestsBlurDate': '۱۳ تیر , ۱۳۰۴',
     'labels.sendYourProfileToYourFriends': 'ارسال پروفایل تجاری شما به دوستان',
+    'labels.advertiseProductsInBuskoolChannel': 'تبلیغ محصولات در کانال باسکول',
     'labels.noRelateRequstFoundFirst': 'به دنبال',
     'labels.noRelateRequstFoundSecond': 'برای محصول خود هستید؟',
     'labels.messengerNoRelateRequstFoundFirst': 'در حال حاضر پیشنهادی برای شما وجود ندارد',
