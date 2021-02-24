@@ -5,6 +5,7 @@ const INITIAL_STATE = {
     contactsListError: false,
     contactsListMessage: null,
     contactsList: [],
+    contactsListData: {},
 
 
     userChatHistoryLoading: false,
@@ -47,7 +48,8 @@ export default (state = INITIAL_STATE, action) => {
                 contactsListLoading: true,
                 contactsListFailed: false,
                 contactsListError: false,
-                contactsListMessage: null
+                contactsListMessage: null,
+                contactsListData: {}
             };
         };
         case actionTypes.FETCH_ALL_CONTACTS_LIST_SUCCESSFULLY: {
@@ -57,6 +59,7 @@ export default (state = INITIAL_STATE, action) => {
                 contactsListLoading: false,
                 contactsListFailed: false,
                 contactsListError: false,
+                contactsListData: { ...action.payload },
                 contactsListMessage: null,
             };
         };
@@ -65,6 +68,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 contactsList: [],
                 contactsListLoading: false,
+                contactsListData: {},
                 contactsListFailed: true,
                 contactsListError: false,
                 contactsListMessage: null
@@ -76,6 +80,7 @@ export default (state = INITIAL_STATE, action) => {
                 contactsList: [],
                 contactsListLoading: false,
                 contactsListFailed: false,
+                contactsListData: {},
                 contactsListError: true,
                 contactsListMessage: null
             };

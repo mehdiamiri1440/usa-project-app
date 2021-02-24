@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, AppState, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, AppState } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
 import messaging from '@react-native-firebase/messaging';
-import { Card, CardItem, Body, Icon, InputGroup, Input, Button } from 'native-base';
+import { Button } from 'native-base';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as messagesActions from '../../redux/messages/actions';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
@@ -17,7 +16,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
 import ChatModal from './ChatModal';
 import Contact from './Contact';
-import ValidatedUserIcon from '../../components/validatedUserIcon';
+import ChannelInContactsList from './ChannelInContactsList';
 
 let unsubscribe;
 
@@ -174,50 +173,7 @@ class ContactsList extends Component {
         )
     };
 
-    renderListHeaderComponent = _ => {
-        return (
-            <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Channel')}
-                style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    height: 75,
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#e5e5e5',
-                }}>
-                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                    <Image
-                        style={{
-                            borderRadius: 23,
-                            width: 46, height: 46
-                        }}
-                        source={require('../../../assets/icons/buskool-logo.png')}
-                    />
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            fontSize: 18, marginHorizontal: 5,
-                            color: '#666666',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        }}
-                    >
-                        {locales('titles.buskoolOfficialChannel')}
-                    </Text>
-                    <ValidatedUserIcon  {...this.props} />
-                </View>
-                <FontAwesome5
-                    name='bullhorn'
-                    solid
-                    color='#AEB5BC'
-                    size={20}
-                    style={{ marginLeft: 45 }}
-                />
-            </TouchableOpacity>
-        )
-    };
+
 
     renderListEmptyComponent = () => {
         const {
@@ -296,6 +252,17 @@ class ContactsList extends Component {
     renderKeyExtractor = item => item.contact_id.toString();
 
     render() {
+        const {
+            contactsListData = {}
+        } = this.props;
+
+        const { channel_info = {} } = contactsListData;
+
+        const {
+            last_content_title,
+            last_content_date,
+            unread_contents
+        } = channel_info;
 
         let { modalFlag, selectedContact, contactsList, } = this.state;
         return (
@@ -327,7 +294,12 @@ class ContactsList extends Component {
                             showsVerticalScrollIndicator={false}
                             style={{ width: '100%', height: deviceHeight * 1 }}
                             contentContainerStyle={{ paddingBottom: 235 }}
-                            ListHeaderComponent={this.renderListHeaderComponent}
+                            ListHeaderComponent={_ => <ChannelInContactsList
+                                unread_contents={unread_contents}
+                                last_content_title={last_content_title}
+                                last_content_date={last_content_date}
+                                {...this.props}
+                            />}
                             data={contactsList}
                             renderItem={this.renderItem}
                         />
@@ -576,6 +548,7 @@ const mapStateToProps = (state) => {
         contactsListError: state.messagesReducer.contactsListError,
         contactsListFailed: state.messagesReducer.contactsListFailed,
         contactsListLoading: state.messagesReducer.contactsListLoading,
+        contactsListData: state.messagesReducer.contactsListData,
 
         userProfile: state.profileReducer.userProfile,
         // newMessage: state.messagesReducer.newMessage,

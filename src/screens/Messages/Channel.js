@@ -31,7 +31,6 @@ const Channel = props => {
     useEffect(_ => {
         if (firstLoad) {
             props.fetchChannelData(page).then(result => {
-                console.log('first load', result)
                 setContents([...result.payload.contents])
             });
             firstLoad = false;
@@ -47,20 +46,25 @@ const Channel = props => {
         total
     } = channelData;
 
-    const renderListHeaderComponent = _ => {
-        return (
-            <View>
+    const shareProfile = async _ => {
 
-            </View>
-        )
-    };
+        const {
+            userProfile = {}
+        } = props;
 
-    const shareApp = async _ => {
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            user_name
+        } = user_info;
+
         try {
             const result = await Share.share({
-                message: `https://play.google.com/store/apps/details?id=com.buskool`,
+                message:
+                    `${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`,
             });
-
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
                     // shared with activity type of result.activityType
@@ -71,7 +75,7 @@ const Channel = props => {
                 // dismissed
             }
         } catch (error) {
-            alert(error.message);
+            console.log(error.message);
         }
     };
 
@@ -531,7 +535,6 @@ const Channel = props => {
                 ref={ChannelContainerRef}
                 keyExtractor={renderKeyExtractor}
                 showsVerticalScrollIndicator={false}
-                ListHeaderComponent={renderListHeaderComponent}
                 inverted={!!contents && !!contents.length}
                 renderItem={renderItem}
                 removeClippedSubviews
@@ -546,30 +549,30 @@ const Channel = props => {
 
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={shareApp}
+                onPress={shareProfile}
                 style={{
                     width: deviceWidth,
                     flexDirection: 'row-reverse',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#00C569',
+                    backgroundColor: '#21AD93',
                     padding: 10
                 }}
             >
                 <FontAwesome
-                    name='android'
+                    name='address-card'
                     color='white'
-                    size={25}
+                    size={20}
                 />
                 <Text
                     style={{
                         color: 'white',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        marginHorizontal: 5,
+                        marginHorizontal: 7,
                         fontSize: 16
                     }}
                 >
-                    {locales('titles.referralShareButton')}
+                    {locales('labels.sendYourProfileToYourFriends')}
                 </Text>
             </TouchableOpacity>
         </>
@@ -586,12 +589,18 @@ const mapStateToProps = state => {
         channelData
     } = state.messagesReducer;
 
+    const {
+        userProfile
+    } = state.profileReducer;
+
     return {
         channelDataLoading,
         channelDataFailed,
         channelDataError,
         channelDataMessage,
-        channelData
+        channelData,
+
+        userProfile
     }
 };
 const mapDispatchToProps = dispatch => {
