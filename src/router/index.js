@@ -287,7 +287,7 @@ const App = (props) => {
       Linking.removeEventListener('url', handleIncomingEvent)
     }
 
-  }, [initialRoute, is_seller, props.loggedInUserId]);
+  }, [initialRoute, is_seller, props.loggedInUserId, props.logOutLoading]);
 
   const checkForUpdate = _ => {
     getAppstoreAppMetadata("com.buskool") //put any apps packageId here
@@ -367,9 +367,6 @@ const App = (props) => {
         break;
     }
   };
-
-
-
 
 
   return (
@@ -457,7 +454,7 @@ const App = (props) => {
         </Dialog>
       </Portal >
 
-      {(props.userProfileLoading || props.logOutLoading) ?
+      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId) || props.logOutLoading)) ?
         <View style={{
           backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
           position: 'absolute',
@@ -718,8 +715,10 @@ const mapStateToProps = (state) => {
   return {
     loggedInUserId: state.authReducer.loggedInUserId,
     logOutLoading: state.authReducer.logOutLoading,
+    logOutError: state.authReducer.logOutError,
 
     userProfile: state.profileReducer.userProfile,
+    userProfileError: state.profileReducer.userProfileError,
     userProfileLoading: state.profileReducer.userProfileLoading,
   }
 };

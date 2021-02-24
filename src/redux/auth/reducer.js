@@ -309,6 +309,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 logOutLoading: true,
                 logOutFailed: false,
+                loggedInUserId: '',
                 logOutError: false,
                 logOutMessage: null
             };
@@ -320,12 +321,7 @@ export default (state = INITIAL_STATE, action) => {
                 logOutFailed: false,
                 logOutError: false,
                 logOutMessage: null,
-
-                loginLoading: false,
-                loginFailed: false,
-                loginError: false,
                 loggedInUserId: '',
-                loginMessage: null,
             };
         };
         case actionTypes.LOGOUT_FAILED: {
@@ -334,6 +330,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 logOutLoading: false,
                 logOutFailed: true,
+                loggedInUserId: '',
                 logOutError: false,
                 logOutMessage: msg
             };
@@ -341,6 +338,7 @@ export default (state = INITIAL_STATE, action) => {
         case actionTypes.LOGOUT_REJECT: {
             return {
                 ...state,
+                loggedInUserId: '',
                 logOutLoading: false,
                 logOutFailed: false,
                 logOutError: true,
