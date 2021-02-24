@@ -94,13 +94,13 @@ const Channel = props => {
 
     const renderMessageWithProductDesign = ({ text = '', file_path = '', product_id = '', created_at = '' }) => {
 
-        const firstText = text.split('\n')[0];
-        const secondText = text.split('\n')[1];
+        const firstText = text && text.length ? text.split('\n')[0] : '';
+        const secondText = text && text.length ? text.split('\n')[1] : '';
 
-        const firstTextFirstPart = firstText.split('|')[0];
-        const firstTextSecondPart = firstText.split('|')[1];
+        const firstTextFirstPart = firstText && firstText.length ? firstText.split('|')[0] : '';
+        const firstTextSecondPart = firstText && firstText.length ? firstText.split('|')[1] : '';
 
-        const secondTextNumberPart = secondText.split(' ')[2];
+        const secondTextNumberPart = secondText && secondText.length ? secondText.split(' ')[2] : '';
 
         return (
             <TouchableOpacity
@@ -139,7 +139,7 @@ const Channel = props => {
                             fontSize: 15
                         }}
                     >
-                        {firstTextFirstPart} | <Text
+                        {firstTextFirstPart}{firstTextSecondPart && firstTextSecondPart.length ? '|' : ''} <Text
                             numberOfLines={1}
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
