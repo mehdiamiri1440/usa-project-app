@@ -215,7 +215,7 @@ const routes = props => {
                                     e.preventDefault();
                                     currentRoute = e.target;
                                     if (is_seller)
-                                        return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 0 } });
+                                        return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
                                     return navigationRef.current.navigate('Messages');
                                 },
                             }}

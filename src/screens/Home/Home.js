@@ -68,10 +68,10 @@ class Home extends React.Component {
                 return this.props.navigation.navigate('MyBuskool', { screen: name, params: { user_name: this.props.userProfile.user_info.user_name } })
         }
         if (name == 'Messages') {
-            return this.props.navigation.navigate("Messages", { screen: 'Messages', params: { tabIndex: 0 } })
+            return this.props.navigation.navigate("Messages", { screen: 'MessagesIndex', params: { tabIndex: 0 } })
         }
         if (name == 'SuggestedBuyers') {
-            return this.props.navigation.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1, fromMyBuskool: true } });
+            return this.props.navigation.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1, fromMyBuskool: true } });
         }
         if (name == 'SpecialProducts') {
             return this.props.navigation.navigate('SpecialProducts');

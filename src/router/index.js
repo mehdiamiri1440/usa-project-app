@@ -120,11 +120,11 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
       }
       case 'buyAdSuggestion': {
         if (is_seller) {
-          return navigationRef.current.navigate('Messages', { screen: 'Messages', params: { tabIndex: 1 } });
+          return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
         }
         else {
           return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'Messages', routeParams: { tabIndex: 1 } } });
+            { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'MessagesIndex', routeParams: { tabIndex: 1 } } });
         }
       }
       default:

@@ -318,8 +318,8 @@ export const MessagesStack = _ => (
                 headerShown: false,
                 title: null,
             })}
-            key='Message'
-            name='Messages'
+            key='MessagesIndex'
+            name='MessagesIndex'
             component={Messages}
         />
 
