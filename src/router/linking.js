@@ -6,16 +6,6 @@ import { dataGenerator } from '../utils';
 
 const config = {
     screens: {
-        Messages: {
-            screens: {
-                Channel: {
-                    path: "public-channel/:id",
-                    parse: {
-                        id: (id) => `${id}`,
-                    },
-                },
-            },
-        },
         Requests: {
             path: "buyAd-requests",
         },
@@ -50,7 +40,13 @@ const config = {
                     parse: {
                         user_name: user_name => `${user_name}`
                     }
-                }
+                },
+                Channel: {
+                    path: "public-channel/:id",
+                    parse: {
+                        id: id => `${id}`
+                    },
+                },
             }
         },
     },
@@ -94,52 +90,50 @@ const handleIncomingEvent = (url) => {
     else {
         url = url.split('/')[3]
     }
-    if (url.includes('public-channel')) {
-        return navigationRef.current.navigate('Messages', {
-            screen: 'Channel',
-        });
-    }
-    else {
-        switch (url) {
-            case 'register-product-successfully':
-                console.log('here')
-                return RootNavigation.navigate('RegisterProductStack', {
-                    screen: 'RegisterProductSuccessfully',
-                    params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
-                });
-            case 'pricing':
-                return RootNavigation.navigate('MyBuskool', {
-                    screen: 'PromoteRegistration',
-                    params: { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_pricing_') }
-                });
+    // if (url.includes('public-channel')) {
+    //     return navigationRef.current.navigate('Messages', {
+    //         screen: 'Channel',
+    //     });
+    // }
+    switch (url) {
+        case 'register-product-successfully':
+            console.log('here')
+            return RootNavigation.navigate('RegisterProductStack', {
+                screen: 'RegisterProductSuccessfully',
+                params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
+            });
+        case 'pricing':
+            return RootNavigation.navigate('MyBuskool', {
+                screen: 'PromoteRegistration',
+                params: { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_pricing_') }
+            });
 
-            case 'product-list':
-                return navigationRef.current.navigate('Home', {
-                    screen: 'ProductsList',
-                    params: { needToRefreshKey: dataGenerator.generateKey('product_list_from_product_list_') }
-                });
+        case 'product-list':
+            return navigationRef.current.navigate('Home', {
+                screen: 'ProductsList',
+                params: { needToRefreshKey: dataGenerator.generateKey('product_list_from_product_list_') }
+            });
 
-            case 'register-product': {
-                return navigationRef.current.navigate('RegisterProductStack', {
-                    screen: 'RegisterProduct',
-                    params: { needToRefreshKey: dataGenerator.generateKey('register_product_from_register_product_') }
-                });
-            }
-            case 'buyAd-requests': {
-                AsyncStorage.getItem('@registerProductParams').then(result => {
-                    result = JSON.parse(result);
-                    if (result && result.subCategoryId && result.subCategoryName) {
-                        return navigationRef.current.navigate('Requests', {
-                            needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_'),
-                            subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName
-                        });
-                    }
-                    return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
-                })
-            };
-            default:
-                break;
+        case 'register-product': {
+            return navigationRef.current.navigate('RegisterProductStack', {
+                screen: 'RegisterProduct',
+                params: { needToRefreshKey: dataGenerator.generateKey('register_product_from_register_product_') }
+            });
         }
+        case 'buyAd-requests': {
+            AsyncStorage.getItem('@registerProductParams').then(result => {
+                result = JSON.parse(result);
+                if (result && result.subCategoryId && result.subCategoryName) {
+                    return navigationRef.current.navigate('Requests', {
+                        needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_'),
+                        subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName
+                    });
+                }
+                return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
+            })
+        };
+        default:
+            break;
     }
 };
 
