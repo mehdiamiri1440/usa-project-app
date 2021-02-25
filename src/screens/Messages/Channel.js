@@ -252,6 +252,51 @@ const Channel = props => {
         )
     };
 
+    const sendCtaLink = url => {
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
+            }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
+    };
+
+    const renderCtaText = (cta_text, cta_link) => {
+        if (cta_text && cta_text.length && cta_link && cta_link.length)
+            return (
+                <TouchableOpacity
+                    onPress={_ => sendCtaLink(cta_link)}
+                    style={{
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(0,0,0,0.4)',
+                        marginRight: 12,
+                        marginBottom: 10,
+                        width: deviceWidth * 0.72,
+                        padding: 10,
+                        borderRadius: 6,
+                        alignItems: 'center'
+                    }}>
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            marginHorizontal: 3,
+                            fontSize: 16
+                        }}
+                    >
+                        {cta_text}
+                    </Text>
+                    <FontAwesome5 name='share' color='white' size={15} />
+                </TouchableOpacity>
+            )
+        return null;
+    };
+
     const renderItem = ({ item, index }) => {
 
         const {
@@ -260,7 +305,9 @@ const Channel = props => {
             created_at = '',
             is_product = false,
             is_sharable = false,
-            id = ''
+            id = '',
+            cta_text = '',
+            cta_link = ''
         } = item;
 
         return (
@@ -277,7 +324,7 @@ const Channel = props => {
                             flexDirection: 'row-reverse'
                         }}
                     >
-                        {!!is_sharable ? <TouchableOpacity
+                        {!!is_sharable && !cta_link && !cta_text ? <TouchableOpacity
                             onPress={_ => forwardMessage(id)}
                             style={{
                                 backgroundColor: 'rgba(102,102,102,0.44)',
@@ -388,7 +435,7 @@ const Channel = props => {
                             {locales('titles.sendToFriends')}
                         </Text>
                         <FontAwesome5 name='share' color='white' size={15} />
-                    </TouchableOpacity> : null}
+                    </TouchableOpacity> : renderCtaText(cta_text, cta_link)}
                 </View>
             </>
 

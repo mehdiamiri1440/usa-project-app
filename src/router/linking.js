@@ -1,5 +1,6 @@
 import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getStateFromPath } from '@react-navigation/native';
 import { navigationRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
 import { dataGenerator } from '../utils';
@@ -28,6 +29,9 @@ const config = {
                 PromoteRegistration: {
                     path: "pricing",
                 },
+                Authentication: {
+                    path: "verification",
+                },
             },
         },
         RegisterProductSuccessfully: {
@@ -47,14 +51,23 @@ const config = {
                         id: id => `${id}`
                     },
                 },
+                MessagesIndex: {
+                    path: 'messenger/:tabIndex',
+                    parse: {
+                        tabIndex: tabIndex => tabIndex == 'buy-ads' ? 1 : 0
+                    },
+                }
             }
+        },
+        SpecialProducts: {
+            path: "special-products",
         },
     },
 };
 
 const linking = {
     prefixes: ["buskool://", "https://www.buskool.com", "http://www.buskool.com",
-        "http://www.alidelkhosh.ir", "https://www.alidelkhosh.ir"
+        "http://www.alidelkhosh.ir", "https://www.alidelkhosh.ir",
     ],
     config,
     getInitialURL: async _ => {
@@ -64,6 +77,18 @@ const linking = {
             handleIncomingEvent(url)
             return url;
         }
+    },
+    getStateFromPath: (path, options) => {
+        if (path.includes('seller'))
+            path = path.replace("/seller/", "")
+
+        if (path.includes('buyer'))
+            path = path.replace("/buyer/", "")
+
+        if (path.includes('profile'))
+            path = path.replace("/profile/", "")
+
+        return getStateFromPath(path, options);
     },
     subscribe: (listener) => {
         const onReceiveURL = ({ url }) => {
