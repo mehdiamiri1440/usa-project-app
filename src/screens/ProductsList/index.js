@@ -41,6 +41,7 @@ class ProductsList extends PureComponent {
             categoryModalFlag: false,
             to_record_number: 15,
             sort_by: ENUMS.SORT_LIST.values.BM,
+            searchLoader: false,
             loaded: false,
             searchFlag: false,
             showModal: false,
@@ -233,7 +234,7 @@ class ProductsList extends PureComponent {
                 analytics().logEvent('search_text', {
                     text
                 })
-                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
+                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0, searchLoader: false })
             }).catch(error => {
                 this.setState({
                     //  showModal: true, 
@@ -447,7 +448,7 @@ class ProductsList extends PureComponent {
             allCitiesObject
         } = this.props;
 
-        const { searchText, loaded, productsListArray, selectedButton,
+        const { searchText, loaded, productsListArray, selectedButton, searchLoader,
             categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
@@ -865,7 +866,9 @@ class ProductsList extends PureComponent {
                                     }
                                 </Text>
                             </TouchableOpacity>
-                            <Input value={searchText}
+                            <Input
+                                value={searchText}
+                                onEndEditing={_ => this.setState({ searchLoader: true })}
                                 ref={this.serachInputRef}
                                 disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
@@ -986,7 +989,7 @@ class ProductsList extends PureComponent {
                     }
                     // initialScrollIndex={0}
                     // refreshing={(!loaded && productsListLoading) || categoriesLoading}
-                    refreshing={false}
+                    refreshing={!!productsListLoading && !!searchLoader}
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,

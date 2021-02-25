@@ -39,6 +39,7 @@ class SpecialProducts extends PureComponent {
             specialProductsListArray: [],
             categoryModalFlag: false,
             to_record_number: 15,
+            searchLoader: false,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false,
@@ -170,7 +171,7 @@ class SpecialProducts extends PureComponent {
                 analytics().logEvent('search_text', {
                     text
                 })
-                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
+                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0, searchLoader: false })
             })
             // .catch(error => {
             //     this.setState({ showModal: true })
@@ -369,7 +370,7 @@ class SpecialProducts extends PureComponent {
             allCitiesObject
         } = this.props;
 
-        const { searchText, loaded, specialProductsListArray, selectedButton,
+        const { searchText, loaded, specialProductsListArray, selectedButton, searchLoader,
             categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
 
         let { provinces = [] } = allProvincesObject;
@@ -781,6 +782,7 @@ class SpecialProducts extends PureComponent {
                             <Input value={searchText}
                                 ref={this.serachInputRef}
                                 disabled={!!specialProductsListLoading}
+                                onEndEditing={_ => this.setState({ searchLoader: true })}
                                 onChangeText={text => this.handleSearch(text)}
                                 style={{ paddingBottom: 10, fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
@@ -873,7 +875,10 @@ class SpecialProducts extends PureComponent {
                     }}
                     // initialNumToRender={2}
                     // initialScrollIndex={0}
-                    refreshing={(!loaded && specialProductsListLoading) || categoriesLoading}
+                    refreshing={((!loaded && specialProductsListLoading) || categoriesLoading)
+                        ||
+                        (!!specialProductsListLoading && !!searchLoader)
+                    }
                     onRefresh={() => {
                         let item = {
                             from_record_number: 0,
