@@ -273,7 +273,7 @@ const Channel = props => {
                     style={{
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
-                        backgroundColor: 'rgba(0,0,0,0.4)',
+                        backgroundColor: 'rgba(112,121,133,1)',
                         marginRight: 12,
                         marginBottom: 10,
                         width: deviceWidth * 0.72,
@@ -281,7 +281,9 @@ const Channel = props => {
                         borderRadius: 6,
                         alignItems: 'center'
                     }}>
+                    <FontAwesome5 name='link' color='white' size={15} />
                     <Text
+                        numberOfLines={1}
                         style={{
                             color: 'white',
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -291,7 +293,6 @@ const Channel = props => {
                     >
                         {cta_text}
                     </Text>
-                    <FontAwesome5 name='share' color='white' size={15} />
                 </TouchableOpacity>
             )
         return null;
@@ -424,6 +425,7 @@ const Channel = props => {
                             borderRadius: 6,
                             alignItems: 'center'
                         }}>
+                        <FontAwesome5 name='share' color='white' size={15} />
                         <Text
                             style={{
                                 color: 'white',
@@ -434,7 +436,6 @@ const Channel = props => {
                         >
                             {locales('titles.sendToFriends')}
                         </Text>
-                        <FontAwesome5 name='share' color='white' size={15} />
                     </TouchableOpacity> : renderCtaText(cta_text, cta_link)}
                 </View>
             </>
