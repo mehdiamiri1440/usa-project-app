@@ -216,7 +216,7 @@ const routes = props => {
                                     currentRoute = e.target;
                                     if (is_seller)
                                         return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
-                                    return navigationRef.current.navigate('Messages');
+                                    return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
                                 },
                             }}
                             options={{
