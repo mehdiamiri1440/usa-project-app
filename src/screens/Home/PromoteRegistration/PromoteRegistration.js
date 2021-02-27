@@ -1041,6 +1041,38 @@ class PromoteRegistration extends React.Component {
 
                                             textAlignVertical: 'center', paddingBottom: 5
                                         }}>
+                                            {locales('labels.advertiseProductsInBuskoolChannel')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <FontAwesome5
+                                            name='times-circle'
+                                            color='#E41C38'
+                                            style={{ marginHorizontal: 5 }}
+                                            solid
+                                            size={25}
+                                        />
+                                    </Text>
+
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row-reverse', marginTop: 10, padding: 10,
+                                    justifyContent: 'space-between', width: '100%'
+                                }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#CCCCCC', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
                                             {locales('labels.validatedSellerSign')}
                                         </Text>
                                     </View>

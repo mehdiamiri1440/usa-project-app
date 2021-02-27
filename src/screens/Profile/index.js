@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-    Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal
+    Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
@@ -191,23 +191,35 @@ class Profile extends PureComponent {
         analytics().logEvent('profile_share', {
             contact_id: this.state.userIdFromByUserName
         });
-        try {
-            const result = await Share.share({
-                message:
-                    `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
-            });
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                } else {
-                    // shared
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
+        // try {
+        //     const result = await Share.share({
+        //         message:
+        //             `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
+        //     });
+        //     if (result.action === Share.sharedAction) {
+        //         if (result.activityType) {
+        //             // shared with activity type of result.activityType
+        //         } else {
+        //             // shared
+        //         }
+        //     } else if (result.action === Share.dismissedAction) {
+        //         // dismissed
+        //     }
+        // } catch (error) {
+        //     console.log(error.message);
+        // }
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${this.props.route && this.props.route.params && this.props.route.params.user_name || ''}`;
+
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
             }
-        } catch (error) {
-            console.log(error.message);
-        }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
     };
 
     closeModal = _ => {
@@ -662,7 +674,7 @@ class Profile extends PureComponent {
                             </View> : null}
 
                         </View>
-                        {(rating_info && rating_info.avg_score > 0 && rating_info.total_count > 0) ? <View style={{
+                        {(rating_info && rating_info.avg_score > 0) ? <View style={{
                             flex: 1,
                             marginVertical: 10,
                             borderRadius: 4, borderWidth: 0.8, borderColor: '#777777',

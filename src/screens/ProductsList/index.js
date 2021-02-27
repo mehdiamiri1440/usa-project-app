@@ -214,6 +214,7 @@ class ProductsList extends PureComponent {
         };
         if (text)
             item = {
+                ...item,
                 search_text: text,
                 sort_by,
             };
@@ -461,7 +462,6 @@ class ProductsList extends PureComponent {
         }
 
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
-
         return (
             <>
                 <NoConnection

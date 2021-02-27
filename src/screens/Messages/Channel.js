@@ -169,13 +169,13 @@ const Channel = props => {
                 <Image
                     source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
                     style={{
-                        resizeMode: 'contain',
-                        width: '100%',
+                        resizeMode: 'cover',
+                        width: deviceWidth * 0.66,
                         alignSelf: 'center',
                         marginTop: 10,
                         borderWidth: 1,
                         borderColor: '#EEEEEE',
-                        height: deviceWidth * 0.57,
+                        height: deviceWidth * 0.66,
                         borderRadius: 5
                     }}
                 />
@@ -273,7 +273,7 @@ const Channel = props => {
                     style={{
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
-                        backgroundColor: 'rgba(112,121,133,1)',
+                        backgroundColor: 'rgba(56,72,95,.67)',
                         marginRight: 12,
                         marginBottom: 10,
                         width: deviceWidth * 0.72,
@@ -357,12 +357,9 @@ const Channel = props => {
                                 <Image
                                     source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
                                     style={{
-                                        maxWidth: 270,
-                                        width: '100%',
-                                        minWidth: 200,
-                                        height: 300,
-                                        maxHeight: 350,
-                                        minHeight: 250,
+                                        alignSelf: 'center',
+                                        width: deviceWidth * 0.66,
+                                        height: deviceWidth * 0.66,
                                         resizeMode: 'cover',
                                     }}
                                 />
@@ -418,9 +415,9 @@ const Channel = props => {
                             flexDirection: 'row-reverse',
                             justifyContent: 'center',
                             backgroundColor: 'rgba(0,0,0,0.4)',
-                            marginRight: 12,
+                            marginRight: 17,
                             marginBottom: 10,
-                            width: deviceWidth * 0.72,
+                            width: deviceWidth * 0.705,
                             padding: 10,
                             borderRadius: 6,
                             alignItems: 'center'
@@ -559,7 +556,8 @@ const Channel = props => {
                     flexDirection: 'row-reverse',
                     alignContent: 'center',
                     alignItems: 'center',
-                    height: 53,
+                    height: 60,
+                    paddingTop: 2,
                     shadowOffset: { width: 20, height: 20 },
                     shadowColor: 'black',
                     shadowOpacity: 1.0,
@@ -567,7 +565,7 @@ const Channel = props => {
                     zIndex: 1
                 }}>
                 <TouchableOpacity
-                    style={{ flexDirection: 'row-reverse' }}
+                    style={{ flexDirection: 'row-reverse', paddingVertical: 10, }}
                     onPress={() => props.navigation.goBack()}>
                     <View
                         style={{
@@ -580,7 +578,7 @@ const Channel = props => {
                     </View>
                     <Image
                         style={{
-                            borderRadius: 23,
+                            borderRadius: 23, marginVertical: 10,
                             width: 46, height: 46
                         }}
                         source={require('../../../assets/icons/buskool-logo.png')}

@@ -717,7 +717,6 @@ class RegisterRequest extends Component {
         )
     };
 
-
     handleProductTypeExample = _ => {
         const {
             selectedSvgName
@@ -733,10 +732,19 @@ class RegisterRequest extends Component {
             case 'غلات': {
                 return locales('titles.hendi1121');
             };
+            case 'خشکبار': {
+                return locales('titles.pesteFandoghi');
+            };
+            case 'ادویه': {
+                return locales('titles.zaferanNegini');
+            };
+            case 'دامپروری': {
+                return locales('titles.asalChehelGiyah');
+            };
             default:
                 return locales('titles.mazafati');
         }
-    }
+    };
 
 
     render() {
@@ -970,7 +978,6 @@ class RegisterRequest extends Component {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                     fontSize: 14,
                                                     height: 45,
-                                                    backgroundColor: '#fff',
                                                     direction: 'rtl',
                                                     textAlign: 'right'
                                                 }}

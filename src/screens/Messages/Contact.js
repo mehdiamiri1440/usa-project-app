@@ -44,7 +44,8 @@ const ContactsList = props => {
                 <View>
                     <View
                         style={{
-                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                            width: deviceWidth * 0.8,
+                            paddingHorizontal: 10,
                             flexDirection: 'row-reverse',
                             justifyContent: 'space-between',
                         }}
@@ -66,7 +67,8 @@ const ContactsList = props => {
 
                     <View
                         style={{
-                            width: (deviceWidth - (deviceWidth * 0.28)), paddingHorizontal: 10,
+                            width: deviceWidth * 0.8,
+                            paddingHorizontal: 10,
                             flexDirection: 'row-reverse',
                             justifyContent: 'space-between',
                         }}

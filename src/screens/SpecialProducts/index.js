@@ -151,6 +151,7 @@ class SpecialProducts extends PureComponent {
         };
         if (text)
             item = {
+                ...item,
                 search_text: text,
                 sort_by,
             };

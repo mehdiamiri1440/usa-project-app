@@ -631,6 +631,15 @@ class SelectCategory extends Component {
             case 'غلات': {
                 return locales('titles.hendi1121');
             };
+            case 'خشکبار': {
+                return locales('titles.pesteFandoghi');
+            };
+            case 'ادویه': {
+                return locales('titles.zaferanNegini');
+            };
+            case 'دامپروری': {
+                return locales('titles.asalChehelGiyah');
+            };
             default:
                 return locales('titles.mazafati');
         }

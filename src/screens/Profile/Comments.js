@@ -133,6 +133,26 @@ const Comments = props => {
         });
     };
 
+    const renderListEmptyComponent = _ => {
+        if (fullName && userId && commentsAndRatings.deleted_count > 0)
+            return null;
+        return (
+            <View style={{
+                alignSelf: 'center', justifyContent: 'flex-start',
+                alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93,
+
+            }}>
+                <FontAwesome5 name='comment-dots' solid size={80} color='#BEBEBE' />
+                <Text style={{
+                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}
+                >
+                    {locales('titles.noComment')}</Text>
+            </View>
+        )
+    };
+
     const renderItem = ({ item }) => {
         return (
             <View
@@ -388,6 +408,7 @@ const Comments = props => {
                 renderItem={renderItem}
                 ListHeaderComponent={renderListHeaderComponent}
                 ListFooterComponent={renderListFooterComponent}
+                ListEmptyComponent={renderListEmptyComponent}
                 data={commentsList.slice(0, commentsListSliceToShow)}
                 ItemSeparatorComponent={renderItemSeparatorComponent}
                 keyExtractor={(_, index) => index.toString()}

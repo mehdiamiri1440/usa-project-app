@@ -35,7 +35,7 @@ const ChannelInContactsList = ({
                 source={require('../../../assets/icons/buskool-logo.png')}
             />
             <View style={{
-                width: deviceWidth - 55,
+                width: deviceWidth * 0.94,
             }}>
                 <View
                     style={{
