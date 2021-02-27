@@ -36,49 +36,49 @@
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
         <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/product-list" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyAd-requests" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" />
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/product-list" /> -->
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyAd-requests" /> -->
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product" /> -->
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" /> -->
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/public-channel" />
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/shared-profile" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/seller" />
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" /> -->
+        <!-- <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/seller" />
         <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyer" />
-        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/profile" />
+        <data android:scheme="https" android:host="www.alidelkhosh.ir" android:pathPrefix="/profile" /> -->
 
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/product-list" />
+        <!-- <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/product-list" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/buyAd-requests" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product" />
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" />
+        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" /> -->
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/public-channel" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/shared-profile" />
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/pricing" />
+        <!-- <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/pricing" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/seller" />
         <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/buyer" />
-        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/profile" />
+        <data android:scheme="https" android:host="www.buskool.com" android:pathPrefix="/profile" /> -->
 
-        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/product-list" />
+        <!-- <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/product-list" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyAd-requests" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product" />
-        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" />
+        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/register-product-successfully" /> -->
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/public-channel" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/shared-profile" />
-        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" />
+        <!-- <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/pricing" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/seller" />
         <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/buyer" />
-        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/profile" />
+        <data android:scheme="http" android:host="www.alidelkhosh.ir" android:pathPrefix="/profile" /> -->
 
-        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/product-list" />
+        <!-- <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/product-list" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/buyAd-requests" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/register-product" />
-        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" />
+        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/register-product-successfully" /> -->
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/public-channel" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/shared-profile" />
-        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/pricing" />
+        <!-- <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/pricing" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/seller" />
         <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/buyer" />
-        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/profile" />
+        <data android:scheme="http" android:host="www.buskool.com" android:pathPrefix="/profile" /> -->
         
         <!-- note that the leading "/" is required for pathPrefix-->
       </intent-filter>

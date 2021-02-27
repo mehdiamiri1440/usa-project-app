@@ -869,6 +869,7 @@ class ProductsList extends PureComponent {
                             <Input
                                 value={searchText}
                                 onEndEditing={_ => this.setState({ searchLoader: true })}
+                                onBlur={_ => this.setState({ searchLoader: false })}
                                 ref={this.serachInputRef}
                                 disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}

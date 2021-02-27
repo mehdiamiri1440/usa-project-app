@@ -17,6 +17,8 @@ import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.masteratul.RNAppstoreVersionCheckerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.brentvatne.react.ReactVideoPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 
 public class MainApplication extends NavigationApplication {
 
