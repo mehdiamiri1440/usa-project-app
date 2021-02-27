@@ -142,7 +142,7 @@ const Comments = props => {
                 alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.93,
 
             }}>
-                <FontAwesome5 name='comment-dots' solid size={80} color='#BEBEBE' />
+                <FontAwesome5 name='comment-alt' solid size={80} color='#BEBEBE' />
                 <Text style={{
                     color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     fontSize: 17, padding: 15, textAlign: 'center'

@@ -50,7 +50,7 @@ export const routeToScreensFromNotifications = (remoteMessage, props) => {
   if (navigationRef.current) {
     switch (remoteMessage.data.BTarget) {
       case 'messages': {
-        return navigationRef.current.navigate('Messages');
+        return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
       }
       case 'myProducts': {
         if (is_seller) {
