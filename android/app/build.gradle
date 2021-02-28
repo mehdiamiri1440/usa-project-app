@@ -165,9 +165,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
             vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
-        versionCode 9
+        versionCode 10
         multiDexEnabled true
-        versionName "3.0.0.9911.0"
+        versionName "4.0.0.9912.1"
     //     ndk {
     //   // Specifies the ABI configurations of your native
     //   // libraries Gradle should build and package with your APK.
