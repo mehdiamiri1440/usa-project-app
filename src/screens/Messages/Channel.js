@@ -635,7 +635,7 @@ const Channel = props => {
                     width: 50,
                     position: 'absolute',
                     left: '44%',
-                    top: '10%',
+                    top: '15%',
                     height: 50,
                     borderRadius: 25
 
