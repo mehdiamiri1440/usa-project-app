@@ -206,7 +206,7 @@ class ProductsList extends PureComponent {
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
-        this.setState({ searchText: text });
+        this.setState({ searchText: text, searchLoader: true });
         let item = {
             sort_by,
             from_record_number: 0,
@@ -239,7 +239,7 @@ class ProductsList extends PureComponent {
             }).catch(error => {
                 this.setState({
                     //  showModal: true, 
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false, searchLoader: false
                 })
             });
         }, 1500);
@@ -868,8 +868,6 @@ class ProductsList extends PureComponent {
                             </TouchableOpacity>
                             <Input
                                 value={searchText}
-                                onEndEditing={_ => this.setState({ searchLoader: true })}
-                                onBlur={_ => this.setState({ searchLoader: false })}
                                 ref={this.serachInputRef}
                                 disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
