@@ -10,6 +10,8 @@ import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import * as authReducer from '../../redux/auth/actions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
+import { deviceWidth } from '../../utils';
+import { versionName } from '../../../version.json';
 
 let settingRoutes = [
     // { label: 'labels.changePassword', icon: <FontAwesome size={25} name='unlock-alt' color='white' />, name: 'ChangePassword' },
@@ -127,6 +129,18 @@ class Settings extends React.Component {
                         backgroundColor: 'white', width: 40, height: 40, borderRadius: 20
                     }}
                 /> : null}
+                <Text
+                    style={{
+                        color: '#777777',
+                        textAlign: 'center',
+                        width: deviceWidth,
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        marginBottom: 20
+                    }}
+                >
+                    {locales('titles.versionName', { fieldName: versionName })}
+                </Text>
             </>
         )
     }
