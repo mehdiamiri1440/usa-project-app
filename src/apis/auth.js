@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { requester } from '../utils';
+import RnRestart from 'react-native-restart';
 
 
 const storeData = (payload) => {
@@ -56,15 +57,18 @@ export const logOut = () => {
                 method: 'GET',
                 withAuth: false,
             })
-            .then(async (result) => {
-                result = await AsyncStorage.removeItem('@Authorization')
-                resolve(result);
+            .then(result => {
+                AsyncStorage.removeItem('@Authorization').then(res => {
+                    resolve(result);
+                    setTimeout(() => {
+                        RnRestart.Restart();
+                    }, 5000);
+                })
             })
             .catch(err => {
                 if (err && !err.response)
                     // return reject(err.response);
                     return reject(err);
-
             });
     });
 };

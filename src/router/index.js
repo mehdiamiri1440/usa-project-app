@@ -453,8 +453,8 @@ const App = (props) => {
           </Dialog.Actions>
         </Dialog>
       </Portal >
-
-      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId) || props.logOutLoading)) ?
+      {console.log('logout error', props.logOutError, 'userprofileerror', props.userProfileError, 'userprofileloading', props.userProfileLoading, 'loggedinuserid', props.loggedInUserId, 'logoutloading', props.logOutLoading)}
+      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId))) ?
         <View style={{
           backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
           position: 'absolute',

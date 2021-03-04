@@ -55,16 +55,14 @@ const getRequestHeaders = async () => {
 
 
 
-const redirectToLogin = _ => {
+export const redirectToLogin = _ => {
     const store = configureStore();
-    AsyncStorage.removeItem('@Authorization')
-        .then(_ => store.dispatch(authActions.logOut())
-            .then(_ => RnRestart.Restart()));
+    store.dispatch(authActions.logOut())
 };
 
 
 
-const refreshToken = (route, method, data, withAuth, headers, token) => {
+export const refreshToken = (route, method, data, withAuth, headers, token) => {
     AsyncStorage.setItem("@Authorization", token)
         .then(_ => fetchAPI({ route, method, data, withAuth }));
 };
@@ -81,7 +79,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 data,
                 params,
                 // withCredentials: withAuth,
-                timeout: 5000,
+                timeout: 15000,
             })
             .then(async result => {
                 resolve(result.data ? result.data : result);
