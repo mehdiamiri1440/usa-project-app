@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { Text, View, Modal, TouchableOpacity, ScrollView, StyleSheet, BackHandler, Linking, RefreshControl } from 'react-native';
+import { Text, View, Modal, TouchableOpacity, ScrollView, StyleSheet, BackHandler, ActivityIndicator, Linking, RefreshControl } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
+import { numberWithCommas } from '../../../utils/formatter';
 
 class PromoteRegistration extends React.Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class PromoteRegistration extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('package_payment');
+        this.props.fetchPackagesPrices();
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.props.navigation.goBack()
             return true;
@@ -65,7 +67,18 @@ class PromoteRegistration extends React.Component {
             dashboard,
             isUsedAsComponent = false,
             showBothPackages = true,
+            packagesPrices = {},
+            packagesPricesLoading
         } = this.props;
+
+        const {
+            prices = {}
+        } = packagesPrices;
+
+        const {
+            "type-1": typeOne,
+            "type-3": typeThree,
+        } = prices;
 
         let {
             active_package_type: activePackageType = 0,
@@ -608,7 +621,7 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}>
-                                {locales('titles.monthly')} <Text
+                                {locales('titles.annuan')} <Text
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -616,13 +629,14 @@ class PromoteRegistration extends React.Component {
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
                                     }}
-                                >89,000
+                                >
+                                    {typeThree ? numberWithCommas(typeThree / 10) : ' '}
                                 </Text>
                                 {` ${locales('titles.toman')} `}
                             </Text>
                             {/* </LinearGradient> */}
 
-                            <View style={{
+                            {/* <View style={{
                                 flexDirection: 'row-reverse', marginVertical: 10,
                                 backgroundColor: '#EEFEF6', alignItems: 'center',
                                 padding: 10, justifyContent: 'center', width: '100%'
@@ -644,7 +658,7 @@ class PromoteRegistration extends React.Component {
                                 >
                                     {locales('titles.oneMonthFree')}
                                 </Text>
-                            </View>
+                            </View> */}
 
                             <View style={{
                             }}>
@@ -840,7 +854,7 @@ class PromoteRegistration extends React.Component {
                                     />
 
                                 </View>
-
+                                {/* 
                                 <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', marginTop: 10 }}>
                                     <Text style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
@@ -849,7 +863,7 @@ class PromoteRegistration extends React.Component {
                                     }}>
                                         {locales('labels.abilityToBuyYearly')}
                                     </Text>
-                                </View>
+                                </View> */}
 
 
                                 {activePackageType == 3 ? <View
@@ -879,7 +893,7 @@ class PromoteRegistration extends React.Component {
                                     >
                                         <TouchableOpacity
                                             // onPress={() => this.pay()}
-                                            onPress={_ => this.setState({ visibility: true, paymentType: 3 })}
+                                            onPress={_ => this.setState({ paymentType: 3 }, _ => this.pay(3))}
                                         >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
                                             </Text>
@@ -923,7 +937,7 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}>
-                                {locales('titles.monthly')} <Text
+                                {locales('titles.threeMonths')} <Text
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -931,7 +945,8 @@ class PromoteRegistration extends React.Component {
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
                                     }}
-                                >99,000
+                                >
+                                    {typeOne ? numberWithCommas(typeOne / 10) : ' '}
                                 </Text> {locales('titles.toman')}
                             </Text>
                             {/* </LinearGradient> */}
@@ -1091,7 +1106,7 @@ class PromoteRegistration extends React.Component {
                                     </Text>
                                 </View>
 
-                                <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
+                                {/* <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
                                     <Text style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
                                         textAlignVertical: 'center',
@@ -1099,7 +1114,7 @@ class PromoteRegistration extends React.Component {
                                     }}>
                                         {locales('labels.abilityToBuyThreeMonth')}
                                     </Text>
-                                </View>
+                                </View> */}
 
                                 {activePackageType == 1 ? <View
                                     style={{
@@ -1127,7 +1142,7 @@ class PromoteRegistration extends React.Component {
                                             margin: 20, backgroundColor: '#556080', alignSelf: 'center'
                                         }]}
                                         // onPress={() => this.pay(1)}
-                                        onPress={_ => this.setState({ visibility: true, paymentType: 1 })}
+                                        onPress={_ => this.setState({ paymentType: 1 }, _ => this.pay(1))}
                                     >
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
                                         </Text>
@@ -1299,20 +1314,41 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    return {
-        dashboardLoading: state.homeReducer.dashboardLoading,
-        dashboardError: state.homeReducer.dashboardError,
-        dashboardMessage: state.homeReducer.dashboardMessage,
-        dashboardFailed: state.homeReducer.dashboardFailed,
-        dashboard: state.homeReducer.dashboard,
+    const {
+        packagesPricesLoading,
+        packagesPricesFailed,
+        packagesPricesError,
+        packagesPricesMessage,
+        packagesPrices,
 
-        userProfile: state.profileReducer.userProfile
+        dashboard,
+        dashboardFailed,
+        dashboardMessage,
+        dashboardLoading,
+        dashboardError
+    } = state.homeReducer;
+
+    return {
+        dashboardLoading,
+        dashboardError,
+        dashboardMessage,
+        dashboardFailed,
+        dashboard,
+
+        packagesPricesLoading,
+        packagesPricesFailed,
+        packagesPricesError,
+        packagesPricesMessage,
+        packagesPrices,
+
+        userProfile: state.profileReducer.userProfile,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
+        fetchPackagesPrices: () => dispatch(homeActions.fetchPackagesPrices()),
     }
 };
 

@@ -5,6 +5,12 @@ const INITIAL_STATE = {
     dashboardError: false,
     dashboardMessage: null,
     dashboard: {},
+
+    packagesPricesLoading: false,
+    packagesPricesFailed: false,
+    packagesPricesError: false,
+    packagesPricesMessage: null,
+    packagesPrices: {},
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -49,6 +55,49 @@ export default (state = INITIAL_STATE, action) => {
                 dashboardFailed: false,
                 dashboardError: true,
                 dashboardMessage: null
+            };
+        };
+
+
+        case actionTypes.FETCH_PACKAGES_PRICES_LOADING: {
+            return {
+                ...state,
+                packagesPrices: {},
+                packagesPricesLoading: true,
+                packagesPricesFailed: false,
+                packagesPricesError: false,
+                packagesPricesMessage: null
+            };
+        };
+        case actionTypes.FETCH_PACKAGES_PRICES_SUCCESSFULLY: {
+            return {
+                ...state,
+                packagesPrices: { ...action.payload },
+                packagesPricesLoading: false,
+                packagesPricesFailed: false,
+                packagesPricesError: false,
+                packagesPricesMessage: null,
+            };
+        };
+        case actionTypes.FETCH_PACKAGES_PRICES_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                packagesPrices: {},
+                packagesPricesLoading: false,
+                packagesPricesFailed: true,
+                packagesPricesError: false,
+                packagesPricesMessage: null
+            };
+        };
+        case actionTypes.FETCH_PACKAGES_PRICES_REJECT: {
+            return {
+                ...state,
+                packagesPrices: {},
+                packagesPricesLoading: false,
+                packagesPricesFailed: false,
+                packagesPricesError: true,
+                packagesPricesMessage: null
             };
         };
 

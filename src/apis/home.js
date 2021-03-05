@@ -21,3 +21,24 @@ export const fetchAllDashboardData = () => {
     });
 };
 
+
+export const fetchPackagesPrices = () => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `/payment/get-packages-price`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
