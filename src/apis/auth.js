@@ -6,7 +6,7 @@ import RnRestart from 'react-native-restart';
 const storeData = (payload) => {
     return new Promise((resolve, _) => {
         if (payload.token)
-            AsyncStorage.setItem('@Authorization', payload.token).then(_ => {
+            AsyncStorage.setItem('@Authorization', JSON.stringify(payload.token)).then(_ => {
                 resolve(payload);
             })
         else
@@ -60,9 +60,6 @@ export const logOut = () => {
             .then(result => {
                 AsyncStorage.removeItem('@Authorization').then(res => {
                     resolve(result);
-                    setTimeout(() => {
-                        RnRestart.Restart();
-                    }, 5000);
                 })
             })
             .catch(err => {
