@@ -453,29 +453,37 @@ const App = (props) => {
           </Dialog.Actions>
         </Dialog>
       </Portal >
-      {console.log('logout error', props.logOutError, 'userprofileerror', props.userProfileError, 'userprofileloading', props.userProfileLoading, 'loggedinuserid', props.loggedInUserId, 'logoutloading', props.logOutLoading)}
+
       {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId))) ?
         <View style={{
-          backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
+          elevation: 10,
+          backgroundColor: '#000546',
+          bottom: 53,
+          height: 50,
+          width: deviceWidth,
+          paddingHorizontal: 10,
           position: 'absolute',
-
-          elevation: 5,
-          borderColor: 'black',
-          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          flexDirection: 'row-reverse'
         }}>
-          <ActivityIndicator size={70}
+          <Text
             style={{
-              position: 'absolute', left: '42%', top: '40%',
-
-              elevation: 0,
-              borderColor: 'black',
-              backgroundColor: 'white', borderRadius: 25
+              color: 'white',
+              fontSize: 14,
+              marginHorizontal: 3,
+              fontFamily: 'IRANSansWeb(FaNum)_Medium',
             }}
-            color="#00C569"
-
+          >
+            {locales('labels.pleaseWait')}
+          </Text>
+          <ActivityIndicator
+            size={20}
+            color="white"
           />
         </View>
         : null}
+
       <AppNavigator
         initialRoute={initialRoute}
         {...props}
