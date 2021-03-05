@@ -22,6 +22,7 @@ export const getTokenFromStorage = () => {
     return new Promise((resolve, reject) => {
         try {
             AsyncStorage.getItem('@Authorization').then(result => {
+                result = JSON.parse(result);
                 if (result !== null) {
                     resolve(result);
                 }
@@ -30,11 +31,11 @@ export const getTokenFromStorage = () => {
                 }
             })
                 .catch(error => {
-                    reject(error)
+                    resolve(randomToken)
                 })
         }
         catch (e) {
-            reject(randomToken)
+            resolve(randomToken)
         }
     })
 };
@@ -42,7 +43,6 @@ export const getTokenFromStorage = () => {
 
 const getRequestHeaders = async () => {
     let token = await getTokenFromStorage()
-
     if (!token || !token.length)
         token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
 
@@ -57,15 +57,19 @@ const getRequestHeaders = async () => {
 
 export const redirectToLogin = _ => {
     const store = configureStore();
-    store.dispatch(authActions.logOut())
+    return store.dispatch(authActions.logOut()).then(_ => setTimeout(() => RnRestart.Restart(), 10000))
 };
 
 
 
 export const refreshToken = (route, method, data, withAuth, headers, token) => {
-    AsyncStorage.setItem("@Authorization", token)
-        .then(_ => fetchAPI({ route, method, data, withAuth }));
+    return new Promise((resolve, reject) => {
+        AsyncStorage.setItem("@Authorization", JSON.stringify(token)).then(result => {
+            resolve(true)
+        });
+    })
 };
+
 
 
 export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
@@ -81,10 +85,10 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 // withCredentials: withAuth,
                 timeout: 15000,
             })
-            .then(async result => {
+            .then(result => {
                 resolve(result.data ? result.data : result);
             })
-            .catch(err => {
+            .catch(async err => {
                 if (err.response && err.response.status === 401) {
 
                     const {
@@ -96,10 +100,18 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     const conditions = status == false && refresh == true && token && token.length;
 
                     if (conditions) {
-                        refreshToken(route, method, data, withAuth, headers, token)
+                        const tokenSaved = await refreshToken(route, method, data, withAuth, headers, token)
+                        if (tokenSaved) {
+                            return fetchAPI({ route, method, data, withAuth })
+                                .then(result => resolve(result.data ? result.data : result))
+                                .catch(err => reject(err))
+                        }
+                        else {
+                            reject(err)
+                        }
                     }
                     else {
-                        redirectToLogin()
+                        return redirectToLogin()
                     }
                 }
 
