@@ -455,32 +455,43 @@ const App = (props) => {
       </Portal >
 
       {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId))) ?
-        <View style={{
-          elevation: 10,
-          backgroundColor: '#000546',
-          bottom: 53,
-          height: 50,
-          width: deviceWidth,
-          paddingHorizontal: 10,
-          position: 'absolute',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          flexDirection: 'row-reverse'
-        }}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14,
-              marginHorizontal: 3,
-              fontFamily: 'IRANSansWeb(FaNum)_Medium',
-            }}
-          >
-            {locales('labels.pleaseWait')}
-          </Text>
-          <ActivityIndicator
-            size={20}
-            color="white"
-          />
+        <View
+          style={{
+            position: 'absolute',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            zIndex: 9999,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            width: deviceWidth,
+            height: deviceHeight,
+            flex: 1
+          }}
+        >
+          <View style={{
+            backgroundColor: '#000546',
+            bottom: 78,
+            height: 50,
+            width: deviceWidth,
+            paddingHorizontal: 10,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            flexDirection: 'row-reverse'
+          }}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 14,
+                marginHorizontal: 3,
+                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+              }}
+            >
+              {locales('labels.pleaseWait')}
+            </Text>
+            <ActivityIndicator
+              size={20}
+              color="white"
+            />
+          </View>
         </View>
         : null}
 

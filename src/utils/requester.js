@@ -7,6 +7,8 @@ import * as authActions from '../redux/auth/actions';
 import configureStore from '../redux/configureStore';
 import { dataGenerator } from '../utils';
 
+const store = configureStore();
+
 export const getUrl = (route) => {
     // if (__DEV__) {
     //     if (!RNEmulatorCheck.isEmulator())
@@ -55,10 +57,7 @@ const getRequestHeaders = async () => {
 
 
 
-export const redirectToLogin = _ => {
-    const store = configureStore();
-    return store.dispatch(authActions.logOut()).then(_ => setTimeout(() => RnRestart.Restart(), 10000))
-};
+export const redirectToLogin = _ => store.dispatch(authActions.logOut()).then(_ => setTimeout(() => RnRestart.Restart(), 10000));
 
 
 
@@ -94,14 +93,14 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     const {
                         status,
                         refresh,
-                        token
+                        token = ''
                     } = err.response.data;
 
                     const conditions = status == false && refresh == true && token && token.length;
 
                     if (conditions) {
                         const tokenSaved = await refreshToken(route, method, data, withAuth, headers, token)
-                        if (tokenSaved) {
+                        if (tokenSaved === true) {
                             return fetchAPI({ route, method, data, withAuth })
                                 .then(result => resolve(result.data ? result.data : result))
                                 .catch(err => reject(err))
