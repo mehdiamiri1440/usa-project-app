@@ -96,7 +96,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                         token = ''
                     } = err.response.data;
 
-                    const conditions = status == false && refresh == true && token && token.length;
+                    const conditions = status == false && refresh == true && token && !!token.length;
 
                     if (conditions) {
                         const tokenSaved = await refreshToken(route, method, data, withAuth, headers, token)
