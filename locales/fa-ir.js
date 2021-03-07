@@ -441,6 +441,8 @@ export default {
     'titles.threeMonths': 'سه ماهه',
     'titles.submitEvidences': 'ثبت مدارک',
     'titles.editProfile': 'ویرایش پروفایل',
+    'titles.discount': 'تخفیف %{fieldName}',
+    'titles.forYouNewBuskoolUser': 'برای شما عضو جدید باسکول',
     'titles.otherRelatedBuyads': 'سایر درخواست‌های خرید (مرتبط و غیرمرتبط)',
     'titles.selectedBuyAdFilter': 'دسته بندی : {fieldName}',
     'titles.promoteDescriptionTitle': 'چرا ارتقا عضویت؟',

@@ -74,7 +74,6 @@ class PromoteRegistration extends React.Component {
         const {
             prices = {}
         } = packagesPrices;
-
         const {
             "type-1": typeOne,
             "type-3": typeThree,
@@ -630,7 +629,8 @@ class PromoteRegistration extends React.Component {
                                         textAlignVertical: 'center',
                                     }}
                                 >
-                                    {typeThree ? numberWithCommas(typeThree / 10) : ' '}
+                                    979,000
+                                    {/* {typeThree ? numberWithCommas(typeThree / 10) : ' '} */}
                                 </Text>
                                 {` ${locales('titles.toman')} `}
                             </Text>
@@ -864,7 +864,57 @@ class PromoteRegistration extends React.Component {
                                         {locales('labels.abilityToBuyYearly')}
                                     </Text>
                                 </View> */}
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            backgroundColor: '#E41C38',
+                                            alignItems: 'center', justifyContent: 'center',
+                                            width: '45%',
+                                            padding: 10, borderRadius: 5
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 18
+                                            }}
+                                        >
+                                            {locales('titles.discount', { fieldName: '30' })}
+                                        </Text>
+                                    </View>
 
+                                    <Text
+                                        style={{
+                                            color: '#777777',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 17,
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {locales('titles.forYouNewBuskoolUser')}
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#1DA1F2',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 30,
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {locales('titles.forYouNewBuskoolUser')}
+                                    </Text>
+                                </View>
 
                                 {activePackageType == 3 ? <View
                                     style={{
@@ -946,7 +996,8 @@ class PromoteRegistration extends React.Component {
                                         textAlignVertical: 'center',
                                     }}
                                 >
-                                    {typeOne ? numberWithCommas(typeOne / 10) : ' '}
+                                    {/* {typeOne ? numberWithCommas(typeOne / 10) : ' '} */}
+                                    279,000
                                 </Text> {locales('titles.toman')}
                             </Text>
                             {/* </LinearGradient> */}
