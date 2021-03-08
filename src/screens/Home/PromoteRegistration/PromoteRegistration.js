@@ -1,5 +1,8 @@
 import React, { createRef } from 'react';
-import { Text, View, Modal, TouchableOpacity, ScrollView, StyleSheet, BackHandler, ActivityIndicator, Linking, RefreshControl } from 'react-native';
+import {
+    Text, View, Modal, TouchableOpacity, ScrollView,
+    StyleSheet, BackHandler, Linking, RefreshControl
+} from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -75,9 +78,17 @@ class PromoteRegistration extends React.Component {
             prices = {}
         } = packagesPrices;
         const {
-            "type-1": typeOne,
-            "type-3": typeThree,
+            "type-1": typeOne = 0,
+            "type-3": typeThree = 0,
+            "type-1-discount": typeOneDiscount = 0,
+            "type-3-discount": typeThreeDiscount = 0,
+            "discount-deadline": discountDeadLine = {}
         } = prices;
+
+        const {
+            days = 0,
+            hours = 0
+        } = discountDeadLine;
 
         let {
             active_package_type: activePackageType = 0,
@@ -302,7 +313,7 @@ class PromoteRegistration extends React.Component {
                                     textAlignVertical: 'center',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#00C569'
-                                }}>{paymentType == 3 ? '979,000' : '297,000'}</Text> <Text
+                                }}>{paymentType == 3 ? numberWithCommas(typeThree) : numberWithCommas(typeOne)}</Text> <Text
                                     style={{
                                         color: '#666666',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -629,11 +640,12 @@ class PromoteRegistration extends React.Component {
                                         textAlignVertical: 'center',
                                     }}
                                 >
-                                    979,000
+                                    {numberWithCommas(typeThree / 10)}
                                     {/* {typeThree ? numberWithCommas(typeThree / 10) : ' '} */}
                                 </Text>
                                 {` ${locales('titles.toman')} `}
                             </Text>
+
                             {/* </LinearGradient> */}
 
                             {/* <View style={{
@@ -864,7 +876,7 @@ class PromoteRegistration extends React.Component {
                                         {locales('labels.abilityToBuyYearly')}
                                     </Text>
                                 </View> */}
-                                <View
+                                {activePackageType < 3 && typeThreeDiscount ? <View
                                     style={{
                                         width: '100%',
                                         justifyContent: 'center',
@@ -897,7 +909,7 @@ class PromoteRegistration extends React.Component {
                                             textAlign: 'center',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 17,
-                                            marginTop: 10
+                                            marginTop: 20
                                         }}
                                     >
                                         {locales('titles.forYouNewBuskoolUser')}
@@ -912,10 +924,98 @@ class PromoteRegistration extends React.Component {
                                             marginTop: 10
                                         }}
                                     >
-                                        {locales('titles.forYouNewBuskoolUser')}
+                                        {numberWithCommas(typeThreeDiscount / 10)} {locales('titles.toman')}
                                     </Text>
-                                </View>
 
+                                    <Text
+                                        style={{
+                                            color: '#808C9B',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 20,
+                                            textDecorationLine: 'line-through',
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {numberWithCommas(typeThree / 10)} {locales('titles.toman')}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            marginVertical: 10
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            name='clock'
+                                            color='#E41C38'
+                                            size={18}
+                                            style={{ marginHorizontal: 3 }}
+                                            solid
+                                        />
+
+                                        {days > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center'
+                                                }}
+                                            >
+                                                {locales('labels.day', { fieldName: days })}
+                                            </Text>
+                                            : null}
+
+                                        {hours > 0 && days > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center',
+                                                    marginHorizontal: 3
+                                                }}
+                                            >
+                                                {locales('labels.and')}
+                                            </Text>
+                                            : null
+                                        }
+
+                                        {hours > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center'
+                                                }}
+                                            >
+                                                {locales('labels.hours', { fieldName: hours })}
+                                            </Text>
+                                            : null}
+
+                                        <Text
+                                            style={{
+                                                color: '#808C9B',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 15,
+                                                marginHorizontal: 3,
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center'
+                                            }}
+                                        >
+                                            {locales('labels.tillEndOfTheDiscount')}
+                                        </Text>
+
+                                    </View>
+                                </View>
+                                    : null}
                                 {activePackageType == 3 ? <View
                                     style={{
                                         backgroundColor: '#f6f6f6',
@@ -997,7 +1097,7 @@ class PromoteRegistration extends React.Component {
                                     }}
                                 >
                                     {/* {typeOne ? numberWithCommas(typeOne / 10) : ' '} */}
-                                    279,000
+                                    {numberWithCommas(typeOne / 10)}
                                 </Text> {locales('titles.toman')}
                             </Text>
                             {/* </LinearGradient> */}
@@ -1157,6 +1257,149 @@ class PromoteRegistration extends React.Component {
                                     </Text>
                                 </View>
 
+                                {activePackageType < 1 && typeOneDiscount ? <View
+                                    style={{
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            backgroundColor: '#E41C38',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            width: '45%',
+                                            padding: 10,
+                                            borderRadius: 5,
+                                            marginTop: 20
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 18
+                                            }}
+                                        >
+                                            {locales('titles.discount', { fieldName: '30' })}
+                                        </Text>
+                                    </View>
+
+                                    <Text
+                                        style={{
+                                            color: '#777777',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 17,
+                                            marginTop: 20
+                                        }}
+                                    >
+                                        {locales('titles.forYouNewBuskoolUser')}
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#1DA1F2',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 30,
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {numberWithCommas(typeOneDiscount / 10)} {locales('titles.toman')}
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#808C9B',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 20,
+                                            textDecorationLine: 'line-through',
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {numberWithCommas(typeOne / 10)} {locales('titles.toman')}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            marginVertical: 10
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            name='clock'
+                                            color='#E41C38'
+                                            size={18}
+                                            style={{ marginHorizontal: 3 }}
+                                            solid
+                                        />
+
+                                        {days > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center'
+                                                }}
+                                            >
+                                                {locales('labels.day', { fieldName: days })}
+                                            </Text>
+                                            : null}
+
+                                        {hours > 0 && days > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center',
+                                                    marginHorizontal: 3
+                                                }}
+                                            >
+                                                {locales('labels.and')}
+                                            </Text>
+                                            : null
+                                        }
+
+                                        {hours > 0 ?
+                                            <Text
+                                                style={{
+                                                    color: '#E41C38',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 15,
+                                                    textAlign: 'center',
+                                                    textAlignVertical: 'center'
+                                                }}
+                                            >
+                                                {locales('labels.hours', { fieldName: hours })}
+                                            </Text>
+                                            : null}
+
+                                        <Text
+                                            style={{
+                                                color: '#808C9B',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 15,
+                                                marginHorizontal: 3,
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center'
+                                            }}
+                                        >
+                                            {locales('labels.tillEndOfTheDiscount')}
+                                        </Text>
+
+                                    </View>
+                                </View>
+                                    : null}
                                 {/* <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
                                     <Text style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
@@ -1166,6 +1409,7 @@ class PromoteRegistration extends React.Component {
                                         {locales('labels.abilityToBuyThreeMonth')}
                                     </Text>
                                 </View> */}
+
 
                                 {activePackageType == 1 ? <View
                                     style={{
