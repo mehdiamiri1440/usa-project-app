@@ -6,9 +6,7 @@ import RnRestart from 'react-native-restart';
 import * as authActions from '../redux/auth/actions';
 import configureStore from '../redux/configureStore';
 import { dataGenerator } from '../utils';
-var RNFS = require('react-native-fs');
 
-var path = RNFS.ExternalCachesDirectoryPath + '/test.txt';
 const store = configureStore();
 
 export const getUrl = (route) => {
@@ -45,58 +43,33 @@ export const getTokenFromStorage = () => {
 };
 
 
-export const getRequestHeaders = ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
-    return new Promise(async (resolve, reject) => {
-        let token = await getTokenFromStorage()
-        if (!token || !token.length)
-            token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
-        RNFS.appendFile(path, `token in getequestHeaders()-->${token}`, 'utf8')
-            .then((success) => {
-                console.log('FILE WRITTEN!');
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
-        // console.log('token in getequestHeaders()', token)
-        const headers = {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Authorization': `Bearer ${token}`
-        };
-        return fetchAPI({ route, method, data, withAuth, params, headers })
-            .then(result => {
-                console.warn('res------->>', result)
-                resolve(result.data ? result.data : result);
-            }
-            )
-            .catch(error => reject(error))
-    })
+const getRequestHeaders = async () => {
+    let token = await getTokenFromStorage()
+    if (!token || !token.length)
+        token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
+    // console.log('token in getequestHeaders()', token)
+    return {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Authorization': `Bearer ${token}`
+    };
 };
 
 
 
-export const redirectToLogin = _ => {
+export const redirectToLogin = msg => {
     return new Promise((resolve, reject) => {
-        RNFS.appendFile(path, `redirected`, 'utf8')
-            .then((success) => {
-                console.log('FILE WRITTEN!');
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
         // console.log('redirected');
-        store.dispatch(authActions.logOut()).then(_ => {
-            RNFS.appendFile(path, `logout after redirection`, 'utf8')
-                .then((success) => {
-                    console.log('FILE WRITTEN!');
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                });
-            // console.log('logout after redirection')
-            resolve(true)
-        })
-            .catch(_ => resovle(true));
+        if (msg == 'The token has been blacklisted') {
+            resolve(false)
+        }
+        else {
+            store.dispatch(authActions.logOut()).then(_ => {
+                // console.log('logout after redirection')
+                resolve(true)
+            })
+                .catch(_ => resovle(true));
+        }
     })
 }
 
@@ -111,15 +84,10 @@ export const refreshToken = (route, method, data, withAuth, headers, token) => {
 };
 
 
-export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null, headers = {} }) => {
+
+export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+    const headers = await getRequestHeaders();
     return new Promise((resolve, reject) => {
-        RNFS.appendFile(path, `route in first of fetchapi====>${route}----->>headers in first of fetchapi----->>${headers.Authorization}`, 'utf8')
-            .then((success) => {
-                console.log('FILE WRITTEN!');
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
         // console.log('route', route, 'headers', headers)
         axios
             .request({
@@ -132,13 +100,6 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 timeout: 20000,
             })
             .then(result => {
-                RNFS.appendFile(path, `route in result---->${route}--->result happended---->${result}`, 'utf8')
-                    .then((success) => {
-                        console.log('FILE WRITTEN!');
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
-                    });
                 // console.log('route', route, 'result happened', result)
                 resolve(result.data ? result.data : result);
             })
@@ -148,80 +109,42 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     const {
                         status,
                         refresh,
+                        msg = '',
+                        redirect_to_login,
                         token = ''
                     } = err.response.data;
 
                     const conditions = status == false && refresh == true && token && !!token.length;
                     // console.log('conditions', conditions, 'status', status, 'refresh', refresh, 'token', token, 'token.length', token.length)
-                    RNFS.appendFile(path, `conditions--->>${conditions}---->>status---->>${status}---->>refresh---->${refresh}---->>token---->${token}----->token.length---->>${token.length}`, 'utf8')
-                        .then((success) => {
-                            console.log('FILE WRITTEN!');
-                        })
-                        .catch((err) => {
-                            console.log(err.message);
-                        });
                     if (conditions) {
                         const tokenSaved = await refreshToken(route, method, data, withAuth, headers, token)
                         // console.log('new token saved', tokenSaved)
-                        RNFS.appendFile(path, `new token saved ---->>${tokenSaved}`, 'utf8')
-                            .then((success) => {
-                                console.log('FILE WRITTEN!');
-                            })
-                            .catch((err) => {
-                                console.log(err.message);
-                            });
                         if (tokenSaved === true) {
-                            RNFS.appendFile(path, `going to do new api call with new token`, 'utf8')
-                                .then((success) => {
-                                    console.log('FILE WRITTEN!');
-                                })
-                                .catch((err) => {
-                                    console.log(err.message);
-                                });
                             // console.log('going to do new api call with new token')
-                            return getRequestHeaders({ route, method, data, withAuth, params })
-                                .then(result => resolve(result.data ? result.data : result))
-                                .catch(err => reject(err))
+                            resolve(fetchAPI({ route, method, data, withAuth }));
+                            // .then(result => resolve(result.data ? result.data : result))
+                            // .catch(err => reject(err))
                         }
                         else {
-                            RNFS.appendFile(path, `new token not saved`, 'utf8')
-                                .then((success) => {
-                                    console.log('FILE WRITTEN!');
-                                })
-                                .catch((err) => {
-                                    console.log(err.message);
-                                });
                             // console.log('new token not saved')
                             reject(err)
                         }
                     }
                     else {
-                        RNFS.appendFile(path, `conditions were fasel and redirect happened with this route------->>${route}`, 'utf8')
-                            .then((success) => {
-                                console.log('FILE WRITTEN!');
-                            })
-                            .catch((err) => {
-                                console.log(err.message);
-                            });
                         // console.log('conditions were false and redirect happened with this route-->>', route)
-                        const tokenOmitted = await redirectToLogin();
-                        if (tokenOmitted === true)
-                            RnRestart.Restart();
+                        if (redirect_to_login === true) {
+                            const tokenOmitted = await redirectToLogin(msg);
+                            if (tokenOmitted === true)
+                                RnRestart.Restart();
+                        }
                     }
                 }
 
-                if (err.response && err.response.status === 400) {
+                else if (err.response && err.response.status === 400) {
                     reject(err.response.data);
                 }
 
                 else {
-                    RNFS.appendFile(path, `something unknown happened`, 'utf8')
-                        .then((success) => {
-                            console.log('FILE WRITTEN!');
-                        })
-                        .catch((err) => {
-                            console.log(err.message);
-                        });
                     // console.log('something unknowns', err)
                     reject(err);
                 }
