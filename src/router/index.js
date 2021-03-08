@@ -159,7 +159,7 @@ const App = (props) => {
 
 
   useEffect(() => {
-    checkForUpdate()
+    // checkForUpdate()
 
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
