@@ -287,7 +287,7 @@ const App = (props) => {
       Linking.removeEventListener('url', handleIncomingEvent)
     }
 
-  }, [initialRoute, is_seller, props.loggedInUserId]);
+  }, [initialRoute, is_seller, props.loggedInUserId, props.logOutLoading]);
 
   const checkForUpdate = _ => {
     getAppstoreAppMetadata("com.buskool") //put any apps packageId here
