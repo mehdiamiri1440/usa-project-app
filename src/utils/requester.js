@@ -60,16 +60,15 @@ const getRequestHeaders = async () => {
 export const redirectToLogin = msg => {
     return new Promise((resolve, reject) => {
         // console.log('redirected');
-        if (msg == 'The token has been blacklisted') {
-            resolve(false)
-        }
-        else {
-            store.dispatch(authActions.logOut()).then(_ => {
-                // console.log('logout after redirection')
-                resolve(true)
-            })
-                .catch(_ => resovle(true));
-        }
+        // if (msg == 'The token has been blacklisted') {
+        //     resolve(false)
+        // }
+        // else {
+        store.dispatch(authActions.logOut()).then(_ => {
+            // console.log('logout after redirection')
+            resolve(true)
+        })
+            .catch(_ => resovle(true));
     })
 }
 
