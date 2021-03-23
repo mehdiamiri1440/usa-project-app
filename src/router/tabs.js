@@ -31,6 +31,7 @@ import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProd
 import Messages from '../screens/Messages';
 import MyRequests from '../screens/Home/MyRequests';
 import Channel from '../screens/Messages/Channel';
+import Chat from '../screens/Messages/ChatModal';
 
 const Stack = createStackNavigator();
 
@@ -221,6 +222,17 @@ export const MyBuskoolStack = _ => {
                 name='MyRequests'
                 component={MyRequests}
             />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
+            />
+
         </Stack.Navigator >
     )
 };
@@ -271,6 +283,16 @@ export const RegisterProductStack = _ => (
             component={UpgradeApp}
         />
 
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
     </Stack.Navigator>
 )
 
@@ -305,6 +327,16 @@ export const RegisterRequestStack = _ => (
             })}
             name={`UpgradeApp`}
             component={UpgradeApp}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
         />
 
     </Stack.Navigator>
@@ -349,6 +381,16 @@ export const MessagesStack = _ => (
             })}
             name={`ProductDetails`}
             component={ProductDetails}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
         />
 
     </Stack.Navigator>
@@ -409,6 +451,16 @@ export const HomeStack = _ => {
                 component={Profile}
             />
 
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
+            />
+
         </Stack.Navigator>
     )
 };
@@ -466,6 +518,16 @@ export const SpecialProductsStack = _ => {
                 key='Profile'
                 name='Profile'
                 component={Profile}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
             />
 
         </Stack.Navigator>
