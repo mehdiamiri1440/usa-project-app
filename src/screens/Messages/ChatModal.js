@@ -137,6 +137,7 @@ class ChatModal extends Component {
 
 
     componentWillUnmount() {
+        this.props.fetchAllContactsList();
         // AsyncStorage.removeItem('@openedChatIds');
         // AsyncStorage.removeItem('@isGuidDisappeard');
     }
