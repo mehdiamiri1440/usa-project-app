@@ -14,7 +14,6 @@ import * as messagesActions from '../../redux/messages/actions';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
-import ChatModal from './ChatModal';
 import Contact from './Contact';
 import ChannelInContactsList from './ChannelInContactsList';
 
@@ -27,7 +26,6 @@ class ContactsList extends Component {
         this.state = {
             tabIndex: 0,
             routes: [{ key: 'messages', title: locales('labels.messages') }, { key: 'requests', title: locales('labels.requests') }],
-            modalFlag: false,
             searchText: '',
             contactsList: [],
             contactsListData: {},
@@ -35,11 +33,6 @@ class ContactsList extends Component {
             to: 15,
             contactsListUpdated: false,
             loaded: false,
-            selectedContact: {
-                first_name: '',
-                last_name: '',
-                id: null
-            },
         }
     }
 
@@ -139,22 +132,8 @@ class ContactsList extends Component {
         }
     };
 
-    setSearchText = searchText => this.setState({ searchText })
+    setSearchText = searchText => this.setState({ searchText });
 
-    closeChatModal = () => {
-        this.setState({ modalFlag: false, loaded: false }, () => {
-            this.props.fetchAllContactsList(this.state.from, this.state.to)
-            // .catch(_ => this.setState({ showModal: true }))
-        });
-    }
-
-    setSelectedContact = selectedContact => {
-        this.setState({ selectedContact })
-    };
-
-    setModalFlag = modalFlag => {
-        this.setState({ modalFlag })
-    };
 
     renderItem = ({ item, index }) => {
         const {
@@ -164,8 +143,6 @@ class ContactsList extends Component {
         return (
             <Contact
                 item={item}
-                setModalFlag={this.setModalFlag}
-                setSelectedContact={this.setSelectedContact}
                 index={index}
                 setSearchText={this.setSearchText}
                 contactsList={contactsList}
@@ -255,7 +232,7 @@ class ContactsList extends Component {
     render() {
 
 
-        let { modalFlag, selectedContact, contactsList, contactsListData } = this.state;
+        let { contactsList, contactsListData } = this.state;
         const { channel_info = {} } = contactsListData;
 
 
@@ -267,14 +244,6 @@ class ContactsList extends Component {
 
         return (
             <>
-
-                {modalFlag ? <ChatModal
-                    transparent={false}
-                    {...this.props}
-                    visible={modalFlag}
-                    contact={selectedContact}
-                    onRequestClose={this.closeChatModal}
-                /> : null}
 
                 <>
                     <View style={{

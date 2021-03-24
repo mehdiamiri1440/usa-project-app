@@ -11,16 +11,12 @@ import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import * as productListActions from '../../redux/productsList/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
-import ChatModal from '../Messages/ChatModal';
-import { formatter, validator, dataGenerator } from '../../utils';
-import Spin from '../../components/loading/loading';
+import { formatter, validator } from '../../utils';
 
 class Product extends PureComponent {
     constructor(props) {
@@ -39,7 +35,6 @@ class Product extends PureComponent {
             minimumPriceError: '',
             amountError: '',
             editionFlag: false,
-            modalFlag: false,
             elevatorFlag: false,
             deleteProductFlag: false,
             showDeletationMessage: false,
@@ -290,7 +285,6 @@ class Product extends PureComponent {
         } = user_info;
 
         const {
-            modalFlag,
             elevatorFlag,
             showDeletationMessage,
             deleteMessageText,
@@ -772,16 +766,6 @@ class Product extends PureComponent {
 
 
 
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    visible={modalFlag}
-                    profile_photo={profile_photo}
-                    {...this.props}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                />}
-
-
                 <View style={{
                     paddingVertical: 2,
 
@@ -984,7 +968,7 @@ class Product extends PureComponent {
                                             analytics().logEvent('open_chat', {
                                                 product_id: productId
                                             });
-                                            this.setState({ modalFlag: true })
+                                            this.props.navigation.navigate('Chat', { profile_photo, contact: selectedContact })
                                         }}
                                         style={[styles.loginButton, { flex: 1 }]}
                                     >
