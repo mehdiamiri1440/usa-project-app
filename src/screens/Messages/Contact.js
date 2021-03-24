@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -18,9 +18,8 @@ const ContactsList = props => {
         (
             <TouchableOpacity
                 onPress={() => {
-                    props.setSelectedContact(item);
-                    props.setModalFlag(true);
                     props.setSearchText('');
+                    props.navigation.navigate('Messages', { screen: 'Chat', params: { contact: item } })
                 }}
 
                 key={item.contact_id}
