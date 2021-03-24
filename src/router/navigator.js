@@ -62,7 +62,8 @@ const routes = props => {
             'ExtraBuyAdCapacity',
             'ExtraProductCapacity',
             'RegisterProductSuccessfully',
-            'ChangeRole'
+            'ChangeRole',
+            'Chat',
         ];
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
