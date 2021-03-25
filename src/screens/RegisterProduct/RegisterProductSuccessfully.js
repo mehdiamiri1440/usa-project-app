@@ -14,7 +14,6 @@ import { formatter } from '../../utils';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as productActions from '../../redux/registerProduct/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
-import ChatModal from '../Messages/ChatModal';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class RegisterProductSuccessfully extends Component {
@@ -22,7 +21,6 @@ class RegisterProductSuccessfully extends Component {
         super(props);
         this.state = {
             subCategoryId: null,
-            modalFlag: false,
             selectedBuyAdId: -1,
             showGoldenModal: false,
             selectedContact: {},
@@ -485,14 +483,13 @@ class RegisterProductSuccessfully extends Component {
             this.setState({ selectedButton: item.id })
 
             this.setState({
-                modalFlag: true,
                 selectedBuyAdId: item.id,
                 selectedContact: {
                     contact_id: item.myuser_id,
                     first_name: item.first_name,
                     last_name: item.last_name,
                 }
-            });
+            }, _ => this.props.navigation.navigate('Chat', { contact: this.state.selectedContact, buyAdId: this.state.selectedBuyAdId }));
             // .catch(_ => this.setState({ showModal: true }));
         }
         else {
@@ -521,7 +518,6 @@ class RegisterProductSuccessfully extends Component {
         } = params;
 
         const {
-            modalFlag,
             selectedBuyAdId,
             showGoldenModal,
             selectedContact
@@ -622,15 +618,6 @@ class RegisterProductSuccessfully extends Component {
                     </Dialog>
                 </Portal >
 
-
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    {...this.props}
-                    visible={modalFlag}
-                    buyAdId={selectedBuyAdId}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                />}
                 <ScrollView
                     style={{
                         marginTop: -4,

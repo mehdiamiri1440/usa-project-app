@@ -14,7 +14,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { dataGenerator, formatter } from '../../utils';
-import ChatModal from '../Messages/ChatModal';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 const RegisterRequestSuccessfully = props => {
@@ -23,7 +22,6 @@ const RegisterRequestSuccessfully = props => {
         products = []
     } = props;
 
-    const [modalFlag, setModalFlag] = useState(false);
     const [selectedContact, setSelectedContact] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -363,7 +361,7 @@ const RegisterRequestSuccessfully = props => {
                                 });
                                 setTimeout(() => {
                                     setLoading(false);
-                                    setModalFlag(true);
+                                    props.navigation.navigate('Chat', { contact: selectedContact })
                                 }, 1000);
                             }}
                             style={{
@@ -406,7 +404,7 @@ const RegisterRequestSuccessfully = props => {
                                         });
                                         setTimeout(() => {
                                             setLoading(false);
-                                            setModalFlag(true);
+                                            props.navigation.navigate('Chat', { contact: selectedContact })
                                         }, 1000);
                                     }}
                                     style={{
@@ -429,7 +427,7 @@ const RegisterRequestSuccessfully = props => {
                                         });
                                         setTimeout(() => {
                                             setLoading(false);
-                                            setModalFlag(true);
+                                            props.navigation.navigate('Chat', { contact: selectedContact })
                                         }, 1000);
                                     }} />
                             </View>
@@ -472,13 +470,6 @@ const RegisterRequestSuccessfully = props => {
     return (
 
         <>
-            {modalFlag && <ChatModal
-                transparent={false}
-                {...props}
-                visible={modalFlag}
-                contact={{ ...selectedContact }}
-                onRequestClose={() => setModalFlag(false)}
-            />}
 
             <View style={{
                 backgroundColor: 'white',

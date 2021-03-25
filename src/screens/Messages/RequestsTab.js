@@ -16,7 +16,6 @@ import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as profileActions from '../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 
-import ChatModal from '../Messages/ChatModal';
 import { numberWithCommas } from '../../utils/formatter';
 
 class RequestsTab extends Component {
@@ -25,7 +24,6 @@ class RequestsTab extends Component {
         this.state = {
             selectedButton: null,
             showDialog: false,
-            modalFlag: false,
             selectedBuyAdId: -1,
             selectedContact: {},
             loaded: false,
@@ -778,14 +776,13 @@ class RequestsTab extends Component {
                     buyAd_id: item.id
                 });
                 this.setState({
-                    modalFlag: true,
                     selectedBuyAdId: item.id,
                     selectedContact: {
                         contact_id: item.buyer_id,
                         first_name: item.first_name,
                         last_name: item.last_name,
                     }
-                });
+                }, _ => this.props.navigation.navigate('Chat', { contact: this.state.selectedContact, buyAdId: this.state.selectedBuyAdId }));
             }
             else {
                 analytics().logEvent('buyAd_suggestion_permission_denied', {
@@ -824,10 +821,7 @@ class RequestsTab extends Component {
 
     render() {
         let {
-            modalFlag,
-            selectedContact,
             showDialog,
-            selectedBuyAdId,
             relatedBuyAdRequestsList,
             showGoldenModal
         } = this.state;
@@ -839,16 +833,6 @@ class RequestsTab extends Component {
                     backgroundColor: 'white'
                 }}
             >
-
-
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    {...this.props}
-                    visible={modalFlag}
-                    buyAdId={selectedBuyAdId}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                />}
 
 
                 < Portal

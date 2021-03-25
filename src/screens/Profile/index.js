@@ -12,11 +12,10 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
+import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
-import ChatModal from '../Messages/ChatModal';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
@@ -29,7 +28,6 @@ class Profile extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            modalFlag: false,
             selectedEvidenceModal: false,
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
@@ -242,7 +240,6 @@ class Profile extends PureComponent {
         } = this.props;
 
         let {
-            modalFlag,
             selectedEvidenceModal,
             selectedImageModal,
             selectedEvidenceIndex,
@@ -341,18 +338,6 @@ class Profile extends PureComponent {
                             source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
                     </View>
                 </Modal>
-
-
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    visible={modalFlag}
-                    {...this.props}
-                    profile_photo={profilePhotoFromByUserName}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                />}
-
-
 
                 <View style={{
                     backgroundColor: 'white',
@@ -594,7 +579,7 @@ class Profile extends PureComponent {
                                                 analytics().logEvent('open_chat', {
                                                     contact_id: userIdFromByUserName
                                                 });
-                                                this.setState({ modalFlag: true })
+                                                this.props.navigation.navigate('Chat', { profile_photo: profilePhotoFromByUserName, contact: selectedContact })
                                             }}
                                             style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                         >

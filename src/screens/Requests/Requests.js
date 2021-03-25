@@ -18,7 +18,6 @@ import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productActions from '../../redux/registerProduct/actions';
 import * as buyAdRequestActions from '../../redux/buyAdRequest/actions';
-import ChatModal from '../Messages/ChatModal';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
@@ -37,7 +36,6 @@ class Requests extends PureComponent {
             loaded: false,
 
             showToast: false,
-            modalFlag: false,
             showDialog: false,
             selectedBuyAdId: -1,
             selectedContact: {},
@@ -159,14 +157,13 @@ class Requests extends PureComponent {
                         });
                     }
                     this.setState({
-                        modalFlag: true,
                         selectedBuyAdId: item.id,
                         selectedContact: {
                             contact_id: item.myuser_id,
                             first_name: item.first_name,
                             last_name: item.last_name,
                         }
-                    });
+                    }, _ => this.props.navigation.navigate('Chat', { buyAdId: this.state.selectedBuyAdId, contact: this.state.selectedContact }));
                 }
                 else {
                     analytics().logEvent('permission_denied', {
@@ -240,7 +237,7 @@ class Requests extends PureComponent {
         const { user_info = {} } = userProfile;
         const { active_pakage_type } = user_info;
 
-        let { modalFlag, selectedContact,
+        let { selectedContact,
             buyAdRequestsList,
             selectedButton, showDialog, selectedBuyAdId, from, to,
             showFilters, selectedFilterName, showGoldenModal } = this.state;
@@ -250,15 +247,6 @@ class Requests extends PureComponent {
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
-
-                {modalFlag && <ChatModal
-                    transparent={false}
-                    {...this.props}
-                    visible={modalFlag}
-                    buyAdId={selectedBuyAdId}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                />}
 
                 <RBSheet
                     ref={this.updateFlag}

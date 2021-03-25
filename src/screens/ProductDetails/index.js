@@ -12,15 +12,13 @@ import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } f
 import * as productListActions from '../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
+import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { validator } from '../../utils';
-import ChatModal from '../Messages/ChatModal';
-import { formatter } from '../../utils'
+import { validator, formatter } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
@@ -35,7 +33,6 @@ class ProductDetails extends PureComponent {
             showFullSizeImageModal: false,
             selectedImage: -1,
             elevatorFlag: false,
-            modalFlag: false,
 
             minimumOrder: '',
             amount: '',
@@ -459,7 +456,6 @@ class ProductDetails extends PureComponent {
             editionFlag,
             showEditionMessage,
             elevatorFlag,
-            modalFlag,
 
             minimumOrder,
             amount,
@@ -538,23 +534,6 @@ class ProductDetails extends PureComponent {
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
-
-
-
-
-                {modalFlag ? <ChatModal
-                    transparent={false}
-                    visible={modalFlag}
-                    {...this.props}
-                    profile_photo={profile_photo}
-                    contact={{ ...selectedContact }}
-                    onRequestClose={() => this.setState({ modalFlag: false })}
-                /> : null}
-
-
-
-
-
 
                 < Portal
                     style={{
@@ -1068,7 +1047,7 @@ class ProductDetails extends PureComponent {
                                                 analytics().logEvent('open_chat', {
                                                     product_id: this.props.route.params.productId
                                                 });
-                                            this.setState({ modalFlag: true })
+                                            this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
                                         }}
                                         style={[styles.loginButton, {
                                             paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
@@ -1295,7 +1274,7 @@ class ProductDetails extends PureComponent {
                                                         analytics().logEvent('open_chat', {
                                                             product_id: this.props.route.params.productId
                                                         });
-                                                    this.setState({ modalFlag: true })
+                                                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
                                                 }
                                             }
                                             }
@@ -1375,7 +1354,7 @@ class ProductDetails extends PureComponent {
                                 analytics().logEvent('open_chat', {
                                     product_id: this.props.route.params.productId
                                 });
-                            this.setState({ modalFlag: true })
+                            this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
                         }}
                         style={[styles.loginButton, {
                             position: 'absolute',
