@@ -45,13 +45,15 @@ const routes = props => {
     let { is_seller } = user_info;
     is_seller = is_seller == 0 ? false : true;
 
+    const [shouldShowBottomMenu, setShouldShowBottomMenu] = useState(true);
+
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
 
 
-    const shouldShowSellerButton = _ => {
+    const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
         const routesNotToShow = [
             'Requests',
@@ -71,11 +73,16 @@ const routes = props => {
         const shouldShow = props.loggedInUserId && is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
+        const isBottomMenuVisible = props.loggedInUserId && !props.userProfileLoading
+            && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
+
+        setShouldShowBottomMenu(isBottomMenuVisible);
+
         setShouldShowSellerButton(shouldShow);
     };
 
     const onRouteStateChanged = ({ key, index, routeNames, history, routes, type, stable }) => {
-        return shouldShowSellerButton();
+        return handleVisiblityOfSellerButtonAndBottomMenu();
     };
 
     return (
@@ -126,8 +133,7 @@ const routes = props => {
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
-                            barStyle={{ backgroundColor: '#313A43' }
-                            }
+                            barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
                         >
 
 
