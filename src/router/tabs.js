@@ -31,7 +31,7 @@ import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProd
 import Messages from '../screens/Messages';
 import MyRequests from '../screens/Home/MyRequests';
 import Channel from '../screens/Messages/Channel';
-import Chat from '../screens/Messages/ChatModal';
+import Chat from '../screens/Messages/ChatScreen';
 
 const Stack = createStackNavigator();
 

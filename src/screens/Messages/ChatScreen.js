@@ -25,7 +25,7 @@ import ViolationReport from './ViolationReport';
 let unsubscribe;
 Jmoment.locale('fa');
 
-class ChatModal extends Component {
+class ChatScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -686,6 +686,6 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 };
 
-ChatModal.contextType = MessagesContext;
+ChatScreen.contextType = MessagesContext;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
