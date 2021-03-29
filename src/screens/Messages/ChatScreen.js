@@ -13,11 +13,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import { deviceHeight, deviceWidth } from '../../utils/deviceDimenssions';
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
 import MessagesContext from './MessagesContext';
-import { formatter, validator } from '../../utils';
+import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
@@ -81,19 +80,7 @@ class ChatScreen extends Component {
         }
 
         this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount);
-        // unsubscribe = messaging().getInitialNotification(async remoteMessage => {
-        //     console.log('message reciev from fcm in chat list when it was init', remoteMessage)
-        //     this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        // });
-        // unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
-        //     console.log('message reciev from fcm in chat list when notification opend app', remoteMessage)
-        //     this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        // });
 
-        // unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
-        //     console.log('message reciev from fcm in chat list when app was in background', remoteMessage)
-        //     this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-        // });
         unsubscribe = messaging().onMessage(async remoteMessage => {
             if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
                 if (contact && contact.contact_id == remoteMessage.data.senderId)
@@ -138,6 +125,7 @@ class ChatScreen extends Component {
 
     componentWillUnmount() {
         this.props.fetchAllContactsList();
+        this.props.fetchTotalUnreadMessages();
         // AsyncStorage.removeItem('@openedChatIds');
         // AsyncStorage.removeItem('@isGuidDisappeard');
     }
@@ -218,7 +206,6 @@ class ChatScreen extends Component {
                 messageText: '',
                 isFirstLoad: false
             });
-
             this.props.sendMessage(msgObject).then((result) => {
                 setTimeout(() => {
                     if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
@@ -238,7 +225,6 @@ class ChatScreen extends Component {
             });
 
         }
-
     }
 
 
@@ -460,6 +446,7 @@ class ChatScreen extends Component {
                             style={{ flexDirection: 'row-reverse' }}
                             onPress={() => {
                                 Jmoment.locale('fa')
+                                this.props.fetchAllContactsList();
                                 this.props.fetchTotalUnreadMessages();
                                 this.props.navigation.goBack();
                             }}>
