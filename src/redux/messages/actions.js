@@ -153,7 +153,3 @@ export const emptyMessage = (message) => {
     return dispatch => dispatch(action(actionTypes.EMPTY_MESSAGE_RECEIVED, message));
 };
 
-
-export const isFromOutSide = (flag) => {
-    return dispatch => dispatch(action(actionTypes.IS_FROM_OUTSIDE, flag));
-};

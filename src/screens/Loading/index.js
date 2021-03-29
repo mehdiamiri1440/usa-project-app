@@ -3,10 +3,9 @@ import { Text, View, ActivityIndicator, Modal } from 'react-native';
 
 const Loading = props => {
 
-    const [visible, setVisible] = useState(global.isFromOutSide);
+    const [visible, setVisible] = useState();
 
     useEffect(() => {
-        global.isFromOutSide = false;
         setTimeout(() => {
             setVisible(false)
         }, 1200);

@@ -34,7 +34,6 @@ const INITIAL_STATE = {
     channelDataMessage: null,
     channelData: {},
 
-    messageFromOutSide: false,
     newMessage: false
 };
 export default (state = INITIAL_STATE, action) => {
@@ -317,12 +316,6 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 newMessage: false
-            }
-        }
-        case actionTypes.IS_FROM_OUTSIDE: {
-            return {
-                ...state,
-                messageFromOutSide: action.payload
             }
         }
 
