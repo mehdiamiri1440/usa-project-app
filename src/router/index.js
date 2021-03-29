@@ -18,6 +18,7 @@ import DeviceInfo from 'react-native-device-info';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
 import { deviceWidth, deviceHeight, dataGenerator } from '../utils';
+import { routeToScreensFromNotifications } from './linking';
 
 
 
@@ -35,112 +36,6 @@ let counter = 0;
 
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();
-}
-
-
-export const routeToScreensFromNotifications = (remoteMessage, props) => {
-
-  const { userProfile = {} } = props;
-  const { user_info = {} } = userProfile;
-  let { is_seller } = user_info;
-  is_seller = is_seller == 0 ? false : true;
-
-  global.isFromOutSide = false
-
-  if (navigationRef.current) {
-    switch (remoteMessage.data.BTarget) {
-      case 'messages': {
-        return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
-      }
-      case 'myProducts': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
-        }
-      }
-      case 'dashboard': {
-        if (is_seller) {
-          return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
-        }
-      }
-      case 'registerProduct': {
-        if (is_seller) {
-          return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
-        }
-      }
-      case 'registerBuyAd': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('RegisterRequest');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
-        }
-      }
-      case 'specialProducts': {
-        if (!is_seller) {
-          return navigationRef.current.navigate('SpecialProducts');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
-        }
-      }
-      case 'productList': {
-        if (remoteMessage.data.productId) {
-          return navigationRef.current.navigate('Home', {
-            screen: 'ProductDetails',
-            params: { productId: remoteMessage.data.productId }
-          });
-        }
-        return navigationRef.current.navigate('Home');
-      }
-      case 'myBuskool': {
-        return navigationRef.current.navigate('MyBuskool');
-      }
-      case 'buyAds': {
-        if (is_seller) {
-          return navigationRef.current.navigate('Requests');
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
-        }
-      }
-      case 'buyAdSuggestion': {
-        if (is_seller) {
-          return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
-        }
-        else {
-          return navigationRef.current.navigate('MyBuskool',
-            { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'MessagesIndex', routeParams: { tabIndex: 1 } } });
-        }
-      }
-      default:
-        return navigationRef.current.navigate('Home');
-    }
-  }
-  else {
-    if (counter <= 2) {
-      // I used counter variable to make sure that this recursive function calling will not occures more than 3 times and
-      // prevent any looping inside app that can cause any crash
-      counter = counter + 1
-      return setTimeout(() => {
-        return routeToScreensFromNotifications(remoteMessage, props)
-      }, 1000);
-    }
-  }
 }
 
 const App = (props) => {

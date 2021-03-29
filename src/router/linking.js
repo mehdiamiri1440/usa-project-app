@@ -1,9 +1,14 @@
 import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getStateFromPath } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
+
 import { navigationRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
 import { dataGenerator } from '../utils';
+import configureStore from '../redux/configureStore';
+
+const store = configureStore();
 
 const config = {
     screens: {
@@ -77,6 +82,15 @@ const linking = {
             handleIncomingEvent(url)
             return url;
         }
+
+        messaging().getInitialNotification()
+            .then(async remoteMessage => {
+                return routeToScreensFromNotifications(remoteMessage);
+            });
+
+        // Get deep link from data
+        // if this is undefined, the app will open the default/home page
+
     },
     getStateFromPath: (path, options) => {
         if (path.includes('seller'))
@@ -98,9 +112,19 @@ const linking = {
 
         Linking.addEventListener('url', onReceiveURL);
 
+        const unsubscribeNotification = messaging().onNotificationOpenedApp(
+            (remoteMessage = {}) => {
+                // Any custom logic to check whether the URL needs to be handled
+                routeToScreensFromNotifications(remoteMessage)
+                // Call the listener to let React Navigation handle the URL
+                listener(remoteMessage);
+            },
+        );
+
         return () => {
             // Clean up the event listener
             Linking.removeEventListener('url', onReceiveURL);
+            unsubscribeNotification();
         };
     },
 };
@@ -108,12 +132,14 @@ const linking = {
 
 
 const handleIncomingEvent = (url) => {
-    console.log('url', url)
-    if (!url.includes('wwww')) {
-        url = url.split('://')[1]
-    }
-    else {
-        url = url.split('/')[3]
+    if (url) {
+        console.log('url', url)
+        if (!url.includes('wwww')) {
+            url = url.split('://')[1]
+        }
+        else {
+            url = url.split('/')[3]
+        }
     }
     // if (url.includes('public-channel')) {
     //     return navigationRef.current.navigate('Messages', {
@@ -161,5 +187,111 @@ const handleIncomingEvent = (url) => {
             break;
     }
 };
+
+
+
+
+export const routeToScreensFromNotifications = (remoteMessage = {}) => {
+
+    const { userProfile = {} } = store.getState().profileReducer;
+    const { user_info = {} } = userProfile;
+    let { is_seller } = user_info;
+    is_seller = is_seller == 0 ? false : true;
+
+    if (navigationRef.current) {
+        switch (remoteMessage?.data?.BTarget) {
+            case 'messages': {
+                return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
+            }
+            case 'myProducts': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'MyProducts' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'MyProducts' } });
+                }
+            }
+            case 'dashboard': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('MyBuskool', { screen: 'Dashboard' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'MyBuskool', childRoute: 'Dashboard' } });
+                }
+            }
+            case 'registerProduct': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterProductStack', childRoute: 'RegisterProduct' } });
+                }
+            }
+            case 'registerBuyAd': {
+                if (!is_seller) {
+                    return navigationRef.current.navigate('RegisterRequest');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
+                }
+            }
+            case 'specialProducts': {
+                if (!is_seller) {
+                    return navigationRef.current.navigate('SpecialProducts');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'SpecialProducts', childRoute: 'SpecialProducts' } });
+                }
+            }
+            case 'productList': {
+                if (remoteMessage?.data?.productId) {
+                    return navigationRef.current.navigate('Home', {
+                        screen: 'ProductDetails',
+                        params: { productId: remoteMessage?.data?.productId }
+                    });
+                }
+                return navigationRef.current.navigate('Home');
+            }
+            case 'myBuskool': {
+                return navigationRef.current.navigate('MyBuskool');
+            }
+            case 'buyAds': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('Requests');
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
+                }
+            }
+            case 'buyAdSuggestion': {
+                if (is_seller) {
+                    return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
+                }
+                else {
+                    return navigationRef.current.navigate('MyBuskool',
+                        { screen: 'ChangeRole', params: { parentRoute: 'Messages', childRoute: 'MessagesIndex', routeParams: { tabIndex: 1 } } });
+                }
+            }
+            default:
+                return navigationRef.current.navigate('Home');
+        }
+    }
+    else {
+        if (counter <= 2) {
+            // I used counter variable to make sure that this recursive function calling will not occures more than 3 times and
+            // prevent any looping inside app that can cause any crash
+            counter = counter + 1
+            return setTimeout(() => {
+                return routeToScreensFromNotifications(remoteMessage)
+            }, 1000);
+        }
+    }
+}
 
 export default linking;
