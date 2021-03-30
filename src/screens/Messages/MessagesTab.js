@@ -57,12 +57,12 @@ class ContactsList extends Component {
             // this.props.emptyMessage(false)
             this.props.fetchAllContactsList(this.state.from, this.state.to);
             unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
-                console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
+                // console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
             });
 
             unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
-                console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
+                // console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
             });
             unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -94,11 +94,11 @@ class ContactsList extends Component {
 
         if (this.props.forceRefresh) {
             this.props.doForceRefresh(false);
-            if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
-                this.props.newMessageReceived(false);
-            }
             this.props.fetchAllContactsList().then(result => {
                 this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
+                if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
+                    this.props.newMessageReceived(false);
+                }
             });
         }
     }
