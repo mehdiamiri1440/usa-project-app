@@ -34,6 +34,18 @@ const INITIAL_STATE = {
     channelDataMessage: null,
     channelData: {},
 
+    violationReportReasonsLoading: false,
+    violationReportReasonsFailed: false,
+    violationReportReasonsError: false,
+    violationReportReasonsMessage: null,
+    violationReportReasons: [],
+
+    sendReportLoading: false,
+    sendReportFailed: false,
+    sendReportError: false,
+    sendReportMessage: null,
+    sendReport: {},
+
     newMessage: false,
 
     forceRefresh: false,
@@ -302,6 +314,96 @@ export default (state = INITIAL_STATE, action) => {
                 channelDataError: true,
                 channelDataMessage: null,
                 channelData: {},
+            };
+        };
+
+
+
+
+        case actionTypes.FETCH_VIOLATION_REPORT_REASONS_LOADING: {
+            return {
+                ...state,
+                violationReportReasonsLoading: true,
+                violationReportReasonsFailed: false,
+                violationReportReasonsError: false,
+                violationReportReasonsMessage: null,
+                violationReportReasons: []
+            };
+        };
+        case actionTypes.FETCH_VIOLATION_REPORT_REASONS_SUCCESSFULLY: {
+            return {
+                ...state,
+                violationReportReasonsLoading: false,
+                violationReportReasonsFailed: false,
+                violationReportReasonsError: false,
+                violationReportReasonsMessage: null,
+                violationReportReasons: [...action.payload.options],
+            };
+        };
+        case actionTypes.FETCH_VIOLATION_REPORT_REASONS_FAILED: {
+            return {
+                ...state,
+                violationReportReasonsLoading: false,
+                violationReportReasonsFailed: true,
+                violationReportReasonsError: false,
+                violationReportReasonsMessage: null,
+                violationReportReasons: [],
+            };
+        };
+        case actionTypes.FETCH_VIOLATION_REPORT_REASONS_REJECT: {
+            return {
+                ...state,
+                violationReportReasonsLoading: false,
+                violationReportReasonsFailed: false,
+                violationReportReasonsError: true,
+                violationReportReasonsMessage: null,
+                violationReportReasons: [],
+            };
+        };
+
+
+
+
+
+
+        case actionTypes.SEND_REPORT_LOADING: {
+            return {
+                ...state,
+                sendReportLoading: true,
+                sendReportFailed: false,
+                sendReportError: false,
+                sendReportMessage: null,
+                sendReport: {}
+            };
+        };
+        case actionTypes.SEND_REPORT_SUCCESSFULLY: {
+            return {
+                ...state,
+                sendReportLoading: false,
+                sendReportFailed: false,
+                sendReportError: false,
+                sendReportMessage: null,
+                sendReport: { ...action.payload },
+            };
+        };
+        case actionTypes.SEND_REPORT_FAILED: {
+            return {
+                ...state,
+                sendReportLoading: false,
+                sendReportFailed: true,
+                sendReportError: false,
+                sendReportMessage: null,
+                sendReport: {},
+            };
+        };
+        case actionTypes.SEND_REPORT_REJECT: {
+            return {
+                ...state,
+                sendReportLoading: false,
+                sendReportFailed: false,
+                sendReportError: true,
+                sendReportMessage: null,
+                sendReport: {},
             };
         };
 

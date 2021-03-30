@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
@@ -325,6 +326,11 @@ class ChatScreen extends Component {
         return null;
     }
 
+
+    closeViolationModal = _ => {
+        this.setState({ visible: true, showViolationReportFlag: false })
+    };
+
     render() {
         let { userChatHistoryLoading, route = {}, isSenderVerified, buyAdId } = this.props;
         const { params = {} } = route;
@@ -341,11 +347,14 @@ class ChatScreen extends Component {
         return (
             <View style={styles.container}>
                 <ImageBackground source={require('../../../assets/images/whatsapp-wallpaper.png')} style={styles.image}>
-                    {/* {showViolationReportFlag ? <ViolationReport
+
+                    {showViolationReportFlag ? <ViolationReport
                         {...this.props}
+                        contactId={id}
                         visible={showViolationReportFlag}
-                        onRequestToClose={_ => this.setState({ visible: true, showViolationReportFlag: false })}
-                    /> : null} */}
+                        onRequestToClose={this.closeViolationModal}
+                    /> : null}
+
                     {detecToShowCommentAndGuid ? <TouchableOpacity
                         onPress={_ => this.setState({ showGuid: false })}
                         activeOpacity={1}
@@ -368,7 +377,7 @@ class ChatScreen extends Component {
                                 borderRadius: 50,
                                 backgroundColor: 'rgba(255,255,255,0.78)',
                                 top: -30,
-                                left: -140,
+                                left: -25,
                                 zIndex: 10,
                                 borderWidth: 0.8,
                                 borderColor: '#313A43'
@@ -461,7 +470,7 @@ class ChatScreen extends Component {
                             <View
                                 style={{
                                     justifyContent: 'center',
-                                    alignItems: 'flex-end', paddingHorizontal: 10
+                                    alignItems: 'flex-end', paddingHorizontal: 5
                                 }}
                             >
                                 <AntDesign name='arrowright' size={25}
@@ -469,8 +478,8 @@ class ChatScreen extends Component {
                             </View>
                             <Image
                                 style={{
-                                    borderRadius: 23,
-                                    width: 46, height: 46
+                                    borderRadius: 20,
+                                    width: 40, height: 40
                                 }}
                                 source={profile_photo || contact.profile_photo ?
                                     { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo || contact.profile_photo}` }
@@ -487,18 +496,18 @@ class ChatScreen extends Component {
                                 }
                             }}
                             style={{
-                                paddingHorizontal: 10,
-                                width: deviceWidth * 0.75,
+                                paddingHorizontal: 5,
+                                width: deviceWidth * 0.59,
                                 alignItems: 'flex-end',
                             }}>
                             <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
                                 <View
-                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '63%', }}
+                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', maxWidth: '65%', top: -2 }}
                                 >
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontSize: 18, marginHorizontal: 5
+                                            fontSize: 17, marginHorizontal: 5,
                                         }}
                                     >
                                         {`${firstName} ${lastName}`}
@@ -507,13 +516,11 @@ class ChatScreen extends Component {
                                 </View>
                                 {!showGuid && !this.props.buyAdId ? <Text
                                     style={{
-                                        width: '30%',
-                                        textAlign: 'left',
+                                        textAlign: 'right',
                                         color: '#21AD93',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
-                                        marginRight: 12,
-                                        marginLeft: 3,
+                                        marginRight: 25,
                                     }}
                                 >
                                     {locales('labels.usersComment')}
@@ -523,26 +530,26 @@ class ChatScreen extends Component {
                             </View>
                         </TouchableOpacity>
 
-                        {/* <TouchableOpacity
-                        style={{ flexDirection: 'row-reverse' }}
-                        onPress={_ => this.setState({ showViolationReportFlag: true })}
-                    >
-                        <FontAwesome5
-                            size={13}
-                            name='exclamation-circle'
-                            color='#BBBBBB'
-                            style={{ marginTop: 5, marginHorizontal: 3 }}
-                        />
-                        <Text
-                            style={{
-                                color: '#BBBBBB',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 13,
-                            }}
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row-reverse' }}
+                            onPress={_ => this.setState({ showViolationReportFlag: true })}
                         >
-                            {locales('titles.reportViolation')}
-                        </Text>
-                    </TouchableOpacity> */}
+                            <FontAwesome5
+                                size={13}
+                                name='exclamation-circle'
+                                color='#BBBBBB'
+                                style={{ marginTop: 5, marginHorizontal: 3 }}
+                            />
+                            <Text
+                                style={{
+                                    color: '#BBBBBB',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 13,
+                                }}
+                            >
+                                {locales('titles.reportViolation')}
+                            </Text>
+                        </TouchableOpacity>
 
                     </View>
 

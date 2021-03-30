@@ -270,3 +270,50 @@ export const fetchChannelData = (page = 1) => {
     });
 };
 
+
+
+
+export const fetchViolationReportReasons = _ => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_report_options`,
+                method: 'POST',
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
+
+
+
+export const sendReportReason = reportObj => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `send_user_report`,
+                method: 'POST',
+                data: reportObj,
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    // return reject(err.response);
+                    return reject(err);
+
+            });
+    });
+};
+
