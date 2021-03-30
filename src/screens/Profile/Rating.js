@@ -200,8 +200,9 @@ const Rating = props => {
                             marginBottom: 20,
                         }}
                     >
-                        {stars.map((item) => (
+                        {stars.map((item, starsIndex) => (
                             <TouchableOpacity
+                                key={starsIndex}
                                 style={{ marginHorizontal: 2 }}
                                 activeOpacity={1}
                                 onPress={_ => onStarsPressed(item)}

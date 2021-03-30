@@ -82,6 +82,7 @@ class StarRating extends React.Component {
                     stars.map((_, index) => (
                         <TouchableOpacity
                             activeOpacity={1}
+                            key={index}
                             style={{ marginHorizontal: 1 }}
                         >
                             <FontAwesome5
