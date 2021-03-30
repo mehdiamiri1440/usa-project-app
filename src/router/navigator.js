@@ -74,8 +74,7 @@ const routes = props => {
         const shouldShow = props.loggedInUserId && is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
-        const isBottomMenuVisible = props.loggedInUserId && !props.userProfileLoading
-            && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
+        const isBottomMenuVisible = props.loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
 
         setShouldShowBottomMenu(isBottomMenuVisible);
 
