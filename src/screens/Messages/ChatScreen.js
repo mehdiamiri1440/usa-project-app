@@ -20,6 +20,7 @@ import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
+import { BackHandler } from 'react-native';
 
 let unsubscribe;
 Jmoment.locale('fa');
@@ -88,6 +89,11 @@ class ChatScreen extends Component {
                 // this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
             }
         });
+
+        BackHandler.addEventListener('hardwareBackPress', _ => {
+            this.handleGoBack();
+            return true;
+        })
     }
 
 
@@ -124,11 +130,15 @@ class ChatScreen extends Component {
 
 
     componentWillUnmount() {
-        this.props.fetchAllContactsList();
-        this.props.fetchTotalUnreadMessages();
+        BackHandler.removeEventListener('hardwareBackPress');
         // AsyncStorage.removeItem('@openedChatIds');
         // AsyncStorage.removeItem('@isGuidDisappeard');
     }
+
+    handleGoBack = _ => {
+        this.props.doForceRefresh(true);
+        this.props.navigation.goBack();
+    };
 
     checkForShowingCommentsGuid = (result, contact) => {
         if (contact && contact.contact_id) {
@@ -446,9 +456,7 @@ class ChatScreen extends Component {
                             style={{ flexDirection: 'row-reverse' }}
                             onPress={() => {
                                 Jmoment.locale('fa')
-                                this.props.fetchAllContactsList();
-                                this.props.fetchTotalUnreadMessages();
-                                this.props.navigation.goBack();
+                                this.handleGoBack();
                             }}>
                             <View
                                 style={{
@@ -669,6 +677,7 @@ const mapDispatchToProps = (dispatch, props) => {
         // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
+        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
     }
 };

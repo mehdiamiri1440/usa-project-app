@@ -61,7 +61,7 @@ class ContactsList extends Component {
             unsubscribe = messaging().onMessage(async remoteMessage => {
                 if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
                     this.props.newMessageReceived(true)
-                    console.log('message reciev from fcm in contacts list', remoteMessage)
+                    console.warn('message reciev from fcm in contacts list', remoteMessage)
                     this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
                 }
             });
@@ -75,11 +75,7 @@ class ContactsList extends Component {
 
         if (prevState.loaded == false && this.props.contactsList.length) {
             // console.warn('wear', prevState.loaded)
-            this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true }, () => {
-                if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
-                    this.props.newMessageReceived(false);
-                }
-            })
+            this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true });
         }
         if (prevProps.refresh != this.props.refresh) {
             this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true })
@@ -89,7 +85,15 @@ class ContactsList extends Component {
         }
         this.props.setRefresh(false)
 
-
+        if (this.props.forceRefresh) {
+            this.props.doForceRefresh(false);
+            if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
+                this.props.newMessageReceived(false);
+            }
+            this.props.fetchAllContactsList().then(result => {
+                this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
+            });
+        }
     }
 
 
@@ -507,6 +511,8 @@ const mapStateToProps = (state) => {
         contactsListLoading: state.messagesReducer.contactsListLoading,
         contactsListData: state.messagesReducer.contactsListData,
 
+        forceRefresh: state.messagesReducer.forceRefresh,
+
         userProfile: state.profileReducer.userProfile,
 
     }
@@ -516,6 +522,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
         newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
+        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         // emptyMessage: (message) => dispatch(messagesActions.emptyMessage(message)),
 
     }

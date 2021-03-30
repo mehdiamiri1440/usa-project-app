@@ -34,7 +34,9 @@ const INITIAL_STATE = {
     channelDataMessage: null,
     channelData: {},
 
-    newMessage: false
+    newMessage: false,
+
+    forceRefresh: false,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -316,6 +318,13 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 newMessage: false
+            }
+        }
+
+        case actionTypes.DO_FORCE_REFRESH: {
+            return {
+                ...state,
+                forceRefresh: action.payload
             }
         }
 

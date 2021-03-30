@@ -133,7 +133,6 @@ const linking = {
 
 const handleIncomingEvent = (url) => {
     if (url) {
-        console.log('url', url)
         if (!url.includes('wwww')) {
             url = url.split('://')[1]
         }
@@ -148,7 +147,6 @@ const handleIncomingEvent = (url) => {
     // }
     switch (url) {
         case 'register-product-successfully':
-            console.log('here')
             return RootNavigation.navigate('RegisterProductStack', {
                 screen: 'RegisterProductSuccessfully',
                 params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
