@@ -336,7 +336,8 @@ class ChatScreen extends Component {
         const { params = {} } = route;
         const {
             profile_photo,
-            contact
+            contact,
+            showReportText
         } = params;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
         let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
@@ -530,27 +531,28 @@ class ChatScreen extends Component {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            style={{ flexDirection: 'row-reverse' }}
-                            onPress={_ => this.setState({ showViolationReportFlag: true })}
-                        >
-                            <FontAwesome5
-                                size={13}
-                                name='exclamation-circle'
-                                color='#BBBBBB'
-                                style={{ marginTop: 5, marginHorizontal: 3 }}
-                            />
-                            <Text
-                                style={{
-                                    color: '#BBBBBB',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 13,
-                                }}
+                        {showReportText === true ?
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row-reverse' }}
+                                onPress={_ => this.setState({ showViolationReportFlag: true })}
                             >
-                                {locales('titles.reportViolation')}
-                            </Text>
-                        </TouchableOpacity>
-
+                                <FontAwesome5
+                                    size={13}
+                                    name='exclamation-circle'
+                                    color='#BBBBBB'
+                                    style={{ marginTop: 5, marginHorizontal: 3 }}
+                                />
+                                <Text
+                                    style={{
+                                        color: '#BBBBBB',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 13,
+                                    }}
+                                >
+                                    {locales('titles.reportViolation')}
+                                </Text>
+                            </TouchableOpacity>
+                            : null}
                     </View>
 
                     {(isFirstLoad && userChatHistoryLoading && !this.state.loaded) ?
