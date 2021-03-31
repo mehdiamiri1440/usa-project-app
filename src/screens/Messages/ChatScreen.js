@@ -100,39 +100,16 @@ class ChatScreen extends Component {
     componentDidUpdate(prevProps, prevState) {
 
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            // console.warn('end reached in updated', this.state.loaded)
             this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
-                // if (!this.state.isFirstLoad)
-                //     setTimeout(() => {
-                //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-                //     }, 1000)
             })
         }
-        // if (this.props.newMessage || this.props.contactsListUpdated) {
-        //     console.warn('re')
-        //     // this.props.newMessageReceived(false)
-        //     // this.props.setcontactsListUpdated(false);
-        //     setTimeout(() => {
-        //         this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount).then(() => {
-        //             this.fetchSenderIds()
-        //             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse() }, () => {
-        //                 // if (!this.state.isFirstLoad)
-        //                 //     setTimeout(() => {
-        //                 //         this.scrollViewRef.current.scrollToEnd({ animated: true });
-        //                 //     }, 1000)
-        //             })
-        //         })
-        //     }, 10);
-        //     console.warn('reached', this.props.newMessage)
-        // }
+
     }
 
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress');
-        // AsyncStorage.removeItem('@openedChatIds');
-        // AsyncStorage.removeItem('@isGuidDisappeard');
     }
 
     handleGoBack = _ => {
@@ -339,10 +316,11 @@ class ChatScreen extends Component {
             showReportText
         } = params;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText, loaded, showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
+        let { userChatHistory, isFirstLoad, messageText,
+            showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
 
 
-        const detecToShowCommentAndGuid = showGuid && !buyAdId;
+        const detectToShowCommentAndGuid = showGuid && !buyAdId;
 
         return (
             <View style={styles.container}>
@@ -355,7 +333,7 @@ class ChatScreen extends Component {
                         onRequestToClose={this.closeViolationModal}
                     /> : null}
 
-                    {detecToShowCommentAndGuid ? <TouchableOpacity
+                    {detectToShowCommentAndGuid ? <TouchableOpacity
                         onPress={_ => this.setState({ showGuid: false })}
                         activeOpacity={1}
                         style={{
@@ -459,7 +437,7 @@ class ChatScreen extends Component {
                             shadowOffset: { width: 20, height: 20 },
                             shadowColor: 'black',
                             shadowOpacity: 1.0,
-                            elevation: detecToShowCommentAndGuid ? 0 : 5,
+                            elevation: detectToShowCommentAndGuid ? 0 : 5,
                             width: deviceWidth
                         }}>
                         <TouchableOpacity
@@ -562,7 +540,7 @@ class ChatScreen extends Component {
                                 shadowOffset: { width: 20, height: 20 },
                                 shadowColor: 'black',
                                 shadowOpacity: 1.0,
-                                elevation: detecToShowCommentAndGuid ? 0 : 5,
+                                elevation: detectToShowCommentAndGuid ? 0 : 5,
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                             }}
@@ -600,7 +578,7 @@ class ChatScreen extends Component {
                     <View
                         style={{
                             position: 'absolute', bottom: 0, paddingTop: 3,
-                            zIndex: detecToShowCommentAndGuid ? 0 : 1,
+                            zIndex: detectToShowCommentAndGuid ? 0 : 1,
                             width: deviceWidth, paddingBottom: 10,
                             flexDirection: 'row-reverse',
                         }}
@@ -673,9 +651,6 @@ const mapStateToProps = (state) => {
         userProfile: state.profileReducer.userProfile,
 
         contactsList: state.messagesReducer.contactsList,
-        // profile_photo: state.messagesReducer.profile_photo,
-
-        // newMessage: state.messagesReducer.newMessage
     }
 };
 
@@ -683,7 +658,6 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
-        // newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
