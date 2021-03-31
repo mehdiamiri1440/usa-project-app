@@ -129,6 +129,7 @@ const linking = {
     },
 };
 
+let counter = 0;
 
 
 const handleIncomingEvent = (url) => {

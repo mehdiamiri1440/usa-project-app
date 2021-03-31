@@ -31,9 +31,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 
-
-let counter = 0;
-
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();
 }
