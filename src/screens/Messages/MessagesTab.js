@@ -530,8 +530,6 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
         newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
-        // emptyMessage: (message) => dispatch(messagesActions.emptyMessage(message)),
-
     }
 };
 

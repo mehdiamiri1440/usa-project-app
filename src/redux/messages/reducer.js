@@ -416,13 +416,6 @@ export default (state = INITIAL_STATE, action) => {
             }
         }
 
-        case actionTypes.EMPTY_MESSAGE_RECEIVED: {
-            return {
-                ...state,
-                newMessage: false
-            }
-        }
-
         case actionTypes.DO_FORCE_REFRESH: {
             return {
                 ...state,

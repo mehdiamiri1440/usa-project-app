@@ -196,11 +196,6 @@ export const newMessageReceived = (message) => {
 };
 
 
-export const emptyMessage = (message) => {
-    return dispatch => dispatch(action(actionTypes.EMPTY_MESSAGE_RECEIVED, message));
-};
-
-
 export const doForceRefresh = (forceRefresh) => {
     return dispatch => dispatch(action(actionTypes.DO_FORCE_REFRESH, forceRefresh));
 };
