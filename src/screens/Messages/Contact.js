@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -6,19 +6,20 @@ import { deviceWidth } from '../../utils/deviceDimenssions';
 
 
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import MessagesContext from './MessagesContext';
 
 
 const ContactsList = props => {
 
     const { item, index, contactsList } = props;
-
+    const msgCntxt = useContext(MessagesContext);
 
 
     return (
         (
             <TouchableOpacity
                 onPress={() => {
-                    props.setSearchText('');
+                    msgCntxt.resetSearch('');
                     props.navigation.navigate('Messages', { screen: 'Chat', params: { contact: item, showReportText: true } })
                 }}
 

@@ -16,7 +16,6 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
-import MessagesContext from './MessagesContext';
 import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
@@ -692,6 +691,5 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 };
 
-ChatScreen.contextType = MessagesContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

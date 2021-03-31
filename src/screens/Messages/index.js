@@ -9,6 +9,7 @@ import { deviceWidth } from '../../utils/deviceDimenssions';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as messagesActions from '../../redux/messages/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
+import MessageContext from './MessagesContext';
 
 import MessagesTab from './MessagesTab';
 import RequestsTab from './RequestsTab';
@@ -16,6 +17,7 @@ import RequestsTab from './RequestsTab';
 
 
 const Messages = props => {
+
 
     const serachInputRef = useRef();
 
@@ -130,102 +132,104 @@ const Messages = props => {
             )}
         />
     );
+    const resetSearch = _ => setSearchText('');
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
-
+            <MessageContext.Provider value={{ resetSearch, searchText }}>
                 <View style={{
-                    width: '100%',
-                    alignItems: 'center'
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 45,
+                    elevation: 5,
+                    justifyContent: 'center'
                 }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                    <TouchableOpacity
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                        onPress={() => props.navigation.goBack()}
                     >
-                        {locales('titles.messanger')}
-                    </Text>
-                </View>
-            </View>
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
 
-            {is_seller ?
-                <View style={{
-                    paddingHorizontal: 15,
-                    left: 0,
-                    backgroundColor: '#22AC93',
-                }}>
-                    <InputGroup rounded style={{
-                        borderWidth: 0,
-                        borderColor: 'transparent',
-                        borderBottomColor: 'white',
-                        borderBottomWidth: 1,
+                    <View style={{
                         width: '100%',
-                        borderRadius: 0,
-
+                        alignItems: 'center'
                     }}>
-                        <Input
-                            value={searchText}
-                            ref={serachInputRef}
-                            onChangeText={handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#FFFFFF' }}
-                            placeholder={locales('labels.search')}
-                            placeholderTextColor="#FFFFFF"
-
-                        />
-                        <Icon name='ios-search' style={{ color: '#FFFFFF', marginHorizontal: 5 }} />
-                    </InputGroup>
+                        <Text
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                        >
+                            {locales('titles.messanger')}
+                        </Text>
+                    </View>
                 </View>
-                :
-                <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
-                    <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
-                        <Input
-                            value={searchText}
-                            ref={serachInputRef}
-                            onChangeText={handleSearch}
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
-                            placeholder={locales('labels.searchContacts')}
-                            placeholderTextColor="#BEBEBE"
 
-                        />
-                        <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
-                    </InputGroup>
-                </View>
-            }
+                {is_seller ?
+                    <View style={{
+                        paddingHorizontal: 15,
+                        left: 0,
+                        backgroundColor: '#22AC93',
+                    }}>
+                        <InputGroup rounded style={{
+                            borderWidth: 0,
+                            borderColor: 'transparent',
+                            borderBottomColor: 'white',
+                            borderBottomWidth: 1,
+                            width: '100%',
+                            borderRadius: 0,
+
+                        }}>
+                            <Input
+                                value={searchText}
+                                ref={serachInputRef}
+                                onChangeText={handleSearch}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#FFFFFF' }}
+                                placeholder={locales('labels.search')}
+                                placeholderTextColor="#FFFFFF"
+
+                            />
+                            <Icon name='ios-search' style={{ color: '#FFFFFF', marginHorizontal: 5 }} />
+                        </InputGroup>
+                    </View>
+                    :
+                    <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
+                        <InputGroup rounded style={{ backgroundColor: 'white', elevation: 1 }}>
+                            <Input
+                                value={searchText}
+                                ref={serachInputRef}
+                                onChangeText={handleSearch}
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
+                                placeholder={locales('labels.searchContacts')}
+                                placeholderTextColor="#BEBEBE"
+
+                            />
+                            <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
+                        </InputGroup>
+                    </View>
+                }
 
 
-            {is_seller ?
-                <TabView
-                    onSwipeStart={() => refreshTabs()}
-                    lazy
-                    removeClippedSubviews={true}
-                    renderTabBar={renderTabBar}
-                    useNativeDriver
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    onIndexChange={setIndex}
-                    initialLayout={initialLayout}
-                />
-                :
-                <MessagesTab
-                    setRefresh={setRefresh}
-                    refresh={refresh}
-                    searchText={searchText}
-                    {...props} />
-            }
-
+                {is_seller ?
+                    <TabView
+                        onSwipeStart={() => refreshTabs()}
+                        lazy
+                        removeClippedSubviews={true}
+                        renderTabBar={renderTabBar}
+                        useNativeDriver
+                        navigationState={{ index, routes }}
+                        renderScene={renderScene}
+                        onIndexChange={setIndex}
+                        initialLayout={initialLayout}
+                    />
+                    :
+                    <MessagesTab
+                        setRefresh={setRefresh}
+                        refresh={refresh}
+                        searchText={searchText}
+                        {...props} />
+                }
+            </MessageContext.Provider>
         </View>
     );
 }

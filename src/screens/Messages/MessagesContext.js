@@ -1,7 +1,8 @@
 import React, { createContext } from 'react';
 
 const MessagesContext = createContext({
-    setNewContactsList: () => { }
+    searchText: '',
+    resetSearch: _ => { }
 });
 
 export default MessagesContext;
