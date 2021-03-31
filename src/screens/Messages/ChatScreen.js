@@ -461,9 +461,10 @@ class ChatScreen extends Component {
                             shadowColor: 'black',
                             shadowOpacity: 1.0,
                             elevation: detecToShowCommentAndGuid ? 0 : 5,
+                            width: deviceWidth
                         }}>
                         <TouchableOpacity
-                            style={{ flexDirection: 'row-reverse' }}
+                            style={{ flexDirection: 'row-reverse', width: '21%' }}
                             onPress={() => {
                                 Jmoment.locale('fa')
                                 this.handleGoBack();
@@ -498,17 +499,17 @@ class ChatScreen extends Component {
                             }}
                             style={{
                                 paddingHorizontal: 5,
-                                width: deviceWidth * 0.59,
+                                width: '55%',
                                 alignItems: 'flex-end',
                             }}>
-                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <View
-                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', maxWidth: '65%', top: -2 }}
+                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', maxWidth: '58%', top: -2 }}
                                 >
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontSize: 17, marginHorizontal: 5,
+                                            fontSize: 17, marginLeft: 2
                                         }}
                                     >
                                         {`${firstName} ${lastName}`}
@@ -519,9 +520,9 @@ class ChatScreen extends Component {
                                     style={{
                                         textAlign: 'right',
                                         color: '#21AD93',
+                                        marginRight: 24,
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 14,
-                                        marginRight: 25,
                                     }}
                                 >
                                     {locales('labels.usersComment')}
@@ -533,7 +534,7 @@ class ChatScreen extends Component {
 
                         {showReportText === true ?
                             <TouchableOpacity
-                                style={{ flexDirection: 'row-reverse' }}
+                                style={{ flexDirection: 'row-reverse', width: '24%' }}
                                 onPress={_ => this.setState({ showViolationReportFlag: true })}
                             >
                                 <FontAwesome5
