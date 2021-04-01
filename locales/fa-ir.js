@@ -19,7 +19,7 @@ export default {
     'errors.invalidDescription': 'توضیحات شامل حروف غیر مجاز است',
     'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
     'errors.canNotBeZero': '{fieldName} باید بزرگتر از صفر باشد',
-
+    'errors.canNotBeLessThan': '{fieldName} نمی‌تواند کمتر از {number} باشد',
 
     "labels.man": "آقا",
     'labels.suggestedSellers': 'فروشندگان پیشنهادی',
@@ -336,6 +336,7 @@ export default {
     'titles.selectOrigin': 'انتخاب مبدا',
     'titles.changeRole': 'تغییر کاربری',
     'titles.toman': 'تومان',
+    'titles.wallet': 'کیف پول',
     'titles.rollChangedSuccessfully': 'تغییر کاربری شما به {fieldName} با موفقیت اعمال گردید.',
     'titles.minimumPriceWithExample': 'مثلا : 15,000',
     'titles.minimumPrice': 'حداقل قیمت(هر کیلو به تومان)',
@@ -438,6 +439,7 @@ export default {
     'titles.doYouWishToBuy': 'آیا قصد خرید عمده محصولی را دارید؟',
     'titles.registerRequestNow': 'همین حالا درخواست خرید ثبت کنید.',
     'titles.extraProductCount': 'تعداد محصولات اضافی',
+    'titles.increaseInventory': 'افزایش موجودی',
     'titles.extra‌BuyAd': 'سقف روزانه پاسخ به درخواست ها',
     'titles.extra‌BuyAdCount': 'افزایش سقف روزانه پاسخ به درخواست ها',
     'titles.moreCapacity': 'افزایش ظرفیت',
@@ -500,6 +502,7 @@ export default {
     "titles.referralShareLink": "لینک دعوت",
     "titles.referralShareButton": "اشتراک گذاری",
     "titles.referralToFree": " تا آزاد سازی ",
+    'titles.walletInventory': 'موجودی کیف پول',
     "titles.copy": "کپی",
     'titles.buskoolOfficialChannel': 'کانال رسمی باسکول',
     'titles.sendToFriends': 'ارسال برای دوستان',

@@ -32,6 +32,7 @@ import Messages from '../screens/Messages';
 import MyRequests from '../screens/Home/MyRequests';
 import Channel from '../screens/Messages/Channel';
 import Chat from '../screens/Messages/ChatScreen';
+import Wallet from '../screens/Home/Wallet';
 
 const Stack = createStackNavigator();
 
@@ -231,6 +232,16 @@ export const MyBuskoolStack = _ => {
                 key='Chat'
                 name='Chat'
                 component={Chat}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Wallet'
+                name='Wallet'
+                component={Wallet}
             />
 
         </Stack.Navigator >

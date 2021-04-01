@@ -4,7 +4,10 @@ import { Radio, Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import { Text, TouchableOpacity, View, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
+import {
+    Text, TouchableOpacity, View, ImageBackground,
+    StyleSheet, Image, ActivityIndicator, ScrollView
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useScrollToTop } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
@@ -23,6 +26,7 @@ import * as productListActions from '../../redux/productsList/actions';
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { numberWithCommas } from '../../utils/formatter';
 
 
 let role = false
@@ -225,7 +229,6 @@ class Home extends React.Component {
                 </Portal >
 
 
-
                 <View style={{
                     backgroundColor: 'white',
                     flexDirection: 'row',
@@ -254,12 +257,11 @@ class Home extends React.Component {
                     </View>
                 </View>
 
-
-
                 <ScrollView
                     ref={this.props.homeRef}
                     style={{ flex: 1, backgroundColor: '#F2F2F2', paddingVertical: 20 }}>
 
+                    <WalletPreview {...this.props} />
 
                     {/* 
                     <TouchableOpacity
@@ -612,8 +614,83 @@ class Home extends React.Component {
     }
 }
 
+export const WalletPreview = props => {
+    return (
+        <TouchableOpacity
+            activeOpacity={1}
+            onPress={_ => props.navigation.navigate('Wallet')}
+        >
+            <ImageBackground
+                source={require('../../../assets/images/wallet-bg.jpg')}
+                style={styles.image}
+                imageStyle={{ borderRadius: 10 }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    <FontAwesome5
+                        name='wallet'
+                        size={15}
+                        color='white'
+                    />
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: 'white',
+                            fontSize: 14,
+                            marginHorizontal: 5
+                        }}
+                    >
+                        {locales('titles.walletInventory')}
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        padding: 5,
+                        marginLeft: 5,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 40,
+                        height: 40
+                    }}
+                >
+                    <FontAwesome5
+                        size={30}
+                        color='#333333'
+                        name='plus'
+                    />
+                </View>
+
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                        fontSize: 20,
+                        marginHorizontal: 5
+                    }}
+                >
+                    {`${numberWithCommas(100000000)} ${locales('titles.toman')}`}
+                </Text>
+            </ImageBackground>
+        </TouchableOpacity>
+    )
+};
 
 const styles = StyleSheet.create({
+    image: {
+        resizeMode: "cover",
+        width: deviceWidth * 0.91,
+        justifyContent: 'space-between',
+        height: deviceHeight * 0.2,
+        padding: 10,
+        alignSelf: 'center',
+    },
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
