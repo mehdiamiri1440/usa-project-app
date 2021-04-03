@@ -353,8 +353,16 @@ class ProductsList extends PureComponent {
     };
 
     renderProductListEmptyComponent = _ => {
-
-        const { productsListLoading } = this.props;
+        const {
+            userProfile = {},
+            productsListLoading
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller = true
+        } = user_info;
 
         if (!productsListLoading)
             return (
@@ -366,7 +374,7 @@ class ProductsList extends PureComponent {
                     <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
                         {locales('titles.noProductFound')}</Text>
                     {
-                        !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
+                        is_seller ? <View >
                             <Button
                                 onPress={() => this.props.navigation.navigate('RegisterProductStack')}
 
@@ -435,6 +443,17 @@ class ProductsList extends PureComponent {
     };
 
     renderItemSeparatorComponent = index => {
+
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller = true
+        } = user_info;
+
         if ((index + 1) % 9 != 0 || index == 0)
             return null;
         return (
@@ -527,7 +546,7 @@ class ProductsList extends PureComponent {
                             justifyContent: 'space-around', alignItems: 'center',
                             alignSelf: 'flex-end', padding: 10
                         }}
-                        onPress={_ => this.props.navigation.navigate(!!this.props?.userProfile?.user_info.is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
                     >
                         <Text style={{
                             fontSize: 18,
@@ -535,7 +554,7 @@ class ProductsList extends PureComponent {
                             color: 'white'
                         }}
                         >
-                            {locales('titles.registerBuyAdRequest')}
+                            {is_seller ? locales('titles.registerNewProduct') : locales('titles.registerBuyAdRequest')}
                         </Text>
                         <FontAwesome5
                             name='arrow-left'
