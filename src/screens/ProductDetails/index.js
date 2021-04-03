@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
-    TouchableOpacity, Linking, Share, RefreshControl
+    TouchableOpacity, Linking, Share, RefreshControl,
+    ActivityIndicator
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
@@ -84,7 +85,9 @@ class ProductDetails extends PureComponent {
             min_sale_amount: 0,
             min_sale_price: 0,
 
-            profile_photo: ''
+            profile_photo: '',
+
+            isContactInfoShown: false
         }
     }
 
@@ -441,12 +444,32 @@ class ProductDetails extends PureComponent {
         this.componentDidMount();
     }
 
+
+
+    openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
     render() {
         const {
             editProductLoading,
             editProductStatus,
             loggedInUserId,
             productDetailsInfoLoading,
+
+            contactInfoLoading,
         } = this.props;
 
 
@@ -506,7 +529,9 @@ class ProductDetails extends PureComponent {
             min_sale_amount,
             min_sale_price,
 
-            profile_photo
+            profile_photo,
+
+            isContactInfoShown
         } = this.state;
 
 
@@ -818,16 +843,16 @@ class ProductDetails extends PureComponent {
 
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row',
+                    flexDirection: 'row-reverse',
+                    paddingHorizontal: 10,
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 45,
                     elevation: 5,
                     shadowOffset: { width: 20, height: 20 },
-                    justifyContent: 'center'
+                    justifyContent: 'space-between'
                 }}>
                     <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             this.props.navigation.goBack()
                         }}
@@ -843,6 +868,14 @@ class ProductDetails extends PureComponent {
                         >
                             {(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
                         </Text>
+                    </View>
+                    <View>
+                        <FontAwesome5
+                            onPress={() => this.shareProductLink(url)}
+                            name='share-alt'
+                            size={20}
+                            color='black'
+                        />
                     </View>
                 </View>
 
@@ -978,7 +1011,7 @@ class ProductDetails extends PureComponent {
                                     style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
                                     {product_name ? product_name : '---'}
                                 </Text>
-                                <View>
+                                {/* <View>
                                     <TouchableOpacity
                                         onPress={() => this.shareProductLink(url)}
                                         style={{
@@ -993,7 +1026,7 @@ class ProductDetails extends PureComponent {
                                         </Text>
 
                                     </TouchableOpacity>
-                                </View>
+                                </View> */}
                             </View>
 
                             <View style={{
@@ -1040,34 +1073,85 @@ class ProductDetails extends PureComponent {
                                         <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
                                     </Button>
                                 </View> :
-
-                                    <Button
-                                        onPress={() => {
-                                            if (this.props.route.params.productId)
-                                                analytics().logEvent('open_chat', {
-                                                    product_id: this.props.route.params.productId
-                                                });
-                                            this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center'
                                         }}
-                                        style={[styles.loginButton, {
-                                            paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
-                                            maxWidth: 160,
-                                            margin: 0
-                                            // width: !!is_elevated ? '50%' : '46%'
-                                        }]}
                                     >
-                                        <View style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                                <FontAwesome name='envelope' size={20} />
-                                            </Text>
-                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                                {locales('titles.achiveSaleStatus')}
-                                            </Text>
-                                        </View>
+                                        <Button
+                                            onPress={() => {
+                                                if (this.props.route.params.productId)
+                                                    analytics().logEvent('open_chat', {
+                                                        product_id: this.props.route.params.productId
+                                                    });
+                                                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                                            }}
+                                            style={[styles.loginButton, {
+                                                paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
+                                                maxWidth: 160,
+                                                margin: 0,
+                                                backgroundColor: isContactInfoShown ? '#E0E0E0' : '#00C569'
+                                                // width: !!is_elevated ? '50%' : '46%'
+                                            }]}
+                                        >
+                                            <View style={[styles.textCenterView, styles.buttonText]}>
+                                                {!contactInfoLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                                    <FontAwesome5 solid name='phone-square-alt'
+                                                        size={20} />
+                                                </Text> :
+                                                    <ActivityIndicator
+                                                        animating={true}
+                                                        size={20}
+                                                        color='white'
+                                                    />
+                                                }
+                                                <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                    {locales('labels.contactInfo')}
+                                                </Text>
+                                            </View>
+                                        </Button>
 
-                                    </Button>
+                                        <Button
+                                            onPress={() => {
+                                                if (this.props.route.params.productId)
+                                                    analytics().logEvent('open_chat', {
+                                                        product_id: this.props.route.params.productId
+                                                    });
+                                                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                                            }}
+                                            style={[styles.loginButton, {
+                                                alignItems: 'center', justifyContent: 'center',
+                                                maxWidth: 160,
+                                                marginHorizontal: 15,
+                                                margin: 0,
+                                                backgroundColor: 'white',
+                                                borderWidth: 1,
+                                                borderColor: '#556080'
+                                                // width: !!is_elevated ? '50%' : '46%'
+                                            }]}
+                                        >
+                                            <View style={[styles.textCenterView, styles.buttonText]}>
+                                                {!contactInfoLoading ? <Text style={[styles.textWhite,
+                                                styles.margin5, { color: '#556080', marginTop: 7 }]}>
+                                                    <FontAwesome5 solid color='#556080' name='comment-alt' size={20} />
+                                                </Text> :
+                                                    <ActivityIndicator
+                                                        animating={true}
+                                                        size={20}
+                                                        color='#556080'
+                                                    />
+                                                }
+                                                <Text style={[styles.textWhite, styles.margin5, styles.textBold,
+                                                { color: '#556080' }, styles.textSize18]}>
+                                                    {locales('titles.sendMessage')}
+                                                </Text>
+                                            </View>
+                                        </Button>
+
+                                    </View>
                                 }
-                                {is_elevated ? <FontAwesome5
+                                {(is_elevated && loggedInUserId == userId) ? <FontAwesome5
                                     onPress={() => Toast.show({
                                         text: locales('titles.elevatorHasAdded'),
                                         position: "bottom",
@@ -1079,6 +1163,95 @@ class ProductDetails extends PureComponent {
                                     : null
                                 }
                             </View>
+
+                            {isContactInfoShown ?
+                                <>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            paddingHorizontal: 15,
+                                            paddingVertical: 25,
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 18,
+                                                color: '#404B55'
+                                            }}>
+                                            {locales('titles.phoneNumber')}
+                                        </Text>
+                                        <TouchableOpacity
+                                            onPress={_ => this.openCallPad('09367751890')}
+                                            style={{
+                                                flexDirection: 'row-reverse',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: '#404B55', fontSize: 18,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                                }}
+                                            >
+                                                09367751890
+                                        </Text>
+                                            <FontAwesome5
+                                                name='phone-square-alt'
+                                                size={20}
+                                                color=''
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            backgroundColor: '#FFFBE5',
+                                            borderRadius: 4,
+                                            alignSelf: 'center',
+                                            padding: 20,
+                                            width: deviceWidth * 0.95
+                                        }}
+                                    >
+
+                                        <View
+                                            style={{
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <FontAwesome5
+                                                color='#404B55'
+                                                size={25}
+                                                name='exclamation-circle'
+                                            />
+                                            <Text
+                                                style={{
+                                                    color: '#404B55',
+                                                    marginHorizontal: 5,
+                                                    fontSize: 18,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                }}
+                                            >
+                                                {locales('titles.policeWarn')}
+                                            </Text>
+                                        </View>
+                                        <Text
+                                            style={{
+                                                marginVertical: 15,
+                                                color: '#666666',
+                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
+                                            {locales('labels.policeWarnDescription')}
+                                        </Text>
+                                    </View>
+                                </>
+                                : null}
 
                             <View style={{
                                 flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
@@ -1342,43 +1515,45 @@ class ProductDetails extends PureComponent {
 
                     </ScrollView>
                 }
-                {!this.props.productDetailsInfoLoading && userId != loggedInUserId ? <View style={{
-                    backgroundColor: '#fff',
-                    width: '100%',
-                    height: 65,
-                    elevation: 5,
-                }} >
-                    <Button
-                        onPress={() => {
-                            if (this.props.route.params.productId)
-                                analytics().logEvent('open_chat', {
-                                    product_id: this.props.route.params.productId
-                                });
-                            this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
-                        }}
-                        style={[styles.loginButton, {
-                            position: 'absolute',
-                            left: 15,
-                            right: 15,
-                            bottom: 10,
-                            zIndex: 1,
-                            marginHorizontal: 10,
-                            margin: 0
-                        }]}
-                    >
-                        <View style={[styles.textCenterView, styles.buttonText]}>
-                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                <FontAwesome name='envelope' size={20} />
-                            </Text>
-                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                {locales('titles.achiveSaleStatus')}
-                            </Text>
-                        </View>
+                {
+                    !this.props.productDetailsInfoLoading && userId != loggedInUserId ? <View style={{
+                        backgroundColor: '#fff',
+                        width: '100%',
+                        height: 65,
+                        elevation: 5,
+                    }} >
+                        <Button
+                            onPress={() => {
+                                if (this.props.route.params.productId)
+                                    analytics().logEvent('open_chat', {
+                                        product_id: this.props.route.params.productId
+                                    });
+                                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                            }}
+                            style={[styles.loginButton, {
+                                position: 'absolute',
+                                left: 15,
+                                right: 15,
+                                bottom: 10,
+                                zIndex: 1,
+                                marginHorizontal: 10,
+                                margin: 0
+                            }]}
+                        >
+                            <View style={[styles.textCenterView, styles.buttonText]}>
+                                <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                    <FontAwesome name='envelope' size={20} />
+                                </Text>
+                                <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                    {locales('titles.achiveSaleStatus')}
+                                </Text>
+                            </View>
 
-                    </Button>
+                        </Button>
 
-                </View>
-                    : null}
+                    </View>
+                        : null
+                }
             </>
         )
     }
