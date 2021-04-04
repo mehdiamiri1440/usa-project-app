@@ -1454,7 +1454,7 @@ class ProductDetails extends PureComponent {
                                 >
                                     <View>
                                         <Image
-                                            style={{ width: deviceWidth * 0.15, height: deviceWidth * 0.15, borderRadius: deviceWidth * 0.065 }}
+                                            style={{ width: deviceWidth * 0.15, height: deviceWidth * 0.15, borderRadius: deviceWidth * 0.075 }}
                                             source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
                                                 : require('../../../assets/icons/user.png')}
                                         />
@@ -1507,7 +1507,8 @@ class ProductDetails extends PureComponent {
                                     <View style={{
                                         justifyContent: 'center',
                                         alignItems: 'flex-end',
-                                        width: '50%'
+                                        width: '50%',
+                                        marginHorizontal: 10
                                     }}
                                     >
                                         <View style={{
