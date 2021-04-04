@@ -1668,26 +1668,24 @@ class ProductDetails extends PureComponent {
                             </View>
 
 
-                            <View >
-                                <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
-                                    <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>
+                            <View
+                                style={{
+                                    marginTop: 30
+                                }}
+                            >
+                                <View style={{ width: deviceWidth, alignItems: 'flex-end' }}>
+                                    <Text style={{ fontSize: 20, color: '#313A43', paddingHorizontal: 20 }}>
                                         {locales('labels.relatedProducts')}
                                     </Text>
                                     <View
                                         style={{
-                                            height: 2,
-                                            flex: 1,
-                                            alignSelf: 'center',
-                                            backgroundColor: "#BEBEBE",
-                                        }}>
-                                        <View
-                                            style={{
-                                                height: 4,
-                                                bottom: 2,
-                                                width: 40,
-                                                alignSelf: 'flex-end',
-                                                backgroundColor: "#00C469",
-                                            }}></View>
+                                            backgroundColor: '#00C569',
+                                            height: 3,
+                                            width: 100,
+                                            marginVertical: 10,
+                                            marginHorizontal: 20
+                                        }}
+                                    >
                                     </View>
                                 </View>
                                 <RelatedProductsList
