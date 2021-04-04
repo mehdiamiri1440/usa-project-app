@@ -1287,9 +1287,9 @@ class ProductDetails extends PureComponent {
                                 : null}
 
                             <View style={{
-                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                 borderBottomWidth: 0.7, paddingVertical: 15,
-                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
 
@@ -1302,12 +1302,13 @@ class ProductDetails extends PureComponent {
                                         color='#777777'
                                         solid
                                         size={20}
+                                        style={{ textAlign: 'center', width: 23 }}
                                     />
                                     <Text style={{
                                         color: '#777777', fontSize: 18,
                                         textAlignVertical: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        marginHorizontal: 5
+                                        marginHorizontal: 7,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
                                         {locales('titles.category')}
                                     </Text>
@@ -1316,9 +1317,9 @@ class ProductDetails extends PureComponent {
                             </View>
 
                             <View style={{
-                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                 borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
                                 <View style={{
@@ -1328,10 +1329,11 @@ class ProductDetails extends PureComponent {
                                     <FontAwesome5
                                         name='map-marker-alt'
                                         color='#777777'
+                                        style={{ textAlign: 'center', width: 23 }}
                                         solid
                                         size={20}
                                     />
-                                    <Text style={{ color: '#777777', fontSize: 18, marginHorizontal: 5, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                    <Text style={{ color: '#777777', fontSize: 16, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                         {locales('titles.province/city')}
                                     </Text>
                                 </View>
@@ -1341,9 +1343,9 @@ class ProductDetails extends PureComponent {
                             </View>
 
                             <View style={{
-                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                 borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
                                 <View style={{
@@ -1354,9 +1356,10 @@ class ProductDetails extends PureComponent {
                                         name='box-open'
                                         color='#777777'
                                         solid
-                                        size={20}
+                                        style={{ textAlign: 'center', width: 23 }}
+                                        size={18}
                                     />
-                                    <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                    <Text style={{ color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                         {locales('titles.stockQuantity')}
                                     </Text>
                                 </View>
@@ -1364,9 +1367,9 @@ class ProductDetails extends PureComponent {
                             </View>
 
                             <View style={{
-                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                 borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
                                 <View style={{
@@ -1377,10 +1380,11 @@ class ProductDetails extends PureComponent {
                                         name='clipboard-check'
                                         color='#777777'
                                         solid
+                                        style={{ textAlign: 'center', width: 23 }}
                                         size={20}
                                     />
                                     <Text style={{
-                                        color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                        color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
                                         {locales('titles.minOrder')}
                                     </Text>
@@ -1391,9 +1395,9 @@ class ProductDetails extends PureComponent {
                             </View>
 
                             <View style={{
-                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                 borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                marginVertical: 10, width: deviceWidth * 0.97, alignSelf: 'center',
+                                marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
                                 justifyContent: 'space-between', paddingHorizontal: 10
                             }}>
                                 <View style={{
@@ -1404,9 +1408,10 @@ class ProductDetails extends PureComponent {
                                         name='dollar-sign'
                                         color='#777777'
                                         solid
+                                        style={{ textAlign: 'center', width: 23 }}
                                         size={20}
                                     />
-                                    <Text style={{ color: '#777777', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}>
+                                    <Text style={{ color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium', }}>
                                         {locales('titles.price')}
                                     </Text>
                                 </View>
@@ -1420,7 +1425,7 @@ class ProductDetails extends PureComponent {
                                     marginVertical: 10, width: deviceWidth * 0.97,
                                     paddingHorizontal: 10
                                 }}>
-                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 20 }}>
+                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 15 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
                                 <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
@@ -1431,7 +1436,7 @@ class ProductDetails extends PureComponent {
                                 style={{
                                     width: deviceWidth * 0.95,
                                     alignSelf: 'center',
-                                    marginVertical: 10,
+                                    marginBottom: 30,
                                     borderRadius: 12,
                                     borderColor: active_pakage_type == 3 ? '#00C569' : '#E9ECEF',
                                     borderWidth: 1,
@@ -1449,7 +1454,7 @@ class ProductDetails extends PureComponent {
                                 >
                                     <View>
                                         <Image
-                                            style={{ width: deviceWidth * 0.18, height: deviceWidth * 0.18, borderRadius: deviceWidth * 0.09 }}
+                                            style={{ width: deviceWidth * 0.15, height: deviceWidth * 0.15, borderRadius: deviceWidth * 0.065 }}
                                             source={profile_photo ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
                                                 : require('../../../assets/icons/user.png')}
                                         />
@@ -1462,7 +1467,7 @@ class ProductDetails extends PureComponent {
                                                 viewBox="0 0 39 39"
                                                 style={{
                                                     bottom: 12,
-                                                    left: 23,
+                                                    left: 19,
                                                 }}
                                             >
                                                 <Defs>
@@ -1501,24 +1506,30 @@ class ProductDetails extends PureComponent {
 
                                     <View style={{
                                         justifyContent: 'center',
-                                        alignItems: 'flex-end'
+                                        alignItems: 'flex-end',
+                                        width: '50%'
                                     }}
                                     >
-                                        <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', }}>
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18,
-                                                marginVertical: 5,
-                                                marginHorizontal: 3,
-                                                color: '#474747',
-                                            }}>
+                                        <View style={{
+                                            flexDirection: 'row-reverse', justifyContent: 'flex-start',
+                                            width: '100%',
+                                        }}>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    textAlign: 'right',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    fontSize: 18,
+                                                    marginLeft: 3,
+                                                    maxWidth: '88%',
+                                                    color: '#474747',
+                                                }}>
                                                 {`${first_name} ${last_name}`}
                                             </Text>
                                             {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                         </View>
                                         {response_rate > 0 ? <Text style={{
-                                            textAlign: 'center', width: '100%', marginBottom: 10,
+                                            textAlign: 'right', width: '100%', marginVertical: 7,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14, color: '#777777'
                                         }}>
                                             {locales('labels.responseRate')} <Text style={{
@@ -1533,7 +1544,7 @@ class ProductDetails extends PureComponent {
                                             <Text
                                                 style={{
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    fontSize: 15, color: '#00C569'
+                                                    fontSize: 15, color: '#00C569', textAlign: 'right'
                                                 }}
                                             >
                                                 {locales('labels.specialSeller')}
