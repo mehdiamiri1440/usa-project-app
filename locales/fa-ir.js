@@ -527,7 +527,7 @@ export default {
     "titles.instagram": "اینستاگرام",
     "titles.increaseProductRegistrationCapacity": "افزایش ظرفیت ثبت محصول",
     "titles.increaseReplyCapacity": "افزایش ظرفیت پاسخگویی",
-    'titles.versionName': 'ورژن {fieldName}',
+    'titles.versionName': 'نسخه {fieldName}',
     "titles.telegram": "تلگرام",
     "titles.sms": " دعوت با پیامک ",
 
