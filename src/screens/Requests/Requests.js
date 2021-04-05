@@ -586,7 +586,7 @@ class Requests extends PureComponent {
                 </View>
                 <SafeAreaView
                     // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
-                    style={{ height: '100%', paddingBottom: 60 }}
+                    style={{ height: '100%', paddingBottom: 60, backgroundColor: 'white' }}
                 >
                     {showFilters ? <Filters
                         selectedFilter={this.selectedFilter}

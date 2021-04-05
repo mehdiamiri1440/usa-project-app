@@ -1,6 +1,6 @@
+import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
-import React, { memo } from 'react';
-import { View, Image, Text, ActivityIndicator } from 'react-native';
+import { View, Image, Text, ActivityIndicator, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -8,23 +8,58 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
-import { deviceWidth } from '../../utils/deviceDimenssions';
+import { deviceWidth, validator } from '../../utils';
 
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
+    const { item, index, selectedButton, userProfile = {},
+        isUserAllowedToSendMessageLoading,
+        contactInfoLoading
+    } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
+
+    const [isContactInfoShown, setIsContactInfoShown] = useState(false);
+
+
+    const fetchContactInfo = () => {
+        setIsContactInfoShown(true);
+    };
+
+
+
+
+    const openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
+
     return (
 
         <View
             style={{
                 padding: 20,
                 backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#f9fcff' : '#FFFFFF',
-                width: '100%',
+                width: '95%',
+                alignSelf: 'center',
+                borderRadius: 12,
+                marginVertical: 20,
                 borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
                 borderWidth: 0.8,
+                borderRightWidth: !!item.is_golden ? 12 : 0.8,
                 borderBottomWidth: item.is_golden ? 0.8 : 0
             }}
             key={item.id}
@@ -44,10 +79,7 @@ const BuyAdList = props => {
 
                     <Image source={require('../../../assets/images/blur-items.jpg')}
                         style={{
-                            width: deviceWidth,
-                            marginTop: -10,
-
-
+                            width: deviceWidth * 0.915,
                             height: '80%'
                         }}
                     />
@@ -296,8 +328,83 @@ const BuyAdList = props => {
                     </Text>
                 </View>
             </View>
-            <View style={{ marginVertical: 15 }}>
+            <View style={{
+                marginVertical: 15,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                width: deviceWidth * 0.89,
+                paddingHorizontal: 5,
+                alignSelf: 'center',
+                justifyContent: 'space-between'
+            }}
+            >
+                {!item.has_phone ?
+                    <Button
+                        small
+                        onPress={() => fetchContactInfo()}
+                        style={{
+                            borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
+                            width: '47%',
+                            zIndex: 1000,
+                            position: 'relative',
+                            alignSelf: 'center',
 
+                        }}
+                    >
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={!isContactInfoShown ?
+                                (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
+                                    : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                                : ['#E0E0E0', '#E0E0E0']}
+                            style={{
+                                width: '100%',
+                                paddingHorizontal: 10,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 8,
+                                padding: 8,
+                                elevation: 0
+                            }}
+                        >
+                            {!contactInfoLoading ?
+                                <FontAwesome5
+                                    solid
+                                    name='phone-square-alt'
+                                    color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                    size={20} />
+                                :
+                                <ActivityIndicator
+                                    size={20}
+                                    color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                    animating={selectedButton == item.id &&
+                                        !!isUserAllowedToSendMessageLoading}
+                                    style={{
+                                        position: 'relative',
+                                        width: 10, height: 10, borderRadius: 5,
+                                        marginLeft: -10,
+                                        marginRight: 5
+                                    }}
+                                />
+                            }
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    marginHorizontal: 3,
+                                    fontSize: 18,
+                                    color: !isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
+                                    paddingHorizontal: 3
+                                }}
+                            >
+                                {locales('labels.contactInfo')}
+                            </Text>
+                        </LinearGradient>
+
+                    </Button>
+                    : null}
                 <Button
                     small
                     onPress={event => {
@@ -305,43 +412,51 @@ const BuyAdList = props => {
                         props.openChat(event, item)
                     }}
                     style={{
-                        borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                        width: deviceWidth * 0.7,
+                        width: !item.has_phone ? '47%' : '70%',
                         zIndex: 1000,
+                        elevation: 0,
                         position: 'relative',
                         alignSelf: 'center',
-
                     }}
                 >
                     <LinearGradient
                         start={{ x: 0, y: 0.51, z: 1 }}
                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                        colors={!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f']}
+                        colors={!item.has_phone ? ['#fff', '#fff']
+                            : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                        }
                         style={{
                             width: '100%',
+                            borderColor: !item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
                             paddingHorizontal: 10,
                             flexDirection: 'row-reverse',
+                            borderWidth: 1,
                             alignItems: 'center',
                             textAlign: 'center',
                             justifyContent: 'center',
-                            borderRadius: 6,
+                            borderRadius: 8,
                             padding: 8,
                             elevation: 0
                         }}
                     >
 
-                        <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={20} />
+                        <MaterialCommunityIcons
+                            name='message'
+                            color={!item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                            size={20}
+                        />
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             fontSize: 18,
-                            color: !item.is_golden ? 'white' : '#333',
+                            color: !item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
                             paddingHorizontal: 3
                         }}>
                             {locales('labels.messageToBuyer')}
 
 
                         </Text>
-                        <ActivityIndicator size={20} color={!item.is_golden ? 'white' : '#333'}
+                        <ActivityIndicator size={20}
+                            color={!item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                             animating={selectedButton == item.id &&
                                 !!isUserAllowedToSendMessageLoading}
                             style={{
@@ -356,10 +471,135 @@ const BuyAdList = props => {
                 </Button>
 
             </View>
+            {(!isContactInfoShown) ?
+                <>
+                    <View
+                        style={{
+                            zIndex: 1,
+                            flexDirection: 'row-reverse',
+                            paddingVertical: 25,
+                            alignItems: 'center',
+                            width: deviceWidth * 0.83,
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                color: '#404B55'
+                            }}>
+                            {locales('titles.phoneNumber')}
+                        </Text>
+                        <TouchableOpacity
+                            onPress={_ => openCallPad('09367751890')}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: '#404B55', fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                }}
+                            >
+                                09367751890
+                                        </Text>
+                            <FontAwesome5
+                                name='phone-square-alt'
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View
+                        style={{
+                            backgroundColor: '#FFFBE5',
+                            borderRadius: 12,
+                            alignSelf: 'center',
+                            padding: 20,
+                            width: deviceWidth * 0.85,
+                            zIndex: 1,
+                            bottom: -10
+                        }}
+                    >
+
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <FontAwesome5
+                                color='#404B55'
+                                size={25}
+                                name='exclamation-circle'
+                            />
+                            <Text
+                                style={{
+                                    color: '#404B55',
+                                    marginHorizontal: 5,
+                                    fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}
+                            >
+                                {locales('titles.policeWarn')}
+                            </Text>
+                        </View>
+                        <Text
+                            style={{
+                                marginVertical: 15,
+                                color: '#666666',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}
+                        >
+                            {locales('labels.policeWarnDescription')}
+                        </Text>
+                    </View>
+                </>
+                : null}
+
         </View>
 
     )
 }
+
+const styles = StyleSheet.create({
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        borderRadius: 4,
+        backgroundColor: '#00C569',
+        color: 'white',
+        elevation: 0
+    },
+    margin5: {
+        margin: 5
+    },
+    textWhite: {
+        color: "#fff"
+    },
+    textCenterView: {
+        justifyContent: 'center',
+        flexDirection: "row-reverse",
+    },
+    textSize18: {
+        fontSize: 18
+    },
+    textBold: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        width: '100%',
+        textAlign: 'center'
+    },
+});
 
 const arePropsEqual = (prevProps, nextProps) => {
     // console.log('prevprops', prevProps, 'nextPRops', nextProps)

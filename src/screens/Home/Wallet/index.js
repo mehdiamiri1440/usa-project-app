@@ -239,7 +239,9 @@ const Wallet = props => {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         marginTop: 20,
-                        padding: 10
+                        flex: 1,
+                        padding: 10,
+                        alignSelf: 'center'
                     }}
                 >
                     <TouchableOpacity
@@ -252,7 +254,7 @@ const Wallet = props => {
                             borderRadius: 25,
                             borderColor: '#00C569',
                             borderWidth: 0.7,
-                            padding: 15
+                            padding: 11,
                         }}
                     >
                         <Text
@@ -281,7 +283,8 @@ const Wallet = props => {
                             borderColor: '#00C569',
                             borderWidth: 0.7,
                             borderRadius: 25,
-                            padding: 15
+                            marginHorizontal: 5,
+                            padding: 11
                         }}
                     >
                         <Text
@@ -310,7 +313,7 @@ const Wallet = props => {
                             borderRadius: 25,
                             borderColor: '#00C569',
                             borderWidth: 0.7,
-                            padding: 15
+                            padding: 11
                         }}
                     >
                         <Text

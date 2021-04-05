@@ -550,8 +550,8 @@ class Home extends React.Component {
 
 
                     <View style={[styles.textInputPadding, {
-                        flex: 1,
-                        alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                        alignItems: 'center', flexDirection: 'row',
+                        justifyContent: 'space-between'
                     }]}>
                         <TouchableOpacity
                             onPress={() => is_seller && this.changeRole()}
@@ -561,7 +561,7 @@ class Home extends React.Component {
                                 borderColor: !is_seller ? '#4DC0BB' : '#556080',
                                 padding: 15,
                                 borderRadius: 12,
-                                width: 165,
+                                width: deviceWidth * 0.4,
                                 height: 57,
                                 zIndex: 1,
                                 alignItems: 'center',
@@ -610,7 +610,7 @@ class Home extends React.Component {
                                 padding: 15,
                                 zIndex: 1,
                                 borderRadius: 12,
-                                width: 165,
+                                width: deviceWidth * 0.4,
                                 height: 57,
                                 alignItems: 'center',
                                 flexDirection: 'row-reverse',
@@ -788,7 +788,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         width: deviceWidth * 0.91,
         justifyContent: 'space-between',
-        height: deviceHeight * 0.16,
+        height: deviceHeight * 0.17,
         padding: 10,
         alignSelf: 'center',
     },
