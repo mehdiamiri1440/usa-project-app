@@ -35,21 +35,21 @@ let role = false
 
 let homeRoutes = [
     // { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'PromotionIntro' },
-    { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'Dashboard' },
-    { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user-circle' solid color='white' />, name: 'EditProfile' },
-    { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SuggestedBuyers' },
-    { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyRequests' },
-    { label: 'labels.suggestedSellers', icon: <FontAwesome5 size={25} name='list-ul' color='white' />, name: 'SpecialProducts' },
-    { label: 'labels.messages', icon: <Entypo size={25} name='message' color='white' />, name: 'Messages' },
-    // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='white' />, name: 'UserFriends' },
-    // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='white' />, name: 'Guid' },
-    { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='white' />, name: 'MyProducts' },
+    { label: 'labels.dashboard', icon: <FontAwesome5 size={25} name='chart-line' color='#556080' />, name: 'Dashboard' },
+    { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user' solid color='#556080' />, name: 'EditProfile' },
+    { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='#556080' />, name: 'SuggestedBuyers' },
+    { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='#556080' />, name: 'MyRequests' },
+    { label: 'labels.suggestedSellers', icon: <FontAwesome5 size={25} name='list-ul' color='#556080' />, name: 'SpecialProducts' },
+    { label: 'labels.messages', icon: <Entypo size={25} name='message' color='#556080' />, name: 'Messages' },
+    // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='#556080' />, name: 'UserFriends' },
+    // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='#556080' />, name: 'Guid' },
+    { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='#556080' />, name: 'MyProducts' },
 
-    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='white' />, name: 'Profile' },
-    { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='white' />, name: 'Authentication' },
-    { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='white' />, name: 'PromoteRegistration' },
-    { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='white' />, name: 'ContactUs' },
-    { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='white' />, name: 'Settings' },
+    { label: 'labels.myProfile', icon: <MaterialCommunityIcons size={25} name='account-arrow-left-outline' color='#556080' />, name: 'Profile' },
+    { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='#556080' />, name: 'Authentication' },
+    { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='#fff' />, name: 'PromoteRegistration' },
+    { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='#556080' />, name: 'ContactUs' },
+    { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='#556080' />, name: 'Settings' },
 ];
 class Home extends React.Component {
     constructor(props) {
@@ -145,7 +145,7 @@ class Home extends React.Component {
 
         const { userProfile = {} } = this.props;
         const { user_info = {} } = userProfile;
-        let { is_seller = null } = user_info;
+        let { is_seller } = user_info;
 
         is_seller = is_seller == 0 ? false : true;
 
@@ -379,13 +379,11 @@ class Home extends React.Component {
                                                     alignContent: 'center',
                                                     backgroundColor: 'white',
                                                     borderRadius: 5,
-                                                    marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
                                                     borderColor: route.name === 'PromoteRegistration' ? '#00C569' : '#ccc',
-                                                    borderWidth: 1,
-                                                    paddingVertical: 10,
+                                                    borderBottomWidth: 1,
+                                                    paddingVertical: 20,
                                                     elevation: 0,
                                                     paddingHorizontal: 20,
-                                                    marginVertical: 10,
                                                     marginHorizontal: 20,
                                                     flexDirection: 'row-reverse',
                                                 }}
@@ -407,7 +405,12 @@ class Home extends React.Component {
                                                         {route.icon}
 
                                                     </BgLinearGradient>
-                                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444' }}>
+                                                    <Text style={{
+                                                        paddingHorizontal: 10, fontSize: 16,
+                                                        textAlignVertical: 'center',
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444'
+                                                    }}
+                                                    >
                                                         {locales(route.label)}
                                                     </Text>
                                                 </View>
@@ -439,13 +442,12 @@ class Home extends React.Component {
                                                     alignContent: 'center',
                                                     backgroundColor: 'white',
                                                     borderRadius: 5,
-                                                    marginBottom: index < homeRoutes.length - 1 ? 10 : 30,
-                                                    borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#ccc',
-                                                    borderWidth: 1,
-                                                    paddingVertical: 10,
+                                                    borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                                                        '#c7a84f' : '#E9ECEF',
+                                                    borderBottomWidth: index < homeRoutes.length - 1 ? 1 : 0,
+                                                    paddingVertical: 20,
                                                     elevation: 0,
                                                     paddingHorizontal: 20,
-                                                    marginVertical: 10,
                                                     marginHorizontal: 20,
                                                     flexDirection: 'row-reverse',
                                                 }}
@@ -470,17 +472,22 @@ class Home extends React.Component {
 
                                                         </BgLinearGradient> :
                                                         <View style={{
-                                                            borderRadius: 5,
-                                                            backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
-                                                            padding: 5,
+                                                            backgroundColor: route.name === 'SuggestedBuyers' ||
+                                                                route.name === 'SpecialProducts' ? '#c7a84f' : '#fff',
+                                                            justifyContent: 'center',
                                                             width: deviceWidth * 0.1,
                                                             height: deviceWidth * 0.1,
-                                                            alignItems: 'center'
+                                                            alignItems: 'center',
                                                         }}>
                                                             {route.icon}
                                                         </View>
                                                     }
-                                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444' }}>
+                                                    <Text style={{
+                                                        paddingHorizontal: 10, fontSize: 16,
+                                                        textAlignVertical: 'center',
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        color: '#444'
+                                                    }}>
                                                         {locales(route.label)}
                                                     </Text>
                                                 </View>
@@ -532,6 +539,7 @@ class Home extends React.Component {
                     <Text style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 18,
+                        marginTop: 30,
                         textAlign: 'center',
                         color: '#313A43'
                     }}>
@@ -561,14 +569,12 @@ class Home extends React.Component {
                             }}>
                             {!is_seller ?
                                 <FontAwesome5
-                                    onPress={() => is_seller && this.changeRole()}
                                     color='#fff'
                                     size={20}
                                     name='check'
                                 />
                                 :
                                 <FontAwesome5
-                                    onPress={() => is_seller && this.changeRole()}
                                     color='#556080'
                                     size={20}
                                     name='circle'
@@ -613,14 +619,12 @@ class Home extends React.Component {
                         >
                             {is_seller ?
                                 <FontAwesome5
-                                    onPress={() => !is_seller && this.changeRole()}
                                     color='#fff'
                                     size={20}
                                     name='check'
                                 />
                                 :
                                 <FontAwesome5
-                                    onPress={() => !is_seller && this.changeRole()}
                                     color='#556080'
                                     size={20}
                                     name='circle'
@@ -663,18 +667,18 @@ class Home extends React.Component {
                             style={{
                                 width: '100%',
                                 left: 10,
-                                bottom: -8
+                                bottom: 12
                             }}
                             resizeMode='contain'
                         />
                         <Text
                             style={{
                                 color: '#999999',
-                                top: 50,
+                                top: 40,
                                 left: 50,
                                 position: 'absolute',
                                 textAlign: 'center',
-                                fontSize: 17,
+                                fontSize: 15,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             }}
                         >
