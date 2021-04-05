@@ -707,18 +707,20 @@ export const WalletPreview = props => {
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
                         width: '100%',
+                        marginTop: 5,
+                        paddingLeft: 7,
                     }}
                 >
                     <FontAwesome5
                         name='wallet'
-                        size={15}
+                        size={18}
                         color='white'
                     />
                     <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             color: 'white',
-                            fontSize: 14,
+                            fontSize: 17,
                             marginHorizontal: 5
                         }}
                     >
@@ -734,13 +736,13 @@ export const WalletPreview = props => {
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        width: 150,
+                        width: 140,
                         height: 40
                     }}
                 >
                     <FontAwesome5
                         size={17}
-                        color='#333333'
+                        color='#00C569'
                         name='plus'
                     />
                     <Text
@@ -759,11 +761,21 @@ export const WalletPreview = props => {
                     style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         color: 'white',
-                        fontSize: 20,
+                        fontSize: 30,
+                        top: -10,
                         marginHorizontal: 5
                     }}
                 >
-                    {`${numberWithCommas(100000000)} ${locales('titles.toman')}`}
+                    {`${numberWithCommas(100000000)}`} <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: 'white',
+                            fontSize: 20,
+                            marginHorizontal: 5,
+                        }}
+                    >
+                        {locales('titles.toman')}
+                    </Text>
                 </Text>
             </ImageBackground>
         </TouchableOpacity>
@@ -775,7 +787,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         width: deviceWidth * 0.91,
         justifyContent: 'space-between',
-        height: deviceHeight * 0.2,
+        height: deviceHeight * 0.16,
         padding: 10,
         alignSelf: 'center',
     },
