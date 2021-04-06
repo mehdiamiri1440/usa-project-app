@@ -89,7 +89,10 @@ class ProductDetails extends PureComponent {
             profile_photo: '',
 
             isContactInfoShown: false,
-            has_phone: false
+            has_phone: false,
+            mobileNumber: '',
+            showMobileNumberWarnModal: false,
+            productIdFromProductDetails: ''
         }
     }
 
@@ -170,7 +173,8 @@ class ProductDetails extends PureComponent {
                 stock,
                 sub_category_id,
                 sub_category_name,
-                updated_at
+                updated_at,
+                id: productIdFromProductDetails
             } = main;
 
             const {
@@ -239,7 +243,8 @@ class ProductDetails extends PureComponent {
                 min_sale_price,
 
                 profile_photo,
-                has_phone
+                has_phone,
+                productIdFromProductDetails
             });
         }
     }
@@ -466,8 +471,40 @@ class ProductDetails extends PureComponent {
             .catch(_ => { })
     };
 
-    fetchContactInfo = () => {
-        this.setState({ isContactInfoShown: true })
+    fetchContactInfo = (id, userId) => {
+        const contactInfoObject = {
+            s_id: userId,
+            p_id: id,
+            item: "PRODUCT"
+        }
+
+        this.props.fetchSellerMobileNumber(contactInfoObject).then(result => {
+            const {
+                payload = {}
+            } = result;
+            const {
+                phone,
+                status
+            } = payload;
+            if (status == true && !!phone) {
+                this.setState({ mobileNumber: phone, isContactInfoShown: true })
+            }
+        })
+            .catch(err => {
+                const {
+                    response = {}
+                } = err;
+                const {
+                    data = {}
+                } = response;
+                const {
+                    msg,
+                    status
+                } = data;
+                if (status == false) {
+                    this.setState({ showMobileNumberWarnModal: true })
+                }
+            });
     };
 
     render() {
@@ -549,7 +586,10 @@ class ProductDetails extends PureComponent {
             profile_photo,
 
             isContactInfoShown,
-            has_phone
+            has_phone,
+            mobileNumber,
+            showMobileNumberWarnModal,
+            productIdFromProductDetails
         } = this.state;
 
 
@@ -570,13 +610,96 @@ class ProductDetails extends PureComponent {
 
 
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
-
         return (
             <>
                 <NoConnection
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showMobileNumberWarnModal}
+                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.contactInfo')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('titles.changePackageTypeToSeeMovileNumber')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.setState({ showMobileNumberWarnModal: false });
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
+
 
                 < Portal
                     style={{
@@ -1052,7 +1175,7 @@ class ProductDetails extends PureComponent {
                                 width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
 
                             }}>
-                                {is_seller ? userId == loggedInUserId ? <View style={{
+                                {userId == loggedInUserId ? <View style={{
                                     flexDirection: 'row', justifyContent: 'space-around',
                                     flex: 1
                                     // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
@@ -1091,105 +1214,8 @@ class ProductDetails extends PureComponent {
                                         <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
                                     </Button>
                                 </View> :
-                                    <Button
-                                        onPress={() => {
-                                            if (this.props.route.params.productId)
-                                                analytics().logEvent('open_chat', {
-                                                    product_id: this.props.route.params.productId
-                                                });
-                                            this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
-                                        }}
-                                        style={[styles.loginButton, {
-                                            paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
-                                            maxWidth: 160,
-                                            margin: 0
-                                            // width: !!is_elevated ? '50%' : '46%'
-                                        }]}
-                                    >
-                                        <View style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                                <FontAwesome name='envelope' size={20} />
-                                            </Text>
-                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                                {locales('titles.achiveSaleStatus')}
-                                            </Text>
-                                        </View>
-
-                                    </Button>
-                                    :
-                                    has_phone ?
-                                        <View
-                                            style={{
-                                                flexDirection: 'row-reverse',
-                                                alignItems: 'center'
-                                            }}
-                                        >
-                                            <Button
-                                                onPress={() => this.fetchContactInfo()}
-                                                style={[styles.loginButton, {
-                                                    paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
-                                                    maxWidth: 160,
-                                                    margin: 0,
-                                                    backgroundColor: isContactInfoShown ? '#E0E0E0' : '#00C569'
-                                                    // width: !!is_elevated ? '50%' : '46%'
-                                                }]}
-                                            >
-                                                <View style={[styles.textCenterView, styles.buttonText]}>
-                                                    {!contactInfoLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                                        <FontAwesome5 solid name='phone-square-alt'
-                                                            size={20} />
-                                                    </Text> :
-                                                        <ActivityIndicator
-                                                            animating={true}
-                                                            size={20}
-                                                            color='white'
-                                                        />
-                                                    }
-                                                    <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                                        {locales('labels.contactInfo')}
-                                                    </Text>
-                                                </View>
-                                            </Button>
-
-                                            <Button
-                                                onPress={() => {
-                                                    if (this.props.route.params.productId)
-                                                        analytics().logEvent('open_chat', {
-                                                            product_id: this.props.route.params.productId
-                                                        });
-                                                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
-                                                }}
-                                                style={[styles.loginButton, {
-                                                    alignItems: 'center', justifyContent: 'center',
-                                                    maxWidth: 160,
-                                                    marginHorizontal: 15,
-                                                    margin: 0,
-                                                    backgroundColor: 'white',
-                                                    borderWidth: 1,
-                                                    borderColor: '#556080'
-                                                    // width: !!is_elevated ? '50%' : '46%'
-                                                }]}
-                                            >
-                                                <View style={[styles.textCenterView, styles.buttonText]}>
-                                                    {!contactInfoLoading ? <Text style={[styles.textWhite,
-                                                    styles.margin5, { color: '#556080', marginTop: 7 }]}>
-                                                        <FontAwesome5 solid color='#556080' name='comment-alt' size={20} />
-                                                    </Text> :
-                                                        <ActivityIndicator
-                                                            animating={true}
-                                                            size={20}
-                                                            color='#556080'
-                                                        />
-                                                    }
-                                                    <Text style={[styles.textWhite, styles.margin5, styles.textBold,
-                                                    { color: '#556080' }, styles.textSize18]}>
-                                                        {locales('titles.sendMessage')}
-                                                    </Text>
-                                                </View>
-                                            </Button>
-
-                                        </View>
-                                        : <Button
+                                    is_seller ?
+                                        <Button
                                             onPress={() => {
                                                 if (this.props.route.params.productId)
                                                     analytics().logEvent('open_chat', {
@@ -1214,6 +1240,104 @@ class ProductDetails extends PureComponent {
                                             </View>
 
                                         </Button>
+                                        :
+                                        (has_phone) ?
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row-reverse',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                <Button
+                                                    onPress={() => this.fetchContactInfo(productIdFromProductDetails, userId)}
+                                                    style={[styles.loginButton, {
+                                                        paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
+                                                        maxWidth: 160,
+                                                        margin: 0,
+                                                        backgroundColor: isContactInfoShown ? '#E0E0E0' : '#00C569'
+                                                        // width: !!is_elevated ? '50%' : '46%'
+                                                    }]}
+                                                >
+                                                    <View style={[styles.textCenterView, styles.buttonText]}>
+                                                        {!contactInfoLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                                            <FontAwesome5 solid name='phone-square-alt'
+                                                                size={20} />
+                                                        </Text> :
+                                                            <ActivityIndicator
+                                                                animating={true}
+                                                                size={20}
+                                                                color='white'
+                                                            />
+                                                        }
+                                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                            {locales('labels.contactInfo')}
+                                                        </Text>
+                                                    </View>
+                                                </Button>
+
+                                                <Button
+                                                    onPress={() => {
+                                                        if (this.props.route.params.productId)
+                                                            analytics().logEvent('open_chat', {
+                                                                product_id: this.props.route.params.productId
+                                                            });
+                                                        this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                                                    }}
+                                                    style={[styles.loginButton, {
+                                                        alignItems: 'center', justifyContent: 'center',
+                                                        maxWidth: 160,
+                                                        marginHorizontal: 15,
+                                                        margin: 0,
+                                                        backgroundColor: 'white',
+                                                        borderWidth: 1,
+                                                        borderColor: '#556080'
+                                                        // width: !!is_elevated ? '50%' : '46%'
+                                                    }]}
+                                                >
+                                                    <View style={[styles.textCenterView, styles.buttonText]}>
+                                                        {!contactInfoLoading ? <Text style={[styles.textWhite,
+                                                        styles.margin5, { color: '#556080', marginTop: 7 }]}>
+                                                            <FontAwesome5 solid color='#556080' name='comment-alt' size={20} />
+                                                        </Text> :
+                                                            <ActivityIndicator
+                                                                animating={true}
+                                                                size={20}
+                                                                color='#556080'
+                                                            />
+                                                        }
+                                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold,
+                                                        { color: '#556080' }, styles.textSize18]}>
+                                                            {locales('titles.sendMessage')}
+                                                        </Text>
+                                                    </View>
+                                                </Button>
+
+                                            </View>
+                                            : <Button
+                                                onPress={() => {
+                                                    if (this.props.route.params.productId)
+                                                        analytics().logEvent('open_chat', {
+                                                            product_id: this.props.route.params.productId
+                                                        });
+                                                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+                                                }}
+                                                style={[styles.loginButton, {
+                                                    paddingBottom: 7, alignItems: 'center', justifyContent: 'center',
+                                                    maxWidth: 160,
+                                                    margin: 0
+                                                    // width: !!is_elevated ? '50%' : '46%'
+                                                }]}
+                                            >
+                                                <View style={[styles.textCenterView, styles.buttonText]}>
+                                                    <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                                        <FontAwesome name='envelope' size={20} />
+                                                    </Text>
+                                                    <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
+                                                        {locales('titles.achiveSaleStatus')}
+                                                    </Text>
+                                                </View>
+
+                                            </Button>
                                 }
                                 {(is_elevated && loggedInUserId == userId) ? <FontAwesome5
                                     onPress={() => Toast.show({
@@ -1248,7 +1372,7 @@ class ProductDetails extends PureComponent {
                                             {locales('titles.phoneNumber')}
                                         </Text>
                                         <TouchableOpacity
-                                            onPress={_ => this.openCallPad('09367751890')}
+                                            onPress={_ => this.openCallPad(mobileNumber)}
                                             style={{
                                                 flexDirection: 'row-reverse',
                                                 justifyContent: 'center',
@@ -1261,8 +1385,8 @@ class ProductDetails extends PureComponent {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                                 }}
                                             >
-                                                09367751890
-                                        </Text>
+                                                {mobileNumber}
+                                            </Text>
                                             <FontAwesome5
                                                 name='phone-square-alt'
                                                 size={20}
@@ -2172,8 +2296,9 @@ const mapStateToProps = (state) => {
 
         editProductStatus,
         editProductMessage,
-        editProductLoading
+        editProductLoading,
 
+        buyerMobileNumberLoading
     } = productsListReducer;
 
     const {
@@ -2209,7 +2334,9 @@ const mapStateToProps = (state) => {
 
         loggedInUserId,
 
-        userProfile
+        userProfile,
+
+        buyerMobileNumberLoading
     }
 };
 
@@ -2219,8 +2346,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
-
         fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id)),
+        fetchSellerMobileNumber: contactInfoObject => dispatch(productListActions.fetchSellerMobileNumber(contactInfoObject)),
     }
 };
 

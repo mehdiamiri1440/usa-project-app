@@ -62,7 +62,7 @@ const BuyAdList = props => {
                         msg,
                         status
                     } = data;
-                    if (status == false && msg == 'Access Denied!') {
+                    if (status == false) {
                         openMobileNumberWarnModal(true);
                     }
                 });
@@ -92,7 +92,7 @@ const BuyAdList = props => {
         <View
             style={{
                 padding: 20,
-                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#f9fcff' : '#FFFFFF',
+                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#FDFDFD' : '#FFFFFF',
                 width: '95%',
                 alignSelf: 'center',
                 borderRadius: 12,

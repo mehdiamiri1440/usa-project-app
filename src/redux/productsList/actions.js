@@ -209,6 +209,30 @@ export const fetchAllProductInfo = id => {
     return request();
 };
 
+
+export const fetchSellerMobileNumber = contactInfoObject => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchSellerMobileNumber(contactInfoObject)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_SELLER_MOBILE_NUMBER_FAILED,
+                        reject: actionTypes.FETCH_SELLER_MOBILE_NUMBER_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_SELLER_MOBILE_NUMBER_LOADING);
+    const success = res => action(actionTypes.FETCH_SELLER_MOBILE_NUMBER_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
 export const updateProductsList = flag => {
     return dispatch => dispatch(action(actionTypes.UPDATE_PRODUCTS_LIST, flag));
 };
