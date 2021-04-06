@@ -403,6 +403,7 @@ export default {
     'titles.veryBad': 'خیلی بد',
     'titles.veryGood': 'خیلی خوب',
     "titles.repeatPassword": "تکرار کلمه عبور",
+    'titles.changePackageTypeToSeeMovileNumber': 'برای مشاهده اطلاعات تماس این کاربر ، نوع عضویت خود را ارتقا دهید .',
     "titles.signUpDoneSuccessfully": "ثبت‌نام با موفقیت انجام شد",
     'titles.enterYourRate': 'به این کاربر از 1 تا 5 امتیاز دهید',
     "titles.userName": "نام کاربری",

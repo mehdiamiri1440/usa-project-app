@@ -93,3 +93,25 @@ export const deleteBuyAd = (id) => {
 
     return request();
 };
+
+export const fetchBuyerMobileNumber = contactInfoObject => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.buyAdRequest
+                .fetchBuyerMobileNumber(contactInfoObject)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_BUYER_MOBILE_NUMBER_FAILED,
+                        reject: actionTypes.FETCH_BUYER_MOBILE_NUMBER_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_BUYER_MOBILE_NUMBER_LOADING);
+    const success = res => action(actionTypes.FETCH_BUYER_MOBILE_NUMBER_SUCCESSFULLY, res);
+
+    return request();
+};

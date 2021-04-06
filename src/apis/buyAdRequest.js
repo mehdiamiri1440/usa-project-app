@@ -80,3 +80,23 @@ export const deleteBuyAd = id => {
             });
     });
 };
+
+export const fetchBuyerMobileNumber = contactInfoObject => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_buyer_phone_number`,
+                method: 'POST',
+                data: contactInfoObject,
+                withAuth: false,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                // return reject(err.response);
+                return reject(err);
+
+            });
+    });
+};

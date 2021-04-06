@@ -28,6 +28,12 @@ const INITIAL_STATE = {
     deleteBuyAdMessage: null,
     deleteBuyAd: {},
 
+    buyerMobileNumberLoading: false,
+    buyerMobileNumberFailed: false,
+    buyerMobileNumberError: false,
+    buyerMobileNumberMessage: null,
+    buyerMobileNumber: {},
+
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -225,6 +231,49 @@ export default (state = INITIAL_STATE, action) => {
                 deleteBuyAdFailed: false,
                 deleteBuyAdError: true,
                 deleteBuyAdMessage: ''
+            };
+        };
+
+        case actionTypes.FETCH_BUYER_MOBILE_NUMBER_LOADING: {
+            return {
+                ...state,
+                buyerMobileNumber: {},
+                buyerMobileNumberLoading: true,
+                buyerMobileNumberFailed: false,
+                buyerMobileNumberError: false,
+                buyerMobileNumberMessage: null
+            };
+        };
+        case actionTypes.FETCH_BUYER_MOBILE_NUMBER_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                buyerMobileNumber: { ...action.payload },
+                buyerMobileNumberLoading: false,
+                buyerMobileNumberFailed: false,
+                buyerMobileNumberError: false,
+                buyerMobileNumberMessage: msg,
+            };
+        };
+        case actionTypes.FETCH_BUYER_MOBILE_NUMBER_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                buyerMobileNumber: {},
+                buyerMobileNumberLoading: false,
+                buyerMobileNumberFailed: true,
+                buyerMobileNumberError: false,
+                buyerMobileNumberMessage: msg
+            };
+        };
+        case actionTypes.FETCH_BUYER_MOBILE_NUMBER_REJECT: {
+            return {
+                ...state,
+                buyerMobileNumber: {},
+                buyerMobileNumberLoading: false,
+                buyerMobileNumberFailed: false,
+                buyerMobileNumberError: true,
+                buyerMobileNumberMessage: ''
             };
         };
 

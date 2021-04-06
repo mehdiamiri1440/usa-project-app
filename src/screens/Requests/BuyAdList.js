@@ -9,25 +9,65 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
 import { deviceWidth, validator } from '../../utils';
+import * as buyAdActions from '../../redux/buyAdRequest/actions';
 
 
 const BuyAdList = props => {
 
     const { item, index, selectedButton, userProfile = {},
-        isUserAllowedToSendMessageLoading,
-        contactInfoLoading
+        isUserAllowedToSendMessageLoading, openMobileNumberWarnModal = _ => { },
+        contactInfoLoading,
+        setPromotionModalVisiblity = _ => { },
+        buyerMobileNumberLoading
     } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
 
     const [isContactInfoShown, setIsContactInfoShown] = useState(false);
+    const [mobileNumber, setMobileNumber] = useState(false);
 
-
-    const fetchContactInfo = () => {
-        setIsContactInfoShown(true);
+    const fetchContactInfo = ({ id, is_golden }) => {
+        const shouldShowPromotionModal = !!is_golden && active_pakage_type != 3;
+        if (shouldShowPromotionModal) {
+            setPromotionModalVisiblity(true)
+        }
+        else {
+            props.setSelectedButton(id);
+            const contactInfoObject = {
+                b_id: item.myuser_id,
+                ba_id: item.id,
+                item: "BUYAD"
+            }
+            props.fetchBuyerMobileNumber(contactInfoObject).then(result => {
+                const {
+                    payload = {}
+                } = result;
+                const {
+                    phone,
+                    status
+                } = payload;
+                if (status == true && !!phone) {
+                    setMobileNumber(phone);
+                    setIsContactInfoShown(true);
+                }
+            })
+                .catch(err => {
+                    const {
+                        response = {}
+                    } = err;
+                    const {
+                        data = {}
+                    } = response;
+                    const {
+                        msg,
+                        status
+                    } = data;
+                    if (status == false && msg == 'Access Denied!') {
+                        openMobileNumberWarnModal(true);
+                    }
+                });
+        }
     };
-
-
 
 
     const openCallPad = phoneNumber => {
@@ -338,10 +378,10 @@ const BuyAdList = props => {
                 justifyContent: 'space-between'
             }}
             >
-                {!item.has_phone ?
+                {item.has_phone ?
                     <Button
                         small
-                        onPress={() => fetchContactInfo()}
+                        onPress={() => fetchContactInfo(item)}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
                             width: '47%',
@@ -366,30 +406,16 @@ const BuyAdList = props => {
                                 textAlign: 'center',
                                 justifyContent: 'center',
                                 borderRadius: 8,
+                                paddingLeft: 20,
                                 padding: 8,
                                 elevation: 0
                             }}
                         >
-                            {!contactInfoLoading ?
-                                <FontAwesome5
-                                    solid
-                                    name='phone-square-alt'
-                                    color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                    size={20} />
-                                :
-                                <ActivityIndicator
-                                    size={20}
-                                    color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                    animating={selectedButton == item.id &&
-                                        !!isUserAllowedToSendMessageLoading}
-                                    style={{
-                                        position: 'relative',
-                                        width: 10, height: 10, borderRadius: 5,
-                                        marginLeft: -10,
-                                        marginRight: 5
-                                    }}
-                                />
-                            }
+                            <FontAwesome5
+                                solid
+                                name='phone-square-alt'
+                                color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                size={20} />
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -401,6 +427,18 @@ const BuyAdList = props => {
                             >
                                 {locales('labels.contactInfo')}
                             </Text>
+                            {buyerMobileNumberLoading && selectedButton == item.id ?
+                                <ActivityIndicator
+                                    size={20}
+                                    color={(!item.is_golden ? 'white' : '#333')}
+                                    animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                    style={{
+                                        position: 'relative',
+                                        width: 10, height: 10, borderRadius: 5,
+                                        marginRight: 5
+                                    }}
+                                />
+                                : null}
                         </LinearGradient>
 
                     </Button>
@@ -412,7 +450,7 @@ const BuyAdList = props => {
                         props.openChat(event, item)
                     }}
                     style={{
-                        width: !item.has_phone ? '47%' : '70%',
+                        width: item.has_phone ? '47%' : '70%',
                         zIndex: 1000,
                         elevation: 0,
                         position: 'relative',
@@ -422,12 +460,12 @@ const BuyAdList = props => {
                     <LinearGradient
                         start={{ x: 0, y: 0.51, z: 1 }}
                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                        colors={!item.has_phone ? ['#fff', '#fff']
+                        colors={item.has_phone ? ['#fff', '#fff']
                             : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
                         }
                         style={{
                             width: '100%',
-                            borderColor: !item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
+                            borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
                             paddingHorizontal: 10,
                             flexDirection: 'row-reverse',
                             borderWidth: 1,
@@ -442,13 +480,13 @@ const BuyAdList = props => {
 
                         <MaterialCommunityIcons
                             name='message'
-                            color={!item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                             size={20}
                         />
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             fontSize: 18,
-                            color: !item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
+                            color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
                             paddingHorizontal: 3
                         }}>
                             {locales('labels.messageToBuyer')}
@@ -456,7 +494,7 @@ const BuyAdList = props => {
 
                         </Text>
                         <ActivityIndicator size={20}
-                            color={!item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                             animating={selectedButton == item.id &&
                                 !!isUserAllowedToSendMessageLoading}
                             style={{
@@ -471,7 +509,7 @@ const BuyAdList = props => {
                 </Button>
 
             </View>
-            {(!isContactInfoShown) ?
+            {(isContactInfoShown) ?
                 <>
                     <View
                         style={{
@@ -492,7 +530,7 @@ const BuyAdList = props => {
                             {locales('titles.phoneNumber')}
                         </Text>
                         <TouchableOpacity
-                            onPress={_ => openCallPad('09367751890')}
+                            onPress={_ => openCallPad(mobileNumber)}
                             style={{
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'center',
@@ -505,8 +543,8 @@ const BuyAdList = props => {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                 }}
                             >
-                                09367751890
-                                        </Text>
+                                {mobileNumber}
+                            </Text>
                             <FontAwesome5
                                 name='phone-square-alt'
                                 size={20}
@@ -614,7 +652,13 @@ const arePropsEqual = (prevProps, nextProps) => {
 
 const mapStateToProps = state => {
     return {
-        userProfile: state.profileReducer.userProfile
+        userProfile: state.profileReducer.userProfile,
+        buyerMobileNumberLoading: state.buyAdRequestReducer.buyerMobileNumberLoading
+    }
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        fetchBuyerMobileNumber: contactInfoObject => dispatch(buyAdActions.fetchBuyerMobileNumber(contactInfoObject)),
     }
 }
-export default connect(mapStateToProps)(memo(BuyAdList, arePropsEqual))
+export default connect(mapStateToProps, mapDispatchToProps)(memo(BuyAdList, arePropsEqual))

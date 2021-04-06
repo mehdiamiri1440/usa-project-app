@@ -42,7 +42,9 @@ class Requests extends PureComponent {
             showFilters: false,
             showGoldenModal: false,
             showModal: false,
-            selectedFilterName: ''
+            selectedFilterName: '',
+
+            showMobileNumberWarnModal: false,
         }
     }
 
@@ -140,6 +142,10 @@ class Requests extends PureComponent {
 
     hideDialog = () => this.setState({ showDialog: false });
 
+    setSelectedButton = id => this.setState({ selectedButton: id });
+
+    setPromotionModalVisiblity = shouldShow => this.setState({ showDialog: shouldShow });
+
     openChat = (event, item) => {
         let { userProfile = {} } = this.props;
         const { user_info = {} } = userProfile;
@@ -182,6 +188,10 @@ class Requests extends PureComponent {
         }
     };
 
+    openMobileNumberWarnModal = shouldShow => {
+        this.setState({ showMobileNumberWarnModal: shouldShow });
+    };
+
     renderItem = ({ item, index, separators }) => {
 
         const { selectedButton, buyAdRequestsList } = this.state;
@@ -191,10 +201,13 @@ class Requests extends PureComponent {
         return (
             <BuyAdList
                 item={item}
+                setSelectedButton={this.setSelectedButton}
                 openChat={this.openChat}
+                setPromotionModalVisiblity={this.setPromotionModalVisiblity}
                 selectedButton={selectedButton}
                 isUserAllowedToSendMessageLoading={isUserAllowedToSendMessageLoading}
                 index={index}
+                openMobileNumberWarnModal={this.openMobileNumberWarnModal}
                 buyAdRequestsList={buyAdRequestsList}
                 separators={separators}
             />
@@ -240,7 +253,7 @@ class Requests extends PureComponent {
         let { selectedContact,
             buyAdRequestsList,
             selectedButton, showDialog, selectedBuyAdId, from, to,
-            showFilters, selectedFilterName, showGoldenModal } = this.state;
+            showFilters, selectedFilterName, showGoldenModal, showMobileNumberWarnModal } = this.state;
         return (
             <>
                 <NoConnection
@@ -286,6 +299,91 @@ class Requests extends PureComponent {
                         </Button>
                     </View>
                 </RBSheet>
+
+
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showMobileNumberWarnModal}
+                        onDismiss={_ => this.openMobileNumberWarnModal(false)}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={_ => this.openMobileNumberWarnModal(false)}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.contactInfo')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {locales('titles.changePackageTypeToSeeMovileNumber')}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.openMobileNumberWarnModal(false);
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={_ => this.openMobileNumberWarnModal(false)}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
 
 
 
