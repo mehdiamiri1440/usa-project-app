@@ -117,7 +117,7 @@ const BuyAdList = props => {
                             position: 'absolute',
                             top: 48,
                             textAlign: 'center',
-                            left: deviceWidth * 0.33,
+                            left: deviceWidth * 0.29,
                             fontSize: 20,
                             color: '#7e7e7e'
                         }}
