@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native'
+import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, Button } from 'native-base'
 import Svg, { Path, G } from "react-native-svg"
 import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -12,18 +14,24 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import { deviceWidth } from '../../utils/deviceDimenssions';
-import { dataGenerator, formatter } from '../../utils';
+import * as productListActions from '../../redux/productsList/actions';
+import { dataGenerator, formatter, deviceWidth, validator, deviceHeight } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 
 const RegisterRequestSuccessfully = props => {
 
     const {
-        products = []
+        products = [],
+        buyerMobileNumberLoading,
     } = props;
 
     const [selectedContact, setSelectedContact] = useState({});
     const [loading, setLoading] = useState(false);
+
+    const [isContactInfoShown, setIsContactInfoShown] = useState(false);
+    const [mobileNumber, setMobileNumber] = useState(false);
+    const [showMobileNumberWarnModal, setShowMobileNumberWarnModal] = useState(false);
+    const [selectedButton, setSelectedButton] = useState(null);
 
     const handleBack = () => {
         if (props.route && props.route.params) {
@@ -130,6 +138,60 @@ const RegisterRequestSuccessfully = props => {
     }
 
 
+
+    const openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
+    const fetchContactInfo = ({ id, myuser_id }) => {
+        setSelectedButton(id);
+        const contactInfoObject = {
+            s_id: myuser_id,
+            p_id: id,
+            item: "PRODUCT"
+        }
+        props.fetchSellerMobileNumber(contactInfoObject).then(result => {
+            const {
+                payload = {}
+            } = result;
+            const {
+                phone,
+                status
+            } = payload;
+            if (status == true && !!phone) {
+                setMobileNumber(phone);
+                setIsContactInfoShown(true);
+            }
+        })
+            .catch(err => {
+                const {
+                    response = {}
+                } = err;
+                const {
+                    data = {}
+                } = response;
+                const {
+                    status
+                } = data;
+                if (status == false) {
+                    setShowMobileNumberWarnModal(true);
+                }
+            });
+    };
+
+
     const renderItem = ({ item }) => {
         const {
             product_name,
@@ -141,11 +203,13 @@ const RegisterRequestSuccessfully = props => {
             last_name,
             active_pakage_type,
             is_verified,
-            photo
+            photo,
+            has_phone
         } = item;
 
         return (
             <>
+
                 <Card
                     style={{
                         paddingVertical: 5,
@@ -348,50 +412,84 @@ const RegisterRequestSuccessfully = props => {
                                 </View>
                             </View>
                         </View>
-                        <Button
-                            onPress={event => {
-                                event.stopPropagation();
-                                event.preventDefault();
-                                setLoading(true);
-                                setSelectedContact({
-                                    first_name,
-                                    last_name,
-                                    is_verified,
-                                    contact_id: myuser_id
-                                });
-                                setTimeout(() => {
-                                    setLoading(false);
-                                    props.navigation.navigate('Chat', { contact: selectedContact })
-                                }, 1000);
-                            }}
-                            style={{
-                                textAlign: 'center',
-                                zIndex: 10005,
-                                borderRadius: 5,
-                                elevation: 0,
-                                padding: 25,
-                                marginBottom: 10,
-                                backgroundColor: '#00C569',
-                                width: '80%',
-                                color: 'white',
+
+                        {has_phone ?
+                            <View style={{
+                                marginVertical: 15,
+                                flexDirection: 'row-reverse',
                                 alignItems: 'center',
+                                width: deviceWidth * 0.89,
+                                paddingHorizontal: 5,
                                 alignSelf: 'center',
-                                justifyContent: 'center',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                justifyContent: 'space-between'
                             }}
-                            rounded
-                        >
-                            <View
-                                style={{
-                                    flexDirection: 'row', justifyContent: 'center',
-                                    alignItems: 'center', width: '100%'
-                                }}>
-                                <ActivityIndicator
-                                    size="small"
-                                    animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                    color="white"
-                                />
-                                <Text
+                            >
+                                <Button
+                                    small
+                                    onPress={() => fetchContactInfo(item)}
+                                    style={{
+                                        borderColor: isContactInfoShown ? '#c7a84f' : '#00C569',
+                                        width: '47%',
+                                        zIndex: 1000,
+                                        position: 'relative',
+                                        alignSelf: 'center',
+
+                                    }}
+                                >
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0.51, z: 1 }}
+                                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                                        colors={!isContactInfoShown ? ['#00C569', '#00C569', '#00C569'] : ['#E0E0E0', '#E0E0E0']}
+                                        style={{
+                                            width: '100%',
+                                            paddingHorizontal: 10,
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 8,
+                                            paddingLeft: 20,
+                                            padding: 8,
+                                            elevation: 0
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            solid
+                                            name='phone-square-alt'
+                                            color='white'
+                                            size={20} />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                marginHorizontal: 3,
+                                                fontSize: 18,
+                                                color: 'white',
+                                                paddingHorizontal: 3
+                                            }}
+                                        >
+                                            {locales('labels.contactInfo')}
+                                        </Text>
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={20}
+                                                color='white'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                                style={{
+                                                    position: 'relative',
+                                                    width: 10, height: 10, borderRadius: 5,
+                                                    marginRight: 5
+                                                }}
+                                            />
+                                            : null}
+                                    </LinearGradient>
+
+                                </Button>
+
+
+
+
+                                <Button
+                                    small
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
@@ -408,13 +506,78 @@ const RegisterRequestSuccessfully = props => {
                                         }, 1000);
                                     }}
                                     style={{
-                                        color: 'white',
-                                        textAlign: 'center',
-                                        fontSize: 20,
-                                        marginHorizontal: 3,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                    }}>{locales('labels.sendMessageToSeller')}</Text>
-                                <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
+                                        width: has_phone ? '47%' : '70%',
+                                        zIndex: 1000,
+                                        elevation: 0,
+                                        position: 'relative',
+                                        alignSelf: 'center',
+                                    }}
+                                >
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0.51, z: 1 }}
+                                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                                        colors={has_phone ? ['#fff', '#fff'] : ['#c7a84f', '#f9f29f', '#c7a84f']}
+                                        style={{
+                                            width: '100%',
+                                            borderColor: has_phone ? '#556080' : '#00C569',
+                                            paddingHorizontal: 10,
+                                            flexDirection: 'row-reverse',
+                                            borderWidth: 1,
+                                            alignItems: 'center',
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 8,
+                                            padding: 8,
+                                            elevation: 0
+                                        }}
+                                    >
+
+                                        <MaterialCommunityIcons
+                                            name='message'
+                                            color={has_phone ? '#556080' : 'white'}
+                                            size={20}
+                                        />
+                                        <Text
+                                            onPress={event => {
+                                                event.stopPropagation();
+                                                event.preventDefault();
+                                                setLoading(true);
+                                                setSelectedContact({
+                                                    first_name,
+                                                    last_name,
+                                                    is_verified,
+                                                    contact_id: myuser_id
+                                                });
+                                                setTimeout(() => {
+                                                    setLoading(false);
+                                                    props.navigation.navigate('Chat', { contact: selectedContact })
+                                                }, 1000);
+                                            }}
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 18,
+                                                color: has_phone ? '#556080' : 'white',
+                                                paddingHorizontal: 3
+                                            }}
+                                        >
+                                            {locales('labels.sendMessageToSeller')}
+                                        </Text>
+                                        <ActivityIndicator
+                                            size="small"
+                                            animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
+                                            color={has_phone ? '#556080' : 'white'}
+                                            style={{
+                                                position: 'relative',
+                                                width: 10, height: 10, borderRadius: 5,
+                                                marginLeft: -10,
+                                                marginRight: 5
+                                            }}
+                                        />
+                                    </LinearGradient>
+
+                                </Button>
+
+                                {/* <Button
                                     onPress={event => {
                                         event.stopPropagation();
                                         event.preventDefault();
@@ -429,9 +592,255 @@ const RegisterRequestSuccessfully = props => {
                                             setLoading(false);
                                             props.navigation.navigate('Chat', { contact: selectedContact })
                                         }, 1000);
-                                    }} />
+                                    }}
+                                    style={{
+                                        textAlign: 'center',
+                                        zIndex: 10005,
+                                        borderRadius: 5,
+                                        elevation: 0,
+                                        padding: 25,
+                                        marginBottom: 10,
+                                        backgroundColor: '#00C569',
+                                        width: '80%',
+                                        color: 'white',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }}
+                                    rounded
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row', justifyContent: 'center',
+                                            alignItems: 'center', width: '100%'
+                                        }}>
+                                        <ActivityIndicator
+                                            size="small"
+                                            animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
+                                            color="white"
+                                        />
+                                        <Text
+                                            onPress={event => {
+                                                event.stopPropagation();
+                                                event.preventDefault();
+                                                setLoading(true);
+                                                setSelectedContact({
+                                                    first_name,
+                                                    last_name,
+                                                    is_verified,
+                                                    contact_id: myuser_id
+                                                });
+                                                setTimeout(() => {
+                                                    setLoading(false);
+                                                    props.navigation.navigate('Chat', { contact: selectedContact })
+                                                }, 1000);
+                                            }}
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                fontSize: 20,
+                                                marginHorizontal: 3,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }}>{locales('labels.sendMessageToSeller')}</Text>
+                                        <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
+                                            onPress={event => {
+                                                event.stopPropagation();
+                                                event.preventDefault();
+                                                setLoading(true);
+                                                setSelectedContact({
+                                                    first_name,
+                                                    last_name,
+                                                    is_verified,
+                                                    contact_id: myuser_id
+                                                });
+                                                setTimeout(() => {
+                                                    setLoading(false);
+                                                    props.navigation.navigate('Chat', { contact: selectedContact })
+                                                }, 1000);
+                                            }} />
+                                    </View>
+                                </Button>
+                           */}
                             </View>
-                        </Button>
+                            :
+                            <Button
+                                onPress={event => {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    setLoading(true);
+                                    setSelectedContact({
+                                        first_name,
+                                        last_name,
+                                        is_verified,
+                                        contact_id: myuser_id
+                                    });
+                                    setTimeout(() => {
+                                        setLoading(false);
+                                        props.navigation.navigate('Chat', { contact: selectedContact })
+                                    }, 1000);
+                                }}
+                                style={{
+                                    textAlign: 'center',
+                                    zIndex: 10005,
+                                    borderRadius: 5,
+                                    elevation: 0,
+                                    padding: 25,
+                                    marginBottom: 10,
+                                    backgroundColor: '#00C569',
+                                    width: '80%',
+                                    color: 'white',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    justifyContent: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                                rounded
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row', justifyContent: 'center',
+                                        alignItems: 'center', width: '100%'
+                                    }}>
+                                    <ActivityIndicator
+                                        size="small"
+                                        animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
+                                        color="white"
+                                    />
+                                    <Text
+                                        onPress={event => {
+                                            event.stopPropagation();
+                                            event.preventDefault();
+                                            setLoading(true);
+                                            setSelectedContact({
+                                                first_name,
+                                                last_name,
+                                                is_verified,
+                                                contact_id: myuser_id
+                                            });
+                                            setTimeout(() => {
+                                                setLoading(false);
+                                                props.navigation.navigate('Chat', { contact: selectedContact })
+                                            }, 1000);
+                                        }}
+                                        style={{
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            fontSize: 20,
+                                            marginHorizontal: 3,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                        }}>{locales('labels.sendMessageToSeller')}</Text>
+                                    <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
+                                        onPress={event => {
+                                            event.stopPropagation();
+                                            event.preventDefault();
+                                            setLoading(true);
+                                            setSelectedContact({
+                                                first_name,
+                                                last_name,
+                                                is_verified,
+                                                contact_id: myuser_id
+                                            });
+                                            setTimeout(() => {
+                                                setLoading(false);
+                                                props.navigation.navigate('Chat', { contact: selectedContact })
+                                            }, 1000);
+                                        }} />
+                                </View>
+                            </Button>
+                        }
+                        {(isContactInfoShown) ?
+                            <>
+                                <View
+                                    style={{
+                                        zIndex: 1,
+                                        flexDirection: 'row-reverse',
+                                        paddingVertical: 25,
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        width: '90%',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 18,
+                                            color: '#404B55'
+                                        }}>
+                                        {locales('titles.phoneNumber')}
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={_ => openCallPad(mobileNumber)}
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: '#404B55', fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                            }}
+                                        >
+                                            {mobileNumber}
+                                        </Text>
+                                        <FontAwesome5
+                                            name='phone-square-alt'
+                                            size={20}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View
+                                    style={{
+                                        backgroundColor: '#FFFBE5',
+                                        borderRadius: 12,
+                                        alignSelf: 'center',
+                                        padding: 20,
+                                        width: '90%',
+                                        zIndex: 1,
+                                        bottom: 10
+                                    }}
+                                >
+
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            color='#404B55'
+                                            size={25}
+                                            name='exclamation-circle'
+                                        />
+                                        <Text
+                                            style={{
+                                                color: '#404B55',
+                                                marginHorizontal: 5,
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            }}
+                                        >
+                                            {locales('titles.policeWarn')}
+                                        </Text>
+                                    </View>
+                                    <Text
+                                        style={{
+                                            marginVertical: 15,
+                                            color: '#666666',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}
+                                    >
+                                        {locales('labels.policeWarnDescription')}
+                                    </Text>
+                                </View>
+                            </>
+                            : null}
+
                         {/* <FastImage
                         resizeMethod='resize'
                         style={{ width: deviceWidth * 0.5, height: deviceWidth * 0.3 }}
@@ -470,6 +879,88 @@ const RegisterRequestSuccessfully = props => {
     return (
 
         <>
+
+            < Portal
+                style={{
+                    padding: 0,
+                    margin: 0
+
+                }}>
+                <Dialog
+                    visible={showMobileNumberWarnModal}
+                    onDismiss={_ => setShowMobileNumberWarnModal(false)}
+                    style={styles.dialogWrapper}
+                >
+                    <Dialog.Actions
+                        style={styles.dialogHeader}
+                    >
+                        <Button
+                            onPress={_ => setShowMobileNumberWarnModal(false)}
+                            style={styles.closeDialogModal}>
+                            <FontAwesome5 name="times" color="#777" solid size={18} />
+                        </Button>
+                        <Paragraph style={styles.headerTextDialogModal}>
+                            {locales('labels.contactInfo')}
+                        </Paragraph>
+                    </Dialog.Actions>
+
+
+
+                    <View
+                        style={{
+                            width: '100%',
+                            alignItems: 'center'
+                        }}>
+
+                        <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                            borderColor: '#facea8',
+                        }]} />
+
+                    </View>
+                    <Paragraph
+                        style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                        {locales('titles.changePackageTypeToSeeMovileNumber')}
+                    </Paragraph>
+                    <View style={{
+                        width: '100%',
+                        textAlign: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Button
+                            style={[styles.modalButton, styles.greenButton]}
+                            onPress={() => {
+                                setShowMobileNumberWarnModal(false);
+                                props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                            }}
+                        >
+
+                            <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                            styles.buttonText]}>{locales('titles.promoteRegistration')}
+                            </Text>
+                        </Button>
+                    </View>
+
+
+
+
+                    <Dialog.Actions style={{
+                        justifyContent: 'center',
+                        width: '100%',
+                        padding: 0
+                    }}>
+                        <Button
+                            style={styles.modalCloseButton}
+                            onPress={_ => setShowMobileNumberWarnModal(false)}
+                        >
+
+                            <Text style={styles.closeButtonText}>{locales('titles.close')}
+                            </Text>
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal >
+
+
 
             <View style={{
                 backgroundColor: 'white',
@@ -659,14 +1150,212 @@ const RegisterRequestSuccessfully = props => {
 const styles = StyleSheet.create({
     textBold: {
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
+    loginFailedContainer: {
+        backgroundColor: '#F8D7DA',
+        padding: 10,
+        borderRadius: 5
+    },
+    loginFailedText: {
+        textAlign: 'center',
+        width: deviceWidth,
+        color: '#761C24'
+    },
+    buttonText: {
+        color: 'white',
+        width: '80%',
+        textAlign: 'center'
+    },
+    backButtonText: {
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    closeButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#777777',
+        width: deviceWidth * 0.5,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    backButtonContainer: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.4,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        justifyContent: 'center'
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        backgroundColor: '#B5B5B5',
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        width: deviceWidth * 0.5,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        alignSelf: 'center',
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
+    },
+    enterText: {
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#00C569',
+        fontSize: 20,
+        padding: 10,
+    },
+    linearGradient: {
+        height: deviceHeight * 0.15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTextStyle: {
+        color: 'white',
+        position: 'absolute',
+        textAlign: 'center',
+        fontSize: 26,
+        bottom: 40
+    },
+    textInputPadding: {
+        padding: 20,
+    },
+    userText: {
+        flexWrap: 'wrap',
+        paddingTop: '3%',
+        fontSize: 20,
+        padding: 20,
+        textAlign: 'right',
+        color: '#7E7E7E'
     }
 })
 
 const mapStateToProps = (state) => {
     return {
-        products: state.registerProductReducer.products
+        products: state.registerProductReducer.products,
+        buyerMobileNumberLoading: state.buyAdRequestReducer.buyerMobileNumberLoading
     }
 };
-
-export default connect(mapStateToProps)(RegisterRequestSuccessfully);
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchSellerMobileNumber: contactInfoObject => dispatch(productListActions.fetchSellerMobileNumber(contactInfoObject)),
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterRequestSuccessfully);
 
