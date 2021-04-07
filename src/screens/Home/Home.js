@@ -100,7 +100,20 @@ class Home extends React.Component {
             screen_name: "my_buskool",
             screen_class: "my_buskool",
         });
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            ||
+            (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
+            )
+        ) {
+            console.warn('therre')
+            this.props.fetchUserProfile()
+        }
     }
 
     // componentDidUpdate(prevProps, prevState) {
@@ -265,7 +278,7 @@ class Home extends React.Component {
                     ref={this.props.homeRef}
                     style={{ backgroundColor: 'white', flex: 1, paddingTop: 20 }}>
 
-                    <WalletPreview {...this.props} />
+                    {is_seller ? <WalletPreview {...this.props} /> : null}
 
                     {/* 
                     <TouchableOpacity
@@ -693,6 +706,16 @@ class Home extends React.Component {
 }
 
 export const WalletPreview = props => {
+    const {
+        userProfile = {}
+    } = props;
+    const {
+        user_info = {}
+    } = userProfile;
+    const {
+        wallet_balance = 0
+    } = user_info;
+
     return (
         <TouchableOpacity
             activeOpacity={1}
@@ -767,7 +790,7 @@ export const WalletPreview = props => {
                         marginHorizontal: 5
                     }}
                 >
-                    {`${numberWithCommas(100000000)}`} <Text
+                    {`${numberWithCommas(wallet_balance)}`} <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             color: 'white',

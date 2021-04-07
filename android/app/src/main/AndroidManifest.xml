@@ -103,6 +103,8 @@
         <data android:scheme="buskool" android:host="profile" />
         <data android:scheme="buskool" android:host="seller" />
         <data android:scheme="buskool" android:host="buyer" />
+        <data android:scheme="buskool" android:host="wallet" />
+        <data android:scheme="buskool" android:host="my-buskool" />
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

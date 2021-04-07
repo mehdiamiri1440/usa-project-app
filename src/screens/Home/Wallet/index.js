@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { Label, InputGroup, Input, Button } from 'native-base';
 import { TextInputMask } from 'react-native-masked-text';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { formatter, deviceWidth, deviceHeight } from '../../../utils';
+import * as profileActions from '../../../redux/profile/actions';
 
 const Wallet = props => {
 
@@ -15,6 +17,36 @@ const Wallet = props => {
 
     const [inventory, setInventory] = useState(10000);
     const [inventoryError, setInventoryError] = useState('');
+
+    const {
+        userProfile = {},
+        loggedInUserId,
+        route = {}
+    } = props;
+
+    const {
+        params = {}
+    } = route;
+
+    const {
+        needToRefreshKey
+    } = params;
+
+    const {
+        user_info = {},
+    } = userProfile;
+
+    const {
+        wallet_balance = 0,
+        first_name = '',
+        last_name = ''
+    } = user_info;
+
+
+
+    useEffect(() => {
+        props.fetchUserProfile();
+    }, [needToRefreshKey])
 
     const changeValueToNumber = value => {
 
@@ -60,8 +92,11 @@ const Wallet = props => {
     };
 
     const onSubmit = _ => {
-
-
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${1000}`).then(supported => {
+            if (supported) {
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${1000}`);
+            }
+        })
     };
 
     return (
@@ -183,7 +218,7 @@ const Wallet = props => {
                                             textAlign: 'center'
                                         }}
                                     >
-                                        {formatter.numberWithCommas(100000000)} <Text
+                                        {formatter.numberWithCommas(wallet_balance)} <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 color: 'white',
@@ -203,8 +238,8 @@ const Wallet = props => {
                                         marginHorizontal: 5
                                     }}
                                 >
-                                    محمدمهدی امیری
-                    </Text>
+                                    {`${first_name} ${last_name}`}
+                                </Text>
                             </ImageBackground>
                         </TouchableOpacity>
                     </View>
@@ -411,11 +446,7 @@ const Wallet = props => {
                         onPress={onSubmit}
                     >
                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.increaseInventory')}</Text>
-                        <ActivityIndicator
-                            color='white'
-                            style={{ position: 'absolute', left: 45, top: 3 }}
-                            size={25}
-                        />
+
                     </TouchableOpacity>
                 </LinearGradient>
 
@@ -445,11 +476,25 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+    const {
+        profileReducer,
+        authReducer
+    } = state;
+    const {
+        userProfile
+    } = profileReducer;
+    const {
+        loggedInUserId
+    } = authReducer;
+
     return {
+        userProfile,
+        loggedInUserId
     }
 };
 const mapDispatchToProps = dispatch => {
     return {
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
     }
 };
 
