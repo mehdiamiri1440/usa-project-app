@@ -182,6 +182,22 @@ const handleIncomingEvent = (url) => {
                 return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
             })
         };
+        case 'wallet': {
+            return navigationRef.current.navigate('MyBuskool', {
+                screen: 'Wallet',
+                params: {
+                    needToRefreshKey: dataGenerator.generateKey('wallet_from_bank_'),
+                }
+            });
+        };
+        case 'my-buskool': {
+            return navigationRef.current.navigate('MyBuskool', {
+                screen: 'HomeIndex',
+                params: {
+                    needToRefreshKey: dataGenerator.generateKey('my_buskool_from_bank_'),
+                }
+            });
+        }
         default:
             break;
     }
