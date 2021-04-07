@@ -92,7 +92,8 @@ class ProductDetails extends PureComponent {
             has_phone: false,
             mobileNumber: '',
             showMobileNumberWarnModal: false,
-            productIdFromProductDetails: ''
+            productIdFromProductDetails: '',
+            accessToContactInfoErrorMessage: ''
         }
     }
 
@@ -479,6 +480,7 @@ class ProductDetails extends PureComponent {
         }
 
         this.props.fetchSellerMobileNumber(contactInfoObject).then(result => {
+
             const {
                 payload = {}
             } = result;
@@ -501,8 +503,9 @@ class ProductDetails extends PureComponent {
                     msg,
                     status
                 } = data;
+                console.warn('her11', msg)
                 if (status == false) {
-                    this.setState({ showMobileNumberWarnModal: true })
+                    this.setState({ showMobileNumberWarnModal: true, accessToContactInfoErrorMessage: msg })
                 }
             });
     };
@@ -589,7 +592,9 @@ class ProductDetails extends PureComponent {
             has_phone,
             mobileNumber,
             showMobileNumberWarnModal,
-            productIdFromProductDetails
+            productIdFromProductDetails,
+
+            accessToContactInfoErrorMessage
         } = this.state;
 
 
@@ -658,9 +663,9 @@ class ProductDetails extends PureComponent {
                         </View>
                         <Paragraph
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('titles.changePackageTypeToSeeMovileNumber')}
+                            {accessToContactInfoErrorMessage}
                         </Paragraph>
-                        <View style={{
+                        {/* <View style={{
                             width: '100%',
                             textAlign: 'center',
                             alignItems: 'center'
@@ -677,7 +682,7 @@ class ProductDetails extends PureComponent {
                                 styles.buttonText]}>{locales('titles.promoteRegistration')}
                                 </Text>
                             </Button>
-                        </View>
+                        </View> */}
 
 
 

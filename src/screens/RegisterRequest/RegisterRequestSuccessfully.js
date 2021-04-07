@@ -32,6 +32,7 @@ const RegisterRequestSuccessfully = props => {
     const [mobileNumber, setMobileNumber] = useState(false);
     const [showMobileNumberWarnModal, setShowMobileNumberWarnModal] = useState(false);
     const [selectedButton, setSelectedButton] = useState(null);
+    const [accessToContactInfoErrorMessage, setAccessToContactInfoErrorMessage] = useState('');
 
     const handleBack = () => {
         if (props.route && props.route.params) {
@@ -183,9 +184,11 @@ const RegisterRequestSuccessfully = props => {
                     data = {}
                 } = response;
                 const {
+                    msg,
                     status
                 } = data;
                 if (status == false) {
+                    setAccessToContactInfoErrorMessage(msg);
                     setShowMobileNumberWarnModal(true);
                 }
             });
@@ -919,9 +922,9 @@ const RegisterRequestSuccessfully = props => {
                     </View>
                     <Paragraph
                         style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                        {locales('titles.changePackageTypeToSeeMovileNumber')}
+                        {accessToContactInfoErrorMessage}
                     </Paragraph>
-                    <View style={{
+                    {/* <View style={{
                         width: '100%',
                         textAlign: 'center',
                         alignItems: 'center'
@@ -938,7 +941,7 @@ const RegisterRequestSuccessfully = props => {
                             styles.buttonText]}>{locales('titles.promoteRegistration')}
                             </Text>
                         </Button>
-                    </View>
+                    </View> */}
 
 
 
