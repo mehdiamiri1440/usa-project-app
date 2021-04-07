@@ -45,6 +45,7 @@ class Requests extends PureComponent {
             selectedFilterName: '',
 
             showMobileNumberWarnModal: false,
+            accessToContactInfoErrorMessage: ''
         }
     }
 
@@ -188,8 +189,8 @@ class Requests extends PureComponent {
         }
     };
 
-    openMobileNumberWarnModal = shouldShow => {
-        this.setState({ showMobileNumberWarnModal: shouldShow });
+    openMobileNumberWarnModal = (shouldShow, msg) => {
+        this.setState({ showMobileNumberWarnModal: shouldShow, accessToContactInfoErrorMessage: msg });
     };
 
     renderItem = ({ item, index, separators }) => {
@@ -252,7 +253,7 @@ class Requests extends PureComponent {
 
         let { selectedContact,
             buyAdRequestsList,
-            selectedButton, showDialog, selectedBuyAdId, from, to,
+            selectedButton, showDialog, selectedBuyAdId, from, to, accessToContactInfoErrorMessage,
             showFilters, selectedFilterName, showGoldenModal, showMobileNumberWarnModal } = this.state;
         return (
             <>
@@ -343,7 +344,7 @@ class Requests extends PureComponent {
                         </View>
                         <Paragraph
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('titles.changePackageTypeToSeeMovileNumber')}
+                            {accessToContactInfoErrorMessage}
                         </Paragraph>
                         <View style={{
                             width: '100%',

@@ -63,7 +63,7 @@ const BuyAdList = props => {
                         status
                     } = data;
                     if (status == false) {
-                        openMobileNumberWarnModal(true);
+                        openMobileNumberWarnModal(true, msg);
                     }
                 });
         }

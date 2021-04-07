@@ -503,7 +503,6 @@ class ProductDetails extends PureComponent {
                     msg,
                     status
                 } = data;
-                console.warn('her11', msg)
                 if (status == false) {
                     this.setState({ showMobileNumberWarnModal: true, accessToContactInfoErrorMessage: msg })
                 }
