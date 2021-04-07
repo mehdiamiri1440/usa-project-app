@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Button } from 'native-base';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { deviceWidth } from '../../../utils';
+
+import * as profileActions from '../../../redux/profile/actions';
+import { deviceWidth, deviceHeight } from '../../../utils';
 
 const UsersSeenMobile = props => {
+
+    useEffect(() => {
+        props.fetchUserContactInfoViewers();
+    }, []);
+
+    const {
+        userContactInfoViewersLoading,
+        userContactInfoViewersList,
+    } = props;
 
     const renderItem = ({ item, index }) => {
         const {
             id,
             first_name,
-            contact_id,
             last_name,
             user_name,
             is_verified
@@ -22,9 +32,9 @@ const UsersSeenMobile = props => {
         const contact = {
             first_name,
             last_name,
-            user_name: 'mehdimehdi',
-            is_verified: false,
-            contact_id: 4
+            user_name,
+            is_verified,
+            contact_id: id
         };
 
         return (
@@ -67,7 +77,7 @@ const UsersSeenMobile = props => {
                             marginHorizontal: 10,
                         }}
                     >
-                        {`${first_name} ${last_name}     `}
+                        {`${first_name} ${last_name}`}
                     </Text>
                 </View>
                 <Button
@@ -122,36 +132,40 @@ const UsersSeenMobile = props => {
 
     const renderListEmptyComponent = _ => {
         return (
-            <View>
-
+            <View
+                style={{
+                    flex: 1,
+                    height: deviceHeight * 0.5,
+                    width: deviceWidth,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                <FontAwesome5
+                    color='#777'
+                    size={40}
+                    name='list-alt'
+                />
+                <Text
+                    style={{
+                        marginTop: 10,
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}
+                >
+                    {locales('labels.emptyList')}
+                </Text>
             </View>
         )
     };
 
+    const onRefresh = _ => {
+        props.fetchUserContactInfoViewers();
+    };
+
     const renderKeyExtractor = item => item.id.toString();
 
-    const usersSeenMobileList = [
-        {
-            id: 0,
-            first_name: 'محمدامین',
-            last_name: 'دلداری',
-        },
-        {
-            id: 1,
-            first_name: 'محمدمهدی',
-            last_name: 'امیری',
-        },
-        {
-            id: 2,
-            first_name: 'علی',
-            last_name: 'قاسمی',
-        },
-        {
-            id: 3,
-            first_name: 'علی',
-            last_name: 'دلخوش',
-        },
-    ];
 
     return (
         <View
@@ -189,22 +203,38 @@ const UsersSeenMobile = props => {
             </View>
 
             <FlatList
-                data={usersSeenMobileList}
+                refreshing={userContactInfoViewersLoading}
+                onRefresh={onRefresh}
+                data={userContactInfoViewersList}
                 renderItem={renderItem}
                 ListHeaderComponent={renderListHeaderComponent}
                 keyExtractor={renderKeyExtractor}
-                ListEmptyComponent={renderListEmptyComponent}
+                ListEmptyComponent={!userContactInfoViewersLoading && renderListEmptyComponent}
             />
         </View>
     )
 }
 
 const mapStateToProps = state => {
+    const {
+        profileReducer
+    } = state;
+
+    const {
+        userContactInfoViewersLoading,
+        userContactInfoViewers,
+        userContactInfoViewersList,
+    } = profileReducer;
+
     return {
+        userContactInfoViewersLoading,
+        userContactInfoViewers,
+        userContactInfoViewersList,
     }
 };
 const mapDispatchToProps = dispatch => {
     return {
+        fetchUserContactInfoViewers: _ => dispatch(profileActions.fetchUserContactInfoViewers()),
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(UsersSeenMobile);
