@@ -36,6 +36,25 @@ const INITIAL_STATE = {
     editProfileMessage: null,
     editProfile: {},
 
+    accountBalanceLoading: false,
+    accountBalanceFailed: false,
+    accountBalanceError: false,
+    accountBalanceMessage: null,
+    accountBalance: {},
+
+    phoneNumberViewPermissionLoading: false,
+    phoneNumberViewPermissionFailed: false,
+    phoneNumberViewPermissionError: false,
+    phoneNumberViewPermissionMessage: null,
+    phoneNumberViewPermission: {},
+
+    userContactInfoViewersLoading: false,
+    userContactInfoViewersFailed: false,
+    userContactInfoViewersError: false,
+    userContactInfoViewersMessage: null,
+    userContactInfoViewers: {},
+    userContactInfoViewersList: [],
+
     profileInfoLoading: false,
     profileInfoFailed: false,
     profileInfoError: false,
@@ -309,6 +328,154 @@ export default (state = INITIAL_STATE, action) => {
                 editProfileMessage: [...description]
             };
         };
+
+
+        case actionTypes.FETCH_ACCOUNT_BALANCE_LOADING: {
+            return {
+                ...state,
+                accountBalance: {},
+                accountBalanceLoading: true,
+                accountBalanceFailed: false,
+                accountBalanceError: false,
+                accountBalanceMessage: null
+            };
+        };
+        case actionTypes.FETCH_ACCOUNT_BALANCE_SUCCESSFULLY: {
+            return {
+                ...state,
+                accountBalance: { ...action.payload },
+                accountBalanceLoading: false,
+                accountBalanceFailed: false,
+                accountBalanceError: false,
+                accountBalanceMessage: null,
+            };
+        };
+        case actionTypes.FETCH_ACCOUNT_BALANCE_FAILED: {
+            return {
+                ...state,
+                accountBalance: {},
+                accountBalanceLoading: false,
+                accountBalanceFailed: true,
+                accountBalanceError: false,
+                accountBalanceMessage: null
+            };
+        };
+        case actionTypes.FETCH_ACCOUNT_BALANCE_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                accountBalance: {},
+                accountBalanceLoading: false,
+                accountBalanceFailed: false,
+                accountBalanceError: true,
+                accountBalanceMessage: [...description]
+            };
+        };
+
+
+        case actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_LOADING: {
+            return {
+                ...state,
+                phoneNumberViewPermission: {},
+                phoneNumberViewPermissionLoading: true,
+                phoneNumberViewPermissionFailed: false,
+                phoneNumberViewPermissionError: false,
+                phoneNumberViewPermissionMessage: null
+            };
+        };
+        case actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_SUCCESSFULLY: {
+            return {
+                ...state,
+                phoneNumberViewPermission: { ...action.payload },
+                phoneNumberViewPermissionLoading: false,
+                phoneNumberViewPermissionFailed: false,
+                phoneNumberViewPermissionError: false,
+                phoneNumberViewPermissionMessage: null,
+            };
+        };
+        case actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_FAILED: {
+            return {
+                ...state,
+                phoneNumberViewPermission: {},
+                phoneNumberViewPermissionLoading: false,
+                phoneNumberViewPermissionFailed: true,
+                phoneNumberViewPermissionError: false,
+                phoneNumberViewPermissionMessage: null
+            };
+        };
+        case actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                phoneNumberViewPermission: {},
+                phoneNumberViewPermissionLoading: false,
+                phoneNumberViewPermissionFailed: false,
+                phoneNumberViewPermissionError: true,
+                phoneNumberViewPermissionMessage: [...description]
+            };
+        };
+
+
+
+
+        case actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_LOADING: {
+            return {
+                ...state,
+                userContactInfoViewers: {},
+                userContactInfoViewersList: [],
+                userContactInfoViewersLoading: true,
+                userContactInfoViewersFailed: false,
+                userContactInfoViewersError: false,
+                userContactInfoViewersMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_SUCCESSFULLY: {
+            return {
+                ...state,
+                userContactInfoViewers: { ...action.payload },
+                userContactInfoViewersList: [...action.payload.users],
+                userContactInfoViewersLoading: false,
+                userContactInfoViewersFailed: false,
+                userContactInfoViewersError: false,
+                userContactInfoViewersMessage: null,
+            };
+        };
+        case actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_FAILED: {
+            return {
+                ...state,
+                userContactInfoViewers: {},
+                userContactInfoViewersList: [],
+                userContactInfoViewersLoading: false,
+                userContactInfoViewersFailed: true,
+                userContactInfoViewersError: false,
+                userContactInfoViewersMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                userContactInfoViewers: {},
+                userContactInfoViewersList: [],
+                userContactInfoViewersLoading: false,
+                userContactInfoViewersFailed: false,
+                userContactInfoViewersError: true,
+                userContactInfoViewersMessage: [...description]
+            };
+        };
+
 
         case actionTypes.FETCH_ALL_PROFILE_INFO_LOADING: {
             return {

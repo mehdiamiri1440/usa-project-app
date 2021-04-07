@@ -162,3 +162,69 @@ export const fetchAllProfileInfo = (user_name) => {
 
     return request();
 };
+
+export const fetchAccountBalance = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchAccountBalance()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_ACCOUNT_BALANCE_FAILED,
+                        reject: actionTypes.FETCH_ACCOUNT_BALANCE_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_ACCOUNT_BALANCE_LOADING);
+    const success = res => action(actionTypes.FETCH_ACCOUNT_BALANCE_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const setPhoneNumberViewPermission = permission => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .setPhoneNumberViewPermission(permission)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_FAILED,
+                        reject: actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_LOADING);
+    const success = res => action(actionTypes.SET_PHONE_NUMBER_VIEW_PERMISSION_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchUserContactInfoViewers = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchUserContactInfoViewers()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_FAILED,
+                        reject: actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_LOADING);
+    const success = res => action(actionTypes.FETCH_USER_CONTACT_INFO_VIEWERS_SUCCESSFULLY, res);
+
+    return request();
+};
