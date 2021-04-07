@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
@@ -34,7 +34,9 @@ class EditProfile extends Component {
             last_name: '',
             editErrors: [],
             is_verified: false,
-            showSubmitEditionModal: false
+            showSubmitEditionModal: false,
+            shouldShowContactInfo: false,
+            showViewPermissionModal: false
         }
     }
 
@@ -56,8 +58,7 @@ class EditProfile extends Component {
                 company_register_code,
                 public_phone,
                 description } = this.props.userProfile.profile;
-
-            const { first_name, last_name, is_verified } = this.props.userProfile.user_info;
+            const { first_name, last_name, is_verified, has_phone } = this.props.userProfile.user_info;
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
@@ -71,6 +72,7 @@ class EditProfile extends Component {
                 last_name,
                 is_verified,
                 description,
+                shouldShowContactInfo: has_phone,
             });
         }
     }
@@ -111,6 +113,18 @@ class EditProfile extends Component {
     };
 
 
+    handleContactInfoCheckBoxChange = _ => {
+        this.setState({ shouldShowContactInfo: !this.state.shouldShowContactInfo }, _ => {
+            this.props.setPhoneNumberViewPermission(this.state.shouldShowContactInfo)
+                .then(result => {
+                    this.setState({ showViewPermissionModal: true }, _ => {
+                        setTimeout(() => {
+                            this.setState({ showViewPermissionModal: false });
+                        }, 3000);
+                    })
+                });
+        })
+    };
 
     openActionSheet = _ => ActionSheet.show(
         {
@@ -221,7 +235,10 @@ class EditProfile extends Component {
             editProfileLoading,
             userProfileLoading,
             editProfileMessage,
-            editProfileError
+            editProfileError,
+
+            phoneNumberViewPermissionLoading,
+            phoneNumberViewPermission,
         } = this.props;
 
 
@@ -234,7 +251,9 @@ class EditProfile extends Component {
             last_name,
             is_verified,
 
-            showSubmitEditionModal
+            showSubmitEditionModal,
+            shouldShowContactInfo,
+            showViewPermissionModal
         } = this.state;
 
 
@@ -258,6 +277,63 @@ class EditProfile extends Component {
 
                         />
                     </View> : null}
+
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showViewPermissionModal}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ showViewPermissionModal: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.editProfile')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.editionsDone')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ showViewPermissionModal: false })}>
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
 
                 < Portal
                     style={{
@@ -481,6 +557,82 @@ class EditProfile extends Component {
                                     placeholder={locales('titles.headerDescription')} />
 
                             </View>
+
+
+                            <View
+                                activeOpacity={1}
+                                style={{
+                                    backgroundColor: '#F5FBFF',
+                                    borderRadius: 12,
+                                    alignSelf: 'center',
+                                    padding: 20,
+                                    marginTop: 20,
+                                    width: deviceWidth * 0.88
+                                }}
+                            >
+
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <FontAwesome5
+                                        color='#404B55'
+                                        size={25}
+                                        solid
+                                        name='exclamation-circle'
+                                    />
+                                    <Text
+                                        style={{
+                                            color: '#404B55',
+                                            marginHorizontal: 5,
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        }}
+                                    >
+                                        {locales('labels.contactInfo')}
+                                    </Text>
+                                </View>
+                                <Text
+                                    style={{
+                                        marginVertical: 15,
+                                        color: '#666666',
+                                        fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}
+                                >
+                                    {locales('labels.contactInfoDescription')}
+                                </Text>
+
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        marginVertical: 10,
+                                    }}
+                                >
+                                    <Checkbox
+                                        status={shouldShowContactInfo ? 'checked' : 'unchecked'}
+                                        onPress={this.handleContactInfoCheckBoxChange}
+                                        color='#00C569'
+                                    />
+                                    <Text
+                                        onPress={this.handleContactInfoCheckBoxChange}
+                                        style={{
+                                            color: '#666666',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        }}
+                                    >
+                                        {locales('labels.limitAccess')}
+                                    </Text>
+                                </View>
+
+                            </View>
+
+
                             <View style={{
                                 marginTop: 20
                             }}>
@@ -724,7 +876,13 @@ const mapStateToProps = (state) => {
         editProfile,
         editProfileLoading,
         editProfileMessage,
-        editProfileError
+        editProfileError,
+
+        phoneNumberViewPermissionLoading,
+        phoneNumberViewPermissionFailed,
+        phoneNumberViewPermissionError,
+        phoneNumberViewPermissionMessage,
+        phoneNumberViewPermission,
     } = state.profileReducer;
 
     return {
@@ -734,14 +892,21 @@ const mapStateToProps = (state) => {
         editProfile,
         editProfileLoading,
         editProfileMessage,
-        editProfileError
+        editProfileError,
+
+        phoneNumberViewPermissionLoading,
+        phoneNumberViewPermissionFailed,
+        phoneNumberViewPermissionError,
+        phoneNumberViewPermissionMessage,
+        phoneNumberViewPermission,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-        editProfile: item => dispatch(profileActions.editProfile(item))
+        editProfile: item => dispatch(profileActions.editProfile(item)),
+        setPhoneNumberViewPermission: permission => dispatch(profileActions.setPhoneNumberViewPermission(permission))
     }
 };
 
