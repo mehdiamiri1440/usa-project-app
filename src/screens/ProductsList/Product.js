@@ -1021,7 +1021,7 @@ class Product extends PureComponent {
                                                 textAlignVertical: 'center'
                                             }}
                                         >
-                                            {province_name} ، {city_name}
+                                            {province_name} - {city_name}
                                         </Text>
                                     </View>
 
