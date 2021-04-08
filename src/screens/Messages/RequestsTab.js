@@ -30,10 +30,8 @@ class RequestsTab extends Component {
             relatedBuyAdRequestsList: [],
             goldenBuyAdsList: [],
             showGoldenModal: false,
-            mobileNumber: '',
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
-            isContactInfoShown: false,
         }
     }
 
@@ -231,7 +229,9 @@ class RequestsTab extends Component {
                     status
                 } = payload;
                 if (status == true && !!phone) {
-                    this.setState({ mobileNumber: phone, isContactInfoShown: true })
+                    item.isContactInfoShown = true;
+                    item.mobileNumber = phone;
+                    this.setState({});
                 }
             })
                 .catch(err => {
@@ -256,8 +256,6 @@ class RequestsTab extends Component {
     renderGoldenListItem = ({ item }) => {
         const {
             selectedButton,
-            isContactInfoShown,
-            mobileNumber
         } = this.state;
         const {
             userProfile = {},
@@ -440,7 +438,7 @@ class RequestsTab extends Component {
                                     <LinearGradient
                                         start={{ x: 0, y: 0.51, z: 1 }}
                                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                                        colors={!isContactInfoShown ? ['#c7a84f', '#f9f29f', '#c7a84f'] : ['#E0E0E0', '#E0E0E0']}
+                                        colors={!item.isContactInfoShown ? ['#c7a84f', '#f9f29f', '#c7a84f'] : ['#E0E0E0', '#E0E0E0']}
                                         style={{
                                             width: '100%',
                                             paddingHorizontal: 10,
@@ -457,14 +455,14 @@ class RequestsTab extends Component {
                                         <FontAwesome5
                                             solid
                                             name='phone-square-alt'
-                                            color={!isContactInfoShown ? '#333' : 'white'}
+                                            color={!item.isContactInfoShown ? '#333' : 'white'}
                                             size={20} />
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 marginHorizontal: 3,
                                                 fontSize: 18,
-                                                color: !isContactInfoShown ? '#333' : 'white',
+                                                color: !item.isContactInfoShown ? '#333' : 'white',
                                                 paddingHorizontal: 3
                                             }}
                                         >
@@ -552,7 +550,7 @@ class RequestsTab extends Component {
                             </Button>
 
                         </View>
-                        {(isContactInfoShown) ?
+                        {(item.isContactInfoShown) ?
                             <>
                                 <View
                                     style={{
@@ -573,7 +571,7 @@ class RequestsTab extends Component {
                                         {locales('titles.phoneNumber')}
                                     </Text>
                                     <TouchableOpacity
-                                        onPress={_ => this.openCallPad(mobileNumber)}
+                                        onPress={_ => this.openCallPad(item.mobileNumber)}
                                         style={{
                                             flexDirection: 'row-reverse',
                                             justifyContent: 'center',
@@ -586,7 +584,7 @@ class RequestsTab extends Component {
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                             }}
                                         >
-                                            {mobileNumber}
+                                            {item.mobileNumber}
                                         </Text>
                                         <FontAwesome5
                                             name='phone-square-alt'
@@ -838,8 +836,6 @@ class RequestsTab extends Component {
     renderItem = ({ item }) => {
         const {
             selectedButton,
-            isContactInfoShown,
-            mobileNumber
         } = this.state;
 
         const {
@@ -1020,7 +1016,7 @@ class RequestsTab extends Component {
                         width: '100%',
                         paddingHorizontal: 5,
                         alignSelf: 'center',
-                        justifyContent: 'space-between'
+                        justifyContent: 'center'
                     }}
                     >
                         {item.has_phone ?
@@ -1031,6 +1027,7 @@ class RequestsTab extends Component {
                                     borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
                                     width: '47%',
                                     zIndex: 1000,
+                                    marginHorizontal: 15,
                                     position: 'relative',
                                     alignSelf: 'center',
 
@@ -1039,7 +1036,7 @@ class RequestsTab extends Component {
                                 <LinearGradient
                                     start={{ x: 0, y: 0.51, z: 1 }}
                                     end={{ x: 0.8, y: 0.2, z: 1 }}
-                                    colors={!isContactInfoShown ?
+                                    colors={!item.isContactInfoShown ?
                                         (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
                                             : ['#c7a84f', '#f9f29f', '#c7a84f'])
                                         : ['#E0E0E0', '#E0E0E0']}
@@ -1059,14 +1056,14 @@ class RequestsTab extends Component {
                                     <FontAwesome5
                                         solid
                                         name='phone-square-alt'
-                                        color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                        color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
                                         size={20} />
                                     <Text
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             marginHorizontal: 3,
                                             fontSize: 18,
-                                            color: !isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
+                                            color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                             paddingHorizontal: 3
                                         }}
                                     >
@@ -1096,6 +1093,7 @@ class RequestsTab extends Component {
                                 alignSelf: 'center', justifyContent: 'center', alignItems: 'center',
                                 width: item.has_phone ? '47%' : '70%',
                                 zIndex: 1000,
+                                marginHorizontal: 15,
                                 elevation: 0,
                                 marginBottom: 0,
                                 position: 'relative',
@@ -1153,7 +1151,7 @@ class RequestsTab extends Component {
                         </Button>
 
                     </View>
-                    {(isContactInfoShown) ?
+                    {(item.isContactInfoShown) ?
                         <>
                             <View
                                 style={{
@@ -1174,7 +1172,7 @@ class RequestsTab extends Component {
                                     {locales('titles.phoneNumber')}
                                 </Text>
                                 <TouchableOpacity
-                                    onPress={_ => this.openCallPad(mobileNumber)}
+                                    onPress={_ => this.openCallPad(item.mobileNumber)}
                                     style={{
                                         flexDirection: 'row-reverse',
                                         justifyContent: 'center',
@@ -1187,7 +1185,7 @@ class RequestsTab extends Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                         }}
                                     >
-                                        {mobileNumber}
+                                        {item.mobileNumber}
                                     </Text>
                                     <FontAwesome5
                                         name='phone-square-alt'
@@ -1882,7 +1880,8 @@ const mapStateToProps = (state) => {
     const {
         relatedBuyAdRequestsLoading,
         relatedBuyAdRequestsList,
-        goldenBuyAdsList
+        goldenBuyAdsList,
+        buyerMobileNumberLoading
     } = state.buyAdRequestReducer;
 
     const {
@@ -1902,7 +1901,8 @@ const mapStateToProps = (state) => {
 
         isUserAllowedToSendMessage,
         isUserAllowedToSendMessagePermission,
-        isUserAllowedToSendMessageLoading
+        isUserAllowedToSendMessageLoading,
+        buyerMobileNumberLoading
     }
 };
 const mapDispatchToProps = (dispatch) => {

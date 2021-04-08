@@ -284,6 +284,8 @@ class RegisterProduct extends React.Component {
         this.setState({ showModal: true })
     };
 
+    setSelectedButton = id => this.setState({ selectedButton: id })
+
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
             minimumOrder, maximumPrice, minimumPrice, amount, city,
@@ -344,6 +346,7 @@ class RegisterProduct extends React.Component {
                             subCategoryId={subCategoryId}
                             product={product}
                             buyAds={buyAds}
+                            setSelectedButton={this.setSelectedButton}
                             changeStep={this.changeStep}
                             subCategoryName={subCategoryName}
                             openChat={this.openChat}

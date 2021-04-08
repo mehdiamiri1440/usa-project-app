@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, ScrollView, BackHandler } from 'react-native';
+import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
@@ -10,11 +10,10 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import { formatter } from '../../utils';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { formatter, deviceHeight, deviceWidth, validator } from '../../utils';
 import * as productActions from '../../redux/registerProduct/actions';
+import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class RegisterProductSuccessfully extends Component {
     constructor(props) {
@@ -25,7 +24,9 @@ class RegisterProductSuccessfully extends Component {
             showGoldenModal: false,
             selectedContact: {},
             subCategoryName: '',
-            loaded: false
+            loaded: false,
+            showMobileNumberWarnModal: false,
+            accessToContactInfoErrorMessage: '',
         }
     }
 
@@ -52,9 +53,70 @@ class RegisterProductSuccessfully extends Component {
     //     }
     // }
 
+
+
+    fetchContactInfo = (item) => {
+        const { id, is_golden, myuser_id } = item;
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            active_pakage_type
+        } = user_info
+        const shouldShowPromotionModal = !!is_golden && active_pakage_type != 3;
+        if (shouldShowPromotionModal) {
+            this.setState({ showGoldenModal: true })
+        }
+        else {
+            this.props.setSelectedButton(id);
+            const contactInfoObject = {
+                b_id: myuser_id,
+                ba_id: id,
+                item: "BUYAD"
+            }
+            this.props.fetchBuyerMobileNumber(contactInfoObject).then(result => {
+                const {
+                    payload = {}
+                } = result;
+                const {
+                    phone,
+                    status
+                } = payload;
+                if (status == true && !!phone) {
+                    item.isContactInfoShown = true;
+                    item.mobileNumber = phone;
+                    this.setState({});
+                }
+            })
+                .catch(err => {
+                    const {
+                        response = {}
+                    } = err;
+                    const {
+                        data = {}
+                    } = response;
+                    const {
+                        msg,
+                        status
+                    } = data;
+                    if (status == false) {
+                        this.setState({ showMobileNumberWarnModal: true, accessToContactInfoErrorMessage: msg })
+                    }
+                });
+        }
+    };
+
+
     renderItem = ({ item, index }) => {
 
-        const { selectedButton, userProfile = {}, isUserAllowedToSendMessageLoading } = this.props;
+        const {
+            selectedButton, userProfile = {},
+            isUserAllowedToSendMessageLoading,
+            buyerMobileNumberLoading
+        } = this.props;
         const { user_info = {} } = userProfile;
         const { active_pakage_type } = user_info;
 
@@ -283,7 +345,246 @@ class RegisterProductSuccessfully extends Component {
                     </View>
                 }
 
-                <View style={{ marginVertical: 15 }}>
+
+
+                <View style={{
+                    marginVertical: 15,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    width: '100%',
+                    paddingHorizontal: 5,
+                    alignSelf: 'center',
+                    justifyContent: 'center'
+                }}
+                >
+                    {item.has_phone ?
+                        <Button
+                            small
+
+                            onPress={event => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                this.fetchContactInfo(item);
+                            }}
+                            style={{
+                                borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
+                                width: '47%',
+                                zIndex: 1000,
+                                marginHorizontal: 15,
+                                position: 'relative',
+                                alignSelf: 'center',
+
+                            }}
+                        >
+                            <LinearGradient
+                                start={{ x: 0, y: 0.51, z: 1 }}
+                                end={{ x: 0.8, y: 0.2, z: 1 }}
+                                colors={!item.isContactInfoShown ?
+                                    (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
+                                        : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                                    : ['#E0E0E0', '#E0E0E0']}
+                                style={{
+                                    width: '100%',
+                                    paddingHorizontal: 10,
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 8,
+                                    paddingLeft: 20,
+                                    padding: 8,
+                                    elevation: 0
+                                }}
+                            >
+                                <FontAwesome5
+                                    solid
+                                    name='phone-square-alt'
+                                    color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                    size={20} />
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 3,
+                                        fontSize: 18,
+                                        color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
+                                        paddingHorizontal: 3
+                                    }}
+                                >
+                                    {locales('labels.contactInfo')}
+                                </Text>
+                                {buyerMobileNumberLoading && selectedButton == item.id ?
+                                    <ActivityIndicator
+                                        size={20}
+                                        color={(!item.is_golden ? 'white' : '#333')}
+                                        animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                        style={{
+                                            position: 'relative',
+                                            width: 10, height: 10, borderRadius: 5,
+                                            marginRight: 5
+                                        }}
+                                    />
+                                    : null}
+                            </LinearGradient>
+
+                        </Button>
+                        : null}
+                    <Button
+                        small
+                        onPress={event => !item.expired && this.openChat(event, item, false)}
+                        style={[item.expired ? styles.disableLoginButton : styles.loginButton,
+                        {
+                            alignSelf: 'center', justifyContent: 'center', alignItems: 'center',
+                            width: item.has_phone ? '47%' : '70%',
+                            zIndex: 1000,
+                            marginHorizontal: 15,
+                            elevation: 0,
+                            marginBottom: 0,
+                            position: 'relative',
+                        }]}
+                    >
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={item.has_phone ? ['#fff', '#fff']
+                                : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                            }
+                            style={{
+                                width: '100%',
+                                borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
+                                paddingHorizontal: 10,
+                                flexDirection: 'row-reverse',
+                                borderWidth: 1,
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 8,
+                                padding: 8,
+                                elevation: 0
+                            }}
+                        >
+
+                            <MaterialCommunityIcons
+                                name='message'
+                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                size={20}
+                            />
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
+                                paddingHorizontal: 3
+                            }}>
+                                {locales('labels.messageToBuyer')}
+
+
+                            </Text>
+                            <ActivityIndicator size={20}
+                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                animating={selectedButton == item.id &&
+                                    !!isUserAllowedToSendMessageLoading}
+                                style={{
+                                    position: 'relative',
+                                    width: 10, height: 10, borderRadius: 5,
+                                    marginLeft: -10,
+                                    marginRight: 5
+                                }}
+                            />
+                        </LinearGradient>
+
+                    </Button>
+
+                </View>
+                {(item.isContactInfoShown) ?
+                    <>
+                        <View
+                            style={{
+                                zIndex: 1,
+                                flexDirection: 'row-reverse',
+                                padding: 20,
+                                alignItems: 'center',
+                                width: '100%',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 18,
+                                    color: '#404B55'
+                                }}>
+                                {locales('titles.phoneNumber')}
+                            </Text>
+                            <TouchableOpacity
+                                onPress={_ => this.openCallPad(item.mobileNumber)}
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: '#404B55', fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                    }}
+                                >
+                                    {item.mobileNumber}
+                                </Text>
+                                <FontAwesome5
+                                    name='phone-square-alt'
+                                    size={20}
+                                />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View
+                            style={{
+                                backgroundColor: '#FFFBE5',
+                                borderRadius: 12,
+                                alignSelf: 'center',
+                                padding: 20,
+                                width: '100%',
+                                zIndex: 1,
+                            }}
+                        >
+
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <FontAwesome5
+                                    color='#404B55'
+                                    size={25}
+                                    name='exclamation-circle'
+                                />
+                                <Text
+                                    style={{
+                                        color: '#404B55',
+                                        marginHorizontal: 5,
+                                        fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    }}
+                                >
+                                    {locales('titles.policeWarn')}
+                                </Text>
+                            </View>
+                            <Text
+                                style={{
+                                    marginVertical: 15,
+                                    color: '#666666',
+                                    fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}
+                            >
+                                {locales('labels.policeWarnDescription')}
+                            </Text>
+                        </View>
+                    </>
+                    : null}
+
+                {/* <View style={{ marginVertical: 15 }}>
 
                     <Button
                         small
@@ -356,6 +657,7 @@ class RegisterProductSuccessfully extends Component {
                     </Button>
 
                 </View>
+            */}
             </View>
 
         )
@@ -473,6 +775,24 @@ class RegisterProductSuccessfully extends Component {
         return buyAdsList
     };
 
+
+
+    openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
     openChat = (event, item) => {
         let { userProfile = {} } = this.props;
         const { user_info = {} } = userProfile;
@@ -497,6 +817,7 @@ class RegisterProductSuccessfully extends Component {
         }
     };
 
+    keyExtractor = item => item.id.toString();
 
     render() {
 
@@ -520,6 +841,8 @@ class RegisterProductSuccessfully extends Component {
         const {
             selectedBuyAdId,
             showGoldenModal,
+            accessToContactInfoErrorMessage,
+            showMobileNumberWarnModal,
             selectedContact
         } = this.state;
 
@@ -529,6 +852,88 @@ class RegisterProductSuccessfully extends Component {
 
         return (
             <>
+
+
+
+                < Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={showMobileNumberWarnModal}
+                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.contactInfo')}
+                            </Paragraph>
+                        </Dialog.Actions>
+
+
+
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#facea8',
+                            }]} />
+
+                        </View>
+                        <Paragraph
+                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                            {accessToContactInfoErrorMessage}
+                        </Paragraph>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton]}
+                                onPress={() => {
+                                    this.setState({ showMobileNumberWarnModal: false });
+                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                }}
+                            >
+
+                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </View>
+
+
+
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
 
 
 
@@ -679,11 +1084,12 @@ class RegisterProductSuccessfully extends Component {
 
                     {this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList).length ?
                         <FlatList
-                            keyExtractor={item => item.id.toString()}
                             renderItem={this.renderItem}
                             data={this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList)}
                             ListHeaderComponent={this.renderListHeaderComponent}
                             ListFooterComponent={this.renderListFooterComponent}
+                            keyExtractor={this.keyExtractor}
+                            renderItem={this.renderItem}
                         />
                         :
                         <View>
@@ -840,20 +1246,22 @@ const styles = StyleSheet.create({
     },
     disableLoginButton: {
         textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.8,
+        width: '60%',
+        height: 40,
+        marginBottom: 10,
+        elevation: 0,
+        borderRadius: 4,
+        backgroundColor: '#BEBEBE',
         color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
     },
     loginButton: {
         textAlign: 'center',
-        margin: 10,
+        width: '60%',
+        height: 40,
+        elevation: 0,
+        marginBottom: 10,
         borderRadius: 4,
         backgroundColor: '#00C569',
-        width: '82%',
-        height: 60,
         color: 'white',
     },
     forgotContainer: {
@@ -896,6 +1304,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchBuyAdsAfterPayment: _ => dispatch(registerProductActions.fetchBuyAdsAfterPayment()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
+        fetchBuyerMobileNumber: contactInfoObject => dispatch(requestActions.fetchBuyerMobileNumber(contactInfoObject)),
     }
 };
 const mapStateToProps = (state) => {
@@ -912,6 +1321,9 @@ const mapStateToProps = (state) => {
         userProfile
     } = state.profileReducer;
 
+    const {
+        buyerMobileNumberLoading
+    } = state.buyAdRequestReducer;
 
     return {
         buyAdsAfterPaymentLoading,
@@ -921,7 +1333,9 @@ const mapStateToProps = (state) => {
         buyAdsAfterPaymentList,
         buyAdsAfterPayment,
 
-        userProfile
+        userProfile,
+
+        buyerMobileNumberLoading
     }
 };
 

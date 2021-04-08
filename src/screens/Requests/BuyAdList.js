@@ -47,6 +47,8 @@ const BuyAdList = props => {
                     status
                 } = payload;
                 if (status == true && !!phone) {
+                    item.isContactInfoShown = true;
+                    item.mobileNumber = phone;
                     setMobileNumber(phone);
                     setIsContactInfoShown(true);
                 }
@@ -375,7 +377,7 @@ const BuyAdList = props => {
                 width: deviceWidth * 0.89,
                 paddingHorizontal: 5,
                 alignSelf: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'center'
             }}
             >
                 {item.has_phone ?
@@ -388,13 +390,14 @@ const BuyAdList = props => {
                             zIndex: 1000,
                             position: 'relative',
                             alignSelf: 'center',
+                            marginHorizontal: 15
 
                         }}
                     >
                         <LinearGradient
                             start={{ x: 0, y: 0.51, z: 1 }}
                             end={{ x: 0.8, y: 0.2, z: 1 }}
-                            colors={!isContactInfoShown ?
+                            colors={!item.isContactInfoShown ?
                                 (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
                                     : ['#c7a84f', '#f9f29f', '#c7a84f'])
                                 : ['#E0E0E0', '#E0E0E0']}
@@ -414,14 +417,14 @@ const BuyAdList = props => {
                             <FontAwesome5
                                 solid
                                 name='phone-square-alt'
-                                color={!isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
                                 size={20} />
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     marginHorizontal: 3,
                                     fontSize: 18,
-                                    color: !isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
+                                    color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                     paddingHorizontal: 3
                                 }}
                             >
@@ -453,6 +456,7 @@ const BuyAdList = props => {
                         width: item.has_phone ? '47%' : '70%',
                         zIndex: 1000,
                         elevation: 0,
+                        marginHorizontal: 15,
                         position: 'relative',
                         alignSelf: 'center',
                     }}
@@ -509,7 +513,7 @@ const BuyAdList = props => {
                 </Button>
 
             </View>
-            {(isContactInfoShown) ?
+            {(item.isContactInfoShown) ?
                 <>
                     <View
                         style={{
@@ -530,7 +534,7 @@ const BuyAdList = props => {
                             {locales('titles.phoneNumber')}
                         </Text>
                         <TouchableOpacity
-                            onPress={_ => openCallPad(mobileNumber)}
+                            onPress={_ => openCallPad(item.mobileNumber)}
                             style={{
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'center',
@@ -543,7 +547,7 @@ const BuyAdList = props => {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                 }}
                             >
-                                {mobileNumber}
+                                {item.mobileNumber}
                             </Text>
                             <FontAwesome5
                                 name='phone-square-alt'

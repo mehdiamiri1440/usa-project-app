@@ -2054,7 +2054,7 @@ class ProductDetails extends PureComponent {
                                     <FontAwesome name='envelope' size={20} />
                                 </Text>
                                 <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                    {locales('titles.achiveSaleStatus')}
+                                    {locales('titles.sendMessage')}
                                 </Text>
                             </View>
 
