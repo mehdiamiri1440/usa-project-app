@@ -593,8 +593,14 @@ class ProductsList extends PureComponent {
             subCategoriesLoading,
 
             allProvincesObject,
-            allCitiesObject
+            allCitiesObject,
+            userProfile = {}
         } = this.props;
+
+        const { user_info = {} } = userProfile;
+        const {
+            is_seller
+        } = user_info;
 
         const { searchText, loaded, productsListArray, selectedButton, searchLoader,
             categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
@@ -1179,7 +1185,7 @@ class ProductsList extends PureComponent {
                                     fetchAllProducts={this.fetchAllProducts}
                                     {...this.props}
                                 />
-                                {this.renderItemSeparatorComponent(index)}
+                                {!is_seller && this.renderItemSeparatorComponent(index)}
                             </>
                         )
                     }
