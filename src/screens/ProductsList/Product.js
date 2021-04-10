@@ -11,6 +11,7 @@ import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -863,7 +864,7 @@ class Product extends PureComponent {
                                             width: '100%',
                                             height: '100%',
                                             marginHorizontal: 0,
-                                            backgroundColor: "#f0f3f6",
+                                            backgroundColor: "#404B55",
                                             borderBottomLeftRadius: 0,
                                             borderBottomRightRadius: 0,
                                             // paddingLeft: 10
@@ -873,20 +874,34 @@ class Product extends PureComponent {
                                             :
                                             require('../../../assets/icons/user.png')
                                         } />
-                                    <Text
-                                        numberOfLines={1}
+
+                                    <LinearGradient
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
                                         style={{
-                                            color: '#CCCCCC', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 21,
+                                            width: '100%', height: 65,
                                             position: 'absolute',
-                                            right: 10,
-                                            bottom: 10,
+                                            padding: 10,
+                                            bottom: 0,
+                                            alignSelf: 'center',
+                                            justifyContent: 'flex-end',
+                                            alignItems: 'flex-end'
                                         }}
+                                        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
                                     >
-                                        {category_name} | {sub_category_name} <Text
-                                            style={{ color: '#FFFFFF', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 21 }}>
-                                            {product_name}
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{
+                                                color: '#CCCCCC', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 21,
+
+                                            }}
+                                        >
+                                            {category_name} | {sub_category_name} <Text
+                                                style={{ color: '#FFFFFF', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 21 }}>
+                                                {product_name}
+                                            </Text>
                                         </Text>
-                                    </Text>
+                                    </LinearGradient>
                                 </View>
 
                                 <View
@@ -977,11 +992,27 @@ class Product extends PureComponent {
                                                 {locales('labels.deleteProduct')}
                                             </Text>
                                             :
-                                            <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
-                                                textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#00C569', fontSize: 16, textAlignVertical: 'center'
-                                            }}>
-                                                {locales('labels.seeProfile')}
-                                            </Text>}
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row-reverse',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}
+                                            >
+                                                <Text onPress={() => this.props.navigation.navigate('Profile', { user_name })} style={{
+                                                    textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#1DA1F2',
+                                                    fontSize: 16, textAlignVertical: 'center'
+                                                }}>
+                                                    {locales('titles.seeProfile')}
+                                                </Text>
+                                                <FontAwesome5
+                                                    name='angle-left'
+                                                    size={20}
+                                                    style={{ marginRight: 5 }}
+                                                    color='#1DA1F2'
+                                                />
+                                            </View>
+                                        }
                                     </TouchableOpacity>
 
                                 </View>
