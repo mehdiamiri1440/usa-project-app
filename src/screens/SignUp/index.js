@@ -121,7 +121,8 @@ class SignUp extends React.Component {
             city,
             province,
             provinceName,
-            cityName
+            cityName,
+            verificationCode
         } = this.state;
 
         let registerObject = {
@@ -134,7 +135,8 @@ class SignUp extends React.Component {
             province: provinceName,
             city: cityName,
             activity_type: activityType == 'buyer' ? '1' : '0',
-            category_id: activityZone
+            category_id: activityZone,
+            verification_code: verificationCode
         };
         this.props.submitRegister(registerObject).then(result => {
             analytics().logEvent('successfull_register', {
