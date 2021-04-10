@@ -1177,6 +1177,7 @@ class ProductsList extends PureComponent {
                     }
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
+                    style={{ backgroundColor: 'white' }}
                     renderItem={({ item, index }) => {
                         return (
                             <>
