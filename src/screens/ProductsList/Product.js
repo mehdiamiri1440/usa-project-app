@@ -245,6 +245,7 @@ class Product extends PureComponent {
                 walletElevatorPaySuccessMessage: locales('titles.walletElevatorPaymentSuccessMessage')
             }, _ => {
                 setTimeout(() => {
+                    this.props.fetchUserProfile();
                     this.setState({ walletElevatorPaySuccessMessage: '' })
                 }, 3000);
             })
@@ -658,7 +659,7 @@ class Product extends PureComponent {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.walletElevatorPaySuccessMessage')}
+                                {walletElevatorPaySuccessMessage}
                             </Text>
 
                         </Dialog.Actions>
@@ -1589,6 +1590,7 @@ const mapDispatchToProps = (dispatch) => {
         deleteProduct: id => dispatch(productListActions.deleteProduct(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
         walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
     }
 };
 
