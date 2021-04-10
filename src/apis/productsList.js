@@ -5,7 +5,7 @@ export const fetchAllProductsList = (item, special_products) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `user/get_product_list`,
+                route: `app/get_product_list`,
                 method: 'POST',
                 data: { ...item, special_products: special_products ? true : false },
                 withAuth: false,
