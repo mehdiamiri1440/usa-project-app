@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import * as productListActions from '../../redux/productsList/actions'
+import * as profileActions from '../../redux/profile/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import { formatter, validator } from '../../utils';
 
@@ -39,7 +40,9 @@ class Product extends PureComponent {
             elevatorFlag: false,
             deleteProductFlag: false,
             showDeletationMessage: false,
-            deleteMessageText: ''
+            deleteMessageText: '',
+            walletElevatorPaymentError: '',
+            walletElevatorPaySuccessMessage: ''
         }
     }
 
@@ -235,12 +238,40 @@ class Product extends PureComponent {
         })
     };
 
+    doWalletElevatorPay = id => {
+        this.props.walletElevatorPay(id).then(result => {
+            this.setState({
+                walletElevatorPayError: '', elevatorFlag: false,
+                walletElevatorPaySuccessMessage: locales('titles.walletElevatorPaymentSuccessMessage')
+            }, _ => {
+                setTimeout(() => {
+                    this.setState({ walletElevatorPaySuccessMessage: '' })
+                }, 3000);
+            })
+        })
+            .catch(error => {
+
+                const {
+                    response = {}
+                } = error;
+                const {
+                    data = {}
+                } = response;
+                const {
+                    msg,
+                    status
+                } = data;
+                if (status == false)
+                    this.setState({ walletElevatorPaymentError: msg, walletElevatorPaySuccessMessage: '' })
+            });
+    };
+
     render() {
         const {
             loggedInUserId,
             deleteProductStatus,
             deleteProductLoading,
-
+            walletElevatorPayLoading,
             width = deviceWidth * 0.97
         } = this.props;
         const { main, photos, profile_info, user_info } = this.props.productItem;
@@ -305,7 +336,10 @@ class Product extends PureComponent {
             amountError,
             editProductLoading,
 
-            showValidatedUserModal
+            showValidatedUserModal,
+
+            walletElevatorPaymentError,
+            walletElevatorPaySuccessMessage
         } = this.state;
 
         const selectedContact = {
@@ -588,6 +622,63 @@ class Product extends PureComponent {
 
 
 
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={!!walletElevatorPaySuccessMessage}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.doElevation')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('titles.walletElevatorPaySuccessMessage')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}>
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+
+
 
 
                 < Portal
@@ -598,14 +689,14 @@ class Product extends PureComponent {
                     }}>
                     <Dialog
                         visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false })}
+                        onDismiss={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
                             style={styles.dialogHeader}
                         >
                             <Button
-                                onPress={() => this.setState({ elevatorFlag: false })}
+                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
                                 style={styles.closeDialogModal}>
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
@@ -632,19 +723,51 @@ class Product extends PureComponent {
                         <View style={{
                             width: '100%',
                             textAlign: 'center',
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-around',
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => this.setState({ elevatorFlag: false }, () => {
+                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170 }]}
+                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' }, () => {
                                     return this.elevatorPay()
                                 })}
                             >
 
-                                <Text style={styles.buttonText}>{locales('titles.pay')}
+                                <Text style={styles.buttonText}>{locales('titles.portalPay')}
+                                </Text>
+                            </Button>
+                            <Button
+                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170 }]}
+                                onPress={_ => this.doWalletElevatorPay(productId)}
+                            >
+                                <ActivityIndicator
+                                    color='white'
+                                    style={{ position: 'absolute', left: 0 }}
+                                    size={15}
+                                    animating={!!walletElevatorPayLoading}
+                                />
+
+                                <Text style={styles.buttonText}>
+                                    {locales('titles.walletPay')}
                                 </Text>
                             </Button>
                         </View>
+
+                        {walletElevatorPaymentError ? <Text
+                            style={{
+                                width: '100%',
+                                textAlign: 'center',
+                                marginVertical: 15,
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: '#E41C38'
+                            }}
+                        >
+                            {walletElevatorPaymentError}
+                        </Text>
+                            : null}
+
                         <Dialog.Actions style={{
                             justifyContent: 'center',
                             width: '100%',
@@ -652,7 +775,7 @@ class Product extends PureComponent {
                         }}>
                             <Button
                                 style={styles.modalCloseButton}
-                                onPress={() => this.setState({ elevatorFlag: false })}
+                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
                             >
 
                                 <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
@@ -1430,6 +1553,18 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+    const {
+        profileReducer
+    } = state;
+
+    const {
+        walletElevatorPayLoading,
+        walletElevatorPayFailed,
+        walletElevatorPayError,
+        walletElevatorPayMessage,
+        walletElevatorPay,
+    } = profileReducer;
+
     return {
         loggedInUserId: state.authReducer.loggedInUserId,
 
@@ -1439,14 +1574,21 @@ const mapStateToProps = (state) => {
 
         editProductStatus: state.productsListReducer.editProductStatus,
         editProductMessage: state.productsListReducer.editProductMessage,
-        editProductLoading: state.productsListReducer.editProductLoading
+        editProductLoading: state.productsListReducer.editProductLoading,
+
+        walletElevatorPayLoading,
+        walletElevatorPayFailed,
+        walletElevatorPayError,
+        walletElevatorPayMessage,
+        walletElevatorPay,
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         deleteProduct: id => dispatch(productListActions.deleteProduct(id)),
-        editProduct: product => dispatch(productListActions.editProduct(product))
+        editProduct: product => dispatch(productListActions.editProduct(product)),
+        walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),
     }
 };
 

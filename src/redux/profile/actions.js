@@ -228,3 +228,25 @@ export const fetchUserContactInfoViewers = _ => {
 
     return request();
 };
+
+export const walletElevatorPay = id => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .walletElevatorPay(id)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.WALLET_ELEVATOR_PAY_FAILED,
+                        reject: actionTypes.WALLET_ELEVATOR_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.WALLET_ELEVATOR_PAY_LOADING);
+    const success = res => action(actionTypes.WALLET_ELEVATOR_PAY_SUCCESSFULLY, res);
+
+    return request();
+};

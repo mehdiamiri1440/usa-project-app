@@ -200,3 +200,24 @@ export const fetchUserContactInfoViewers = _ => {
             });
     });
 };
+
+export const walletElevatorPay = id => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `wallet-expend/elevator`,
+                method: 'POST',
+                data: { product_id: id },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};

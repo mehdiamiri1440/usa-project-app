@@ -55,6 +55,12 @@ const INITIAL_STATE = {
     userContactInfoViewers: {},
     userContactInfoViewersList: [],
 
+    walletElevatorPayLoading: false,
+    walletElevatorPayFailed: false,
+    walletElevatorPayError: false,
+    walletElevatorPayMessage: null,
+    walletElevatorPay: {},
+
     profileInfoLoading: false,
     profileInfoFailed: false,
     profileInfoError: false,
@@ -473,6 +479,56 @@ export default (state = INITIAL_STATE, action) => {
                 userContactInfoViewersFailed: false,
                 userContactInfoViewersError: true,
                 userContactInfoViewersMessage: [...description]
+            };
+        };
+
+
+
+
+
+        case actionTypes.WALLET_ELEVATOR_PAY_LOADING: {
+            return {
+                ...state,
+                walletElevatorPay: {},
+                walletElevatorPayLoading: true,
+                walletElevatorPayFailed: false,
+                walletElevatorPayError: false,
+                walletElevatorPayMessage: null
+            };
+        };
+        case actionTypes.WALLET_ELEVATOR_PAY_SUCCESSFULLY: {
+            return {
+                ...state,
+                walletElevatorPay: { ...action.payload },
+                walletElevatorPayLoading: false,
+                walletElevatorPayFailed: false,
+                walletElevatorPayError: false,
+                walletElevatorPayMessage: null,
+            };
+        };
+        case actionTypes.WALLET_ELEVATOR_PAY_FAILED: {
+            return {
+                ...state,
+                walletElevatorPay: {},
+                walletElevatorPayLoading: false,
+                walletElevatorPayFailed: true,
+                walletElevatorPayError: false,
+                walletElevatorPayMessage: null
+            };
+        };
+        case actionTypes.WALLET_ELEVATOR_PAY_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                walletElevatorPay: {},
+                walletElevatorPayLoading: false,
+                walletElevatorPayFailed: false,
+                walletElevatorPayError: true,
+                walletElevatorPayMessage: [...description]
             };
         };
 
