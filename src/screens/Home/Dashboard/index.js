@@ -33,8 +33,18 @@ const Dashboard = props => {
         dashboardError,
         dashboardFailed,
         dashboardMessage,
-        dashboard
+        dashboard,
+
+        userProfile = {}
     } = props;
+
+    const {
+        user_info = {}
+    } = userProfile;
+
+    const {
+        is_seller
+    } = user_info;
 
     let {
         active_pakage_type: activePackageType = 0,
@@ -110,6 +120,38 @@ const Dashboard = props => {
                 }
                 style={{ paddingHorizontal: 30, paddingTop: 30 }}
             >
+
+                {
+                    is_seller ?
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('UsersSeenMobile')}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                width: deviceWidth,
+                                paddingBottom: 20
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: '#1DA1F2',
+                                    fontSize: 16,
+                                }}
+                            >
+                                {locales('titles.buyersSeenYourContactInfo')}
+                            </Text>
+                            <FontAwesome5
+                                name='angle-left'
+                                size={16}
+                                style={{ marginRight: 5 }}
+                                color='#1DA1F2'
+                            />
+                        </TouchableOpacity>
+                        : null
+                }
 
                 <Card transparent  >
                     <View
@@ -466,6 +508,7 @@ const Dashboard = props => {
 
                     </View>
                 </Card>
+
             </ScrollView>
         </>
 
@@ -493,6 +536,7 @@ const mapStateToProps = (state) => {
         dashboardMessage: state.homeReducer.dashboardMessage,
         dashboardFailed: state.homeReducer.dashboardFailed,
         dashboard: state.homeReducer.dashboard,
+        userProfile: state.profileReducer.userProfile
     }
 };
 

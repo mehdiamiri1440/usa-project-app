@@ -254,6 +254,7 @@ export default {
     'titles.promotionTextContinue': '100% مبلغ پرداختی به شما بازگردانده می شود',
     'titles.annualSpecialRegistration': 'عضویت ویژه سالانه',
     'titles.monthlySpecialRegistration': 'عضویت پایه سه ماهه',
+    'titles.buyersSeenYourContactInfo': 'خریدارانی که شماره تماس شما را دیده اند',
     'titles.moneyRetention': 'ضمانت بازگشت وجه',
     'titles.seeProfile': 'مشاهده پروفایل',
     'titles.specialRegistration': 'عضویت ویژه',
