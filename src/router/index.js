@@ -100,16 +100,12 @@ const App = (props) => {
           setInitialRoute('Intro')
           RootNavigation.navigate('Intro')
         }
-        setTimeout(() => {
-          SplashScreen.hide();
-        }, 200);
+        SplashScreen.hide();
       })
     }
     else {
       SplashScreen.hide();
     }
-    // Linking.getInitialURL().then(url => handleIncomingEvent(undefined, url))
-    // Linking.addEventListener('url', event => handleIncomingEvent(event, undefined))
     if (I18nManager.isRTL) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
@@ -176,7 +172,6 @@ const App = (props) => {
 
     return () => {
       isReadyRef.current = false
-      Linking.removeEventListener('url', handleIncomingEvent)
     }
 
   }, [initialRoute, is_seller, props.loggedInUserId, props.logOutLoading]);
@@ -204,61 +199,6 @@ const App = (props) => {
         console.log("error occurred", err);
       });
   }
-
-  const handleIncomingEvent = (event, url) => {
-    if (!url) {
-      url = (event.url).split('://')[1].includes('www') ? (event.url).split('://')[1].split('/')[1]
-        : (event.url).split('://')[1]
-    }
-    else {
-      console.log('url', url)
-      url = url.split('/')[3]
-    }
-    switch (url) {
-      case 'register-product-successfully':
-        console.log('here')
-        return RootNavigation.navigate('RegisterProductStack', {
-          screen: 'RegisterProductSuccessfully',
-          params: { needToRefreshKey: dataGenerator.generateKey('register_product_successfully_from_bank') }
-        });
-      case 'pricing':
-        return RootNavigation.navigate('MyBuskool', {
-          screen: 'PromoteRegistration',
-          params: { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_pricing_') }
-        });
-
-      case 'product-list':
-        return navigationRef.current.navigate('Home', {
-          screen: 'ProductsList',
-          params: { needToRefreshKey: dataGenerator.generateKey('product_list_from_product_list_') }
-        });
-
-      case 'register-product': {
-        return navigationRef.current.navigate('RegisterProductStack', {
-          screen: 'RegisterProduct',
-          params: { needToRefreshKey: dataGenerator.generateKey('register_product_from_register_product_') }
-        });
-      }
-      case 'buyAd-requests': {
-        AsyncStorage.getItem('@registerProductParams').then(result => {
-          result = JSON.parse(result);
-          if (result && result.subCategoryId && result.subCategoryName) {
-            return navigationRef.current.navigate('Requests', {
-              needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_'),
-              subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName
-            });
-          }
-          return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
-        })
-      };
-      case 'public-channel':
-        return navigationRef.current.navigate('Messages', {
-          screen: 'Channel',
-        });
-      default:
-        break;
-    }
-  };
 
 
   return (
