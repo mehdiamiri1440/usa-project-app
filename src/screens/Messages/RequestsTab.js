@@ -208,7 +208,19 @@ class RequestsTab extends Component {
 
 
     fetchContactInfo = (item) => {
+
         const { id, is_golden, buyer_id } = item;
+
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            active_pakage_type
+        } = user_info;
+
         const shouldShowPromotionModal = !!is_golden && active_pakage_type != 3;
         if (shouldShowPromotionModal) {
             this.setState({ showGoldenModal: true })

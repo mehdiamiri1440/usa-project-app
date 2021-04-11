@@ -156,7 +156,10 @@ const RegisterRequestSuccessfully = props => {
             .catch(_ => { })
     };
 
-    const fetchContactInfo = ({ id, myuser_id }) => {
+    const fetchContactInfo = item => {
+
+        const { id, myuser_id } = item;
+
         setSelectedButton(id);
         const contactInfoObject = {
             s_id: myuser_id,
@@ -172,6 +175,8 @@ const RegisterRequestSuccessfully = props => {
                 status
             } = payload;
             if (status == true && !!phone) {
+                item.isContactInfoShown = true;
+                item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
             }
@@ -194,6 +199,18 @@ const RegisterRequestSuccessfully = props => {
             });
     };
 
+    const navigateToChat = (event, { first_name, last_name, is_verified, myuser_id }) => {
+        event.stopPropagation();
+        event.preventDefault();
+        const tempContact = {
+            first_name,
+            last_name,
+            is_verified,
+            contact_id: myuser_id
+        };
+        setSelectedContact({ ...tempContact });
+        props.navigation.navigate('Chat', { contact: { ...tempContact } })
+    };
 
     const renderItem = ({ item }) => {
         const {
@@ -431,7 +448,7 @@ const RegisterRequestSuccessfully = props => {
                                     small
                                     onPress={() => fetchContactInfo(item)}
                                     style={{
-                                        borderColor: isContactInfoShown ? '#c7a84f' : '#00C569',
+                                        borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
                                         width: '47%',
                                         zIndex: 1000,
                                         position: 'relative',
@@ -442,7 +459,7 @@ const RegisterRequestSuccessfully = props => {
                                     <LinearGradient
                                         start={{ x: 0, y: 0.51, z: 1 }}
                                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                                        colors={!isContactInfoShown ? ['#00C569', '#00C569', '#00C569'] : ['#E0E0E0', '#E0E0E0']}
+                                        colors={!item.isContactInfoShown ? ['#00C569', '#00C569', '#00C569'] : ['#E0E0E0', '#E0E0E0']}
                                         style={{
                                             width: '100%',
                                             paddingHorizontal: 10,
@@ -493,21 +510,7 @@ const RegisterRequestSuccessfully = props => {
 
                                 <Button
                                     small
-                                    onPress={event => {
-                                        event.stopPropagation();
-                                        event.preventDefault();
-                                        setLoading(true);
-                                        setSelectedContact({
-                                            first_name,
-                                            last_name,
-                                            is_verified,
-                                            contact_id: myuser_id
-                                        });
-                                        setTimeout(() => {
-                                            setLoading(false);
-                                            props.navigation.navigate('Chat', { contact: selectedContact })
-                                        }, 1000);
-                                    }}
+                                    onPress={event => navigateToChat(event, item)}
                                     style={{
                                         width: has_phone ? '47%' : '70%',
                                         zIndex: 1000,
@@ -541,21 +544,7 @@ const RegisterRequestSuccessfully = props => {
                                             size={20}
                                         />
                                         <Text
-                                            onPress={event => {
-                                                event.stopPropagation();
-                                                event.preventDefault();
-                                                setLoading(true);
-                                                setSelectedContact({
-                                                    first_name,
-                                                    last_name,
-                                                    is_verified,
-                                                    contact_id: myuser_id
-                                                });
-                                                setTimeout(() => {
-                                                    setLoading(false);
-                                                    props.navigation.navigate('Chat', { contact: selectedContact })
-                                                }, 1000);
-                                            }}
+                                            onPress={event => navigateToChat(event, item)}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 18,
@@ -668,21 +657,7 @@ const RegisterRequestSuccessfully = props => {
                             </View>
                             :
                             <Button
-                                onPress={event => {
-                                    event.stopPropagation();
-                                    event.preventDefault();
-                                    setLoading(true);
-                                    setSelectedContact({
-                                        first_name,
-                                        last_name,
-                                        is_verified,
-                                        contact_id: myuser_id
-                                    });
-                                    setTimeout(() => {
-                                        setLoading(false);
-                                        props.navigation.navigate('Chat', { contact: selectedContact })
-                                    }, 1000);
-                                }}
+                                onPress={event => navigateToChat(event, item)}
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
@@ -711,21 +686,7 @@ const RegisterRequestSuccessfully = props => {
                                         color="white"
                                     />
                                     <Text
-                                        onPress={event => {
-                                            event.stopPropagation();
-                                            event.preventDefault();
-                                            setLoading(true);
-                                            setSelectedContact({
-                                                first_name,
-                                                last_name,
-                                                is_verified,
-                                                contact_id: myuser_id
-                                            });
-                                            setTimeout(() => {
-                                                setLoading(false);
-                                                props.navigation.navigate('Chat', { contact: selectedContact })
-                                            }, 1000);
-                                        }}
+                                        onPress={event => navigateToChat(event, item)}
                                         style={{
                                             color: 'white',
                                             textAlign: 'center',
@@ -734,25 +695,12 @@ const RegisterRequestSuccessfully = props => {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                         }}>{locales('labels.sendMessageToSeller')}</Text>
                                     <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
-                                        onPress={event => {
-                                            event.stopPropagation();
-                                            event.preventDefault();
-                                            setLoading(true);
-                                            setSelectedContact({
-                                                first_name,
-                                                last_name,
-                                                is_verified,
-                                                contact_id: myuser_id
-                                            });
-                                            setTimeout(() => {
-                                                setLoading(false);
-                                                props.navigation.navigate('Chat', { contact: selectedContact })
-                                            }, 1000);
-                                        }} />
+                                        onPress={event => navigateToChat(event, item)}
+                                    />
                                 </View>
                             </Button>
                         }
-                        {(isContactInfoShown) ?
+                        {(item.isContactInfoShown) ?
                             <>
                                 <View
                                     style={{
@@ -774,7 +722,7 @@ const RegisterRequestSuccessfully = props => {
                                         {locales('titles.phoneNumber')}
                                     </Text>
                                     <TouchableOpacity
-                                        onPress={_ => openCallPad(mobileNumber)}
+                                        onPress={_ => openCallPad(item.mobileNumber)}
                                         style={{
                                             flexDirection: 'row-reverse',
                                             justifyContent: 'center',
@@ -787,7 +735,7 @@ const RegisterRequestSuccessfully = props => {
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
                                             }}
                                         >
-                                            {mobileNumber}
+                                            {item.mobileNumber}
                                         </Text>
                                         <FontAwesome5
                                             name='phone-square-alt'
