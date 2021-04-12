@@ -1243,18 +1243,19 @@ class ProductDetails extends PureComponent {
                     </View>
                 </Modal>
 
+
                 <View style={{
                     backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
-                    paddingHorizontal: 10,
+                    flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
                     height: 45,
                     elevation: 5,
                     shadowOffset: { width: 20, height: 20 },
-                    justifyContent: 'space-between'
+                    justifyContent: 'center'
                 }}>
                     <TouchableOpacity
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                         onPress={() => {
                             this.props.navigation.goBack()
                         }}
@@ -1271,16 +1272,7 @@ class ProductDetails extends PureComponent {
                             {(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
                         </Text>
                     </View>
-                    <View>
-                        <FontAwesome5
-                            onPress={() => this.shareProductLink(url)}
-                            name='share-alt'
-                            size={20}
-                            color='black'
-                        />
-                    </View>
                 </View>
-
                 {(productDetailsInfoLoading || editProductLoading) ?
                     <ScrollView style={{
                         backgroundColor: 'white',
@@ -1413,7 +1405,7 @@ class ProductDetails extends PureComponent {
                                     style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
                                     {product_name ? product_name : '---'}
                                 </Text>
-                                {/* <View>
+                                <View>
                                     <TouchableOpacity
                                         onPress={() => this.shareProductLink(url)}
                                         style={{
@@ -1428,7 +1420,7 @@ class ProductDetails extends PureComponent {
                                         </Text>
 
                                     </TouchableOpacity>
-                                </View> */}
+                                </View>
                             </View>
 
                             <View style={{
