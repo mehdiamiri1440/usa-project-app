@@ -84,7 +84,6 @@ const routes = props => {
     const onRouteStateChanged = ({ key, index, routeNames, history, routes, type, stable }) => {
         return handleVisiblityOfSellerButtonAndBottomMenu();
     };
-
     return (
         <>
             <NavigationContainer
@@ -129,7 +128,7 @@ const routes = props => {
                     )
                     : (
                         <Tab.Navigator
-                            initialRouteName={initialRoute}
+                            initialRouteName={!!is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"

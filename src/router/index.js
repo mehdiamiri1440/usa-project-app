@@ -92,7 +92,9 @@ const App = (props) => {
 
     if (!props.loggedInUserId) {
       AsyncStorage.getItem('@isIntroductionSeen').then(result => {
-        if (JSON.parse(result)) {
+        result = JSON.parse(result);
+
+        if (result) {
           setInitialRoute('SignUp')
           RootNavigation.navigate('SignUp')
         }
@@ -104,6 +106,7 @@ const App = (props) => {
       })
     }
     else {
+      setInitialRoute(is_seller ? 'RegisterProductStack' : 'RegisterRequest')
       SplashScreen.hide();
     }
     if (I18nManager.isRTL) {

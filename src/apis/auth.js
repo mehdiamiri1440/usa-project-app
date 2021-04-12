@@ -199,7 +199,8 @@ export const submitRegister = ({
     city,
     activity_type = '',
     // national_code,
-    category_id
+    category_id,
+    verification_code
 }) => {
     return new Promise((resolve, reject) => {
         requester
@@ -218,7 +219,8 @@ export const submitRegister = ({
                     city,
                     activity_type,
                     // national_code,
-                    category_id
+                    category_id,
+                    verification_code
                 }
             })
             .then(result => {
