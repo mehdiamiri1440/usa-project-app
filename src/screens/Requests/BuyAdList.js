@@ -386,7 +386,7 @@ const BuyAdList = props => {
                         onPress={() => fetchContactInfo(item)}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                            width: item.has_message ? '47%' : '70%',
+                            width: item.has_msg ? '47%' : '70%',
                             zIndex: 1000,
                             position: 'relative',
                             alignSelf: 'center',
@@ -445,7 +445,7 @@ const BuyAdList = props => {
 
                     </Button>
                     : null}
-                {item.has_message ? <Button
+                {item.has_msg ? <Button
                     small
                     onPress={event => {
                         event.stopPropagation()
