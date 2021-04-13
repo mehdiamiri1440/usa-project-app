@@ -432,13 +432,12 @@ const BuyAdList = props => {
                             </Text>
                             {buyerMobileNumberLoading && selectedButton == item.id ?
                                 <ActivityIndicator
-                                    size={20}
+                                    size={15}
                                     color={(!item.is_golden ? 'white' : '#333')}
                                     animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                     style={{
-                                        position: 'relative',
-                                        width: 10, height: 10, borderRadius: 5,
-                                        marginRight: 5
+                                        position: 'absolute', right: 10,
+                                        width: 5, height: 5, borderRadius: 5,
                                     }}
                                 />
                                 : null}
