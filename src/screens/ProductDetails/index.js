@@ -2075,7 +2075,7 @@ class ProductDetails extends PureComponent {
                             justifyContent: 'space-between',
                             alignItems: 'center'
                         }} >
-                            {(has_phone) ?
+                            {(has_phone && !is_seller) ?
                                 <Button
                                     onPress={() => this.fetchContactInfo(productIdFromProductDetails, userId)}
                                     style={[styles.loginButton, {
