@@ -452,37 +452,49 @@ class SpecialProducts extends PureComponent {
                         <View
                             key={index}
                             style={{
-                                borderRadius: 5,
-                                borderWidth: 2,
-                                borderColor: '#eee',
                                 paddingBottom: 10,
-                                marginBottom: 15
+                                marginBottom: 15,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-around',
+                                alignItems: 'center'
 
                             }}>
                             <ContentLoader
                                 speed={2}
-                                width={deviceWidth}
+                                width={deviceWidth * 0.45}
                                 height={deviceHeight * 0.3}
-                                viewBox="0 0 500 263"
+                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
                                 backgroundColor="#f3f3f3"
                                 foregroundColor="#ecebeb"
 
                             >
 
-                                <Rect x="296" y="24" rx="3" ry="3" width="88" height="10" />
-                                <Rect x="273" y="47" rx="3" ry="3" width="110" height="8" />
-                                <Rect x="79" y="96" rx="3" ry="3" width="209" height="15" />
-                                <Rect x="149" y="141" rx="3" ry="3" width="139" height="15" />
-                                <Rect x="196" y="185" rx="3" ry="3" width="93" height="15" />
-                                <Circle cx="430" cy="39" r="30" />
-                                <Rect x="17" y="30" rx="8" ry="8" width="84" height="17" />
-                                <Rect x="337" y="88" rx="3" ry="3" width="122" height="122" />
-                                <Rect x="0" y="74" rx="0" ry="0" width="472" height="2" />
-                                <Circle cx="309" cy="105" r="12" />
-                                <Circle cx="309" cy="148" r="12" />
-                                <Circle cx="309" cy="191" r="12" />
-                                <Rect x="15" y="223" rx="3" ry="3" width="445" height="46" />
+                                <Rect x="0" y="0" width="100%" height="140" />
+                                <Circle cx="90%" cy="165" r="10" />
+                                <Rect x="30%" y="210" width="120" height="10" />
+                                <Rect x="30%" y="160" width="100" height="10" />
+                                <Rect x="30%" y="185" width="120" height="10" />
+
                             </ContentLoader>
+
+                            <ContentLoader
+                                speed={2}
+                                width={deviceWidth * 0.45}
+                                height={deviceHeight * 0.3}
+                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+
+                            >
+
+                                <Rect x="0" y="0" width="100%" height="140" />
+                                <Circle cx="90%" cy="165" r="10" />
+                                <Rect x="30%" y="210" width="120" height="10" />
+                                <Rect x="30%" y="160" width="100" height="10" />
+                                <Rect x="30%" y="185" width="120" height="10" />
+
+                            </ContentLoader>
+
                         </View>
                     )}
                 </View>
