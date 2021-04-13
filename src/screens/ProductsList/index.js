@@ -614,7 +614,6 @@ class ProductsList extends PureComponent {
         if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
-
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
         return (
             <>

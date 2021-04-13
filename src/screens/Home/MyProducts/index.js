@@ -233,15 +233,31 @@ class MyProducts extends Component {
                     onEndReachedThreshold={0.2}
                     keyExtractor={(_, index) => index.toString()}
                     data={myProductsArray}
-                    renderItem={({ item }) => <Product
-                        minimumOrderRef={this.minimumOrderRef}
-                        maximumPriceRef={this.maximumPriceRef}
-                        amountRef={this.amountRef}
-                        minimumPriceRef={this.minimumPriceRef}
-                        productItem={item}
-                        fetchAllProducts={this.fetchAllProducts}
-                        {...this.props}
-                    />}
+                    horizontal={false}
+                    style={{ backgroundColor: 'white' }}
+                    numColumns={2}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center' }}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <View
+                                style={{
+                                    width: '47%', margin: 5,
+                                    alignItems: 'center', justifyContent: 'center'
+                                }}
+                            >
+                                <Product
+                                    minimumOrderRef={this.minimumOrderRef}
+                                    maximumPriceRef={this.maximumPriceRef}
+                                    amountRef={this.amountRef}
+                                    minimumPriceRef={this.minimumPriceRef}
+                                    productItem={item}
+                                    fetchAllProducts={this.fetchAllProducts}
+                                    {...this.props}
+                                />
+                            </View>
+                        )
+                    }
+                    }
                 />
 
             </>
