@@ -43,7 +43,7 @@ const RelatedProductsList = props => {
                 }}>
                 <FastImage
                     resizeMethod='resize'
-                    style={{ width: deviceWidth * 0.62, height: deviceWidth * 0.4 }}
+                    style={{ width: '100%', height: deviceWidth * 0.4 }}
                     source={{
                         uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`,
                         headers: { Authorization: 'eTag' },
