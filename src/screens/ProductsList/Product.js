@@ -979,8 +979,8 @@ class Product extends PureComponent {
                                         {photos_count <= 9 ? photos_count : '9+'}
                                     </Text>
                                 </View>}
-
                                 <Image
+                                    resizeMode='cover'
                                     style={{
                                         borderRadius: 12,
                                         width: '100%',
@@ -989,7 +989,6 @@ class Product extends PureComponent {
                                         backgroundColor: "#404B55",
                                         borderBottomLeftRadius: 0,
                                         borderBottomRightRadius: 0,
-                                        resizeMode: 'cover'
                                         // paddingLeft: 10
                                     }}
                                     source={photos.length ?
@@ -1214,6 +1213,7 @@ class Product extends PureComponent {
                                         })}
                                         name='chart-line' size={16} color='white' style={[
                                             {
+                                                position: 'absolute', right: 0, bottom: 3,
                                                 width: 30, height: 30, backgroundColor: '#38485F', borderRadius: 4,
                                                 textAlign: 'center', textAlignVertical: 'center', margin: 5, padding: 5
                                             }]}
