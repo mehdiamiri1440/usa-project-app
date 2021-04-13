@@ -386,7 +386,7 @@ const BuyAdList = props => {
                         onPress={() => fetchContactInfo(item)}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                            width: '47%',
+                            width: item.has_message ? '47%' : '70%',
                             zIndex: 1000,
                             position: 'relative',
                             alignSelf: 'center',
@@ -445,7 +445,7 @@ const BuyAdList = props => {
 
                     </Button>
                     : null}
-                <Button
+                {item.has_message ? <Button
                     small
                     onPress={event => {
                         event.stopPropagation()
@@ -510,7 +510,8 @@ const BuyAdList = props => {
                     </LinearGradient>
 
                 </Button>
-
+                    : null
+                }
             </View>
             {(item.isContactInfoShown) ?
                 <>
