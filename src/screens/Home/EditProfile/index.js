@@ -58,7 +58,7 @@ class EditProfile extends Component {
                 company_register_code,
                 public_phone,
                 description } = this.props.userProfile.profile;
-            const { first_name, last_name, is_verified, has_phone } = this.props.userProfile.user_info;
+            const { first_name, last_name, is_verified, phone_allowed } = this.props.userProfile.user_info;
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
@@ -72,7 +72,7 @@ class EditProfile extends Component {
                 last_name,
                 is_verified,
                 description,
-                shouldShowContactInfo: has_phone,
+                shouldShowContactInfo: phone_allowed,
             });
         }
     }
@@ -255,7 +255,6 @@ class EditProfile extends Component {
             shouldShowContactInfo,
             showViewPermissionModal
         } = this.state;
-
 
         return (
             <>

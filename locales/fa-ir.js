@@ -143,7 +143,7 @@ export default {
     'labels.suggesstedProduct': 'محصول پیشنهادی',
     'labels.uploadProductImages': 'لطفا فقط تصاویر مرتبط با محصول خود را ثبت کنید.',
     'labels.terms': 'قوانین',
-    'labels.limitAccess': 'بله، اجازه میدهم.',
+    'labels.limitAccess': 'بله، اجازه میدهم ؟',
     'labels.registerProduct': 'ثبت ‌محصول',
     'labels.registerProductToSeeSuggestedBuyers': 'برای مشاهده خریداران مرتبط ، ابتدا محصول خود را ثبت کنید.',
     'labels.dashboard': 'داشبورد',
