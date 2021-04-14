@@ -6,7 +6,8 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import {
     Text, TouchableOpacity, View, ImageBackground,
-    StyleSheet, Image, ActivityIndicator, ScrollView
+    StyleSheet, Image, ActivityIndicator, ScrollView,
+    RefreshControl
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useScrollToTop } from '@react-navigation/native';
@@ -154,9 +155,25 @@ class Home extends React.Component {
         });
     }
 
+    onRefresh = _ => {
+
+        const {
+            userProfile = {}
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller
+        } = user_info;
+
+        if (is_seller)
+            this.props.fetchUserProfile();
+    };
+
     render() {
 
-        const { userProfile = {} } = this.props;
+        const { userProfile = {}, userProfileLoading } = this.props;
         const { user_info = {} } = userProfile;
         let { is_seller } = user_info;
 
@@ -274,6 +291,12 @@ class Home extends React.Component {
                 </View>
 
                 <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={userProfileLoading}
+                            onRefresh={this.onRefresh}
+                        />
+                    }
                     ref={this.props.homeRef}
                     style={{ backgroundColor: 'white', flex: 1, paddingTop: 20 }}>
 

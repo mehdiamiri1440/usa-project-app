@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView, Linking } from 'react-native';
+import {
+    View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView,
+    RefreshControl, Linking
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Label, InputGroup, Input, Button } from 'native-base';
 import { TextInputMask } from 'react-native-masked-text';
@@ -21,7 +24,8 @@ const Wallet = props => {
     const {
         userProfile = {},
         loggedInUserId,
-        route = {}
+        route = {},
+        userProfileLoading
     } = props;
 
     const {
@@ -92,11 +96,15 @@ const Wallet = props => {
     };
 
     const onSubmit = _ => {
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${1000}`).then(supported => {
+        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`).then(supported => {
             if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${1000}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`);
             }
         })
+    };
+
+    const onRefresh = _ => {
+        props.fetchUserProfile();
     };
 
     return (
@@ -130,6 +138,12 @@ const Wallet = props => {
             </View>
 
             <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={userProfileLoading}
+                        onRefresh={onRefresh}
+                    />
+                }
                 keyboardShouldPersistTaps='handled'
                 style={{ backgroundColor: 'white' }}
             >
@@ -481,7 +495,8 @@ const mapStateToProps = state => {
         authReducer
     } = state;
     const {
-        userProfile
+        userProfile,
+        userProfileLoading
     } = profileReducer;
     const {
         loggedInUserId
@@ -489,6 +504,7 @@ const mapStateToProps = state => {
 
     return {
         userProfile,
+        userProfileLoading,
         loggedInUserId
     }
 };
