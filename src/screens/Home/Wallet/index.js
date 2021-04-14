@@ -18,7 +18,7 @@ const Wallet = props => {
 
     const inputRef = useRef();
 
-    const [inventory, setInventory] = useState(10000);
+    const [inventory, setInventory] = useState(50000);
     const [inventoryError, setInventoryError] = useState('');
 
     const {
@@ -299,17 +299,16 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: '#F9FAF5',
+                            backgroundColor: inventory == 150000 ? '#00C569' : '#F9FAF5',
                             borderRadius: 25,
-                            borderColor: '#00C569',
-                            borderWidth: 0.7,
                             padding: 11,
                         }}
                     >
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 19
+                                fontSize: 19,
+                                color: inventory == 150000 ? 'white' : 'black'
                             }}
                         >
                             150,000
@@ -317,7 +316,8 @@ const Wallet = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 15
+                                fontSize: 15,
+                                color: inventory == 150000 ? 'white' : 'black'
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
@@ -328,9 +328,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: '#F9FAF5',
-                            borderColor: '#00C569',
-                            borderWidth: 0.7,
+                            backgroundColor: inventory == 100000 ? '#00C569' : '#F9FAF5',
                             borderRadius: 25,
                             marginHorizontal: 5,
                             padding: 11
@@ -339,7 +337,8 @@ const Wallet = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 19
+                                fontSize: 19,
+                                color: inventory == 100000 ? 'white' : 'black'
                             }}
                         >
                             100,000
@@ -347,7 +346,8 @@ const Wallet = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 15
+                                fontSize: 15,
+                                color: inventory == 100000 ? 'white' : 'black'
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
@@ -358,17 +358,16 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: '#F9FAF5',
+                            backgroundColor: inventory == 50000 ? '#00C569' : '#F9FAF5',
                             borderRadius: 25,
-                            borderColor: '#00C569',
-                            borderWidth: 0.7,
                             padding: 11
                         }}
                     >
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 19
+                                fontSize: 19,
+                                color: inventory == 50000 ? 'white' : 'black'
                             }}
                         >
                             50,000
@@ -376,7 +375,8 @@ const Wallet = props => {
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 15
+                                fontSize: 15,
+                                color: inventory == 50000 ? 'white' : 'black'
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
