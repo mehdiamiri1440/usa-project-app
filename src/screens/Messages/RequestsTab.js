@@ -162,11 +162,9 @@ class RequestsTab extends Component {
             return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
                 <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                     <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
+
                     <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#777777', textAlign: 'center' }}>
-                        {locales('labels.messengerNoRelateRequstFoundFirst')}
-                    </Text>
-                    <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', textAlign: 'center' }}>
-                        {locales('labels.messengerNoRelateRequstFoundSecond')}
+                        {locales('labels.registerProductToSeeSuggestedBuyers')}
                     </Text>
                 </View>
                 <Button

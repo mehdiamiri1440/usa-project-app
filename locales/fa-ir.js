@@ -145,6 +145,7 @@ export default {
     'labels.terms': 'قوانین',
     'labels.limitAccess': 'بله، اجازه میدهم.',
     'labels.registerProduct': 'ثبت ‌محصول',
+    'labels.registerProductToSeeSuggestedBuyers': 'برای مشاهده خریداران مرتبط ، ابتدا محصول خود را ثبت کنید.',
     'labels.dashboard': 'داشبورد',
     'labels.dailyBuyersCount': 'تعداد روزانه خریداران در دسترس',
     'labels.signOut': 'خروج',
