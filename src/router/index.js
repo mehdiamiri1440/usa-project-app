@@ -4,7 +4,7 @@ import { Button } from 'native-base';
 import SplashScreen from 'react-native-splash-screen'
 import {
   Alert, Linking, Text, I18nManager, View, ActivityIndicator,
-  NativeModules, StyleSheet
+  NativeModules, StyleSheet, AppState
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -13,7 +13,7 @@ import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
 import DeviceInfo from 'react-native-device-info';
-
+import moment from 'moment';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
@@ -23,11 +23,13 @@ import { routeToScreensFromNotifications } from './linking';
 
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import AppNavigator from './navigator';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 
 
@@ -41,18 +43,19 @@ const App = (props) => {
   // console.disableYellowBox = true;
   const { userProfile = {} } = props;
   const { user_info = {} } = userProfile;
-  let { is_seller } = user_info;
-  is_seller = is_seller == 0 ? false : true;
+  let { is_seller, wallet_balance = 0 } = user_info;
 
-  const [initialRoute, setInitialRoute] = useState(is_seller ? 'RegisterProductStack' : 'RegisterRequest');
+  const [initialRoute, setInitialRoute] = useState(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
   let [isForceUpdate, setIsForceUpdate] = useState(true);
+  let [contactInfoGuidModal, setShowContactInfoGuidModal] = useState(false);
 
 
   useEffect(() => {
     checkForUpdate()
-
+    checkForShowingContactInfoGuid();
+    AppState.addEventListener('change', handleAppStateChange)
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
     //     res.text().then(result => {
@@ -174,10 +177,52 @@ const App = (props) => {
     }
 
     return () => {
-      isReadyRef.current = false
+      AppState.removeEventListener('change', handleAppStateChange)
+      isReadyRef.current = false;
     }
 
   }, [initialRoute, is_seller, props.loggedInUserId, props.logOutLoading]);
+
+
+  const handleAppStateChange = (nextAppState) => {
+    if (
+      AppState.current != nextAppState
+    ) {
+      checkForShowingContactInfoGuid();
+    }
+  };
+
+  const checkForShowingContactInfoGuid = _ => {
+
+    if (!!is_seller && wallet_balance == 0) {
+
+      AsyncStorage.getItem('@contactInfoShownTimes').then(result => {
+        result = JSON.parse(result);
+        if (result && result.length > 0) {
+
+          if (result.length < 5) {
+
+            if (moment().diff(result[result.length - 1], 'hours') >= 24) {
+              result.push(moment());
+              AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
+                setShowContactInfoGuidModal(true);
+              })
+            }
+
+          }
+
+        }
+        else {
+          result = [];
+          result.push(moment());
+          AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
+            setShowContactInfoGuidModal(true);
+          })
+        }
+      })
+    }
+
+  };
 
   const checkForUpdate = _ => {
     getAppstoreAppMetadata("com.buskool") //put any apps packageId here
@@ -206,6 +251,84 @@ const App = (props) => {
 
   return (
     <>
+      <Portal
+        style={{
+          padding: 0,
+          margin: 0
+
+        }}>
+        <Dialog
+          onDismiss={() => setShowContactInfoGuidModal(false)}
+          dismissable
+          visible={contactInfoGuidModal}
+          style={styles.dialogWrapper}
+        >
+          <Dialog.Actions
+            style={styles.dialogHeader}
+          >
+            <Button
+              onPress={() => setShowContactInfoGuidModal(false)}
+              style={styles.closeDialogModal}>
+              <FontAwesome5 name="times" color="#777" solid size={18} />
+            </Button>
+            <Paragraph style={styles.headerTextDialogModal}>
+              {locales('labels.contactInfoGuid')}
+            </Paragraph>
+          </Dialog.Actions>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center'
+            }}>
+
+            <MaterialCommunityIcons name="exclamation" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+              borderColor: '#edf8e6',
+            }]} />
+
+          </View>
+          <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+            <Text style={styles.mainTextDialogModal}>
+              {locales('labels.contactInfoGuidDescription')}
+            </Text>
+
+          </Dialog.Actions>
+          <Dialog.Actions style={{
+            justifyContent: 'center',
+            width: '100%',
+            alignItems: 'center',
+            padding: 0
+          }}>
+            <Button
+              style={[styles.loginButton, { width: '50%' }]}
+              onPress={() => {
+                setShowContactInfoGuidModal(false);
+                navigationRef?.current?.navigate('MyBuskool', { screen: 'ContactInfoGuid' })
+              }}
+            >
+
+              <Text style={[styles.closeButtonText, { color: 'white' }]}>{locales('labels.guid')}
+              </Text>
+            </Button>
+          </Dialog.Actions>
+
+          <Dialog.Actions style={{
+            justifyContent: 'center',
+            width: '100%',
+            padding: 0
+          }}>
+            <Button
+              style={styles.modalCloseButton}
+              onPress={() => setShowContactInfoGuidModal(false)}
+            >
+
+              <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+              </Text>
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal >
+
       <Portal
         style={{
           padding: 0,
