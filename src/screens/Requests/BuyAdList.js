@@ -58,14 +58,15 @@ const BuyAdList = props => {
                         response = {}
                     } = err;
                     const {
-                        data = {}
+                        data = {},
+                        status: statusCode
                     } = response;
                     const {
                         msg,
-                        status
+                        status,
                     } = data;
                     if (status == false) {
-                        openMobileNumberWarnModal(true, msg);
+                        openMobileNumberWarnModal(true, msg, statusCode);
                     }
                 });
         }
@@ -101,8 +102,8 @@ const BuyAdList = props => {
                 marginVertical: 20,
                 borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
                 borderWidth: 0.8,
-                borderRightWidth: !!item.is_golden ? 12 : 0.8,
-                borderBottomWidth: item.is_golden ? 0.8 : 0.2
+                borderRightWidth: !!item.is_golden ? 12 : 1,
+                borderBottomWidth: item.is_golden ? 0.8 : 1
             }}
             key={item.id}
         >
@@ -339,23 +340,25 @@ const BuyAdList = props => {
                 marginVertical: 5,
                 flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center'
             }}>
-                <View
-                    style={{ flexDirection: 'row-reverse', marginHorizontal: 30 }}
-                >
-                    <MaterialCommunityIcons
-                        onPress={() => {
-                            return Toast.show({
-                                text: locales('titles.remianedCapacityToSendMessageToBuyer'),
-                                position: "bottom",
-                                style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                                duration: 2000
-                            })
-                        }
-                        }
-                        name='comment-alert' size={25} color={'#777777'} />
-                    <Text style={{ color: '#556083', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
-                </View>
+                {item.has_msg ?
+                    <View
+                        style={{ flexDirection: 'row-reverse', marginHorizontal: 30 }}
+                    >
+                        <MaterialCommunityIcons
+                            onPress={() => {
+                                return Toast.show({
+                                    text: locales('titles.remianedCapacityToSendMessageToBuyer'),
+                                    position: "bottom",
+                                    style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                                    duration: 2000
+                                })
+                            }
+                            }
+                            name='comment-alert' size={25} color={'#777777'} />
+                        <Text style={{ color: '#556083', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
+                    </View>
+                    : null}
                 <View>
                     <Text
                         numberOfLines={1}
@@ -587,7 +590,7 @@ const BuyAdList = props => {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
                             >
-                                {locales('titles.policeWarn')}
+                                {locales('titles.buskoolSuggesstion')}
                             </Text>
                         </View>
                         <Text
