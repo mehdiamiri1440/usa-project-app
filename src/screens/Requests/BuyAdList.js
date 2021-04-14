@@ -601,7 +601,7 @@ const BuyAdList = props => {
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}
                         >
-                            {locales('labels.policeWarnDescription')}
+                            {locales('labels.buskoolSuggestionDescription')}
                         </Text>
                     </View>
                 </>
