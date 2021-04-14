@@ -1083,6 +1083,7 @@ class Product extends PureComponent {
                                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                         marginHorizontal: 5,
                                                         fontSize: 13,
+                                                        maxWidth: '90%',
                                                         color: '#666666',
                                                     }}>
                                                     {`${first_name} ${last_name}`}
