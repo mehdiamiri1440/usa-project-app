@@ -140,7 +140,7 @@ const CreditCardPayment = props => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#556080',
-                    padding: 10,
+                    padding: 15,
                 }}
             >
                 <FontAwesome5

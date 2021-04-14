@@ -34,6 +34,7 @@ import Channel from '../screens/Messages/Channel';
 import Chat from '../screens/Messages/ChatScreen';
 import Wallet from '../screens/Home/Wallet';
 import UsersSeenMobile from '../screens/Home/UsersSeenMobile';
+import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
 
 const Stack = createStackNavigator();
 
@@ -253,6 +254,16 @@ export const MyBuskoolStack = _ => {
                 key='UsersSeenMobile'
                 name='UsersSeenMobile'
                 component={UsersSeenMobile}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='ContactInfoGuid'
+                name='ContactInfoGuid'
+                component={ContactInfoGuid}
             />
 
         </Stack.Navigator >
