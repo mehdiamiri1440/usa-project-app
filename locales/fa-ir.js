@@ -458,7 +458,7 @@ export default {
     'titles.registerRequestNow': 'همین حالا درخواست خرید ثبت کنید.',
     'titles.extraProductCount': 'تعداد محصولات اضافی',
     'titles.didNotFindProduct': 'آیا محصول مورد نظر خود را پیدا نکرده اید؟',
-    'titles.didNotFindBuyAd': 'آیا درخواست مورد نظر خود را پیدا نکرده اید؟',
+    'titles.didNotFindBuyAd': 'آیا خریدار مورد نظر خود را پیدا نکرده اید؟',
     'titles.increaseInventory': 'افزایش موجودی',
     'titles.extra‌BuyAd': 'سقف روزانه پاسخ به درخواست ها',
     'titles.extra‌BuyAdCount': 'افزایش سقف روزانه پاسخ به درخواست ها',
