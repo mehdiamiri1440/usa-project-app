@@ -810,7 +810,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         width: deviceWidth * 0.91,
         justifyContent: 'space-between',
-        height: deviceHeight * 0.17,
+        height: deviceHeight * 0.22,
         padding: 10,
         alignSelf: 'center',
     },
