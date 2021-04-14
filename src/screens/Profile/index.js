@@ -788,13 +788,20 @@ class Profile extends PureComponent {
                             </View>
                             {productsListByUserName && productsListByUserName.length ?
                                 productsListByUserName.map((item, index) => (
-                                    <Product
-                                        key={index}
-                                        productItem={item}
-                                        fetchAllProducts={this.fetchAllProducts}
-                                        {...this.props}
-                                        width={deviceWidth * 0.93}
-                                    />
+                                    <View
+                                        style={{
+                                            marginVertical: 10,
+                                            width: deviceWidth * 0.93
+                                        }}
+                                    >
+                                        <Product
+                                            key={index}
+                                            productItem={item}
+                                            fetchAllProducts={this.fetchAllProducts}
+                                            {...this.props}
+                                            width={'100%'}
+                                        />
+                                    </View>
                                 ))
                                 : <View style={{
                                     alignSelf: 'center', justifyContent: 'flex-start',
