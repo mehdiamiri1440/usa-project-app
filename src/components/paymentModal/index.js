@@ -11,6 +11,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import * as homeActions from '../../redux/home/actions';
 import PromoteRegistration from '../../screens/Home/PromoteRegistration/PromoteRegistration';
+import CreditCardPayment from '../../screens/Home/PromoteRegistration/CreditCardPayment';
 
 
 const PaymentModal = props => {
@@ -99,6 +100,7 @@ const PaymentModal = props => {
                 </View>
             </View>
             <PromoteRegistration isUsedAsComponent showBothPackages {...props} />
+            <CreditCardPayment />
             {/* <ScrollView
                 contentContainerStyle={{ backgroundColor: '#F6F6F6' }}
                 ref={wrapperRef}

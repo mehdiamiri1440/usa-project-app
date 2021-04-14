@@ -3,7 +3,6 @@ import {
     Text, View, Modal, TouchableOpacity, ScrollView,
     StyleSheet, BackHandler, Linking, RefreshControl
 } from 'react-native';
-import RBSheet from "react-native-raw-bottom-sheet";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,13 +11,12 @@ import { Card, Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
-import { validator } from '../../../utils';
 import { numberWithCommas } from '../../../utils/formatter';
+import CreditCardPayment from './CreditCardPayment';
 
 class PromoteRegistration extends React.Component {
     constructor(props) {
@@ -70,21 +68,6 @@ class PromoteRegistration extends React.Component {
 
 
 
-    openCallPad = phoneNumber => {
-
-        if (!validator.isMobileNumber(phoneNumber))
-            return;
-
-        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(`tel:${phoneNumber}`)
-            }
-            else {
-
-            }
-        })
-            .catch(_ => { })
-    };
 
     render() {
 
@@ -123,100 +106,6 @@ class PromoteRegistration extends React.Component {
 
         return (
             <>
-                <RBSheet
-                    ref={this.refRBSheet}
-                    closeOnDragDown
-                    closeOnPressMask
-                    height={300}
-                    animationType='slide'
-                    customStyles={{
-                        draggableIcon: {
-                            backgroundColor: "#000"
-                        },
-                        container: {
-                            borderTopLeftRadius: 12,
-                            borderTopRightRadius: 12,
-                            backgroundColor: '#FAFAFA'
-                        }
-                    }}
-                >
-                    <Text
-                        onPress={() => this.refRBSheet.current.close()}
-                        style={{ width: '100%', textAlign: 'right', paddingHorizontal: 20 }}>
-                        <EvilIcons name='close-o' size={35} color='#777777' />
-                    </Text>
-
-                    <FontAwesome5 name='credit-card' style={{ alignSelf: 'center' }} color='#1DA1F2' size={75} />
-                    <Text style={{
-                        width: '100%', textAlign: 'center', fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        marginTop: 20,
-                        color: '#777',
-                    }}>
-                        {locales('labels.transferViaCardDescription')}
-                    </Text>
-
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-around',
-                            alignItems: 'center',
-                            marginTop: 20,
-                        }}>
-
-                        <TouchableOpacity
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                            <FontAwesome5 name="phone" solid size={15}
-                                onPress={_ => this.openCallPad('09178928266')}
-                                style={{
-                                    paddingTop: 15,
-                                    color: '#00c569'
-                                }} />
-                            <Text
-                                onPress={_ => this.openCallPad('09178928266')}
-                                style={{
-                                    textAlign: 'center',
-                                    marginVertical: 10,
-                                    paddingHorizontal: 15,
-                                    fontSize: 18,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}
-                            >
-                                09178928266
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                            <FontAwesome5 name="phone" solid size={15}
-                                onPress={_ => this.openCallPad('09118413054')}
-                                style={{
-                                    paddingTop: 15,
-                                    color: '#00c569'
-                                }} />
-                            <Text
-                                onPress={_ => this.openCallPad('09118413054')}
-                                style={{
-                                    textAlign: 'center',
-                                    marginVertical: 10,
-                                    paddingHorizontal: 15,
-                                    fontSize: 18,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                }}
-                            >
-                                09118413054
-                            </Text>
-                        </TouchableOpacity>
-
-                    </View>
-
-                </RBSheet>
-
                 <Modal
                     transparent={false}
                     onRequestClose={_ => this.setState({ visibility: false })}
@@ -1636,38 +1525,7 @@ class PromoteRegistration extends React.Component {
                     </View>
 
                 </ScrollView>
-                <TouchableOpacity
-                    onPress={event => {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        this.refRBSheet.current.open()
-                    }}
-                    activeOpacity={1}
-                    style={{
-                        width: deviceWidth,
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#4eb9fb',
-                        padding: 10
-                    }}
-                >
-                    <FontAwesome5
-                        name='credit-card'
-                        color='white'
-                        size={20}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 7,
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('labels.transferAmongCreditCart')}
-                    </Text>
-                </TouchableOpacity>
+                {!isUsedAsComponent ? <CreditCardPayment /> : null}
             </>
         )
     }

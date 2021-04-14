@@ -12,6 +12,7 @@ import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { formatter } from '../../../utils'
 import PromoteRegistration from './PromoteRegistration';
+import CreditCardPayment from './CreditCardPayment';
 
 class ExtraProductCapacity extends React.Component {
     constructor(props) {
@@ -399,6 +400,7 @@ class ExtraProductCapacity extends React.Component {
                         <PromoteRegistration isUsedAsComponent={true} showBothPackages={false} {...this.props} />
                     </View>
                 </ScrollView>
+                <CreditCardPayment />
             </>
         )
     }
