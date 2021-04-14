@@ -28,7 +28,6 @@ import {
     from './tabs';
 import { deviceWidth, deviceHeight } from '../utils';
 import * as productActions from '../redux/registerProduct/actions';
-import * as profileActions from '../redux/profile/actions';
 import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
@@ -269,7 +268,6 @@ const routes = props => {
                                 listeners={{
                                     tabPress: e => {
                                         currentRoute = e.target;
-                                        props.fetchUserProfile();
                                         navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
                                     },
                                 }}
@@ -345,7 +343,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         doForceRefresh: forceRefresh => dispatch(messageActions.doForceRefresh(forceRefresh)),
-        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
     }
 };
 
