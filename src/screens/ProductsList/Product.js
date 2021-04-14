@@ -1343,7 +1343,7 @@ class Product extends PureComponent {
 const styles = StyleSheet.create({
     cardWrapper: {
         width: '100%',
-        borderRadius: 120
+        borderRadius: 12
     },
     cardItemStyle: {
         borderRadius: 12,

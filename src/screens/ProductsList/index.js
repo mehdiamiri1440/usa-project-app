@@ -414,36 +414,36 @@ class ProductsList extends PureComponent {
                             <ContentLoader
                                 speed={2}
                                 width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.3}
+                                height={deviceHeight * 0.39}
                                 style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
                                 backgroundColor="#f3f3f3"
                                 foregroundColor="#ecebeb"
 
                             >
 
-                                <Rect x="0" y="0" width="100%" height="140" />
-                                <Circle cx="90%" cy="165" r="10" />
-                                <Rect x="30%" y="210" width="120" height="10" />
-                                <Rect x="30%" y="160" width="100" height="10" />
-                                <Rect x="30%" y="185" width="120" height="10" />
+                                <Rect x="0" y="0" width="100%" height="200" />
+                                <Circle cx="90%" cy="225" r="10" />
+                                <Rect x="30%" y="285" width="120" height="10" />
+                                <Rect x="30%" y="220" width="100" height="10" />
+                                <Rect x="30%" y="255" width="120" height="10" />
 
                             </ContentLoader>
 
                             <ContentLoader
                                 speed={2}
                                 width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.3}
+                                height={deviceHeight * 0.39}
                                 style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
                                 backgroundColor="#f3f3f3"
                                 foregroundColor="#ecebeb"
 
                             >
 
-                                <Rect x="0" y="0" width="100%" height="140" />
-                                <Circle cx="90%" cy="165" r="10" />
-                                <Rect x="30%" y="210" width="120" height="10" />
-                                <Rect x="30%" y="160" width="100" height="10" />
-                                <Rect x="30%" y="185" width="120" height="10" />
+                                <Rect x="0" y="0" width="100%" height="200" />
+                                <Circle cx="90%" cy="225" r="10" />
+                                <Rect x="30%" y="285" width="120" height="10" />
+                                <Rect x="30%" y="220" width="100" height="10" />
+                                <Rect x="30%" y="255" width="120" height="10" />
 
                             </ContentLoader>
 
