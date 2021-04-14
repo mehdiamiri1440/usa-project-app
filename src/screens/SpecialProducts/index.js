@@ -39,7 +39,7 @@ class SpecialProducts extends PureComponent {
             from_record_number: 0,
             specialProductsListArray: [],
             categoryModalFlag: false,
-            to_record_number: 15,
+            to_record_number: 16,
             searchLoader: false,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
@@ -148,7 +148,7 @@ class SpecialProducts extends PureComponent {
         let item = {
             sort_by,
             from_record_number: 0,
-            to_record_number: 15
+            to_record_number: 16
         };
         if (text)
             item = {
@@ -173,7 +173,7 @@ class SpecialProducts extends PureComponent {
                 analytics().logEvent('search_text', {
                     text
                 })
-                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0, searchLoader: false })
+                this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
             })
             // .catch(error => {
             //     this.setState({ showModal: true })
@@ -354,14 +354,14 @@ class SpecialProducts extends PureComponent {
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
         if (province) {
@@ -376,7 +376,7 @@ class SpecialProducts extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, specialProductsListArray: [...result.payload.products] })
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
         });;
@@ -389,19 +389,19 @@ class SpecialProducts extends PureComponent {
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
 
         this.props.fetchAllSpecialProductsList(searchItem).then(result => {
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', specialProductsListArray: [...result.payload.products] })
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, province: '', city: '', specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
         });;
@@ -751,14 +751,14 @@ class SpecialProducts extends PureComponent {
                                     let searchItem = {
                                         from_record_number: 0,
                                         sort_by: item.value,
-                                        to_record_number: 15,
+                                        to_record_number: 16,
                                     };
                                     if (searchText && searchText.length) {
                                         searchItem = {
                                             from_record_number: 0,
                                             sort_by: item.value,
                                             search_text: searchText,
-                                            to_record_number: 15
+                                            to_record_number: 16
                                         }
                                     }
                                     if (province) {
@@ -769,7 +769,7 @@ class SpecialProducts extends PureComponent {
                                     }
 
                                     this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
-                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
+                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 16 })
                                     }).catch(error => {
                                         this.setState({
                                             //  showModal: true, 
@@ -844,7 +844,7 @@ class SpecialProducts extends PureComponent {
                                         from_record_number: 0,
                                         sort_by,
                                         search_text: item.category_name,
-                                        to_record_number: 15,
+                                        to_record_number: 16,
                                     };
                                     if (province) {
                                         searchItem = { ...searchItem, province_id: province }
@@ -854,7 +854,7 @@ class SpecialProducts extends PureComponent {
                                     }
 
                                     this.props.fetchAllSpecialProductsList(searchItem).then(_ => {
-                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
+                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 16, searchFlag: true })
                                     }).catch(error => {
                                         this.setState({
                                             //  showModal: true, 
@@ -990,8 +990,8 @@ class SpecialProducts extends PureComponent {
                     onEndReached={() => {
                         if (loaded && specialProductsListArray.length >= this.state.to_record_number)
                             this.setState({
-                                from_record_number: this.state.from_record_number + 15,
-                                to_record_number: this.state.to_record_number + 15,
+                                from_record_number: this.state.from_record_number + 16,
+                                to_record_number: this.state.to_record_number + 16,
                             }, () => {
                                 const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
@@ -1032,13 +1032,13 @@ class SpecialProducts extends PureComponent {
                         let item = {
                             from_record_number: 0,
                             sort_by: this.state.sort_by,
-                            to_record_number: 15,
+                            to_record_number: 16,
                         };
                         if (searchText && searchText.length) {
                             item = {
                                 from_record_number: 0,
                                 sort_by: this.state.sort_by,
-                                to_record_number: 15,
+                                to_record_number: 16,
                                 search_text: this.state.searchText
                             }
                         }
@@ -1053,7 +1053,7 @@ class SpecialProducts extends PureComponent {
                             this.setState({
                                 specialProductsListArray: [...result.payload.products],
                                 from_record_number: 0,
-                                to_record_number: 15
+                                to_record_number: 16
                             })
                         }).catch(error => {
                             // this.setState({ showModal: true })

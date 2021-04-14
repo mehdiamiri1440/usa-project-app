@@ -42,7 +42,7 @@ class ProductsList extends PureComponent {
             productsListArray: [],
             disableSubCategory: false,
             categoryModalFlag: false,
-            to_record_number: 15,
+            to_record_number: 16,
             sort_by: ENUMS.SORT_LIST.values.BM,
             searchLoader: false,
             loaded: false,
@@ -88,12 +88,12 @@ class ProductsList extends PureComponent {
             let item = {
                 from_record_number: 0,
                 sort_by: ENUMS.SORT_LIST.values.BM,
-                to_record_number: 15,
+                to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(result => {
                 this.setState({
                     productsListArray: [...this.props.productsListArray],
-                    to_record_number: 15,
+                    to_record_number: 16,
                     from_record_number: 0
                 })
             })
@@ -123,12 +123,12 @@ class ProductsList extends PureComponent {
             let item = {
                 from_record_number: 0,
                 sort_by: ENUMS.SORT_LIST.values.BM,
-                to_record_number: 15,
+                to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(result => {
                 this.setState({
                     productsListArray: [...result.payload.products],
-                    to_record_number: 15,
+                    to_record_number: 16,
                     from_record_number: 0
                 }, () => {
                     setTimeout(() => {
@@ -213,7 +213,7 @@ class ProductsList extends PureComponent {
         let item = {
             sort_by,
             from_record_number: 0,
-            to_record_number: 15
+            to_record_number: 16
         };
         if (text)
             item = {
@@ -238,7 +238,7 @@ class ProductsList extends PureComponent {
                 analytics().logEvent('search_text', {
                     text
                 })
-                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0, searchLoader: false })
+                this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
             }).catch(error => {
                 this.setState({
                     //  showModal: true, 
@@ -293,14 +293,14 @@ class ProductsList extends PureComponent {
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
         if (province) {
@@ -315,7 +315,7 @@ class ProductsList extends PureComponent {
                 this.props.productsListRef.current && this.props.productsListRef.current != null &&
                 this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
                 this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, productsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({
                 //  showModal: true, 
@@ -331,19 +331,19 @@ class ProductsList extends PureComponent {
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
 
         this.props.fetchAllProductsList(searchItem).then(result => {
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
+            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, province: '', city: '', productsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({
                 //  showModal: true, 
@@ -851,14 +851,14 @@ class ProductsList extends PureComponent {
                                     let searchItem = {
                                         from_record_number: 0,
                                         sort_by: item.value,
-                                        to_record_number: 15,
+                                        to_record_number: 16,
                                     };
                                     if (searchText && searchText.length) {
                                         searchItem = {
                                             from_record_number: 0,
                                             sort_by: item.value,
                                             search_text: searchText,
-                                            to_record_number: 15
+                                            to_record_number: 16
                                         }
                                     }
                                     if (province) {
@@ -869,7 +869,7 @@ class ProductsList extends PureComponent {
                                     }
 
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
+                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 16 })
                                     }).catch(error => {
                                         this.setState({
                                             // showModal: true, 
@@ -947,7 +947,7 @@ class ProductsList extends PureComponent {
                                         from_record_number: 0,
                                         sort_by,
                                         search_text: item.category_name,
-                                        to_record_number: 15,
+                                        to_record_number: 16,
                                     };
                                     if (province) {
                                         searchItem = { ...searchItem, province_id: province }
@@ -957,7 +957,7 @@ class ProductsList extends PureComponent {
                                     }
 
                                     this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
+                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 16, searchFlag: true })
                                     }).catch(error => {
                                         this.setState({
                                             //  showModal: true, 
@@ -1094,8 +1094,8 @@ class ProductsList extends PureComponent {
                     onEndReached={() => {
                         if (loaded && productsListArray.length >= this.state.to_record_number)
                             this.setState({
-                                from_record_number: this.state.from_record_number + 15,
-                                to_record_number: this.state.to_record_number + 15,
+                                from_record_number: this.state.from_record_number + 16,
+                                to_record_number: this.state.to_record_number + 16,
                             }, () => {
                                 const { from_record_number, to_record_number, sort_by, searchText } = this.state;
 
@@ -1159,13 +1159,13 @@ class ProductsList extends PureComponent {
                         let item = {
                             from_record_number: 0,
                             sort_by: this.state.sort_by,
-                            to_record_number: 15,
+                            to_record_number: 16,
                         };
                         if (searchText && searchText.length) {
                             item = {
                                 from_record_number: 0,
                                 sort_by: this.state.sort_by,
-                                to_record_number: 15,
+                                to_record_number: 16,
                                 search_text: this.state.searchText
                             }
                         }
@@ -1177,7 +1177,7 @@ class ProductsList extends PureComponent {
                         }
                         this.props.fetchAllProductsList(item).then(result => {
                             this.setState({
-                                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 15
+                                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
                             })
                         }).catch(error => {
                             this.setState({
