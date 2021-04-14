@@ -139,7 +139,7 @@ const CreditCardPayment = props => {
                     flexDirection: 'row-reverse',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#00C569',
+                    backgroundColor: '#556080',
                     padding: 10,
                 }}
             >
