@@ -27,7 +27,7 @@ const BuyAdList = props => {
     const [mobileNumber, setMobileNumber] = useState(false);
 
     const fetchContactInfo = ({ id, is_golden }) => {
-        const shouldShowPromotionModal = !!is_golden && active_pakage_type != 3;
+        const shouldShowPromotionModal = !!is_golden && active_pakage_type == 0;
         if (shouldShowPromotionModal) {
             setPromotionModalVisiblity(true)
         }

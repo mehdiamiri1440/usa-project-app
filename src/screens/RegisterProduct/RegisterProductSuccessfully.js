@@ -66,7 +66,7 @@ class RegisterProductSuccessfully extends Component {
         const {
             active_pakage_type
         } = user_info
-        const shouldShowPromotionModal = !!is_golden && active_pakage_type != 3;
+        const shouldShowPromotionModal = !!is_golden && active_pakage_type == 0;
         if (shouldShowPromotionModal) {
             this.setState({ showGoldenModal: true })
         }
