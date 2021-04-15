@@ -773,51 +773,129 @@ class RequestsTab extends Component {
                             </Text>
                         </Text>
 
-                        <Button
-                            onPress={event => this.openChat(event, item, true)}
-                            style={[styles.loginButton,
-                            { alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'center', alignItems: 'center' }]}
+                        <View style={{
+                            marginVertical: 15,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            width: '100%',
+                            paddingHorizontal: 5,
+                            alignSelf: 'center',
+                            justifyContent: 'center'
+                        }}
                         >
-
-                            <LinearGradient
-                                start={{ x: 0, y: 0.51, z: 1 }}
-                                end={{ x: 0.8, y: 0.2, z: 1 }}
-                                colors={['#c7a84f', '#f9f29f', '#c7a84f']}
-                                style={{
-                                    width: '100%',
-                                    borderWidth: 0,
-                                    paddingHorizontal: 10,
-                                    flexDirection: 'row-reverse',
-                                    alignItems: 'center',
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    height: 40,
-                                    borderRadius: 6,
-                                }}
-                            >
-                                <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#333'} size={20} />
-                                <Text style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18,
-                                    color: '#333',
-                                    paddingHorizontal: 3
-                                }}>
-                                    {locales('labels.messageToBuyer')}
-
-
-                                </Text>
-                                <ActivityIndicator size={20} color={'#333'}
-                                    animating={selectedButton == item.id &&
-                                        !!isUserAllowedToSendMessageLoading}
+                            {item.has_phone ?
+                                <Button
+                                    small
+                                    onPress={() => this.fetchContactInfo(item)}
                                     style={{
+                                        borderColor: '#c7a84f',
+                                        width: '47%',
+                                        zIndex: 1000,
                                         position: 'relative',
-                                        width: 10, height: 10, borderRadius: 5,
-                                        marginLeft: -10,
-                                        marginRight: 5
+                                        marginHorizontal: 15,
+                                        alignSelf: 'center',
+
                                     }}
-                                />
-                            </LinearGradient>
-                        </Button>
+                                >
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0.51, z: 1 }}
+                                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                                        colors={!item.isContactInfoShown ? ['#c7a84f', '#f9f29f', '#c7a84f'] : ['#E0E0E0', '#E0E0E0']}
+                                        style={{
+                                            width: '100%',
+                                            paddingHorizontal: 10,
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 8,
+                                            paddingLeft: 20,
+                                            padding: 8,
+                                            elevation: 0
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            solid
+                                            name='phone-square-alt'
+                                            color={!item.isContactInfoShown ? '#333' : 'white'}
+                                            size={20} />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                marginHorizontal: 3,
+                                                fontSize: 18,
+                                                color: !item.isContactInfoShown ? '#333' : 'white',
+                                                paddingHorizontal: 3
+                                            }}
+                                        >
+                                            {locales('labels.contactInfo')}
+                                        </Text>
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={15}
+                                                color='#333'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                                style={{
+                                                    position: 'absolute', right: 10,
+                                                    width: 5, height: 5, borderRadius: 5,
+                                                }}
+                                            />
+                                            : null}
+                                    </LinearGradient>
+
+                                </Button>
+                                : null}
+                            <Button
+                                onPress={event => this.openChat(event, item, true)}
+                                style={[styles.loginButton,
+                                {
+                                    alignSelf: 'center', backgroundColor: 'transparent',
+                                    borderWidth: 0, justifyContent: 'center', alignItems: 'center',
+                                    width: item.has_phone ? '47%' : '60%',
+                                    top: 5
+                                }]}
+                            >
+
+                                <LinearGradient
+                                    start={{ x: 0, y: 0.51, z: 1 }}
+                                    end={{ x: 0.8, y: 0.2, z: 1 }}
+                                    colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                    style={{
+                                        width: '100%',
+                                        borderWidth: 0,
+                                        paddingHorizontal: 10,
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        justifyContent: 'center',
+                                        height: 45,
+                                        borderRadius: 6,
+                                    }}
+                                >
+                                    <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#333'} size={20} />
+                                    <Text style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 18,
+                                        color: '#333',
+                                        paddingHorizontal: 3
+                                    }}>
+                                        {locales('labels.messageToBuyer')}
+
+
+                                    </Text>
+                                    <ActivityIndicator size={20} color={'#333'}
+                                        animating={selectedButton == item.id &&
+                                            !!isUserAllowedToSendMessageLoading}
+                                        style={{
+                                            position: 'relative',
+                                            width: 10, height: 10, borderRadius: 5,
+                                            marginLeft: -10,
+                                            marginRight: 5
+                                        }}
+                                    />
+                                </LinearGradient>
+                            </Button>
+                        </View>
                     </View>
                 }
             </View>
