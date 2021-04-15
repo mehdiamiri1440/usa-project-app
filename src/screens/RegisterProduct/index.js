@@ -80,8 +80,9 @@ class RegisterProduct extends React.Component {
 
         const { stepNumber } = this.state;
 
-        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
+        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading && stepNumber <= 6) {
             this.mainContainer.current.scrollTo({ y: 0 });
+        }
 
         if (this.props.resetTab) {
             this.props.resetRegisterProduct(false);
