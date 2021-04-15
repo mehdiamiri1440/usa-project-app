@@ -368,9 +368,9 @@ class RegisterProductSuccessfully extends Component {
                             }}
                             style={{
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                                width: '47%',
+                                width: '50%',
                                 zIndex: 1000,
-                                marginHorizontal: 15,
+                                marginHorizontal: 10,
                                 position: 'relative',
                                 alignSelf: 'center',
 
@@ -433,9 +433,9 @@ class RegisterProductSuccessfully extends Component {
                         style={[item.expired ? styles.disableLoginButton : styles.loginButton,
                         {
                             alignSelf: 'center', justifyContent: 'center', alignItems: 'center',
-                            width: item.has_phone ? '47%' : '70%',
+                            width: item.has_phone ? '50%' : '70%',
                             zIndex: 1000,
-                            marginHorizontal: 15,
+                            marginHorizontal: 10,
                             elevation: 0,
                             marginBottom: 0,
                             position: 'relative',
