@@ -17,6 +17,7 @@ import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as profileActions from '../../../redux/profile/actions';
 import { permissions } from '../../../utils';
 
+let myTimeout;
 class EditProfile extends Component {
     constructor(props) {
         super(props)
@@ -115,11 +116,11 @@ class EditProfile extends Component {
 
     handleContactInfoCheckBoxChange = _ => {
         this.setState({ shouldShowContactInfo: !this.state.shouldShowContactInfo }, _ => {
-            this.props.setPhoneNumberViewPermission(this.state.shouldShowContactInfo)
+            this.props.setPhoneNumberViewPermission(!!this.state.shouldShowContactInfo)
                 .then(result => {
                     this.setState({ showViewPermissionModal: true }, _ => {
-                        setTimeout(() => {
-                            this.setState({ showViewPermissionModal: false });
+                        myTimeout = setTimeout(() => {
+                            this.setState({ showViewPermissionModal: false }, _ => clearTimeout(myTimeout));
                         }, 3000);
                     })
                 });
@@ -284,6 +285,8 @@ class EditProfile extends Component {
 
                     }}>
                     <Dialog
+                        dismissable
+                        onDismiss={() => this.setState({ showViewPermissionModal: false })}
                         visible={showViewPermissionModal}
                         style={styles.dialogWrapper}
                     >
