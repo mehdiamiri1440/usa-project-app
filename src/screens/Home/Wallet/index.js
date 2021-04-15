@@ -417,7 +417,7 @@ const Wallet = props => {
                             value={inventory}
                             onChangeText={handleInputChange}
                             style={{
-                                padding: 20,
+                                minHeight: 60,
                                 color: '#00C569',
                                 fontSize: 20,
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',

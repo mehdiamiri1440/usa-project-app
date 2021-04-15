@@ -252,7 +252,7 @@ export default {
     'titles.sureToDeleteBuyAd': 'آیا از حذف این درخواست اطمینان دارید ؟',
     'titles.willBeSentToBuyers': 'برای کشاورزان و تامین کنندگان مرتبط ارسال می‌شود.',
     "titles.enterToBuskool": "ورود به باسکول",
-    'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت ثبت درخواست خرید خود را افزایش دهید.',
+    'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت پاسخگویی خود را افزایش دهید.',
     'titles.deleteCommentTitle': 'حذف نظر',
     'titles.minOrder': 'حداقل سفارش',
     'titles.increaseCapacity': 'افزایش ظرفیت',
