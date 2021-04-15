@@ -237,11 +237,17 @@ class EditProfile extends Component {
             userProfileLoading,
             editProfileMessage,
             editProfileError,
-
+            userProfile = {},
             phoneNumberViewPermissionLoading,
             phoneNumberViewPermission,
         } = this.props;
 
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller
+        } = user_info;
 
         const {
             profile_photo,
@@ -604,7 +610,7 @@ class EditProfile extends Component {
                                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     }}
                                 >
-                                    {locales('labels.contactInfoDescription')}
+                                    {is_seller ? locales('labels.contactInfoDescription') : locales('titles.buyersPermissionForContactInfo')}
                                 </Text>
 
                                 <View
@@ -616,6 +622,7 @@ class EditProfile extends Component {
                                     }}
                                 >
                                     <Checkbox
+                                        disabled={!!phoneNumberViewPermissionLoading}
                                         status={shouldShowContactInfo ? 'checked' : 'unchecked'}
                                         onPress={this.handleContactInfoCheckBoxChange}
                                         color='#00C569'
@@ -630,6 +637,11 @@ class EditProfile extends Component {
                                     >
                                         {locales('labels.limitAccess')}
                                     </Text>
+                                    <ActivityIndicator
+                                        animating={!!phoneNumberViewPermissionLoading}
+                                        color='#00C569'
+                                        style={{ marginHorizontal: 5 }}
+                                    />
                                 </View>
 
                             </View>

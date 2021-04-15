@@ -255,6 +255,7 @@ export default {
     'titles.icreaseYouRegisterRequstCapacity': 'لطفا ظرفیت پاسخگویی خود را افزایش دهید.',
     'titles.deleteCommentTitle': 'حذف نظر',
     'titles.minOrder': 'حداقل سفارش',
+    'titles.buyersPermissionForContactInfo': 'آیا اجازه می دهید فروشندگان واقعی به شماره تماس شما دسترسی داشته باشند ؟',
     'titles.increaseCapacity': 'افزایش ظرفیت',
     'titles.enterPhoneNumber': 'شماره موبایل خود را وارد نمایید',
     'titles.showMore': 'مشاهده بیشتر',
