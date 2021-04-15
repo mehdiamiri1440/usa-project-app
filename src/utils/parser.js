@@ -28,7 +28,7 @@ export const tryParseToInt = function (value) {
 };
 
 
-export const showDate = (item = {}, prevMessage = {}) => {
+export const showDate = (item = {}, prevMessage = {}, style = {}) => {
 
   let text = '';
 
@@ -70,7 +70,8 @@ export const showDate = (item = {}, prevMessage = {}) => {
           padding: 3,
           margin: 5,
           elevation: 1,
-          alignSelf: 'center'
+          alignSelf: 'center',
+          ...style
         }}
       >
         <Text

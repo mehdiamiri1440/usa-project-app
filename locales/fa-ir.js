@@ -261,6 +261,7 @@ export default {
     'titles.showMore': 'مشاهده بیشتر',
     'titles.showLess': 'مشاهده کمتر',
     'titles.forMoreDetails': 'برای مشاهده اطلاعات بیشتر',
+    'titles.dollarDescription': 'از کیف پول شما برای این دسترسی مبلغی کم شده است',
     'titles.here': 'اینجا',
     'titles.noInternetConnection': 'اتصال شما به اینترنت دچار مشکل شده‌است .',
     'titles.goForClick': 'را لمس کنید',
