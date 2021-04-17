@@ -1075,7 +1075,11 @@ class Product extends PureComponent {
                                             alignItems: 'flex-start', flexDirection: 'row-reverse'
                                         }}
                                     >
-                                        <View>
+                                        <View
+                                            style={{
+                                                width: '69%'
+                                            }}
+                                        >
                                             <View style={{ flexDirection: 'row-reverse' }}>
                                                 <Text
                                                     numberOfLines={1}
@@ -1083,7 +1087,7 @@ class Product extends PureComponent {
                                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                         marginHorizontal: 5,
                                                         fontSize: 13,
-                                                        maxWidth: '90%',
+                                                        maxWidth: '83%',
                                                         color: '#666666',
                                                     }}>
                                                     {`${first_name} ${last_name}`}
@@ -1104,7 +1108,47 @@ class Product extends PureComponent {
                                                     }}>%{response_rate}</Text>
                                                 </Text>} */}
                                         </View>
-
+                                        {response_rate > 0 && loggedInUserId != myuser_id ?
+                                            <TouchableOpacity
+                                                onPress={() => Toast.show({
+                                                    text: locales('labels.responseRate'),
+                                                    position: "bottom",
+                                                    style: {
+                                                        borderRadius: 10,
+                                                        bottom: 100, width: '90%',
+                                                        alignSelf: 'center', textAlign: 'center'
+                                                    },
+                                                    textStyle: {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                        textAlign: 'center'
+                                                    },
+                                                    duration: 3000
+                                                })}
+                                                style={{
+                                                    backgroundColor: '#f2f2f2',
+                                                    borderRadius: 20,
+                                                    paddingHorizontal: 5,
+                                                    flexDirection: 'row-reverse',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                {/* <FontAwesome5
+                                                    name='exchange-alt'
+                                                    size={15}
+                                                    color='#e41c38'
+                                                /> */}
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        color: '#e41c38',
+                                                        fontSize: 14
+                                                    }}
+                                                >
+                                                    {response_rate}%
+                                                </Text>
+                                            </TouchableOpacity>
+                                            : null}
                                     </View>
 
                                 </TouchableOpacity>
