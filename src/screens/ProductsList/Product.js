@@ -1077,7 +1077,7 @@ class Product extends PureComponent {
                                     >
                                         <View
                                             style={{
-                                                width: '69%'
+                                                width: '61%'
                                             }}
                                         >
                                             <View style={{ flexDirection: 'row-reverse' }}>
@@ -1087,7 +1087,7 @@ class Product extends PureComponent {
                                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                         marginHorizontal: 5,
                                                         fontSize: 13,
-                                                        maxWidth: '83%',
+                                                        maxWidth: '78%',
                                                         color: '#666666',
                                                     }}>
                                                     {`${first_name} ${last_name}`}
@@ -1110,6 +1110,7 @@ class Product extends PureComponent {
                                         </View>
                                         {response_rate > 0 && loggedInUserId != myuser_id ?
                                             <TouchableOpacity
+                                                activeOpacity={1}
                                                 onPress={() => Toast.show({
                                                     text: locales('labels.responseRate'),
                                                     position: "bottom",
@@ -1133,19 +1134,20 @@ class Product extends PureComponent {
                                                     alignItems: 'center',
                                                 }}
                                             >
-                                                {/* <FontAwesome5
+                                                <FontAwesome5
                                                     name='exchange-alt'
-                                                    size={15}
+                                                    size={13}
                                                     color='#e41c38'
-                                                /> */}
+                                                />
                                                 <Text
                                                     style={{
                                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                         color: '#e41c38',
-                                                        fontSize: 14
+                                                        fontSize: 13,
+                                                        marginHorizontal: 2
                                                     }}
                                                 >
-                                                    {response_rate}%
+                                                    %{response_rate}
                                                 </Text>
                                             </TouchableOpacity>
                                             : null}
