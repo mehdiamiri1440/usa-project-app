@@ -42,6 +42,7 @@ let homeRoutes = [
     { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='#556080' />, name: 'MyRequests' },
     { label: 'labels.suggestedSellers', icon: <FontAwesome5 size={25} name='list-ul' color='#556080' />, name: 'SpecialProducts' },
     { label: 'labels.messages', icon: <Entypo size={25} name='message' color='#556080' />, name: 'Messages' },
+
     // { label: 'titles.referralListTitle', icon: <Entypo size={25} name='share' color='#556080' />, name: 'UserFriends' },
     // { label: 'labels.guid', icon: <Entypo size={25} name='help' color='#556080' />, name: 'Guid' },
     { label: 'labels.myProducts', icon: <Fontisto size={25} name='list-1' color='#556080' />, name: 'MyProducts' },
@@ -50,6 +51,10 @@ let homeRoutes = [
     { label: 'labels.authentication', icon: <MaterialIcons size={25} name='verified-user' color='#556080' />, name: 'Authentication' },
     { label: 'labels.promoteRegistration', icon: <FontAwesome size={25} name='arrow-up' color='#fff' />, name: 'PromoteRegistration' },
     { label: 'titles.support', icon: <FontAwesome5 size={25} name='headset' color='#556080' />, name: 'ContactUs' },
+    {
+        label: 'labels.contactInfoShowingGuid', icon: <FontAwesome5
+            size={25} name='phone-square' color='#556080' />, name: 'ContactInfoGuid'
+    },
     { label: 'labels.settings', icon: <AntDesign size={25} name='setting' color='#556080' />, name: 'Settings' },
 ];
 class Home extends React.Component {
@@ -406,6 +411,7 @@ class Home extends React.Component {
                                 this.props.userProfile.user_info.active_pakage_type == 3) ? null :
                                 (!is_seller && (route.name == 'PromoteRegistration' ||
                                     route.name == 'Dashboard' || route.name == 'MyProducts' ||
+                                    route.name == 'ContactInfoGuid' ||
                                     route.name == 'SuggestedBuyers')) ? null :
                                     route.name == 'MyRequests' && is_seller || route.name == 'SpecialProducts' && is_seller ? null :
                                         route.name === 'PromoteRegistration' ?

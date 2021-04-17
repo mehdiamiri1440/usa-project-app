@@ -80,6 +80,7 @@ export default {
     'labels.writeAboutYourActivity': 'درباره کسب و کارتان بنویسید',
     'labels.hour': 'ساعت',
     'labels.contactInfoGuid': 'راهنمای اطلاعات تماس',
+    'labels.contactInfoShowingGuid': 'راهنمای نمایش اطلاعات تماس',
     'labels.contactInfoGuidDescription': 'شماره تماس شما به خریداران نمایش داده نمی‌شود . اگر مایل به نمایش شماره تماس خود به خریداران هستید ، راهنمای زیر را مطالعه کنید',
     'labels.responseToRequestExpired': 'فرصت پاسخ گویی شما به این خریدار به پایان رسیده است',
     'labels.dealEasier': 'آسوده‌تر معامله کنید',
