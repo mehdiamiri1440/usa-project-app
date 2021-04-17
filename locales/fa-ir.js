@@ -59,6 +59,8 @@ export default {
     'labels.authenticationButton': 'شما هم احراز هویت کنید',
     'labels.authenticationDescription': 'باسکول هیچ مسئولیتی در قبال سو رفتار کاربران احراز هویت شده به عهده نمی گیرد و صرفا اطلاعات هویتی آنها را مطابق توضیحات بالا تایید می کند.',
     'labels.myRequests': 'درخواست‌های من',
+    'labels.accessToBuyersContactInfo': 'دسترسی به اطلاعات تماس خریداران',
+    'labels.giveBuyersAccessToYourContactInfo': 'نمایش اطلاعات تماس شما به خریداران',
     'labels.noContactFound': 'مخاطبی یافت نشد',
     'labels.safeShopDescription': 'باسکول هیچ‌گونه منفعت و مسئولیتی در قبال معامله شما ندارد. با مطالعه‌ی راهنمای خرید امن ، آسوده‌تر معامله کنید. ',
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",

@@ -769,6 +769,70 @@ class PromoteRegistration extends React.Component {
 
                                 </View>
 
+                                <View style={{
+                                    flexDirection: 'row-reverse', marginTop: 10, padding: 10,
+                                    justifyContent: 'space-between', width: '100%'
+                                }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.accessToBuyersContactInfo')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <FontAwesome5
+                                            name='check-circle'
+                                            color='#21AD93'
+                                            style={{ marginHorizontal: 5 }}
+                                            solid
+                                            size={25}
+                                        />
+                                    </Text>
+
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row-reverse', marginTop: 10, padding: 10,
+                                    justifyContent: 'space-between', width: '100%'
+                                }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.giveBuyersAccessToYourContactInfo')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <FontAwesome5
+                                            name='check-circle'
+                                            color='#21AD93'
+                                            style={{ marginHorizontal: 5 }}
+                                            solid
+                                            size={25}
+                                        />
+                                    </Text>
+
+                                </View>
+
 
                                 <View style={{
                                     flexDirection: 'row-reverse', marginTop: 10, padding: 10,
@@ -1198,6 +1262,71 @@ class PromoteRegistration extends React.Component {
                                         />
                                     </Text>
                                 </View>
+
+                                <View style={{
+                                    flexDirection: 'row-reverse', marginTop: 10, padding: 10,
+                                    justifyContent: 'space-between', width: '100%'
+                                }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.accessToBuyersContactInfo')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <FontAwesome5
+                                            name='check-circle'
+                                            color='#21AD93'
+                                            style={{ marginHorizontal: 5 }}
+                                            solid
+                                            size={25}
+                                        />
+                                    </Text>
+
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row-reverse', marginTop: 10, padding: 10,
+                                    justifyContent: 'space-between', width: '100%'
+                                }}>
+                                    <View style={{ flexDirection: 'row-reverse' }}>
+
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: '#666666', marginHorizontal: 5, textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                            textAlignVertical: 'center', paddingBottom: 5
+                                        }}>
+                                            {locales('labels.giveBuyersAccessToYourContactInfo')}
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{
+                                        color: '#666666', fontSize: 20, textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>
+                                        <FontAwesome5
+                                            name='check-circle'
+                                            color='#21AD93'
+                                            style={{ marginHorizontal: 5 }}
+                                            solid
+                                            size={25}
+                                        />
+                                    </Text>
+
+                                </View>
+
 
                                 <View style={{
                                     flexDirection: 'row-reverse', marginTop: 10, padding: 10,
