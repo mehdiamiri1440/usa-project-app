@@ -560,7 +560,7 @@ class PromoteRegistration extends React.Component {
                                     </Text>
                                 </View>
                             </View>
-                            <Text
+                            {/* <Text
                                 style={{
                                     color: '#38485F',
                                     textAlign: 'center',
@@ -569,7 +569,7 @@ class PromoteRegistration extends React.Component {
                                     fontSize: 18
                                 }}>
                                 {` ${locales('titles.promoteDescriptionTextFourth')} `}
-                            </Text>
+                            </Text> */}
                         </View>
                     </View>
                         : null}

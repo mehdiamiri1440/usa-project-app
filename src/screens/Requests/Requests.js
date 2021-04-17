@@ -480,7 +480,7 @@ class Requests extends PureComponent {
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {accessToContactInfoErrorMessage}
                         </Paragraph>
-                        {statusCode == 408 ? <View style={{
+                        {statusCode == 423 ? <View style={{
                             width: '100%',
                             textAlign: 'center',
                             alignItems: 'center'
