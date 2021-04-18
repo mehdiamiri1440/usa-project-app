@@ -1210,7 +1210,7 @@ class Product extends PureComponent {
                                             numberOfLines={1}
                                             style={{
                                                 color: '#474747', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 12,
-                                                textAlignVertical: 'center'
+                                                textAlignVertical: 'center', width: '90%'
                                             }}
                                         >
                                             {province_name} - {city_name}
@@ -1258,10 +1258,10 @@ class Product extends PureComponent {
                                             textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                                             duration: 3000
                                         })}
-                                        name='chart-line' size={16} color='white' style={[
+                                        name='chart-line' size={14} color='white' style={[
                                             {
-                                                position: 'absolute', right: 0, bottom: 3,
-                                                width: 30, height: 30, backgroundColor: '#38485F', borderRadius: 4,
+                                                position: 'absolute', right: 0, bottom: -1,
+                                                width: 25, height: 25, backgroundColor: '#38485F', borderRadius: 4,
                                                 textAlign: 'center', textAlignVertical: 'center', margin: 5, padding: 5
                                             }]}
                                     />}
