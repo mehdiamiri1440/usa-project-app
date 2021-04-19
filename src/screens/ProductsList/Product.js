@@ -1158,14 +1158,14 @@ class Product extends PureComponent {
                                             </Text>
                                         </TouchableOpacity>
                                         :
-                                        loggedInUserId == myuser_id
+                                        loggedInUserId == myuser_id && shouldShowMyButtons
                                             ?
                                             <TouchableOpacity
                                                 onPress={() => this.setState({ deleteProductFlag: true })}
                                                 style={{
                                                     alignItems: 'center',
                                                     flexDirection: 'row-reverse',
-                                                    right: -25
+                                                    right: '-5%'
                                                 }}
                                             >
                                                 <FontAwesome5
@@ -1337,6 +1337,8 @@ class Product extends PureComponent {
                                                 flex: 1,
                                                 marginRight: 15,
                                                 backgroundColor: '#E41C38',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                                 height: 40,
                                                 elevation: 0
                                             }}
@@ -1345,10 +1347,10 @@ class Product extends PureComponent {
 
                                             <View
                                                 style={[styles.textCenterView, styles.buttonText]}>
-                                                <Text style={[styles.textWhite, styles.marginTop10]}>
+                                                <Text style={[styles.textWhite, { marginHorizontal: 5 }]}>
                                                     <FontAwesome5 name='chart-line' size={20} color='white' />
                                                 </Text>
-                                                <Text style={[styles.textWhite, styles.textBold, styles.margin5, { marginTop: 10 }]}>
+                                                <Text style={[styles.textWhite, styles.textBold]}>
                                                     {locales('titles.elevateProduct')}
                                                 </Text>
                                             </View>

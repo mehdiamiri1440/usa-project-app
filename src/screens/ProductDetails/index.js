@@ -560,7 +560,7 @@ class ProductDetails extends PureComponent {
             loggedInUserId,
             productDetailsInfoLoading,
 
-            contactInfoLoading,
+            sellerMobileNumberLoading,
             walletElevatorPayLoading,
 
             userProfile = {}
@@ -2087,7 +2087,7 @@ class ProductDetails extends PureComponent {
                                     }]}
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
-                                        {!contactInfoLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                        {!sellerMobileNumberLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
                                             <FontAwesome5 solid name='phone-square-alt'
                                                 size={20} />
                                         </Text> :
@@ -2352,7 +2352,8 @@ const mapStateToProps = (state) => {
     const {
         profileReducer,
         authReducer,
-        productsListReducer
+        productsListReducer,
+        buyAdRequestReducer,
     } = state;
 
     const {
@@ -2378,7 +2379,7 @@ const mapStateToProps = (state) => {
         editProductMessage,
         editProductLoading,
 
-        buyerMobileNumberLoading
+        sellerMobileNumberLoading
     } = productsListReducer;
 
     const {
@@ -2395,6 +2396,7 @@ const mapStateToProps = (state) => {
     const {
         loggedInUserId
     } = authReducer;
+
 
     return {
         productDetails,
@@ -2423,7 +2425,7 @@ const mapStateToProps = (state) => {
 
         userProfile,
 
-        buyerMobileNumberLoading,
+        sellerMobileNumberLoading,
 
 
         walletElevatorPayLoading,

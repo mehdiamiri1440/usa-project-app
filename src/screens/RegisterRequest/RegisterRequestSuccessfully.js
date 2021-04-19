@@ -22,7 +22,7 @@ const RegisterRequestSuccessfully = props => {
 
     const {
         products = [],
-        buyerMobileNumberLoading,
+        sellerMobileNumberLoading = false,
     } = props;
 
     const [selectedContact, setSelectedContact] = useState({});
@@ -157,7 +157,6 @@ const RegisterRequestSuccessfully = props => {
     };
 
     const fetchContactInfo = item => {
-
         const { id, myuser_id } = item;
 
         setSelectedButton(id);
@@ -473,11 +472,24 @@ const RegisterRequestSuccessfully = props => {
                                             elevation: 0
                                         }}
                                     >
-                                        <FontAwesome5
-                                            solid
-                                            name='phone-square-alt'
-                                            color='white'
-                                            size={20} />
+                                        {!!sellerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={20}
+                                                color='white'
+                                                animating
+                                                style={{
+                                                    position: 'relative',
+                                                    width: 10, height: 10, borderRadius: 5,
+                                                    marginRight: 5
+                                                }}
+                                            />
+                                            :
+                                            <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color='white'
+                                                size={20} />
+                                        }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -489,18 +501,7 @@ const RegisterRequestSuccessfully = props => {
                                         >
                                             {locales('labels.contactInfo')}
                                         </Text>
-                                        {buyerMobileNumberLoading && selectedButton == item.id ?
-                                            <ActivityIndicator
-                                                size={20}
-                                                color='white'
-                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                                style={{
-                                                    position: 'relative',
-                                                    width: 10, height: 10, borderRadius: 5,
-                                                    marginRight: 5
-                                                }}
-                                            />
-                                            : null}
+
                                     </LinearGradient>
 
                                 </Button>
@@ -1300,7 +1301,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         products: state.registerProductReducer.products,
-        buyerMobileNumberLoading: state.buyAdRequestReducer.buyerMobileNumberLoading
+        sellerMobileNumberLoading: state.productsListReducer.sellerMobileNumberLoading
     }
 };
 const mapDispatchToProps = dispatch => {
