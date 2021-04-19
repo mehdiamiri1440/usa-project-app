@@ -420,12 +420,10 @@ class ProductsList extends PureComponent {
                                 foregroundColor="#ecebeb"
 
                             >
-
                                 <Rect x="0" y="0" width="100%" height="170" />
-                                <Rect x="40%" y="190" width="100" height="10" />
-                                <Rect x="30%" y="215" width="120" height="10" />
-                                <Rect x="30%" y="235" width="120" height="10" />
-
+                                <Rect x="35%" y="180" width="100" height="10" />
+                                <Rect x="25%" y="205" width="120" height="10" />
+                                <Rect x="25%" y="225" width="120" height="10" />
                             </ContentLoader>
 
                             <ContentLoader
@@ -437,13 +435,10 @@ class ProductsList extends PureComponent {
                                 foregroundColor="#ecebeb"
 
                             >
-
-
                                 <Rect x="0" y="0" width="100%" height="170" />
-                                <Rect x="40%" y="190" width="100" height="10" />
-                                <Rect x="30%" y="215" width="120" height="10" />
-                                <Rect x="30%" y="235" width="120" height="10" />
-
+                                <Rect x="35%" y="180" width="100" height="10" />
+                                <Rect x="25%" y="205" width="120" height="10" />
+                                <Rect x="25%" y="225" width="120" height="10" />
                             </ContentLoader>
 
                         </View>
