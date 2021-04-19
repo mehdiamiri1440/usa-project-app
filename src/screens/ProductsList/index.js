@@ -422,9 +422,9 @@ class ProductsList extends PureComponent {
                             >
 
                                 <Rect x="0" y="0" width="100%" height="170" />
-                                <Rect x="30%" y="255" width="120" height="10" />
                                 <Rect x="40%" y="190" width="100" height="10" />
-                                <Rect x="30%" y="225" width="120" height="10" />
+                                <Rect x="30%" y="215" width="120" height="10" />
+                                <Rect x="30%" y="235" width="120" height="10" />
 
                             </ContentLoader>
 
@@ -440,9 +440,9 @@ class ProductsList extends PureComponent {
 
 
                                 <Rect x="0" y="0" width="100%" height="170" />
-                                <Rect x="30%" y="255" width="120" height="10" />
                                 <Rect x="40%" y="190" width="100" height="10" />
-                                <Rect x="30%" y="225" width="120" height="10" />
+                                <Rect x="30%" y="215" width="120" height="10" />
+                                <Rect x="30%" y="235" width="120" height="10" />
 
                             </ContentLoader>
 
