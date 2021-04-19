@@ -435,46 +435,55 @@ class SpecialProducts extends PureComponent {
                             style={{
                                 paddingBottom: 10,
                                 marginBottom: 15,
+                                flex: 1,
+                                width: '100%',
+                                height: deviceHeight * 0.35,
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                                 alignItems: 'center'
 
                             }}>
-                            <ContentLoader
-                                speed={2}
-                                width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.39}
-                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-
+                            <View
+                                style={{
+                                    borderRadius: 12, marginHorizontal: 3,
+                                    borderWidth: 1, borderColor: '#eee', width: '45%', height: '100%'
+                                }}
                             >
+                                <ContentLoader
+                                    speed={2}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
 
-                                <Rect x="0" y="0" width="100%" height="200" />
-                                <Circle cx="90%" cy="225" r="10" />
-                                <Rect x="30%" y="285" width="120" height="10" />
-                                <Rect x="30%" y="220" width="100" height="10" />
-                                <Rect x="30%" y="255" width="120" height="10" />
+                                >
+                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="30%" y="65%" width="100" height="10" />
+                                    <Rect x="15%" y="73%" width="120" height="10" />
+                                    <Rect x="15%" y="80%" width="120" height="10" />
+                                </ContentLoader>
+                            </View>
 
-                            </ContentLoader>
-
-                            <ContentLoader
-                                speed={2}
-                                width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.39}
-                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-
+                            <View
+                                style={{
+                                    borderRadius: 12, marginHorizontal: 3,
+                                    borderWidth: 1, borderColor: '#eee', width: '45%', height: '100%'
+                                }}
                             >
+                                <ContentLoader
+                                    speed={2}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
 
-                                <Rect x="0" y="0" width="100%" height="200" />
-                                <Circle cx="90%" cy="225" r="10" />
-                                <Rect x="30%" y="285" width="120" height="10" />
-                                <Rect x="30%" y="220" width="100" height="10" />
-                                <Rect x="30%" y="255" width="120" height="10" />
-
-                            </ContentLoader>
+                                >
+                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="30%" y="65%" width="100" height="10" />
+                                    <Rect x="15%" y="73%" width="120" height="10" />
+                                    <Rect x="15%" y="80%" width="120" height="10" />
+                                </ContentLoader>
+                            </View>
 
                         </View>
                     )}

@@ -17,6 +17,7 @@ import { deviceHeight, deviceWidth, formatter } from '../../utils';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 let stepsArray = [1, 2, 3, 4, 5]
@@ -139,6 +140,7 @@ class SignUp extends React.Component {
             verification_code: verificationCode
         };
         this.props.submitRegister(registerObject).then(result => {
+            AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
             analytics().logEvent('successfull_register', {
                 mobile_number: mobileNumber
             })

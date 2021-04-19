@@ -108,46 +108,34 @@ class MyProducts extends Component {
                             style={{
                                 paddingBottom: 10,
                                 marginBottom: 15,
+                                flex: 1,
+                                width: '100%',
+                                height: deviceHeight * 0.35,
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                                 alignItems: 'center'
 
                             }}>
-                            <ContentLoader
-                                speed={2}
-                                width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.39}
-                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-
+                            <View
+                                style={{
+                                    borderRadius: 12, marginHorizontal: 3,
+                                    borderWidth: 1, borderColor: '#eee', width: '95%', height: '100%'
+                                }}
                             >
+                                <ContentLoader
+                                    speed={2}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
 
-                                <Rect x="0" y="0" width="100%" height="200" />
-                                <Circle cx="90%" cy="225" r="10" />
-                                <Rect x="30%" y="285" width="120" height="10" />
-                                <Rect x="30%" y="220" width="100" height="10" />
-                                <Rect x="30%" y="255" width="120" height="10" />
-
-                            </ContentLoader>
-
-                            <ContentLoader
-                                speed={2}
-                                width={deviceWidth * 0.45}
-                                height={deviceHeight * 0.39}
-                                style={{ borderRadius: 12, marginHorizontal: 3, borderWidth: 1, borderColor: '#eee' }}
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-
-                            >
-
-                                <Rect x="0" y="0" width="100%" height="200" />
-                                <Circle cx="90%" cy="225" r="10" />
-                                <Rect x="30%" y="285" width="120" height="10" />
-                                <Rect x="30%" y="220" width="100" height="10" />
-                                <Rect x="30%" y="255" width="120" height="10" />
-
-                            </ContentLoader>
+                                >
+                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="25%" y="65%" width="240" height="10" />
+                                    <Rect x="20%" y="73%" width="270" height="10" />
+                                    <Rect x="20%" y="80%" width="270" height="10" />
+                                </ContentLoader>
+                            </View>
 
                         </View>
                     )}
@@ -248,19 +236,18 @@ class MyProducts extends Component {
                     data={myProductsArray}
                     horizontal={false}
                     style={{ backgroundColor: 'white' }}
-                    numColumns={2}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center' }}
                     renderItem={({ item, index }) => {
                         return (
                             <View
                                 style={{
-                                    width: '47%', margin: 5,
+                                    width: '95%', marginTop: 10, alignSelf: 'center',
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
                             >
                                 <Product
                                     minimumOrderRef={this.minimumOrderRef}
                                     maximumPriceRef={this.maximumPriceRef}
+                                    shouldShowMyButtons
                                     amountRef={this.amountRef}
                                     minimumPriceRef={this.minimumPriceRef}
                                     productItem={item}

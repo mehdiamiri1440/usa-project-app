@@ -273,7 +273,8 @@ class Product extends PureComponent {
             deleteProductStatus,
             deleteProductLoading,
             walletElevatorPayLoading,
-            width = deviceWidth * 0.97
+            width = deviceWidth * 0.97,
+            shouldShowMyButtons = false
         } = this.props;
         const { main, photos, profile_info, user_info } = this.props.productItem;
         const {
@@ -738,7 +739,7 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>{locales('titles.portalPay')}
                                 </Text>
                             </Button>
-                            <Button
+                            {/* <Button
                                 style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170 }]}
                                 onPress={_ => this.doWalletElevatorPay(productId)}
                             >
@@ -752,7 +753,7 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>
                                     {locales('titles.walletPay')}
                                 </Text>
-                            </Button>
+                            </Button> */}
                         </View>
 
                         {walletElevatorPaymentError ? <Text
@@ -779,7 +780,7 @@ class Product extends PureComponent {
                                 onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
                             >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
@@ -1156,7 +1157,35 @@ class Product extends PureComponent {
                                                 %{response_rate}
                                             </Text>
                                         </TouchableOpacity>
-                                        : null}
+                                        :
+                                        loggedInUserId == myuser_id
+                                            ?
+                                            <TouchableOpacity
+                                                onPress={() => this.setState({ deleteProductFlag: true })}
+                                                style={{
+                                                    alignItems: 'center',
+                                                    flexDirection: 'row-reverse',
+                                                    right: -25
+                                                }}
+                                            >
+                                                <FontAwesome5
+                                                    name='trash'
+                                                    size={13}
+                                                    color='#E41C38'
+                                                    style={{ marginHorizontal: 3 }}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        color: '#E41C38',
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 14,
+                                                        textAlignVertical: 'center',
+                                                    }}>
+                                                    {locales('labels.deleteProduct')}
+                                                </Text>
+
+                                            </TouchableOpacity>
+                                            : null
+                                    }
 
                                 </TouchableOpacity>
 
@@ -1282,32 +1311,12 @@ class Product extends PureComponent {
                                 </View>
 
                             </View>
-                            {/* 
-                            <View style={[styles.actionsWrapper, {
-                                paddingHorizontal: 10,
-                                marginTop: 30
-                            }]}>
-                                {loggedInUserId != myuser_id ?
-                                    <Button
-                                        onPress={() => {
-                                            analytics().logEvent('open_chat', {
-                                                product_id: productId
-                                            });
-                                            this.props.navigation.navigate('Chat', { profile_photo, contact: selectedContact })
-                                        }}
-                                        style={[styles.loginButton, { flex: 1 }]}
-                                    >
-                                        <View style={[styles.textCenterView, styles.buttonText]}>
-                                            <Text style={[styles.textWhite, styles.margin5, { marginTop: 5 }]}>
-                                                <FontAwesome5 solid name='envelope' size={20} />
-                                            </Text>
-                                            <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: 3 }]}>
-                                                {locales('titles.achiveSaleStatus')}
-                                            </Text>
-                                        </View>
 
-                                    </Button>
-                                    :
+                            {loggedInUserId == myuser_id && shouldShowMyButtons ?
+                                <View style={[styles.actionsWrapper, {
+                                    paddingHorizontal: 10,
+                                }]}>
+
                                     <View style={{
                                         flexWrap: 'wrap',
                                         flexDirection: 'row',
@@ -1371,18 +1380,10 @@ class Product extends PureComponent {
 
                                         </Button>
                                     </View>
-                                }
-                                {!!is_elevated && <FontAwesome5
-                                    onPress={() => Toast.show({
-                                        text: locales('titles.elevatorHasAdded'),
-                                        position: "bottom",
-                                        style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
-                                        textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                                        duration: 3000
-                                    })}
-                                    name='chart-line' size={20} color='white' style={[styles.elevatorIcon]}
-                                />}
-                            </View> */}
+
+                                </View>
+                                : null
+                            }
 
                         </TouchableOpacity>
                     </View>

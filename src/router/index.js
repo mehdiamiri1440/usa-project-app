@@ -195,33 +195,44 @@ const App = (props) => {
   const checkForShowingContactInfoGuid = _ => {
 
     if (!!is_seller && wallet_balance == 0) {
+      AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
+        isNewUser = JSON.parse(isNewUser);
+        if (isNewUser == true) {
+          AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
+            setTimeout(() => {
+              setShowContactInfoGuidModal(true);
+            }, 3600000);
+          })
+        }
+        else {
 
-      AsyncStorage.getItem('@contactInfoShownTimes').then(result => {
-        result = JSON.parse(result);
-        if (result && result.length > 0) {
+          AsyncStorage.getItem('@contactInfoShownTimes').then(result => {
+            result = JSON.parse(result);
+            if (result && result.length > 0) {
 
-          if (result.length < 5) {
+              if (result.length < 5) {
 
-            if (moment().diff(result[result.length - 1], 'hours') >= 24) {
+                if (moment().diff(result[result.length - 1], 'hours') >= 24) {
+                  result.push(moment());
+                  AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
+                    setShowContactInfoGuidModal(true);
+                  })
+                }
+
+              }
+
+            }
+            else {
+              result = [];
               result.push(moment());
               AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
                 setShowContactInfoGuidModal(true);
               })
             }
-
-          }
-
-        }
-        else {
-          result = [];
-          result.push(moment());
-          AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
-            setShowContactInfoGuidModal(true);
           })
         }
       })
     }
-
   };
 
   const checkForUpdate = _ => {

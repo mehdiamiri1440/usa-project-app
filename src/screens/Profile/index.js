@@ -796,6 +796,7 @@ class Profile extends PureComponent {
                                     >
                                         <Product
                                             key={index}
+                                            shouldShowMyButtons
                                             productItem={item}
                                             fetchAllProducts={this.fetchAllProducts}
                                             {...this.props}
