@@ -918,7 +918,7 @@ class Product extends PureComponent {
                             <View
                                 style={{
                                     width: '100%',
-                                    height: deviceHeight * 0.25,
+                                    height: deviceHeight * 0.2,
 
                                 }}
                             >
@@ -972,9 +972,9 @@ class Product extends PureComponent {
                                         flexDirection: 'row-reverse', zIndex: 1,
                                         justifyContent: 'center', alignItems: 'center',
                                         backgroundColor: 'rgba(0,0,0,0.6)', position: 'absolute',
-                                        right: 10, top: 5, borderRadius: 12, padding: 3, width: 46
+                                        right: 5, top: 5, borderRadius: 50, width: 46
                                     }}>
-                                    <Entypo name='images' size={20} color='white' />
+                                    <Entypo name='images' size={15} color='white' />
                                     <Text style={{ color: 'white', marginHorizontal: 2 }}>
                                         {photos_count <= 9 ? photos_count : '9+'}
                                     </Text>
@@ -1009,12 +1009,13 @@ class Product extends PureComponent {
                                         justifyContent: 'flex-end',
                                         alignItems: 'flex-end'
                                     }}
-                                    colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
+                                    colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)']}
                                 >
                                     <Text
                                         numberOfLines={1}
                                         style={{
                                             color: '#E9ECEF', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14,
+                                            bottom: -7
 
                                         }}
                                     >
@@ -1033,10 +1034,11 @@ class Product extends PureComponent {
                                     flexDirection: 'row-reverse',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginVertical: 5,
+                                    paddingVertical: 5,
                                     borderBottomColor: '#E9ECEF',
                                     borderBottomWidth: 1,
-                                    width: '95%', alignSelf: 'center'
+                                    width: '95%',
+                                    alignSelf: 'center'
                                 }}>
                                 <TouchableOpacity
                                     onPress={() => {
@@ -1063,21 +1065,23 @@ class Product extends PureComponent {
                                             :
                                             require('../../../assets/icons/user.png')
                                         } /> */}
-                                    <FontAwesome5
-                                        name='user-circle'
-                                        color='#777777'
-                                        solid
-                                        size={18}
-                                    />
                                     <View
                                         style={{
-                                            justifyContent: 'space-between',
-                                            alignItems: 'flex-start', flexDirection: 'row-reverse'
+                                            justifyContent: 'flex-start',
+                                            maxWidth: '90%',
+                                            alignItems: 'center',
+                                            flexDirection: 'row-reverse'
                                         }}
                                     >
+                                        <FontAwesome5
+                                            name='user-circle'
+                                            color='#777777'
+                                            solid
+                                            size={16}
+                                        />
                                         <View
                                             style={{
-                                                width: '61%'
+                                                width: '72%',
                                             }}
                                         >
                                             <View style={{ flexDirection: 'row-reverse' }}>
@@ -1087,7 +1091,7 @@ class Product extends PureComponent {
                                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                         marginHorizontal: 5,
                                                         fontSize: 13,
-                                                        maxWidth: '78%',
+                                                        maxWidth: '95%',
                                                         color: '#666666',
                                                     }}>
                                                     {`${first_name} ${last_name}`}
@@ -1108,50 +1112,51 @@ class Product extends PureComponent {
                                                     }}>%{response_rate}</Text>
                                                 </Text>} */}
                                         </View>
-                                        {response_rate > 0 && loggedInUserId != myuser_id ?
-                                            <TouchableOpacity
-                                                activeOpacity={1}
-                                                onPress={() => Toast.show({
-                                                    text: locales('labels.responseRate'),
-                                                    position: "bottom",
-                                                    style: {
-                                                        borderRadius: 10,
-                                                        bottom: 100, width: '90%',
-                                                        alignSelf: 'center', textAlign: 'center'
-                                                    },
-                                                    textStyle: {
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                        textAlign: 'center'
-                                                    },
-                                                    duration: 3000
-                                                })}
+                                    </View>
+
+                                    {response_rate > 0 && loggedInUserId != myuser_id ?
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => Toast.show({
+                                                text: locales('labels.responseRate'),
+                                                position: "bottom",
+                                                style: {
+                                                    borderRadius: 10,
+                                                    bottom: 100, width: '90%',
+                                                    alignSelf: 'center', textAlign: 'center'
+                                                },
+                                                textStyle: {
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    textAlign: 'center'
+                                                },
+                                                duration: 3000
+                                            })}
+                                            style={{
+                                                backgroundColor: '#f2f2f2',
+                                                borderRadius: 20,
+                                                paddingHorizontal: 5,
+                                                flexDirection: 'row-reverse',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <FontAwesome5
+                                                name='exchange-alt'
+                                                size={10}
+                                                color='#e41c38'
+                                            />
+                                            <Text
                                                 style={{
-                                                    backgroundColor: '#f2f2f2',
-                                                    borderRadius: 20,
-                                                    paddingHorizontal: 5,
-                                                    flexDirection: 'row-reverse',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    color: '#e41c38',
+                                                    fontSize: 11,
+                                                    marginHorizontal: 2
                                                 }}
                                             >
-                                                <FontAwesome5
-                                                    name='exchange-alt'
-                                                    size={13}
-                                                    color='#e41c38'
-                                                />
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        color: '#e41c38',
-                                                        fontSize: 13,
-                                                        marginHorizontal: 2
-                                                    }}
-                                                >
-                                                    %{response_rate}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            : null}
-                                    </View>
+                                                %{response_rate}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        : null}
 
                                 </TouchableOpacity>
 
@@ -1195,7 +1200,8 @@ class Product extends PureComponent {
                             </View>
 
                             <View style={{
-                                width: '100%', paddingHorizontal: 5,
+                                width: '100%', paddingHorizontal: 10,
+                                paddingBottom: 5
 
                             }}>
 
@@ -1254,14 +1260,14 @@ class Product extends PureComponent {
                                         onPress={() => Toast.show({
                                             text: locales('titles.elevatorHasAdded'),
                                             position: "bottom",
-                                            style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
+                                            style: { borderRadius: 8, bottom: 100, width: '90%', alignSelf: 'center', textAlign: 'center' },
                                             textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
                                             duration: 3000
                                         })}
                                         name='chart-line' size={14} color='white' style={[
                                             {
-                                                position: 'absolute', right: 0, bottom: -1,
-                                                width: 25, height: 25, backgroundColor: '#38485F', borderRadius: 4,
+                                                position: 'absolute', right: -5, bottom: -1,
+                                                width: 25, height: 25, backgroundColor: '#38485F', borderRadius: 8,
                                                 textAlign: 'center', textAlignVertical: 'center', margin: 5, padding: 5
                                             }]}
                                     />}
@@ -1396,7 +1402,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#fff',
         elevation: 0,
-        borderWidth: 2,
+        borderWidth: 1,
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',

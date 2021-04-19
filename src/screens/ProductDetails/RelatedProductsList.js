@@ -35,7 +35,7 @@ const RelatedProductsList = props => {
                     borderColor: '#E9ECEF',
                     backgroundColor: '#fff',
                     overflow: 'hidden',
-                    width: 250,
+                    width: 235,
                 }}
                 activeOpacity={1}
                 onPress={() => {
@@ -91,7 +91,6 @@ const RelatedProductsList = props => {
                 borderRadius: 4,
                 overflow: 'hidden',
                 marginBottom: 20,
-                marginHorizontal: 7,
             }}
             initialNumToRender={2}
             horizontal={true}

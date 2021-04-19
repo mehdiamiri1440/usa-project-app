@@ -127,38 +127,51 @@ const CreditCardPayment = props => {
 
             </RBSheet>
 
-            <TouchableOpacity
-                onPress={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    refRBSheet.current.open()
-                }}
-                activeOpacity={1}
+            <View
                 style={{
                     width: deviceWidth,
-                    flexDirection: 'row-reverse',
+                    padding: 10,
+                    elevation: 5,
+                    backgroundColor: 'white',
+                    alignSelf: 'center',
                     justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#556080',
-                    padding: 15,
+                    alignItems: 'center'
                 }}
             >
-                <FontAwesome5
-                    name='credit-card'
-                    color='white'
-                    size={20}
-                />
-                <Text
+                <TouchableOpacity
+                    onPress={event => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        refRBSheet.current.open()
+                    }}
+                    activeOpacity={1}
                     style={{
-                        color: 'white',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        marginHorizontal: 7,
-                        fontSize: 16
+                        width: '100%',
+                        borderRadius: 4,
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#556080',
+                        padding: 15,
                     }}
                 >
-                    {locales('labels.transferAmongCreditCart')}
-                </Text>
-            </TouchableOpacity>
+                    <FontAwesome5
+                        name='credit-card'
+                        color='white'
+                        size={20}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 7,
+                            fontSize: 16
+                        }}
+                    >
+                        {locales('labels.transferAmongCreditCart')}
+                    </Text>
+                </TouchableOpacity>
+            </View>
 
         </>
     )

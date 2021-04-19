@@ -1735,7 +1735,7 @@ class ProductDetails extends PureComponent {
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 fontSize: 14, color: '#e41c38'
                                             }}>
-                                                %{response_rate}
+                                                {response_rate}%
                                             </Text>
                                         </Text> : null}
 
@@ -1763,8 +1763,8 @@ class ProductDetails extends PureComponent {
                                     <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center' }}>
                                         <Text style={{
                                             textAlign: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 14,
                                             marginHorizontal: 3,
                                             color: '#00C569',
                                         }}>
@@ -1772,7 +1772,7 @@ class ProductDetails extends PureComponent {
                                         </Text>
                                         <FontAwesome5
                                             color='#00C569'
-                                            size={18}
+                                            size={16}
                                             name='angle-left'
                                         />
                                     </View>
