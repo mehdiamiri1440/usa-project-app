@@ -2124,14 +2124,14 @@ class ProductDetails extends PureComponent {
                                         marginTop: 7,
                                         color: (!is_seller && has_phone) ? '#556080' : 'white',
                                     }]}>
-                                        <FontAwesome name='envelope' size={20} />
+                                        <FontAwesome5 solid name='comment-alt' size={20} />
                                     </Text>
                                     <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18,
                                     {
                                         color: (!is_seller && has_phone) ? '#556080' : 'white',
                                     }
                                     ]}>
-                                        {locales('titles.sendMessage')}
+                                        {(!is_seller && has_phone) ? locales('labels.chat') : locales('labels.chatWithSeller')}
                                     </Text>
                                 </View>
 

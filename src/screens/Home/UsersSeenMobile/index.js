@@ -9,7 +9,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as profileActions from '../../../redux/profile/actions';
-import { deviceWidth, deviceHeight, parser } from '../../../utils';
+import { deviceWidth, deviceHeight, dataGenerator } from '../../../utils';
 
 const UsersSeenMobile = props => {
 
@@ -198,8 +198,8 @@ const UsersSeenMobile = props => {
             >
                 <FontAwesome5
                     color='#777'
-                    size={40}
-                    name='list-alt'
+                    size={50}
+                    name='users'
                 />
                 <Text
                     style={{
@@ -209,8 +209,37 @@ const UsersSeenMobile = props => {
                         fontFamily: 'IRANSansWeb(FaNum)_Bold'
                     }}
                 >
-                    {locales('labels.emptyList')}
+                    {locales('labels.emptySeenUsersList')}
                 </Text>
+
+                <Button
+                    onPress={_ => props.navigation.navigate('ContactInfoGuid')}
+                    style={{
+                        borderRadius: 12,
+                        width: '70%',
+                        justifyContent: 'center',
+                        height: 50,
+                        marginTop: 20,
+                        padding: 10,
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row-reverse',
+                        backgroundColor: '#00C569'
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 15,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: 'white',
+                            marginHorizontal: 5,
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('labels.contactInfoShowingGuid')}
+                    </Text>
+                </Button>
+
             </View>
         )
     };
@@ -219,7 +248,7 @@ const UsersSeenMobile = props => {
         props.fetchUserContactInfoViewers();
     };
 
-    const renderKeyExtractor = item => item.id.toString();
+    const renderKeyExtractor = item => `${item.id.toString()}_${dataGenerator.generateKey('item_index')}`;
 
 
     return (
