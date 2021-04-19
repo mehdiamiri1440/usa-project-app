@@ -167,7 +167,7 @@ android {
         targetSdkVersion 29
         versionCode 14
         multiDexEnabled true
-        versionName "4.1.0.9912.1"
+        versionName "5.0.0.0001.0"
     //     ndk {
     //   // Specifies the ABI configurations of your native
     //   // libraries Gradle should build and package with your APK.

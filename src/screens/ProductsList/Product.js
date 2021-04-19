@@ -1165,7 +1165,7 @@ class Product extends PureComponent {
                                                 style={{
                                                     alignItems: 'center',
                                                     flexDirection: 'row-reverse',
-                                                    right: '-5%'
+                                                    right: '-2%'
                                                 }}
                                             >
                                                 <FontAwesome5
