@@ -417,11 +417,19 @@ const BuyAdList = props => {
                                 elevation: 0
                             }}
                         >
-                            <FontAwesome5
-                                solid
-                                name='phone-square-alt'
-                                color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                size={20} />
+                            {buyerMobileNumberLoading && selectedButton == item.id ?
+                                <ActivityIndicator
+                                    size={20}
+                                    color={(!item.is_golden ? 'white' : '#333')}
+                                    animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                />
+                                :
+                                <FontAwesome5
+                                    solid
+                                    name='phone-square-alt'
+                                    color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                    size={20} />
+                            }
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -433,17 +441,7 @@ const BuyAdList = props => {
                             >
                                 {locales('labels.contactInfo')}
                             </Text>
-                            {buyerMobileNumberLoading && selectedButton == item.id ?
-                                <ActivityIndicator
-                                    size={15}
-                                    color={(!item.is_golden ? 'white' : '#333')}
-                                    animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                    style={{
-                                        position: 'absolute', right: 10,
-                                        width: 5, height: 5, borderRadius: 5,
-                                    }}
-                                />
-                                : null}
+
                         </LinearGradient>
 
                     </Button>
