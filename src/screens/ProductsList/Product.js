@@ -1068,7 +1068,7 @@ class Product extends PureComponent {
                                     <View
                                         style={{
                                             justifyContent: 'flex-start',
-                                            maxWidth: '90%',
+                                            maxWidth: '88%',
                                             alignItems: 'center',
                                             flexDirection: 'row-reverse'
                                         }}
