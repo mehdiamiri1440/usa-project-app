@@ -42,7 +42,8 @@ const ContactInfoGuid = props => {
                 </View>
             </View>
 
-            <ScrollView>
+            <ScrollView
+            >
 
                 <View
                     style={{
@@ -198,6 +199,17 @@ const ContactInfoGuid = props => {
                             </Text>
                         </Text>
                     </View>
+                    <Text
+                        style={{
+                            color: '#556080',
+                            top: -15,
+                            fontSize: 15,
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        }}
+                    >
+                        {locales('labels.repeatedBuyersWillNotBeCounted')}
+                    </Text>
 
 
                     <View
@@ -236,6 +248,7 @@ const ContactInfoGuid = props => {
                     style={{
                         width: deviceWidth,
                         padding: 40,
+                        bottom: 40,
                         backgroundColor: '#FAFAFA'
                     }}
                 >

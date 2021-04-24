@@ -1871,6 +1871,26 @@ class ProductDetails extends PureComponent {
                                     }}
                                 >
                                     {locales('labels.safeShopDescription')}
+                                    <Text
+                                        style={{
+                                            marginVertical: 15,
+                                            color: '#00C569',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}
+                                    >
+                                        {` ${locales('titles.safeShopHelp')} `}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            marginVertical: 15,
+                                            color: '#666666',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}
+                                    >
+                                        {locales('labels.tradeComfortabely')}
+                                    </Text>
                                 </Text>
                             </TouchableOpacity>
 
