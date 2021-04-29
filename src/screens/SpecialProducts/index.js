@@ -1076,7 +1076,7 @@ class SpecialProducts extends PureComponent {
                     horizontal={false}
                     numColumns={2}
                     style={{ backgroundColor: 'white' }}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center' }}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
                     ItemSeparatorComponent={({ _, leadingItem }) => this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={({ item, index }) => {
                         return (

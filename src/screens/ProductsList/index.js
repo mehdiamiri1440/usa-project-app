@@ -1181,7 +1181,7 @@ class ProductsList extends PureComponent {
                     style={{ backgroundColor: 'white' }}
                     horizontal={false}
                     numColumns={2}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center' }}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
                     ItemSeparatorComponent={({ _, leadingItem }) => !is_seller && this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={({ item, index }) => {
                         return (
