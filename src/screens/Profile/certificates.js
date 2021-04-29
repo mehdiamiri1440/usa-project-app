@@ -11,7 +11,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 
 
-const CErtificates = props => {
+const Certificates = props => {
     const { certificatesFromByUserName } = props
     return (
         <FlatList
@@ -60,7 +60,7 @@ const areEqual = (prevProps, nextProps) => {
     return true;
 };
 
-export default memo(CErtificates, areEqual);
+export default memo(Certificates, areEqual);
 
 
 

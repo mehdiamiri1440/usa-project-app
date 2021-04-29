@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
@@ -304,13 +305,20 @@ class Profile extends PureComponent {
                             style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
                             onPress={() => this.setState({ selectedImageModal: false })}
                         />
-                        <Image
-                            style={{
-                                alignSelf: 'center', width: deviceWidth,
-                                height: deviceHeight * 0.6,
-                                resizeMode: 'contain'
-                            }}
-                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${relatedsFromByUserName[selectedImageIndex]}` }} />
+                        <ImageZoom
+                            cropWidth={deviceWidth}
+                            cropHeight={deviceHeight}
+                            imageWidth={deviceWidth}
+                            imageHeight={deviceHeight * 0.6}
+                        >
+                            <Image
+                                style={{
+                                    alignSelf: 'center', width: deviceWidth,
+                                    height: '100%',
+                                    resizeMode: 'contain'
+                                }}
+                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${relatedsFromByUserName[selectedImageIndex]}` }} />
+                        </ImageZoom>
                     </View>
                 </Modal>
 
@@ -329,13 +337,21 @@ class Profile extends PureComponent {
                             style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
                             onPress={() => this.setState({ selectedEvidenceModal: false })}
                         />
-                        <Image
-                            style={{
-                                alignSelf: 'center', width: deviceWidth,
-                                height: deviceHeight * 0.6,
-                                resizeMode: 'contain'
-                            }}
-                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
+                        <ImageZoom
+                            cropWidth={deviceWidth}
+                            cropHeight={deviceHeight}
+                            imageWidth={deviceWidth}
+                            imageHeight={deviceHeight * 0.6}
+                        >
+                            <Image
+                                style={{
+                                    alignSelf: 'center',
+                                    width: deviceWidth,
+                                    height: '100%',
+                                    resizeMode: 'contain'
+                                }}
+                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
+                        </ImageZoom>
                     </View>
                 </Modal>
 

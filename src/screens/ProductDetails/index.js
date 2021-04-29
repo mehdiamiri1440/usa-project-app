@@ -18,6 +18,7 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -1233,13 +1234,21 @@ class ProductDetails extends PureComponent {
                             style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
                             onPress={() => this.setState({ showFullSizeImageModal: false })}
                         />
-                        <Image
-                            style={{
-                                alignSelf: 'center', width: deviceWidth,
-                                height: deviceHeight * 0.6,
-                                resizeMode: 'contain'
-                            }}
-                            source={{ uri: photosWithCompletePath[selectedImage] }} />
+                        <ImageZoom
+                            cropWidth={deviceWidth}
+                            cropHeight={deviceHeight}
+                            imageWidth={deviceWidth}
+                            imageHeight={deviceHeight}
+                        >
+                            <Image
+                                style={{
+                                    alignSelf: 'center',
+                                    width: '100%',
+                                    height: '100%',
+                                    resizeMode: 'contain'
+                                }}
+                                source={{ uri: photosWithCompletePath[selectedImage] }} />
+                        </ImageZoom>
                     </View>
                 </Modal>
 

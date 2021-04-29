@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -166,6 +167,7 @@ const Channel = props => {
                 >
                     {locales('labels.suggesstedProduct')}
                 </Text>
+
                 <Image
                     source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${file_path}` }}
                     style={{
@@ -498,30 +500,36 @@ const Channel = props => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={_ => {
-                        !caption ? fadeIn() : fadeOut();
-                        setCaption(!caption)
-                    }}
-                    style={{
-                        width: deviceWidth,
-                        height: deviceHeight,
-                        backgroundColor: 'rgba(0,0,0,1)'
-                    }}
+                <ImageZoom
+                    cropWidth={deviceWidth}
+                    cropHeight={deviceHeight}
+                    imageWidth={deviceWidth}
+                    imageHeight={deviceHeight}
                 >
-
-                    <Image
-                        source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${selectedItem?.file_path}` }}
-                        style={{
-                            resizeMode: 'contain',
-                            width: deviceWidth,
-                            alignSelf: 'center',
-                            height: deviceHeight,
-                            borderRadius: 4
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={_ => {
+                            !caption ? fadeIn() : fadeOut();
+                            setCaption(!caption)
                         }}
-                    />
-                </TouchableOpacity>
+                        style={{
+                            width: deviceWidth,
+                            height: deviceHeight,
+                            backgroundColor: 'rgba(0,0,0,1)'
+                        }}
+                    >
+                        <Image
+                            source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${selectedItem?.file_path}` }}
+                            style={{
+                                resizeMode: 'contain',
+                                width: '100%',
+                                alignSelf: 'center',
+                                height: '100%',
+                                borderRadius: 4
+                            }}
+                        />
+                    </TouchableOpacity>
+                </ImageZoom>
                 <Animated.View
                     style={{
                         width: '100%',
