@@ -20,7 +20,7 @@ const ContactsList = props => {
             <TouchableOpacity
                 onPress={() => {
                     msgCntxt.resetSearch('');
-                    props.navigation.navigate('Messages', { screen: 'Chat', params: { contact: item, showReportText: true } })
+                    props.navigation.navigate('Chat', { contact: item, showReportText: true })
                 }}
 
                 key={item.contact_id}

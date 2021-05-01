@@ -112,6 +112,7 @@ class ChatScreen extends Component {
     handleGoBack = _ => {
         this.props.doForceRefresh(true);
         this.props.navigation.goBack();
+        return true;
     };
 
     checkForShowingCommentsGuid = (result, contact) => {
