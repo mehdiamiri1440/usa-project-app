@@ -1227,9 +1227,9 @@ class ProductDetails extends PureComponent {
                         />
                         <ImageZoom
                             cropWidth={deviceWidth}
-                            cropHeight={deviceHeight}
+                            cropHeight={deviceHeight * 0.9}
                             imageWidth={deviceWidth}
-                            imageHeight={deviceHeight}
+                            imageHeight={deviceHeight * 0.9}
                         >
                             <Image
                                 style={{

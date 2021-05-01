@@ -307,7 +307,7 @@ class Profile extends PureComponent {
                         />
                         <ImageZoom
                             cropWidth={deviceWidth}
-                            cropHeight={deviceHeight}
+                            cropHeight={deviceHeight * 0.9}
                             imageWidth={deviceWidth}
                             imageHeight={deviceHeight * 0.6}
                         >
@@ -339,7 +339,7 @@ class Profile extends PureComponent {
                         />
                         <ImageZoom
                             cropWidth={deviceWidth}
-                            cropHeight={deviceHeight}
+                            cropHeight={deviceHeight * 0.9}
                             imageWidth={deviceWidth}
                             imageHeight={deviceHeight * 0.6}
                         >

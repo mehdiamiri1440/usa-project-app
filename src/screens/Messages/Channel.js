@@ -502,9 +502,9 @@ const Channel = props => {
 
                 <ImageZoom
                     cropWidth={deviceWidth}
-                    cropHeight={deviceHeight}
+                    cropHeight={deviceHeight * 0.9}
                     imageWidth={deviceWidth}
-                    imageHeight={deviceHeight}
+                    imageHeight={deviceHeight * 0.9}
                 >
                     <TouchableOpacity
                         activeOpacity={1}
