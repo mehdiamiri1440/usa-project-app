@@ -41,7 +41,7 @@ const PaymentModal = props => {
             return props.navigation.navigate(parentScreen, { screen: childScreen, ...routeParams });
         }
         console.warn('route para', routeParams)
-        return props.navigation.navigate(parentScreen, routeParams);
+        props.navigation.navigate(parentScreen, routeParams);
     };
 
     const wrapperRef = useRef('');
@@ -55,11 +55,8 @@ const PaymentModal = props => {
 
         props.fetchAllDashboardData();
 
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            closeAndNavigate();
-            return true;
-        });
-        return BackHandler.removeEventListener();
+        BackHandler.addEventListener('hardwareBackPress', closeAndNavigate);
+        return _ => BackHandler.removeEventListener('hardwareBackPress', closeAndNavigate);
 
     }, []);
 

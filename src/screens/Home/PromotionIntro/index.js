@@ -44,15 +44,18 @@ class PromotionIntro extends React.Component {
     }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.backChangesHandler)
     }
 
+
+
     componentWillUnmount() {
-        BackHandler.removeEventListener()
+        BackHandler.removeEventListener('hardwareBackPress', this.backChangesHandler)
     }
+
+    backChangesHandler = _ => {
+        this.props.navigation.goBack()
+    };
 
     renderComment = (item) => {
 

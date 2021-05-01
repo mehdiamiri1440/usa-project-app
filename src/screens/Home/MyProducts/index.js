@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TouchableOpacity, BackHandler } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -44,16 +44,8 @@ class MyProducts extends Component {
     componentDidMount() {
         this.fetchAllProducts();
         analytics().logEvent('my_product');
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        })
-
     }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener()
-    }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.loaded == false && this.props.myProductsArray.length) {

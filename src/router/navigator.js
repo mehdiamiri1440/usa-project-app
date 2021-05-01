@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Image, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, View, Text, TouchableOpacity, BackHandler, ToastAndroid as Toast } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationState } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -33,6 +33,8 @@ import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
 let currentRoute = '';
+// let backHandlerClickCount = 0;
+let isFirstTimeOpenApp = true;
 
 const routes = props => {
 
@@ -41,6 +43,12 @@ const routes = props => {
         userProfile = {},
         newMessage
     } = props;
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges)
+        return _ => BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges)
+    }, [])
+
 
     const { user_info = {} } = userProfile;
     let { is_seller } = user_info;
@@ -53,6 +61,26 @@ const routes = props => {
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
 
+
+    const handleBackButton = () => {
+        const shortToast = message => {
+            Toast.show(message, Toast.LONG, Toast.BOTTOM);
+        }
+
+        backHandlerClickCount += 1;
+        if ((backHandlerClickCount < 2)) {
+            shortToast('Press again to quit the application');
+        } else {
+            BackHandler.exitApp();
+        }
+
+        // timeout for fade and exit
+        setTimeout(() => {
+            backHandlerClickCount = 0;
+        }, 1000);
+
+        return true;
+    }
 
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
@@ -81,8 +109,27 @@ const routes = props => {
         setShouldShowSellerButton(shouldShow);
     };
 
+    const handleAppBackChanges = _ => {
+
+        const canGoBack = navigationRef?.current?.canGoBack();
+        console.warn('go to close 333')
+        if (!isFirstTimeOpenApp) {
+            if (canGoBack) {
+                navigationRef?.current?.goBack();
+            }
+            else {
+                console.warn('go to close 111')
+                BackHandler.exitApp();
+            }
+        }
+        else {
+            isFirstTimeOpenApp = false;
+        }
+        console.warn('go to close 222')
+    };
+
     const onRouteStateChanged = ({ key, index, routeNames, history, routes, type, stable }) => {
-        return handleVisiblityOfSellerButtonAndBottomMenu();
+        handleVisiblityOfSellerButtonAndBottomMenu();
     };
     return (
         <>

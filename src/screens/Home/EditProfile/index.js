@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
+import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -41,16 +41,9 @@ class EditProfile extends Component {
         }
     }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener()
-    }
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        })
         if (this.props.userProfile && Object.entries(this.props.userProfile).length) {
             const {
                 profile_photo,

@@ -15,12 +15,13 @@ import UserFriends from '../UserFriends/UserLists'
 const Referral = props => {
 
     useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            props.navigation.goBack()
-            return true;
-        })
-        return _ => BackHandler.removeEventListener()
+        BackHandler.addEventListener('hardwareBackPress', backChangesHandler)
+        return _ => BackHandler.removeEventListener('hardwareBackPress', backChangesHandler)
     }, [])
+
+    const backChangesHandler = _ => {
+        props.navigation.goBack()
+    };
 
     const openSms = () => {
         let url = 'sms:?body=سلام این لینک باسکول هست';

@@ -1,6 +1,6 @@
 
-import React, { useEffect } from 'react';
-import { Text, View, StyleSheet, BackHandler, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
 import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -10,13 +10,6 @@ import Clipboard from "@react-native-community/clipboard";
 import UsersList from './UserLists';
 
 const UserFriends = props => {
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            props.navigation.goBack()
-            return true;
-        })
-        return _ => BackHandler.removeEventListener()
-    }, [])
 
     const openSms = () => {
         let url = 'sms:?body=سلام این لینک باسکول هست';

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, BackHandler, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { ActionSheet, Button } from 'native-base';
 import { connect } from 'react-redux';
@@ -55,14 +55,6 @@ const Authentication = props => {
         buttonIndex => onActionSheetClicked(buttonIndex, name)
     );
 
-
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            props.navigation.goBack()
-            return true;
-        })
-        return BackHandler.removeEventListener()
-    }, [])
 
     const onActionSheetClicked = async (buttonIndex, name) => {
         const options = {

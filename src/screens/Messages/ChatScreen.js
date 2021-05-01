@@ -90,10 +90,7 @@ class ChatScreen extends Component {
             }
         });
 
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-            this.handleGoBack();
-            return true;
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.handleGoBack)
     }
 
 
@@ -109,7 +106,7 @@ class ChatScreen extends Component {
 
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress');
+        BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
     }
 
     handleGoBack = _ => {
@@ -470,7 +467,6 @@ class ChatScreen extends Component {
                             onPress={() => {
                                 Jmoment.locale('fa');
                                 if (!this.props.buyAdId) {
-                                    this.props.navigation.goBack();
                                     this.props.navigation.navigate('Profile', { user_name });
                                 }
                             }}

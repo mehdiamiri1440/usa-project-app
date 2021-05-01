@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-    Text, Image, View, StyleSheet, Modal, ScrollView, BackHandler,
+    Text, Image, View, StyleSheet, Modal, ScrollView,
     TouchableOpacity, Linking, Share, RefreshControl,
     ActivityIndicator
 } from 'react-native';
@@ -131,16 +131,7 @@ class ProductDetails extends PureComponent {
         if (this.props.route.params.productId) {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        });
     }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener();
-    }
-
 
 
     componentDidUpdate(prevProps, prevState) {

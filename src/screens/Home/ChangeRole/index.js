@@ -16,15 +16,16 @@ class ChangeRole extends Component {
     homeRef = React.createRef();
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' });
-            return true;
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackChange)
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackChange);
     }
+
+    handleBackChange = _ => {
+        this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' });
+    };
 
     changeRole = _ => {
         this.props.changeRole().then(_ => {
