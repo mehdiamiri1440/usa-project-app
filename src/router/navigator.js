@@ -34,7 +34,6 @@ import linking from './linking';
 
 let currentRoute = '';
 // let backHandlerClickCount = 0;
-let isFirstTimeOpenApp = true;
 
 const routes = props => {
 
@@ -112,20 +111,16 @@ const routes = props => {
     const handleAppBackChanges = _ => {
 
         const canGoBack = navigationRef?.current?.canGoBack();
-        console.warn('go to close 333')
-        if (!isFirstTimeOpenApp) {
-            if (canGoBack) {
-                navigationRef?.current?.goBack();
-            }
-            else {
-                console.warn('go to close 111')
-                BackHandler.exitApp();
-            }
+
+        if (canGoBack) {
+            console.warn('in back controller')
+            navigationRef?.current?.goBack();
         }
         else {
-            isFirstTimeOpenApp = false;
+            console.warn('in exit controller')
+            BackHandler.exitApp();
         }
-        console.warn('go to close 222')
+        return true;
     };
 
     const onRouteStateChanged = ({ key, index, routeNames, history, routes, type, stable }) => {
