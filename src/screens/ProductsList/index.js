@@ -88,7 +88,8 @@ class ProductsList extends PureComponent {
             this.setState({
                 productsListArray: [...this.props.productsListArray],
                 to_record_number: 16,
-                from_record_number: 0
+                from_record_number: 0,
+                searchText: ''
             })
             this.props.updateProductsList(false);
 
