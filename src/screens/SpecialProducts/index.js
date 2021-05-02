@@ -182,6 +182,36 @@ class SpecialProducts extends PureComponent {
 
     };
 
+    submitSearching = _ => {
+        const { sort_by, province, city, searchText } = this.state;
+
+        let item = {
+            sort_by,
+            search_text: searchText,
+            from_record_number: 0,
+            to_record_number: 16
+        };
+
+        if (province) {
+            item = { ...item, province_id: province }
+        }
+        if (city) {
+            item = { ...item, city_id: city }
+        }
+
+        this.props.fetchAllSpecialProductsList(item).then(_ => {
+            analytics().logEvent('search_text', {
+                text
+            })
+            this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
+        }).catch(error => {
+            this.setState({
+                //  showModal: true, 
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false, searchLoader: false
+            })
+        });
+    };
+
     sortProducts = (id, name) => {
         analytics().logEvent('apply_sort', {
             sort_type: name
@@ -922,6 +952,7 @@ class SpecialProducts extends PureComponent {
                                 ref={this.serachInputRef}
                                 disabled={!!specialProductsListLoading}
                                 onEndEditing={_ => this.setState({ searchLoader: true })}
+                                onSubmitEditing={this.submitSearching}
                                 onChangeText={text => this.handleSearch(text)}
                                 style={{ paddingBottom: 10, fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlignVertical: 'bottom' }}
                                 placeholderTextColor="#bebebe"
