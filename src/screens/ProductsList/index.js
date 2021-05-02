@@ -90,7 +90,14 @@ class ProductsList extends PureComponent {
                 to_record_number: 16,
                 from_record_number: 0
             })
-            this.props.updateProductsList(false)
+            this.props.updateProductsList(false);
+
+            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
+                this.props.productsListRef.current && this.props.productsListRef.current != null &&
+                this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 &&
+                this.props.productsListArray.length > 0 && !this.props.productsListLoading)
+                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+
         }
 
         if (

@@ -136,6 +136,7 @@ class Home extends React.Component {
             };
             this.props.fetchAllProductsList(item).then(_ => {
                 this.props.updateProductsList(true);
+
                 this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
                     this.props.fetchUserProfile().then(_ => {
                         this.closeModal();
