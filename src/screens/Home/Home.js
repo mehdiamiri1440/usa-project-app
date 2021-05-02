@@ -123,7 +123,9 @@ class Home extends React.Component {
     };
 
     changeRole = _ => {
+
         this.props.changeRole().then(res => {
+
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
 
@@ -133,10 +135,11 @@ class Home extends React.Component {
                 to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(_ => {
+                this.props.updateProductsList(true);
                 this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
                     this.props.fetchUserProfile().then(_ => {
                         this.closeModal();
-                    });
+                    })
                 })
             })
 

@@ -70,8 +70,6 @@ class ProductsList extends PureComponent {
             screen_class: "product_list",
         });
 
-        this.props.navigation.addListener('focus', this.handleScreenFocused);
-
         this.fetchAllProducts();
         this.initialCalls().catch(error => {
             this.setState({
@@ -86,6 +84,14 @@ class ProductsList extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (this.props.updateProductsListFlag) {
+            this.setState({
+                productsListArray: [...this.props.productsListArray],
+                to_record_number: 16,
+                from_record_number: 0
+            })
+            this.props.updateProductsList(false)
+        }
 
         if (
             (this.props.route && this.props.route.params &&
@@ -146,13 +152,6 @@ class ProductsList extends PureComponent {
         }
     }
 
-    handleScreenFocused = _ => {
-        this.setState({
-            productsListArray: [...this.props.productsListArray],
-            to_record_number: 16,
-            from_record_number: 0
-        })
-    };
 
     initialCalls = _ => {
         return new Promise((resolve, reject) => {
