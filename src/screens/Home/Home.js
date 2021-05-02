@@ -25,6 +25,7 @@ import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import { numberWithCommas } from '../../utils/formatter';
 import { versionName } from '../../../version.json';
 import { homeRoutes, sellerSpecialRoutes, buyerSpecialRoutes } from './HomeRoutes';
+import ENUMS from '../../enums';
 class Home extends React.Component {
 
     constructor(props) {
@@ -125,11 +126,18 @@ class Home extends React.Component {
         this.props.changeRole().then(res => {
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
-            this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
-                this.props.fetchUserProfile().then(_ => {
-                    this.props.updateProductsList(true)
-                    this.closeModal();
-                });
+
+            let item = {
+                from_record_number: 0,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                to_record_number: 16,
+            };
+            this.props.fetchAllProductsList(item).then(_ => {
+                this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
+                    this.props.fetchUserProfile().then(_ => {
+                        this.closeModal();
+                    });
+                })
             })
 
         })
@@ -189,6 +197,7 @@ class Home extends React.Component {
         const {
             userProfileLoading,
             changeRoleLoading,
+            productsListLoading
         } = this.props;
 
         const {
@@ -595,7 +604,7 @@ class Home extends React.Component {
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                             }}>
-                            {changeRoleLoading && !!is_seller ?
+                            {(changeRoleLoading || productsListLoading) && !!is_seller ?
                                 <ActivityIndicator
                                     color='#556080'
                                 />
@@ -654,7 +663,7 @@ class Home extends React.Component {
                             }}
                             onPress={() => !!!is_seller && !changeRoleLoading && this.changeRole()}
                         >
-                            {changeRoleLoading && !!!is_seller ?
+                            {(changeRoleLoading || productsListLoading) && !!!is_seller ?
                                 <ActivityIndicator
                                     color='#556080'
                                 />
@@ -1070,15 +1079,40 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         logOut: () => dispatch(authActions.logOut()),
         changeRole: _ => dispatch(authActions.changeRole()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
-        updateProductsList: flag => dispatch(productListActions.updateProductsList(flag))
+        updateProductsList: flag => dispatch(productListActions.updateProductsList(flag)),
+        fetchAllProductsList: item => dispatch(productListActions.fetchAllProductsList(item, false)),
     }
 }
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
+
+    const {
+        profileReducer,
+        productsListReducer,
+        authReducer
+    } = state;
+
+    const {
+        productsListLoading
+    } = productsListReducer;
+
+    const {
+        userProfile,
+        userProfileLoading
+    } = profileReducer;
+
+
+    const {
+        changeRoleLoading
+    } = authReducer;
+
 
     return {
-        userProfile: state.profileReducer.userProfile,
-        changeRoleLoading: state.authReducer.changeRoleLoading,
-        userProfileLoading: state.profileReducer.userProfileLoading,
+        changeRoleLoading,
+
+        productsListLoading,
+
+        userProfile,
+        userProfileLoading
     }
 }
 
