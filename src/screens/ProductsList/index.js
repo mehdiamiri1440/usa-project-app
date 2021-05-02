@@ -1345,49 +1345,98 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({
+    productsListReducer,
+    registerProductReducer,
+    locationsReducer,
+    profileReducer
+}) => {
+
+    const {
+        productsListObject,
+        productsListArray,
+        productsListLoading,
+        productsListError,
+        productsListFailed,
+        productsListMessage,
+
+        productDetailsId,
+        updateProductsListFlag
+    } = productsListReducer;
+
+    const {
+        categoriesLoading,
+        categoriesMessage,
+        categoriesError,
+        categoriesFailed,
+        categoriesList,
+        categories,
+
+        subCategoriesLoading,
+        subCategoriesMessage,
+        subCategoriesError,
+        subCategoriesFailed,
+        subCategoriesList,
+        subCategories
+    } = registerProductReducer;
+
+    const {
+        provinceLoading,
+        provinceError,
+        provinceFailed,
+        provinceMessage,
+        allProvincesObject,
+
+        fetchCitiesLoading,
+        fetchCitiesError,
+        fetchCitiesFailed,
+        fetchCitiesMessage,
+        allCitiesObject
+    } = locationsReducer;
+
+    const {
+        userProfile
+    } = profileReducer;
+
     return {
-        productsListArray: state.productsListReducer.productsListArray,
-        productsListObject: state.productsListReducer.productsListObject,
-        productsListLoading: state.productsListReducer.productsListLoading,
-        productsListError: state.productsListReducer.productsListError,
-        productsListFailed: state.productsListReducer.productsListFailed,
-        productsListMessage: state.productsListReducer.productsListMessage,
+        productsListObject,
+        productsListArray,
+        productsListLoading,
+        productsListError,
+        productsListFailed,
+        productsListMessage,
 
-        categoriesLoading: state.registerProductReducer.categoriesLoading,
-        categoriesMessage: state.registerProductReducer.categoriesMessage,
-        categoriesError: state.registerProductReducer.categoriesError,
-        categoriesFailed: state.registerProductReducer.categoriesFailed,
-        categoriesList: state.registerProductReducer.categoriesList,
-        categories: state.registerProductReducer.categories,
+        categoriesLoading,
+        categoriesMessage,
+        categoriesError,
+        categoriesFailed,
+        categoriesList,
+        categories,
 
+        subCategoriesLoading,
+        subCategoriesMessage,
+        subCategoriesError,
+        subCategoriesFailed,
+        subCategoriesList,
+        subCategories,
 
-        subCategoriesLoading: state.registerProductReducer.subCategoriesLoading,
-        subCategoriesMessage: state.registerProductReducer.subCategoriesMessage,
-        subCategoriesError: state.registerProductReducer.subCategoriesError,
-        subCategoriesFailed: state.registerProductReducer.subCategoriesFailed,
-        subCategoriesList: state.registerProductReducer.subCategoriesList,
-        subCategories: state.registerProductReducer.subCategories,
-
-        provinceLoading: state.locationsReducer.fetchAllProvincesLoading,
-        provinceError: state.locationsReducer.fetchAllProvincesError,
-        provinceFailed: state.locationsReducer.fetchAllProvincesFailed,
-        provinceMessage: state.locationsReducer.fetchAllProvincesMessage,
-        allProvincesObject: state.locationsReducer.allProvincesObject,
-
-        fetchCitiesLoading: state.locationsReducer.fetchAllCitiesLoading,
-        fetchCitiesError: state.locationsReducer.fetchAllCitiesError,
-        fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
-        fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
-        allCitiesObject: state.locationsReducer.allCitiesObject,
-
-        productDetailsId: state.productsListReducer.productDetailsId,
-
-        updateProductsListFlag: state.productsListReducer.updateProductsListFlag,
-
-        userProfile: state.profileReducer.userProfile,
+        provinceLoading,
+        provinceError,
+        provinceFailed,
+        provinceMessage,
+        allProvincesObject,
 
 
+        fetchCitiesLoading,
+        fetchCitiesError,
+        fetchCitiesFailed,
+        fetchCitiesMessage,
+        allCitiesObject,
+
+        productDetailsId,
+        updateProductsListFlag,
+
+        userProfile
     }
 };
 
