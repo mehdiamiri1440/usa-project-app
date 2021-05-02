@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, Text, TouchableOpacity, BackHandler, ToastAndroid as Toast } from 'react-native';
+import { Image, View, Text, TouchableOpacity, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigationContainer, useNavigationState } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -33,7 +33,6 @@ import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
 let currentRoute = '';
-// let backHandlerClickCount = 0;
 
 const routes = props => {
 
@@ -46,7 +45,7 @@ const routes = props => {
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges)
         return _ => BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges)
-    }, [])
+    }, [props.loggedInUserId])
 
 
     const { user_info = {} } = userProfile;
@@ -59,27 +58,6 @@ const routes = props => {
 
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
-
-
-    const handleBackButton = () => {
-        const shortToast = message => {
-            Toast.show(message, Toast.LONG, Toast.BOTTOM);
-        }
-
-        backHandlerClickCount += 1;
-        if ((backHandlerClickCount < 2)) {
-            shortToast('Press again to quit the application');
-        } else {
-            BackHandler.exitApp();
-        }
-
-        // timeout for fade and exit
-        setTimeout(() => {
-            backHandlerClickCount = 0;
-        }, 1000);
-
-        return true;
-    }
 
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
@@ -113,11 +91,9 @@ const routes = props => {
         const canGoBack = navigationRef?.current?.canGoBack();
 
         if (canGoBack) {
-            console.warn('in back controller')
             navigationRef?.current?.goBack();
         }
         else {
-            console.warn('in exit controller')
             BackHandler.exitApp();
         }
         return true;
