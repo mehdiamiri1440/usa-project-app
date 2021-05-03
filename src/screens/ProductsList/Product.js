@@ -1652,7 +1652,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         deleteProduct: id => dispatch(productListActions.deleteProduct(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
         walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),

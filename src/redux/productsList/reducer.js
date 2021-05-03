@@ -48,7 +48,6 @@ const INITIAL_STATE = {
     productDetailsError: false,
     productDetailsMessage: null,
 
-    productDetailsId: null,
 
     productDetailsInfoLoading: false,
     productDetailsInfo: [],
@@ -395,33 +394,6 @@ export default (state = INITIAL_STATE, action) => {
                 productDetailsMessage: 'محصول موجود نیست و یا  قبلا حذف شده‌است'
             };
         };
-
-
-        case actionTypes.SET_PRODUCT_DETAILS_ID_LOADING: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY: {
-            return {
-                ...state,
-                productDetailsId: action.payload
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_FAILED: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_REJECT: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-
 
 
         case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING: {

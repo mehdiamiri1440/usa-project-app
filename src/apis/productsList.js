@@ -137,18 +137,6 @@ export const fetchProductDetails = id => {
 
 
 
-export const setProductDetailsId = id => {
-    return new Promise((resolve, reject) => {
-        if (id) {
-            resolve(id)
-        }
-        else {
-            reject(false)
-        }
-    });
-};
-
-
 export const fetchSellerMobileNumber = contactInfoObject => {
     return new Promise((resolve, reject) => {
         requester

@@ -72,9 +72,6 @@ class SpecialProducts extends PureComponent {
         // .catch(error => {
         //     this.setState({ showModal: true })
         // });
-        if (this.props.productDetailsId) {
-            this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
-        }
 
     }
 
@@ -1311,7 +1308,6 @@ const mapStateToProps = (state) => {
         fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
         allCitiesObject: state.locationsReducer.allCitiesObject,
 
-        productDetailsId: state.productsListReducer.productDetailsId,
         userProfile: state.profileReducer.userProfile
 
     }

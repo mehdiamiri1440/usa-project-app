@@ -77,9 +77,7 @@ class ProductsList extends PureComponent {
                 searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
-        if (this.props.productDetailsId) {
-            this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
-        }
+
 
     }
 
@@ -1398,7 +1396,6 @@ const mapStateToProps = ({
         productsListFailed,
         productsListMessage,
 
-        productDetailsId,
         updateProductsListFlag
     } = productsListReducer;
 
@@ -1471,7 +1468,6 @@ const mapStateToProps = ({
         fetchCitiesMessage,
         allCitiesObject,
 
-        productDetailsId,
         updateProductsListFlag,
 
         userProfile

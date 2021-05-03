@@ -2458,7 +2458,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setProductDetailsId: id => dispatch(productListActions.setProductDetailsId(id)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),

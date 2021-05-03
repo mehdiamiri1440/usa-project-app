@@ -162,28 +162,6 @@ export const fetchProductDetails = id => {
     return request();
 };
 
-export const setProductDetailsId = id => {
-    const request = () => {
-        return dispatch => {
-            dispatch(loading());
-            return API.productsList
-                .setProductDetailsId(id)
-                .then(res => dispatch(success(res)))
-                .catch(err => {
-                    dispatch(generateErrorAction(err, {
-                        failure: actionTypes.SET_PRODUCT_DETAILS_ID_FAILED,
-                        reject: actionTypes.SET_PRODUCT_DETAILS_ID_REJECT
-                    }));
-                    throw err;
-                });
-        };
-    };
-    const loading = () => action(actionTypes.SET_PRODUCT_DETAILS_ID_LOADING);
-    const success = res => action(actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY, res);
-
-    return request();
-};
-
 export const fetchAllProductInfo = id => {
     const request = () => {
         return dispatch => {
