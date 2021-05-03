@@ -1,20 +1,18 @@
 import React from 'react';
-import { Text, View, StyleSheet, BackHandler } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, ScrollView } from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import GetMobileNumberStep from './Steps/GetMobileNumberStep';
+
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';
-import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
+
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceHeight, deviceWidth, formatter } from '../../utils';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -127,7 +125,7 @@ class SignUp extends React.Component {
         } = this.state;
 
         let registerObject = {
-            phone: mobileNumber,
+            phone: formatter.toLatinNumbers(mobileNumber),
             first_name: firstName,
             last_name: lastName,
             password,
@@ -137,7 +135,7 @@ class SignUp extends React.Component {
             city: cityName,
             activity_type: activityType == 'buyer' ? '1' : '0',
             category_id: activityZone,
-            verification_code: verificationCode
+            verification_code: formatter.toLatinNumbers(verificationCode)
         };
         this.props.submitRegister(registerObject).then(result => {
             AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
