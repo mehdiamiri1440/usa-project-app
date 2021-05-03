@@ -95,7 +95,32 @@ class SpecialProducts extends PureComponent {
             this.props.fetchAllCategories().catch(error => reject(error));
         })
 
-    }
+    };
+
+
+    scrollToTop = (result, needsTimeout, type) => {
+        let conditions = this.props.productsListRef && this.props.productsListRef != null
+            && this.props.productsListRef != undefined &&
+            this.props.productsListRef.current && this.props.productsListRef.current != null &&
+            this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 &&
+            this.props.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading;
+
+        if (result)
+            conditions = conditions && result.payload.products.length > 0;
+
+        if (type == 'offset')
+            setTimeout(() => this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 }), 300);
+
+        else
+            if (conditions)
+                if (needsTimeout)
+                    setTimeout(() => this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                        , 300);
+                else
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+
+    };
+
 
     setShowModal = _ => {
         this.setState({ showModal: false }, () => {
@@ -120,10 +145,7 @@ class SpecialProducts extends PureComponent {
             };
         };
         this.props.fetchAllSpecialProductsList(item).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            this.scrollToTop(result);
         })
         // .catch(error => {
         //     this.setState({ showModal: true })
@@ -149,11 +171,7 @@ class SpecialProducts extends PureComponent {
                 sort_by,
             };
         myTimeout = setTimeout(() => {
-
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            this.scrollToTop();
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -375,10 +393,7 @@ class SpecialProducts extends PureComponent {
         }
 
         return this.props.fetchAllSpecialProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.specialProductsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            this.scrollToTop(result)
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, specialProductsListArray: [...result.payload.products] })
         }).catch(error => {
             // this.setState({ showModal: true })
@@ -755,10 +770,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !specialProductsListLoading && this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                    this.scrollToTop();
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -847,10 +859,7 @@ class SpecialProducts extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !specialProductsListLoading && this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                    this.scrollToTop();
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,

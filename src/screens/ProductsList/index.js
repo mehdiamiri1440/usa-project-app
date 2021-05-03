@@ -3,17 +3,18 @@ import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndi
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import ContentLoader, { Rect, Circle } from "react-content-loader/native"
+import ContentLoader, { Rect } from "react-content-loader/native"
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
-import Svg, { Image as SvgImage, Defs, G, Circle as SvgCircle } from "react-native-svg";
 import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Product from './Product';
-import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
+import Product from './Product';
 import NoConnection from '../../components/noConnectionError';
 import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
@@ -21,8 +22,6 @@ import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-// import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import ENUMS from '../../enums';
 
 
@@ -89,13 +88,7 @@ class ProductsList extends PureComponent {
                 searchText: ''
             })
             this.props.updateProductsList(false);
-
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 &&
-                this.props.productsListArray.length > 0 && !this.props.productsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-
+            this.scrollToTop();
         }
 
         if (
@@ -129,13 +122,7 @@ class ProductsList extends PureComponent {
                     to_record_number: 16,
                     from_record_number: 0
                 }, () => {
-                    setTimeout(() => {
-                        if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                            this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                            this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading) {
-                            this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 });
-                        }
-                    }, 300);
+                    this.scrollToTop(result, true, 'offset')
                 })
             })
         }
@@ -153,13 +140,38 @@ class ProductsList extends PureComponent {
 
     }
 
+    scrollToTop = (result, needsTimeout, type) => {
+        let conditions = this.props.productsListRef && this.props.productsListRef != null
+            && this.props.productsListRef != undefined &&
+            this.props.productsListRef.current && this.props.productsListRef.current != null &&
+            this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 &&
+            this.props.productsListArray.length > 0 && !this.props.productsListLoading;
+
+        if (result)
+            conditions = conditions && result.payload.products.length > 0;
+
+        if (type == 'offset')
+            setTimeout(() => this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 }), 300);
+
+        else
+            if (conditions)
+                if (needsTimeout)
+                    setTimeout(() => this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                        , 300);
+                else
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+
+    };
 
     initialCalls = _ => {
         return new Promise((resolve, reject) => {
-            this.props.fetchAllProvinces().catch(error => reject(error));
-            this.props.fetchAllCategories().catch(error => reject(error));
-        })
-
+            Promise.all([
+                this.props.fetchAllProvinces(),
+                this.props.fetchAllCategories()
+            ])
+                .then(result => resolve(result))
+                .catch(error => reject(error))
+        });
     }
 
     setShowModal = _ => {
@@ -184,12 +196,7 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-        }).catch(error => {
+        this.props.fetchAllProductsList(item).then(result => this.scrollToTop(result)).catch(error => {
             this.setState({
                 //  showModal: true,
                 searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
@@ -217,11 +224,7 @@ class ProductsList extends PureComponent {
                 sort_by,
             };
         myTimeout = setTimeout(() => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading) {
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            }
+            this.scrollToTop();
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -336,10 +339,7 @@ class ProductsList extends PureComponent {
         }
 
         return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            this.scrollToTop(result);
             this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, productsListArray: [...result.payload.products] })
         }).catch(error => {
             this.setState({
@@ -857,10 +857,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !productsListLoading && this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+                                    this.scrollToTop();
                                     const { searchText } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
@@ -949,13 +946,7 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 activeOpacity={1}
                                 onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
-
+                                    this.scrollToTop(undefined, true)
                                     const { sort_by } = this.state;
                                     let searchItem = {
                                         from_record_number: 0,
