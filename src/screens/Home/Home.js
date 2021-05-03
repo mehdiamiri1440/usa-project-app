@@ -7,7 +7,7 @@ import analytics from '@react-native-firebase/analytics';
 import {
     Text, TouchableOpacity, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl
+    RefreshControl, AppState
 } from 'react-native';
 import { useScrollToTop } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
@@ -63,7 +63,9 @@ class Home extends React.Component {
         const {
             is_seller
         } = user_info;
-        this.setState({ is_seller: !!is_seller })
+        this.setState({ is_seller: !!is_seller });
+
+        AppState.addEventListener('change', this.handleAppStateChange)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -80,6 +82,18 @@ class Home extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
+
+    handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            this.props.fetchUserProfile();
+        }
+    };
 
     handleRouteChange = (name) => {
         const {
