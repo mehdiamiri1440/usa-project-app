@@ -68,7 +68,6 @@ class ProductsList extends PureComponent {
             screen_class: "product_list",
         });
 
-        this.fetchAllProducts();
         this.initialCalls().catch(error => {
             this.setState({
                 // showModal: true,
@@ -121,9 +120,7 @@ class ProductsList extends PureComponent {
                     productsListArray: [...result.payload.products],
                     to_record_number: 16,
                     from_record_number: 0
-                }, () => {
-                    this.scrollToTop(result, true, 'offset')
-                })
+                }, () => this.scrollToTop(result, true, 'offset'));
             })
         }
 
@@ -134,11 +131,68 @@ class ProductsList extends PureComponent {
             })
         }
 
-        if (this.state.searchFlag) {
-            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
-        }
-
     }
+
+    initialCalls = _ => {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.fetchAllProducts(),
+                this.props.fetchAllProvinces(),
+                this.props.fetchAllCategories()
+            ])
+                .then(result => resolve(result))
+                .catch(error => reject(error))
+        });
+    };
+
+    fetchAllProducts = (itemFromResult) => {
+        const {
+            from_record_number,
+            to_record_number,
+            sort_by,
+            searchText
+        } = this.state;
+
+        let item = {
+            from_record_number,
+            sort_by,
+            to_record_number,
+        };
+
+        if (itemFromResult)
+            item = itemFromResult;
+
+        if (searchText && searchText.length) {
+            item = {
+                from_record_number,
+                sort_by,
+                search_text: searchText,
+                to_record_number,
+            };
+        };
+        this.props.fetchAllProductsList(item)
+            .then(result => {
+                this.scrollToTop(result);
+                this.setState({
+                    from_record_number: 0,
+                    to_record_number: 16,
+
+                    searchLoader: false,
+
+                    sortModalFlag: false,
+
+                    categoryModalFlag: false,
+
+                    productsListArray: [...result?.payload?.products]
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    //  showModal: true,
+                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
+            });
+    };
 
     scrollToTop = (result, needsTimeout, type) => {
         let conditions = this.props.productsListRef && this.props.productsListRef != null
@@ -163,47 +217,11 @@ class ProductsList extends PureComponent {
 
     };
 
-    initialCalls = _ => {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.props.fetchAllProvinces(),
-                this.props.fetchAllCategories()
-            ])
-                .then(result => resolve(result))
-                .catch(error => reject(error))
-        });
-    }
-
     setShowModal = _ => {
         this.setState({ showModal: false }, () => {
             this.componentDidMount();
         });
-    }
-
-    fetchAllProducts = () => {
-        const { from_record_number, to_record_number, sort_by, searchText } = this.state;
-
-        let item = {
-            from_record_number,
-            sort_by,
-            to_record_number,
-        };
-        if (searchText && searchText.length) {
-            item = {
-                from_record_number,
-                sort_by,
-                search_text: searchText,
-                to_record_number,
-            };
-        };
-        this.props.fetchAllProductsList(item).then(result => this.scrollToTop(result)).catch(error => {
-            this.setState({
-                //  showModal: true,
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });
     };
-
 
     handleSearch = (text) => {
 
@@ -232,17 +250,12 @@ class ProductsList extends PureComponent {
                 item = { ...item, city_id: city }
             }
 
-            this.props.fetchAllProductsList(item).then(_ => {
-                analytics().logEvent('search_text', {
-                    text
-                })
-                this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
-            }).catch(error => {
-                this.setState({
-                    //  showModal: true, 
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false, searchLoader: false
-                })
+            analytics().logEvent('search_text', {
+                text
             });
+            this.setState({ productsListArray: [] })
+            this.fetchAllProducts(item);
+            // this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
         }, 1500);
 
     };
@@ -264,17 +277,12 @@ class ProductsList extends PureComponent {
             item = { ...item, city_id: city }
         }
 
-        this.props.fetchAllProductsList(item).then(_ => {
-            analytics().logEvent('search_text', {
-                text
-            })
-            this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
-        }).catch(error => {
-            this.setState({
-                //  showModal: true, 
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false, searchLoader: false
-            })
+        analytics().logEvent('search_text', {
+            text: searchText
         });
+
+        this.setState({ productsListArray: [] })
+        this.fetchAllProducts(item);
     };
 
     sortProducts = (id, name) => {
@@ -291,8 +299,6 @@ class ProductsList extends PureComponent {
             })
         })
     };
-
-
 
     setProvince = (value, index) => {
         this.setState({ disableSubCategory: true })
@@ -378,6 +384,115 @@ class ProductsList extends PureComponent {
 
     };
 
+    onRefreshLists = _ => {
+        return (
+            <ActivityIndicator size="small" color="#00C569"
+                style={{
+                    position: 'absolute', right: '15%', top: '2%',
+                    width: 50, height: 50, borderRadius: 25
+                }}
+            />
+        )
+    };
+
+    onEndOfProductListReached = _ => {
+        const {
+            province,
+            city,
+
+            productsListArray,
+
+            to_record_number,
+            from_record_number,
+
+            loaded,
+
+            sort_by,
+
+            searchText
+        } = this.state;
+
+        if (loaded && productsListArray.length >= to_record_number)
+            this.setState({
+                from_record_number: from_record_number + 16,
+                to_record_number: to_record_number + 16,
+            }, () => {
+
+                let item = {
+                    from_record_number,
+                    sort_by,
+                    to_record_number,
+                };
+                if (searchText && searchText.length) {
+                    item = {
+                        from_record_number,
+                        sort_by,
+                        to_record_number,
+                        search_text: searchText
+                    }
+                }
+                if (province) {
+                    item = { ...item, province_id: province }
+                }
+                if (city) {
+                    item = { ...item, city_id: city }
+                }
+
+                this.props.fetchAllProductsList(item).then(_ => {
+                    this.setState({ loaded: false })
+                }).catch(error => {
+                    this.setState({
+                        // showModal: true,
+                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                    })
+                });
+            })
+    };
+
+    onProductListRefreshed = _ => {
+        const {
+            searchText,
+
+            province,
+            city,
+
+            sort_by
+        } = this.state;
+
+
+        let item = {
+            from_record_number: 0,
+            sort_by,
+            to_record_number: 16,
+        };
+        if (searchText && searchText.length) {
+            item = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+                search_text: searchText
+            }
+        }
+        if (province) {
+            item = { ...item, province_id: province }
+        }
+        if (city) {
+            item = { ...item, city_id: city }
+        }
+        this.props.fetchAllProductsList(item).then(result => {
+            this.setState({
+                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
+            })
+        }).catch(error => {
+            this.setState({
+                //  showModal: true,
+                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
+        });
+    };
+
+
+
     renderProductListEmptyComponent = _ => {
         const {
             userProfile = {},
@@ -390,38 +505,73 @@ class ProductsList extends PureComponent {
             is_seller = true
         } = user_info;
 
+        const {
+            loaded
+        } = this.state;
+
         if (!productsListLoading)
             return (
-                <View style={{
-                    alignSelf: 'center', justifyContent: 'center',
-                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
-                }}>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7
+                    }}
+                >
                     <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
                         {locales('titles.noProductFound')}</Text>
                     {
-                        is_seller ? <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterProductStack')}
+                        is_seller ?
+                            <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterProductStack')}
 
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerNewProduct')}
-                                </Text>
-                            </Button>
-                        </View> : <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterRequest')}
-
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                            </Button>
-                        </View>}
+                                    style={styles.loginButton}>
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            {
+                                                width: deviceWidth * 0.9,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }]}
+                                    >
+                                        {locales('titles.registerNewProduct')}
+                                    </Text>
+                                </Button>
+                            </View>
+                            :
+                            <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                                    style={styles.loginButton}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            {
+                                                width: deviceWidth * 0.9,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }]}
+                                    >
+                                        {locales('titles.registerBuyAdRequest')}
+                                    </Text>
+                                </Button>
+                            </View>}
                 </View>
             )
-        if (!this.state.loaded || productsListLoading) {
+        if (!loaded || productsListLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
@@ -607,13 +757,216 @@ class ProductsList extends PureComponent {
         )
     };
 
-    render() {
+    handleSortItemClick = value => {
         const {
-            productsListObject,
+            productsListLoading
+        } = this.props;
+
+        const {
+            searchText,
+            province,
+            city
+        } = this.state;
+
+        !productsListLoading && this.setState({ sort_by: value }, () => {
+            this.scrollToTop();
+            let searchItem = {
+                from_record_number: 0,
+                sort_by: value,
+                to_record_number: 16,
+            };
+            if (searchText && searchText.length) {
+                searchItem = {
+                    from_record_number: 0,
+                    sort_by: value,
+                    search_text: searchText,
+                    to_record_number: 16
+                }
+            }
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+
+            this.fetchAllProducts(searchItem);
+        })
+    }
+
+    renderSortListItem = ({ item }) => {
+        const {
+            sort_by,
+        } = this.state;
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => this.handleSortItemClick(item.value)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                    color: '#e41c38'
+                }}>
+                {sort_by == item.value ?
+                    <FontAwesome5 name='check' size={26} color='#00C569' />
+                    :
+                    <FontAwesome5 name='angle-left' size={26} color='#777' />
+                }
+                <Text
+                    style={{
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: sort_by == item.value ? '#00C569' : '#777'
+                    }}
+                >
+                    {item.title}
+                </Text>
+            </TouchableOpacity>
+
+        )
+    };
+
+    renderSubCategoriesListItem = ({ item }) => {
+
+        const {
+            productsListLoading
+        } = this.props;
+
+        const {
+            sort_by,
+            province,
+            city
+        } = this.state;
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
+                    this.scrollToTop(undefined, true)
+                    let searchItem = {
+                        from_record_number: 0,
+                        sort_by,
+                        search_text: item.category_name,
+                        to_record_number: 16,
+                    };
+                    if (province) {
+                        searchItem = { ...searchItem, province_id: province }
+                    }
+                    if (city) {
+                        searchItem = { ...searchItem, city_id: city }
+                    }
+
+                    this.fetchAllProducts(searchItem);
+                })}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </TouchableOpacity>
+        )
+    };
+
+    renderCategoriesListItem = ({ item }) => {
+        const {
+            productsListLoading
+        } = this.props;
+
+        return (
+            <TouchableOpacity
+                onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
+                style={{
+                    borderRadius: 18,
+                    marginHorizontal: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: 85,
+                    borderWidth: 1,
+                    borderColor: '#7E7E7E',
+                    backgroundColor: '#eee',
+                    minHeight: 30
+                }}>
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        color: '#7E7E7E',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </TouchableOpacity>
+        )
+    };
+
+    renderProductListFooterComponent = _ => {
+        const {
+            loaded
+        } = this.state;
+
+        const {
+            productsListLoading
+        } = this.props;
+
+        if (loaded && productsListLoading)
+            return (
+                <View style={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 15
+
+                }}>
+                    <ActivityIndicator size="small" color="#00C569"
+                        style={{
+                            zIndex: 999,
+                            width: 50, height: 50,
+                            borderRadius: 50,
+                            backgroundColor: '#fff',
+                            elevation: 5,
+                            padding: 0,
+                        }}
+                    />
+                </View>
+            )
+        return null;
+    };
+
+    renderProductListItem = ({ item }) => {
+        return (
+            <View
+                style={{
+                    width: '47%', marginVertical: 10,
+                    marginHorizontal: 5,
+                    alignItems: 'center', justifyContent: 'center'
+                }}
+            >
+                <Product
+                    productItem={item}
+                    fetchAllProducts={this.fetchAllProducts}
+                    {...this.props}
+                />
+            </View>
+
+        )
+    };
+
+    render() {
+
+        const {
             productsListLoading,
-            productsListFailed,
-            productsListMessage,
-            productsListError,
+
             subCategoriesList,
             categoriesList,
             categoriesLoading,
@@ -622,364 +975,313 @@ class ProductsList extends PureComponent {
             allProvincesObject,
             allCitiesObject,
             userProfile = {}
+
         } = this.props;
 
-        const { user_info = {} } = userProfile;
+        const {
+            user_info = {}
+        } = userProfile;
+
         const {
             is_seller
         } = user_info;
 
-        const { searchText, loaded, productsListArray, selectedButton, searchLoader,
-            categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
+        const {
 
-        let { provinces = [] } = allProvincesObject;
+            searchText,
+            productsListArray,
+            selectedButton,
+            searchLoader,
+            categoryModalFlag,
+            sortModalFlag,
+            locationsFlag,
+            province,
+            city,
+            selectedCategoryModal
+
+        } = this.state;
+
+
+        let {
+            provinces = []
+        } = allProvincesObject;
 
         let cities = [];
+
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
         if (allCitiesObject && Object.entries(allCitiesObject).length) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
         }
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
+
+
         return (
-            <>
+            <View
+                style={{
+                    flex: 1
+                }}
+            >
                 <NoConnection
                     closeModal={this.setShowModal}
                     showModal={this.state.showModal}
                 />
 
-                <Modal
-                    animationType="slide"
-                    visible={locationsFlag}
-                    onRequestClose={() => this.setState({ locationsFlag: false })}>
+                {locationsFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={locationsFlag}
+                        onRequestClose={() => this.setState({ locationsFlag: false })}>
 
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row-reverse',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
-                            onPress={() => {
-                                this.setState({ locationsFlag: false });
-                            }}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
 
                         <View style={{
-                            width: deviceWidth * 0.6,
-                            alignItems: 'flex-end'
+                            backgroundColor: 'white',
+                            flexDirection: 'row-reverse',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            height: 45,
+                            elevation: 5,
+                            justifyContent: 'center'
                         }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {locales('labels.locationsFilter')}
-                            </Text>
-                        </View>
-                    </View>
-
-
-                    <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
-                        <Card>
-                            <CardItem>
-                                <Body>
-                                    <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
-
-                                        <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('labels.province')}
-                                            </Label>
-                                            <Item regular
-                                                style={{
-                                                    width: deviceWidth * 0.9,
-                                                    borderRadius: 5,
-                                                    alignSelf: 'center',
-                                                    borderColor: '#a8a8a8'
-                                                }}
-                                            >
-                                                <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                    useNativeAndroidPickerStyle={false}
-                                                    onValueChange={this.setProvince}
-                                                    onOpen={() => { this.setState({ disableSubCategory: true }) }}
-                                                    style={styles}
-                                                    value={province}
-                                                    disabled={categoriesLoading}
-                                                    placeholder={{
-                                                        label: locales('labels.selectProvince'),
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    }}
-                                                    items={[...provinces.map(item => ({
-                                                        label: item.province_name, value: item.id
-                                                    }))]}
-                                                />
-                                            </Item>
-                                        </View>
-
-                                        <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('labels.city')}
-                                            </Label>
-                                            {(this.props.provinceLoading || this.props.fetchCitiesLoading) ?
-                                                <ActivityIndicator size="small" color="#00C569"
-                                                    style={{
-                                                        position: 'absolute', right: '15%', top: '2%',
-                                                        width: 50, height: 50, borderRadius: 25
-                                                    }}
-                                                /> : null}
-                                            <Item regular
-                                                style={{
-                                                    width: deviceWidth * 0.9,
-                                                    borderRadius: 5,
-                                                    alignSelf: 'center',
-                                                    borderColor: '#a8a8a8'
-                                                }}
-                                            >
-                                                <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                    useNativeAndroidPickerStyle={false}
-                                                    onValueChange={this.setCity}
-                                                    disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
-                                                    style={styles}
-                                                    value={city}
-                                                    placeholder={{
-                                                        label: locales('labels.selectCity'),
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    }}
-                                                    items={[...cities.map(item => ({
-                                                        label: item.city_name, value: item.id
-                                                    }))]}
-                                                />
-                                            </Item>
-                                        </View>
-
-                                        <View style={{
-                                            flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
-                                            alignItems: 'center'
-                                        }}>
-                                            <Button
-                                                style={[styles.loginButton, { width: '50%' }]}
-                                                onPress={this.searchLocation}>
-                                                <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 1 && !!productsListLoading}
-                                                    style={{
-                                                        marginLeft: -15,
-                                                        justifyContent: 'center',
-
-                                                        width: 30, height: 30, borderRadius: 15
-                                                    }}
-                                                />
-                                                <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                    {locales('labels.search')}
-                                                </Text>
-
-                                            </Button>
-                                            <Button
-                                                style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
-                                                onPress={this.deleteFilter}>
-                                                <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 2 && !!productsListLoading}
-                                                    style={{
-                                                        marginLeft: -15,
-                                                        justifyContent: 'center',
-
-                                                        width: 30, height: 30, borderRadius: 15
-                                                    }}
-                                                />
-                                                <Text style={[styles.buttonText, {
-                                                    alignSelf: 'center',
-                                                    fontSize: 16
-                                                }]}>
-                                                    {locales('labels.deleteFilter')}
-                                                </Text>
-
-                                            </Button>
-                                        </View>
-
-                                    </View>
-                                </Body>
-                            </CardItem>
-                        </Card>
-
-                    </View>
-
-                </Modal>
-
-                <Modal
-                    animationType="slide"
-                    visible={sortModalFlag}
-                    onRequestClose={() => this.setState({ sortModalFlag: false })}>
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.setState({ sortModalFlag: false })}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
-
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {locales('labels.sortBy')}
-                            </Text>
-                        </View>
-                    </View>
-                    <FlatList
-                        refreshing={productsListLoading || categoriesLoading}
-                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
-                            }}
-                        />}
-                        data={ENUMS.SORT_LIST.list}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
                             <TouchableOpacity
-                                activeOpacity={1}
-                                onPress={() => !productsListLoading && this.setState({ sort_by: item.value }, () => {
-                                    this.scrollToTop();
-                                    const { searchText } = this.state;
-                                    let searchItem = {
-                                        from_record_number: 0,
-                                        sort_by: item.value,
-                                        to_record_number: 16,
-                                    };
-                                    if (searchText && searchText.length) {
-                                        searchItem = {
-                                            from_record_number: 0,
-                                            sort_by: item.value,
-                                            search_text: searchText,
-                                            to_record_number: 16
-                                        }
-                                    }
-                                    if (province) {
-                                        searchItem = { ...searchItem, province_id: province }
-                                    }
-                                    if (city) {
-                                        searchItem = { ...searchItem, city_id: city }
-                                    }
-
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 16 })
-                                    }).catch(error => {
-                                        this.setState({
-                                            // showModal: true, 
-                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                        })
-                                    });
-                                })}
                                 style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
-                                    color: '#e41c38'
-                                }}>
-                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
-                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
+                                    width: deviceWidth * 0.4,
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-end',
+                                    paddingHorizontal: 10
+                                }}
+                                onPress={() => {
+                                    this.setState({ locationsFlag: false });
+                                }}
+                            >
+                                <AntDesign name='arrowright' size={25} />
                             </TouchableOpacity>
-                        )}
-                    />
-                </Modal>
 
-                <Modal
-                    animationType="slide"
-                    visible={categoryModalFlag}
-                    onRequestClose={() => this.setState({ categoryModalFlag: false })}>
+                            <View style={{
+                                width: deviceWidth * 0.6,
+                                alignItems: 'flex-end'
+                            }}>
+                                <Text
+                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                                >
+                                    {locales('labels.locationsFilter')}
+                                </Text>
+                            </View>
+                        </View>
 
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.setState({ categoryModalFlag: false })}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
+
+                        <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
+                            <Card>
+                                <CardItem>
+                                    <Body>
+                                        <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+
+                                            <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
+                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                    {locales('labels.province')}
+                                                </Label>
+                                                <Item regular
+                                                    style={{
+                                                        width: deviceWidth * 0.9,
+                                                        borderRadius: 5,
+                                                        alignSelf: 'center',
+                                                        borderColor: '#a8a8a8'
+                                                    }}
+                                                >
+                                                    <RNPickerSelect
+                                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                                        useNativeAndroidPickerStyle={false}
+                                                        onValueChange={this.setProvince}
+                                                        onOpen={() => { this.setState({ disableSubCategory: true }) }}
+                                                        style={styles}
+                                                        value={province}
+                                                        disabled={categoriesLoading}
+                                                        placeholder={{
+                                                            label: locales('labels.selectProvince'),
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                        }}
+                                                        items={[...provinces.map(item => ({
+                                                            label: item.province_name, value: item.id
+                                                        }))]}
+                                                    />
+                                                </Item>
+                                            </View>
+
+                                            <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
+                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                                    {locales('labels.city')}
+                                                </Label>
+                                                {(this.props.provinceLoading || this.props.fetchCitiesLoading) ?
+                                                    <ActivityIndicator size="small" color="#00C569"
+                                                        style={{
+                                                            position: 'absolute', right: '15%', top: '2%',
+                                                            width: 50, height: 50, borderRadius: 25
+                                                        }}
+                                                    /> : null}
+                                                <Item regular
+                                                    style={{
+                                                        width: deviceWidth * 0.9,
+                                                        borderRadius: 5,
+                                                        alignSelf: 'center',
+                                                        borderColor: '#a8a8a8'
+                                                    }}
+                                                >
+                                                    <RNPickerSelect
+                                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                                        useNativeAndroidPickerStyle={false}
+                                                        onValueChange={this.setCity}
+                                                        disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
+                                                        style={styles}
+                                                        value={city}
+                                                        placeholder={{
+                                                            label: locales('labels.selectCity'),
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                        }}
+                                                        items={[...cities.map(item => ({
+                                                            label: item.city_name, value: item.id
+                                                        }))]}
+                                                    />
+                                                </Item>
+                                            </View>
+
+                                            <View style={{
+                                                flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
+                                                alignItems: 'center'
+                                            }}>
+                                                <Button
+                                                    style={[styles.loginButton, { width: '50%' }]}
+                                                    onPress={this.searchLocation}>
+                                                    <ActivityIndicator size="small" color="white"
+                                                        animating={selectedButton == 1 && !!productsListLoading}
+                                                        style={{
+                                                            marginLeft: -15,
+                                                            justifyContent: 'center',
+
+                                                            width: 30, height: 30, borderRadius: 15
+                                                        }}
+                                                    />
+                                                    <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
+                                                        {locales('labels.search')}
+                                                    </Text>
+
+                                                </Button>
+                                                <Button
+                                                    style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
+                                                    onPress={this.deleteFilter}>
+                                                    <ActivityIndicator size="small" color="white"
+                                                        animating={selectedButton == 2 && !!productsListLoading}
+                                                        style={{
+                                                            marginLeft: -15,
+                                                            justifyContent: 'center',
+
+                                                            width: 30, height: 30, borderRadius: 15
+                                                        }}
+                                                    />
+                                                    <Text style={[styles.buttonText, {
+                                                        alignSelf: 'center',
+                                                        fontSize: 16
+                                                    }]}>
+                                                        {locales('labels.deleteFilter')}
+                                                    </Text>
+
+                                                </Button>
+                                            </View>
+
+                                        </View>
+                                    </Body>
+                                </CardItem>
+                            </Card>
+
+                        </View>
+
+                    </Modal>
+                    : null}
+
+                {sortModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={sortModalFlag}
+                        onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
                         <View style={{
-                            width: '100%',
-                            alignItems: 'center'
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            height: 45,
+                            elevation: 5,
+                            justifyContent: 'center'
                         }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {selectedCategoryModal}
-                            </Text>
-                        </View>
-                    </View>
-                    <FlatList
-                        data={subCategoriesList}
-                        keyExtractor={(item, index) => index.toString()}
-                        refreshing={subCategoriesLoading || productsListLoading}
-                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
-                            }}
-                        />}
-                        renderItem={({ item }) => (
                             <TouchableOpacity
-                                activeOpacity={1}
-                                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
-                                    this.scrollToTop(undefined, true)
-                                    const { sort_by } = this.state;
-                                    let searchItem = {
-                                        from_record_number: 0,
-                                        sort_by,
-                                        search_text: item.category_name,
-                                        to_record_number: 16,
-                                    };
-                                    if (province) {
-                                        searchItem = { ...searchItem, province_id: province }
-                                    }
-                                    if (city) {
-                                        searchItem = { ...searchItem, city_id: city }
-                                    }
-
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 16, searchFlag: true })
-                                    }).catch(error => {
-                                        this.setState({
-                                            //  showModal: true, 
-                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                        })
-                                    });
-                                })}
-                                style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                                }}>
-                                <FontAwesome5 name='angle-left' size={26} color='#777' />
-                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
+                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                                onPress={() => this.setState({ sortModalFlag: false })}
+                            >
+                                <AntDesign name='arrowright' size={25} />
                             </TouchableOpacity>
-                        )}
-                    />
-                </Modal>
+
+                            <View style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                                <Text
+                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                                >
+                                    {locales('labels.sortBy')}
+                                </Text>
+                            </View>
+                        </View>
+                        <FlatList
+                            refreshing={productsListLoading || categoriesLoading}
+                            onRefresh={this.onRefreshLists}
+                            data={ENUMS.SORT_LIST.list}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={this.renderSortListItem}
+                        />
+                    </Modal>
+                    : null}
+
+                {categoryModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={categoryModalFlag}
+                        onRequestClose={() => this.setState({ categoryModalFlag: false })}>
+
+                        <View style={{
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            height: 45,
+                            elevation: 5,
+                            justifyContent: 'center'
+                        }}>
+                            <TouchableOpacity
+                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                                onPress={() => this.setState({ categoryModalFlag: false })}
+                            >
+                                <AntDesign name='arrowright' size={25} />
+                            </TouchableOpacity>
+
+                            <View style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                                <Text
+                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                                >
+                                    {selectedCategoryModal}
+                                </Text>
+                            </View>
+                        </View>
+                        <FlatList
+                            data={subCategoriesList}
+                            keyExtractor={(_, index) => index.toString()}
+                            refreshing={subCategoriesLoading || productsListLoading}
+                            onRefresh={this.onRefreshLists}
+                            renderItem={this.renderSubCategoriesListItem}
+                        />
+                    </Modal>
+                    : null}
 
                 <View style={{
                     backgroundColor: 'white',
@@ -1042,7 +1344,10 @@ class ProductsList extends PureComponent {
                                 disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
                                 onSubmitEditing={this.submitSearching}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', paddingBottom: 10, color: '#777', textAlignVertical: 'bottom' }}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    paddingBottom: 10, color: '#777', textAlignVertical: 'bottom'
+                                }}
                                 placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
@@ -1052,35 +1357,31 @@ class ProductsList extends PureComponent {
                             <TouchableOpacity
                                 onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
                                 style={{
-                                    borderRadius: 18, marginTop: 7, marginBottom: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                                    borderRadius: 18, marginTop: 7, marginBottom: 8,
+                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
                                     minWidth: 110, backgroundColor: '#556080', minHeight: 30
                                 }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
+                                <Text
+                                    style={{
+                                        textAlign: 'center', textAlignVertical: 'center',
+                                        color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                    }}
+                                >
                                     {locales('labels.sort')}
                                 </Text>
                                 <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
                             </TouchableOpacity>
+
                             <FlatList
                                 data={categoriesList}
                                 horizontal={true}
                                 inverted={true}
                                 showsHorizontalScrollIndicator={false}
                                 style={{ marginVertical: 8 }}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
-                                        style={{
-                                            borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
-                                            alignItems: 'center', justifyContent: 'center',
-                                            minWidth: 85, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee', minHeight: 30
-                                        }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {item.category_name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
+                                keyExtractor={(_, index) => index.toString()}
+                                renderItem={this.renderCategoriesListItem}
                             />
+
                         </View>
                     </View>
 
@@ -1088,139 +1389,24 @@ class ProductsList extends PureComponent {
 
 
                 <FlatList
-                    keyboardDismissMode='on-drag'
-                    // ItemSeparatorComponent={this.renderItemSeparatorComponent}
-                    keyboardShouldPersistTaps='handled'
-                    ListEmptyComponent={this.renderProductListEmptyComponent}
-                    // getItemLayout={(data, index) => (
-                    //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
-                    // )}
-                    extraData={this.state}
                     ref={this.props.productsListRef}
-                    onEndReached={() => {
-                        if (loaded && productsListArray.length >= this.state.to_record_number)
-                            this.setState({
-                                from_record_number: this.state.from_record_number + 16,
-                                to_record_number: this.state.to_record_number + 16,
-                            }, () => {
-                                const { from_record_number, to_record_number, sort_by, searchText } = this.state;
-
-                                let item = {
-                                    from_record_number,
-                                    sort_by,
-                                    to_record_number,
-                                };
-                                if (searchText && searchText.length) {
-                                    item = {
-                                        from_record_number,
-                                        sort_by,
-                                        to_record_number,
-                                        search_text: searchText
-                                    }
-                                }
-                                if (province) {
-                                    item = { ...item, province_id: province }
-                                }
-                                if (city) {
-                                    item = { ...item, city_id: city }
-                                }
-
-                                this.props.fetchAllProductsList(item).then(_ => {
-                                    this.setState({ loaded: false })
-                                }).catch(error => {
-                                    this.setState({
-                                        // showModal: true,
-                                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                    })
-                                });
-                            })
-                    }}
-                    onEndReachedThreshold={3.5}
-                    // initialNumToRender={2}
-                    ListFooterComponent={() => {
-                        return ((loaded && productsListLoading)) ?
-                            <View style={{
-                                textAlign: 'center',
-                                alignItems: 'center',
-                                marginBottom: 15
-
-                            }}>
-                                <ActivityIndicator size="small" color="#00C569"
-                                    style={{
-                                        zIndex: 999,
-                                        width: 50, height: 50,
-                                        borderRadius: 50,
-                                        backgroundColor: '#fff',
-                                        elevation: 5,
-                                        padding: 0,
-                                    }}
-                                />
-                            </View> : null
-                    }
-                    }
-                    // initialScrollIndex={0}
-                    // refreshing={(!loaded && productsListLoading) || categoriesLoading}
-                    refreshing={!!productsListLoading && !!searchLoader}
-                    onRefresh={() => {
-                        let item = {
-                            from_record_number: 0,
-                            sort_by: this.state.sort_by,
-                            to_record_number: 16,
-                        };
-                        if (searchText && searchText.length) {
-                            item = {
-                                from_record_number: 0,
-                                sort_by: this.state.sort_by,
-                                to_record_number: 16,
-                                search_text: this.state.searchText
-                            }
-                        }
-                        if (province) {
-                            item = { ...item, province_id: province }
-                        }
-                        if (city) {
-                            item = { ...item, city_id: city }
-                        }
-                        this.props.fetchAllProductsList(item).then(result => {
-                            this.setState({
-                                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
-                            })
-                        }).catch(error => {
-                            this.setState({
-                                //  showModal: true,
-                                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                            })
-                        });
-                    }
-                    }
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
                     style={{ backgroundColor: 'white' }}
                     horizontal={false}
                     numColumns={2}
                     columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
+                    refreshing={false}
+                    onRefresh={this.onProductListRefreshed}
+                    onEndReached={this.onEndOfProductListReached}
+                    onEndReachedThreshold={3}
+                    ListEmptyComponent={this.renderProductListEmptyComponent}
+                    ListFooterComponent={this.renderProductListFooterComponent}
                     ItemSeparatorComponent={({ _, leadingItem }) => !is_seller && this.renderItemSeparatorComponent(leadingItem)}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <View
-                                style={{
-                                    width: '47%', marginVertical: 10,
-                                    marginHorizontal: 5,
-                                    alignItems: 'center', justifyContent: 'center'
-                                }}
-                            >
-                                <Product
-                                    productItem={item}
-                                    fetchAllProducts={this.fetchAllProducts}
-                                    {...this.props}
-                                />
-                            </View>
-                        )
-                    }
-                    }
+                    renderItem={this.renderProductListItem}
                 />
 
-            </>
+            </View>
         )
     }
 }
