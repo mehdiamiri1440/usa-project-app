@@ -36,7 +36,6 @@ class ProductsList extends PureComponent {
             province: '',
             sortModalFlag: false,
             locationsFlag: false,
-            refreshed: false,
             searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
@@ -152,10 +151,6 @@ class ProductsList extends PureComponent {
             this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
         }
 
-
-        if (this.state.refreshed) {
-            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
-        }
     }
 
 

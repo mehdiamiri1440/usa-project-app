@@ -34,7 +34,6 @@ class SpecialProducts extends PureComponent {
             province: '',
             sortModalFlag: false,
             locationsFlag: false,
-            refreshed: false,
             searchText: undefined,
             from_record_number: 0,
             specialProductsListArray: [],
@@ -88,10 +87,6 @@ class SpecialProducts extends PureComponent {
             this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], searchFlag: false })
         }
 
-
-        if (this.state.refreshed) {
-            this.setState({ specialProductsListArray: [...this.props.specialProductsListArray], refreshed: false })
-        }
     }
 
     initialCalls = _ => {
