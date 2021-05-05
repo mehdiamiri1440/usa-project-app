@@ -164,15 +164,12 @@ class ProductsList extends PureComponent {
 
         if (searchText && searchText.length) {
             item = {
-                from_record_number,
-                sort_by,
+                ...item,
                 search_text: searchText,
-                to_record_number,
             };
         };
         this.props.fetchAllProductsList(item)
             .then(result => {
-                this.scrollToTop(result);
                 this.setState({
                     from_record_number: 0,
                     to_record_number: 16,
@@ -184,7 +181,7 @@ class ProductsList extends PureComponent {
                     categoryModalFlag: false,
 
                     productsListArray: [...result?.payload?.products]
-                });
+                }, _ => this.scrollToTop(result));
             })
             .catch(error => {
                 this.setState({
@@ -768,8 +765,7 @@ class ProductsList extends PureComponent {
             city
         } = this.state;
 
-        !productsListLoading && this.setState({ sort_by: value }, () => {
-            this.scrollToTop();
+        !productsListLoading && this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
             let searchItem = {
                 from_record_number: 0,
                 sort_by: value,
@@ -842,7 +838,11 @@ class ProductsList extends PureComponent {
         return (
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
+                onPress={() => !productsListLoading && this.setState({
+                    searchText: item.category_name,
+                    productsListArray: [],
+                    categoryModalFlag: false
+                }, () => {
                     this.scrollToTop(undefined, true)
                     let searchItem = {
                         from_record_number: 0,
@@ -1231,8 +1231,6 @@ class ProductsList extends PureComponent {
                             </View>
                         </View>
                         <FlatList
-                            refreshing={productsListLoading || categoriesLoading}
-                            onRefresh={this.onRefreshLists}
                             data={ENUMS.SORT_LIST.list}
                             keyExtractor={(_, index) => index.toString()}
                             renderItem={this.renderSortListItem}
@@ -1276,8 +1274,6 @@ class ProductsList extends PureComponent {
                         <FlatList
                             data={subCategoriesList}
                             keyExtractor={(_, index) => index.toString()}
-                            refreshing={subCategoriesLoading || productsListLoading}
-                            onRefresh={this.onRefreshLists}
                             renderItem={this.renderSubCategoriesListItem}
                         />
                     </Modal>
