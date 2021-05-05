@@ -38,7 +38,6 @@ class ProductsList extends PureComponent {
             searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
-            disableSubCategory: false,
             categoryModalFlag: false,
             to_record_number: 16,
             sort_by: ENUMS.SORT_LIST.values.BM,
@@ -47,6 +46,8 @@ class ProductsList extends PureComponent {
             searchFlag: false,
             showModal: false,
             selectedCategoryModal: '',
+            subCategoriesList: [],
+            cities: []
         }
 
     }
@@ -87,7 +88,7 @@ class ProductsList extends PureComponent {
                 searchText: ''
             })
             this.props.updateProductsList(false);
-            this.scrollToTop();
+            this.scrollToTop({});
         }
 
         if (
@@ -115,13 +116,7 @@ class ProductsList extends PureComponent {
                 sort_by: ENUMS.SORT_LIST.values.BM,
                 to_record_number: 16,
             };
-            this.props.fetchAllProductsList(item).then(result => {
-                this.setState({
-                    productsListArray: [...result.payload.products],
-                    to_record_number: 16,
-                    from_record_number: 0
-                }, () => this.scrollToTop(result, true, 'offset'));
-            })
+            this.fetchAllProducts(item, { needsTimeout: true, type: 'offset' })
         }
 
         if (this.state.loaded == false && this.props.productsListArray.length) {
@@ -145,7 +140,8 @@ class ProductsList extends PureComponent {
         });
     };
 
-    fetchAllProducts = (itemFromResult) => {
+    fetchAllProducts = (itemFromResult, scrollObject = {}) => {
+
         const {
             from_record_number,
             to_record_number,
@@ -180,8 +176,10 @@ class ProductsList extends PureComponent {
 
                     categoryModalFlag: false,
 
+                    locationsFlag: false,
+
                     productsListArray: [...result?.payload?.products]
-                }, _ => this.scrollToTop(result));
+                }, _ => this.scrollToTop({ ...scrollObject, result }));
             })
             .catch(error => {
                 this.setState({
@@ -191,7 +189,7 @@ class ProductsList extends PureComponent {
             });
     };
 
-    scrollToTop = (result, needsTimeout, type) => {
+    scrollToTop = ({ result, needsTimeout, type }) => {
         let conditions = this.props.productsListRef && this.props.productsListRef != null
             && this.props.productsListRef != undefined &&
             this.props.productsListRef.current && this.props.productsListRef.current != null &&
@@ -239,7 +237,6 @@ class ProductsList extends PureComponent {
                 sort_by,
             };
         myTimeout = setTimeout(() => {
-            this.scrollToTop();
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -282,34 +279,29 @@ class ProductsList extends PureComponent {
         this.fetchAllProducts(item);
     };
 
-    sortProducts = (id, name) => {
+    sortProducts = ({ id, category_name: name, subcategories: subCategoriesList = {} }) => {
 
         analytics().logEvent('apply_sort', {
             sort_type: name
-        })
-        this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
-            this.props.fetchAllSubCategories(id).catch(error => {
-                this.setState({
-                    // showModal: true,
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                })
-            })
-        })
+        });
+
+        subCategoriesList = Object.values(subCategoriesList);
+        this.setState({ categoryModalFlag: true, selectedCategoryModal: name, subCategoriesList })
     };
 
-    setProvince = (value, index) => {
-        this.setState({ disableSubCategory: true })
+    setProvince = (value) => {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '', cityError: '', city: '' })
-            this.props.fetchAllProvinces(value).then(result => {
-                this.setState({ disableSubCategory: false })
-            }).catch(error => {
-                this.setState({
-                    //  showModal: true,
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                })
-            });
+
+            let cities = provinces.find(item => item.id == value)?.cities ?? {};
+
+            if (!cities || (!Array.isArray(cities) && !Object.entries(cities).length))
+                cities = {};
+
+            if (!Array.isArray(cities))
+                cities = Object.values(cities);
+
+            this.setState({ province: value, provinceError: '', cityError: '', city: '', cities })
         }
     };
 
@@ -320,7 +312,7 @@ class ProductsList extends PureComponent {
 
     searchLocation = () => {
         const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 1 });
+        this.setState({ selectedButton: 1, productsListArray: [], locationsFlag: false });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -341,21 +333,12 @@ class ProductsList extends PureComponent {
             searchItem = { ...searchItem, city_id: city }
         }
 
-        return this.props.fetchAllProductsList(searchItem).then(result => {
-            this.scrollToTop(result);
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, productsListArray: [...result.payload.products] })
-        }).catch(error => {
-            this.setState({
-                //  showModal: true, 
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });;
-
+        return this.fetchAllProducts(searchItem);
     };
 
     deleteFilter = () => {
-        const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 2 });
+        const { searchText, sort_by } = this.state;
+        this.setState({ selectedButton: 2, productsListArray: [], locationsFlag: false, city: '', province: '' });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -370,26 +353,8 @@ class ProductsList extends PureComponent {
             }
         }
 
-        this.props.fetchAllProductsList(searchItem).then(result => {
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 16, province: '', city: '', productsListArray: [...result.payload.products] })
-        }).catch(error => {
-            this.setState({
-                //  showModal: true, 
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });;
+        this.fetchAllProducts(searchItem);
 
-    };
-
-    onRefreshLists = _ => {
-        return (
-            <ActivityIndicator size="small" color="#00C569"
-                style={{
-                    position: 'absolute', right: '15%', top: '2%',
-                    width: 50, height: 50, borderRadius: 25
-                }}
-            />
-        )
     };
 
     onEndOfProductListReached = _ => {
@@ -488,7 +453,71 @@ class ProductsList extends PureComponent {
         });
     };
 
+    renderSubCategoriesListEmptyComponent = _ => {
+        const {
+            subCategoriesLoading
+        } = this.props;
 
+        if (!subCategoriesLoading)
+            return (
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7
+                    }}
+                >
+                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('labels.emptyList')}</Text>
+                </View>
+            );
+
+        return (
+            <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                    <View
+                        key={index}
+                        style={{
+                            padding: 20,
+                            flex: 1,
+                            width: '100%',
+                            height: deviceHeight * 0.1,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            borderBottomWidth: 0.7,
+                            borderBottomColor: '#BEBEBE'
+
+                        }}>
+                        <ContentLoader
+                            speed={2}
+                            width={'100%'}
+                            height={'100%'}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+
+                        >
+                            <Rect x="75%" y="20%" width="120" height="10" />
+                        </ContentLoader>
+                        <FontAwesome5 name='angle-left' size={26} color='#777' />
+                    </View>
+                )
+                )}
+            </View>
+        )
+    };
 
     renderProductListEmptyComponent = _ => {
         const {
@@ -843,7 +872,6 @@ class ProductsList extends PureComponent {
                     productsListArray: [],
                     categoryModalFlag: false
                 }, () => {
-                    this.scrollToTop(undefined, true)
                     let searchItem = {
                         from_record_number: 0,
                         sort_by,
@@ -857,7 +885,7 @@ class ProductsList extends PureComponent {
                         searchItem = { ...searchItem, city_id: city }
                     }
 
-                    this.fetchAllProducts(searchItem);
+                    this.fetchAllProducts(searchItem, { needsTimeout: true });
                 })}
                 style={{
                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
@@ -884,7 +912,7 @@ class ProductsList extends PureComponent {
 
         return (
             <TouchableOpacity
-                onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
+                onPress={() => !productsListLoading && this.sortProducts(item)}
                 style={{
                     borderRadius: 18,
                     marginHorizontal: 5,
@@ -967,14 +995,13 @@ class ProductsList extends PureComponent {
         const {
             productsListLoading,
 
-            subCategoriesList,
             categoriesList,
             categoriesLoading,
-            subCategoriesLoading,
 
             allProvincesObject,
-            allCitiesObject,
-            userProfile = {}
+            userProfile = {},
+
+            provinceLoading
 
         } = this.props;
 
@@ -991,14 +1018,14 @@ class ProductsList extends PureComponent {
             searchText,
             productsListArray,
             selectedButton,
-            searchLoader,
             categoryModalFlag,
             sortModalFlag,
             locationsFlag,
             province,
             city,
-            selectedCategoryModal
-
+            selectedCategoryModal,
+            subCategoriesList,
+            cities
         } = this.state;
 
 
@@ -1006,13 +1033,9 @@ class ProductsList extends PureComponent {
             provinces = []
         } = allProvincesObject;
 
-        let cities = [];
 
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
-        if (allCitiesObject && Object.entries(allCitiesObject).length) {
-            cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
-        }
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
 
 
@@ -1092,7 +1115,6 @@ class ProductsList extends PureComponent {
                                                         Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                         useNativeAndroidPickerStyle={false}
                                                         onValueChange={this.setProvince}
-                                                        onOpen={() => { this.setState({ disableSubCategory: true }) }}
                                                         style={styles}
                                                         value={province}
                                                         disabled={categoriesLoading}
@@ -1111,7 +1133,7 @@ class ProductsList extends PureComponent {
                                                 <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                     {locales('labels.city')}
                                                 </Label>
-                                                {(this.props.provinceLoading || this.props.fetchCitiesLoading) ?
+                                                {(provinceLoading || this.props.fetchCitiesLoading) ?
                                                     <ActivityIndicator size="small" color="#00C569"
                                                         style={{
                                                             position: 'absolute', right: '15%', top: '2%',
@@ -1130,7 +1152,7 @@ class ProductsList extends PureComponent {
                                                         Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
                                                         useNativeAndroidPickerStyle={false}
                                                         onValueChange={this.setCity}
-                                                        disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
+                                                        disabled={provinceLoading || !province}
                                                         style={styles}
                                                         value={city}
                                                         placeholder={{
@@ -1272,6 +1294,7 @@ class ProductsList extends PureComponent {
                             </View>
                         </View>
                         <FlatList
+                            ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
                             data={subCategoriesList}
                             keyExtractor={(_, index) => index.toString()}
                             renderItem={this.renderSubCategoriesListItem}
@@ -1385,6 +1408,7 @@ class ProductsList extends PureComponent {
 
 
                 <FlatList
+                    initialNumToRender={4}
                     ref={this.props.productsListRef}
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
@@ -1579,7 +1603,6 @@ const mapStateToProps = ({
         subCategoriesMessage,
         subCategoriesError,
         subCategoriesFailed,
-        subCategoriesList,
         subCategories
     } = registerProductReducer;
 
@@ -1620,7 +1643,6 @@ const mapStateToProps = ({
         subCategoriesMessage,
         subCategoriesError,
         subCategoriesFailed,
-        subCategoriesList,
         subCategories,
 
         provinceLoading,
@@ -1644,10 +1666,10 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
         fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
-        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, true)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
         fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
