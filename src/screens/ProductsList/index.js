@@ -218,6 +218,76 @@ class ProductsList extends PureComponent {
         });
     };
 
+    handleSortItemClick = value => {
+        const {
+            productsListLoading
+        } = this.props;
+
+        const {
+            searchText,
+            province,
+            city
+        } = this.state;
+
+        !productsListLoading && this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
+            let searchItem = {
+                from_record_number: 0,
+                sort_by: value,
+                to_record_number: 16,
+            };
+            if (searchText && searchText.length) {
+                searchItem = {
+                    from_record_number: 0,
+                    sort_by: value,
+                    search_text: searchText,
+                    to_record_number: 16
+                }
+            }
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+
+            this.fetchAllProducts(searchItem);
+        })
+    };
+
+    handleSubCategoryItemClick = item => {
+
+        const {
+            productsListLoading
+        } = this.props;
+
+        const {
+            sort_by,
+            province,
+            city
+        } = this.state;
+
+        !productsListLoading && this.setState({
+            searchText: item.category_name,
+            productsListArray: [],
+            categoryModalFlag: false
+        }, () => {
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                search_text: item.category_name,
+                to_record_number: 16,
+            };
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+
+            this.fetchAllProducts(searchItem, { needsTimeout: true });
+        })
+    };
+
     handleSearch = (text) => {
 
 
@@ -783,42 +853,6 @@ class ProductsList extends PureComponent {
         )
     };
 
-    handleSortItemClick = value => {
-        const {
-            productsListLoading
-        } = this.props;
-
-        const {
-            searchText,
-            province,
-            city
-        } = this.state;
-
-        !productsListLoading && this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
-            let searchItem = {
-                from_record_number: 0,
-                sort_by: value,
-                to_record_number: 16,
-            };
-            if (searchText && searchText.length) {
-                searchItem = {
-                    from_record_number: 0,
-                    sort_by: value,
-                    search_text: searchText,
-                    to_record_number: 16
-                }
-            }
-            if (province) {
-                searchItem = { ...searchItem, province_id: province }
-            }
-            if (city) {
-                searchItem = { ...searchItem, city_id: city }
-            }
-
-            this.fetchAllProducts(searchItem);
-        })
-    }
-
     renderSortListItem = ({ item }) => {
         const {
             sort_by,
@@ -853,40 +887,10 @@ class ProductsList extends PureComponent {
     };
 
     renderSubCategoriesListItem = ({ item }) => {
-
-        const {
-            productsListLoading
-        } = this.props;
-
-        const {
-            sort_by,
-            province,
-            city
-        } = this.state;
-
         return (
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={() => !productsListLoading && this.setState({
-                    searchText: item.category_name,
-                    productsListArray: [],
-                    categoryModalFlag: false
-                }, () => {
-                    let searchItem = {
-                        from_record_number: 0,
-                        sort_by,
-                        search_text: item.category_name,
-                        to_record_number: 16,
-                    };
-                    if (province) {
-                        searchItem = { ...searchItem, province_id: province }
-                    }
-                    if (city) {
-                        searchItem = { ...searchItem, city_id: city }
-                    }
-
-                    this.fetchAllProducts(searchItem, { needsTimeout: true });
-                })}
+                onPress={_ => this.handleSubCategoryItemClick(item)}
                 style={{
                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
@@ -1001,8 +1005,8 @@ class ProductsList extends PureComponent {
             allProvincesObject,
             userProfile = {},
 
-            provinceLoading
-
+            provinceLoading,
+            fetchCitiesLoading
         } = this.props;
 
         const {
@@ -1014,7 +1018,6 @@ class ProductsList extends PureComponent {
         } = user_info;
 
         const {
-
             searchText,
             productsListArray,
             selectedButton,
@@ -1025,7 +1028,8 @@ class ProductsList extends PureComponent {
             city,
             selectedCategoryModal,
             subCategoriesList,
-            cities
+            cities,
+            showModal
         } = this.state;
 
 
@@ -1047,7 +1051,7 @@ class ProductsList extends PureComponent {
             >
                 <NoConnection
                     closeModal={this.setShowModal}
-                    showModal={this.state.showModal}
+                    showModal={showModal}
                 />
 
                 {locationsFlag ?
@@ -1133,7 +1137,7 @@ class ProductsList extends PureComponent {
                                                 <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                                     {locales('labels.city')}
                                                 </Label>
-                                                {(provinceLoading || this.props.fetchCitiesLoading) ?
+                                                {(provinceLoading || fetchCitiesLoading) ?
                                                     <ActivityIndicator size="small" color="#00C569"
                                                         style={{
                                                             position: 'absolute', right: '15%', top: '2%',

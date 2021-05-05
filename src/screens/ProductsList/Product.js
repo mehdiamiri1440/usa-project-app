@@ -19,7 +19,9 @@ import * as productListActions from '../../redux/productsList/actions'
 import * as profileActions from '../../redux/profile/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import { formatter, validator } from '../../utils';
+import buskoolLogo from '../../../android/app/src/main/res/mipmap-hdpi/ic_launcher.png';
 
+const defaultImageUri = Image.resolveAssetSource(buskoolLogo).uri;
 class Product extends PureComponent {
     constructor(props) {
         super(props)
@@ -981,6 +983,11 @@ class Product extends PureComponent {
                                     </Text>
                                 </View>}
                                 <Image
+                                    // defaultSource={{
+                                    //     uri: defaultImageUri,
+                                    //     width: '100%',
+                                    //     height: '100%'
+                                    // }}
                                     resizeMode='cover'
                                     style={{
                                         borderRadius: 12,
