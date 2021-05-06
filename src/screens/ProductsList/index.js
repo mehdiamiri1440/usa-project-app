@@ -123,7 +123,7 @@ class ProductsList extends PureComponent {
             this.setState({
                 loaded: true,
                 productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
-            })
+            }, _ => console.log(this.state.productsListArray))
         }
 
     }
@@ -434,9 +434,6 @@ class ProductsList extends PureComponent {
 
             productsListArray,
 
-            to_record_number,
-            from_record_number,
-
             loaded,
 
             sort_by,
@@ -444,11 +441,15 @@ class ProductsList extends PureComponent {
             searchText
         } = this.state;
 
-        if (loaded && productsListArray.length >= to_record_number)
+        if (loaded && productsListArray.length >= this.state.to_record_number)
             this.setState({
-                from_record_number: from_record_number + 16,
-                to_record_number: to_record_number + 16,
+                from_record_number: this.state.from_record_number + 16,
+                to_record_number: this.state.to_record_number + 16,
             }, () => {
+                const {
+                    to_record_number,
+                    from_record_number,
+                } = this.state;
 
                 let item = {
                     from_record_number,
@@ -469,7 +470,7 @@ class ProductsList extends PureComponent {
                 if (city) {
                     item = { ...item, city_id: city }
                 }
-
+                console.log(item)
                 this.props.fetchAllProductsList(item).then(_ => {
                     this.setState({ loaded: false })
                 }).catch(error => {

@@ -391,9 +391,6 @@ class SpecialProducts extends PureComponent {
 
             specialProductsListArray,
 
-            to_record_number,
-            from_record_number,
-
             loaded,
 
             sort_by,
@@ -401,11 +398,15 @@ class SpecialProducts extends PureComponent {
             searchText
         } = this.state;
 
-        if (loaded && specialProductsListArray.length >= to_record_number)
+        if (loaded && specialProductsListArray.length >= this.state.to_record_number)
             this.setState({
                 from_record_number: from_record_number + 16,
-                to_record_number: to_record_number + 16,
+                to_record_number: this.state.to_record_number + 16,
             }, () => {
+                const {
+                    to_record_number,
+                    from_record_number,
+                } = this.state;
 
                 let item = {
                     from_record_number,
