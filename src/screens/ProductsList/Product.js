@@ -12,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
+import ContentLoader, { Rect } from "react-content-loader/native"
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -19,9 +20,7 @@ import * as productListActions from '../../redux/productsList/actions'
 import * as profileActions from '../../redux/profile/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import { formatter, validator } from '../../utils';
-import buskoolLogo from '../../../android/app/src/main/res/mipmap-hdpi/ic_launcher.png';
 
-const defaultImageUri = Image.resolveAssetSource(buskoolLogo).uri;
 class Product extends PureComponent {
     constructor(props) {
         super(props)
@@ -44,7 +43,8 @@ class Product extends PureComponent {
             showDeletationMessage: false,
             deleteMessageText: '',
             walletElevatorPaymentError: '',
-            walletElevatorPaySuccessMessage: ''
+            walletElevatorPaySuccessMessage: '',
+            isProductImageLoaded: false
         }
     }
 
@@ -343,7 +343,9 @@ class Product extends PureComponent {
             showValidatedUserModal,
 
             walletElevatorPaymentError,
-            walletElevatorPaySuccessMessage
+            walletElevatorPaySuccessMessage,
+
+            isProductImageLoaded
         } = this.state;
 
         const selectedContact = {
@@ -982,12 +984,8 @@ class Product extends PureComponent {
                                         {photos_count <= 9 ? photos_count : '9+'}
                                     </Text>
                                 </View>}
+
                                 <Image
-                                    // defaultSource={{
-                                    //     uri: defaultImageUri,
-                                    //     width: '100%',
-                                    //     height: '100%'
-                                    // }}
                                     resizeMode='cover'
                                     style={{
                                         borderRadius: 12,
@@ -999,11 +997,18 @@ class Product extends PureComponent {
                                         borderBottomRightRadius: 0,
                                         // paddingLeft: 10
                                     }}
-                                    source={photos.length ?
-                                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
+                                    onLoad={_ => this.setState({ isProductImageLoaded: true })}
+                                    source={isProductImageLoaded ?
+                                        (
+                                            photos.length ?
+                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
+                                                :
+                                                require('../../../assets/icons/placeholder-image.jpg')
+                                        )
                                         :
-                                        require('../../../assets/icons/user.png')
-                                    } />
+                                        require('../../../assets/icons/placeholder-image.jpg')
+                                    }
+                                />
 
                                 <LinearGradient
                                     start={{ x: 0.5, y: 0 }}
