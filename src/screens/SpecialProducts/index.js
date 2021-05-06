@@ -400,7 +400,7 @@ class SpecialProducts extends PureComponent {
 
         if (loaded && specialProductsListArray.length >= this.state.to_record_number)
             this.setState({
-                from_record_number: from_record_number + 16,
+                from_record_number: this.state.from_record_number + 16,
                 to_record_number: this.state.to_record_number + 16,
             }, () => {
                 const {
