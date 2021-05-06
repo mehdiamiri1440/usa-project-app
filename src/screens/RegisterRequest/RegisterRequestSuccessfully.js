@@ -208,7 +208,7 @@ const RegisterRequestSuccessfully = props => {
             contact_id: myuser_id
         };
         setSelectedContact({ ...tempContact });
-        props.navigation.navigate('Chat', { contact: { ...tempContact } })
+        props.navigation.navigate('Chat', { shouldHideGuidAndComment: true, contact: { ...tempContact } })
     };
 
     const renderItem = ({ item }) => {

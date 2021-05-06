@@ -48,10 +48,10 @@ class ChatScreen extends Component {
     componentDidMount() {
         const { route = {} } = this.props;
         const { params = {} } = route;
-        const { contact = {} } = params;
+        const { contact = {}, shouldHideGuidAndComment } = params;
 
         const { buyAdId } = this.props;
-        if (!buyAdId) {
+        if (!buyAdId && !shouldHideGuidAndComment) {
             AsyncStorage.getItem('@openedChatIds').then(result => {
                 let ids = JSON.parse(result);
                 // const isGuidDisappeard = JSON.parse(result[1][1]);
@@ -311,7 +311,8 @@ class ChatScreen extends Component {
         const {
             profile_photo,
             contact,
-            showReportText
+            showReportText,
+            shouldHideGuidAndComment = false
         } = params;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
         let { userChatHistory, isFirstLoad, messageText,
@@ -464,10 +465,10 @@ class ChatScreen extends Component {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            activeOpacity={this.props.buyAdId ? 1 : 0}
+                            activeOpacity={(shouldHideGuidAndComment || this.props.buyAdId) ? 1 : 0}
                             onPress={() => {
                                 Jmoment.locale('fa');
-                                if (!this.props.buyAdId) {
+                                if (!this.props.buyAdId && !shouldHideGuidAndComment) {
                                     this.props.navigation.navigate('Profile', { user_name });
                                 }
                             }}
@@ -490,7 +491,7 @@ class ChatScreen extends Component {
                                     </Text>
                                     {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                                 </View>
-                                {!showGuid && !this.props.buyAdId ? <Text
+                                {!showGuid && !this.props.buyAdId && !shouldHideGuidAndComment ? <Text
                                     style={{
                                         textAlign: 'right',
                                         color: '#21AD93',

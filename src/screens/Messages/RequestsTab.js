@@ -1404,7 +1404,11 @@ class RequestsTab extends Component {
                         first_name: item.first_name,
                         last_name: item.last_name,
                     }
-                }, _ => this.props.navigation.navigate('Chat', { contact: this.state.selectedContact, buyAdId: this.state.selectedBuyAdId }));
+                }, _ => this.props.navigation.navigate('Chat', {
+                    contact: this.state.selectedContact,
+                    buyAdId: this.state.selectedBuyAdId,
+                    shouldHideGuidAndComment: true
+                }));
             }
             else {
                 analytics().logEvent('buyAd_suggestion_permission_denied', {

@@ -174,7 +174,11 @@ class Requests extends PureComponent {
                             first_name: item.first_name,
                             last_name: item.last_name,
                         }
-                    }, _ => this.props.navigation.navigate('Chat', { buyAdId: this.state.selectedBuyAdId, contact: this.state.selectedContact }));
+                    }, _ => this.props.navigation.navigate('Chat', {
+                        shouldHideGuidAndComment: true,
+                        buyAdId: this.state.selectedBuyAdId,
+                        contact: this.state.selectedContact
+                    }));
                 }
                 else {
                     analytics().logEvent('permission_denied', {
