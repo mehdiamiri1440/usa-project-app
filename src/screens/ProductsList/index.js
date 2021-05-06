@@ -123,7 +123,7 @@ class ProductsList extends PureComponent {
             this.setState({
                 loaded: true,
                 productsListArray: [...this.state.productsListArray, ...this.props.productsListArray],
-            }, _ => console.log(this.state.productsListArray))
+            })
         }
 
     }
@@ -470,7 +470,6 @@ class ProductsList extends PureComponent {
                 if (city) {
                     item = { ...item, city_id: city }
                 }
-                console.log(item)
                 this.props.fetchAllProductsList(item).then(_ => {
                     this.setState({ loaded: false })
                 }).catch(error => {
