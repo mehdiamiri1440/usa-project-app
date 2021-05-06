@@ -53,8 +53,6 @@ const App = (props) => {
 
 
   useEffect(() => {
-    checkForUpdate()
-    checkForShowingContactInfoGuid();
     AppState.addEventListener('change', handleAppStateChange)
     // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
     //   .then(res => {
@@ -112,12 +110,15 @@ const App = (props) => {
       setInitialRoute(is_seller ? 'RegisterProductStack' : 'RegisterRequest')
       SplashScreen.hide();
     }
+
     if (I18nManager.isRTL) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
       RNRestart.Restart();
     }
 
+    checkForShowingContactInfoGuid();
+    checkForUpdate();
 
     if (isRegistered) {
       firebase.messaging().getToken()
