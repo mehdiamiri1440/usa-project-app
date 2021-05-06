@@ -44,7 +44,8 @@ class Product extends PureComponent {
             deleteMessageText: '',
             walletElevatorPaymentError: '',
             walletElevatorPaySuccessMessage: '',
-            isProductImageLoaded: false
+            isProductImageLoaded: false,
+            isProductImageBroken: false,
         }
     }
 
@@ -269,6 +270,26 @@ class Product extends PureComponent {
             });
     };
 
+    renderProductImage = (photos = []) => {
+        const {
+            isProductImageBroken,
+            isProductImageLoaded
+        } = this.state;
+
+        let imagePath;
+
+        if (isProductImageBroken)
+            return require('../../../assets/icons/image-load-faild.jpg');
+
+        if (isProductImageLoaded) {
+            if (photos.length)
+                return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
+            return require('../../../assets/icons/placeholder-image.jpg');
+        }
+        return require('../../../assets/icons/placeholder-image.jpg');
+
+    };
+
     render() {
         const {
             loggedInUserId,
@@ -344,8 +365,6 @@ class Product extends PureComponent {
 
             walletElevatorPaymentError,
             walletElevatorPaySuccessMessage,
-
-            isProductImageLoaded
         } = this.state;
 
         const selectedContact = {
@@ -997,17 +1016,9 @@ class Product extends PureComponent {
                                         borderBottomRightRadius: 0,
                                         // paddingLeft: 10
                                     }}
+                                    onError={_ => this.setState({ isProductImageBroken: true })}
                                     onLoad={_ => this.setState({ isProductImageLoaded: true })}
-                                    source={isProductImageLoaded ?
-                                        (
-                                            photos.length ?
-                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` }
-                                                :
-                                                require('../../../assets/icons/placeholder-image.jpg')
-                                        )
-                                        :
-                                        require('../../../assets/icons/placeholder-image.jpg')
-                                    }
+                                    source={this.renderProductImage(photos)}
                                 />
 
                                 <LinearGradient
