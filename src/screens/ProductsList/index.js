@@ -23,6 +23,7 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import ENUMS from '../../enums';
+import { dataGenerator, enumHelper } from '../../utils';
 
 
 let myTimeout;
@@ -45,12 +46,10 @@ class ProductsList extends PureComponent {
             loaded: false,
             searchFlag: false,
             showModal: false,
-            selectedSubCategoryModal: '',
             subCategoriesList: [],
-            middleCategoriesList: [],
-            middleCategoriesModalFlag: false,
-            selectedMiddleCategoryModal: '',
-            cities: []
+            cities: [],
+            totalCategoriesModalFlag: false,
+            modals: []
         }
 
     }
@@ -179,7 +178,7 @@ class ProductsList extends PureComponent {
 
                     subCategoriesModalFlag: false,
 
-                    middleCategoriesModalFlag: false,
+                    totalCategoriesModalFlag: false,
 
                     locationsFlag: false,
 
@@ -259,10 +258,6 @@ class ProductsList extends PureComponent {
         })
     };
 
-    handleMiddleCategoryItemClick = ({ id, category_name: name, subcategories: subCategoriesList = {} }) => {
-        subCategoriesList = Object.values(subCategoriesList);
-        this.setState({ subCategoriesModalFlag: true, selectedSubCategoryModal: name, subCategoriesList })
-    };
 
     handleSubCategoryItemClick = item => {
 
@@ -273,34 +268,41 @@ class ProductsList extends PureComponent {
         const {
             sort_by,
             province,
-            city
+            city,
+            subCategoriesList = []
         } = this.state;
 
         analytics().logEvent('apply_sort', {
             sort_type: item.name
         });
 
-        !productsListLoading && this.setState({
-            searchText: item.category_name,
-            productsListArray: [],
-            middleCategoriesModalFlag: false,
-            subCategoriesModalFlag: false
-        }, () => {
-            let searchItem = {
-                from_record_number: 0,
-                sort_by,
-                search_text: item.category_name,
-                to_record_number: 16,
-            };
-            if (province) {
-                searchItem = { ...searchItem, province_id: province }
-            }
-            if (city) {
-                searchItem = { ...searchItem, city_id: city }
-            }
+        if (!subCategoriesList.length) {
+            !productsListLoading && this.setState({
+                searchText: item.category_name,
+                productsListArray: [],
+                modals: [],
+                totalCategoriesModalFlag: false,
+                subCategoriesModalFlag: false
+            }, () => {
+                let searchItem = {
+                    from_record_number: 0,
+                    sort_by,
+                    search_text: item.category_name,
+                    to_record_number: 16,
+                };
+                if (province) {
+                    searchItem = { ...searchItem, province_id: province }
+                }
+                if (city) {
+                    searchItem = { ...searchItem, city_id: city }
+                }
 
-            this.fetchAllProducts(searchItem, { needsTimeout: true });
-        })
+                this.fetchAllProducts(searchItem, { needsTimeout: true });
+            });
+        }
+        else {
+            this.sortProducts(item)
+        }
     };
 
     handleSearch = (text) => {
@@ -364,8 +366,78 @@ class ProductsList extends PureComponent {
         this.fetchAllProducts(item);
     };
 
-    sortProducts = ({ id, category_name: name, middleCategories: middleCategoriesList = [] }) => {
-        this.setState({ middleCategoriesModalFlag: true, selectedMiddleCategoryModal: name, middleCategoriesList })
+    omitItemFromModals = category_name => {
+        let modals = [...this.state.modals];
+        const foundIndex = this.state.modals.findIndex(item => item.category_name == category_name);
+        modals.splice(foundIndex, 1);
+        this.setState({ modals });
+    };
+
+    renderModalItem = ({ item }) => {
+        const
+            {
+                category_name,
+                subCategoriesList
+            } = item;
+
+        return (
+            <Modal
+                animationType="slide"
+                visible={this.state.modals.findIndex(item => item.category_name == category_name) > -1}
+                onRequestClose={_ => this.omitItemFromModals(category_name)}
+            >
+
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 45,
+                    elevation: 5,
+                    justifyContent: 'center'
+                }}>
+                    <TouchableOpacity
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                        onPress={_ => this.omitItemFromModals(category_name)}
+                    >
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
+
+                    <View style={{
+                        width: '100%',
+                        alignItems: 'center'
+                    }}>
+                        <Text
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                        >
+                            {category_name}
+                        </Text>
+                    </View>
+                </View>
+                <FlatList
+                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                    data={subCategoriesList}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={this.renderSubCategoriesListItem}
+                />
+            </Modal >
+
+        )
+    }
+    sortProducts = ({ id, category_name, subcategories: subCategoriesList = {}, ...rest }) => {
+        subCategoriesList = Object.values(subCategoriesList);
+
+        let modals = [...this.state.modals];
+        modals.push({
+            id: dataGenerator.generateKey(`modal_${id}_`),
+            category_name,
+            subCategoriesList,
+            ...rest
+        })
+        this.setState({ subCategoriesModalFlag: true, subCategoriesList, modals }, _ => {
+            if (!this.state.subCategoriesList.length)
+                this.handleSubCategoryItemClick({ id, category_name, subcategories: [], ...rest })
+        })
     };
 
     setProvince = (value) => {
@@ -895,29 +967,6 @@ class ProductsList extends PureComponent {
         )
     };
 
-    renderMiddleCategoriesListItem = ({ item }) => {
-        return (
-            <TouchableOpacity
-                activeOpacity={1}
-                onPress={_ => this.handleMiddleCategoryItemClick(item)}
-                style={{
-                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                }}>
-                <FontAwesome5 name='angle-left' size={26} color='#777' />
-                <Text
-                    style={{
-                        fontSize: 18,
-                        color: '#777',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                    }}
-                >
-                    {item.category_name}
-                </Text>
-            </TouchableOpacity>
-        )
-    };
-
     renderSubCategoriesListItem = ({ item }) => {
         return (
             <TouchableOpacity
@@ -941,31 +990,53 @@ class ProductsList extends PureComponent {
         )
     };
 
-    renderCategoriesListItem = ({ item }) => {
+    renderCategoriesListItem = (item, isFromModal) => {
         const {
             productsListLoading
         } = this.props;
 
+        if (!isFromModal)
+            return (
+                <TouchableOpacity
+                    onPress={() => !productsListLoading && this.sortProducts(item)}
+                    style={{
+                        borderRadius: 18,
+                        marginHorizontal: 5,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 85,
+                        borderWidth: 1,
+                        borderColor: '#7E7E7E',
+                        backgroundColor: '#eee',
+                        minHeight: 30
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {item.category_name}
+                    </Text>
+                </TouchableOpacity>
+            );
+
         return (
             <TouchableOpacity
+                activeOpacity={1}
                 onPress={() => !productsListLoading && this.sortProducts(item)}
                 style={{
-                    borderRadius: 18,
-                    marginHorizontal: 5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    minWidth: 85,
-                    borderWidth: 1,
-                    borderColor: '#7E7E7E',
-                    backgroundColor: '#eee',
-                    minHeight: 30
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                 }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
                 <Text
                     style={{
-                        textAlign: 'center',
-                        textAlignVertical: 'center',
-                        color: '#7E7E7E',
+                        fontSize: 18,
+                        color: '#777',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}
                 >
@@ -1026,6 +1097,119 @@ class ProductsList extends PureComponent {
         )
     };
 
+    renderFiltersIcon = _ => {
+
+        const {
+            productsListLoading
+        } = this.props;
+
+        return (
+            <TouchableOpacity
+                onPress={() => !productsListLoading && this.setState({ totalCategoriesModalFlag: true })}
+                style={{
+                    borderRadius: 12, marginTop: 7, marginBottom: 8,
+                    borderColor: '#EDEDED',
+                    borderWidth: 1,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                    minWidth: 90, backgroundColor: '#FAFAFA', minHeight: 30
+                }}>
+                <Text
+                    style={{
+                        textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                        color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {locales('labels.classifications')}
+                </Text>
+                <FontAwesome5 name='list' size={12} color='#707070' />
+            </TouchableOpacity>
+        )
+    };
+
+    renderSortIcons = _ => {
+
+        const {
+            productsListLoading
+        } = this.props;
+
+        const {
+            sort_by
+        } = this.state;
+        const {
+            list,
+            values
+        } = ENUMS.SORT_LIST
+        const {
+            BM
+        } = values;
+
+        if (sort_by == BM)
+            return (
+                <TouchableOpacity
+                    onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#EDEDED',
+                        borderWidth: 1,
+                        paddingHorizontal: 10,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 100,
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30
+                    }}>
+                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
+                    <Text
+                        style={{
+                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {locales('labels.sort')}
+                    </Text>
+                </TouchableOpacity>
+            );
+        return (
+            <TouchableOpacity
+                onPress={() => !productsListLoading && this.handleSortItemClick(BM)}
+                style={{
+                    borderRadius: 12,
+                    marginTop: 7,
+                    marginBottom: 8,
+                    marginHorizontal: 5,
+                    borderColor: '#FA8888',
+                    borderWidth: 1,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: 120,
+                    backgroundColor: '#FCF6F6',
+                    minHeight: 30,
+                    paddingHorizontal: 10
+                }}>
+                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#E41C38' />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        fontSize: 15,
+                        paddingHorizontal: 3,
+                        color: '#E41C38',
+                        marginRight: 2,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {enumHelper.convertEnumValueToTitle(list, sort_by)}
+                </Text>
+                <FontAwesome5 name='times' size={12} color='#E41C38' />
+            </TouchableOpacity>
+        );
+    };
+
     render() {
 
         const {
@@ -1053,18 +1237,13 @@ class ProductsList extends PureComponent {
             searchText,
             productsListArray,
             selectedButton,
-            subCategoriesModalFlag,
             sortModalFlag,
             locationsFlag,
             province,
             city,
-            selectedSubCategoryModal,
-            subCategoriesList,
-            middleCategoriesList,
             cities,
             showModal,
-            middleCategoriesModalFlag,
-            selectedMiddleCategoryModal
+            totalCategoriesModalFlag
         } = this.state;
 
 
@@ -1299,11 +1478,11 @@ class ProductsList extends PureComponent {
                     </Modal>
                     : null}
 
-                {!!middleCategoriesModalFlag ?
+                {!!totalCategoriesModalFlag ?
                     <Modal
                         animationType="slide"
-                        visible={!!middleCategoriesModalFlag}
-                        onRequestClose={() => this.setState({ middleCategoriesModalFlag: false })}>
+                        visible={!!totalCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 
                         <View style={{
                             backgroundColor: 'white',
@@ -1316,7 +1495,7 @@ class ProductsList extends PureComponent {
                         }}>
                             <TouchableOpacity
                                 style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ middleCategoriesModalFlag: false })}
+                                onPress={() => this.setState({ totalCategoriesModalFlag: false })}
                             >
                                 <AntDesign name='arrowright' size={25} />
                             </TouchableOpacity>
@@ -1328,60 +1507,25 @@ class ProductsList extends PureComponent {
                                 <Text
                                     style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                                 >
-                                    {selectedMiddleCategoryModal}
+                                    {locales('titles.allOfTheCategories')}
                                 </Text>
                             </View>
                         </View>
                         <FlatList
-                            ListEmptyComponent={this.renderMiddleCategoriesListEmptyComponent}
-                            data={middleCategoriesList}
+                            data={categoriesList}
+                            style={{ marginVertical: 8 }}
                             keyExtractor={(_, index) => index.toString()}
-                            renderItem={this.renderMiddleCategoriesListItem}
+                            renderItem={({ item }) => this.renderCategoriesListItem(item, true)}
                         />
+
                     </Modal>
                     : null}
 
-                {subCategoriesModalFlag ?
-                    <Modal
-                        animationType="slide"
-                        visible={subCategoriesModalFlag}
-                        onRequestClose={() => this.setState({ subCategoriesModalFlag: false })}>
-
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ subCategoriesModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
-
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {selectedSubCategoryModal}
-                                </Text>
-                            </View>
-                        </View>
-                        <FlatList
-                            ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
-                            data={subCategoriesList}
-                            keyExtractor={(_, index) => index.toString()}
-                            renderItem={this.renderSubCategoriesListItem}
-                        />
-                    </Modal>
-                    : null}
+                <FlatList
+                    data={this.state.modals}
+                    keyExtractor={item => item.id.toString()}
+                    renderItem={this.renderModalItem}
+                />
 
                 <View style={{
                     backgroundColor: 'white',
@@ -1454,23 +1598,10 @@ class ProductsList extends PureComponent {
                         </InputGroup>
 
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <TouchableOpacity
-                                onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
-                                style={{
-                                    borderRadius: 18, marginTop: 7, marginBottom: 8,
-                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center', textAlignVertical: 'center',
-                                        color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                    }}
-                                >
-                                    {locales('labels.sort')}
-                                </Text>
-                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
-                            </TouchableOpacity>
+
+                            {this.renderFiltersIcon()}
+
+                            {this.renderSortIcons()}
 
                             <FlatList
                                 data={categoriesList}
@@ -1479,7 +1610,7 @@ class ProductsList extends PureComponent {
                                 showsHorizontalScrollIndicator={false}
                                 style={{ marginVertical: 8 }}
                                 keyExtractor={(_, index) => index.toString()}
-                                renderItem={this.renderCategoriesListItem}
+                                renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
                             />
 
                         </View>
