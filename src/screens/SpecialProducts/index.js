@@ -35,14 +35,17 @@ class SpecialProducts extends PureComponent {
             searchText: undefined,
             from_record_number: 0,
             specialProductsListArray: [],
-            categoryModalFlag: false,
+            subCategoriesModalFlag: false,
             to_record_number: 16,
             searchLoader: false,
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false,
             showModal: false,
-            selectedCategoryModal: '',
+            selectedSubCategoryModal: '',
+            middleCategoriesList: [],
+            middleCategoriesModalFlag: false,
+            selectedMiddleCategoryModal: '',
             subCategoriesList: [],
             cities: []
         }
@@ -68,7 +71,7 @@ class SpecialProducts extends PureComponent {
         this.initialCalls().catch(error => {
             this.setState({
                 // showModal: true,
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
 
@@ -154,7 +157,7 @@ class SpecialProducts extends PureComponent {
 
                     sortModalFlag: false,
 
-                    categoryModalFlag: false,
+                    subCategoriesModalFlag: false,
 
                     locationsFlag: false,
 
@@ -164,7 +167,7 @@ class SpecialProducts extends PureComponent {
             .catch(error => {
                 this.setState({
                     //  showModal: true,
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                    searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                 })
             });
     };
@@ -211,6 +214,11 @@ class SpecialProducts extends PureComponent {
         })
     };
 
+    handleMiddleCategoryItemClick = ({ id, category_name: name, subcategories: subCategoriesList = {} }) => {
+        subCategoriesList = Object.values(subCategoriesList);
+        this.setState({ subCategoriesModalFlag: true, selectedSubCategoryModal: name, subCategoriesList })
+    };
+
     handleSubCategoryItemClick = (item) => {
 
         const {
@@ -226,7 +234,7 @@ class SpecialProducts extends PureComponent {
         !specialProductsListLoading && this.setState({
             searchText: item.category_name,
             specialProductsListArray: [],
-            categoryModalFlag: false
+            subCategoriesModalFlag: false
         }, () => {
             let searchItem = {
                 from_record_number: 0,
@@ -305,15 +313,8 @@ class SpecialProducts extends PureComponent {
         this.setState({ specialProductsListArray: [] })
         this.fetchAllProducts(item);
     };
-
-    sortProducts = ({ id, category_name: name, subcategories: subCategoriesList = {} }) => {
-
-        analytics().logEvent('apply_sort', {
-            sort_type: name
-        });
-
-        subCategoriesList = Object.values(subCategoriesList);
-        this.setState({ categoryModalFlag: true, selectedCategoryModal: name, subCategoriesList })
+    sortProducts = ({ id, category_name: name, middleCategories: middleCategoriesList = [] }) => {
+        this.setState({ middleCategoriesModalFlag: true, selectedMiddleCategoryModal: name, middleCategoriesList })
     };
 
     setProvince = (value) => {
@@ -433,7 +434,7 @@ class SpecialProducts extends PureComponent {
                 }).catch(error => {
                     this.setState({
                         // showModal: true,
-                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                        searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                     })
                 });
             })
@@ -476,7 +477,7 @@ class SpecialProducts extends PureComponent {
         }).catch(error => {
             this.setState({
                 //  showModal: true,
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
     };
@@ -787,6 +788,30 @@ class SpecialProducts extends PureComponent {
         )
     };
 
+
+    renderMiddleCategoriesListItem = ({ item }) => {
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => this.handleMiddleCategoryItemClick(item)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </TouchableOpacity>
+        )
+    };
+
     renderSubCategoriesListItem = ({ item }) => {
         return (
             <TouchableOpacity
@@ -910,16 +935,19 @@ class SpecialProducts extends PureComponent {
             searchText,
             specialProductsListArray,
             selectedButton,
-            categoryModalFlag,
+            subCategoriesModalFlag,
             sortModalFlag,
             locationsFlag,
             sort_by,
             province,
             city,
-            selectedCategoryModal,
+            selectedSubCategoryModal,
             subCategoriesList,
             cities,
-            showModal
+            showModal,
+            middleCategoriesModalFlag,
+            selectedMiddleCategoryModal,
+            middleCategoriesList
         } = this.state;
 
         let { provinces = [] } = allProvincesObject;
@@ -1149,11 +1177,12 @@ class SpecialProducts extends PureComponent {
                     </Modal>
                     : null}
 
-                {categoryModalFlag ?
+
+                {!!middleCategoriesModalFlag ?
                     <Modal
                         animationType="slide"
-                        visible={categoryModalFlag}
-                        onRequestClose={() => this.setState({ categoryModalFlag: false })}>
+                        visible={!!middleCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ middleCategoriesModalFlag: false })}>
 
                         <View style={{
                             backgroundColor: 'white',
@@ -1166,7 +1195,7 @@ class SpecialProducts extends PureComponent {
                         }}>
                             <TouchableOpacity
                                 style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ categoryModalFlag: false })}
+                                onPress={() => this.setState({ middleCategoriesModalFlag: false })}
                             >
                                 <AntDesign name='arrowright' size={25} />
                             </TouchableOpacity>
@@ -1178,7 +1207,49 @@ class SpecialProducts extends PureComponent {
                                 <Text
                                     style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                                 >
-                                    {selectedCategoryModal}
+                                    {selectedMiddleCategoryModal}
+                                </Text>
+                            </View>
+                        </View>
+                        <FlatList
+                            ListEmptyComponent={this.renderMiddleCategoriesListEmptyComponent}
+                            data={middleCategoriesList}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={this.renderMiddleCategoriesListItem}
+                        />
+                    </Modal>
+                    : null}
+
+                {subCategoriesModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={subCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ subCategoriesModalFlag: false })}>
+
+                        <View style={{
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            height: 45,
+                            elevation: 5,
+                            justifyContent: 'center'
+                        }}>
+                            <TouchableOpacity
+                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                                onPress={() => this.setState({ subCategoriesModalFlag: false })}
+                            >
+                                <AntDesign name='arrowright' size={25} />
+                            </TouchableOpacity>
+
+                            <View style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                                <Text
+                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                                >
+                                    {selectedSubCategoryModal}
                                 </Text>
                             </View>
                         </View>
