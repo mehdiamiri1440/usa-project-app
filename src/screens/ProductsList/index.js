@@ -1,5 +1,14 @@
 import React, { createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import {
+    Text,
+    View,
+    FlatList,
+    TouchableOpacity,
+    Modal,
+    StyleSheet,
+    ActivityIndicator,
+    Image,
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
@@ -48,7 +57,7 @@ class ProductsList extends PureComponent {
             cities: [],
             totalCategoriesModalFlag: false,
             modals: [],
-            isFilterApplied: false
+            isFilterApplied: false,
         }
 
     }
@@ -373,57 +382,6 @@ class ProductsList extends PureComponent {
         this.setState({ modals });
     };
 
-    renderModalItem = ({ item }) => {
-        const
-            {
-                category_name,
-                subCategoriesList
-            } = item;
-
-        return (
-            <Modal
-                animationType="slide"
-                visible={this.state.modals.findIndex(item => item.category_name == category_name) > -1}
-                onRequestClose={_ => this.omitItemFromModals(category_name)}
-            >
-
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={_ => this.omitItemFromModals(category_name)}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {category_name}
-                        </Text>
-                    </View>
-                </View>
-                <FlatList
-                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
-                    data={subCategoriesList}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={this.renderSubCategoriesListItem}
-                />
-            </Modal >
-
-        )
-    }
     sortProducts = ({ id, category_name, subcategories: subCategoriesList = {}, ...rest }) => {
         subCategoriesList = Object.values(subCategoriesList);
 
@@ -628,6 +586,82 @@ class ProductsList extends PureComponent {
             this.fetchAllProducts(searchItem);
         });
 
+    };
+
+    removeLocations = _ => {
+        this.setState({ province: null, city: null, productsListArray: [] }, _ => {
+            const {
+                sort_by,
+                searchText
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (searchText && searchText.length) {
+                searchItem = {
+                    ...searchItem,
+                    search_text: searchText,
+                };
+            };
+            this.fetchAllProducts(searchItem);
+        });
+
+    };
+
+    renderModalItem = ({ item }) => {
+        const
+            {
+                category_name,
+                subCategoriesList
+            } = item;
+
+        return (
+            <Modal
+                animationType="slide"
+                visible={this.state.modals.findIndex(item => item.category_name == category_name) > -1}
+                onRequestClose={_ => this.omitItemFromModals(category_name)}
+            >
+
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 45,
+                    elevation: 5,
+                    justifyContent: 'center'
+                }}>
+                    <TouchableOpacity
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                        onPress={_ => this.omitItemFromModals(category_name)}
+                    >
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
+
+                    <View style={{
+                        width: '100%',
+                        alignItems: 'center'
+                    }}>
+                        <Text
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                        >
+                            {category_name}
+                        </Text>
+                    </View>
+                </View>
+                <FlatList
+                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                    data={subCategoriesList}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={this.renderSubCategoriesListItem}
+                />
+            </Modal >
+
+        )
     };
 
     renderSubCategoriesListEmptyComponent = _ => {
@@ -1123,21 +1157,36 @@ class ProductsList extends PureComponent {
         )
     };
 
-    renderFilters = _ => {
+    renderSelectedLocaiton = _ => {
+
         const {
-            isFilterApplied,
-            searchText,
+            province,
+            city,
+            cities
         } = this.state;
 
         const {
-            categoriesList,
+            allProvincesObject = {},
             productsListLoading
         } = this.props;
 
-        if (isFilterApplied && searchText && searchText.length)
+        let {
+            provinces = []
+        } = allProvincesObject;
+
+
+        let selectedLocation = '';
+
+        if (province)
+            selectedLocation = provinces.find(item => item.id == province)?.province_name;
+
+        if (city)
+            selectedLocation = cities.find(item => item.id == city)?.city_name;
+
+        if (!!selectedLocation)
             return (
                 <TouchableOpacity
-                    onPress={() => !productsListLoading && this.removeFilter()}
+                    onPress={() => !productsListLoading && this.removeLocations()}
                     style={{
                         borderRadius: 12,
                         marginTop: 7,
@@ -1164,22 +1213,81 @@ class ProductsList extends PureComponent {
                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                         }}
                     >
-                        {searchText}
+                        {selectedLocation}
                     </Text>
                     <FontAwesome5 name='times' size={12} color='#E41C38' />
                 </TouchableOpacity>
             );
+        return null;
+    };
+
+    renderFilterHeaderComponent = _ => {
+
+        const {
+            isFilterApplied,
+            searchText,
+        } = this.state;
+
+        const {
+            productsListLoading
+        } = this.props;
+
         return (
-            <FlatList
-                data={categoriesList}
-                horizontal={true}
-                inverted={true}
+
+            <View
                 showsHorizontalScrollIndicator={false}
-                style={{ marginVertical: 8 }}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
-            />
-        );
+                showsVerticalScrollIndicator={false}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // bottom: 5
+                }}
+            >
+                {this.renderAllCategoriesIcon()}
+
+                {this.renderSortIcons()}
+
+                {this.renderSelectedLocaiton()}
+
+                {isFilterApplied ?
+                    <TouchableOpacity
+                        onPress={() => !productsListLoading && this.removeFilter()}
+                        style={{
+                            borderRadius: 12,
+                            marginTop: 7,
+                            marginBottom: 8,
+                            marginHorizontal: 5,
+                            borderColor: '#FA8888',
+                            borderWidth: 1,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minWidth: 120,
+                            backgroundColor: '#FCF6F6',
+                            minHeight: 30,
+                            paddingHorizontal: 10
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                fontSize: 15,
+                                paddingHorizontal: 3,
+                                color: '#E41C38',
+                                marginRight: 2,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}
+                        >
+                            {searchText}
+                        </Text>
+                        <FontAwesome5 name='times' size={12} color='#E41C38' />
+                    </TouchableOpacity>
+                    :
+                    null}
+            </View>
+
+        )
     };
 
     renderAllCategoriesIcon = _ => {
@@ -1329,7 +1437,8 @@ class ProductsList extends PureComponent {
             cities,
             showModal,
             totalCategoriesModalFlag,
-            modals
+            modals,
+            isFilterApplied
         } = this.state;
 
 
@@ -1346,7 +1455,8 @@ class ProductsList extends PureComponent {
         return (
             <View
                 style={{
-                    flex: 1
+                    flex: 1,
+                    backgroundColor: 'white'
                 }}
             >
                 <NoConnection
@@ -1482,16 +1592,16 @@ class ProductsList extends PureComponent {
                                                         style={{
                                                             marginLeft: -15,
                                                             justifyContent: 'center',
-
+                                                            position: 'absolute',
                                                             width: 30, height: 30, borderRadius: 15
                                                         }}
                                                     />
                                                     <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                        {locales('labels.search')}
+                                                        {locales('labels.applyFilter')}
                                                     </Text>
 
                                                 </Button>
-                                                <Button
+                                                {/* <Button
                                                     style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                     onPress={this.deleteFilter}>
                                                     <ActivityIndicator size="small" color="white"
@@ -1510,7 +1620,7 @@ class ProductsList extends PureComponent {
                                                         {locales('labels.deleteFilter')}
                                                     </Text>
 
-                                                </Button>
+                                                </Button> */}
                                             </View>
 
                                         </View>
@@ -1686,19 +1796,30 @@ class ProductsList extends PureComponent {
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
 
-                        <View style={{ flexDirection: 'row-reverse' }}>
 
-                            {this.renderAllCategoriesIcon()}
 
-                            {this.renderSortIcons()}
 
-                            {this.renderFilters()}
-
-                        </View>
                     </View>
 
                 </View>
 
+                <FlatList
+                    ListHeaderComponent={this.renderFilterHeaderComponent}
+                    data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
+                    horizontal={true}
+                    inverted={true}
+                    showsHorizontalScrollIndicator={false}
+                    style={{
+                        maxHeight: 40
+                    }}
+                    contentContainerStyle={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        maxHeight: 40
+                    }}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+                />
 
                 <FlatList
                     initialNumToRender={4}

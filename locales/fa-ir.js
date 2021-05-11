@@ -229,6 +229,7 @@ export default {
     'labels.kiloGram': 'کیلوگرم',
     'labels.ton': 'تن',
     'labels.doElevation': 'اعمال نردبان',
+    'labels.applyFilter': 'اعمال فیلتر',
     'labels.messageToBuyer': 'چت با خریدار',
     "labels.woman": "خانم",
     "labels.locationsFilter": 'فیلتر مکان',
