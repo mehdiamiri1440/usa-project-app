@@ -12,7 +12,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import Product from './Product';
 import NoConnection from '../../components/noConnectionError';
@@ -21,9 +20,8 @@ import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
-import { dataGenerator, enumHelper } from '../../utils';
 
 
 let myTimeout;
@@ -49,7 +47,8 @@ class ProductsList extends PureComponent {
             subCategoriesList: [],
             cities: [],
             totalCategoriesModalFlag: false,
-            modals: []
+            modals: [],
+            isFilterApplied: false
         }
 
     }
@@ -157,7 +156,7 @@ class ProductsList extends PureComponent {
             to_record_number,
         };
 
-        if (itemFromResult)
+        if (!!itemFromResult)
             item = itemFromResult;
 
         if (searchText && searchText.length) {
@@ -281,6 +280,7 @@ class ProductsList extends PureComponent {
                 searchText: item.category_name,
                 productsListArray: [],
                 modals: [],
+                isFilterApplied: true,
                 totalCategoriesModalFlag: false,
                 subCategoriesModalFlag: false
             }, () => {
@@ -311,7 +311,7 @@ class ProductsList extends PureComponent {
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
-        this.setState({ searchText: text, searchLoader: true });
+        this.setState({ searchText: text, searchLoader: true, isFilterApplied: false });
         let item = {
             sort_by,
             from_record_number: 0,
@@ -362,7 +362,7 @@ class ProductsList extends PureComponent {
             text: searchText
         });
 
-        this.setState({ productsListArray: [] })
+        this.setState({ productsListArray: [], isFilterApplied: false })
         this.fetchAllProducts(item);
     };
 
@@ -602,6 +602,32 @@ class ProductsList extends PureComponent {
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
+    };
+
+    removeFilter = _ => {
+
+        this.setState({ isFilterApplied: false, searchText: null, productsListArray: [] }, _ => {
+            const {
+                province,
+                city,
+                sort_by
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+            this.fetchAllProducts(searchItem);
+        });
+
     };
 
     renderSubCategoriesListEmptyComponent = _ => {
@@ -1097,7 +1123,66 @@ class ProductsList extends PureComponent {
         )
     };
 
-    renderFiltersIcon = _ => {
+    renderFilters = _ => {
+        const {
+            isFilterApplied,
+            searchText,
+        } = this.state;
+
+        const {
+            categoriesList,
+            productsListLoading
+        } = this.props;
+
+        if (isFilterApplied && searchText && searchText.length)
+            return (
+                <TouchableOpacity
+                    onPress={() => !productsListLoading && this.removeFilter()}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#FA8888',
+                        borderWidth: 1,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 120,
+                        backgroundColor: '#FCF6F6',
+                        minHeight: 30,
+                        paddingHorizontal: 10
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            fontSize: 15,
+                            paddingHorizontal: 3,
+                            color: '#E41C38',
+                            marginRight: 2,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {searchText}
+                    </Text>
+                    <FontAwesome5 name='times' size={12} color='#E41C38' />
+                </TouchableOpacity>
+            );
+        return (
+            <FlatList
+                data={categoriesList}
+                horizontal={true}
+                inverted={true}
+                showsHorizontalScrollIndicator={false}
+                style={{ marginVertical: 8 }}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+            />
+        );
+    };
+
+    renderAllCategoriesIcon = _ => {
 
         const {
             productsListLoading
@@ -1243,7 +1328,8 @@ class ProductsList extends PureComponent {
             city,
             cities,
             showModal,
-            totalCategoriesModalFlag
+            totalCategoriesModalFlag,
+            modals
         } = this.state;
 
 
@@ -1521,11 +1607,14 @@ class ProductsList extends PureComponent {
                     </Modal>
                     : null}
 
-                <FlatList
-                    data={this.state.modals}
-                    keyExtractor={item => item.id.toString()}
-                    renderItem={this.renderModalItem}
-                />
+                {modals.length ?
+                    <FlatList
+                        data={this.state.modals}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={this.renderModalItem}
+                    />
+                    :
+                    null}
 
                 <View style={{
                     backgroundColor: 'white',
@@ -1599,19 +1688,11 @@ class ProductsList extends PureComponent {
 
                         <View style={{ flexDirection: 'row-reverse' }}>
 
-                            {this.renderFiltersIcon()}
+                            {this.renderAllCategoriesIcon()}
 
                             {this.renderSortIcons()}
 
-                            <FlatList
-                                data={categoriesList}
-                                horizontal={true}
-                                inverted={true}
-                                showsHorizontalScrollIndicator={false}
-                                style={{ marginVertical: 8 }}
-                                keyExtractor={(_, index) => index.toString()}
-                                renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
-                            />
+                            {this.renderFilters()}
 
                         </View>
                     </View>
