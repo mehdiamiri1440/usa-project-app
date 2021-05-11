@@ -1,5 +1,14 @@
 import React, { createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import {
+    Text,
+    View,
+    FlatList,
+    TouchableOpacity,
+    Modal,
+    StyleSheet,
+    ActivityIndicator,
+    Image
+} from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
@@ -19,7 +28,7 @@ import NoConnection from '../../components/noConnectionError';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
 
 let myTimeout;
@@ -42,12 +51,11 @@ class SpecialProducts extends PureComponent {
             loaded: false,
             searchFlag: false,
             showModal: false,
-            selectedSubCategoryModal: '',
-            middleCategoriesList: [],
-            middleCategoriesModalFlag: false,
-            selectedMiddleCategoryModal: '',
             subCategoriesList: [],
-            cities: []
+            cities: [],
+            totalCategoriesModalFlag: false,
+            modals: [],
+            isFilterApplied: false,
         }
 
     }
@@ -138,7 +146,7 @@ class SpecialProducts extends PureComponent {
             to_record_number,
         };
 
-        if (itemFromResult)
+        if (!!itemFromResult)
             item = itemFromResult;
 
         if (searchText && searchText.length) {
@@ -158,6 +166,8 @@ class SpecialProducts extends PureComponent {
                     sortModalFlag: false,
 
                     subCategoriesModalFlag: false,
+
+                    totalCategoriesModalFlag: false,
 
                     locationsFlag: false,
 
@@ -219,7 +229,7 @@ class SpecialProducts extends PureComponent {
         this.setState({ subCategoriesModalFlag: true, selectedSubCategoryModal: name, subCategoriesList })
     };
 
-    handleSubCategoryItemClick = (item) => {
+    handleSubCategoryItemClick = item => {
 
         const {
             specialProductsListLoading
@@ -228,29 +238,42 @@ class SpecialProducts extends PureComponent {
         const {
             sort_by,
             province,
-            city
+            city,
+            subCategoriesList = []
         } = this.state;
 
-        !specialProductsListLoading && this.setState({
-            searchText: item.category_name,
-            specialProductsListArray: [],
-            subCategoriesModalFlag: false
-        }, () => {
-            let searchItem = {
-                from_record_number: 0,
-                sort_by,
-                search_text: item.category_name,
-                to_record_number: 16,
-            };
-            if (province) {
-                searchItem = { ...searchItem, province_id: province }
-            }
-            if (city) {
-                searchItem = { ...searchItem, city_id: city }
-            }
+        analytics().logEvent('apply_sort', {
+            sort_type: item.name
+        });
 
-            this.fetchAllProducts(searchItem, { needsTimeout: true });
-        })
+        if (!subCategoriesList.length) {
+            !specialProductsListLoading && this.setState({
+                searchText: item.category_name,
+                specialProductsListArray: [],
+                modals: [],
+                isFilterApplied: true,
+                totalCategoriesModalFlag: false,
+                subCategoriesModalFlag: false
+            }, () => {
+                let searchItem = {
+                    from_record_number: 0,
+                    sort_by,
+                    search_text: item.category_name,
+                    to_record_number: 16,
+                };
+                if (province) {
+                    searchItem = { ...searchItem, province_id: province }
+                }
+                if (city) {
+                    searchItem = { ...searchItem, city_id: city }
+                }
+
+                this.fetchAllProducts(searchItem, { needsTimeout: true });
+            });
+        }
+        else {
+            this.sortProducts(item)
+        }
     };
 
     handleSearch = (text) => {
@@ -259,7 +282,7 @@ class SpecialProducts extends PureComponent {
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
-        this.setState({ searchText: text, searchLoader: true });
+        this.setState({ searchText: text, searchLoader: true, isFilterApplied: false });
         let item = {
             sort_by,
             from_record_number: 0,
@@ -310,11 +333,31 @@ class SpecialProducts extends PureComponent {
             text: searchText
         });
 
-        this.setState({ specialProductsListArray: [] })
+        this.setState({ specialProductsListArray: [], isFilterApplied: false })
         this.fetchAllProducts(item);
     };
-    sortProducts = ({ id, category_name: name, middleCategories: middleCategoriesList = [] }) => {
-        this.setState({ middleCategoriesModalFlag: true, selectedMiddleCategoryModal: name, middleCategoriesList })
+
+    omitItemFromModals = category_name => {
+        let modals = [...this.state.modals];
+        const foundIndex = this.state.modals.findIndex(item => item.category_name == category_name);
+        modals.splice(foundIndex, 1);
+        this.setState({ modals });
+    };
+
+    sortProducts = ({ id, category_name, subcategories: subCategoriesList = {}, ...rest }) => {
+        subCategoriesList = Object.values(subCategoriesList);
+
+        let modals = [...this.state.modals];
+        modals.push({
+            id: dataGenerator.generateKey(`modal_${id}_`),
+            category_name,
+            subCategoriesList,
+            ...rest
+        })
+        this.setState({ subCategoriesModalFlag: true, subCategoriesList, modals }, _ => {
+            if (!this.state.subCategoriesList.length)
+                this.handleSubCategoryItemClick({ id, category_name, subcategories: [], ...rest })
+        })
     };
 
     setProvince = (value) => {
@@ -428,7 +471,6 @@ class SpecialProducts extends PureComponent {
                 if (city) {
                     item = { ...item, city_id: city }
                 }
-
                 this.props.fetchAllSpecialProductsList(item).then(_ => {
                     this.setState({ loaded: false })
                 }).catch(error => {
@@ -480,6 +522,112 @@ class SpecialProducts extends PureComponent {
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
+    };
+
+    removeFilter = _ => {
+
+        this.setState({ isFilterApplied: false, searchText: null, specialProductsListArray: [] }, _ => {
+            const {
+                province,
+                city,
+                sort_by
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+            this.fetchAllProducts(searchItem);
+        });
+
+    };
+
+    removeLocations = _ => {
+        this.setState({ province: null, city: null, specialProductsListArray: [] }, _ => {
+            const {
+                sort_by,
+                searchText
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (searchText && searchText.length) {
+                searchItem = {
+                    ...searchItem,
+                    search_text: searchText,
+                };
+            };
+            this.fetchAllProducts(searchItem);
+        });
+
+    };
+
+    renderModalItem = ({ item }) => {
+        const
+            {
+                category_name,
+                subCategoriesList
+            } = item;
+
+        const {
+            modals = []
+        } = this.state;
+
+        return (
+            <Modal
+                animationType="slide"
+                visible={modals.findIndex(item => item.category_name == category_name) > -1}
+                onRequestClose={_ => this.omitItemFromModals(category_name)}
+            >
+
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    height: 45,
+                    elevation: 5,
+                    justifyContent: 'center'
+                }}>
+                    <TouchableOpacity
+                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                        onPress={_ => this.omitItemFromModals(category_name)}
+                    >
+                        <AntDesign name='arrowright' size={25} />
+                    </TouchableOpacity>
+
+                    <View style={{
+                        width: '100%',
+                        alignItems: 'center'
+                    }}>
+                        <Text
+                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                        >
+                            {category_name}
+                        </Text>
+                    </View>
+                </View>
+                <FlatList
+                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                    data={subCategoriesList}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={this.renderSubCategoriesListItem}
+                />
+            </Modal >
+
+        )
     };
 
     renderSubCategoriesListEmptyComponent = _ => {
@@ -549,9 +697,8 @@ class SpecialProducts extends PureComponent {
     };
 
     renderProductListEmptyComponent = _ => {
-
         const {
-            specialProductsListLoading,
+            specialProductsListLoading
         } = this.props;
 
         const {
@@ -560,24 +707,44 @@ class SpecialProducts extends PureComponent {
 
         if (!specialProductsListLoading)
             return (
-                <View style={{
-                    alignSelf: 'center', justifyContent: 'center',
-                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
-                }}>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7
+                    }}
+                >
                     <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
                         {locales('titles.noProductFound')}</Text>
-                    {
-                        <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterRequest')}
-
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                            </Button>
-                        </View>}
+                    <View >
+                        <Button
+                            onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                            style={styles.loginButton}
+                        >
+                            <Text
+                                style={[
+                                    styles.buttonText,
+                                    {
+                                        width: deviceWidth * 0.9,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }]}
+                            >
+                                {locales('titles.registerBuyAdRequest')}
+                            </Text>
+                        </Button>
+                    </View>
                 </View>
             )
         if (!loaded || specialProductsListLoading) {
@@ -655,13 +822,15 @@ class SpecialProducts extends PureComponent {
 
         if ((foundIndex + 1) % 9 != 0)
             return null;
+
         return (
+
             <LinearGradient
                 start={{ x: 0, y: 1 }}
                 end={{ x: 0.8, y: 0.2 }}
                 style={{
                     width: deviceWidth, alignSelf: 'center',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-between', marginVertical: 20,
                     padding: 15, overflow: 'hidden', height: 200
                 }}
                 colors={['#060446', '#21AD93']}
@@ -679,7 +848,6 @@ class SpecialProducts extends PureComponent {
                     }}
                 >
                 </View>
-
                 <Image
                     style={{
                         width: 150,
@@ -788,30 +956,6 @@ class SpecialProducts extends PureComponent {
         )
     };
 
-
-    renderMiddleCategoriesListItem = ({ item }) => {
-        return (
-            <TouchableOpacity
-                activeOpacity={1}
-                onPress={_ => this.handleMiddleCategoryItemClick(item)}
-                style={{
-                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                }}>
-                <FontAwesome5 name='angle-left' size={26} color='#777' />
-                <Text
-                    style={{
-                        fontSize: 18,
-                        color: '#777',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                    }}
-                >
-                    {item.category_name}
-                </Text>
-            </TouchableOpacity>
-        )
-    };
-
     renderSubCategoriesListItem = ({ item }) => {
         return (
             <TouchableOpacity
@@ -835,31 +979,53 @@ class SpecialProducts extends PureComponent {
         )
     };
 
-    renderCategoriesListItem = ({ item }) => {
+    renderCategoriesListItem = (item, isFromModal) => {
         const {
             specialProductsListLoading
         } = this.props;
 
+        if (!isFromModal)
+            return (
+                <TouchableOpacity
+                    onPress={() => !specialProductsListLoading && this.sortProducts(item)}
+                    style={{
+                        borderRadius: 18,
+                        marginHorizontal: 5,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 85,
+                        borderWidth: 1,
+                        borderColor: '#7E7E7E',
+                        backgroundColor: '#eee',
+                        minHeight: 30
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {item.category_name}
+                    </Text>
+                </TouchableOpacity>
+            );
+
         return (
             <TouchableOpacity
+                activeOpacity={1}
                 onPress={() => !specialProductsListLoading && this.sortProducts(item)}
                 style={{
-                    borderRadius: 18,
-                    marginHorizontal: 5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    minWidth: 85,
-                    borderWidth: 1,
-                    borderColor: '#7E7E7E',
-                    backgroundColor: '#eee',
-                    minHeight: 30
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
                 }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
                 <Text
                     style={{
-                        textAlign: 'center',
-                        textAlignVertical: 'center',
-                        color: '#7E7E7E',
+                        fontSize: 18,
+                        color: '#777',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}
                 >
@@ -875,10 +1041,10 @@ class SpecialProducts extends PureComponent {
         } = this.state;
 
         const {
-            specialProductsListLoading
+            specialProductsListArray
         } = this.props;
 
-        if (loaded && specialProductsListLoading)
+        if (loaded && specialProductsListArray)
             return (
                 <View style={{
                     textAlign: 'center',
@@ -918,6 +1084,252 @@ class SpecialProducts extends PureComponent {
         )
     };
 
+    renderSelectedLocaiton = _ => {
+
+        const {
+            province,
+            city,
+            cities
+        } = this.state;
+
+        const {
+            allProvincesObject = {},
+            specialProductsListLoading
+        } = this.props;
+
+        let {
+            provinces = []
+        } = allProvincesObject;
+
+
+        let selectedLocation = '';
+
+        if (province)
+            selectedLocation = provinces.find(item => item.id == province)?.province_name;
+
+        if (city)
+            selectedLocation = cities.find(item => item.id == city)?.city_name;
+
+        if (!!selectedLocation)
+            return (
+                <TouchableOpacity
+                    onPress={() => !specialProductsListLoading && this.removeLocations()}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#FA8888',
+                        borderWidth: 1,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 120,
+                        backgroundColor: '#FCF6F6',
+                        minHeight: 30,
+                        paddingHorizontal: 10
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            fontSize: 15,
+                            paddingHorizontal: 3,
+                            color: '#E41C38',
+                            marginRight: 2,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {selectedLocation}
+                    </Text>
+                    <FontAwesome5 name='times' size={12} color='#E41C38' />
+                </TouchableOpacity>
+            );
+        return null;
+    };
+
+    renderFilterHeaderComponent = _ => {
+
+        const {
+            isFilterApplied,
+            searchText,
+        } = this.state;
+
+        const {
+            specialProductsListLoading
+        } = this.props;
+
+        return (
+
+            <View
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // bottom: 5
+                }}
+            >
+                {this.renderAllCategoriesIcon()}
+
+                {this.renderSortIcons()}
+
+                {this.renderSelectedLocaiton()}
+
+                {isFilterApplied ?
+                    <TouchableOpacity
+                        onPress={() => !specialProductsListLoading && this.removeFilter()}
+                        style={{
+                            borderRadius: 12,
+                            marginTop: 7,
+                            marginBottom: 8,
+                            marginHorizontal: 5,
+                            borderColor: '#FA8888',
+                            borderWidth: 1,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minWidth: 120,
+                            backgroundColor: '#FCF6F6',
+                            minHeight: 30,
+                            paddingHorizontal: 10
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                fontSize: 15,
+                                paddingHorizontal: 3,
+                                color: '#E41C38',
+                                marginRight: 2,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}
+                        >
+                            {searchText}
+                        </Text>
+                        <FontAwesome5 name='times' size={12} color='#E41C38' />
+                    </TouchableOpacity>
+                    :
+                    null}
+            </View>
+
+        )
+    };
+
+    renderAllCategoriesIcon = _ => {
+
+        const {
+            specialProductsListLoading
+        } = this.props;
+
+        return (
+            <TouchableOpacity
+                onPress={() => !specialProductsListLoading && this.setState({ totalCategoriesModalFlag: true })}
+                style={{
+                    borderRadius: 12, marginTop: 7, marginBottom: 8,
+                    borderColor: '#EDEDED',
+                    borderWidth: 1,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                    minWidth: 90, backgroundColor: '#FAFAFA', minHeight: 30
+                }}>
+                <Text
+                    style={{
+                        textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                        color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {locales('labels.classifications')}
+                </Text>
+                <FontAwesome5 name='list' size={12} color='#707070' />
+            </TouchableOpacity>
+        )
+    };
+
+    renderSortIcons = _ => {
+
+        const {
+            specialProductsListLoading
+        } = this.props;
+
+        const {
+            sort_by
+        } = this.state;
+        const {
+            list,
+            values
+        } = ENUMS.SORT_LIST
+        const {
+            BM
+        } = values;
+
+        if (sort_by == BM)
+            return (
+                <TouchableOpacity
+                    onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#EDEDED',
+                        borderWidth: 1,
+                        paddingHorizontal: 10,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 100,
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30
+                    }}>
+                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
+                    <Text
+                        style={{
+                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {locales('labels.sort')}
+                    </Text>
+                </TouchableOpacity>
+            );
+        return (
+            <TouchableOpacity
+                onPress={() => !specialProductsListLoading && this.handleSortItemClick(BM)}
+                style={{
+                    borderRadius: 12,
+                    marginTop: 7,
+                    marginBottom: 8,
+                    marginHorizontal: 5,
+                    borderColor: '#FA8888',
+                    borderWidth: 1,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: 120,
+                    backgroundColor: '#FCF6F6',
+                    minHeight: 30,
+                    paddingHorizontal: 10
+                }}>
+                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#E41C38' />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        fontSize: 15,
+                        paddingHorizontal: 3,
+                        color: '#E41C38',
+                        marginRight: 2,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {enumHelper.convertEnumValueToTitle(list, sort_by)}
+                </Text>
+                <FontAwesome5 name='times' size={12} color='#E41C38' />
+            </TouchableOpacity>
+        );
+    };
+
     render() {
         const {
             specialProductsListLoading,
@@ -928,36 +1340,40 @@ class SpecialProducts extends PureComponent {
             allProvincesObject,
 
             provinceLoading,
-            fetchCitiesLoading
+            fetchCitiesLoading,
         } = this.props;
 
         const {
             searchText,
             specialProductsListArray,
             selectedButton,
-            subCategoriesModalFlag,
             sortModalFlag,
             locationsFlag,
-            sort_by,
             province,
             city,
-            selectedSubCategoryModal,
-            subCategoriesList,
             cities,
             showModal,
-            middleCategoriesModalFlag,
-            selectedMiddleCategoryModal,
-            middleCategoriesList
+            totalCategoriesModalFlag,
+            modals,
+            isFilterApplied
         } = this.state;
 
-        let { provinces = [] } = allProvincesObject;
+        let {
+            provinces = []
+        } = allProvincesObject;
+
 
         provinces = provinces.map(item => ({ ...item, value: item.id }));
 
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
 
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
                 <NoConnection
                     closeModal={this.setShowModal}
                     showModal={showModal}
@@ -1091,24 +1507,20 @@ class SpecialProducts extends PureComponent {
                                                         style={{
                                                             marginLeft: -15,
                                                             justifyContent: 'center',
-
+                                                            position: 'absolute',
                                                             width: 30, height: 30, borderRadius: 15
                                                         }}
                                                     />
                                                     <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                        {locales('labels.search')}
+                                                        {locales('labels.applyFilter')}
                                                     </Text>
 
                                                 </Button>
-                                                <Button
-                                                    style={[styles.loginButton, {
-                                                        width: '50%',
-                                                        flexDirection: 'row',
-                                                        backgroundColor: '#556080',
-                                                    }]}
+                                                {/* <Button
+                                                    style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                     onPress={this.deleteFilter}>
                                                     <ActivityIndicator size="small" color="white"
-                                                        animating={selectedButton == 2 && !!specialProductsListLoading}
+                                                        animating={selectedButton == 2 && !!productsListLoading}
                                                         style={{
                                                             marginLeft: -15,
                                                             justifyContent: 'center',
@@ -1123,7 +1535,7 @@ class SpecialProducts extends PureComponent {
                                                         {locales('labels.deleteFilter')}
                                                     </Text>
 
-                                                </Button>
+                                                </Button> */}
                                             </View>
 
                                         </View>
@@ -1177,12 +1589,11 @@ class SpecialProducts extends PureComponent {
                     </Modal>
                     : null}
 
-
-                {!!middleCategoriesModalFlag ?
+                {!!totalCategoriesModalFlag ?
                     <Modal
                         animationType="slide"
-                        visible={!!middleCategoriesModalFlag}
-                        onRequestClose={() => this.setState({ middleCategoriesModalFlag: false })}>
+                        visible={!!totalCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 
                         <View style={{
                             backgroundColor: 'white',
@@ -1195,7 +1606,7 @@ class SpecialProducts extends PureComponent {
                         }}>
                             <TouchableOpacity
                                 style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ middleCategoriesModalFlag: false })}
+                                onPress={() => this.setState({ totalCategoriesModalFlag: false })}
                             >
                                 <AntDesign name='arrowright' size={25} />
                             </TouchableOpacity>
@@ -1207,60 +1618,28 @@ class SpecialProducts extends PureComponent {
                                 <Text
                                     style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
                                 >
-                                    {selectedMiddleCategoryModal}
+                                    {locales('titles.allOfTheCategories')}
                                 </Text>
                             </View>
                         </View>
                         <FlatList
-                            ListEmptyComponent={this.renderMiddleCategoriesListEmptyComponent}
-                            data={middleCategoriesList}
+                            data={categoriesList}
+                            style={{ marginVertical: 8 }}
                             keyExtractor={(_, index) => index.toString()}
-                            renderItem={this.renderMiddleCategoriesListItem}
+                            renderItem={({ item }) => this.renderCategoriesListItem(item, true)}
                         />
+
                     </Modal>
                     : null}
 
-                {subCategoriesModalFlag ?
-                    <Modal
-                        animationType="slide"
-                        visible={subCategoriesModalFlag}
-                        onRequestClose={() => this.setState({ subCategoriesModalFlag: false })}>
-
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ subCategoriesModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
-
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {selectedSubCategoryModal}
-                                </Text>
-                            </View>
-                        </View>
-                        <FlatList
-                            ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
-                            data={subCategoriesList}
-                            keyExtractor={(_, index) => index.toString()}
-                            renderItem={this.renderSubCategoriesListItem}
-                        />
-                    </Modal>
-                    : null}
+                {modals.length ?
+                    <FlatList
+                        data={modals}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={this.renderModalItem}
+                    />
+                    :
+                    null}
 
                 <View style={{
                     backgroundColor: 'white',
@@ -1331,40 +1710,27 @@ class SpecialProducts extends PureComponent {
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
 
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <TouchableOpacity
-                                onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
-                                style={{
-                                    borderRadius: 18, marginTop: 7, marginBottom: 8,
-                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center', textAlignVertical: 'center',
-                                        color: '#fff', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                    }}
-                                >
-                                    {locales('labels.sort')}
-                                </Text>
-                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
-                            </TouchableOpacity>
-
-                            <FlatList
-                                data={categoriesList}
-                                horizontal={true}
-                                inverted={true}
-                                showsHorizontalScrollIndicator={false}
-                                style={{ marginVertical: 8 }}
-                                keyExtractor={(_, index) => index.toString()}
-                                renderItem={this.renderCategoriesListItem}
-                            />
-
-                        </View>
                     </View>
 
                 </View>
 
+                <FlatList
+                    ListHeaderComponent={this.renderFilterHeaderComponent}
+                    data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
+                    horizontal={true}
+                    inverted={true}
+                    showsHorizontalScrollIndicator={false}
+                    style={{
+                        maxHeight: 40
+                    }}
+                    contentContainerStyle={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        maxHeight: 40
+                    }}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+                />
 
                 <FlatList
                     initialNumToRender={4}
@@ -1384,7 +1750,7 @@ class SpecialProducts extends PureComponent {
                     ItemSeparatorComponent={({ _, leadingItem }) => this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={this.renderProductListItem}
                 />
-            </>
+            </View>
         )
     }
 }

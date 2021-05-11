@@ -266,7 +266,6 @@ class ProductsList extends PureComponent {
         })
     };
 
-
     handleSubCategoryItemClick = item => {
 
         const {
@@ -619,10 +618,14 @@ class ProductsList extends PureComponent {
                 subCategoriesList
             } = item;
 
+        const {
+            modals = []
+        } = this.state;
+
         return (
             <Modal
                 animationType="slide"
-                visible={this.state.modals.findIndex(item => item.category_name == category_name) > -1}
+                visible={modals.findIndex(item => item.category_name == category_name) > -1}
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
 
@@ -1719,7 +1722,7 @@ class ProductsList extends PureComponent {
 
                 {modals.length ?
                     <FlatList
-                        data={this.state.modals}
+                        data={modals}
                         keyExtractor={item => item.id.toString()}
                         renderItem={this.renderModalItem}
                     />
