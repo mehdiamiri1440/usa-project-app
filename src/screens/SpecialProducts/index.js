@@ -1385,138 +1385,145 @@ class SpecialProducts extends PureComponent {
                         visible={locationsFlag}
                         onRequestClose={() => this.setState({ locationsFlag: false })}>
 
+                        <View
+                            style={{
+                                flex: 1,
+                                height: deviceHeight,
+                                width: deviceWidth,
+                            }}
+                        >
+                            <View style={{
+                                backgroundColor: 'white',
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                height: 45,
+                                elevation: 5,
+                                justifyContent: 'center'
+                            }}>
+                                <TouchableOpacity
+                                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
+                                    onPress={() => {
+                                        this.setState({ locationsFlag: false });
+                                    }}
+                                >
+                                    <AntDesign name='arrowright' size={25} />
+                                </TouchableOpacity>
 
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row-reverse',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{
-                                    width: deviceWidth * 0.4,
-                                    justifyContent: 'center',
-                                    alignItems: 'flex-end',
-                                    paddingHorizontal: 10
-                                }}
-                                onPress={() => {
-                                    this.setState({ locationsFlag: false });
-                                }}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
+                                <View style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
+                                    >
+                                        {locales('labels.locationsFilter')}
+                                    </Text>
+                                </View>
+                            </View>
+
 
                             <View style={{
-                                width: deviceWidth * 0.6,
-                                alignItems: 'flex-end'
+                                padding: 20,
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                width: deviceWidth,
+                                height: '70%'
                             }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {locales('labels.locationsFilter')}
-                                </Text>
-                            </View>
-                        </View>
 
+                                <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
+                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        {locales('labels.targetProvince')}
+                                    </Label>
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.9,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: '#a8a8a8'
+                                        }}
+                                    >
+                                        <RNPickerSelect
+                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={this.setProvince}
+                                            style={styles}
+                                            value={province}
+                                            disabled={categoriesLoading}
+                                            placeholder={{
+                                                label: locales('labels.pleaseSelectTargetProvince'),
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            }}
+                                            items={[...provinces.map(item => ({
+                                                label: item.province_name, value: item.id
+                                            }))]}
+                                        />
+                                    </Item>
+                                </View>
 
-                        <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
-                            <Card>
-                                <CardItem>
-                                    <Body>
-                                        <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+                                <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
+                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        {locales('labels.targetCity')}
+                                    </Label>
+                                    {(provinceLoading || fetchCitiesLoading) ?
+                                        <ActivityIndicator size="small" color="#00C569"
+                                            style={{
+                                                position: 'absolute', right: '15%', top: '2%',
+                                                width: 50, height: 50, borderRadius: 25
+                                            }}
+                                        /> : null}
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.9,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: '#a8a8a8'
+                                        }}
+                                    >
+                                        <RNPickerSelect
+                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={this.setCity}
+                                            disabled={provinceLoading || !province}
+                                            style={styles}
+                                            value={city}
+                                            placeholder={{
+                                                label: locales('labels.pleaseSelectTargetCity'),
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            }}
+                                            items={[...cities.map(item => ({
+                                                label: item.city_name, value: item.id
+                                            }))]}
+                                        />
+                                    </Item>
+                                </View>
 
-                                            <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                    {locales('labels.province')}
-                                                </Label>
-                                                <Item regular
-                                                    style={{
-                                                        width: deviceWidth * 0.9,
-                                                        borderRadius: 5,
-                                                        alignSelf: 'center',
-                                                        borderColor: '#a8a8a8'
-                                                    }}
-                                                >
-                                                    <RNPickerSelect
-                                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                        useNativeAndroidPickerStyle={false}
-                                                        onValueChange={this.setProvince}
-                                                        style={styles}
-                                                        value={province}
-                                                        disabled={categoriesLoading}
-                                                        placeholder={{
-                                                            label: locales('labels.selectProvince'),
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        }}
-                                                        items={[...provinces.map(item => ({
-                                                            label: item.province_name, value: item.id
-                                                        }))]}
-                                                    />
-                                                </Item>
-                                            </View>
+                                <View style={{
+                                    flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 25,
+                                    alignItems: 'center'
+                                }}>
+                                    <Button
+                                        style={[styles.loginButton, { width: '60%' }]}
+                                        onPress={this.searchLocation}>
+                                        <ActivityIndicator size="small" color="white"
+                                            animating={selectedButton == 1 && !!specialProductsListLoading}
+                                            style={{
+                                                marginLeft: -15,
+                                                justifyContent: 'center',
+                                                position: 'absolute',
+                                                width: 30, height: 30, borderRadius: 15
+                                            }}
+                                        />
+                                        <Text style={[styles.buttonText, {
+                                            alignSelf: 'center', fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }]}>
+                                            {locales('labels.applyFilter')}
+                                        </Text>
 
-                                            <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                                <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                    {locales('labels.city')}
-                                                </Label>
-                                                {(provinceLoading || fetchCitiesLoading) ?
-                                                    <ActivityIndicator size="small" color="#00C569"
-                                                        style={{
-                                                            position: 'absolute', right: '15%', top: '2%',
-                                                            width: 50, height: 50, borderRadius: 25
-                                                        }}
-                                                    /> : null}
-                                                <Item regular
-                                                    style={{
-                                                        width: deviceWidth * 0.9,
-                                                        borderRadius: 5,
-                                                        alignSelf: 'center',
-                                                        borderColor: '#a8a8a8'
-                                                    }}
-                                                >
-                                                    <RNPickerSelect
-                                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                        useNativeAndroidPickerStyle={false}
-                                                        onValueChange={this.setCity}
-                                                        disabled={provinceLoading || !province}
-                                                        style={styles}
-                                                        value={city}
-                                                        placeholder={{
-                                                            label: locales('labels.selectCity'),
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        }}
-                                                        items={[...cities.map(item => ({
-                                                            label: item.city_name, value: item.id
-                                                        }))]}
-                                                    />
-                                                </Item>
-                                            </View>
-
-                                            <View style={{
-                                                flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
-                                                alignItems: 'center'
-                                            }}>
-                                                <Button
-                                                    style={[styles.loginButton, { width: '50%' }]}
-                                                    onPress={this.searchLocation}>
-                                                    <ActivityIndicator size="small" color="white"
-                                                        animating={selectedButton == 1 && !!specialProductsListLoading}
-                                                        style={{
-                                                            marginLeft: -15,
-                                                            justifyContent: 'center',
-                                                            position: 'absolute',
-                                                            width: 30, height: 30, borderRadius: 15
-                                                        }}
-                                                    />
-                                                    <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                        {locales('labels.applyFilter')}
-                                                    </Text>
-
-                                                </Button>
-                                                {/* <Button
+                                    </Button>
+                                    {/* <Button
                                                     style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                     onPress={this.deleteFilter}>
                                                     <ActivityIndicator size="small" color="white"
@@ -1536,15 +1543,10 @@ class SpecialProducts extends PureComponent {
                                                     </Text>
 
                                                 </Button> */}
-                                            </View>
+                                </View>
 
-                                        </View>
-                                    </Body>
-                                </CardItem>
-                            </Card>
-
+                            </View>
                         </View>
-
                     </Modal>
                     : null}
 
