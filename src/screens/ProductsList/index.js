@@ -232,16 +232,12 @@ class ProductsList extends PureComponent {
 
     handleSortItemClick = value => {
         const {
-            productsListLoading
-        } = this.props;
-
-        const {
             searchText,
             province,
             city
         } = this.state;
 
-        !productsListLoading && this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
+        this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
             let searchItem = {
                 from_record_number: 0,
                 sort_by: value,
@@ -267,11 +263,6 @@ class ProductsList extends PureComponent {
     };
 
     handleSubCategoryItemClick = item => {
-
-        const {
-            productsListLoading
-        } = this.props;
-
         const {
             sort_by,
             province,
@@ -284,7 +275,7 @@ class ProductsList extends PureComponent {
         });
 
         if (!subCategoriesList.length) {
-            !productsListLoading && this.setState({
+            this.setState({
                 searchText: item.category_name,
                 productsListArray: [],
                 modals: [],
@@ -1054,14 +1045,10 @@ class ProductsList extends PureComponent {
     };
 
     renderCategoriesListItem = (item, isFromModal) => {
-        const {
-            productsListLoading
-        } = this.props;
-
         if (!isFromModal)
             return (
                 <TouchableOpacity
-                    onPress={() => !productsListLoading && this.sortProducts(item)}
+                    onPress={() => this.sortProducts(item)}
                     style={{
                         borderRadius: 12,
                         marginHorizontal: 5,
@@ -1091,7 +1078,7 @@ class ProductsList extends PureComponent {
         return (
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={() => !productsListLoading && this.sortProducts(item)}
+                onPress={() => this.sortProducts(item)}
                 style={{
                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
@@ -1171,7 +1158,6 @@ class ProductsList extends PureComponent {
 
         const {
             allProvincesObject = {},
-            productsListLoading
         } = this.props;
 
         let {
@@ -1190,7 +1176,7 @@ class ProductsList extends PureComponent {
         if (!!selectedLocation)
             return (
                 <TouchableOpacity
-                    onPress={() => !productsListLoading && this.removeLocations()}
+                    onPress={() => this.removeLocations()}
                     style={{
                         borderRadius: 12,
                         marginHorizontal: 5,
@@ -1228,10 +1214,6 @@ class ProductsList extends PureComponent {
             searchText,
         } = this.state;
 
-        const {
-            productsListLoading
-        } = this.props;
-
         return (
 
             <View
@@ -1250,7 +1232,7 @@ class ProductsList extends PureComponent {
 
                 {isFilterApplied ?
                     <TouchableOpacity
-                        onPress={() => !productsListLoading && this.removeFilter()}
+                        onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
                             marginTop: 7,
@@ -1290,13 +1272,9 @@ class ProductsList extends PureComponent {
 
     renderAllCategoriesIcon = _ => {
 
-        const {
-            productsListLoading
-        } = this.props;
-
         return (
             <TouchableOpacity
-                onPress={() => !productsListLoading && this.setState({ totalCategoriesModalFlag: true })}
+                onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12, marginTop: 7, marginBottom: 8,
                     borderColor: '#EDEDED',
@@ -1318,11 +1296,6 @@ class ProductsList extends PureComponent {
     };
 
     renderSortIcons = _ => {
-
-        const {
-            productsListLoading
-        } = this.props;
-
         const {
             sort_by
         } = this.state;
@@ -1337,7 +1310,7 @@ class ProductsList extends PureComponent {
         if (sort_by == BM)
             return (
                 <TouchableOpacity
-                    onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
+                    onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
                         marginTop: 7,
@@ -1366,7 +1339,7 @@ class ProductsList extends PureComponent {
             );
         return (
             <TouchableOpacity
-                onPress={() => !productsListLoading && this.handleSortItemClick(BM)}
+                onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
                     marginTop: 7,
@@ -1759,7 +1732,7 @@ class ProductsList extends PureComponent {
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
-                                onPress={() => !productsListLoading && this.setState({ locationsFlag: true })}
+                                onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
                                     color: (selectedCity) ||
