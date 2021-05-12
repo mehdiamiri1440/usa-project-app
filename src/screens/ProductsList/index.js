@@ -15,7 +15,7 @@ import analytics from '@react-native-firebase/analytics';
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
-import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
+import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -64,6 +64,7 @@ class ProductsList extends PureComponent {
 
 
     productsListRef = createRef();
+    categoryFiltersRef = createRef();
 
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
@@ -267,7 +268,7 @@ class ProductsList extends PureComponent {
             sort_by,
             province,
             city,
-            subCategoriesList = []
+            subCategoriesList = [],
         } = this.state;
 
         analytics().logEvent('apply_sort', {
@@ -295,6 +296,8 @@ class ProductsList extends PureComponent {
                 if (city) {
                     searchItem = { ...searchItem, city_id: city }
                 }
+
+                this.categoryFiltersRef?.current.scrollToOffset({ animated: true, offset: 0 });
 
                 this.fetchAllProducts(searchItem, { needsTimeout: true });
             });
@@ -832,9 +835,8 @@ class ProductsList extends PureComponent {
                                     height={'100%'}
                                     backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
-
                                 >
-                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect rx={10} ry={10} x="0" y="0" width="100%" height="60%" />
                                     <Rect x="30%" y="65%" width="100" height="10" />
                                     <Rect x="15%" y="73%" width="120" height="10" />
                                     <Rect x="15%" y="80%" width="120" height="10" />
@@ -855,7 +857,7 @@ class ProductsList extends PureComponent {
                                     foregroundColor="#ecebeb"
 
                                 >
-                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect rx={10} ry={10} x="0" y="0" width="100%" height="60%" />
                                     <Rect x="30%" y="65%" width="100" height="10" />
                                     <Rect x="15%" y="73%" width="120" height="10" />
                                     <Rect x="15%" y="80%" width="120" height="10" />
@@ -1059,7 +1061,7 @@ class ProductsList extends PureComponent {
                         borderColor: '#EDEDED',
                         backgroundColor: '#FFFFFF',
                         minHeight: 30,
-                        paddingHorizontal: 15
+                        paddingHorizontal: 15,
                     }}>
                     <Text
                         style={{
@@ -1280,7 +1282,7 @@ class ProductsList extends PureComponent {
                     borderColor: '#EDEDED',
                     borderWidth: 1,
                     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                    minWidth: 90, backgroundColor: '#FAFAFA', minHeight: 30
+                    backgroundColor: '#FAFAFA', minHeight: 30, paddingHorizontal: 15
                 }}>
                 <Text
                     style={{
@@ -1372,6 +1374,48 @@ class ProductsList extends PureComponent {
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
             </TouchableOpacity>
         );
+    };
+
+    renderCategoriesFilterListEmptyComponent = _ => {
+        const {
+            isFilterApplied,
+            searchText
+        } = this.state;
+
+        if (isFilterApplied && searchText && searchText.length)
+            return null;
+        return (
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                    <ContentLoader
+                        key={index}
+                        speed={2}
+                        style={{
+                            marginHorizontal: 5,
+                            borderRadius: 12,
+                            width: deviceWidth * 0.2,
+                            borderWidth: 1,
+                            height: 30,
+                        }}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                    >
+                        <Rect
+                            x="0" y="0" width="100%" rx={10} ry={10} height="100%"
+                        />
+                    </ContentLoader>
+                )
+                )}
+            </View>
+        )
+
     };
 
     render() {
@@ -1565,9 +1609,9 @@ class ProductsList extends PureComponent {
                                         <ActivityIndicator size="small" color="white"
                                             animating={selectedButton == 1 && !!productsListLoading}
                                             style={{
-                                                marginLeft: -15,
                                                 justifyContent: 'center',
                                                 position: 'absolute',
+                                                left: 40,
                                                 width: 30, height: 30, borderRadius: 15
                                             }}
                                         />
@@ -1790,16 +1834,19 @@ class ProductsList extends PureComponent {
                     {this.renderAllCategoriesIcon()}
 
                     <FlatList
-                        ListHeaderComponent={this.renderFilterHeaderComponent}
-                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
-                        horizontal={true}
-                        inverted={true}
-                        showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-start',
+                            minWidth: '100%'
                         }}
+                        ref={this.categoryFiltersRef}
+                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
                         keyExtractor={(_, index) => index.toString()}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        inverted={true}
+                        ListEmptyComponent={this.renderCategoriesFilterListEmptyComponent}
+                        ListHeaderComponent={this.renderFilterHeaderComponent}
                         renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
                     />
                 </View>
