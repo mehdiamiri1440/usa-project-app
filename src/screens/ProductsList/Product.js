@@ -44,7 +44,6 @@ class Product extends PureComponent {
             deleteMessageText: '',
             walletElevatorPaymentError: '',
             walletElevatorPaySuccessMessage: '',
-            isProductImageLoaded: false,
             isProductImageBroken: false,
         }
     }
@@ -273,19 +272,14 @@ class Product extends PureComponent {
     renderProductImage = (photos = []) => {
         const {
             isProductImageBroken,
-            isProductImageLoaded
         } = this.state;
-
-        let imagePath;
 
         if (isProductImageBroken)
             return require('../../../assets/icons/image-load-faild.jpg');
 
-        if (isProductImageLoaded) {
-            if (photos.length)
-                return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
-            return require('../../../assets/icons/placeholder-image.jpg');
-        }
+        if (photos.length)
+            return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
+
         return require('../../../assets/icons/placeholder-image.jpg');
 
     };
@@ -1004,23 +998,40 @@ class Product extends PureComponent {
                                     </Text>
                                 </View>}
 
-                                <Image
-                                    resizeMode='cover'
+                                <View
                                     style={{
-                                        borderRadius: 12,
+                                        backgroundColor: "#404B55",
                                         width: '100%',
                                         height: '100%',
-                                        marginHorizontal: 0,
-                                        backgroundColor: "#404B55",
-                                        borderBottomLeftRadius: 0,
-                                        borderBottomRightRadius: 0,
-                                        // paddingLeft: 10
+                                        borderTopLeftRadius: 12,
+                                        borderTopRightRadius: 12,
                                     }}
-                                    onError={_ => this.setState({ isProductImageBroken: true })}
-                                    onLoad={_ => this.setState({ isProductImageLoaded: true })}
-                                    source={this.renderProductImage(photos)}
-                                />
-
+                                >
+                                    <Image
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            borderTopLeftRadius: 12,
+                                            borderTopRightRadius: 12,
+                                        }}
+                                        source={require('../../../assets/icons/placeholder-image.jpg')}
+                                    />
+                                    <Image
+                                        resizeMode='cover'
+                                        style={{
+                                            borderRadius: 12,
+                                            width: '100%',
+                                            height: '100%',
+                                            marginHorizontal: 0,
+                                            borderBottomLeftRadius: 0,
+                                            borderBottomRightRadius: 0,
+                                            position: 'absolute',
+                                            // paddingLeft: 10
+                                        }}
+                                        onError={_ => this.setState({ isProductImageBroken: true })}
+                                        source={this.renderProductImage(photos)}
+                                    />
+                                </View>
                                 <LinearGradient
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
