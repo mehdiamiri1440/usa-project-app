@@ -1160,28 +1160,24 @@ class SpecialProducts extends PureComponent {
                         onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
-                            marginTop: 7,
-                            marginBottom: 8,
                             marginHorizontal: 5,
                             borderColor: '#FA8888',
                             borderWidth: 1,
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            minWidth: 120,
                             backgroundColor: '#FCF6F6',
                             minHeight: 30,
-                            paddingHorizontal: 10
+                            paddingHorizontal: 15
                         }}>
                         <Text
                             style={{
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                                 fontSize: 15,
-                                paddingHorizontal: 3,
+                                paddingLeft: 10,
                                 color: '#E41C38',
-                                marginRight: 2,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}
                         >
                             {searchText}
