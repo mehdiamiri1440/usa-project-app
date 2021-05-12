@@ -681,7 +681,7 @@ class ProductsList extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         width: deviceWidth,
-                        height: deviceHeight * 0.7
+                        height: deviceHeight * 0.7,
                     }}
                 >
                     <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
@@ -712,7 +712,7 @@ class ProductsList extends PureComponent {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             borderBottomWidth: 0.7,
-                            borderBottomColor: '#BEBEBE'
+                            borderBottomColor: '#BEBEBE',
 
                         }}>
                         <ContentLoader
@@ -813,7 +813,7 @@ class ProductsList extends PureComponent {
             )
         if (!loaded || productsListLoading) {
             return (
-                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
                         <View
@@ -1063,22 +1063,23 @@ class ProductsList extends PureComponent {
                 <TouchableOpacity
                     onPress={() => !productsListLoading && this.sortProducts(item)}
                     style={{
-                        borderRadius: 18,
+                        borderRadius: 12,
                         marginHorizontal: 5,
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: 85,
                         borderWidth: 1,
-                        borderColor: '#7E7E7E',
-                        backgroundColor: '#eee',
-                        minHeight: 30
+                        borderColor: '#EDEDED',
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30,
+                        paddingHorizontal: 15
                     }}>
                     <Text
                         style={{
                             textAlign: 'center',
                             textAlignVertical: 'center',
-                            color: '#7E7E7E',
+                            color: '#707070',
+                            fontSize: 15,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                         }}
                     >
@@ -1160,7 +1161,7 @@ class ProductsList extends PureComponent {
         )
     };
 
-    renderSelectedLocaiton = _ => {
+    renderSelectedLocation = _ => {
 
         const {
             province,
@@ -1192,28 +1193,24 @@ class ProductsList extends PureComponent {
                     onPress={() => !productsListLoading && this.removeLocations()}
                     style={{
                         borderRadius: 12,
-                        marginTop: 7,
-                        marginBottom: 8,
                         marginHorizontal: 5,
                         borderColor: '#FA8888',
                         borderWidth: 1,
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: 120,
                         backgroundColor: '#FCF6F6',
                         minHeight: 30,
-                        paddingHorizontal: 10
+                        paddingHorizontal: 15
                     }}>
                     <Text
                         style={{
                             textAlign: 'center',
                             textAlignVertical: 'center',
                             fontSize: 15,
-                            paddingHorizontal: 3,
+                            paddingLeft: 10,
                             color: '#E41C38',
-                            marginRight: 2,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
                         {selectedLocation}
@@ -1247,11 +1244,9 @@ class ProductsList extends PureComponent {
                     // bottom: 5
                 }}
             >
-                {this.renderAllCategoriesIcon()}
-
                 {this.renderSortIcons()}
 
-                {this.renderSelectedLocaiton()}
+                {this.renderSelectedLocation()}
 
                 {isFilterApplied ?
                     <TouchableOpacity
@@ -1808,23 +1803,33 @@ class ProductsList extends PureComponent {
 
                 </View>
 
-                <FlatList
-                    ListHeaderComponent={this.renderFilterHeaderComponent}
-                    data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
-                    horizontal={true}
-                    inverted={true}
-                    showsHorizontalScrollIndicator={false}
+                <View
                     style={{
-                        maxHeight: 40
-                    }}
-                    contentContainerStyle={{
-                        alignItems: 'center',
+                        flexDirection: 'row-reverse',
                         justifyContent: 'center',
-                        maxHeight: 40
+                        alignItems: 'center',
+                        borderBottomColor: '#EBEBEB',
+                        borderBottomWidth: 1,
+                        height: 50,
+                        maxHeight: 50,
                     }}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
-                />
+                >
+                    {this.renderAllCategoriesIcon()}
+
+                    <FlatList
+                        ListHeaderComponent={this.renderFilterHeaderComponent}
+                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
+                        horizontal={true}
+                        inverted={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+                    />
+                </View>
 
                 <FlatList
                     initialNumToRender={4}
