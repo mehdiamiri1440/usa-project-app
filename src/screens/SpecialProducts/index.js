@@ -190,16 +190,12 @@ class SpecialProducts extends PureComponent {
 
     handleSortItemClick = value => {
         const {
-            specialProductsListLoading
-        } = this.props;
-
-        const {
             searchText,
             province,
             city
         } = this.state;
 
-        !specialProductsListLoading && this.setState({ sort_by: value, sortModalFlag: false, specialProductsListArray: [] }, () => {
+        this.setState({ sort_by: value, sortModalFlag: false, specialProductsListArray: [] }, () => {
             let searchItem = {
                 from_record_number: 0,
                 sort_by: value,
@@ -230,11 +226,6 @@ class SpecialProducts extends PureComponent {
     };
 
     handleSubCategoryItemClick = item => {
-
-        const {
-            specialProductsListLoading
-        } = this.props;
-
         const {
             sort_by,
             province,
@@ -247,7 +238,7 @@ class SpecialProducts extends PureComponent {
         });
 
         if (!subCategoriesList.length) {
-            !specialProductsListLoading && this.setState({
+            this.setState({
                 searchText: item.category_name,
                 specialProductsListArray: [],
                 modals: [],
@@ -749,7 +740,7 @@ class SpecialProducts extends PureComponent {
             )
         if (!loaded || specialProductsListLoading) {
             return (
-                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
                         <View
@@ -980,31 +971,28 @@ class SpecialProducts extends PureComponent {
     };
 
     renderCategoriesListItem = (item, isFromModal) => {
-        const {
-            specialProductsListLoading
-        } = this.props;
-
         if (!isFromModal)
             return (
                 <TouchableOpacity
-                    onPress={() => !specialProductsListLoading && this.sortProducts(item)}
+                    onPress={() => this.sortProducts(item)}
                     style={{
-                        borderRadius: 18,
+                        borderRadius: 12,
                         marginHorizontal: 5,
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: 85,
                         borderWidth: 1,
-                        borderColor: '#7E7E7E',
-                        backgroundColor: '#eee',
-                        minHeight: 30
+                        borderColor: '#EDEDED',
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30,
+                        paddingHorizontal: 15
                     }}>
                     <Text
                         style={{
                             textAlign: 'center',
                             textAlignVertical: 'center',
-                            color: '#7E7E7E',
+                            color: '#707070',
+                            fontSize: 15,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                         }}
                     >
@@ -1016,7 +1004,7 @@ class SpecialProducts extends PureComponent {
         return (
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={() => !specialProductsListLoading && this.sortProducts(item)}
+                onPress={() => this.sortProducts(item)}
                 style={{
                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
                     borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
@@ -1084,7 +1072,7 @@ class SpecialProducts extends PureComponent {
         )
     };
 
-    renderSelectedLocaiton = _ => {
+    renderSelectedLocation = _ => {
 
         const {
             province,
@@ -1094,7 +1082,6 @@ class SpecialProducts extends PureComponent {
 
         const {
             allProvincesObject = {},
-            specialProductsListLoading
         } = this.props;
 
         let {
@@ -1113,31 +1100,27 @@ class SpecialProducts extends PureComponent {
         if (!!selectedLocation)
             return (
                 <TouchableOpacity
-                    onPress={() => !specialProductsListLoading && this.removeLocations()}
+                    onPress={() => this.removeLocations()}
                     style={{
                         borderRadius: 12,
-                        marginTop: 7,
-                        marginBottom: 8,
                         marginHorizontal: 5,
                         borderColor: '#FA8888',
                         borderWidth: 1,
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: 120,
                         backgroundColor: '#FCF6F6',
                         minHeight: 30,
-                        paddingHorizontal: 10
+                        paddingHorizontal: 15
                     }}>
                     <Text
                         style={{
                             textAlign: 'center',
                             textAlignVertical: 'center',
                             fontSize: 15,
-                            paddingHorizontal: 3,
+                            paddingLeft: 10,
                             color: '#E41C38',
-                            marginRight: 2,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
                         {selectedLocation}
@@ -1155,10 +1138,6 @@ class SpecialProducts extends PureComponent {
             searchText,
         } = this.state;
 
-        const {
-            specialProductsListLoading
-        } = this.props;
-
         return (
 
             <View
@@ -1171,15 +1150,13 @@ class SpecialProducts extends PureComponent {
                     // bottom: 5
                 }}
             >
-                {this.renderAllCategoriesIcon()}
-
                 {this.renderSortIcons()}
 
-                {this.renderSelectedLocaiton()}
+                {this.renderSelectedLocation()}
 
                 {isFilterApplied ?
                     <TouchableOpacity
-                        onPress={() => !specialProductsListLoading && this.removeFilter()}
+                        onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
                             marginTop: 7,
@@ -1219,13 +1196,10 @@ class SpecialProducts extends PureComponent {
 
     renderAllCategoriesIcon = _ => {
 
-        const {
-            specialProductsListLoading
-        } = this.props;
 
         return (
             <TouchableOpacity
-                onPress={() => !specialProductsListLoading && this.setState({ totalCategoriesModalFlag: true })}
+                onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12, marginTop: 7, marginBottom: 8,
                     borderColor: '#EDEDED',
@@ -1247,11 +1221,6 @@ class SpecialProducts extends PureComponent {
     };
 
     renderSortIcons = _ => {
-
-        const {
-            specialProductsListLoading
-        } = this.props;
-
         const {
             sort_by
         } = this.state;
@@ -1266,7 +1235,7 @@ class SpecialProducts extends PureComponent {
         if (sort_by == BM)
             return (
                 <TouchableOpacity
-                    onPress={() => !specialProductsListLoading && this.setState({ sortModalFlag: true })}
+                    onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
                         marginTop: 7,
@@ -1295,7 +1264,7 @@ class SpecialProducts extends PureComponent {
             );
         return (
             <TouchableOpacity
-                onPress={() => !specialProductsListLoading && this.handleSortItemClick(BM)}
+                onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
                     marginTop: 7,
@@ -1675,7 +1644,7 @@ class SpecialProducts extends PureComponent {
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
-                                onPress={() => !specialProductsListLoading && this.setState({ locationsFlag: true })}
+                                onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
                                     color: (selectedCity) ||
@@ -1716,23 +1685,33 @@ class SpecialProducts extends PureComponent {
 
                 </View>
 
-                <FlatList
-                    ListHeaderComponent={this.renderFilterHeaderComponent}
-                    data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
-                    horizontal={true}
-                    inverted={true}
-                    showsHorizontalScrollIndicator={false}
+                <View
                     style={{
-                        maxHeight: 40
-                    }}
-                    contentContainerStyle={{
-                        alignItems: 'center',
+                        flexDirection: 'row-reverse',
                         justifyContent: 'center',
-                        maxHeight: 40
+                        alignItems: 'center',
+                        borderBottomColor: '#EBEBEB',
+                        borderBottomWidth: 1,
+                        height: 50,
+                        maxHeight: 50,
                     }}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
-                />
+                >
+                    {this.renderAllCategoriesIcon()}
+
+                    <FlatList
+                        ListHeaderComponent={this.renderFilterHeaderComponent}
+                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
+                        horizontal={true}
+                        inverted={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+                    />
+                </View>
 
                 <FlatList
                     initialNumToRender={4}
