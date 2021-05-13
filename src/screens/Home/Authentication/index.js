@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { ActionSheet, Button } from 'native-base';
@@ -16,9 +16,22 @@ import * as authActions from '../../../redux/auth/actions';
 import { permissions } from '../../../utils';
 
 
-
-
 const Authentication = props => {
+
+    let stepsArray = [
+        {
+            number: 1,
+            title: locales('titles.idCardTitle')
+        },
+        {
+            number: 2,
+            title: locales('titles.yourPhoto')
+        },
+        {
+            number: 3,
+            title: locales('titles.relatedEvidences')
+        },
+    ];
 
     const scrollViewRef = useRef('');
     const {
@@ -47,6 +60,8 @@ const Authentication = props => {
     let [idCardWithOwnerError, setIdCardWithOwnerError] = useState('');
 
     let [scrollToElement, setScrollToElement] = useState(0);
+
+    let [stepNumber, setStepNumber] = useState(0);
 
     const chooseImage = (name) => ActionSheet.show(
         {
@@ -355,6 +370,66 @@ const Authentication = props => {
                 </Dialog>
             </Portal >
 
+
+            <View style={{
+                paddingVertical: 10,
+                width: deviceWidth, marginVertical: 5,
+            }}
+            >
+                <View style={{
+                    flexDirection: 'row-reverse',
+                    marginVertical: 5,
+                    justifyContent: 'space-between',
+                    alignContent: 'center', alignSelf: 'center',
+                    width: deviceWidth - 40,
+
+                }}>
+                    {stepsArray.map((item, index) => {
+                        return (
+                            <View key={index}
+                                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
+                                        alignSelf: 'center', alignContent: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                        backgroundColor: stepNumber >= item.number ? "#00C569" : '#BEBEBE',
+                                        width: 20, height: 20, borderRadius: 10,
+                                        zIndex: 1
+                                    }}
+                                >
+                                    {item.number}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: stepNumber >= item.number ? "#333333" : '#999999',
+                                        fontSize: 14,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    }}
+                                >
+                                    {item.title}
+                                </Text>
+                                {index < stepsArray.length - 1 && <View
+                                    style={{
+                                        position: 'absolute',
+                                        height: 2,
+                                        width: '100%',
+                                        top: 8,
+                                        right: '50%',
+                                        backgroundColor: stepNumber - 1 >= item.number ? "#00C569" : '#BEBEBE',
+                                    }}>
+                                </View>
+                                }
+
+                            </View>
+                        )
+                    }
+                    )}
+                </View>
+
+            </View>
 
             {(userProfileLoading) ?
                 <View style={{
