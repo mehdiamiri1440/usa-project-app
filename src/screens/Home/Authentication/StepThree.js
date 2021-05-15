@@ -251,7 +251,9 @@ const StepThree = props => {
                     </Text>
                 </>
                 :
-                <View
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={chooseImage}
                     style={{
                         borderWidth: 1,
                         borderRadius: 12,
@@ -274,7 +276,7 @@ const StepThree = props => {
                         }}
                         source={{ uri: evidence.uri }}
                     />
-                </View>
+                </TouchableOpacity>
             }
             <View
                 style={{

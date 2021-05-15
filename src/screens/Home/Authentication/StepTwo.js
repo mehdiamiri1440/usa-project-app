@@ -227,7 +227,9 @@ const StepTwo = props => {
                     </Text>
                 </>
                 :
-                <View
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={chooseImage}
                     style={{
                         borderWidth: 1,
                         borderRadius: 12,
@@ -250,7 +252,7 @@ const StepTwo = props => {
                         }}
                         source={{ uri: idCardWithOwner.uri }}
                     />
-                </View>
+                </TouchableOpacity>
             }
             <View
                 style={{
