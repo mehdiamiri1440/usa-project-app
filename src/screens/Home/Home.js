@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
+import { useRoute, useNavigationState } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import {
     Text, TouchableOpacity, View, ImageBackground,
@@ -88,8 +89,16 @@ class Home extends React.Component {
 
 
     handleAppStateChange = (nextAppState) => {
+        const {
+            state
+        } = this.props;
+
+        const {
+            routes = []
+        } = state;
         if (
-            AppState.current != nextAppState
+            AppState.current != nextAppState && routes.length
+            && routes[routes.length - 1].name != 'EditProfile' && routes[routes.length - 1].name != 'Authentication'
         ) {
             this.props.fetchUserProfile();
         }
@@ -1138,10 +1147,11 @@ const mapStateToProps = state => {
 
 const Wrapper = (props) => {
     const ref = React.useRef(null);
-
+    const route = useRoute();
+    const state = useNavigationState(state => state)
     useScrollToTop(ref);
 
-    return <Home {...props} homeRef={ref} />;
+    return <Home {...props} homeRef={ref} route={route} state={state} />;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
