@@ -453,6 +453,7 @@ const MyRequests = props => {
 
             <Header
                 title={locales('labels.myRequests')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 

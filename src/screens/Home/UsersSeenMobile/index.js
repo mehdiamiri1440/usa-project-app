@@ -259,6 +259,7 @@ const UsersSeenMobile = props => {
         >
             <Header
                 title={locales('titles.users')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 

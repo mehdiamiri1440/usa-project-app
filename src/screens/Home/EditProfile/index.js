@@ -391,6 +391,7 @@ class EditProfile extends Component {
 
                 <Header
                     title={locales('titles.editProfile')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
 

@@ -50,6 +50,7 @@ class Settings extends React.Component {
             <>
                 <Header
                     title={locales('labels.settings')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
                 <ScrollView

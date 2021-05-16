@@ -111,6 +111,7 @@ const Wallet = props => {
         <>
             <Header
                 title={locales('titles.wallet')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
             <ScrollView

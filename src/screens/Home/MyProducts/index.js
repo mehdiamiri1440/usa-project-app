@@ -158,6 +158,7 @@ class MyProducts extends Component {
                 />
                 <Header
                     title={locales('labels.myProducts')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
 

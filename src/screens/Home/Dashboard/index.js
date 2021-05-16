@@ -82,6 +82,7 @@ const Dashboard = props => {
 
             <Header
                 title={locales('labels.dashboard')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 

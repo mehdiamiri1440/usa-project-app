@@ -20,6 +20,7 @@ class ContactUs extends React.Component {
             <>
                 <Header
                     title={locales('titles.support')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
 

@@ -101,6 +101,7 @@ class ExtraBuyAdCapacity extends React.Component {
 
                 <Header
                     title={locales('titles.extra‌BuyAd')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
 

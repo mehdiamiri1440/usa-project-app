@@ -347,6 +347,7 @@ class PromoteRegistration extends React.Component {
                 {!isUsedAsComponent ?
                     <Header
                         title={locales('labels.promoteRegistration')}
+                        shouldShowAuthenticationRibbonFromProps
                         {...this.props}
                     />
                     :

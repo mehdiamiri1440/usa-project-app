@@ -298,6 +298,7 @@ class Home extends React.Component {
 
                 <Header
                     title={locales('labels.myBuskool')}
+                    shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />
                 <ScrollView

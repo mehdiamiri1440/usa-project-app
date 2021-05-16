@@ -48,6 +48,7 @@ const UserFriends = props => {
         <>
             <Header
                 title={locales('titles.referralListTitle')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 

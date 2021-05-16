@@ -62,6 +62,7 @@ const Referral = props => {
         <>
             <Header
                 title={locales('titles.referralMainTitle')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
             <ScrollView style={{

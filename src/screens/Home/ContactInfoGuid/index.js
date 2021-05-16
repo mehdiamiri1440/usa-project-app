@@ -18,6 +18,7 @@ const ContactInfoGuid = props => {
 
             <Header
                 title={locales('labels.contactInfoGuid')}
+                shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 
