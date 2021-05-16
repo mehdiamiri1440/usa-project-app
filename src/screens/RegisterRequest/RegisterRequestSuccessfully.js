@@ -915,7 +915,7 @@ const RegisterRequestSuccessfully = props => {
 
             <Header
                 title={locales('labels.registerRequest')}
-                onBackButtonPressed={handleBack}
+                onBackButtonPressed={_ => handleBack()}
                 {...props}
             />
 
