@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Card, Button } from 'native-base';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -17,7 +16,7 @@ import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { numberWithCommas } from '../../../utils/formatter';
 import CreditCardPayment from './CreditCardPayment';
-
+import Header from '../../../components/header';
 class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
@@ -345,33 +344,13 @@ class PromoteRegistration extends React.Component {
                 />
 
 
-                {!isUsedAsComponent ? <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.promoteRegistration')}
-                        </Text>
-                    </View>
-                </View> : null}
+                {!isUsedAsComponent ?
+                    <Header
+                        title={locales('labels.promoteRegistration')}
+                        {...this.props}
+                    />
+                    :
+                    null}
 
                 <ScrollView
                     ref={this.wrapperRef}

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView, FlatList, StyleSheet, Image, ImageBackground } from 'react-native';
+import { Text, View, SafeAreaView, FlatList, StyleSheet, Image, ImageBackground } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Navigation } from 'react-native-navigation';
@@ -7,7 +7,6 @@ import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Button } from 'native-base';
-import Svg, { Image as SvgImage, Defs, G, Circle as SvgCircle } from "react-native-svg";
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -26,6 +25,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
+import Header from '../../components/header';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -704,39 +704,14 @@ class Requests extends PureComponent {
                     </Dialog>
                 </Portal >
 
-
-
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => {
-                            this.updateFlag.current.close(); this.props.navigation.goBack()
-                        }}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.buyRequests')}
-                        </Text>
-                    </View>
-                </View>
-
-
+                <Header
+                    title={locales('labels.buyRequests')}
+                    onBackButtonPressed={() => {
+                        this.updateFlag.current.close();
+                        this.props.navigation.goBack()
+                    }}
+                    {...this.props}
+                />
 
                 {/* {userInfo.active_pakage_type == 0 && <View style={{
                     shadowOffset: { width: 20, height: 20 },

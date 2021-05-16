@@ -1,15 +1,14 @@
 
 
 import React, { useEffect } from 'react';
-import { Text, View, BackHandler, StyleSheet, Image, ScrollView, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
+import { Text, View, BackHandler, StyleSheet, Image, ScrollView, ToastAndroid, Linking } from 'react-native';
 import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { deviceWidth, deviceHeight } from '../../../utils';
 import Clipboard from "@react-native-community/clipboard";
 
 import UserFriends from '../UserFriends/UserLists'
-
+import Header from '../../../components/header';
 
 
 const Referral = props => {
@@ -61,34 +60,10 @@ const Referral = props => {
 
     return (
         <>
-
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
-
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('titles.referralMainTitle')}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                title={locales('titles.referralMainTitle')}
+                {...props}
+            />
             <ScrollView style={{
                 backgroundColor: '#fff',
                 flex: 1,

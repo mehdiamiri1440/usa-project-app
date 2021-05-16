@@ -7,15 +7,12 @@ import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Card, Button, Textarea, ActionSheet } from 'native-base';
 
-
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as profileActions from '../../../redux/profile/actions';
-import { permissions } from '../../../utils';
+import { permissions, deviceHeight, deviceWidth } from '../../../utils';
+import Header from '../../../components/header';
 
 let myTimeout;
 class EditProfile extends Component {
@@ -392,35 +389,10 @@ class EditProfile extends Component {
                     </Dialog>
                 </Portal >
 
-
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.editProfile')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('titles.editProfile')}
+                    {...this.props}
+                />
 
                 <ScrollView
                     keyboardShouldPersistTaps='handled'

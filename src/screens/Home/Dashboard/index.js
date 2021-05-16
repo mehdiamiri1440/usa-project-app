@@ -10,6 +10,7 @@ import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth } from '../../../utils';
 import * as homeActions from '../../../redux/home/actions';
 import ENUMS from '../../../enums';
+import Header from '../../../components/header';
 
 const Dashboard = props => {
 
@@ -79,33 +80,11 @@ const Dashboard = props => {
             }
 
 
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
+            <Header
+                title={locales('labels.dashboard')}
+                {...props}
+            />
 
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('labels.dashboard')}
-                    </Text>
-                </View>
-            </View>
             <ScrollView
                 refreshControl={
                     <RefreshControl

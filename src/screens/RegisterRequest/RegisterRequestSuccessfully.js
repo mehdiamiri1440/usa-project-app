@@ -17,6 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import * as productListActions from '../../redux/productsList/actions';
 import { dataGenerator, formatter, deviceWidth, validator, deviceHeight } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
+import Header from '../../components/header';
 
 const RegisterRequestSuccessfully = props => {
 
@@ -912,35 +913,11 @@ const RegisterRequestSuccessfully = props => {
                 </Dialog>
             </Portal >
 
-
-
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={handleBack}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
-
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('labels.registerRequest')}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                title={locales('labels.registerRequest')}
+                onBackButtonPressed={handleBack}
+                {...props}
+            />
 
             <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
                 <View

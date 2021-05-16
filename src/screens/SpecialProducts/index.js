@@ -29,6 +29,7 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
+import Header from '../../components/header';
 
 let myTimeout;
 class SpecialProducts extends PureComponent {
@@ -584,33 +585,12 @@ class SpecialProducts extends PureComponent {
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={_ => this.omitItemFromModals(category_name)}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
+                <Header
+                    {...this.props}
+                    title={category_name}
+                    onBackButtonPressed={_ => this.omitItemFromModals(category_name)}
+                />
 
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {category_name}
-                        </Text>
-                    </View>
-                </View>
                 <FlatList
                     ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
                     data={subCategoriesList}
@@ -1400,36 +1380,12 @@ class SpecialProducts extends PureComponent {
                                 width: deviceWidth,
                             }}
                         >
-                            <View style={{
-                                backgroundColor: 'white',
-                                flexDirection: 'row',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                                height: 45,
-                                elevation: 5,
-                                justifyContent: 'center'
-                            }}>
-                                <TouchableOpacity
-                                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                    onPress={() => {
-                                        this.setState({ locationsFlag: false });
-                                    }}
-                                >
-                                    <AntDesign name='arrowright' size={25} />
-                                </TouchableOpacity>
 
-                                <View style={{
-                                    width: '100%',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text
-                                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                    >
-                                        {locales('labels.locationsFilter')}
-                                    </Text>
-                                </View>
-                            </View>
-
+                            <Header
+                                {...this.props}
+                                title={locales('labels.locationsFilter')}
+                                onBackButtonPressed={_ => this.setState({ locationsFlag: false })}
+                            />
 
                             <View style={{
                                 padding: 20,
@@ -1564,33 +1520,12 @@ class SpecialProducts extends PureComponent {
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ sortModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
+                        <Header
+                            {...this.props}
+                            title={locales('labels.sortBy')}
+                            onBackButtonPressed={_ => this.setState({ sortModalFlag: false })}
+                        />
 
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {locales('labels.sortBy')}
-                                </Text>
-                            </View>
-                        </View>
                         <FlatList
                             data={ENUMS.SORT_LIST.list}
                             keyExtractor={(_, index) => index.toString()}
@@ -1605,33 +1540,12 @@ class SpecialProducts extends PureComponent {
                         visible={!!totalCategoriesModalFlag}
                         onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ totalCategoriesModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
+                        <Header
+                            {...this.props}
+                            title={locales('titles.allOfTheCategories')}
+                            onBackButtonPressed={_ => this.setState({ totalCategoriesModalFlag: false })}
+                        />
 
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {locales('titles.allOfTheCategories')}
-                                </Text>
-                            </View>
-                        </View>
                         <FlatList
                             data={categoriesList}
                             style={{ marginVertical: 8 }}
@@ -1651,33 +1565,10 @@ class SpecialProducts extends PureComponent {
                     :
                     null}
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.specialProducts')}
-                        </Text>
-                    </View>
-                </View>
+                <Header
+                    {...this.props}
+                    title={locales('labels.specialProducts')}
+                />
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>

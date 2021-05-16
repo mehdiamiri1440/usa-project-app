@@ -28,7 +28,8 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
 import NoConnection from '../../components/noConnectionError';
-import StarRating from '../../components/StarRating'
+import StarRating from '../../components/StarRating';
+import Header from '../../components/header';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -1244,35 +1245,10 @@ class ProductDetails extends PureComponent {
                 </Modal>
 
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    shadowOffset: { width: 20, height: 20 },
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => {
-                            this.props.navigation.goBack()
-                        }}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-                    <View >
-                        <Text
-                            style={{
-                                fontSize: 18,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            }}
-                        >
-                            {(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
-                        </Text>
-                    </View>
-                </View>
+                <Header
+                    title={(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
+                    {...this.props}
+                />
                 {(productDetailsInfoLoading || editProductLoading) ?
                     <ScrollView style={{
                         backgroundColor: 'white',

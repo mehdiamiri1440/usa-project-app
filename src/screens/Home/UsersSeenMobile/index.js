@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { Button, Toast } from 'native-base';
-import moment from 'moment';
 import Jmoment from 'moment-jalaali';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight, dataGenerator } from '../../../utils';
+import Header from '../../../components/header';
 
 const UsersSeenMobile = props => {
 
@@ -258,33 +257,10 @@ const UsersSeenMobile = props => {
                 flex: 1
             }}
         >
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
-
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('titles.users')}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                title={locales('titles.users')}
+                {...props}
+            />
 
             <FlatList
                 refreshing={userContactInfoViewersLoading}

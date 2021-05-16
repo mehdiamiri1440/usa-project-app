@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
-import { ScrollView } from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
+
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
-import * as authReducer from '../../redux/auth/actions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
-import { deviceWidth } from '../../utils';
+import * as authReducer from '../../redux/auth/actions';
+import Header from '../../components/header';
 
 let settingRoutes = [
     // { label: 'labels.changePassword', icon: <FontAwesome size={25} name='unlock-alt' color='white' />, name: 'ChangePassword' },
@@ -49,36 +48,10 @@ class Settings extends React.Component {
     render() {
         return (
             <>
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.settings')}
-                        </Text>
-                    </View>
-                </View>
-
-
-
+                <Header
+                    title={locales('labels.settings')}
+                    {...this.props}
+                />
                 <ScrollView
                     style={{ marginVertical: 20, flex: 1, backgroundColor: '#F2F2F2' }}>
 

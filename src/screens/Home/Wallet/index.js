@@ -4,15 +4,15 @@ import {
     RefreshControl, Linking
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Label, InputGroup, Input, Button } from 'native-base';
+import { Label, InputGroup, Button } from 'native-base';
 import { TextInputMask } from 'react-native-masked-text';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import LinearGradient from 'react-native-linear-gradient';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { formatter, deviceWidth, deviceHeight } from '../../../utils';
 import * as profileActions from '../../../redux/profile/actions';
+import Header from '../../../components/header';
 
 const Wallet = props => {
 
@@ -109,34 +109,10 @@ const Wallet = props => {
 
     return (
         <>
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
-
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('titles.wallet')}
-                    </Text>
-                </View>
-            </View>
-
+            <Header
+                title={locales('titles.wallet')}
+                {...props}
+            />
             <ScrollView
                 refreshControl={
                     <RefreshControl

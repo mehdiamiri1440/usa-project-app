@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import ContentLoader, { Rect, Circle, Path } from "react-content-loader/native"
+import ContentLoader, { Rect } from "react-content-loader/native"
 
-
-import NoConnection from '../../../components/noConnectionError';
-import Product from '../../ProductsList/Product';
 import * as productsListActions from '../../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+import Product from '../../ProductsList/Product';
+import NoConnection from '../../../components/noConnectionError';
+import Header from '../../../components/header';
 import ENUMS from '../../../enums';
-
-let myTimeout;
 class MyProducts extends Component {
     constructor(props) {
         super(props)
@@ -159,34 +156,10 @@ class MyProducts extends Component {
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.myProducts')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('labels.myProducts')}
+                    {...this.props}
+                />
 
                 <FlatList
                     keyboardDismissMode='on-drag'

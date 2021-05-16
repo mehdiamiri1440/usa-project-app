@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 
 import { TabView, TabBar } from 'react-native-tab-view';
 import { deviceWidth } from '../../utils/deviceDimenssions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as messagesActions from '../../redux/messages/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
 import MessageContext from './MessagesContext';
 
 import MessagesTab from './MessagesTab';
 import RequestsTab from './RequestsTab';
+import Header from '../../components/header';
 
 
 
@@ -137,33 +137,11 @@ const Messages = props => {
     return (
         <View style={{ flex: 1 }}>
             <MessageContext.Provider value={{ resetSearch, searchText }}>
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
 
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.messanger')}
-                        </Text>
-                    </View>
-                </View>
+                <Header
+                    title={locales('titles.messanger')}
+                    {...props}
+                />
 
                 {is_seller ?
                     <View style={{

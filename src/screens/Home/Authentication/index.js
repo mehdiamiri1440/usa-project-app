@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 
 import { connect } from 'react-redux';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as authActions from '../../../redux/auth/actions';
@@ -12,6 +11,7 @@ import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import AuthenticatedSuccessfully from './AuthenticatedSuccessfully';
+import Header from '../../../components/header';
 
 
 const Authentication = props => {
@@ -126,33 +126,11 @@ const Authentication = props => {
                 flex: 1
             }}
         >
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
 
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('labels.authentication')}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                title={locales('labels.authentication')}
+                {...props}
+            />
 
             {is_verified ?
                 <View

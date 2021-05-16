@@ -1,17 +1,14 @@
 import React from 'react';
 import analytics from '@react-native-firebase/analytics';
 import {
-    Text, TouchableOpacity, View, Image, ToastAndroid, Linking
+    Text, View, Image, ToastAndroid, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import Clipboard from "@react-native-community/clipboard";
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-
-import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-import { deviceHeight } from '../../../utils/deviceDimenssions';
+import Header from '../../../components/header';
 class ContactUs extends React.Component {
 
     componentDidMount() {
@@ -21,34 +18,10 @@ class ContactUs extends React.Component {
     render() {
         return (
             <>
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.support')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('titles.support')}
+                    {...this.props}
+                />
 
                 <View style={{
                     padding: 15,

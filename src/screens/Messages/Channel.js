@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
     FlatList, View, Text, Image, TouchableOpacity,
-    ActivityIndicator, Modal, Animated, Linking
+    ActivityIndicator, Modal, Animated, Linking,
+    ImageBackground, StyleSheet
 } from 'react-native';
 import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
@@ -9,13 +10,12 @@ import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ImageZoom from 'react-native-image-pan-zoom';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import * as messagesActions from '../../redux/messages/actions';
 import { deviceWidth, parser, formatter, deviceHeight } from '../../utils';
-import ValidatedUserIcon from '../../components/validatedUserIcon';
+import Header from '../../components/header';
 
 const Channel = props => {
 
@@ -559,112 +559,55 @@ const Channel = props => {
 
             </Modal>
 
-            <View
-                style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row-reverse',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 60,
-                    paddingTop: 2,
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
-                    elevation: 5,
-                    zIndex: 1
-                }}>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row-reverse', paddingVertical: 10, }}
-                    onPress={() => props.navigation.goBack()}>
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            alignItems: 'flex-end', paddingHorizontal: 10
-                        }}
-                    >
-                        <AntDesign name='arrowright' size={25}
-                        />
-                    </View>
-                    <Image
-                        style={{
-                            borderRadius: 23, marginVertical: 10,
-                            width: 46, height: 46
-                        }}
-                        source={require('../../../assets/icons/buskool-logo.png')}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => props.navigation.goBack()}
-                    style={{
-                        paddingHorizontal: 10,
-                        width: deviceWidth * 0.6,
-                        alignItems: 'flex-end',
-                    }}>
-                    <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-                        <View
-                            style={{ flexDirection: 'row-reverse', alignItems: 'center', width: '96%' }}
-                        >
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 18, marginHorizontal: 5
-                                }}
-                            >
-                                {locales('titles.buskoolOfficialChannel')}
-                            </Text>
-                            <ValidatedUserIcon  {...props} />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-
-            <Image
+            <ImageBackground
                 source={require('../../../assets/images/whatsapp-wallpaper.png')}
-                style={{
-                    flex: 1,
-                    position: 'absolute',
-                    resizeMode: 'cover',
-                    width: '100%',
-                    height: '100%',
-                }}
-            />
+                style={styles.image}
+            >
 
-            {channelDataLoading ? <ActivityIndicator
-                size="large"
-                color="#00C569"
-                style={{
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
-                    elevation: 5,
-                    alignSelf: 'center',
-                    borderColor: 'black',
-                    backgroundColor: 'white',
-                    width: 50,
-                    position: 'absolute',
-                    left: '44%',
-                    top: '15%',
-                    height: 50,
-                    borderRadius: 25
+                <Header
+                    title={locales('titles.buskoolOfficialChannel')}
+                    image={require('../../../assets/icons/buskool-logo.png')}
+                    isVerified
+                    {...props}
+                />
 
-                }}
-            /> : null}
+                {channelDataLoading ? <ActivityIndicator
+                    size="large"
+                    color="#00C569"
+                    style={{
+                        shadowOffset: { width: 20, height: 20 },
+                        shadowColor: 'black',
+                        shadowOpacity: 1.0,
+                        elevation: 5,
+                        alignSelf: 'center',
+                        borderColor: 'black',
+                        backgroundColor: 'white',
+                        width: 50,
+                        position: 'absolute',
+                        left: '44%',
+                        top: '15%',
+                        height: 50,
+                        borderRadius: 25
 
-            <FlatList
-                ref={ChannelContainerRef}
-                keyExtractor={renderKeyExtractor}
-                showsVerticalScrollIndicator={false}
-                inverted={!!contents && !!contents.length}
-                renderItem={renderItem}
-                removeClippedSubviews
-                legacyImplementation
-                windowSize={8}
-                maxToRenderPerBatch={3}
-                onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
-                onEndReached={onEndReached}
-                onEndReachedThreshold={0.1}
-                data={contents}
-            />
+                    }}
+                /> : null}
+
+                <FlatList
+                    ref={ChannelContainerRef}
+                    keyExtractor={renderKeyExtractor}
+                    showsVerticalScrollIndicator={false}
+                    inverted={!!contents && !!contents.length}
+                    renderItem={renderItem}
+                    removeClippedSubviews
+                    legacyImplementation
+                    windowSize={8}
+                    maxToRenderPerBatch={3}
+                    onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
+                    onEndReached={onEndReached}
+                    onEndReachedThreshold={0.1}
+                    data={contents}
+                />
+            </ImageBackground>
 
             <TouchableOpacity
                 activeOpacity={1}
@@ -694,9 +637,18 @@ const Channel = props => {
                     {locales('labels.sendYourProfileToYourFriends')}
                 </Text>
             </TouchableOpacity>
+
         </>
     )
 };
+
+const styles = StyleSheet.create({
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center"
+    },
+})
 
 const mapStateToProps = state => {
 

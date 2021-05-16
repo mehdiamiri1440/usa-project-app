@@ -27,6 +27,7 @@ import { numberWithCommas } from '../../utils/formatter';
 import { versionName } from '../../../version.json';
 import { homeRoutes, sellerSpecialRoutes, buyerSpecialRoutes } from './HomeRoutes';
 import ENUMS from '../../enums';
+import Header from '../../components/header';
 class Home extends React.Component {
 
     constructor(props) {
@@ -295,37 +296,10 @@ class Home extends React.Component {
                     </Dialog>
                 </Portal >
 
-
-                <View
-                    style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}
-                >
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.myBuskool')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('labels.myBuskool')}
+                    {...this.props}
+                />
                 <ScrollView
                     refreshControl={
                         <RefreshControl

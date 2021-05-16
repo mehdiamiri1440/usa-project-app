@@ -18,7 +18,6 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
@@ -31,7 +30,7 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
-
+import Header from '../../components/header';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -622,34 +621,12 @@ class ProductsList extends PureComponent {
                 visible={modals.findIndex(item => item.category_name == category_name) > -1}
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
+                <Header
+                    title={category_name}
+                    onBackButtonPressed={_ => this.omitItemFromModals(category_name)}
+                    {...this.props}
+                />
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={_ => this.omitItemFromModals(category_name)}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {category_name}
-                        </Text>
-                    </View>
-                </View>
                 <FlatList
                     ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
                     data={subCategoriesList}
@@ -1488,36 +1465,11 @@ class ProductsList extends PureComponent {
                                 width: deviceWidth,
                             }}
                         >
-                            <View style={{
-                                backgroundColor: 'white',
-                                flexDirection: 'row',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                                height: 45,
-                                elevation: 5,
-                                justifyContent: 'center'
-                            }}>
-                                <TouchableOpacity
-                                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                    onPress={() => {
-                                        this.setState({ locationsFlag: false });
-                                    }}
-                                >
-                                    <AntDesign name='arrowright' size={25} />
-                                </TouchableOpacity>
-
-                                <View style={{
-                                    width: '100%',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text
-                                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                    >
-                                        {locales('labels.locationsFilter')}
-                                    </Text>
-                                </View>
-                            </View>
-
+                            <Header
+                                title={locales('labels.locationsFilter')}
+                                onBackButtonPressed={_ => this.setState({ locationsFlag: false })}
+                                {...this.props}
+                            />
 
                             <View style={{
                                 padding: 20,
@@ -1652,33 +1604,12 @@ class ProductsList extends PureComponent {
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ sortModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
+                        <Header
+                            title={locales('labels.sortBy')}
+                            onBackButtonPressed={_ => this.setState({ sortModalFlag: false })}
+                            {...this.props}
+                        />
 
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {locales('labels.sortBy')}
-                                </Text>
-                            </View>
-                        </View>
                         <FlatList
                             data={ENUMS.SORT_LIST.list}
                             keyExtractor={(_, index) => index.toString()}
@@ -1693,33 +1624,12 @@ class ProductsList extends PureComponent {
                         visible={!!totalCategoriesModalFlag}
                         onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            alignContent: 'center',
-                            alignItems: 'center',
-                            height: 45,
-                            elevation: 5,
-                            justifyContent: 'center'
-                        }}>
-                            <TouchableOpacity
-                                style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                                onPress={() => this.setState({ totalCategoriesModalFlag: false })}
-                            >
-                                <AntDesign name='arrowright' size={25} />
-                            </TouchableOpacity>
+                        <Header
+                            title={locales('titles.allOfTheCategories')}
+                            onBackButtonPressed={_ => this.setState({ totalCategoriesModalFlag: false })}
+                            {...this.props}
+                        />
 
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                                <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                                >
-                                    {locales('titles.allOfTheCategories')}
-                                </Text>
-                            </View>
-                        </View>
                         <FlatList
                             data={categoriesList}
                             style={{ marginVertical: 8 }}
@@ -1739,34 +1649,10 @@ class ProductsList extends PureComponent {
                     :
                     null}
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.products')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('labels.products')}
+                    {...this.props}
+                />
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>

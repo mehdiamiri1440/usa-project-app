@@ -1,9 +1,8 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, InputGroup, Input, Button } from 'native-base';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -13,7 +12,7 @@ import * as homeActions from '../../../redux/home/actions';
 import { formatter } from '../../../utils';
 import PromoteRegistration from './PromoteRegistration';
 import CreditCardPayment from './CreditCardPayment';
-
+import Header from '../../../components/header';
 class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
         super(props)
@@ -100,34 +99,11 @@ class ExtraBuyAdCapacity extends React.Component {
                     closeModal={this.closeModal}
                 />
 
+                <Header
+                    title={locales('titles.extra‌BuyAd')}
+                    {...this.props}
+                />
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.extra‌BuyAd')}
-                        </Text>
-                    </View>
-                </View>
                 <ScrollView
                     ref={this.wrapperRef}
                     refreshControl={

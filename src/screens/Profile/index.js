@@ -25,6 +25,7 @@ import RelatedPhotos from './RelatedPhotos';
 import Certificates from './certificates';
 import Rating from './Rating';
 import Comments from './Comments';
+import Header from '../../components/header';
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -355,34 +356,11 @@ class Profile extends PureComponent {
                     </View>
                 </Modal>
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
+                <Header
+                    title={locales('labels.seeProfile')}
+                    {...this.props}
+                />
 
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.seeProfile')}
-                        </Text>
-                    </View>
-                </View>
 
                 {(profileInfoLoading) ?
                     <ScrollView style={{

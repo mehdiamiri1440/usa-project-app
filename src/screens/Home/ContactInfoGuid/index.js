@@ -5,6 +5,7 @@ import { Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import { deviceWidth } from '../../../utils';
+import Header from '../../../components/header';
 
 const ContactInfoGuid = props => {
     return (
@@ -14,33 +15,11 @@ const ContactInfoGuid = props => {
                 flex: 1
             }}
         >
-            <View style={{
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignContent: 'center',
-                alignItems: 'center',
-                height: 45,
-                elevation: 5,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity
-                    style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                    onPress={() => props.navigation.goBack()}
-                >
-                    <AntDesign name='arrowright' size={25} />
-                </TouchableOpacity>
 
-                <View style={{
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                    >
-                        {locales('labels.contactInfoGuid')}
-                    </Text>
-                </View>
-            </View>
+            <Header
+                title={locales('labels.contactInfoGuid')}
+                {...props}
+            />
 
             <ScrollView
             >
