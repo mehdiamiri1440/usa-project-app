@@ -46,37 +46,61 @@ export default (props = {}) => {
                 <AntDesign name='arrowright' size={25} />
                 {image
                     ?
-                    <Image
-                        style={{
-                            borderRadius: 20,
-                            width: 40,
-                            height: 40,
-                            marginHorizontal: 3
-                        }}
-                        source={image}
-                    />
+                    <>
+                        <Image
+                            style={{
+                                borderRadius: 20,
+                                width: 40,
+                                height: 40,
+                                marginHorizontal: 3
+                            }}
+                            source={image}
+                        />
+                        <View style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row-reverse'
+                        }}>
+                            <Text
+                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Light', marginHorizontal: 5 }}
+                            >
+                                {title}
+                            </Text>
+                            {isVerified
+                                ?
+                                <ValidatedUserIcon
+                                    {...props}
+                                />
+                                :
+                                null}
+                        </View>
+                    </>
                     : null
                 }
             </TouchableOpacity>
 
-            <View style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row-reverse'
-            }}>
-                <Text
-                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}
-                >
-                    {title}
-                </Text>
-                {isVerified
-                    ?
-                    <ValidatedUserIcon
-                        {...props}
-                    />
-                    :
-                    null}
-            </View>
+            {!image
+                ?
+                <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row-reverse'
+                }}>
+                    <Text
+                        style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}
+                    >
+                        {title}
+                    </Text>
+                    {isVerified
+                        ?
+                        <ValidatedUserIcon
+                            {...props}
+                        />
+                        :
+                        null}
+                </View>
+                : null
+            }
         </View>
     )
 }
