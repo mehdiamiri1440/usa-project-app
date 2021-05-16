@@ -138,25 +138,25 @@ const StepOne = props => {
             <View
                 style={{
                     borderWidth: 1,
+                    borderRadius: 7,
+                    overflow: 'hidden',
                     borderRadius: 12,
                     borderColor: '#BDC4CC',
                     alignSelf: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginTop: 10,
-                    width: '95%',
-                    height: deviceHeight * 0.33
+                    width: '100%',
+                    height: deviceHeight * 0.3
                 }}
             >
 
                 <Image
-                    resizeMode='stretch'
+                    resizeMode='cover'
                     source={require('../../../../assets/images/user-id-card.jpg')}
-                    borderRadius={5}
                     style={{
                         width: '100%',
-                        height: '100%',
-                        borderRadius: 5
+                        height: '100%'
                     }}
                 />
             </View>
@@ -193,7 +193,7 @@ const StepOne = props => {
                             borderWidth: 1,
                             borderRadius: 8,
                             borderStyle: 'dashed',
-                            borderColor: '#707070',
+                            borderColor: '#BDC4CC',
                             backgroundColor: '#fff',
                             zIndex: 1,
                             justifyContent: 'center',
@@ -234,23 +234,24 @@ const StepOne = props => {
                     onPress={chooseImage}
                     style={{
                         borderWidth: 1,
+                        borderRadius: 7,
+                        overflow: 'hidden',
                         borderRadius: 12,
                         borderColor: '#BDC4CC',
                         alignSelf: 'center',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginTop: 10,
-                        width: '95%',
-                        height: deviceHeight * 0.35
+                        width: '100%',
+                        height: deviceHeight * 0.3
                     }}
                 >
                     <Image
-                        resizeMode='stretch'
+                        resizeMode='cover'
                         borderRadius={5}
                         style={{
                             width: '100%',
                             height: '100%',
-                            borderRadius: 8
                         }}
                         source={{ uri: idCard.uri }}
                     />
@@ -317,7 +318,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         color: 'white',
         alignItems: 'center',
-        backgroundColor: '#B5B5B5',
+        backgroundColor: '#e0e0e0',
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },

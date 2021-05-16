@@ -170,18 +170,18 @@ const StepThree = props => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginTop: 10,
-                    width: '95%',
+                    width: '100%',
+                    overflow: 'hidden',
                     height: deviceHeight * 0.2
                 }}
             >
 
                 <Image
-                    resizeMode='stretch'
+                    resizeMode='contain'
                     source={require('../../../../assets/images/madarek.jpg')}
                     style={{
-                        width: '99%',
+                        width: '100%',
                         height: '100%',
-                        borderRadius: 6
                     }}
                 />
             </View>
@@ -209,7 +209,7 @@ const StepThree = props => {
                     <TouchableOpacity
                         onPress={chooseImage}
                         style={{
-                            height: deviceHeight * 0.25,
+                            height: deviceHeight * 0.23,
                             width: '95%',
                             marginTop: 10,
                             alignSelf: 'center',
@@ -263,16 +263,15 @@ const StepThree = props => {
                         justifyContent: 'center',
                         marginTop: 10,
                         width: '95%',
-                        height: deviceHeight * 0.25
+                        overflow: 'hidden',
+                        height: deviceHeight * 0.3
                     }}
                 >
                     <Image
-                        resizeMode='stretch'
-                        borderRadius={5}
+                        resizeMode='cover'
                         style={{
                             width: '100%',
                             height: '100%',
-                            borderRadius: 8
                         }}
                         source={{ uri: evidence.uri }}
                     />

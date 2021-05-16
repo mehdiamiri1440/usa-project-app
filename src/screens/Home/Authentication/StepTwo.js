@@ -145,18 +145,18 @@ const StepTwo = props => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginTop: 10,
-                    width: '50%',
-                    height: deviceHeight * 0.3
+                    width: '60%',
+                    overflow: 'hidden',
+                    height: deviceHeight * 0.4
                 }}
             >
 
                 <Image
-                    resizeMode='contain'
+                    resizeMode='cover'
                     source={require('../../../../assets/images/verifi-user-image.jpg')}
                     style={{
                         width: '100%',
                         height: '100%',
-                        borderRadius: 5
                     }}
                 />
             </View>
@@ -184,18 +184,17 @@ const StepTwo = props => {
                     <TouchableOpacity
                         onPress={chooseImage}
                         style={{
-                            height: deviceHeight * 0.3,
-                            width: '50%',
-                            marginTop: 10,
-                            alignSelf: 'center',
                             borderWidth: 1,
-                            borderRadius: 8,
-                            borderStyle: 'dashed',
-                            borderColor: '#707070',
-                            backgroundColor: '#fff',
-                            zIndex: 1,
-                            justifyContent: 'center',
+                            borderRadius: 12,
+                            borderColor: '#BDC4CC',
+                            alignSelf: 'center',
                             alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: 10,
+                            borderStyle: 'dashed',
+                            width: '60%',
+                            overflow: 'hidden',
+                            height: deviceHeight * 0.4
                         }}>
                         <View>
                             <View style={{
@@ -238,17 +237,16 @@ const StepTwo = props => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginTop: 10,
-                        width: '50%',
-                        height: deviceHeight * 0.3
+                        width: '60%',
+                        overflow: 'hidden',
+                        height: deviceHeight * 0.4
                     }}
                 >
                     <Image
-                        resizeMode='stretch'
-                        borderRadius={5}
+                        resizeMode='cover'
                         style={{
                             width: '100%',
                             height: '100%',
-                            borderRadius: 8
                         }}
                         source={{ uri: idCardWithOwner.uri }}
                     />
@@ -327,7 +325,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         color: 'white',
         alignItems: 'center',
-        backgroundColor: '#B5B5B5',
+        backgroundColor: '#e0e0e0',
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
