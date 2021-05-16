@@ -494,6 +494,7 @@ export default {
     'titles.copiedToClipboard': 'کپی شد.',
     'titles.extraProduct': 'افزایش ظرفیت ثبت محصول',
     'titles.users': 'کاربران',
+    'titles.clickToStartAuthentication': 'برای احراز هویت کلیک کنید',
     'titles.usersComments': 'نظرات کاربران',
     'titles.doYouWishToBuy': 'آیا قصد خرید عمده محصولی را دارید؟',
     'titles.registerNewBuyAdRequest': 'درخواست خرید ثبت کنید .',
