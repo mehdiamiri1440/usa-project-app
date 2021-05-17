@@ -280,7 +280,7 @@ class Home extends React.Component {
                             </Text>
 
                         </Dialog.Actions>
-                        <Dialog.Actions style={{
+                        {/* <Dialog.Actions style={{
                             justifyContent: 'center',
                             width: '100%',
                             padding: 0
@@ -292,7 +292,7 @@ class Home extends React.Component {
                                 <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
                                 </Text>
                             </Button>
-                        </Dialog.Actions>
+                        </Dialog.Actions> */}
                     </Dialog>
                 </Portal >
 

@@ -93,7 +93,7 @@ const Dashboard = props => {
                         onRefresh={() => props.fetchAllDashboardData()}
                     />
                 }
-                style={{ paddingHorizontal: 30, paddingTop: 30 }}
+                style={{ paddingHorizontal: 30, paddingTop: 30, backgroundColor: 'white' }}
             >
 
                 {

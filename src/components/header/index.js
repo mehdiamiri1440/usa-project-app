@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -14,8 +14,6 @@ const Header = (props = {}) => {
         navigation = {},
         onBackButtonPressed,
         image,
-        firstName,
-        lastName,
         isVerified,
         containerStyle = {},
         shouldShowAuthenticationRibbonFromProps = false,
@@ -30,11 +28,15 @@ const Header = (props = {}) => {
         is_verified
     } = user_info;
 
-    const [shouldShowAuthenticationRibbonFromState, setShouldShowAuthenticationRibbonFromState] = useState(true);
-
     const shouldShowAuthenticationRibbonCondition = !!!is_verified &&
         shouldShowAuthenticationRibbonFromProps &&
-        shouldShowAuthenticationRibbonFromState;
+        global.shouldShowRibbon;
+
+    const [shouldShowAuthenticationRibbonFromState, setShouldShowAuthenticationRibbonFromState] = useState(global.shouldShowRibbon);
+
+    useEffect(() => {
+        setShouldShowAuthenticationRibbonFromState(global.shouldShowAuthenticationRibbonFromState)
+    }, [global.shouldShowRibbon]);
 
     const {
         goBack = _ => { },
@@ -83,7 +85,11 @@ const Header = (props = {}) => {
                                 flexDirection: 'row-reverse'
                             }}>
                                 <Text
-                                    style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Light', marginHorizontal: 5 }}
+                                    style={{
+                                        fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        marginHorizontal: 5
+                                    }}
                                 >
                                     {title}
                                 </Text>
@@ -108,7 +114,11 @@ const Header = (props = {}) => {
                         flexDirection: 'row-reverse'
                     }}>
                         <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5 }}
+                            style={{
+                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                marginHorizontal: 5
+                            }}
                         >
                             {title}
                         </Text>
@@ -138,13 +148,16 @@ const Header = (props = {}) => {
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
                         overflow: 'hidden',
-                        zIndex: 1000000000
+                        zIndex: 1
                     }}
                 >
                     <FontAwesome5
                         name='times'
                         color='white'
-                        onPress={_ => setShouldShowAuthenticationRibbonFromState(false)}
+                        onPress={_ => {
+                            global.shouldShowRibbon = false;
+                            setShouldShowAuthenticationRibbonFromState(false);
+                        }}
                         size={22}
                         style={{
                             left: 0,
@@ -163,7 +176,10 @@ const Header = (props = {}) => {
                         }}
                     >
                         <View
-                            style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
                             <FontAwesome5
                                 name='certificate'
                                 color='white'
@@ -204,6 +220,7 @@ const Header = (props = {}) => {
 const mapStateToProps = ({
     profileReducer
 }) => {
+
     const {
         userProfile
     } = profileReducer;
@@ -211,5 +228,6 @@ const mapStateToProps = ({
     return {
         userProfile
     }
-}
+};
+
 export default connect(mapStateToProps)(Header);
