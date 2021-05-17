@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { connect } from 'react-redux';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth } from '../../utils';
 import ValidatedUserIcon from '../validatedUserIcon';
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const Header = (props = {}) => {
 
@@ -37,6 +44,7 @@ const Header = (props = {}) => {
     useEffect(() => {
         setShouldShowAuthenticationRibbonFromState(global.shouldShowAuthenticationRibbonFromState)
     }, [global.shouldShowRibbon]);
+
 
     const {
         goBack = _ => { },
@@ -134,8 +142,8 @@ const Header = (props = {}) => {
                 }
             </View>
 
-            {shouldShowAuthenticationRibbonCondition
-                ?
+
+            {shouldShowAuthenticationRibbonCondition ?
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={_ => navigate('MyBuskool', { screen: 'Authentication' })}
@@ -157,6 +165,7 @@ const Header = (props = {}) => {
                         onPress={_ => {
                             global.shouldShowRibbon = false;
                             setShouldShowAuthenticationRibbonFromState(false);
+                            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                         }}
                         size={22}
                         style={{
@@ -211,8 +220,7 @@ const Header = (props = {}) => {
                         />
                     </View>
                 </TouchableOpacity>
-                : null
-            }
+                : null}
         </>
     )
 };
