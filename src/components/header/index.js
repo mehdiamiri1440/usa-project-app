@@ -35,21 +35,26 @@ const Header = (props = {}) => {
         is_verified
     } = user_info;
 
-    const shouldShowAuthenticationRibbonCondition = !!!is_verified &&
-        shouldShowAuthenticationRibbonFromProps &&
-        global.shouldShowRibbon;
-
-    const [shouldShowAuthenticationRibbonFromState, setShouldShowAuthenticationRibbonFromState] = useState(global.shouldShowRibbon);
-
-    useEffect(() => {
-        setShouldShowAuthenticationRibbonFromState(global.shouldShowAuthenticationRibbonFromState)
-    }, [global.shouldShowRibbon]);
-
-
     const {
         goBack = _ => { },
         navigate = _ => { }
     } = navigation;
+
+    const [shouldShowAuthenticationRibbonFromState, setShouldShowAuthenticationRibbonFromState] = useState(global.shouldShowRibbon);
+
+    const shouldShowAuthenticationRibbonCondition = !!!is_verified &&
+        shouldShowAuthenticationRibbonFromProps &&
+        shouldShowAuthenticationRibbonFromState;
+
+    useEffect(() => {
+        setShouldShowAuthenticationRibbonFromState(global.shouldShowRibbon);
+    }, [global.shouldShowRibbon]);
+
+    const hideRibbon = _ => {
+        global.shouldShowRibbon = false;
+        setShouldShowAuthenticationRibbonFromState(false);
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    };
 
     return (
         <>
@@ -162,11 +167,7 @@ const Header = (props = {}) => {
                     <FontAwesome5
                         name='times'
                         color='white'
-                        onPress={_ => {
-                            global.shouldShowRibbon = false;
-                            setShouldShowAuthenticationRibbonFromState(false);
-                            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                        }}
+                        onPress={hideRibbon}
                         size={22}
                         style={{
                             left: 0,
