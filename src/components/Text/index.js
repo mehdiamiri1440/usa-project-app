@@ -10,7 +10,7 @@ export default ({
     if (Array.isArray(style))
         style.every(item => !item.fontFamily) ? style.push({ fontFamily: 'IRANSansWeb(FaNum)_Light' }) : null;
     else
-        style.fontFamily = 'IRANSansWeb(FaNum)_Light';
+        !style.hasOwnProperty('fontFamily') ? style.fontFamily = 'IRANSansWeb(FaNum)_Light' : null;
 
     return (
         <Text
