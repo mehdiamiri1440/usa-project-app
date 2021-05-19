@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import moment from 'moment';
 import Jmoment from 'moment-jalaali';
+import ShadowView from 'react-native-simple-shadow-view'
 
 import { deviceWidth } from './index';
 
@@ -60,7 +61,7 @@ export const showDate = (item = {}, prevMessage = {}, style = {}) => {
   else text = '';
   if (text)
     return (
-      <View
+      <ShadowView
         style={{
           alignItems: 'center',
           justifyContent: 'center',
@@ -69,8 +70,11 @@ export const showDate = (item = {}, prevMessage = {}, style = {}) => {
           borderRadius: 7.6,
           padding: 3,
           margin: 5,
-          elevation: 1,
           alignSelf: 'center',
+          shadowColor: 'black',
+          shadowOpacity: 0.13,
+          shadowRadius: 1,
+          shadowOffset: { width: 0, height: 2 },
           ...style
         }}
       >
@@ -86,7 +90,7 @@ export const showDate = (item = {}, prevMessage = {}, style = {}) => {
         >
           {text}
         </Text>
-      </View>
+      </ShadowView>
     )
   return null;
 };

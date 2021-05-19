@@ -6,6 +6,7 @@ import { Button } from 'native-base';
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import { View, Text, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import ShadowView from 'react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -291,7 +292,6 @@ class ChatScreen extends Component {
                             width: 50, height: 50,
                             borderRadius: 50,
                             backgroundColor: '#fff',
-                            elevation: 5,
                             padding: 0,
                         }}
                     />
@@ -426,17 +426,17 @@ class ChatScreen extends Component {
                         </Text>
                     </TouchableOpacity> : null}
 
-                    <View
+                    <ShadowView
                         style={{
                             backgroundColor: 'white',
                             flexDirection: 'row-reverse',
                             alignContent: 'center',
                             alignItems: 'center',
                             height: 53,
-                            shadowOffset: { width: 20, height: 20 },
                             shadowColor: 'black',
-                            shadowOpacity: 1.0,
-                            elevation: detectToShowCommentAndGuid ? 0 : 5,
+                            shadowOpacity: 0.13,
+                            shadowRadius: detectToShowCommentAndGuid ? 0 : 5,
+                            shadowOffset: { width: 0, height: 2 },
                             width: deviceWidth
                         }}>
                         <TouchableOpacity
@@ -530,20 +530,25 @@ class ChatScreen extends Component {
                                 </Text>
                             </TouchableOpacity>
                             : null}
-                    </View>
+                    </ShadowView>
 
                     {(isFirstLoad && userChatHistoryLoading && !this.state.loaded) ?
-                        <ActivityIndicator size="large" color="#00C569"
+                        <ShadowView
                             style={{
                                 position: 'absolute', left: '44%', top: '40%',
-                                shadowOffset: { width: 20, height: 20 },
                                 shadowColor: 'black',
-                                shadowOpacity: 1.0,
-                                elevation: detectToShowCommentAndGuid ? 0 : 5,
+                                shadowOpacity: 0.13,
+                                shadowRadius: detectToShowCommentAndGuid ? 0 : 5,
+                                shadowOffset: { width: 0, height: 2 },
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                             }}
-                        /> : null}
+                        >
+                            <ActivityIndicator size="large" color="#00C569"
+                                style={{ top: 7 }}
+                            />
+                        </ShadowView>
+                        : null}
 
 
                     <FlatList

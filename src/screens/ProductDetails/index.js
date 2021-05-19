@@ -9,9 +9,10 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { Input, Label, Item, Button, Body, Toast, CardItem, Card } from 'native-base';
+import { Input, Label, Item, Button, Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
 import * as productListActions from '../../redux/productsList/actions';
+import ShadowView from 'react-native-simple-shadow-view'
 import * as profileActions from '../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -1266,9 +1267,11 @@ class ProductDetails extends PureComponent {
                             </ContentLoader>
                         </View>
 
-                        <View style={{
-                            backgroundColor: '#fff',
-                            elevation: 2,
+                        <ShadowView style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
 
                         }}>
                             <View style={{
@@ -1330,12 +1333,14 @@ class ProductDetails extends PureComponent {
                                     <Rect x="15" y="330" rx="3" ry="3" width="156" height="18" />
                                 </ContentLoader>
                             </View>
-                        </View>
-                        <View style={{
+                        </ShadowView>
+                        <ShadowView style={{
                             marginTop: 30,
-                            backgroundColor: '#fff',
                             paddingVertical: 30,
-                            elevation: 2
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
                             <ContentLoader
                                 speed={2}
@@ -1351,7 +1356,7 @@ class ProductDetails extends PureComponent {
                                 <Rect x="25" y="225" rx="3" ry="3" width="423" height="43" />
                                 <Rect x="24" y="280" rx="3" ry="3" width="423" height="43" />
                             </ContentLoader>
-                        </View>
+                        </ShadowView>
                     </ScrollView> :
                     <ScrollView
                         style={{ backgroundColor: 'white' }}
@@ -1362,9 +1367,11 @@ class ProductDetails extends PureComponent {
                                 onRefresh={() => this.componentDidMount()}
                             />
                         }>
-                        <View style={{
-                            backgroundColor: 'white', shadowOffset: { width: 10, height: 10 },
-                            elevation: 5,
+                        <ShadowView style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
                             <ProductImages
                                 showFullSizeImage={this.showFullSizeImage}
@@ -1907,7 +1914,7 @@ class ProductDetails extends PureComponent {
                                 />
                             </View>
 
-                        </View>
+                        </ShadowView>
 
 
                         {/* <View style={{ marginVertical: 30 }}>
@@ -2072,14 +2079,17 @@ class ProductDetails extends PureComponent {
                 }
                 {
                     !this.props.productDetailsInfoLoading && userId != loggedInUserId ?
-                        <View style={{
-                            backgroundColor: '#fff',
+                        <ShadowView style={{
                             width: '100%',
                             height: 65,
-                            elevation: 5,
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            backgroundColor: 'white',
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                             flexDirection: 'row-reverse',
                             justifyContent: 'space-between',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }} >
                             {(has_phone && !is_seller) ?
                                 <Button
@@ -2142,7 +2152,7 @@ class ProductDetails extends PureComponent {
                                 </View>
 
                             </Button>
-                        </View>
+                        </ShadowView>
                         : null
                 }
             </>

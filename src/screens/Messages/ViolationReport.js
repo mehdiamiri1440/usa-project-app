@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import { View, Text, Modal, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import ShadowView from 'react-native-simple-shadow-view'
 import { Button, Textarea, InputGroup, Label } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -145,13 +146,16 @@ const ViolationReport = props => {
             onRequestClose={onRequestToClose}
         >
 
-            <View style={{
+            <ShadowView style={{
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 alignContent: 'center',
                 alignItems: 'center',
                 height: 45,
-                elevation: 5,
+                shadowColor: 'black',
+                shadowOpacity: 0.13,
+                shadowRadius: 1,
+                shadowOffset: { width: 0, height: 2 },
                 justifyContent: 'center'
             }}>
                 <TouchableOpacity
@@ -171,7 +175,7 @@ const ViolationReport = props => {
                         {submitModal ? locales('titles.reportSubmited') : locales('titles.violationReportReason')}
                     </Text>
                 </View>
-            </View>
+            </ShadowView>
 
             {!showDescriptionModal ?
                 <FlatList

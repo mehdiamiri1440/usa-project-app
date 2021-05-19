@@ -57,7 +57,9 @@ const Message = props => {
             >
                 <ShadowView
                     style={{
-                        maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9, paddingVertical: 3,
+                        maxWidth: deviceWidth * 0.75,
+                        borderRadius: 9,
+                        paddingVertical: 3,
                         backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         shadowColor: 'black',
                         shadowOpacity: 0.13,
@@ -65,53 +67,60 @@ const Message = props => {
                         shadowOffset: { width: 0, height: 2 },
                     }}
                 >
+                    <View
+                        style={{ paddingHorizontal: 10 }}
+                    >
 
-                    <Text
-                        selectionColor='gray'
-                        suppressHighlighting
-                        selectable
-                        onPress={() => {
-                            ToastAndroid.showWithGravityAndOffset(
-                                locales('titles.copiedToClipboard'),
-                                ToastAndroid.LONG,
-                                ToastAndroid.BOTTOM,
-                                5,
-                                20)
-                            Clipboard.setString(item.text)
-                        }}
-                        style={{
-                            zIndex: 999999,
-                            textAlign: 'right',
-                            fontSize: showPhoneFormat ? 18 : 16,
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            color: showPhoneFormat ? '#5188B8' : '#333333'
-
-                        }}>
-                        {item.text}
-                    </Text>
-                    <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
-                        {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
-                            style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                            name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
-                            color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
-                            <Feather name='clock' size={14} color='#617D8A'
-                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                            />
-                        )
-                        }
                         <Text
+                            selectionColor='gray'
+                            suppressHighlighting
+                            selectable
+                            onPress={() => {
+                                ToastAndroid.showWithGravityAndOffset(
+                                    locales('titles.copiedToClipboard'),
+                                    ToastAndroid.LONG,
+                                    ToastAndroid.BOTTOM,
+                                    5,
+                                    20)
+                                Clipboard.setString(item.text)
+                            }}
                             style={{
-                                color: showPhoneFormat ? '#5188B8' : '#333333',
-                                fontSize: 12,
+                                zIndex: 999999,
+                                textAlign: 'right',
+                                fontSize: showPhoneFormat ? 18 : 16,
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                color: showPhoneFormat ? '#5188B8' : '#333333'
+
                             }}>
-                            {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
+                            {item.text}
                         </Text>
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
+                            {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
+                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
+                                color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
+                                <Feather name='clock' size={14} color='#617D8A'
+                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                />
+                            )
+                            }
+                            <Text
+                                style={{
+                                    color: showPhoneFormat ? '#5188B8' : '#333333',
+                                    fontSize: 12,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>
+                                {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
+                            </Text>
+                        </View>
                     </View>
                     {showPhoneFormat ?
                         <TouchableOpacity
                             activeOpacity={1}
                             onPress={() => openCallPad(item.text)}
+                            style={{
+                                bottom: -4,
+                            }}
                         >
                             <View
                                 style={{
@@ -129,7 +138,6 @@ const Message = props => {
                                     marginBottom: -5,
                                     borderBottomLeftRadius: 8,
                                     borderBottomRightRadius: 8,
-                                    bottom: 2,
                                     marginTop: 7,
                                     overflow: "hidden",
                                     borderTopRightRadius: 0,

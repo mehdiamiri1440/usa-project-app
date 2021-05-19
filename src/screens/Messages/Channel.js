@@ -7,6 +7,7 @@ import {
 import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
 import Jmoment from 'moment-jalaali';
+import ShadowView from 'react-native-simple-shadow-view'
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ImageZoom from 'react-native-image-pan-zoom';
 
@@ -571,26 +572,32 @@ const Channel = props => {
                     {...props}
                 />
 
-                {channelDataLoading ? <ActivityIndicator
-                    size="large"
-                    color="#00C569"
-                    style={{
-                        shadowOffset: { width: 20, height: 20 },
-                        shadowColor: 'black',
-                        shadowOpacity: 1.0,
-                        elevation: 5,
-                        alignSelf: 'center',
-                        borderColor: 'black',
-                        backgroundColor: 'white',
-                        width: 50,
-                        position: 'absolute',
-                        left: '44%',
-                        top: '15%',
-                        height: 50,
-                        borderRadius: 25
+                {channelDataLoading ?
+                    <ShadowView
+                        style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
+                            alignSelf: 'center',
+                            borderColor: 'black',
+                            backgroundColor: 'white',
+                            width: 50,
+                            position: 'absolute',
+                            left: '44%',
+                            top: '15%',
+                            height: 50,
+                            borderRadius: 25
 
-                    }}
-                /> : null}
+                        }}
+                    >
+                        <ActivityIndicator
+                            size="large"
+                            color="#00C569"
+                            style={{ top: 7 }}
+                        />
+                    </ShadowView>
+                    : null}
 
                 <FlatList
                     ref={ChannelContainerRef}
