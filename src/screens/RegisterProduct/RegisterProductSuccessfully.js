@@ -203,6 +203,7 @@ class RegisterProductSuccessfully extends Component {
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         fontSize: 18,
+                                        fontWeight: '200',
                                         color: '#556083',
                                         marginHorizontal: 2
                                     }}
@@ -212,6 +213,7 @@ class RegisterProductSuccessfully extends Component {
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 18,
                                         marginHorizontal: 2,
                                         color: '#777777'
@@ -221,6 +223,7 @@ class RegisterProductSuccessfully extends Component {
                                 </Text>
                                 <Text
                                     style={{
+                                        fontWeight: '200',
                                         color: '#556083',
                                         fontSize: 18,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -232,6 +235,7 @@ class RegisterProductSuccessfully extends Component {
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 18,
                                         marginHorizontal: 2,
                                         color: '#777777'
@@ -296,6 +300,7 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontWeight: '200',
                                     fontSize: 18,
                                     color: '#556083',
                                     marginHorizontal: 2
@@ -304,6 +309,7 @@ class RegisterProductSuccessfully extends Component {
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 18,
                                         color: '#e41c38',
                                         marginHorizontal: 2
@@ -313,6 +319,7 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontWeight: '200',
                                     fontSize: 18,
                                     marginHorizontal: 2,
                                     color: '#777777'
@@ -323,6 +330,7 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     color: '#556083',
+                                    fontWeight: '200',
                                     fontSize: 18,
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     marginHorizontal: 2
@@ -333,6 +341,7 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontWeight: '200',
                                     fontSize: 18,
                                     marginHorizontal: 2,
                                     color: '#777777'
@@ -744,6 +753,7 @@ class RegisterProductSuccessfully extends Component {
                     {locales('labels.suggestedBuyersForYou')} <Text
                         style={{
                             color: '#21AD93',
+                            fontWeight: '200',
                             fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
@@ -753,6 +763,7 @@ class RegisterProductSuccessfully extends Component {
                     <Text
                         style={{
                             color: '#777777',
+                            fontWeight: '200',
                             fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
@@ -806,7 +817,10 @@ class RegisterProductSuccessfully extends Component {
                     first_name: item.first_name,
                     last_name: item.last_name,
                 }
-            }, _ => this.props.navigation.navigate('Chat', { contact: this.state.selectedContact, buyAdId: this.state.selectedBuyAdId }));
+            }, _ => this.props.navigation.navigate('Chat', {
+                contact: this.state.selectedContact, buyAdId: this.state.selectedBuyAdId,
+                shouldHideGuidAndComment: true
+            }));
             // .catch(_ => this.setState({ showModal: true }));
         }
         else {
