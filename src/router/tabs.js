@@ -1,6 +1,5 @@
 import React from 'react';
-import { createStackNavigator, CardStyleInterpolators, TransitionPresets, TransitionSpecs } from '@react-navigation/stack';
-import { Easing, Animated } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../screens/Home/Dashboard';
 import ContactUs from '../screens/Home/ContactUs';
@@ -38,9 +37,21 @@ import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
 
 const Stack = createStackNavigator();
 
+const forFade = ({ current }) => ({
+    cardStyle: {
+        opacity: current.progress,
+    },
+});
+
 export const MyBuskoolStack = _ => {
     return (
         <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+
+            }}
             initialRouteName={global.initialProfileRoute}
         // initialRouteName={'ChangeRole'}
         >
@@ -270,9 +281,14 @@ export const MyBuskoolStack = _ => {
     )
 };
 
-
 export const RegisterProductStack = _ => (
     <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
         initialRouteName={'RegisterProduct'}
         headerMode='none'
     >
@@ -331,6 +347,12 @@ export const RegisterProductStack = _ => (
 
 export const RegisterRequestStack = _ => (
     <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
         initialRouteName={'RegisterRequest'}
     >
 
@@ -376,7 +398,14 @@ export const RegisterRequestStack = _ => (
 )
 
 export const MessagesStack = _ => (
-    <Stack.Navigator>
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
+    >
 
         <Stack.Screen
             options={({ navigation, route }) => ({
@@ -432,59 +461,10 @@ export const MessagesStack = _ => (
 
 export const HomeStack = _ => {
 
-    // const config = {
-    //     animation: 'timing',
-    //     config: {
-    //         stiffness: 1000,
-    //         damping: 50,
-    //         mass: 3,
-    //         overshootClamping: false,
-    //         restDisplacementThreshold: 0.01,
-    //         restSpeedThreshold: 0.01,
-    //     },
-    // };
-    // const closeConfig = {
-    //     animation: 'spring',
-    //     config: {
-    //         duration: 500,
-    //         easing: Easing.linear
-    //     }
-    // }
-
-
-    const animatedValue = new Animated.Value(0);
-    Animated.timing(animatedValue, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-        isInteraction: true,
-        easing: Easing.linear
-    }).start();
-
     return (
         <Stack.Navigator
             screenOptions={{
-                gestureDirection: 'horizontal',
-                cardStyleInterpolator: ({ current, next = {}, index, closing, layouts }) => {
-                    const {
-                        progress: currentProgress,
-                    } = current;
-
-                    const {
-                        progress: nextProgress,
-                    } = next;
-
-                    const {
-                        screen
-                    } = layouts;
-                    console.log('pr', currentProgress)
-                    return {
-                        cardStyle: {
-                            opacity: animatedValue,
-                        },
-                    };
-                },
-                gestureEnabled: true,
+                cardStyleInterpolator: forFade,
 
             }}
         >
@@ -555,7 +535,14 @@ export const HomeStack = _ => {
 
 export const SpecialProductsStack = _ => {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+
+            }}
+        >
 
             <Stack.Screen
                 options={({ navigation, route }) => ({
