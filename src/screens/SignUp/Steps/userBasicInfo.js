@@ -183,7 +183,11 @@ class UserBasicInfo extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {!!genderError && <Label
-                    style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', marginVertical: -10, marginHorizontal: 20 }}>
+                    style={{
+                        fontSize: 14, color: '#D81A1A', textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        marginVertical: -10, marginHorizontal: 20
+                    }}>
                     {genderError}
                 </Label>}
 
@@ -220,7 +224,11 @@ class UserBasicInfo extends React.Component {
 
                         />
                     </Item>
-                    {!!firstNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{firstNameError}</Label>}
+                    {!!firstNameError && <Label style={{
+                        fontSize: 14, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A'
+                    }}>{firstNameError}</Label>}
                 </View>
                 {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField
@@ -264,7 +272,11 @@ class UserBasicInfo extends React.Component {
 
                         />
                     </Item>
-                    {!!lastNameError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{lastNameError}</Label>}
+                    {!!lastNameError && <Label style={{
+                        fontSize: 14, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A'
+                    }}>{lastNameError}</Label>}
                 </View>
                 {/* <View style={styles.textInputPadding}>
                         <OutlinedTextField

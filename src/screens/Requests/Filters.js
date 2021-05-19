@@ -162,13 +162,13 @@ class Filters extends Component {
                                 zIndex: 999,
                                 width: 50, height: 50,
                                 borderRadius: 50,
-                                backgroundColor: '#fff',
+                                backgroundColor: 'white',
                                 padding: 0,
                             }}
                         >
                             <ActivityIndicator size="small" color="#00C569"
                                 style={{
-                                    top: 7
+                                    top: 14
                                 }}
                             />
                         </ShadowView>

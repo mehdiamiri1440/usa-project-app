@@ -140,7 +140,10 @@ const EnterActivisionCode = (props) => {
                         </Text>
                     )}
                 />
-                {!!valueError && <Label style={{ fontSize: 14, marginVertical: 5, color: '#D81A1A', textAlign: 'center' }}>{valueError}</Label>}
+                {!!valueError && <Label style={{
+                    fontSize: 14, marginVertical: 5, color: '#D81A1A', textAlign: 'center',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light'
+                }}>{valueError}</Label>}
             </SafeAreaView>
             <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 10 }}>
                 <Timer

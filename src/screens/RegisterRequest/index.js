@@ -989,7 +989,10 @@ class RegisterRequest extends Component {
                                                 ref={this.productTypeRef}
                                             />
                                         </InputGroup>
-                                        <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
+                                        <Label style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            height: 20, fontSize: 14, color: '#D81A1A'
+                                        }}>
                                             {!!productTypeError && productTypeError}
                                         </Label>
 
@@ -1073,6 +1076,7 @@ class RegisterRequest extends Component {
                                         </InputGroup>
                                         <Label style={{
                                             height: 25,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                                             textAlign: !amountError && amount.length ? 'left' : 'right'
                                         }}>
 

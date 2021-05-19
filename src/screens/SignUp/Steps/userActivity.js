@@ -155,7 +155,11 @@ class UserActivity extends React.Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                {!!activityTypeError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
+                {!!activityTypeError && <Label style={{
+                    fontSize: 14,
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                }}>
                     {activityTypeError}</Label>}
 
                 <View style={styles.labelInputPadding}>
@@ -199,7 +203,11 @@ class UserActivity extends React.Component {
                             }))]}
                         />
                     </Item>
-                    {!!activityZoneError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
+                    {!!activityZoneError && <Label style={{
+                        fontSize: 14,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                    }}>
                         {activityZoneError}</Label>}
                 </View>
                 {/* 

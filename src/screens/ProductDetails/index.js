@@ -1079,7 +1079,10 @@ class ProductDetails extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!amountError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label> : null}
+                                        {!!amountError ? <Label style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 14, color: '#D81A1A'
+                                        }}>{amountError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
                                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
@@ -1101,7 +1104,10 @@ class ProductDetails extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!minimumOrderError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>{minimumOrderError}</Label> : null}
+                                        {!!minimumOrderError ? <Label style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 14, color: '#D81A1A'
+                                        }}>{minimumOrderError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
                                         <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
@@ -1123,7 +1129,10 @@ class ProductDetails extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!minimumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                        {!!minimumPriceError ? <Label style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 14, color: '#D81A1A'
+                                        }}>
                                             {minimumPriceError}</Label> : null}
                                     </View>
                                     <View style={styles.textInputPadding}>
@@ -1148,7 +1157,10 @@ class ProductDetails extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!maximumPriceError ? <Label style={{ fontSize: 14, color: '#D81A1A' }}>
+                                        {!!maximumPriceError ? <Label style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 14, color: '#D81A1A'
+                                        }}>
                                             {maximumPriceError}
                                         </Label> : null}
                                     </View>

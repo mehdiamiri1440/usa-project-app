@@ -51,10 +51,10 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_BUYAD_REQUEST_SUCCESSFULLY: {
-            let { msg = '' } = action.payload
+            let { msg = '', buyAds = [] } = action.payload
             return {
                 ...state,
-                buyAdRequestList: [...action.payload.buyAds],
+                buyAdRequestList: buyAds,
                 buyAdRequest: { ...action.payload },
                 buyAdRequestLoading: false,
                 buyAdRequestFailed: false,

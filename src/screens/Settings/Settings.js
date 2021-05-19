@@ -119,7 +119,7 @@ class Settings extends React.Component {
                     >
                         <ActivityIndicator size="small" color="#00C569"
                             style={{
-                                top: 7
+                                top: 10
                             }}
                         />
                     </ShadowView>

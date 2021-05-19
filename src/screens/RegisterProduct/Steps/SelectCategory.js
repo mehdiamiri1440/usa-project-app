@@ -810,7 +810,10 @@ class SelectCategory extends Component {
                                     ref={this.productTypeRef}
                                 />
                             </InputGroup>
-                            <Label style={{ height: 30 }}>
+                            <Label style={{
+                                height: 30,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {!!productTypeError && <Text style={{
                                     fontSize: 14, color: '#D81A1A',
                                     fontFamily: 'IRANSansWeb(FaNum)_Light',

@@ -242,7 +242,10 @@ const ViolationReport = props => {
                                     rowSpan={5}
                                 />
                             </InputGroup>
-                            <Label style={{ height: 20, fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>
+                            <Label style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                height: 20, fontSize: 14, color: '#D81A1A', textAlign: 'center'
+                            }}>
                                 {!!descriptionError && descriptionError}
                             </Label>
                         </View>

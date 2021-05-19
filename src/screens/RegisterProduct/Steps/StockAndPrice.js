@@ -418,6 +418,7 @@ class StockAndPrice extends Component {
                     </InputGroup>
                     <Label style={{
                         height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                         textAlign: !amountError && amount.length ? 'left' : 'right'
                     }}>
 
@@ -519,6 +520,7 @@ class StockAndPrice extends Component {
 
                     <Label style={{
                         height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                         textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
                     }}>
 

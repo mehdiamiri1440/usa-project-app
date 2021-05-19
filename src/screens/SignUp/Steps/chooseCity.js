@@ -191,7 +191,10 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+                        {!!provinceError && <Label style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                        }}>{provinceError}</Label>}
                     </View>
 
                     <View style={[styles.labelInputPadding, { marginTop: 30 }]}>
@@ -236,7 +239,10 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{cityError}</Label>}
+                        {!!cityError && <Label style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                        }}>{cityError}</Label>}
                     </View>
 
                     <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>

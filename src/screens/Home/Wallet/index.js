@@ -424,7 +424,10 @@ const Wallet = props => {
 
                         </Button>
                     </InputGroup>
-                    <Label style={{ height: 20, fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>
+                    <Label style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        height: 20, fontSize: 14, color: '#D81A1A', textAlign: 'center'
+                    }}>
                         {!!inventoryError && inventoryError}
                     </Label>
                 </View>

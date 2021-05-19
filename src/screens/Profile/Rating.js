@@ -313,7 +313,10 @@ const Rating = props => {
                                         rowSpan={5}
                                     />
                                 </InputGroup>
-                                <Label style={{ height: 20, fontSize: 14, color: '#D81A1A' }}>
+                                <Label style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    height: 20, fontSize: 14, color: '#D81A1A'
+                                }}>
                                     {!!descriptionError && descriptionError}
                                 </Label>
                             </View>

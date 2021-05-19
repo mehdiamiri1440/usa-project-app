@@ -154,7 +154,11 @@ class UserAuthority extends React.Component {
 
                         />
                     </Item>
-                    {!!passwordError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{passwordError}</Label>}
+                    {!!passwordError && <Label style={{
+                        fontSize: 14, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A'
+                    }}>{passwordError}</Label>}
                 </View>
                 {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
