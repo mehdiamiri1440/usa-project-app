@@ -80,7 +80,10 @@ class Settings extends React.Component {
                                     }}>
                                         {route.icon}
                                     </View>
-                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center' }}>
+                                    <Text style={{
+                                        paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                    }}>
                                         {locales(route.label)}
                                     </Text>
                                 </View>

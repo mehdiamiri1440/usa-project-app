@@ -13,7 +13,11 @@ class ChangePassword extends React.Component {
 
         return (
             <View>
-                <Text>change passwordS</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)Light'
+                    }}
+                >change passwordS</Text>
             </View>
         )
     }

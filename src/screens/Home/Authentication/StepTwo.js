@@ -172,6 +172,7 @@ const StepTwo = props => {
                 <Text
                     style={{
                         color: '#E41C38',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }}
                 >
                     *
@@ -219,6 +220,7 @@ const StepTwo = props => {
                             textAlign: 'center',
                             fontSize: 15,
                             marginTop: 5,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                             marginHorizontal: 10
                         }}
                     >
@@ -305,6 +307,7 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     backButtonContainer: {

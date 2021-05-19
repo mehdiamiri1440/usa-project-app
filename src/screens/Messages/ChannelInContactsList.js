@@ -100,6 +100,7 @@ const ChannelInContactsList = ({
                         <Text style={{
                             color: 'white', backgroundColor: '#00C569', width: 20, height: 20,
                             borderRadius: 15, textAlign: 'center', textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}>
                             {unread_contents}
                         </Text>

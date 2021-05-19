@@ -565,20 +565,38 @@ class Profile extends PureComponent {
                                         <View>
                                             {product_count >= 0 ? <>
                                                 <Text
-                                                    style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{product_count > 0 ? product_count : 0}</Text>
-                                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.products')}</Text>
+                                                    style={{
+                                                        textAlign: 'center', color: '#7E7E7E', fontSize: 18,
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    }}>{product_count > 0 ? product_count : 0}</Text>
+                                                <Text style={{
+                                                    textAlign: 'center', color: '#7E7E7E', fontSize: 16,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                }}>{locales('labels.products')}</Text>
                                             </>
                                                 :
                                                 <>
                                                     <Text
-                                                        style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{buyAd_count > 0 ? buyAd_count : 0}</Text>
-                                                    <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.requests')}</Text>
+                                                        style={{
+                                                            textAlign: 'center', color: '#7E7E7E', fontSize: 18,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                        }}>{buyAd_count > 0 ? buyAd_count : 0}</Text>
+                                                    <Text style={{
+                                                        textAlign: 'center', color: '#7E7E7E', fontSize: 16,
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    }}>{locales('labels.requests')}</Text>
                                                 </>
                                             }
                                         </View>
                                         <View>
-                                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 18 }}>{reputation_score > 0 ? reputation_score : 0}</Text>
-                                            <Text style={{ textAlign: 'center', color: '#7E7E7E', fontSize: 16 }}>{locales('labels.credit')}</Text>
+                                            <Text style={{
+                                                textAlign: 'center', color: '#7E7E7E', fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}>{reputation_score > 0 ? reputation_score : 0}</Text>
+                                            <Text style={{
+                                                textAlign: 'center', color: '#7E7E7E', fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}>{locales('labels.credit')}</Text>
                                         </View>
                                     </View>
                                     {userIdFromByUserName != (this.props.userProfile &&
@@ -653,7 +671,8 @@ class Profile extends PureComponent {
                                             <FontAwesome name='share-alt' size={14} color='#777777' />
                                         </Text>
                                         <Text style={{
-                                            color: '#777777', fontSize: 14, paddingHorizontal: 5
+                                            color: '#777777', fontSize: 14, paddingHorizontal: 5,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         }}>
                                             {locales('labels.share')}
                                         </Text>
@@ -664,7 +683,10 @@ class Profile extends PureComponent {
 
                             {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
                                 <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                    {locales('labels.responseRate')} <Text style={{ color: '#E41C38' }}>%{response_rate}</Text>
+                                    {locales('labels.responseRate')} <Text style={{
+                                        color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>%{response_rate}</Text>
                                 </Text>
                             </View> : null}
 
@@ -681,7 +703,10 @@ class Profile extends PureComponent {
                                 padding: 5,
                                 justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                             }}>
-                                <Text style={{ fontSize: 20, color: '#777777', paddingHorizontal: 5 }}>{rating_info.avg_score}</Text>
+                                <Text style={{
+                                    fontSize: 20, color: '#777777', paddingHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>{rating_info.avg_score}</Text>
                                 <StarRating
                                     starsCount={5}
                                     defaultRate={rating_info.avg_score}
@@ -696,7 +721,10 @@ class Profile extends PureComponent {
                                 justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                             }}
                             >
-                                <Text style={{ fontSize: 16, color: '#777777', paddingVertical: 2 }}>
+                                <Text style={{
+                                    fontSize: 16, color: '#777777', paddingVertical: 2,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>
                                     {rating_info.total_count} {locales('labels.comment')}
                                 </Text>
                             </View>
@@ -713,34 +741,58 @@ class Profile extends PureComponent {
                             }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <FontAwesome5 name='tasks' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.activityZone')}</Text>
+                                    <Text style={{
+                                        marginHorizontal: 5, color: '#7E7E7E', fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>{locales('labels.activityZone')}</Text>
                                 </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{activityDomainFromByUserName}</Text>
+                                <Text style={{
+                                    width: deviceWidth * 0.45, color: '#556080', fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>{activityDomainFromByUserName}</Text>
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <Entypo name='location-pin' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.address')}</Text>
+                                    <Text style={{
+                                        marginHorizontal: 5, color: '#7E7E7E', fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>{locales('labels.address')}</Text>
                                 </View>
                                 <Text
-                                    style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
+                                    style={{
+                                        width: deviceWidth * 0.45, color: '#556080', fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>{`${provinceFromByUserName} - ${cityFromByUserName}`}</Text>
                             </View>
 
                             {companyNameFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FAFAFA', padding: 10 }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <FontAwesome name='building' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.companyName')}</Text>
+                                    <Text style={{
+                                        marginHorizontal: 5, color: '#7E7E7E', fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>{locales('labels.companyName')}</Text>
                                 </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
+                                <Text style={{
+                                    width: deviceWidth * 0.45, color: '#556080', fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>{companyNameFromByUserName || locales('labels.notRegistered')}</Text>
                             </View> : null}
 
                             {companyRegisterCodeFromByUserName ? <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', backgroundColor: '#FFFFFF', padding: 10 }}>
                                 <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.4 }}>
                                     <FontAwesome name='file-text' size={25} color='#7E7E7E' />
-                                    <Text style={{ marginHorizontal: 5, color: '#7E7E7E', fontSize: 16 }}>{locales('labels.registrationNumber')}</Text>
+                                    <Text style={{
+                                        marginHorizontal: 5, color: '#7E7E7E', fontSize: 16,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>{locales('labels.registrationNumber')}</Text>
                                 </View>
-                                <Text style={{ width: deviceWidth * 0.45, color: '#556080', fontSize: 16 }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
+                                <Text style={{
+                                    width: deviceWidth * 0.45, color: '#556080', fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>{companyRegisterCodeFromByUserName || locales('labels.notRegistered')}</Text>
                             </View> : null}
 
                         </View>
@@ -770,7 +822,10 @@ class Profile extends PureComponent {
                                 <Text style={{ color: '#666666', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
-                                <Text style={{ color: '#777777', marginVertical: 10 }}>
+                                <Text style={{
+                                    color: '#777777', marginVertical: 10,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>
                                     {descriptionFromByUserName}
                                 </Text>
                             </View>

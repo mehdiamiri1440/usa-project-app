@@ -484,7 +484,8 @@ class ChatScreen extends Component {
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontSize: 17, marginLeft: 2
+                                            fontSize: 17, marginLeft: 2,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                                         }}
                                     >
                                         {`${firstName} ${lastName}`}
@@ -615,6 +616,7 @@ class ChatScreen extends Component {
                                 width: deviceWidth * 0.8, paddingHorizontal: 20,
                                 maxHeight: 100, height: 44,
                                 overflow: 'scroll',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}
                             placeholder='پیامی بگذارید'
                             placeholderTextColor="#BEBEBE"

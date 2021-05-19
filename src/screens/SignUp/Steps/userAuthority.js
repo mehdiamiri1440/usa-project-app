@@ -123,7 +123,10 @@ class UserAuthority extends React.Component {
                 </View> */}
                 <View style={[styles.labelInputPadding, { marginTop: -10 }]}>
                     <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterPassword')} <Text style={{ color: '#e41c38' }}>({locales('titles.8CharLeast')})</Text>
+                        {locales('titles.enterPassword')} <Text style={{
+                            color: '#e41c38',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}>({locales('titles.8CharLeast')})</Text>
                     </Label>
                     <Item regular style={{
                         borderRadius: 5,
@@ -237,6 +240,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -323,6 +327,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         color: '#7E7E7E'
     }

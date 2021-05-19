@@ -129,7 +129,8 @@ const EnterActivisionCode = (props) => {
                                 borderColor: value.length === 4 && !valueError ? "#00C569"
                                     : value.length === 4 && valueError
                                         ? '#de3545' :
-                                        "#bebebe"
+                                        "#bebebe",
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }]}
                             onLayout={getCellOnLayoutHandler(index)}>
                             {symbol || (isFocused ? <Cursor
@@ -146,8 +147,14 @@ const EnterActivisionCode = (props) => {
                     min={2}
                     sec={0}
                     isCountDownTimer={true}
-                    containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                    substitutionTextStyle={{ color: '#1CC625', textAlign: 'center' }}
+                    containerStyle={{
+                        justifyContent: 'center', alignItems: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                    substitutionTextStyle={{
+                        color: '#1CC625', textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
                     timerStyle={{ color: '#1CC625', fontSize: 18 }}
                     onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber).catch(_ => setShowModal(true))}
                     substitutionText={locales('titles.sendVerificationCodeAgain')}
@@ -223,6 +230,7 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     backButtonContainer: {
@@ -313,6 +321,7 @@ const styles = StyleSheet.create({
     userText: {
         flexWrap: 'wrap',
         fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         marginTop: -10,
         paddingHorizontal: 20,
         textAlign: 'center',

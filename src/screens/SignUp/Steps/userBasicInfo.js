@@ -140,7 +140,10 @@ class UserBasicInfo extends React.Component {
                                     color: '#777'
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.woman')}</Text>
+                            <Text style={{
+                                marginHorizontal: 5, fontSize: 14,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>{locales('labels.woman')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -172,7 +175,10 @@ class UserBasicInfo extends React.Component {
                                     color: '#777'
                                 }}
                             />
-                            <Text style={{ marginHorizontal: 5, fontSize: 14 }}>{locales('labels.man')}</Text>
+                            <Text style={{
+                                marginHorizontal: 5, fontSize: 14,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>{locales('labels.man')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -297,6 +303,7 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     backButtonContainer: {
@@ -389,6 +396,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,

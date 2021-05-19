@@ -189,6 +189,7 @@ class ExtraProductCapacity extends React.Component {
                                         textAlign: 'center',
                                         color: '#777',
                                         paddingTop: 5,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         fontSize: 14
                                     }}>
                                         {locales('labels.extraProductDescription')}

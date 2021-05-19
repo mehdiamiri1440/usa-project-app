@@ -399,6 +399,7 @@ const styles = StyleSheet.create({
     loginFailedText: {
         textAlign: 'center',
         width: deviceWidth,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#761C24'
     },
     buttonText: {

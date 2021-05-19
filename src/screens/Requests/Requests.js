@@ -434,7 +434,10 @@ class Requests extends PureComponent {
                             }}
                             style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
                         >
-                            <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}>{locales('titles.promoteRegistration')}</Text>
+                            <Text style={{
+                                color: 'white', textAlign: 'center', width: '100%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                            }}>{locales('titles.promoteRegistration')}</Text>
                         </Button>
                     </View>
                 </RBSheet>

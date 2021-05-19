@@ -204,7 +204,8 @@ const UserFriends = props => {
                                     <FontAwesome5 name="check" size={16} color="#00c569" solid />
                                     <Text style={{
                                         marginHorizontal: 5,
-                                        color: '#00c569'
+                                        color: '#00c569',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light'
                                     }}>
                                         {locales('titles.done')}
                                     </Text>

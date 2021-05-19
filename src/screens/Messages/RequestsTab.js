@@ -345,7 +345,8 @@ class RequestsTab extends Component {
                         </View>
                         <Text
                             style={{
-                                textAlign: 'center'
+                                textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}
                         >
                             <Text
@@ -724,7 +725,8 @@ class RequestsTab extends Component {
                             style={{
                                 textAlign: 'center',
                                 marginVertical: 43,
-                                top: -10
+                                top: -10,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}
                         >
                             <Text
@@ -977,7 +979,9 @@ class RequestsTab extends Component {
                 >
                     <Text
                         style={{
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+
                         }}
                     >
                         <Text

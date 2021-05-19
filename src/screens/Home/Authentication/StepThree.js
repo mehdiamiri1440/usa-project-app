@@ -197,6 +197,7 @@ const StepThree = props => {
                 <Text
                     style={{
                         color: '#E41C38',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light'
                     }}
                 >
                     *
@@ -235,7 +236,11 @@ const StepThree = props => {
                                 color='#323A42'
                                 name='camera' size={35} />
                         </View>
-                        <Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                            }}
+                        >
                             {locales('labels.addImage')}
                         </Text>
                     </TouchableOpacity>
@@ -244,7 +249,8 @@ const StepThree = props => {
                             color: '#e41c38',
                             fontSize: 15,
                             marginTop: 5,
-                            marginHorizontal: 10
+                            marginHorizontal: 10,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }}
                     >
                         {evidenceError}
@@ -342,7 +348,8 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
     },
     backButtonContainer: {
         textAlign: 'center',

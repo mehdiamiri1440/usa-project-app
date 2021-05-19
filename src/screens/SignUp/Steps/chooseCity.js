@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         color: '#7E7E7E'
     },

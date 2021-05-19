@@ -145,7 +145,9 @@ class PromoteRegistration extends React.Component {
 
                             <Text style={{
                                 color: '#666666', fontSize: 20, textAlign: 'center',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+
                             }}>
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
@@ -184,7 +186,8 @@ class PromoteRegistration extends React.Component {
 
                             <Text style={{
                                 color: '#666666', fontSize: 20, textAlign: 'center',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
@@ -224,7 +227,8 @@ class PromoteRegistration extends React.Component {
 
                             <Text style={{
                                 color: '#666666', fontSize: 20, textAlign: 'center',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
@@ -264,7 +268,9 @@ class PromoteRegistration extends React.Component {
 
                             <Text style={{
                                 color: '#666666', fontSize: 20, textAlign: 'center',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+
                             }}>
                                 <Text style={{
                                     fontSize: 18, textAlign: 'center',
@@ -303,7 +309,8 @@ class PromoteRegistration extends React.Component {
 
                             <Text style={{
                                 color: '#666666', fontSize: 20, textAlign: 'center',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>
                                 <Text style={{
                                     fontSize: 18, textAlign: 'center',
@@ -729,7 +736,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -761,7 +768,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -793,7 +800,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -826,7 +833,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -859,7 +866,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -1224,7 +1231,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -1255,7 +1262,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'
@@ -1287,7 +1294,7 @@ class PromoteRegistration extends React.Component {
 
                                     <Text style={{
                                         color: '#666666', fontSize: 20, textAlign: 'center',
-                                        textAlignVertical: 'center'
+                                        textAlignVertical: 'center',
                                     }}>
                                         <FontAwesome5
                                             name='check-circle'

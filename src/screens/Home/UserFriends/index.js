@@ -102,6 +102,7 @@ const UserFriends = props => {
                         color: "#777",
                         paddingHorizontal: 5,
                         textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                         paddingTop: 14
                     }}>
                         {locales('titles.referralMainPageContents')}

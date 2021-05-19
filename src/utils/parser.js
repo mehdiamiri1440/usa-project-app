@@ -79,6 +79,7 @@ export const showDate = (item = {}, prevMessage = {}, style = {}) => {
             textAlign: 'center',
             textAlignVertical: 'center',
             color: '#313a43',
+            fontFamily: 'IRANSansWeb(FaNum)_Light',
             fontSize: 14,
             paddingHorizontal: 10
           }}

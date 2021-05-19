@@ -81,6 +81,7 @@ const Message = props => {
                             zIndex: 999999,
                             textAlign: 'right',
                             fontSize: showPhoneFormat ? 18 : 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                             color: showPhoneFormat ? '#5188B8' : '#333333'
 
                         }}>
@@ -99,7 +100,8 @@ const Message = props => {
                         <Text
                             style={{
                                 color: showPhoneFormat ? '#5188B8' : '#333333',
-                                fontSize: 12
+                                fontSize: 12,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>
                             {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
                         </Text>

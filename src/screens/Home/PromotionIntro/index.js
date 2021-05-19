@@ -117,7 +117,8 @@ class PromotionIntro extends React.Component {
                     marginTop: -16
                 }}>
                     <Text style={{
-                        color: '#7E7E7E'
+                        color: '#7E7E7E',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }}>
                         {item.text}
                     </Text>

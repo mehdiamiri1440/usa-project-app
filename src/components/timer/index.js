@@ -60,12 +60,18 @@ class Timer extends Component {
                             onSubstitution();
                             this.restartTimer();
                         }}
-                        style={substitutionTextStyle}>{substitutionText}</Text>
+                        style={{
+                            ...substitutionTextStyle,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}>{substitutionText}</Text>
                 ) : (
-                        <Text style={timerStyle}>
-                            {min}:{sec < 10 ? `0${sec}` : sec}
-                        </Text>
-                    )
+                    <Text style={{
+                        ...timerStyle,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}>
+                        {min}:{sec < 10 ? `0${sec}` : sec}
+                    </Text>
+                )
                 }
             </View>
         );
@@ -81,5 +87,6 @@ const styles = StyleSheet.create({
         color: '#7E7E7E',
         fontSize: 18,
         padding: 10,
+        fontFamily: 'IRANSansWeb(FaNum)_Light'
     }
 })

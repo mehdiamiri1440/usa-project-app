@@ -993,7 +993,10 @@ class Product extends PureComponent {
                                         right: 5, top: 5, borderRadius: 50, width: 46
                                     }}>
                                     <Entypo name='images' size={15} color='white' />
-                                    <Text style={{ color: 'white', marginHorizontal: 2 }}>
+                                    <Text style={{
+                                        color: 'white', marginHorizontal: 2,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>
                                         {photos_count <= 9 ? photos_count : '9+'}
                                     </Text>
                                 </View>}
@@ -1056,7 +1059,11 @@ class Product extends PureComponent {
                                     >
                                         {/* {category_name}  */}
                                         {sub_category_name} | <Text
-                                            style={{ color: '#E9ECEF', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14 }}>
+                                            style={{
+                                                color: '#E9ECEF',
+                                                fontWeight: '200',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 14
+                                            }}>
                                             {product_name}
                                         </Text>
                                     </Text>

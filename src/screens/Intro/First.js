@@ -8,11 +8,19 @@ const First = props => {
     return (
         <View
             style={{ flex: 1 }}>
-            <Text>first</Text>
+            <Text
+                style={{
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                }}
+            >first</Text>
             <Button
                 onPress={() => props.setStep(2)}
             >
-                <Text>next</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                >next</Text>
             </Button>
         </View>
     )

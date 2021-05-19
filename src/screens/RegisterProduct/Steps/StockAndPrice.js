@@ -421,7 +421,10 @@ class StockAndPrice extends Component {
                         textAlign: !amountError && amount.length ? 'left' : 'right'
                     }}>
 
-                        {!!amountError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
+                        {!!amountError && <Text style={{
+                            fontSize: 14, color: '#D81A1A',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}> {amountError}</Text>}
                         {!amountError && amount.length ? <Text style={{
                             fontSize: 14, color: '#1DA1F2',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',

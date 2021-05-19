@@ -263,6 +263,7 @@ class SignUp extends React.Component {
                                                 shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
                                                 shadowOpacity: 1.0,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                                                 elevation: 5,
                                                 textAlignVertical: 'center', borderColor: '#FFFFFF',
                                                 backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',

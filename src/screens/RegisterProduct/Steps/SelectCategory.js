@@ -811,7 +811,10 @@ class SelectCategory extends Component {
                                 />
                             </InputGroup>
                             <Label style={{ height: 30 }}>
-                                {!!productTypeError && <Text style={{ fontSize: 14, color: '#D81A1A', }}>
+                                {!!productTypeError && <Text style={{
+                                    fontSize: 14, color: '#D81A1A',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>
                                     {productTypeError}
                                 </Text>}
                             </Label>

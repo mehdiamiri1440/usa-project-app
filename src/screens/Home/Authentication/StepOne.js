@@ -172,6 +172,7 @@ const StepOne = props => {
                 <Text
                     style={{
                         color: '#E41C38',
+                        fontFamily: 'IRANSansWeb(FaNum)Light'
                     }}
                 >
                     *
@@ -221,7 +222,8 @@ const StepOne = props => {
                             color: '#e41c38',
                             fontSize: 15,
                             marginTop: 5,
-                            marginHorizontal: 10
+                            marginHorizontal: 10,
+                            fontFamily: 'IRANSansWeb(FaNum)Light'
                         }}
                     >
                         {idCardError}

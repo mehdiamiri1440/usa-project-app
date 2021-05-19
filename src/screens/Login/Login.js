@@ -271,7 +271,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 20,
         textAlign: 'center',
-        color: '#7E7E7E'
+        color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light'
     }
 });
 const mapStateToProps = state => {

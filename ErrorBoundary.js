@@ -34,17 +34,28 @@ class ErrorBoundary extends React.Component {
                     </View>
                     <View style={{ position: 'absolute', bottom: 50, justifyContent: 'center', alignItems: 'center' }}>
                         <View>
-                            <Text>{locales('labels.somethingWentWrong')}</Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                }}
+                            >{locales('labels.somethingWentWrong')}</Text>
                         </View>
                         <View>
-                            <Text>{locales('labels.pleaseRetry')}</Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                }}
+                            >{locales('labels.pleaseRetry')}</Text>
                         </View>
                         <Button
                             onPress={() => RNRestart.Restart()}
                             style={styles.loginButton}
                         >
                             <View style={[styles.textCenterView, styles.buttonText]}>
-                                <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
+                                <Text style={[styles.textWhite, styles.margin5, {
+                                    marginTop: 7,
+                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                }]}>
                                     <MaterialCommunityIcons name='reload' size={23} />
                                 </Text>
                                 <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize20]}>

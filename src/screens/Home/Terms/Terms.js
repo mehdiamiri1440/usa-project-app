@@ -11,7 +11,11 @@ class Terms extends React.Component {
         });
     }
     render() {
-        return <Text>terms</Text>
+        return <Text
+            style={{
+                fontFamily: 'IRANSansWeb(FaNum)_Light',
+            }}
+        >terms</Text>
     }
 }
 export default Terms

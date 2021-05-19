@@ -637,6 +637,7 @@ class EditProfile extends Component {
                                         marginVertical: 10,
                                         paddingHorizontal: 15,
                                         backgroundColor: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         paddingVertical: 5,
                                         borderRadius: 4
                                     }}
@@ -657,6 +658,7 @@ class EditProfile extends Component {
                                                 color: '#E41C38',
                                                 textAlign: 'center',
                                                 marginVertical: 10,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                                                 paddingHorizontal: 15,
                                                 paddingVertical: 5,
                                                 borderRadius: 4

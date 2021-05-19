@@ -523,6 +523,7 @@ class RegisterProduct extends React.Component {
                                         width: '100%',
                                         color: '#E41C38',
                                         textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         marginVertical: 10,
                                         paddingHorizontal: 15,
                                         paddingVertical: 5,
@@ -569,6 +570,7 @@ const styles = StyleSheet.create({
     },
     loginFailedText: {
         textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: deviceWidth,
         color: '#155724'
     },

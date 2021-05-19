@@ -120,7 +120,8 @@ const Referral = props => {
                         color: "#777",
                         paddingHorizontal: 5,
                         textAlign: 'center',
-                        paddingTop: 14
+                        paddingTop: 14,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }}>
                         {locales('titles.referralMainPageContents')}
 

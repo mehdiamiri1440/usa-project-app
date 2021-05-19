@@ -8,16 +8,28 @@ const Third = props => {
     return (
         <View
             style={{ flex: 1 }}>
-            <Text>third</Text>
+            <Text
+                style={{
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                }}
+            >third</Text>
             <Button
                 onPress={() => props.submit()}
             >
-                <Text>next</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                >next</Text>
             </Button>
             <Button
                 onPress={() => props.setStep(2)}
             >
-                <Text>prev</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                >prev</Text>
             </Button>
         </View>
     )

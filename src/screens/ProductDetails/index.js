@@ -1390,7 +1390,8 @@ class ProductDetails extends PureComponent {
                                         }}>
                                         <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
                                         <Text style={{
-                                            color: '#777777', fontSize: 14, marginLeft: 5
+                                            color: '#777777', fontSize: 14, marginLeft: 5,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                                         }}>
                                             {locales('labels.share')}
                                         </Text>
@@ -1602,7 +1603,10 @@ class ProductDetails extends PureComponent {
                                 <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 15 }}>
                                     {locales('titles.headerDescription')}
                                 </Text>
-                                <Text style={{ fontSize: 16, color: '#777777', marginBottom: 20 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
+                                <Text style={{
+                                    fontSize: 16, color: '#777777', marginBottom: 20,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
                             </View>
 
                             <TouchableOpacity
@@ -1788,7 +1792,10 @@ class ProductDetails extends PureComponent {
                                         justifyContent: 'center', flexDirection: 'row-reverse', alignItems: 'center',
                                     }}
                                     >
-                                        <Text style={{ fontSize: 16, color: '#777777', paddingVertical: 2 }}>
+                                        <Text style={{
+                                            fontSize: 16, color: '#777777', paddingVertical: 2,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}>
                                             {total_count} {locales('labels.comment')}
                                         </Text>
                                     </View>
@@ -1877,7 +1884,10 @@ class ProductDetails extends PureComponent {
                                 }}
                             >
                                 <View style={{ width: deviceWidth, alignItems: 'flex-end' }}>
-                                    <Text style={{ fontSize: 20, color: '#313A43', paddingHorizontal: 20 }}>
+                                    <Text style={{
+                                        fontSize: 20, color: '#313A43', paddingHorizontal: 20,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}>
                                         {locales('labels.relatedProducts')}
                                     </Text>
                                     <View

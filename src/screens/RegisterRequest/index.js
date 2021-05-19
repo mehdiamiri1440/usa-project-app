@@ -811,6 +811,7 @@ class RegisterRequest extends Component {
                                 textAlign: 'center',
                                 marginVertical: 10,
                                 paddingHorizontal: 15,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 paddingVertical: 5,
                                 borderRadius: 4
                             }}
@@ -1075,7 +1076,10 @@ class RegisterRequest extends Component {
                                             textAlign: !amountError && amount.length ? 'left' : 'right'
                                         }}>
 
-                                            {!!amountError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {amountError}</Text>}
+                                            {!!amountError && <Text style={{
+                                                fontSize: 14, color: '#D81A1A',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}> {amountError}</Text>}
                                             {!amountError && amount.length ? <Text style={{
                                                 fontSize: 14, color: '#1DA1F2',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',

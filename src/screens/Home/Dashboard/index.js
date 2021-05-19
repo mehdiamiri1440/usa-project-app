@@ -145,7 +145,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.yourActiveRegistration')}
                             </Text>
                         </View>
@@ -204,7 +207,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.countOfRegisterableProducts')}
                             </Text>
                         </View>
@@ -263,7 +269,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.viewableBuyRequests')}
                             </Text>
                         </View>
@@ -323,7 +332,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.authroized')}
                             </Text>
                         </View>
@@ -381,7 +393,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.accessToGoldens')}
                             </Text>
                         </View>
@@ -442,7 +457,10 @@ const Dashboard = props => {
                         }}>
 
                         <View>
-                            <Text style={{ paddingHorizontal: 15, fontSize: 20 }}>
+                            <Text style={{
+                                paddingHorizontal: 15, fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}>
                                 {locales('titles.registeredProductsCount')}
                             </Text>
                         </View>

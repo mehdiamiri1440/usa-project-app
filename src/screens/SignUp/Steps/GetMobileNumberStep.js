@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '100%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     disableLoginButton: {
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#7E7E7E',
         fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         padding: 10,
     },
     enterText: {
@@ -155,6 +157,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#00C569',
         fontSize: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         padding: 10,
     },
     linearGradient: {
@@ -177,6 +180,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         color: '#7E7E7E'
     }

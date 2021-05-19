@@ -59,7 +59,10 @@ const ContactsList = props => {
                             </Text>
                             {item.is_verified ? <ValidatedUserIcon {...props} /> : null}
                         </View>
-                        <Text style={{ color: '#666666' }}>
+                        <Text style={{
+                            color: '#666666',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}>
                             {Jmoment(item.last_msg_time_date.split(" ")[0]).format('jYYYY/jM/jD')}
                         </Text>
                     </View>
@@ -73,13 +76,17 @@ const ContactsList = props => {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Text style={{ color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%' }}
+                        <Text style={{
+                            color: '#666666', flexWrap: 'wrap', textAlign: 'right', width: '85%',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}
                             numberOfLines={1}>
                             {item.last_msg.last_msg_text}
                         </Text>
                         {item.unread_msgs_count > 0 && <Text style={{
                             color: 'white', backgroundColor: '#00C569', width: 20, height: 20,
-                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center'
+                            borderRadius: 15, textAlign: 'center', textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}>
                             {item.unread_msgs_count}
                         </Text>}

@@ -151,7 +151,8 @@ class ExtraBuyAdCapacity extends React.Component {
                             }}>
                                 {locales('titles.extraBuyAdRequestDescriptionTextFirst')}
                                 <Text style={{
-                                    color: '#00c569'
+                                    color: '#00c569',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                 }}>
                                     {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
                                 </Text>
@@ -200,6 +201,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                         textAlign: 'center',
                                         color: '#777',
                                         paddingTop: 5,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         fontSize: 14
                                     }}>
                                         {locales('labels.extraBuyAdDescription')}
