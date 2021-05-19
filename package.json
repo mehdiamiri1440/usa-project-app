@@ -74,6 +74,7 @@
     "react-native-safe-area": "^0.5.1",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.0",
+    "react-native-simple-shadow-view": "^1.6.3",
     "react-native-sound": "^0.11.0",
     "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.0",

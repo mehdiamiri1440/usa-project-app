@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Animated } from 'react-native';
 
 import Dashboard from '../screens/Home/Dashboard';
 import ContactUs from '../screens/Home/ContactUs';
@@ -37,11 +38,21 @@ import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
 
 const Stack = createStackNavigator();
 
-const forFade = ({ current }) => ({
-    cardStyle: {
-        opacity: current.progress,
-    },
-});
+const forFade = ({ current, next }) => {
+    const opacity = Animated.add(
+        current.progress,
+        next ? next.progress : 0
+    ).interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [0, 1, 0],
+    });
+
+    return {
+        cardStyle: {
+            opacity,
+        }
+    };
+};
 
 export const MyBuskoolStack = _ => {
     return (
@@ -287,7 +298,6 @@ export const RegisterProductStack = _ => (
             gestureDirection: 'horizontal',
             cardStyleInterpolator: forFade,
             gestureEnabled: true,
-
         }}
         initialRouteName={'RegisterProduct'}
         headerMode='none'
@@ -464,8 +474,9 @@ export const HomeStack = _ => {
     return (
         <Stack.Navigator
             screenOptions={{
+                gestureDirection: 'horizontal',
                 cardStyleInterpolator: forFade,
-
+                gestureEnabled: true,
             }}
         >
             <Stack.Screen
