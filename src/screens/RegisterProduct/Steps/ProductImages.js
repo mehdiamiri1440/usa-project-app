@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
     },
     loginFailedText: {
         textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: deviceWidth,
         color: '#761C24'
     },
@@ -375,6 +376,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -452,6 +454,7 @@ const styles = StyleSheet.create({
     userText: {
         flexWrap: 'wrap',
         paddingTop: '3%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         fontSize: 20,
         padding: 20,
         textAlign: 'right',

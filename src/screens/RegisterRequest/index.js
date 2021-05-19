@@ -1353,6 +1353,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     backButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#7E7E7E',
         width: '60%',
         textAlign: 'center'

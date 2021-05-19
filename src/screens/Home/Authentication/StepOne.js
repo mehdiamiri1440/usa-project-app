@@ -172,7 +172,7 @@ const StepOne = props => {
                 <Text
                     style={{
                         color: '#E41C38',
-                        fontFamily: 'IRANSansWeb(FaNum)Light'
+                        fontFamily: 'IRANSansWeb(FaNum)_Light'
                     }}
                 >
                     *
@@ -223,7 +223,7 @@ const StepOne = props => {
                             fontSize: 15,
                             marginTop: 5,
                             marginHorizontal: 10,
-                            fontFamily: 'IRANSansWeb(FaNum)Light'
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }}
                     >
                         {idCardError}
@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     backButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#7E7E7E',
         width: '60%',
         textAlign: 'center'

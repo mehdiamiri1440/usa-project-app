@@ -1097,6 +1097,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -1267,6 +1268,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,

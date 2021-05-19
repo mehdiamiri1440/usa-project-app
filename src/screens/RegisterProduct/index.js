@@ -678,6 +678,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     backButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#7E7E7E',
         width: '60%',
         textAlign: 'center'

@@ -685,6 +685,7 @@ class Profile extends PureComponent {
                                 <Text style={{ color: '#BEBEBE', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                     {locales('labels.responseRate')} <Text style={{
                                         color: '#E41C38',
+                                        fontWeight: '200',
                                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     }}>%{response_rate}</Text>
                                 </Text>

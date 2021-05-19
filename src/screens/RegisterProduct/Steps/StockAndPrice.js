@@ -351,7 +351,7 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.qunatityAmount')} <Text
                             style={{
-                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', fontWeight: '200'
                             }}>({locales('labels.kiloGram')})</Text><Text
                                 style={{
                                     color: '#D44546',
@@ -427,7 +427,7 @@ class StockAndPrice extends Component {
                         }}> {amountError}</Text>}
                         {!amountError && amount.length ? <Text style={{
                             fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}>
                             {amountText}</Text> : null}
 
@@ -522,10 +522,13 @@ class StockAndPrice extends Component {
                         textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
                     }}>
 
-                        {!!minimumOrderError && <Text style={{ fontSize: 14, color: '#D81A1A' }}> {minimumOrderError}</Text>}
+                        {!!minimumOrderError && <Text style={{
+                            fontSize: 14, color: '#D81A1A',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}> {minimumOrderError}</Text>}
                         {!minimumOrderError && minimumOrder.length ? <Text style={{
                             fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}>
                             {minimumOrderText}</Text> : null}
 
@@ -549,7 +552,8 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.minPriceNeeded')} <Text
                             style={{
-                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontWeight: '200',
                             }}>({locales('titles.kiloInToman')})</Text><Text
                                 style={{
                                     color: '#D44546',
@@ -613,7 +617,10 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    <Label style={{ fontSize: 14, color: '#D81A1A', height: 25 }}>
+                    <Label style={{
+                        fontSize: 14, color: '#D81A1A', height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}>
                         {!!minimumPriceError ? minimumPriceError : null}
                     </Label>
                     {/* <OutlinedTextField
@@ -635,7 +642,9 @@ class StockAndPrice extends Component {
                     <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                         {locales('titles.maxPriceNeeded')} <Text
                             style={{
-                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                color: '#333', fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontWeight: '200',
+
                             }}>({locales('titles.kiloInToman')})</Text><Text
                                 style={{
                                     color: '#D44546',
@@ -700,7 +709,10 @@ class StockAndPrice extends Component {
 
                         />
                     </InputGroup>
-                    <Label style={{ fontSize: 14, color: '#D81A1A', height: 25 }}>
+                    <Label style={{
+                        fontSize: 14, color: '#D81A1A', height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}>
                         {!!maximumPriceError ? maximumPriceError : null}
                     </Label>
                     {/* <OutlinedTextField
@@ -756,6 +768,7 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     backButtonContainer: {

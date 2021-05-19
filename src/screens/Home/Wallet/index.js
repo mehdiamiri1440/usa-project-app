@@ -213,6 +213,7 @@ const Wallet = props => {
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 color: 'white',
+                                                fontWeight: '200',
                                                 fontSize: 25,
                                             }}
                                         >

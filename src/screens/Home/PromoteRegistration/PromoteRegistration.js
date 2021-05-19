@@ -151,12 +151,14 @@ class PromoteRegistration extends React.Component {
                             }}>
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
+                                    fontWeight: '200',
                                     textAlignVertical: 'center',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#666666'
                                 }}>{paymentType == 1 ? 3 : 12}</Text> <Text
                                     style={{
                                         color: '#666666',
+                                        fontWeight: '200',
                                         fontSize: 18,
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
@@ -191,11 +193,13 @@ class PromoteRegistration extends React.Component {
                             }}>
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
+                                    fontWeight: '200',
                                     textAlignVertical: 'center',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#666666'
                                 }}>{paymentType == 1 ? locales('titles.dosentHave') : 1}</Text> {paymentType == 3 ? <Text
                                     style={{
+                                        fontWeight: '200',
                                         color: '#666666',
                                         fontSize: 18,
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -233,11 +237,13 @@ class PromoteRegistration extends React.Component {
                                 <Text style={{
                                     fontSize: 20, textAlign: 'center',
                                     textAlignVertical: 'center',
+                                    fontWeight: '200',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#666666'
                                 }}>{paymentType == 3 ? 11 : 3}</Text> <Text
                                     style={{
                                         fontSize: 18,
+                                        fontWeight: '200',
                                         color: '#666666',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
@@ -274,11 +280,13 @@ class PromoteRegistration extends React.Component {
                             }}>
                                 <Text style={{
                                     fontSize: 18, textAlign: 'center',
+                                    fontWeight: '200',
                                     textAlignVertical: 'center',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#666666'
                                 }}>{paymentType == 3 ? '89,000' : '99,000'}</Text> <Text
                                     style={{
+                                        fontWeight: '200',
                                         color: '#666666',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
@@ -314,11 +322,13 @@ class PromoteRegistration extends React.Component {
                             }}>
                                 <Text style={{
                                     fontSize: 18, textAlign: 'center',
+                                    fontWeight: '200',
                                     textAlignVertical: 'center',
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     color: '#00C569'
                                 }}>{paymentType == 3 ? numberWithCommas(typeThree) : numberWithCommas(typeOne)}</Text> <Text
                                     style={{
+                                        fontWeight: '200',
                                         color: '#666666',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}>
@@ -436,6 +446,7 @@ class PromoteRegistration extends React.Component {
                                     }}>
                                         <Text style={{
                                             width: '100%',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             color: '#707070',
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -444,6 +455,7 @@ class PromoteRegistration extends React.Component {
                                             {locales('titles.promoteDescriptionTextFirst')}
                                         </Text>
                                         <Text style={{
+                                            fontWeight: '200',
                                             color: '#E41C38',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
@@ -453,6 +465,7 @@ class PromoteRegistration extends React.Component {
                                         <Text
                                             style={{
                                                 width: '100%',
+                                                fontWeight: '200',
                                                 fontSize: 16,
                                                 color: '#707070',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -502,6 +515,7 @@ class PromoteRegistration extends React.Component {
                                     }}>
                                         <Text style={{
                                             width: '100%',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             color: '#707070',
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -511,6 +525,7 @@ class PromoteRegistration extends React.Component {
                                         </Text>
                                         <Text style={{
                                             color: '#00C569',
+                                            fontWeight: '200',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
                                         }}>
@@ -518,12 +533,14 @@ class PromoteRegistration extends React.Component {
                                         </Text>
                                         <Text style={{
                                             color: '#707070',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                         }}>
                                             {` ${locales('titles.extraBuyAdRequestDescriptionTextThird')} `}
                                         </Text>
                                         <Text style={{
+                                            fontWeight: '200',
                                             color: '#313A43',
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             fontSize: 18
@@ -532,6 +549,7 @@ class PromoteRegistration extends React.Component {
                                         </Text>
                                         <Text style={{
                                             color: '#707070',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                         }}>
@@ -620,6 +638,7 @@ class PromoteRegistration extends React.Component {
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 21,
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
@@ -897,6 +916,7 @@ class PromoteRegistration extends React.Component {
                                             <Text style={{
                                                 fontSize: 16,
                                                 color: '#E41C38', marginHorizontal: 5, textAlign: 'center',
+                                                fontWeight: '200',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
                                                 textAlignVertical: 'center', paddingBottom: 5
@@ -1140,6 +1160,7 @@ class PromoteRegistration extends React.Component {
                                     style={{
                                         color: '#1DA1F2',
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 21,
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
@@ -1612,6 +1633,7 @@ class PromoteRegistration extends React.Component {
                                     }}>
                                         <Text style={{
                                             width: '100%',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             color: '#707070',
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1621,6 +1643,7 @@ class PromoteRegistration extends React.Component {
                                         </Text>
                                         <Text style={{
                                             color: '#21AD93',
+                                            fontWeight: '200',
                                             fontSize: 16,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         }}>

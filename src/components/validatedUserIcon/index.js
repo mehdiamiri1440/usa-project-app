@@ -160,7 +160,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                             textAlign: 'right',
                             flex: 1,
                             marginRight: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)Light'
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }
                     }>
                         {locales('labels.authenticationFirst')}
@@ -186,7 +186,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                             textAlign: 'right',
                             flex: 1,
                             marginRight: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)Light'
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }
                     }>
                         {locales('labels.authenticationSecond')}
@@ -212,7 +212,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                             textAlign: 'right',
                             flex: 1,
                             marginRight: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)Light'
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }
                     }>
                         {locales('labels.authenticationThird')}
@@ -236,7 +236,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                     paddingVertical: 15,
                     paddingHorizontal: 30,
                     textAlign: 'center',
-                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                    fontFamily: 'IRANSansWeb(FaNum)_Light'
                 }}>
                     {locales('labels.authenticationDescription')}
                 </Text>

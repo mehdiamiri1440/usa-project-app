@@ -36,14 +36,14 @@ class ErrorBoundary extends React.Component {
                         <View>
                             <Text
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light'
                                 }}
                             >{locales('labels.somethingWentWrong')}</Text>
                         </View>
                         <View>
                             <Text
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light'
                                 }}
                             >{locales('labels.pleaseRetry')}</Text>
                         </View>
@@ -54,7 +54,7 @@ class ErrorBoundary extends React.Component {
                             <View style={[styles.textCenterView, styles.buttonText]}>
                                 <Text style={[styles.textWhite, styles.margin5, {
                                     marginTop: 7,
-                                    fontFamily: 'IRANSansWeb(FaNum)Light'
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light'
                                 }]}>
                                     <MaterialCommunityIcons name='reload' size={23} />
                                 </Text>

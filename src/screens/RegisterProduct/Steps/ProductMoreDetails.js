@@ -419,6 +419,7 @@ class ProductMoreDetails extends Component {
                                 <Label style={{
                                     fontSize: 14, marginTop: -8, marginRight: 2,
                                     height: 20,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     color: '#D81A1A', width: deviceWidth * 0.9
                                 }}>{!!detail.error && detail.error.length && detail.error}</Label>
                             </>
@@ -503,11 +504,13 @@ const styles = StyleSheet.create({
     addMoreButtonText: {
         color: '#00C569',
         marginRight: 5,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         fontSize: 13
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -596,6 +599,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,

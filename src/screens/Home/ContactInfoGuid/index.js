@@ -162,6 +162,7 @@ const ContactInfoGuid = props => {
                             <Text
                                 style={{
                                     color: '#00C569',
+                                    fontWeight: '200',
                                     fontSize: 15,
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
@@ -170,6 +171,7 @@ const ContactInfoGuid = props => {
                             </Text>
                             <Text
                                 style={{
+                                    fontWeight: '200',
                                     color: '#556080',
                                     fontSize: 15,
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',

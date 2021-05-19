@@ -838,6 +838,7 @@ export const WalletPreview = props => {
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             color: 'white',
                             fontSize: 20,
+                            fontWeight: '200',
                             marginHorizontal: 5,
                         }}
                     >
@@ -845,7 +846,7 @@ export const WalletPreview = props => {
                     </Text>
                 </Text>
             </ImageBackground>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 };
 
@@ -860,6 +861,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
