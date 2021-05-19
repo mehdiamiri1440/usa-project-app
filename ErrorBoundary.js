@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 20, height: 20 },
         shadowColor: 'black',
         shadowOpacity: 0.3,
-        elevation: 6,
         borderRadius: 5
     },
     loginFailedContainer: {
