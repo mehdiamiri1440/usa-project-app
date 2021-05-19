@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import ShadowView from 'react-native-simple-shadow-view';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
@@ -58,53 +59,71 @@ class Settings extends React.Component {
 
                     {settingRoutes.map((route, index) => {
                         return (
-                            <TouchableOpacity
-                                onPress={() => this.handleRouteChange(route.name)}
+                            <ShadowView
                                 style={{
-                                    alignContent: 'center',
-                                    backgroundColor: 'white',
-                                    borderRadius: 5,
-                                    paddingVertical: 10,
-                                    elevation: 2,
-                                    paddingHorizontal: 20,
-                                    marginVertical: 10,
-                                    marginHorizontal: 20,
-                                    flexDirection: 'row-reverse',
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
                                 }}
-                                key={index}>
-                                <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
-                                    <View style={{
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.handleRouteChange(route.name)}
+                                    style={{
+                                        alignContent: 'center',
+                                        backgroundColor: 'white',
                                         borderRadius: 5,
-                                        backgroundColor: '#666666',
-                                        padding: 5
-                                    }}>
-                                        {route.icon}
+                                        paddingVertical: 10,
+                                        paddingHorizontal: 20,
+                                        marginVertical: 10,
+                                        marginHorizontal: 20,
+                                        flexDirection: 'row-reverse',
+                                    }}
+                                    key={index}>
+                                    <View style={{ width: '45%', flexDirection: 'row-reverse' }}>
+                                        <View style={{
+                                            borderRadius: 5,
+                                            backgroundColor: '#666666',
+                                            padding: 5
+                                        }}>
+                                            {route.icon}
+                                        </View>
+                                        <Text style={{
+                                            paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                        }}>
+                                            {locales(route.label)}
+                                        </Text>
                                     </View>
-                                    <Text style={{
-                                        paddingHorizontal: 10, fontSize: 16, textAlignVertical: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light'
-                                    }}>
-                                        {locales(route.label)}
-                                    </Text>
-                                </View>
-                                <View style={{ width: '55%', flexDirection: 'row' }}>
-                                    <Text style={{ textAlignVertical: 'center' }}>
-                                        <FontAwesome5 color={'#666666'} size={25} name='angle-left' />
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-
+                                    <View style={{ width: '55%', flexDirection: 'row' }}>
+                                        <Text style={{ textAlignVertical: 'center' }}>
+                                            <FontAwesome5 color={'#666666'} size={25} name='angle-left' />
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </ShadowView>
                         )
                     })}
                 </ScrollView>
-                {(this.state.loading || this.props.logOutLoading) ? <ActivityIndicator size="small" color="#00C569"
-                    style={{
-                        position: 'absolute', left: '44%', top: '40%',
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white', width: 40, height: 40, borderRadius: 20
-                    }}
-                /> : null}
+                {(this.state.loading || this.props.logOutLoading) ?
+                    <ShadowView
+                        style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
+                            position: 'absolute', left: '44%', top: '40%',
+                            borderColor: 'black',
+                            backgroundColor: 'white', width: 40, height: 40, borderRadius: 20
+                        }}
+                    >
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                top: 7
+                            }}
+                        />
+                    </ShadowView>
+                    : null}
 
             </>
         )

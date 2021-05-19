@@ -4,6 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
+import ShadowView from 'react-native-simple-shadow-view';
 
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';
@@ -255,24 +256,32 @@ class SignUp extends React.Component {
                             {stepsArray.map((item, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        <Text
+                                        <ShadowView
                                             style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center',
-                                                justifyContent: 'center',
-                                                alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
-                                                shadowOpacity: 1.0,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                elevation: 5,
-                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 26, height: 26, borderRadius: 13
-
+                                                shadowOpacity: 0.13,
+                                                shadowRadius: 1,
+                                                shadowOffset: { width: 0, height: 2 },
                                             }}
                                         >
-                                            {item}
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center', color: 'white', alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    alignSelf: 'center', alignContent: 'center',
+                                                    shadowOffset: { width: 10, height: 10 },
+                                                    shadowColor: 'black',
+                                                    shadowOpacity: 1.0,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                    width: 26, height: 26, borderRadius: 13
+
+                                                }}
+                                            >
+                                                {item}
+                                            </Text>
+                                        </ShadowView>
                                         {index < stepsArray.length - 1 && <View
                                             style={{
                                                 height: 8,

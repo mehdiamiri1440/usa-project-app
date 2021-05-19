@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-
+import ShadowView from 'react-native-simple-shadow-view';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -153,16 +153,29 @@ class Filters extends Component {
                         padding: 20,
                         justifyContent: "center", alignItems: 'center'
                     }}>
-                        <ActivityIndicator size="small" color="#00C569"
+                        <ShadowView
                             style={{
+                                shadowColor: 'black',
+                                shadowOpacity: 0.13,
+                                shadowRadius: 1,
+                                shadowOffset: { width: 0, height: 2 },
                                 zIndex: 999,
                                 width: 50, height: 50,
                                 borderRadius: 50,
                                 backgroundColor: '#fff',
-                                elevation: 5,
                                 padding: 0,
                             }}
-                        /></View> : null}
+                        >
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    top: 7
+                                }}
+                            />
+                        </ShadowView>
+                    </View>
+                        :
+                        null
+                    }
                     <FlatList
                         data={categoriesList}
                         refreshing={this.props.categoriesLoading}

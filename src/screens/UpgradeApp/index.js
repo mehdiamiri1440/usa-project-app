@@ -109,7 +109,7 @@ class UpgradeApp extends Component {
 
                 <View style={{
                     backgroundColor: '#fff',
-                    elevation: 1,
+                    elevation: 0,
                     borderRadius: 12,
 
                     marginTop: 20

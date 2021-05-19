@@ -400,16 +400,12 @@ class RegisterProduct extends React.Component {
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-
-                        elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
                     }}>
                         <ActivityIndicator size="large"
                             style={{
                                 position: 'absolute', left: '44%', top: '40%',
-
-                                elevation: 5,
                                 borderColor: 'black',
                                 backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
                             }}
@@ -432,7 +428,6 @@ class RegisterProduct extends React.Component {
                         alignContent: 'center',
                         alignItems: 'center',
                         height: 45,
-                        elevation: 5,
                         justifyContent: 'center'
                     }}>
                         {/* <TouchableOpacity

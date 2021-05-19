@@ -17,8 +17,8 @@ import ContentLoader, { Rect } from "react-content-loader/native"
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
+import ShadowView from 'react-native-simple-shadow-view';
 
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
@@ -1021,16 +1021,26 @@ class SpecialProducts extends PureComponent {
                     marginBottom: 15
 
                 }}>
-                    <ActivityIndicator size="small" color="#00C569"
+                    <ShadowView
                         style={{
+                            backgroundColor: 'white',
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                             zIndex: 999,
-                            width: 50, height: 50,
+                            width: 50,
+                            height: 50,
                             borderRadius: 50,
-                            backgroundColor: '#fff',
-                            elevation: 5,
                             padding: 0,
                         }}
-                    />
+                    >
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                top: 14
+                            }}
+                        />
+                    </ShadowView>
                 </View>
             )
         return null;
