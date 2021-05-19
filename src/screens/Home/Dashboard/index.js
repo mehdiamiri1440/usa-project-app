@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } 
 import { Card } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
+import ShadowView from 'react-native-simple-shadow-view';
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -129,19 +131,22 @@ const Dashboard = props => {
                 }
 
                 <Card transparent  >
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             minHeight: 170,
                             marginBottom: 30,
-                            elevation: 1
                         }}>
 
                         <View>
@@ -187,23 +192,26 @@ const Dashboard = props => {
                                 {locales('labels.promoteRegistration')}</Text>
                         </TouchableOpacity>}
 
-                    </View>
+                    </ShadowView>
                 </Card>
 
                 <Card transparent  >
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             height: 170,
                             marginBottom: 30,
-                            elevation: 1
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
 
                         <View>
@@ -249,23 +257,25 @@ const Dashboard = props => {
                                 {locales('titles.increaseProductRegistrationCapacity')}</Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </ShadowView>
                 </Card>
 
                 <Card transparent  >
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             height: 170,
-                            marginBottom: 30,
-                            elevation: 1
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
 
                         <View>
@@ -312,23 +322,26 @@ const Dashboard = props => {
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('titles.increaseReplyCapacity')}</Text>
                         </TouchableOpacity>
-                    </View>
+                    </ShadowView>
                 </Card>
 
                 <Card transparent  >
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             height: 170,
                             marginBottom: 30,
-                            elevation: 1
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
 
                         <View>
@@ -373,23 +386,26 @@ const Dashboard = props => {
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.editProfileAuthentication')}</Text>
                         </TouchableOpacity> : null}
-                    </View>
+                    </ShadowView>
                 </Card>
 
                 <Card transparent  >
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             height: 170,
                             marginBottom: 30,
-                            elevation: 1
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
 
                         <View>
@@ -435,25 +451,28 @@ const Dashboard = props => {
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('titles.accessToGoldens')}</Text>
                         </TouchableOpacity> : null}
-                    </View>
+                    </ShadowView>
                 </Card>
 
                 <Card transparent style={{
                     marginBottom: 40
                 }}>
-                    <View
+                    <ShadowView
                         style={{
                             flex: 1,
                             borderRadius: 5,
                             textAlign: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
                             height: 170,
                             marginBottom: 30,
-                            elevation: 1
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}>
 
                         <View>
@@ -499,7 +518,7 @@ const Dashboard = props => {
                                 {locales('labels.myProducts')}</Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </ShadowView>
                 </Card>
 
             </ScrollView>

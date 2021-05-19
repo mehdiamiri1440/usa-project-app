@@ -6,6 +6,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Card, Button, Textarea, ActionSheet } from 'native-base';
+import ShadowView from 'react-native-simple-shadow-view';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -412,42 +413,50 @@ class EditProfile extends Component {
 
                         <View
                         >
-                            <View style={{
-                                width: 130,
-                                height: 130,
-                                borderRadius: 130,
-                                alignSelf: 'center',
-                                overflow: "hidden",
-                                elevation: 6,
 
-                            }}>
-                                <Button
-                                    onPress={this.openActionSheet}
-                                    style={{
-                                        position: 'absolute',
-                                        width: '100%',
-                                        height: '100%',
-                                        zIndex: 1,
-                                        backgroundColor: 'rgba(0,0,0,0.5)',
-                                        justifyContent: 'center',
+                            <View
+                                style={{
+                                    width: 130,
+                                    height: 130,
+                                    borderRadius: 75,
+                                    alignSelf: 'center',
+                                    overflow: "hidden",
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
 
-                                    }}>
+                                }}
+                            >
+                                <ShadowView >
+                                    <Button
+                                        onPress={this.openActionSheet}
+                                        style={{
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            zIndex: 1,
+                                            backgroundColor: 'rgba(0,0,0,0.5)',
+                                            justifyContent: 'center',
 
-                                    <FontAwesome5 name="camera" solid size={35} color="#fff"
-                                    />
-                                </Button>
-                                <Image
-                                    style={{
-                                        justifyContent: 'center',
-                                        height: '100%',
-                                    }}
-                                    source={
-                                        !!profile_photo && profile_photo.uri ? {
-                                            uri: profile_photo.uri
-                                        } :
-                                            require('../../../../assets/icons/user.png')
-                                    } />
+                                        }}>
 
+                                        <FontAwesome5 name="camera" solid size={35} color="#fff"
+                                        />
+                                    </Button>
+                                    <Image
+                                        style={{
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                        }}
+                                        source={
+                                            !!profile_photo && profile_photo.uri ? {
+                                                uri: profile_photo.uri
+                                            } :
+                                                require('../../../../assets/icons/user.png')
+                                        } />
+
+                                </ShadowView>
                             </View>
                             <Text
                                 style={{
