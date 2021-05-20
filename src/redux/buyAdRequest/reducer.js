@@ -52,6 +52,10 @@ export default (state = INITIAL_STATE, action) => {
         };
         case actionTypes.FETCH_BUYAD_REQUEST_SUCCESSFULLY: {
             let { msg = '', buyAds = [] } = action.payload
+
+            if (!Array.isArray(buyAds))
+                buyAds = Object.values(buyAds);
+
             return {
                 ...state,
                 buyAdRequestList: buyAds,

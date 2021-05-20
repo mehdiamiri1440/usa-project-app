@@ -49,7 +49,9 @@ class Requests extends PureComponent {
 
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
-            statusCode: null
+            statusCode: null,
+
+            buyAdRequestsList: []
         }
     }
 
@@ -108,12 +110,6 @@ class Requests extends PureComponent {
             this.checkForFiltering()
         }
     }
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log('this.props', this.props, 'nextprops', nextProps, 'this.state', this.state, 'nexststate', nextState)
-    //     if (this.props.isUserAllowedToSendMessageLoading || (this.props.buyAdRequestLoading && this.props.buyAdRequestsList.length) || this.props.buyAdRequestsList.length)
-    //         return false;
-    //     return true
-    // }
 
     checkForFiltering = async () => {
         let isFilter = await this.checkForFilterParamsAvailability();
@@ -362,37 +358,96 @@ class Requests extends PureComponent {
         this.setState({ showFilters: false }, () => {
             if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
                 this.props.requestsRef.current && this.props.requestsRef.current != null &&
-                this.props.requestsRef.current != undefined && this.state.buyAdRequestsList && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading)
+                this.props.requestsRef.current != undefined && this.state.buyAdRequestsList && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
                 setTimeout(() => {
                     this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
                 }, 300);
+            }
         })
     };
 
     selectedFilter = (id, name) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
         analytics().logEvent('buyAd_filter', {
             category: name
         })
         this.setState({
-            buyAdRequestsList: this.props.buyAdRequestsList.filter(item => item.category_id == id),
+            buyAdRequestsList: buyAdRequestsList &&
+                buyAdRequestsList.length ?
+                buyAdRequestsList.filter(item => item.category_id == id) : [],
             selectedFilterName: name,
         })
     };
 
+    renderListEmptyComponent = _ => {
+
+        const {
+            buyAdRequestLoading = false
+        } = this.props;
+
+        if (!!buyAdRequestLoading)
+            return [1, 2, 3, 4, 5].map((_, index) =>
+                <View
+                    key={index}
+                    style={{
+                        backgroundColor: '#fff',
+                        paddingTop: 25,
+                        flex: 1,
+                        paddingBottom: 10,
+                        borderBottomWidth: 2,
+                        borderBottomColor: '#ddd'
+                    }}>
+                    <ContentLoader
+                        speed={2}
+                        width={deviceWidth}
+                        height={deviceHeight * 0.24}
+                        viewBox="0 0 340 160"
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                    >
+                        <Rect x="50" y="37" rx="3" ry="3" width="242" height="20" />
+                        <Rect x="85" y="3" rx="3" ry="3" width="169" height="20" />
+                        <Rect x="22" y="119" rx="3" ry="3" width="299" height="30" />
+                        <Rect x="116" y="74" rx="3" ry="3" width="105" height="20" />
+                    </ContentLoader>
+                </View>
+            );
+
+        return (
+            <View style={{
+                alignSelf: 'center', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center',
+                flex: 1,
+                width: deviceWidth * 0.9, height: deviceHeight * 0.7
+            }}>
+                <Entypo name='list' size={80} color='#BEBEBE' />
+                <Text style={{
+                    textAlign: 'center', color: '#7E7E7E',
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}
+                >
+                    {locales('titles.noBuyAdFound')}
+                </Text>
+            </View>
+        )
+    };
 
     render() {
 
         let {
-            buyAdRequestLoading,
-            userProfile = {} } = this.props;
-
-        const { user_info = {} } = userProfile;
-        const { active_pakage_type } = user_info;
-
-        let { selectedContact,
-            buyAdRequestsList,
-            selectedButton, showDialog, selectedBuyAdId, from, to, accessToContactInfoErrorMessage,
-            showFilters, selectedFilterName, showGoldenModal, showMobileNumberWarnModal, statusCode } = this.state;
+            buyAdRequestsList = [],
+            showDialog,
+            accessToContactInfoErrorMessage,
+            showFilters,
+            selectedFilterName,
+            showGoldenModal,
+            showMobileNumberWarnModal,
+            statusCode
+        } = this.state;
         return (
             <>
                 <NoConnection
@@ -808,6 +863,7 @@ class Requests extends PureComponent {
                         closeFilters={this.closeFilters}
                         showFilters={showFilters}
                     /> : null}
+
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={false}
@@ -818,51 +874,18 @@ class Requests extends PureComponent {
                         }}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => !!buyAdRequestLoading ?
-                            [1, 2, 3, 4, 5].map((_, index) =>
-                                <View
-                                    key={index}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        paddingTop: 25,
-                                        paddingBottom: 10,
-                                        borderBottomWidth: 2,
-                                        borderBottomColor: '#ddd'
-                                    }}>
-                                    <ContentLoader
-                                        speed={2}
-                                        width={deviceWidth}
-                                        height={deviceHeight * 0.24}
-                                        viewBox="0 0 340 160"
-                                        backgroundColor="#f3f3f3"
-                                        foregroundColor="#ecebeb"
-                                    >
-                                        <Rect x="50" y="37" rx="3" ry="3" width="242" height="20" />
-                                        <Rect x="85" y="3" rx="3" ry="3" width="169" height="20" />
-                                        <Rect x="22" y="119" rx="3" ry="3" width="299" height="30" />
-                                        <Rect x="116" y="74" rx="3" ry="3" width="105" height="20" />
-                                    </ContentLoader>
-                                </View>)
-                            : <View style={{
-                                alignSelf: 'center', justifyContent: 'center',
-                                alignContent: 'center', alignItems: 'center', width: deviceWidth * 0.9, height: deviceHeight * 0.7
-                            }}>
-                                <Entypo name='list' size={80} color='#BEBEBE' />
-                                <Text style={{ textAlign: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noBuyAdFound')}</Text>
-                            </View>
-                        }
+                        ListEmptyComponent={this.renderListEmptyComponent}
                         data={buyAdRequestsList}
                         extraData={this.state}
-                        onEndReachedThreshold={0.2}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                         windowSize={10}
                         initialNumToRender={3}
                         maxToRenderPerBatch={3}
                         style={{
-                            // paddingHorizontal: 15,
                             marginBottom: selectedFilterName ? 92 : 45
-                        }} />
+                        }}
+                    />
 
                     <View style={{
                         position: 'absolute',
