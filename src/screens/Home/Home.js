@@ -10,7 +10,7 @@ import {
     StyleSheet, Image, ActivityIndicator, ScrollView,
     RefreshControl, AppState
 } from 'react-native';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop, useIsFocused } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
 
@@ -91,15 +91,19 @@ class Home extends React.Component {
 
     handleAppStateChange = (nextAppState) => {
         const {
-            state
+            state,
+            isFocused
         } = this.props;
 
         const {
             routes = []
         } = state;
+
         if (
             AppState.current != nextAppState && routes.length
-            && routes[routes.length - 1].name != 'EditProfile' && routes[routes.length - 1].name != 'Authentication'
+            && routes[routes.length - 1].name != 'EditProfile' &&
+            routes[routes.length - 1].name != 'Authentication' &&
+            isFocused
         ) {
             this.props.fetchUserProfile();
         }
@@ -1127,8 +1131,8 @@ const Wrapper = (props) => {
     const route = useRoute();
     const state = useNavigationState(state => state)
     useScrollToTop(ref);
-
-    return <Home {...props} homeRef={ref} route={route} state={state} />;
+    const isFocused = useIsFocused();
+    return <Home {...props} homeRef={ref} route={route} state={state} isFocused={isFocused} />;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
