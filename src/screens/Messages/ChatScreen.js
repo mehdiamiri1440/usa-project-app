@@ -4,7 +4,10 @@ import Jmoment from 'moment-jalaali';
 import moment from 'moment';
 import { Button } from 'native-base';
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
-import { View, Text, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
+import {
+    View, Text, TouchableOpacity, Image, TextInput, FlatList,
+    ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
+} from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from 'react-native-simple-shadow-view'
 import Axios from 'axios';
@@ -17,11 +20,13 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
+import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
 import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
-import { BackHandler } from 'react-native';
+import ChatRating from './ChatRating';
+import { result } from 'lodash';
 
 let unsubscribe;
 Jmoment.locale('fa');
@@ -40,6 +45,7 @@ class ChatScreen extends Component {
             loaded: false,
             showGuid: false,
             showViolationReportFlag: false,
+            shouldShowRatingCard: false
         };
         Jmoment.locale('en')
     }
@@ -47,15 +53,118 @@ class ChatScreen extends Component {
     scrollViewRef = React.createRef();
 
     componentDidMount() {
+
+        const { route = {} } = this.props;
+        const { params = {} } = route;
+        const { contact = {} } = params;
+
+        this.handleGuid();
+
+        this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => {
+            this.checkForShowingRatingCard();
+        });
+
+        this.handleIncomingMessage();
+
+        BackHandler.addEventListener('hardwareBackPress', this.handleGoBack)
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+
+        if (prevState.loaded == false && this.props.userChatHistory.length) {
+            this.fetchSenderIds()
+            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true });
+        }
+
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
+    }
+
+    handleIncomingMessage = _ => {
+        const { route = {} } = this.props;
+        const { params = {} } = route;
+        const { contact = {} } = params;
+
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
+                if (contact && contact.contact_id == remoteMessage.data.senderId)
+                    this.pushNewMessageToChatList(remoteMessage);
+            }
+        });
+    };
+
+    handleGoBack = _ => {
+        this.props.doForceRefresh(true);
+        this.props.navigation.goBack();
+        return true;
+    };
+
+    checkForShowingRatingCard = _ => {
+
+        const {
+            route = {},
+        } = this.props;
+        const { params = {} } = route;
+
+        const { contact = {} } = params;
+
+        const {
+            contact_id
+        } = contact;
+
+        const {
+            userChatHistory = []
+        } = this.state;
+
+        this.props.checkUserAutorityToPostComment(contact_id).then((result = {}) => {
+
+            const {
+                payload = {}
+            } = result;
+
+            const {
+                is_allowed
+            } = payload;
+
+            AsyncStorage.getItem('@ratedChats').then(result => {
+
+                result = JSON.parse(result);
+
+                if (!Array.isArray(result) || result == null || result == undefined)
+                    result = [];
+
+                const foundTime = result.find(item => item.contact_id == contact_id)?.date;
+
+                const closeButtonPassedTime = !foundTime ? true : moment().diff(foundTime, 'hours') >= 24;
+
+                const conidtions = (is_allowed) &&
+                    (closeButtonPassedTime) &&
+                    (userChatHistory && userChatHistory.length &&
+                        userChatHistory[0] && userChatHistory[0].created_at &&
+                        moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10
+                    );
+
+                this.setState({ shouldShowRatingCard: conidtions });
+            });
+
+        });
+    };
+
+    handleGuid = _ => {
         const { route = {} } = this.props;
         const { params = {} } = route;
         const { contact = {}, shouldHideGuidAndComment } = params;
 
         const { buyAdId } = this.props;
+
         if (!buyAdId && !shouldHideGuidAndComment) {
+
             AsyncStorage.getItem('@openedChatIds').then(result => {
+
                 let ids = JSON.parse(result);
-                // const isGuidDisappeard = JSON.parse(result[1][1]);
+
                 if (!ids || ids.length == 0) {
                     this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
                 }
@@ -70,7 +179,6 @@ class ChatScreen extends Component {
                             this.setState({
                                 showGuid: false
                             });
-                            // AsyncStorage.setItem('@isGuidDisappeard', JSON.stringify(true))
                         }
                         else {
                             this.setState({ showGuid: true }, _ => setTimeout(() => this.setState({ showGuid: false }), 2000))
@@ -80,40 +188,6 @@ class ChatScreen extends Component {
                 this.checkForShowingCommentsGuid(ids, contact);
             });
         }
-
-        this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount);
-
-        unsubscribe = messaging().onMessage(async remoteMessage => {
-            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
-                if (contact && contact.contact_id == remoteMessage.data.senderId)
-                    this.pushNewMessageToChatList(remoteMessage);
-                // this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }));
-            }
-        });
-
-        BackHandler.addEventListener('hardwareBackPress', this.handleGoBack)
-    }
-
-
-    componentDidUpdate(prevProps, prevState) {
-
-        if (prevState.loaded == false && this.props.userChatHistory.length) {
-            this.fetchSenderIds()
-            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true }, () => {
-            })
-        }
-
-    }
-
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
-    }
-
-    handleGoBack = _ => {
-        this.props.doForceRefresh(true);
-        this.props.navigation.goBack();
-        return true;
     };
 
     checkForShowingCommentsGuid = (result, contact) => {
@@ -132,8 +206,7 @@ class ChatScreen extends Component {
             }
             AsyncStorage.setItem('@openedChatIds', JSON.stringify(result));
         }
-    }
-
+    };
 
     pushNewMessageToChatList = (remoteMessage) => {
         const { route = {} } = this.props;
@@ -157,7 +230,10 @@ class ChatScreen extends Component {
                 item.is_read = true;
             }
         })
-        this.setState({ userChatHistory }, () => {
+        this.setState({
+            userChatHistory,
+            shouldShowRatingCard: false
+        }, () => {
             Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`, {
                 msg_count: this.state.msgCount,
                 user_id: contact.contact_id
@@ -165,7 +241,6 @@ class ChatScreen extends Component {
         })
 
     };
-
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })
@@ -190,7 +265,8 @@ class ChatScreen extends Component {
             this.setState({
                 userChatHistory: [...userChatHistory.slice(-25)].reverse(),
                 messageText: '',
-                isFirstLoad: false
+                isFirstLoad: false,
+                shouldShowRatingCard: false
             });
             this.props.sendMessage(msgObject).then((result) => {
                 setTimeout(() => {
@@ -211,8 +287,7 @@ class ChatScreen extends Component {
             });
 
         }
-    }
-
+    };
 
     hideUnAuthorizedUserChatPopUp = () => {
 
@@ -251,6 +326,39 @@ class ChatScreen extends Component {
         }
     });
 
+    closeViolationModal = _ => {
+        this.setState({ visible: true, showViolationReportFlag: false })
+    };
+
+    closeRatingCard = _ => {
+        let { route = {} } = this.props;
+        const { params = {} } = route;
+        const {
+            contact,
+        } = params;
+        let {
+            contact_id
+        } = contact;
+        this.setState({ shouldShowRatingCard: false }, _ => {
+
+            AsyncStorage.getItem('@ratedChats').then(result => {
+                result = JSON.parse(result);
+
+                if (!Array.isArray(result) || !result || result == null || result == undefined)
+                    result = [];
+
+                if (result.every(item => item.contact_id != contact_id))
+                    result.push({
+                        contact_id,
+                        date: moment()
+                    }
+                    );
+
+                AsyncStorage.setItem('@ratedChats', JSON.stringify(result))
+            })
+        })
+    };
+
     onEndReached = _ => {
         const { route = {} } = this.props;
         const { params = {} } = route;
@@ -261,6 +369,7 @@ class ChatScreen extends Component {
                 this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }))
             })
     };
+
     keyExtractor = (_, index) => index.toString();
 
     renderItem = ({ item, index, separators }) => {
@@ -275,6 +384,58 @@ class ChatScreen extends Component {
             separators={separators}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
         />;
+    };
+
+    renderListHeaderComponent = _ => {
+        const {
+            isSenderVerified,
+            route = {}
+        } = this.props;
+
+
+        const { params = {} } = route;
+
+        const {
+            contact,
+        } = params;
+
+        let {
+            first_name: firstName,
+            last_name: lastName,
+            contact_id: id
+        } = contact;
+
+        const {
+            showUnAuthorizedUserPopUp,
+            shouldShowRatingCard,
+            userChatHistory
+        } = this.state;
+
+        return (
+            <View
+            >
+                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
+                    !isSenderVerified && showUnAuthorizedUserPopUp) ?
+                    <ChatWithUnAuthorizedUserPopUp
+                        hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                    />
+                    : null}
+
+                {
+                    (userChatHistory.length && shouldShowRatingCard)
+                        ?
+                        <ChatRating
+                            firstName={firstName}
+                            lastName={lastName}
+                            userId={id}
+                            closeRatingCard={this.closeRatingCard}
+                            {...this.props}
+                        />
+
+                        : null
+                }
+            </View>
+        )
     };
 
     renderListFooterComponent = _ => {
@@ -298,15 +459,10 @@ class ChatScreen extends Component {
                 </View>
             )
         return null;
-    }
-
-
-    closeViolationModal = _ => {
-        this.setState({ visible: true, showViolationReportFlag: false })
     };
 
     render() {
-        let { userChatHistoryLoading, route = {}, isSenderVerified, buyAdId } = this.props;
+        let { userChatHistoryLoading, route = {}, buyAdId } = this.props;
         const { params = {} } = route;
         const {
             profile_photo,
@@ -316,7 +472,8 @@ class ChatScreen extends Component {
         } = params;
         let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
         let { userChatHistory, isFirstLoad, messageText,
-            showUnAuthorizedUserPopUp, showGuid, showViolationReportFlag } = this.state;
+            showGuid, showViolationReportFlag,
+        } = this.state;
 
 
         const detectToShowCommentAndGuid = showGuid && !buyAdId;
@@ -555,6 +712,7 @@ class ChatScreen extends Component {
                         data={userChatHistory}
                         ListFooterComponentStyle={{ padding: 10 }}
                         ListFooterComponent={this.renderListFooterComponent}
+                        ListHeaderComponent={this.renderListHeaderComponent}
                         inverted
                         maxToRenderPerBatch={3}
                         initialNumToRender={3}
@@ -567,17 +725,6 @@ class ChatScreen extends Component {
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />
-
-
-                    {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
-                        !isSenderVerified && showUnAuthorizedUserPopUp) ? <View style={{ marginBottom: 55, marginTop: -65 }}>
-
-                        <ChatWithUnAuthorizedUserPopUp
-                            hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
-                        />
-                    </View>
-                        : null}
-
 
                     <View
                         style={{
@@ -666,7 +813,8 @@ const mapDispatchToProps = (dispatch, props) => {
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
-        fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id))
+        fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),
+        checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
     }
 };
 
