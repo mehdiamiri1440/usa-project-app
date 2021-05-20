@@ -79,12 +79,14 @@ const RegisterRequestSuccessfully = props => {
                     <Text
                         style={{
                             color: '#21AD93',
+                            fontWeight: '200',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >{` ${locales('titles.buskool')}`}</Text>
                     <Text
                         style={{
                             color: '#777777',
+                            fontWeight: '200',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
@@ -394,6 +396,7 @@ const RegisterRequestSuccessfully = props => {
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 16,
+                                                fontWeight: '200',
                                                 color: '#474747',
                                             }}
                                         >
@@ -426,6 +429,7 @@ const RegisterRequestSuccessfully = props => {
                                             style={{
                                                 color: '#777',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontWeight: '200',
                                                 fontSize: 16,
                                             }}>{locales('titles.stockQuantity')} :</Text> {formatter.convertedNumbersToTonUnit(stock)}
                                     </Text>
@@ -989,6 +993,7 @@ const RegisterRequestSuccessfully = props => {
                         style={{
                             paddingHorizontal: 10,
                             textAlign: 'center',
+                            fontWeight: '200',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 15,
                             color: '#21ad93'
@@ -1000,6 +1005,7 @@ const RegisterRequestSuccessfully = props => {
                             paddingHorizontal: 10,
                             textAlign: 'center',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontWeight: '200',
                             fontSize: 15,
                             color: '#777777'
                         }}>
