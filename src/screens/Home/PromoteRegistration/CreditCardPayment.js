@@ -3,6 +3,7 @@ import {
     Text, View, TouchableOpacity, Linking
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
+import ShadowView from 'react-native-simple-shadow-view';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -127,11 +128,14 @@ const CreditCardPayment = props => {
 
             </RBSheet>
 
-            <View
+            <ShadowView
                 style={{
                     width: deviceWidth,
                     padding: 10,
-                    elevation: 5,
+                    shadowColor: 'black',
+                    shadowOpacity: 0.13,
+                    shadowRadius: 1,
+                    shadowOffset: { width: 0, height: 2 },
                     backgroundColor: 'white',
                     alignSelf: 'center',
                     justifyContent: 'center',
@@ -171,7 +175,7 @@ const CreditCardPayment = props => {
                         {locales('labels.transferAmongCreditCart')}
                     </Text>
                 </TouchableOpacity>
-            </View>
+            </ShadowView>
 
         </>
     )

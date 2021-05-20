@@ -551,6 +551,7 @@ const Channel = props => {
                         style={{
                             textAlign: 'center',
                             width: '100%',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
                             color: 'white'
                         }}
                     >

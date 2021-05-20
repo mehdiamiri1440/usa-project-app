@@ -7,6 +7,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Card, Button } from 'native-base';
+import ShadowView from 'react-native-simple-shadow-view';
 
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -386,11 +387,14 @@ class PromoteRegistration extends React.Component {
                     }}
                 >
 
-                    {!isUsedAsComponent ? <View
+                    {!isUsedAsComponent ? <ShadowView
                         style={{
                             width: deviceWidth * 0.96,
                             alignSelf: 'center',
-                            elevation: 5,
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}
                     >
                         <View style={{
@@ -569,7 +573,7 @@ class PromoteRegistration extends React.Component {
                                 {` ${locales('titles.promoteDescriptionTextFourth')} `}
                             </Text> */}
                         </View>
-                    </View>
+                    </ShadowView>
                         : null}
 
                     <Card transparent>
@@ -579,7 +583,6 @@ class PromoteRegistration extends React.Component {
                             borderRadius: 5,
                             borderWidth: 2,
                             borderColor: '#21AD93',
-                            elevation: 2
                         }}>
                             {/* <LinearGradient
                                 start={{ x: 0, y: 1 }}
@@ -613,7 +616,6 @@ class PromoteRegistration extends React.Component {
                                 position: 'absolute',
                                 left: -45,
                                 top: 7,
-                                elevation: 4
                             }}>
                                 {locales('labels.special')}
                             </Text>
@@ -1129,7 +1131,6 @@ class PromoteRegistration extends React.Component {
                             overflow: 'hidden',
                             borderRadius: 5,
                             marginTop: 15,
-                            elevation: 2,
                             marginBottom: 50,
 
                         }}>
@@ -1582,13 +1583,16 @@ class PromoteRegistration extends React.Component {
                         </View>
                     </Card>
                         : null}
-                    <View
+                    <ShadowView
                         style={{
                             width: deviceWidth * 0.96,
                             alignSelf: 'center',
-                            elevation: 5,
                             marginBottom: 20,
-                            marginTop: !showBothPackages ? 20 : 0
+                            marginTop: !showBothPackages ? 20 : 0,
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
                         }}
                     >
                         {!isUsedAsComponent ? <View style={{
@@ -1654,7 +1658,7 @@ class PromoteRegistration extends React.Component {
                             </View>
                         </View>
                             : null}
-                    </View>
+                    </ShadowView>
 
                 </ScrollView>
                 {!isUsedAsComponent ? <CreditCardPayment /> : null}

@@ -469,6 +469,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        elevation: 0,
         alignSelf: 'center',
         justifyContent: 'center',
     },

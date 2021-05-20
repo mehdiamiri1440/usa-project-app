@@ -428,7 +428,7 @@ class EditProfile extends Component {
 
                                 }}
                             >
-                                <ShadowView >
+                                <ShadowView>
                                     <Button
                                         onPress={this.openActionSheet}
                                         style={{

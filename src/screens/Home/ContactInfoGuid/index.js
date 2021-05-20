@@ -70,6 +70,7 @@ const ContactInfoGuid = props => {
                                 borderRadius: 8,
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                elevation: 0,
                                 width: '40%',
                                 padding: 10
                             }}
@@ -115,6 +116,7 @@ const ContactInfoGuid = props => {
                                 alignItems: 'center',
                                 width: '40%',
                                 justifyContent: 'center',
+                                elevation: 0,
                                 padding: 10,
                             }}
                         >
