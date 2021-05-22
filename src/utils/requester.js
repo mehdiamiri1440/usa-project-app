@@ -69,7 +69,7 @@ export const redirectToLogin = msg => {
             // console.log('logout after redirection')
             resolve(true)
         })
-            .catch(_ => resovle(true));
+            .catch(_ => resolve(true));
     })
 }
 
