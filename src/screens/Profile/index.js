@@ -547,7 +547,8 @@ class Profile extends PureComponent {
                                             height: deviceWidth * 0.22, borderRadius: deviceWidth * 0.11
                                         }}
                                         source={
-                                            profilePhotoFromByUserName ? { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
+                                            profilePhotoFromByUserName ?
+                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
                                                 : require('../../../assets/icons/user.png')}
                                     />
 

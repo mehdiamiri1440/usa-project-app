@@ -14,24 +14,21 @@ import messaging from '@react-native-firebase/messaging';
 import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { navigationRef, isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
-import { deviceWidth, deviceHeight, dataGenerator } from '../utils';
+import { deviceWidth, deviceHeight } from '../utils';
 import { routeToScreensFromNotifications } from './linking';
 
-
-
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import AppNavigator from './navigator';
 
-import AsyncStorage from '@react-native-community/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-
+let promotionModalTimeout, guidModalTimeout;
 
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();
@@ -43,13 +40,14 @@ const App = (props) => {
   // console.disableYellowBox = true;
   const { userProfile = {} } = props;
   const { user_info = {} } = userProfile;
-  let { is_seller, wallet_balance = 0 } = user_info;
+  let { is_seller, wallet_balance = 0, active_pakage_type } = user_info;
 
   const [initialRoute, setInitialRoute] = useState(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
   let [updateModalFlag, setUpdateModalFlag] = useState(false);
   let [isForceUpdate, setIsForceUpdate] = useState(true);
   let [contactInfoGuidModal, setShowContactInfoGuidModal] = useState(false);
+  let [showPromotionModal, setShowPromotionModal] = useState(false);
 
 
   useEffect(() => {
@@ -117,7 +115,8 @@ const App = (props) => {
       RNRestart.Restart();
     }
 
-    checkForShowingContactInfoGuid();
+    // checkForShowingContactInfoGuid();
+    checkForShowingPromotionModal();
     checkForUpdate();
 
     if (isRegistered) {
@@ -178,7 +177,9 @@ const App = (props) => {
     }
 
     return () => {
-      AppState.removeEventListener('change', handleAppStateChange)
+      clearTimeout(promotionModalTimeout);
+      // clearTimeout(guidModalTimeout);
+      AppState.removeEventListener('change', handleAppStateChange);
       isReadyRef.current = false;
     }
 
@@ -189,7 +190,8 @@ const App = (props) => {
     if (
       AppState.current != nextAppState
     ) {
-      checkForShowingContactInfoGuid();
+      // checkForShowingContactInfoGuid();
+      checkForShowingPromotionModal();
     }
   };
 
@@ -200,9 +202,7 @@ const App = (props) => {
         isNewUser = JSON.parse(isNewUser);
         if (isNewUser == true) {
           AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
-            setTimeout(() => {
-              setShowContactInfoGuidModal(true);
-            }, 3600000);
+            guidModalTimeout = setTimeout(() => setShowContactInfoGuidModal(true), 3600000);
           })
         }
         else {
@@ -236,6 +236,50 @@ const App = (props) => {
     }
   };
 
+  const checkForShowingPromotionModal = _ => {
+
+    if (!!is_seller && active_pakage_type == 0) {
+
+      AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
+        isNewUser = JSON.parse(isNewUser);
+        if (isNewUser == true) {
+          AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
+            promotionModalTimeout = setTimeout(() => setShowPromotionModal(true), 3600000);
+          })
+        }
+        else {
+          AsyncStorage.getItem('@promotionModalLastSeen').then(result => {
+
+            result = JSON.parse(result);
+
+            if (result) {
+              if (moment().diff(result, 'days') >= 1) {
+                AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+                setShowPromotionModal(true);
+              }
+              else {
+                setShowPromotionModal(false);
+              }
+
+            }
+            else {
+              setShowPromotionModal(true);
+              AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
+            }
+
+          })
+        }
+
+      }
+      )
+    };
+  };
+
+  const closePromotionModal = _ => {
+    setShowPromotionModal(false);
+    AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+  };
+
   const checkForUpdate = _ => {
     getAppstoreAppMetadata("com.buskool") //put any apps packageId here
       .then(metadata => {
@@ -263,6 +307,83 @@ const App = (props) => {
 
   return (
     <>
+      <Portal
+        style={{
+          padding: 0,
+          margin: 0
+
+        }}>
+        <Dialog
+          onDismiss={closePromotionModal}
+          visible={showPromotionModal}
+          style={styles.dialogWrapper}
+        >
+          <Dialog.Actions
+            style={styles.dialogHeader}
+          >
+            <Button
+              onPress={closePromotionModal}
+              style={styles.closeDialogModal}>
+              <FontAwesome5 name="times" color="#777" solid size={18} />
+            </Button>
+            <Paragraph style={styles.headerTextDialogModal}>
+              {locales('labels.promoteRegistration')}
+            </Paragraph>
+          </Dialog.Actions>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center'
+            }}>
+
+            <MaterialCommunityIcons name="exclamation" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+              borderColor: '#edf8e6',
+            }]} />
+
+          </View>
+          <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+            <Text style={styles.mainTextDialogModal}>
+              {locales('labels.promoteRegistrationModalDescription')}
+            </Text>
+
+          </Dialog.Actions>
+          <Dialog.Actions style={{
+            justifyContent: 'center',
+            width: '100%',
+            alignItems: 'center',
+            padding: 0
+          }}>
+            <Button
+              style={[styles.loginButton, { width: '50%' }]}
+              onPress={() => {
+                closePromotionModal();
+                navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+              }}
+            >
+
+              <Text style={[styles.closeButtonText, { color: 'white' }]}>{locales('labels.promoteRegistration')}
+              </Text>
+            </Button>
+          </Dialog.Actions>
+
+          <Dialog.Actions style={{
+            justifyContent: 'center',
+            width: '100%',
+            padding: 0
+          }}>
+            <Button
+              style={styles.modalCloseButton}
+              onPress={closePromotionModal}
+            >
+
+              <Text style={styles.closeButtonText}>{locales('titles.close')}
+              </Text>
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal >
+
       <Portal
         style={{
           padding: 0,

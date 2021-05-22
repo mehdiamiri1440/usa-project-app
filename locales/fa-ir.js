@@ -137,6 +137,7 @@ export default {
     'labels.registerRequest': 'ثبت درخواست',
     'labels.somethingWentWrong': 'متاسفانه به مشکلی برخورده‌ایم',
     'labels.pleaseRetry': 'لطفا مجددا تلاش بفرمایید',
+    'labels.promoteRegistrationModalDescription': 'برای دسترسی به خریداران طلایی ، شماره کاربران ، ثبت محصول بیشتر و دیگر امکانات ویژه باسکول ، عضویت خود را ارتقا دهید',
     'labels.myProducts': 'محصولات من',
     'labels.guid': 'راهنما',
     'labels.special': 'ویژه',
