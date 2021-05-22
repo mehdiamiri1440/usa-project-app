@@ -78,7 +78,10 @@ const ChatRating = props => {
                 }}
             >
                 <FontAwesome5
-                    onPress={_ => props.closeRatingCard()}
+                    onPress={_ => {
+                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                        props.closeRatingCard();
+                    }}
                     name='times'
                     color='#777777'
                     size={20}
