@@ -58,7 +58,7 @@ export const logOut = () => {
                 withAuth: false,
             })
             .then(result => {
-                AsyncStorage.removeItem('@Authorization').then(res => {
+                AsyncStorage.multiRemove(['@Authorization', 'persist:root']).then(res => {
                     resolve(result);
                 })
             })

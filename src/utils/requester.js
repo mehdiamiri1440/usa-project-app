@@ -59,18 +59,19 @@ const getRequestHeaders = async () => {
 
 
 export const redirectToLogin = msg => {
-    return new Promise((resolve, reject) => {
-        // console.log('redirected');
-        // if (msg == 'The token has been blacklisted') {
-        //     resolve(false)
-        // }
-        // else {
-        store.dispatch(authActions.logOut()).then(_ => {
-            // console.log('logout after redirection')
-            resolve(true)
-        })
-            .catch(_ => resolve(true));
+    // console.log('redirected');
+    // if (msg == 'The token has been blacklisted') {
+    //     resolve(false)
+    // }
+    // else {
+    store.dispatch(authActions.logOut()).then(_ => {
+        RnRestart.Restart();
+        // console.log('logout after redirection')
     })
+        .catch(_ => {
+            RnRestart.Restart();
+
+        })
 }
 
 
@@ -132,11 +133,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     }
                     else {
                         // console.log('conditions were false and redirect happened with this route-->>', route)
-                        if (redirect_to_login === true) {
-                            const tokenOmitted = await redirectToLogin(msg);
-                            if (tokenOmitted === true)
-                                RnRestart.Restart();
-                        }
+                        redirectToLogin(msg);
                     }
                 }
 
