@@ -8,7 +8,8 @@ class StarRating extends React.Component {
         super(props);
         this.state = {
             half: false,
-            names: [],
+            names: [
+            ],
             color: '#FFBB00',
             iconName: 'star-o',
             hoveredIndex: props.starsCount * 2.0 || 10.0,
@@ -26,7 +27,7 @@ class StarRating extends React.Component {
             let isDefaultRateInteger = validator.isInt(defaultRate);
 
             this.setState({
-                hoveredIndex: isDefaultRateInteger ? defaultRate : defaultRate - 0.5,
+                hoveredIndex: isDefaultRateInteger ? defaultRate : Math.round(defaultRate) < defaultRate ? defaultRate : defaultRate - 0.5,
                 half: !isDefaultRateInteger
             }, () => {
                 this.renderStars();
@@ -43,19 +44,22 @@ class StarRating extends React.Component {
         this.setState(state => {
             for (let index = 0; index < 5; index++) {
                 if (index < hoveredIndex) {
-                    state.names.push('star')
+                    state.names.push({ title: 'star', color: '#FFBB00' })
                 }
                 else if (index == hoveredIndex && this.state.half) {
-                    state.names.push('star-half-alt')
+                    state.names.push({ title: 'star-half-alt', color: '#FFBB00' })
                 }
                 else if (index == hoveredIndex && !this.state.half) {
-                    state.names.push('star')
+                    state.names.push({ title: 'star', color: '#BEBEBE' })
                 }
                 else {
-                    state.names.push('star')
+                    state.names.push({ title: 'star', color: '#BEBEBE' })
                 }
             }
-            return '';
+            return [{
+                title: '',
+                color: ''
+            }];
         })
     };
 
@@ -86,14 +90,14 @@ class StarRating extends React.Component {
                             style={{ marginHorizontal: 1 }}
                         >
                             <FontAwesome5
-                                name={names[index]}
-                                style={{ transform: names[index] == 'star-half-alt' ? [{ scaleX: -1 }] : [{ rotate: '0deg' }] }}
+                                name={names[index]?.title}
+                                style={{ transform: names[index]?.title == 'star-half-alt' ? [{ scaleX: -1 }] : [{ rotate: '0deg' }] }}
                                 key={index}
-                                color={index <= this.state.hoveredIndex ? color : '#BEBEBE'}
                                 size={size}
                                 solid
                                 style={{
-                                    transform: [{ rotateY: '180deg' }]
+                                    transform: [{ rotateY: '180deg' }],
+                                    color: index < this.state.hoveredIndex || names[index]?.title == 'star-half-alt' ? color : '#BEBEBE'
                                 }}
                                 onProgress={() => !disable && this.handleStarClick(index)}
                             />
