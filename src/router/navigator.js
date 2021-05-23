@@ -19,13 +19,14 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
+import SplashScreen from 'react-native-splash-screen'
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-
 
 import UpgradeApp from '../screens/UpgradeApp'
 import Intro from '../screens/Intro'
@@ -41,6 +42,7 @@ import {
     SpecialProductsStack
 }
     from './tabs';
+
 import { deviceWidth, deviceHeight } from '../utils';
 import * as productActions from '../redux/registerProduct/actions';
 import * as messageActions from '../redux/messages/actions';
@@ -263,6 +265,7 @@ const routes = props => {
     };
 
     const onNavigationContainerGotReady = () => {
+        SplashScreen.hide();
         isReadyRef.current = true;
         // checkForShowingContactInfoGuid();
         checkForShowingPromotionModal();

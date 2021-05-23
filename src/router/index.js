@@ -9,7 +9,6 @@ import {
   NativeModules
 } from 'react-native';
 import { connect } from 'react-redux';
-import SplashScreen from 'react-native-splash-screen'
 import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
@@ -19,7 +18,6 @@ import { isReadyRef } from './rootNavigation';
 import * as RootNavigation from './rootNavigation';
 import { deviceWidth, deviceHeight } from '../utils';
 import { routeToScreensFromNotifications } from './linking';
-
 
 import AppNavigator from './navigator';
 
@@ -91,12 +89,10 @@ const App = (props) => {
           setInitialRoute('Intro')
           RootNavigation.navigate('Intro')
         }
-        SplashScreen.hide();
       })
     }
     else {
       setInitialRoute(is_seller ? 'RegisterProductStack' : 'RegisterRequest')
-      SplashScreen.hide();
     }
 
     if (I18nManager.isRTL) {
