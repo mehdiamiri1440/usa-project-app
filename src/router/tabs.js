@@ -38,21 +38,11 @@ import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
 
 const Stack = createStackNavigator();
 
-const forFade = ({ current, next }) => {
-    const opacity = Animated.add(
-        current.progress,
-        next ? next.progress : 0
-    ).interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [0, 1, 0],
-    });
-
-    return {
-        cardStyle: {
-            opacity,
-        }
-    };
-};
+const forFade = ({ current }) => ({
+    cardStyle: {
+        opacity: current.progress,
+    },
+});
 
 export const MyBuskoolStack = _ => {
     return (

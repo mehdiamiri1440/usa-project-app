@@ -280,7 +280,7 @@ class Product extends PureComponent {
         if (photos.length)
             return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
 
-        return require('../../../assets/icons/placeholder-image.jpg');
+        return require('../../../assets/icons/placeholder-logo.png');
 
     };
 
@@ -1023,13 +1023,15 @@ class Product extends PureComponent {
                                     }}
                                 >
                                     <Image
+                                        resizeMode='contain'
                                         style={{
-                                            width: '100%',
-                                            height: '100%',
                                             borderTopLeftRadius: 12,
+                                            height: '50%',
+                                            width: '100%',
+                                            top: '20%',
                                             borderTopRightRadius: 12,
                                         }}
-                                        source={require('../../../assets/icons/placeholder-image.jpg')}
+                                        source={require('../../../assets/icons/placeholder-logo.png')}
                                     />
                                     <Image
                                         resizeMode='cover'

@@ -785,7 +785,7 @@ class ProductsList extends PureComponent {
             )
         if (!loaded || productsListLoading) {
             return (
-                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10, marginTop: 10 }}>
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
                         <View
@@ -795,7 +795,7 @@ class ProductsList extends PureComponent {
                                 marginBottom: 15,
                                 flex: 1,
                                 width: '100%',
-                                height: deviceHeight * 0.35,
+                                height: deviceHeight * 0.34,
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                                 alignItems: 'center'
@@ -803,8 +803,8 @@ class ProductsList extends PureComponent {
                             }}>
                             <View
                                 style={{
-                                    borderRadius: 12, marginHorizontal: 3,
-                                    borderWidth: 1, borderColor: '#eee', width: '45%', height: '100%'
+                                    borderRadius: 12, marginHorizontal: 3, overflow: 'hidden',
+                                    borderWidth: 1, borderColor: '#eee', width: '47.5%', height: '100%'
                                 }}
                             >
                                 <ContentLoader
@@ -814,7 +814,7 @@ class ProductsList extends PureComponent {
                                     backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
                                 >
-                                    <Rect rx={10} ry={10} x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="0" y="0" width="100%" height="60%" />
                                     <Rect x="30%" y="65%" width="100" height="10" />
                                     <Rect x="15%" y="73%" width="120" height="10" />
                                     <Rect x="15%" y="80%" width="120" height="10" />
@@ -823,8 +823,8 @@ class ProductsList extends PureComponent {
 
                             <View
                                 style={{
-                                    borderRadius: 12, marginHorizontal: 3,
-                                    borderWidth: 1, borderColor: '#eee', width: '45%', height: '100%'
+                                    borderRadius: 12, marginHorizontal: 3, overflow: 'hidden',
+                                    borderWidth: 1, borderColor: '#eee', width: '47.5%', height: '100%'
                                 }}
                             >
                                 <ContentLoader
@@ -835,7 +835,7 @@ class ProductsList extends PureComponent {
                                     foregroundColor="#ecebeb"
 
                                 >
-                                    <Rect rx={10} ry={10} x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="0" y="0" width="100%" height="60%" />
                                     <Rect x="30%" y="65%" width="100" height="10" />
                                     <Rect x="15%" y="73%" width="120" height="10" />
                                     <Rect x="15%" y="80%" width="120" height="10" />
