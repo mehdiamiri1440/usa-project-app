@@ -26,7 +26,6 @@ import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
 import ChatRating from './ChatRating';
-import { result } from 'lodash';
 
 let unsubscribe;
 Jmoment.locale('fa');

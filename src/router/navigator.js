@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, Text, TouchableOpacity, BackHandler } from 'react-native';
+import {
+    Linking,
+    Image,
+    View,
+    Text,
+    TouchableOpacity,
+    BackHandler,
+    AppState,
+    StyleSheet
+} from 'react-native';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
+import { Button } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-
+import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
+import DeviceInfo from 'react-native-device-info';
+import moment from 'moment';
 
 import Octicons from 'react-native-vector-icons/dist/Octicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 
 import UpgradeApp from '../screens/UpgradeApp'
@@ -32,7 +47,7 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '';
+let currentRoute = '', promotionModalTimeout, guidModalTimeout;
 
 const routes = props => {
 
@@ -43,21 +58,165 @@ const routes = props => {
     } = props;
 
     useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges)
-        return _ => BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges)
+
+        AppState.addEventListener('change', handleAppStateChange);
+
+        BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
+
+        return _ => {
+
+            clearTimeout(promotionModalTimeout);
+
+            AppState.removeEventListener('change', handleAppStateChange);
+
+            BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
+
+        }
     }, [props.loggedInUserId])
 
 
-    const { user_info = {} } = userProfile;
-    let { is_seller } = user_info;
-    is_seller = is_seller == 0 ? false : true;
+    const {
+        user_info = {}
+    } = userProfile;
+
+    let {
+        is_seller,
+        wallet_balance = 0,
+        active_pakage_type
+    } = user_info;
 
     const [shouldShowBottomMenu, setShouldShowBottomMenu] = useState(true);
+
+    const [updateModalFlag, setUpdateModalFlag] = useState(false);
+
+    const [showPromotionModal, setShowPromotionModal] = useState(false);
+
+    const [isForceUpdate, setIsForceUpdate] = useState(true);
+
+    const [contactInfoGuidModal, setShowContactInfoGuidModal] = useState(false);
 
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
+
+    const handleAppStateChange = (nextAppState) => {
+        if (
+            AppState.current != nextAppState
+        ) {
+            // checkForShowingContactInfoGuid();
+            checkForShowingPromotionModal();
+        }
+    };
+
+    const checkForUpdate = _ => {
+        getAppstoreAppMetadata("com.buskool") //put any apps packageId here
+            .then(metadata => {
+                if (
+                    DeviceInfo.getVersion() != metadata.version
+                ) {
+                    const versionParts = metadata.version.split('.');
+                    if (versionParts[versionParts.length - 1] == '1') {
+                        setIsForceUpdate(true);
+                    }
+                    else {
+                        setIsForceUpdate(false);
+                    }
+                    setUpdateModalFlag(true);
+                }
+                else {
+                    setUpdateModalFlag(false);
+                }
+            })
+            .catch(err => {
+                console.log("error occurred", err);
+            });
+    };
+
+    const checkForShowingContactInfoGuid = _ => {
+
+        if (!!is_seller && wallet_balance == 0) {
+            AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
+                isNewUser = JSON.parse(isNewUser);
+                if (isNewUser == true) {
+                    AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
+                        guidModalTimeout = setTimeout(() => setShowContactInfoGuidModal(true), 3600000);
+                    })
+                }
+                else {
+
+                    AsyncStorage.getItem('@contactInfoShownTimes').then(result => {
+                        result = JSON.parse(result);
+                        if (result && result.length > 0) {
+
+                            if (result.length < 5) {
+
+                                if (moment().diff(result[result.length - 1], 'hours') >= 24) {
+                                    result.push(moment());
+                                    AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
+                                        setShowContactInfoGuidModal(true);
+                                    })
+                                }
+
+                            }
+
+                        }
+                        else {
+                            result = [];
+                            result.push(moment());
+                            AsyncStorage.setItem('@contactInfoShownTimes', JSON.stringify(result)).then(_ => {
+                                setShowContactInfoGuidModal(true);
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    };
+
+    const checkForShowingPromotionModal = _ => {
+
+        if (!!is_seller && active_pakage_type == 0) {
+
+            AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
+                isNewUser = JSON.parse(isNewUser);
+                if (isNewUser == true) {
+                    AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
+                        promotionModalTimeout = setTimeout(() => setShowPromotionModal(true), 3600000);
+                    })
+                }
+                else {
+                    AsyncStorage.getItem('@promotionModalLastSeen').then(result => {
+
+                        result = JSON.parse(result);
+
+                        if (result) {
+                            if (moment().diff(result, 'days') >= 1) {
+                                AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+                                setShowPromotionModal(true);
+                            }
+                            else {
+                                setShowPromotionModal(false);
+                            }
+
+                        }
+                        else {
+                            setShowPromotionModal(true);
+                            AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
+                        }
+
+                    })
+                }
+
+            }
+            )
+        };
+    };
+
+    const closePromotionModal = _ => {
+        setShowPromotionModal(false);
+        AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+    };
 
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
@@ -76,7 +235,7 @@ const routes = props => {
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
 
-        const shouldShow = props.loggedInUserId && is_seller && !props.userProfileLoading
+        const shouldShow = props.loggedInUserId && !!is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
         const isBottomMenuVisible = props.loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
@@ -102,8 +261,265 @@ const routes = props => {
     const onRouteStateChanged = ({ key, index, routeNames, history, routes, type, stable }) => {
         handleVisiblityOfSellerButtonAndBottomMenu();
     };
+
+    const onNavigationContainerGotReady = () => {
+        isReadyRef.current = true;
+        // checkForShowingContactInfoGuid();
+        checkForShowingPromotionModal();
+        checkForUpdate();
+    };
+
     return (
         <>
+            {showPromotionModal ?
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        onDismiss={closePromotionModal}
+                        visible={showPromotionModal}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={closePromotionModal}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.promoteRegistration')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <MaterialCommunityIcons name="exclamation" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.promoteRegistrationModalDescription')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            alignItems: 'center',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={[styles.loginButton, { width: '50%' }]}
+                                onPress={() => {
+                                    closePromotionModal();
+                                    navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                }}
+                            >
+
+                                <Text style={[styles.closeButtonText, { color: 'white' }]}>{locales('labels.promoteRegistration')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={closePromotionModal}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+                :
+                null
+            }
+
+            {contactInfoGuidModal ?
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        onDismiss={() => setShowContactInfoGuidModal(false)}
+                        dismissable
+                        visible={contactInfoGuidModal}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={() => setShowContactInfoGuidModal(false)}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.contactInfoGuid')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <MaterialCommunityIcons name="exclamation" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#edf8e6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.contactInfoGuidDescription')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            alignItems: 'center',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={[styles.loginButton, { width: '50%' }]}
+                                onPress={() => {
+                                    setShowContactInfoGuidModal(false);
+                                    navigationRef?.current?.navigate('MyBuskool', { screen: 'ContactInfoGuid' })
+                                }}
+                            >
+
+                                <Text style={[styles.closeButtonText, { color: 'white' }]}>{locales('labels.guid')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            <Button
+                                style={styles.modalCloseButton}
+                                onPress={() => setShowContactInfoGuidModal(false)}
+                            >
+
+                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+                :
+                null
+            }
+            {updateModalFlag ?
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        visible={updateModalFlag}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            {!isForceUpdate ? <Button
+                                onPress={() => setUpdateModalFlag(false)}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button> : null}
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.update')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                            <AntDesign name="exclamation" color="#3fc3ee" size={70} style={[styles.dialogIcon, {
+                                borderColor: '#9de0f6',
+                            }]} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={[styles.mainTextDialogModal, { fontSize: 18 }]}>
+                                {locales('titles.newVersionUpdate')}
+                            </Text>
+                        </Dialog.Actions>
+                        <View style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            paddingBottom: 30,
+                            padding: 10,
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
+                                onPress={() => {
+                                    Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                                        } else {
+                                            Linking.openURL('https://play.google.com')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://play.google.com')
+                                        })
+                                }}
+                            >
+
+                                <Text style={styles.buttonText}>{locales('titles.update')}
+                                </Text>
+                            </Button>
+                        </View>
+                        <Dialog.Actions style={{
+                            justifyContent: 'center',
+                            width: '100%',
+                            padding: 0
+                        }}>
+                            {!isForceUpdate ? <Button
+                                style={[styles.modalCloseButton,]}
+                                onPress={() => setUpdateModalFlag(false)}>
+
+                                <Text style={styles.closeButtonText}>{locales('titles.cancel')}
+                                </Text>
+                            </Button> : null}
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+                :
+                null
+            }
+
             <NavigationContainer
                 linking={linking}
                 onStateChange={onRouteStateChanged}
@@ -129,9 +545,7 @@ const routes = props => {
                     </Text>
                 </View>}
                 ref={navigationRef}
-                onReady={() => {
-                    isReadyRef.current = true;
-                }}
+                onReady={onNavigationContainerGotReady}
             >
 
 
@@ -172,7 +586,7 @@ const routes = props => {
                                 component={HomeStack}
                             />
 
-                            {is_seller ? <Tab.Screen
+                            {!!is_seller ? <Tab.Screen
                                 key={'Requests'}
                                 options={{
                                     tabBarBadge: false,
@@ -206,7 +620,7 @@ const routes = props => {
 
 
 
-                            {is_seller ? <Tab.Screen
+                            {!!is_seller ? <Tab.Screen
                                 key={'RegisterProduct'}
                                 listeners={{
                                     tabPress: e => {
@@ -268,7 +682,7 @@ const routes = props => {
                                         e.preventDefault();
                                         currentRoute = e.target;
                                         props.doForceRefresh(true);
-                                        if (is_seller)
+                                        if (!!is_seller)
                                             return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
                                         return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
                                     },
@@ -347,14 +761,130 @@ const routes = props => {
                 : null}
         </>
     )
-}
+};
 
-const mapStateToProps = (state) => {
+const styles = StyleSheet.create({
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        width: '100%',
+        textAlign: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        borderRadius: 5,
+        width: deviceWidth * 0.4,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        maxWidth: 145,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd'
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+});
+
+const mapStateToProps = ({
+    profileReducer,
+    messagesReducer
+}) => {
+
+    const {
+        userProfile,
+        userProfileLoading
+    } = profileReducer;
+
+    const {
+        newMessage
+    } = messagesReducer;
 
     return {
-        userProfile: state.profileReducer.userProfile,
-        newMessage: state.messagesReducer.newMessage,
-        userProfileLoading: state.profileReducer.userProfileLoading
+        newMessage,
+
+        userProfile,
+        userProfileLoading
     }
 };
 const mapDispatchToProps = (dispatch) => {
