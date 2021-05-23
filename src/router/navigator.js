@@ -575,9 +575,6 @@ const routes = props => {
                             inactiveColor="#FFFFFF"
                             barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
                         >
-
-
-
                             <Tab.Screen
                                 key={'Home'}
                                 listeners={{
