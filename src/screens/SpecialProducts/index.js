@@ -739,7 +739,7 @@ class SpecialProducts extends PureComponent {
                             }}>
                             <View
                                 style={{
-                                    borderRadius: 12, marginHorizontal: 3,
+                                    borderRadius: 12, marginHorizontal: 3, overflow: 'hidden',
                                     borderWidth: 1, borderColor: '#eee', width: '47.5%', height: '100%'
                                 }}
                             >

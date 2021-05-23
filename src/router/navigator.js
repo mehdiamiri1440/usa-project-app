@@ -56,7 +56,8 @@ const routes = props => {
     const {
         initialRoute,
         userProfile = {},
-        newMessage
+        newMessage,
+        loggedInUserId
     } = props;
 
     useEffect(() => {
@@ -74,7 +75,7 @@ const routes = props => {
             BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
 
         }
-    }, [props.loggedInUserId])
+    }, [loggedInUserId])
 
 
     const {
@@ -124,6 +125,8 @@ const routes = props => {
                     else {
                         setIsForceUpdate(false);
                     }
+                    setShowContactInfoGuidModal(false);
+                    setShowPromotionModal(false);
                     setUpdateModalFlag(true);
                 }
                 else {
@@ -195,7 +198,8 @@ const routes = props => {
                         if (result) {
                             if (moment().diff(result, 'days') >= 1) {
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
-                                setShowPromotionModal(true);
+                                if (!updateModalFlag)
+                                    setShowPromotionModal(true);
                             }
                             else {
                                 setShowPromotionModal(false);
@@ -203,8 +207,10 @@ const routes = props => {
 
                         }
                         else {
-                            setShowPromotionModal(true);
-                            AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
+                            if (!updateModalFlag) {
+                                setShowPromotionModal(true);
+                                AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
+                            }
                         }
 
                     })
@@ -237,10 +243,10 @@ const routes = props => {
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
 
-        const shouldShow = props.loggedInUserId && !!is_seller && !props.userProfileLoading
+        const shouldShow = loggedInUserId && !!is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
-        const isBottomMenuVisible = props.loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
+        const isBottomMenuVisible = loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
 
         setShouldShowBottomMenu(isBottomMenuVisible);
 
@@ -552,7 +558,7 @@ const routes = props => {
             >
 
 
-                {(!props.loggedInUserId) ?
+                {(!loggedInUserId) ?
                     (
                         <Stack.Navigator
                             headerMode='none'>

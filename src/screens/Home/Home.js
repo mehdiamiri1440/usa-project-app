@@ -257,11 +257,11 @@ class Home extends React.Component {
                         <Dialog.Actions
                             style={styles.dialogHeader}
                         >
-                            <Button
+                            {/* <Button
                                 onPress={() => this.closeModal()}
                                 style={styles.closeDialogModal}>
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
+                            </Button> */}
                             <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('titles.changeRole')}
                             </Paragraph>
@@ -994,6 +994,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         paddingHorizontal: 15,
+        marginVertical: 15,
         width: '100%'
     },
     modalButton: {

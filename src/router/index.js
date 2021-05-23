@@ -31,8 +31,13 @@ const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
   // console.disableYellowBox = true;
-  const { userProfile = {} } = props;
+  const {
+    userProfile = {},
+    loggedInUserId
+  } = props;
+
   const { user_info = {} } = userProfile;
+
   let { is_seller } = user_info;
 
   const [initialRoute, setInitialRoute] = useState(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest');
@@ -77,7 +82,7 @@ const App = (props) => {
 
 
 
-    if (!props.loggedInUserId) {
+    if (!loggedInUserId) {
       AsyncStorage.getItem('@isIntroductionSeen').then(result => {
         result = JSON.parse(result);
 
@@ -92,7 +97,7 @@ const App = (props) => {
       })
     }
     else {
-      setInitialRoute(is_seller ? 'RegisterProductStack' : 'RegisterRequest')
+      setInitialRoute(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest')
     }
 
     if (I18nManager.isRTL) {
@@ -127,7 +132,7 @@ const App = (props) => {
                       setInitialRoute('Messages')
                   });
                   messaging()
-                    .subscribeToTopic(`FCM${props.loggedInUserId}`)
+                    .subscribeToTopic(`FCM${loggedInUserId}`)
                     .then(() => {
 
                       messaging().getInitialNotification(() => {
@@ -152,7 +157,7 @@ const App = (props) => {
           }
           else {
             messaging()
-              .subscribeToTopic(`FCM${props.loggedInUserId}`)
+              .subscribeToTopic(`FCM${loggedInUserId}`)
             Alert.alert('device is not registered');
           }
         })
@@ -163,12 +168,12 @@ const App = (props) => {
       isReadyRef.current = false;
     }
 
-  }, [initialRoute, is_seller, props.loggedInUserId, props.logOutLoading]);
+  }, [initialRoute, is_seller, loggedInUserId, props.logOutLoading]);
 
 
   return (
     <>
-      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!props.loggedInUserId))) ?
+      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
         <View
           style={{
             position: 'absolute',
@@ -211,6 +216,7 @@ const App = (props) => {
 
       <AppNavigator
         initialRoute={initialRoute}
+        loggedInUserId={loggedInUserId}
         {...props}
       />
     </>
