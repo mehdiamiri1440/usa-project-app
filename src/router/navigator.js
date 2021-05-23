@@ -87,6 +87,7 @@ const routes = props => {
         wallet_balance = 0,
         active_pakage_type
     } = user_info;
+    is_seller = is_seller == 0 ? false : true;
 
     const [shouldShowBottomMenu, setShouldShowBottomMenu] = useState(true);
 
@@ -140,7 +141,7 @@ const routes = props => {
 
     const checkForShowingContactInfoGuid = _ => {
 
-        if (!!is_seller && wallet_balance == 0) {
+        if (is_seller && wallet_balance == 0) {
             AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
                 isNewUser = JSON.parse(isNewUser);
                 if (isNewUser == true) {
@@ -181,7 +182,7 @@ const routes = props => {
 
     const checkForShowingPromotionModal = _ => {
 
-        if (!!is_seller && active_pakage_type == 0) {
+        if (is_seller && active_pakage_type == 0) {
 
             AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
                 isNewUser = JSON.parse(isNewUser);
@@ -243,7 +244,7 @@ const routes = props => {
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
 
-        const shouldShow = loggedInUserId && !!is_seller && !props.userProfileLoading
+        const shouldShow = loggedInUserId && is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
         const isBottomMenuVisible = loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
@@ -569,7 +570,7 @@ const routes = props => {
                     )
                     : (
                         <Tab.Navigator
-                            initialRouteName={!!is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
+                            initialRouteName={is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
@@ -592,7 +593,7 @@ const routes = props => {
                                 component={HomeStack}
                             />
 
-                            {!!is_seller ? <Tab.Screen
+                            {is_seller ? <Tab.Screen
                                 key={'Requests'}
                                 options={{
                                     tabBarBadge: false,
@@ -626,7 +627,7 @@ const routes = props => {
 
 
 
-                            {!!is_seller ? <Tab.Screen
+                            {is_seller ? <Tab.Screen
                                 key={'RegisterProduct'}
                                 listeners={{
                                     tabPress: e => {
@@ -688,7 +689,7 @@ const routes = props => {
                                         e.preventDefault();
                                         currentRoute = e.target;
                                         props.doForceRefresh(true);
-                                        if (!!is_seller)
+                                        if (is_seller)
                                             return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
                                         return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
                                     },
