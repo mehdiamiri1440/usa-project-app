@@ -768,7 +768,7 @@ class RegisterRequest extends Component {
 
         return (
             <>
-                <Loading />
+                {/* <Loading /> */}
                 <NoConnection
                     closeModal={this.closeModal}
                     showModal={showModal}

@@ -387,7 +387,7 @@ class RegisterProduct extends React.Component {
         return (
             <>
 
-                <Loading />
+                {/* <Loading /> */}
                 {stepNumber == 7 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
