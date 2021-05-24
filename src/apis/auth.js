@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { requester } from '../utils';
 import RnRestart from 'react-native-restart';
+import DeviceInfo from 'react-native-device-info';
 
+const device_id = DeviceInfo.getUniqueId();
 
 const storeData = (payload) => {
     return new Promise((resolve, _) => {
@@ -24,6 +26,7 @@ export const login = (mobileNumber, password) => {
                 method: 'POST',
                 withAuth: false,
                 data: {
+                    device_id,
                     phone: mobileNumber,
                     password,
                     client: 'mobile'
@@ -99,6 +102,7 @@ export const checkActivisionCode = (code, mobileNumber) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
+                device_id,
                 route: `verify_code`,
                 method: 'POST',
                 withAuth: false,
