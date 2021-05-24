@@ -32,7 +32,8 @@ const Header = (props = {}) => {
     } = userProfile;
 
     const {
-        is_verified
+        is_verified,
+        is_seller
     } = user_info;
 
     const {
@@ -211,7 +212,7 @@ const Header = (props = {}) => {
                             textAlign: 'center',
                             textAlignVertical: 'center',
                         }}>
-                            {locales('titles.clickToStartAuthentication')}
+                            {!!is_seller ? locales('labels.verifyForHavingMoreBuyers') : locales('labels.verifyForHavingMoreSellers')}
                         </Text>
                         <FontAwesome5
                             name='angle-left'

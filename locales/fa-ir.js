@@ -123,6 +123,8 @@ export default {
     'labels.products': 'محصولات',
     'labels.selectSubCategory': 'انتخاب زیر دسته‌بندی',
     'labels.subCategory': 'زیردسته‌بندی',
+    'labels.verifyForHavingMoreBuyers':'برای جذب خریداران بیشتر احراز هویت کنید',
+    'labels.verifyForHavingMoreSellers':'برای جذب فروشندگان بیشتر احراز هویت کنید',
     'labels.suggestedProducts': 'محصولات پیشنهادی',
     'labels.uploadIdCardLikeSample': 'کارت ملی خود را طبق نمونه بارگذاری کنید .',
     'labels.uploadIdCardWithOwnerLikeSample': 'تصویر خود همراه با تصویر کارت ملی را طبق نمونه زیر بارگذاری کنید .',
