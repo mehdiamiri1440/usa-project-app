@@ -102,14 +102,14 @@ export const checkActivisionCode = (code, mobileNumber) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                device_id,
                 route: `verify_code`,
                 method: 'POST',
                 withAuth: false,
                 data: {
                     phone: mobileNumber,
                     verification_code: code,
-                    client: 'mobile'
+                    client: 'mobile',
+                    device_id,
                 }
             })
             .then(result => {
