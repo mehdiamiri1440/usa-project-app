@@ -267,7 +267,6 @@ dependencies {
     compile project(':react-native-audio')
     compile project(':react-native-sound')
     compile project(':@react-native-community_voice')
-    compile project(':react-native-appstore-version-checker')
     implementation project(':react-native-device-info')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'

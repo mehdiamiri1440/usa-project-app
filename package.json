@@ -43,7 +43,6 @@
     "react-content-loader": "^5.1.1",
     "react-native": "^0.63.4",
     "react-native-apk-installer-n": "^2.1.1",
-    "react-native-appstore-version-checker": "^3.0.0",
     "react-native-audio": "^4.3.0",
     "react-native-confirmation-code-field": "^6.5.1",
     "react-native-contacts": "^5.2.7",

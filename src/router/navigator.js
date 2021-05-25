@@ -92,14 +92,11 @@ const routes = props => {
         AppState.addEventListener('change', handleAppStateChange);
 
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
-        console.log('0000')
         if (shouldDoAsyncJobs) {
-            console.log('11111')
             checkForUpdate();
         }
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
-            console.log('2222')
             // checkForShowingContactInfoGuid();
             checkForShowingPromotionModal();
             setShouldDoAsyncJobs(false);
