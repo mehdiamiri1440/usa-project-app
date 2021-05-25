@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -302,78 +303,123 @@ const routes = props => {
                     style={{
                         padding: 0,
                         margin: 0
-
-                    }}>
+                    }}
+                >
                     <Dialog
                         onDismiss={closePromotionModal}
                         visible={showPromotionModal}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper }}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={closePromotionModal}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.promoteRegistration')}
-                            </Paragraph>
-                        </Dialog.Actions>
                         <View
                             style={{
+                                backgroundColor: '#E7F9FF',
                                 width: '100%',
-                                alignItems: 'center'
-                            }}>
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                            }}
+                        >
+                            <FontAwesome5
+                                onPress={closePromotionModal}
+                                solid
+                                size={20}
+                                color='#808C9B'
+                                name='times'
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15
+                                }}
+                            />
 
-                            <MaterialCommunityIcons name="exclamation" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('labels.promoteRegistrationModalDescription')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            alignItems: 'center',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={[styles.loginButton, { width: '50%' }]}
-                                onPress={() => {
-                                    closePromotionModal();
-                                    navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                            <Image
+                                style={{
+                                    width: '90%',
+                                    marginVertical: 20,
+                                    alignSelf: 'center'
+                                }}
+                                resizeMode='contain'
+                                source={require('../../assets/images/promotion-icon.png')}
+                            />
+                            <View
+                                style={{
+                                    width: deviceWidth * 2,
+                                    height: deviceWidth * 2,
+                                    borderTopLeftRadius: deviceWidth * 1.5,
+                                    borderTopRightRadius: deviceWidth * 1.5,
+                                    zIndex: -10,
+                                    backgroundColor: 'white',
+                                    top: 100,
+                                    position: 'absolute'
                                 }}
                             >
 
-                                <Text style={[styles.closeButtonText, { color: 'white' }]}>{locales('labels.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
+                            </View>
+                        </View>
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={closePromotionModal}
+                        <View
+                            style={{
+                                paddingHorizontal: 10,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: '#374761',
+                                    textAlign: 'center',
+                                    fontSize: 25,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    marginVertical: 10
+                                }}
                             >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
+                                {locales('titles.fastAndEasySale')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#38485F',
+                                    textAlign: 'center',
+                                    width: '80%',
+                                    alignSelf: 'center',
+                                    fontSize: 15,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    marginVertical: 15
+                                }}
+                            >
+                                {locales('labels.promotionModalText')}
+                            </Text>
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                style={{
+                                    width: '70%',
+                                    borderRadius: 8,
+                                    alignSelf: 'center',
+                                    padding: 10,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: 20,
+                                    minHeight: 60,
+                                }}
+                                colors={['#21AD93', '#00C569']}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        closePromotionModal();
+                                        navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                    }}
+                                >
+                                    <Text style={[styles.buttonText, {
+                                        alignSelf: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                    }]}>{locales('labels.promoteRegistration')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                        </View>
                     </Dialog>
-                </Portal >
+                </Portal>
                 :
                 null
             }
