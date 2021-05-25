@@ -203,7 +203,8 @@ const Channel = props => {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 color: '#777777',
-                                fontSize: 15
+                                fontSize: 15,
+                                fontWeight: '200'
                             }}
                         >
                             {firstTextSecondPart}
