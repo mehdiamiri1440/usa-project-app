@@ -102,7 +102,7 @@ const ChatRating = props => {
                         alignSelf: 'center'
                     }}
                 >
-                    {`${locales('labels.from')} ${firstName} ${lastName}`}
+                    {`${locales('labels.connectionBy')} ${firstName} ${lastName}`}
                 </Text>
 
                 {!rateSubmissionLoading ?
