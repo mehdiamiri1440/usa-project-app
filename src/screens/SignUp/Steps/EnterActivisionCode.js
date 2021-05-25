@@ -54,7 +54,7 @@ const EnterActivisionCode = (props) => {
 
         else {
             setValueError('')
-            props.checkActivisionCode(value, mobileNumber).then((res) => {
+            props.checkActivisionCode(value, mobileNumber).then((res = {}) => {
                 setValueError('');
                 if (res.payload.redirected) {
                     props.fastLogin(res.payload).then(result => {
@@ -67,7 +67,13 @@ const EnterActivisionCode = (props) => {
                 }
                 else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
-                    setValueError(locales('labels.invalidCode'));
+                    const {
+                        payload = {}
+                    } = res;
+                    const {
+                        msg = ''
+                    } = payload;
+                    setValueError(msg);
                 }
             }).catch(err => {
                 if (err && err.data)

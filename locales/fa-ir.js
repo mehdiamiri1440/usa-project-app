@@ -14,7 +14,7 @@ export default {
     "errors.passwordLength": "طول کلمه عبور حداقل باید 8 کارکتر باشد",
     "errors.notSamePasswords": "کلمه عبور و تکرار آن باهم مطابقت ندارند",
     'errors.mobileNumberInvalidFormat': 'فرمت شماره همراه صحیح نمی‌باشد',
-    'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست یا منقضی شده است',
+    'errors.errorInVerificationCode': 'کد وارد شده صحیح نیست',
     'errors.passwordShouldBe8AtLeast': 'کلمه‌عبور باید حداقل 8 کارکتر باشد',
     'errors.invalidDescription': 'توضیحات شامل حروف غیر مجاز است',
     'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
