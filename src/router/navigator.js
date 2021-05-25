@@ -16,8 +16,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { getAppstoreAppMetadata } from "react-native-appstore-version-checker";
 import DeviceInfo from 'react-native-device-info';
+import Axios from 'axios';
+
 import moment from 'moment';
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -57,26 +58,8 @@ const routes = props => {
         initialRoute,
         userProfile = {},
         newMessage,
-        loggedInUserId
+        loggedInUserId,
     } = props;
-
-    useEffect(() => {
-
-        AppState.addEventListener('change', handleAppStateChange);
-
-        BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
-
-        return _ => {
-
-            clearTimeout(promotionModalTimeout);
-
-            AppState.removeEventListener('change', handleAppStateChange);
-
-            BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
-
-        }
-    }, [loggedInUserId])
-
 
     const {
         user_info = {}
@@ -85,8 +68,9 @@ const routes = props => {
     let {
         is_seller,
         wallet_balance = 0,
-        active_pakage_type
+        active_pakage_type,
     } = user_info;
+
     is_seller = is_seller == 0 ? false : true;
 
     const [shouldShowBottomMenu, setShouldShowBottomMenu] = useState(true);
@@ -95,11 +79,45 @@ const routes = props => {
 
     const [showPromotionModal, setShowPromotionModal] = useState(false);
 
-    const [isForceUpdate, setIsForceUpdate] = useState(true);
+    const [isForceUpdate, setIsForceUpdate] = useState(false);
 
     const [contactInfoGuidModal, setShowContactInfoGuidModal] = useState(false);
 
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
+
+    const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
+
+    useEffect(() => {
+
+        AppState.addEventListener('change', handleAppStateChange);
+
+        BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
+        console.log('0000')
+        if (shouldDoAsyncJobs) {
+            console.log('11111')
+            checkForUpdate();
+        }
+
+        if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
+            console.log('2222')
+            // checkForShowingContactInfoGuid();
+            checkForShowingPromotionModal();
+            setShouldDoAsyncJobs(false);
+        };
+
+        return _ => {
+
+            isReadyRef.current = true;
+
+            clearTimeout(promotionModalTimeout);
+
+            AppState.removeEventListener('change', handleAppStateChange);
+
+            BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
+
+        }
+    }, [loggedInUserId, shouldDoAsyncJobs, userProfile])
+
 
     const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
@@ -114,29 +132,32 @@ const routes = props => {
     };
 
     const checkForUpdate = _ => {
-        getAppstoreAppMetadata("com.buskool") //put any apps packageId here
-            .then(metadata => {
-                if (
-                    DeviceInfo.getVersion() != metadata.version
-                ) {
-                    const versionParts = metadata.version.split('.');
-                    if (versionParts[versionParts.length - 1] == '1') {
-                        setIsForceUpdate(true);
+        Axios.get(`https://play.google.com/store/apps/details?id=com.buskool&en`).then(
+            res => {
+                const matches = res.data.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,4}\.\d{1,3}\b/);
+                if (matches && matches.length) {
+                    const version = matches[0];
+                    if (
+                        DeviceInfo.getVersion() != version
+                    ) {
+                        const versionParts = version.split('.');
+                        if (versionParts[versionParts.length - 1] == '1') {
+                            setIsForceUpdate(true);
+
+                        }
+                        else {
+                            setIsForceUpdate(false);
+                        }
+                        setShowContactInfoGuidModal(false);
+                        setShowPromotionModal(false);
+                        setUpdateModalFlag(true)
                     }
                     else {
-                        setIsForceUpdate(false);
+                        setUpdateModalFlag(false);
                     }
-                    setShowContactInfoGuidModal(false);
-                    setShowPromotionModal(false);
-                    setUpdateModalFlag(true);
                 }
-                else {
-                    setUpdateModalFlag(false);
-                }
-            })
-            .catch(err => {
-                console.log("error occurred", err);
-            });
+            }
+        )
     };
 
     const checkForShowingContactInfoGuid = _ => {
@@ -272,11 +293,9 @@ const routes = props => {
     };
 
     const onNavigationContainerGotReady = () => {
-        SplashScreen.hide();
         isReadyRef.current = true;
-        // checkForShowingContactInfoGuid();
-        checkForShowingPromotionModal();
-        checkForUpdate();
+        SplashScreen.hide();
+        setShouldDoAsyncJobs(true);
     };
 
     return (
