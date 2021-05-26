@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity, LayoutAnimation, UIManager, Platform } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+    View,
+    Text,
+    ActivityIndicator,
+    TouchableOpacity,
+    LayoutAnimation,
+    UIManager,
+    Platform,
+    ScrollView
+} from 'react-native';
+import { Button, Textarea, InputGroup, Label } from 'native-base';
 import { connect } from 'react-redux';
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
-import { deviceWidth, deviceHeight } from '../../utils';
-
+import { deviceWidth, deviceHeight, validator } from '../../utils';
 
 if (
     Platform.OS === "android" &&
@@ -16,6 +26,9 @@ if (
 }
 
 const ChatRating = props => {
+
+    const refRBSheet = useRef();
+    const descriptionRef = useRef();
 
     const {
         firstName,
@@ -27,85 +40,341 @@ const ChatRating = props => {
 
     const [isRatingDone, setIsRatingDone] = useState(false);
 
+    const [ratingType, setRatingType] = useState('');
+
+    const [ratingScore, setRatingScore] = useState(null);
+
+    const [description, setDescription] = useState('');
+
+    const [descriptionError, setDescriptionError] = useState('');
+
+    const [descriptionClicked, setDescriptionClicked] = useState(false);
+
+    const [descriptionVisibility, setDescriptionVisibility] = useState(false);
+
     const doRating = type => {
 
-        let ratingObject = {
-            user_id: userId
-        };
-
+        setRatingType(type);
         switch (type) {
             case 'good': {
-                ratingObject.rating_score = 5;
+                setRatingScore(5);
                 break;
             };
 
             case 'bad': {
-                ratingObject.rating_score = 1;
+                setRatingScore(1);
                 break;
             };
 
             default:
-                ratingObject.rating_score = 1;
+                setRatingScore(1);
                 break;
         };
 
-        props.submitRating(ratingObject).then(_ => {
+        refRBSheet?.current?.open();
+    };
 
-            setIsRatingDone(true);
+    const onDescriptionSubmit = field => {
+        setDescription(field);
+        setDescriptionClicked(!!field);
+        setDescriptionError(!field || validator.isValidDescription(field) ? '' : locales('errors.invalidDescription'));
+    };
 
-            setTimeout(() => {
-                setIsRatingDone(false);
-                props.closeRatingCard();
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            }, 3000);
+    const submitRating = _ => {
 
-        });
+        let ratingObject = {
+            user_id: userId,
+            rating_score: ratingScore
+        };
 
+        if (description && description.length)
+            ratingObject.text = description;
+
+        if (!descriptionError)
+            props.submitRating(ratingObject).then(_ => {
+                refRBSheet?.current?.close();
+                setIsRatingDone(true);
+
+                setTimeout(() => {
+                    setIsRatingDone(false);
+                    props.closeRatingCard();
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                }, 3000);
+
+            });
     };
 
     if (!isRatingDone)
         return (
-            <View
-                style={{
-                    backgroundColor: '#E8F4F8',
-                    padding: 10,
-                    marginVertical: 10,
-                    width: deviceWidth * 0.95,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 12
-                }}
-            >
-                <FontAwesome5
-                    onPress={_ => {
-                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                        props.closeRatingCard();
-                    }}
-                    name='times'
-                    color='#777777'
-                    size={20}
-                    style={{
-                        alignSelf: 'flex-end'
-                    }}
-                />
-
-                <Text
-                    numberOfLines={1}
-                    style={{
-                        marginTop: 5,
-                        color: '#313A43',
-                        fontSize: 18,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        textAlign: 'center',
-                        width: '95%',
-                        alignSelf: 'center'
+            <>
+                <RBSheet
+                    ref={refRBSheet}
+                    closeOnDragDown
+                    closeOnPressMask
+                    // onClose={_ => closeContactInfoSlider()}
+                    height={350}
+                    animationType='slide'
+                    customStyles={{
+                        draggableIcon: {
+                            backgroundColor: "#000"
+                        },
+                        container: {
+                            borderTopLeftRadius: 12,
+                            borderTopRightRadius: 12,
+                            backgroundColor: '#FAFAFA'
+                        }
                     }}
                 >
-                    {`${locales('labels.connectionBy')} ${firstName} ${lastName}`}
-                </Text>
+                    <ScrollView
+                        keyboardDismissMode='on-drag'
+                        keyboardShouldPersistTaps='handled'
+                    >
+                        <Text
+                            // onPress={_ => this.closeContactInfoSlider()}
+                            style={{ width: '100%', textAlign: 'right', paddingHorizontal: 20 }}>
+                            <FontAwesome5 name='times' size={20} color='#777777' />
+                        </Text>
 
-                {!rateSubmissionLoading ?
+
+                        <View style={{ padding: 20, width: '100%', marginTop: 20 }}>
+                            <Label
+                                style={{
+                                    color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 15, marginVertical: 5
+                                }}
+                            >
+                                {ratingType == 'good' ?
+                                    locales('titles.reasonOfSatisfy') :
+                                    locales('titles.reasonOfNotSatisfy')
+                                }
+                                <Text
+                                    style={{
+                                        fontSize: 17,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        color: '#00C886',
+                                        fontWeight: '200'
+                                    }}
+                                >
+                                    {` ${firstName} ${lastName} `}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        fontWeight: '200',
+                                        color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                    }}
+                                >
+                                    {locales('titles.secondWriteHere')}
+                                </Text>
+                            </Label>
+                            <InputGroup
+                                regular
+                                style={{
+                                    borderRadius: 4,
+                                    borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                        descriptionClicked ? '#E41C38' : '#666',
+                                    paddingLeft: 15,
+                                    paddingHorizontal: 10,
+                                    backgroundColor: '#FBFBFB'
+                                }}>
+                                <FontAwesome5 name={
+                                    description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                        ? 'times-circle' : 'edit'}
+                                    color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                        : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                    size={16}
+                                    solid
+                                    style={{ position: 'absolute', top: 10, left: 10 }}
+                                />
+                                <Textarea
+                                    onChangeText={onDescriptionSubmit}
+                                    error=''
+                                    value={description}
+                                    autoCapitalize='none'
+                                    autoCompleteType='off'
+                                    autoCorrect={false}
+                                    placeholderTextColor='#777777'
+                                    placeholder={locales('titles.commentDescriptionWithExample')}
+                                    ref={descriptionRef}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        paddingTop: 10,
+                                        direction: 'rtl',
+                                        textAlign: 'right',
+                                        width: '100%'
+                                    }}
+                                    rowSpan={5}
+                                />
+                            </InputGroup>
+                            <Label style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                height: 20, fontSize: 14, color: '#D81A1A'
+                            }}>
+                                {!!descriptionError && descriptionError}
+                            </Label>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                marginBottom: 30,
+                                justifyContent: 'space-around',
+                                width: '100%'
+                            }}
+                        >
+                            <Button
+                                onPress={_ => {
+                                    if (description.length) {
+                                        submitRating();
+                                    }
+                                    else {
+                                        setDescriptionClicked(true);
+                                        setDescriptionError(locales('errors.fieldNeeded', { fieldName: locales('titles.headerDescription') }))
+                                    }
+                                }
+                                }
+                                style={{
+                                    textAlign: 'center',
+                                    borderRadius: 5,
+                                    elevation: 0,
+                                    padding: 25,
+                                    marginBottom: 10,
+                                    backgroundColor: (descriptionError || !description.length) ? '#B5B5B5' : '#00C886',
+                                    width: '40%',
+                                    color: 'white',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    justifyContent: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                                rounded
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row', justifyContent: 'center',
+                                        alignItems: 'center', width: '100%'
+                                    }}>
+
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            fontSize: 20,
+                                            marginHorizontal: 3,
+                                            marginTop: 2,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                        }}>
+                                        {locales('titles.postComment')}
+                                    </Text>
+                                    {
+                                        rateSubmissionLoading && description.length ?
+                                            <ActivityIndicator
+                                                size={20}
+                                                color='white'
+                                            />
+                                            :
+                                            <FontAwesome5
+                                                name='star'
+                                                color={(descriptionError || !description.length) ? '#e0e0e0' : '#FFBB00'}
+                                                size={22}
+                                                solid
+                                            />
+                                    }
+                                </View>
+                            </Button>
+
+                            <Button
+                                onPress={_ => {
+                                    setDescription('');
+                                    setDescriptionError(null);
+                                    setDescriptionClicked(false);
+                                    submitRating();
+                                }}
+                                style={{
+                                    textAlign: 'center',
+                                    zIndex: 10005,
+                                    borderRadius: 5,
+                                    elevation: 0,
+                                    padding: 25,
+                                    marginBottom: 10,
+                                    backgroundColor: descriptionError ? '#B5B5B5' : '#000546',
+                                    width: '40%',
+                                    color: 'white',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    justifyContent: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                }}
+                                rounded
+                            >
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        fontSize: 20,
+                                        marginHorizontal: 3,
+                                        marginTop: 2,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                    }}
+                                >
+                                    {locales('titles.haveNoComment')}
+                                </Text>
+                                {
+                                    rateSubmissionLoading && !description.length ?
+                                        <ActivityIndicator
+                                            size={20}
+                                            color='white'
+                                            style={{
+                                                position: 'absolute',
+                                                right: -20
+                                            }}
+                                        />
+                                        :
+                                        null
+                                }
+                            </Button>
+                        </View>
+                    </ScrollView>
+                </RBSheet>
+                <View
+                    style={{
+                        backgroundColor: '#E8F4F8',
+                        padding: 10,
+                        marginVertical: 10,
+                        width: deviceWidth * 0.95,
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 12
+                    }}
+                >
+                    <FontAwesome5
+                        onPress={_ => {
+                            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                            props.closeRatingCard();
+                        }}
+                        name='times'
+                        color='#777777'
+                        size={20}
+                        style={{
+                            alignSelf: 'flex-end'
+                        }}
+                    />
+
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            marginTop: 5,
+                            color: '#313A43',
+                            fontSize: 18,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            textAlign: 'center',
+                            width: '95%',
+                            alignSelf: 'center'
+                        }}
+                    >
+                        {`${locales('labels.connectionBy')} ${firstName} ${lastName}`}
+                    </Text>
                     <View
                         style={{
                             marginTop: 10,
@@ -192,30 +461,8 @@ const ChatRating = props => {
                         </TouchableOpacity>
 
                     </View>
-                    :
-                    <View
-                        style={{
-                            height: deviceHeight * 0.147,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <ActivityIndicator
-                            size={30}
-                            color='#00C569'
-                        />
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: '#00C569'
-                            }}
-                        >
-                            {locales('labels.pleaseWait')}
-                        </Text>
-                    </View>
-                }
-            </View>
+                </View>
+            </>
         );
 
     return (

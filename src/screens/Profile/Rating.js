@@ -96,9 +96,10 @@ const Rating = props => {
         if (description && description.length)
             rateObj.text = description;
 
-        props.submitRating(rateObj).then(_ => {
-            setShowModal(true);
-        })
+        if (description && description.length && validator.isValidDescription(description))
+            props.submitRating(rateObj).then(_ => {
+                setShowModal(true);
+            })
     };
 
     const closeModal = _ => {
@@ -258,7 +259,8 @@ const Rating = props => {
                                         style={{
                                             fontSize: 17,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            color: '#00C886'
+                                            color: '#00C886',
+                                            fontWeight: '200'
                                         }}
                                     >
                                         {` ${fullName} `}
@@ -266,7 +268,7 @@ const Rating = props => {
                                     <Text
                                         style={{
                                             fontSize: 15,
-
+                                            fontWeight: '200',
                                             color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
                                         }}
