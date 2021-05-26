@@ -131,7 +131,7 @@ const routes = props => {
     const checkForUpdate = _ => {
         Axios.get(`https://play.google.com/store/apps/details?id=com.buskool&en`).then(
             res => {
-                const matches = res.data.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,4}\.\d{1,3}\b/);
+                const matches = res.data.match(/\b\d{1,2}\.\d{1}\.\d{1}\.\d{4}\.\d{1}\b/);
                 if (matches && matches.length) {
                     const version = matches[0];
                     if (
