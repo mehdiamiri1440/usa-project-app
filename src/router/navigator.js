@@ -51,8 +51,7 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, guidModalTimeout;
-
+let currentRoute = '', promotionModalTimeout, guidModalTimeout, isModalsSeen = false;
 const routes = props => {
 
     const {
@@ -207,7 +206,10 @@ const routes = props => {
                 isNewUser = JSON.parse(isNewUser);
                 if (isNewUser == true) {
                     AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
-                        promotionModalTimeout = setTimeout(() => setShowPromotionModal(true), 3600000);
+                        promotionModalTimeout = setTimeout(() => {
+                            isModalsSeen = true;
+                            setShowPromotionModal(true);
+                        }, 3600000);
                     })
                 }
                 else {
@@ -218,8 +220,10 @@ const routes = props => {
                         if (result) {
                             if (moment().diff(result, 'days') >= 1) {
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
-                                if (!updateModalFlag)
+                                if (!updateModalFlag) {
+                                    isModalsSeen = true;
                                     setShowPromotionModal(true);
+                                }
                             }
                             else {
                                 setShowPromotionModal(false);
@@ -228,6 +232,7 @@ const routes = props => {
                         }
                         else {
                             if (!updateModalFlag) {
+                                isModalsSeen = true;
                                 setShowPromotionModal(true);
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
                             }
@@ -242,6 +247,7 @@ const routes = props => {
     };
 
     const closePromotionModal = _ => {
+        isModalsSeen = false;
         setShowPromotionModal(false);
         AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
     };
@@ -281,7 +287,10 @@ const routes = props => {
             navigationRef?.current?.goBack();
         }
         else {
-            BackHandler.exitApp();
+            if (isModalsSeen)
+                closePromotionModal();
+            else
+                BackHandler.exitApp();
         }
         return true;
     };
