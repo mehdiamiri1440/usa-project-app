@@ -137,7 +137,7 @@ const ChatRating = props => {
                         keyboardShouldPersistTaps='handled'
                     >
                         <Text
-                            // onPress={_ => this.closeContactInfoSlider()}
+                            onPress={_ => refRBSheet?.current?.close()}
                             style={{ width: '100%', textAlign: 'right', paddingHorizontal: 20 }}>
                             <FontAwesome5 name='times' size={20} color='#777777' />
                         </Text>
