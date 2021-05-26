@@ -50,7 +50,7 @@ const ChatRating = props => {
 
     const [descriptionClicked, setDescriptionClicked] = useState(false);
 
-    const [descriptionVisibility, setDescriptionVisibility] = useState(false);
+    const [buttonType, setButtonType] = useState(null);
 
     const doRating = type => {
 
@@ -80,17 +80,23 @@ const ChatRating = props => {
         setDescriptionError(!field || validator.isValidDescription(field) ? '' : locales('errors.invalidDescription'));
     };
 
-    const submitRating = _ => {
+    const submitRating = type => {
 
         let ratingObject = {
             user_id: userId,
             rating_score: ratingScore
         };
 
-        if (description && description.length)
+        setButtonType(type);
+
+        if (description && description.length && !descriptionError && type == 0)
             ratingObject.text = description;
 
-        if (!descriptionError)
+        if (!descriptionError || type == 1) {
+            if (ratingObject.text) {
+                setDescriptionError(null);
+            }
+            setDescriptionClicked(false);
             props.submitRating(ratingObject).then(_ => {
                 refRBSheet?.current?.close();
                 setIsRatingDone(true);
@@ -102,6 +108,7 @@ const ChatRating = props => {
                 }, 3000);
 
             });
+        }
     };
 
     if (!isRatingDone)
@@ -223,16 +230,7 @@ const ChatRating = props => {
                             }}
                         >
                             <Button
-                                onPress={_ => {
-                                    if (description.length) {
-                                        submitRating();
-                                    }
-                                    else {
-                                        setDescriptionClicked(true);
-                                        setDescriptionError(locales('errors.fieldNeeded', { fieldName: locales('titles.headerDescription') }))
-                                    }
-                                }
-                                }
+                                onPress={_ => submitRating(0)}
                                 style={{
                                     textAlign: 'center',
                                     borderRadius: 5,
@@ -267,7 +265,7 @@ const ChatRating = props => {
                                         {locales('titles.postComment')}
                                     </Text>
                                     {
-                                        rateSubmissionLoading && description.length ?
+                                        rateSubmissionLoading && buttonType == 0 ?
                                             <ActivityIndicator
                                                 size={20}
                                                 color='white'
@@ -284,12 +282,7 @@ const ChatRating = props => {
                             </Button>
 
                             <Button
-                                onPress={_ => {
-                                    setDescription('');
-                                    setDescriptionError(null);
-                                    setDescriptionClicked(false);
-                                    submitRating();
-                                }}
+                                onPress={_ => submitRating(1)}
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
@@ -297,7 +290,7 @@ const ChatRating = props => {
                                     elevation: 0,
                                     padding: 25,
                                     marginBottom: 10,
-                                    backgroundColor: descriptionError ? '#B5B5B5' : '#000546',
+                                    backgroundColor: '#000546',
                                     width: '40%',
                                     color: 'white',
                                     alignItems: 'center',
@@ -320,7 +313,7 @@ const ChatRating = props => {
                                     {locales('titles.haveNoComment')}
                                 </Text>
                                 {
-                                    rateSubmissionLoading && !description.length ?
+                                    rateSubmissionLoading && buttonType == 1 ?
                                         <ActivityIndicator
                                             size={20}
                                             color='white'
