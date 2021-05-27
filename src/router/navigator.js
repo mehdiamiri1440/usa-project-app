@@ -514,6 +514,7 @@ const routes = props => {
                 :
                 null
             }
+
             {updateModalFlag ?
                 <Portal
                     style={{
