@@ -262,21 +262,20 @@ const ChatRating = props => {
                                             marginTop: 2,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                         }}>
-                                        {locales('titles.postComment')}
+                                        {locales('labels.insert')}
                                     </Text>
                                     {
                                         rateSubmissionLoading && buttonType == 0 ?
                                             <ActivityIndicator
                                                 size={20}
                                                 color='white'
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: -10
+                                                }}
                                             />
                                             :
-                                            <FontAwesome5
-                                                name='star'
-                                                color={(descriptionError || !description.length) ? '#e0e0e0' : '#FFBB00'}
-                                                size={22}
-                                                solid
-                                            />
+                                            null
                                     }
                                 </View>
                             </Button>
