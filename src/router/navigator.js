@@ -51,7 +51,7 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, guidModalTimeout, isModalsSeen = false;
+let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isModalsSeen = false;
 const routes = props => {
 
     const {
@@ -98,7 +98,7 @@ const routes = props => {
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
             // checkForShowingContactInfoGuid();
-            setTimeout(() => checkForShowingPromotionModal());
+            setTimeout(() => checkForShowingPromotionModal(), 5000);
             setShouldDoAsyncJobs(false);
         };
 
@@ -107,6 +107,7 @@ const routes = props => {
             isReadyRef.current = true;
 
             clearTimeout(promotionModalTimeout);
+
 
             AppState.removeEventListener('change', handleAppStateChange);
 
