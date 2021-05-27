@@ -714,6 +714,8 @@ class ChatScreen extends Component {
                         ListHeaderComponent={this.renderListHeaderComponent}
                         inverted
                         maxToRenderPerBatch={3}
+                        keyboardDismissMode='none'
+                        keyboardShouldPersistTaps='handled'
                         initialNumToRender={3}
                         windowSize={10}
                         ref={this.scrollViewRef}
