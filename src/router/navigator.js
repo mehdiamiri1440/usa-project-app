@@ -98,7 +98,7 @@ const routes = props => {
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
             // checkForShowingContactInfoGuid();
-            checkForShowingPromotionModal();
+            setTimeout(() => checkForShowingPromotionModal());
             setShouldDoAsyncJobs(false);
         };
 
