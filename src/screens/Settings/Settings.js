@@ -29,7 +29,15 @@ class Settings extends React.Component {
     handleRouteChange = (name) => {
         if (name == 'SignOut') {
             this.setState({ loading: true })
-            AsyncStorage.removeItem('@openedChatIds').then(_ => {
+            AsyncStorage.multiRemove([
+                '@openedChatIds',
+                '@contactInfoShownTimes',
+                '@promotionModalLastSeen',
+                '@IsNewSignedUpUser',
+                '@ratedChats',
+                '@sender_ids',
+                '@registerProductParams'
+            ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
                         this.props.logOut();
