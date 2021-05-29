@@ -487,7 +487,10 @@ class Requests extends PureComponent {
                                 this.updateFlag.current.close();
                                 this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
                             }}
-                            style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
+                            style={{
+                                borderRadius: 5, backgroundColor: '#00C569',
+                                alignSelf: 'center', margin: 10, width: deviceWidth * 0.3
+                            }}
                         >
                             <Text style={{
                                 color: 'white', textAlign: 'center', width: '100%',
@@ -730,7 +733,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton]}
+                                style={[styles.modalButton, styles.greenButton, { borderRadius: 8, elevation: 0 }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
                                     this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
@@ -952,7 +955,8 @@ const styles = StyleSheet.create({
         color: 'white',
         width: '80%',
         textAlign: 'center',
-        fontFamily: 'IRANSansWeb(FaNum)_Light'
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        fontSize: 16
     },
     backButtonText: {
         fontFamily: 'IRANSansWeb(FaNum)_Light',
