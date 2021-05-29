@@ -145,7 +145,7 @@ class Requests extends PureComponent {
 
     setSelectedButton = id => this.setState({ selectedButton: id });
 
-    setPromotionModalVisiblity = shouldShow => this.setState({ showDialog: shouldShow });
+    setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
     openChat = (event, item) => {
         let { userProfile = {} } = this.props;
@@ -951,7 +951,8 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '80%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Light'
     },
     backButtonText: {
         fontFamily: 'IRANSansWeb(FaNum)_Light',
