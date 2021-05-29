@@ -1507,7 +1507,7 @@ class ProductDetails extends PureComponent {
                                         {locales('titles.category')}
                                     </Text>
                                 </View>
-                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{category_name}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{sub_category_name}</Text>
                             </View>
 
                             <View style={{
