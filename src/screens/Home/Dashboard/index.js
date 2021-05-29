@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } 
 import { Card } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';

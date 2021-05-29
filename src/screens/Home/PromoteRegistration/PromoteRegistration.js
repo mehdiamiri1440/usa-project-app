@@ -7,7 +7,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Card, Button } from 'native-base';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';

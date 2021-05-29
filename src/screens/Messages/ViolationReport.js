@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import { View, Text, Modal, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import ShadowView from 'react-native-simple-shadow-view'
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import { Button, Textarea, InputGroup, Label } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';

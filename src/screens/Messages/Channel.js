@@ -7,7 +7,7 @@ import {
 import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
 import Jmoment from 'moment-jalaali';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ImageZoom from 'react-native-image-pan-zoom';
 

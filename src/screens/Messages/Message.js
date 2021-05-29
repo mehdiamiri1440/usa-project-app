@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import ShadowView from 'react-native-simple-shadow-view'
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import { ToastAndroid, View, Text, TouchableOpacity, Linking } from 'react-native';
 import Clipboard from "@react-native-community/clipboard";
 

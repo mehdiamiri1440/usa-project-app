@@ -9,7 +9,7 @@ import {
     ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import ShadowView from 'react-native-simple-shadow-view'
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';

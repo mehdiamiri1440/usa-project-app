@@ -163,11 +163,13 @@ android {
     defaultConfig {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
-            vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
         versionCode 17
         multiDexEnabled true
         versionName "6.0.0.0003.0"
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
     //     ndk {
     //   // Specifies the ABI configurations of your native
     //   // libraries Gradle should build and package with your APK.

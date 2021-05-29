@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { deviceWidth } from '../../utils/deviceDimenssions';
