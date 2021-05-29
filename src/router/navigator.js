@@ -106,7 +106,6 @@ const routes = props => {
 
             isReadyRef.current = true;
 
-            clearTimeout(promotionModalTimeout);
 
 
             AppState.removeEventListener('change', handleAppStateChange);
