@@ -282,15 +282,15 @@ const routes = props => {
     const handleAppBackChanges = _ => {
 
         const canGoBack = navigationRef?.current?.canGoBack();
-
-        if (canGoBack) {
-            navigationRef?.current?.goBack();
-        }
+        if (isModalsSeen)
+            closePromotionModal();
         else {
-            if (isModalsSeen)
-                closePromotionModal();
-            else
+            if (canGoBack) {
+                navigationRef?.current?.goBack();
+            }
+            else {
                 BackHandler.exitApp();
+            }
         }
         return true;
     };
