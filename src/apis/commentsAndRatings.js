@@ -7,7 +7,7 @@ export const fetchAllComments = userId => {
                 route: `profile/get-user-comments`,
                 method: 'POST',
                 data: { user_id: userId },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -28,7 +28,7 @@ export const submitRating = rateObj => {
                 route: `profile/add-comment`,
                 method: 'POST',
                 data: rateObj,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -49,7 +49,7 @@ export const checkUserAuthorityToPostComment = userId => {
                 route: `profile/is-user-authorized-to-post-comment`,
                 method: 'POST',
                 data: { user_id: userId },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -70,7 +70,7 @@ export const likeOrDisLikeComment = likingObj => {
                 route: `profile/do-like`,
                 method: 'POST',
                 data: likingObj,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -91,7 +91,7 @@ export const deleteComment = id => {
                 route: `profile/delete-user-comment`,
                 method: 'POST',
                 data: { c_id: id },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)

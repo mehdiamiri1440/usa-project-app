@@ -5,6 +5,7 @@ import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+import RnRestart from 'react-native-restart';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
@@ -40,7 +41,7 @@ class Settings extends React.Component {
             ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
-                        this.props.logOut();
+                        this.props.logOut().then(_ => RnRestart.Restart());
                     })
             })
         }

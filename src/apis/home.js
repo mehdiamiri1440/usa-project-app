@@ -7,7 +7,7 @@ export const fetchAllDashboardData = () => {
             .fetchAPI({
                 route: `get_seller_dashboard_required_data`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -28,7 +28,7 @@ export const fetchPackagesPrices = () => {
             .fetchAPI({
                 route: `/payment/get-packages-price`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);

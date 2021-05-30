@@ -6,7 +6,7 @@ export const fetchAllBuyAdRequests = provinceId => {
             .fetchAPI({
                 route: `get_related_buyAds_list_to_the_seller`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -26,7 +26,7 @@ export const fetchRelatedRequests = _ => {
             .fetchAPI({
                 route: `get_my_buyAd_suggestions`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -46,7 +46,7 @@ export const fetchMyRequests = _ => {
             .fetchAPI({
                 route: `get_my_buyAds`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -67,7 +67,7 @@ export const deleteBuyAd = id => {
                 route: `delete_buy_ad_by_id`,
                 method: 'POST',
                 data: { buy_ad_id: id },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -88,7 +88,7 @@ export const fetchBuyerMobileNumber = contactInfoObject => {
                 route: `get_buyer_phone_number`,
                 method: 'POST',
                 data: contactInfoObject,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)

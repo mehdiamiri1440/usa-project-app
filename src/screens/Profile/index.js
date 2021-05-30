@@ -178,12 +178,16 @@ class Profile extends PureComponent {
     fetchAllProducts = () => {
         const { from_record_number = 0, to_record_number = 15, sort_by = 'BM' } = this.state;
 
+        const {
+            loggedInUserId
+        } = this.props;
+
         let item = {
             from_record_number,
             sort_by,
             to_record_number,
         };
-        this.props.fetchAllProductsList(item)
+        this.props.fetchAllProductsList(item, !!loggedInUserId)
         // .catch(_ => this.setState({ showModal: false }));
     };
 
@@ -1064,6 +1068,10 @@ const mapStateToProps = (state) => {
 
     } = state.profileReducer;
 
+    const {
+        loggedInUserId
+    } = state.authReducer;
+
     return {
         userProfileLoading,
         userProfileFailed,
@@ -1093,14 +1101,16 @@ const mapStateToProps = (state) => {
         productsListByUserNameMessage,
 
         profileInfo,
-        profileInfoLoading
+        profileInfoLoading,
+
+        loggedInUserId
     }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         fetchAllProfileInfo: user_name => dispatch(profileActions.fetchAllProfileInfo(user_name)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
         // fetchProfileStatistics: userName => dispatch(profileActions.fetchProfileStatistics(userName)),
         // fetchProfileByUserName: userName => dispatch(profileActions.fetchProfileByUserName(userName)),
         // fetchProductsListByUserName: userName => dispatch(profileActions.fetchProductsListByUserName(userName)),

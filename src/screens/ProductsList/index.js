@@ -158,6 +158,10 @@ class ProductsList extends PureComponent {
             searchText
         } = this.state;
 
+        const {
+            loggedInUserId
+        } = this.props;
+
         let item = {
             from_record_number,
             sort_by,
@@ -173,7 +177,7 @@ class ProductsList extends PureComponent {
                 search_text: searchText,
             };
         };
-        this.props.fetchAllProductsList(item)
+        this.props.fetchAllProductsList(item, !!loggedInUserId)
             .then(result => {
                 this.setState({
                     from_record_number: 0,
@@ -481,6 +485,10 @@ class ProductsList extends PureComponent {
                     from_record_number,
                 } = this.state;
 
+                const {
+                    loggedInUserId
+                } = this.props;
+
                 let item = {
                     from_record_number,
                     sort_by,
@@ -500,7 +508,7 @@ class ProductsList extends PureComponent {
                 if (city) {
                     item = { ...item, city_id: city }
                 }
-                this.props.fetchAllProductsList(item).then(_ => {
+                this.props.fetchAllProductsList(item, !!loggedInUserId).then(_ => {
                     this.setState({ loaded: false })
                 }).catch(error => {
                     this.setState({
@@ -521,6 +529,9 @@ class ProductsList extends PureComponent {
             sort_by
         } = this.state;
 
+        const {
+            loggedInUserId
+        } = this.props;
 
         let item = {
             from_record_number: 0,
@@ -541,7 +552,7 @@ class ProductsList extends PureComponent {
         if (city) {
             item = { ...item, city_id: city }
         }
-        this.props.fetchAllProductsList(item).then(result => {
+        this.props.fetchAllProductsList(item, !!loggedInUserId).then(result => {
             this.setState({
                 productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
             })
@@ -1913,7 +1924,8 @@ const mapStateToProps = ({
     productsListReducer,
     registerProductReducer,
     locationsReducer,
-    profileReducer
+    profileReducer,
+    authReducer
 }) => {
 
     const {
@@ -1960,6 +1972,10 @@ const mapStateToProps = ({
         userProfile
     } = profileReducer;
 
+    const {
+        loggedInUserId
+    } = authReducer;
+
     return {
         productsListObject,
         productsListArray,
@@ -1996,14 +2012,16 @@ const mapStateToProps = ({
 
         updateProductsListFlag,
 
-        userProfile
+        userProfile,
+
+        loggedInUserId
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
         fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, true)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),

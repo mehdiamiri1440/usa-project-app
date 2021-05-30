@@ -87,6 +87,12 @@ const routes = props => {
 
     const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
 
+    const forFade = ({ current }) => ({
+        cardStyle: {
+            opacity: current.progress,
+        },
+    });
+
     useEffect(() => {
 
         AppState.addEventListener('change', handleAppStateChange);
@@ -305,6 +311,20 @@ const routes = props => {
         setShouldDoAsyncJobs(true);
     };
 
+    const StartUp = _ => (
+        <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+                headerShown: false
+            }}
+        >
+            <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
+            <Stack.Screen key='Intro' name='Intro' component={Intro} />
+            <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
+        </Stack.Navigator>
+    )
     return (
         <>
             {showPromotionModal ?
@@ -633,12 +653,52 @@ const routes = props => {
 
                 {(!loggedInUserId) ?
                     (
-                        <Stack.Navigator
-                            headerMode='none'>
-                            <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
-                            <Stack.Screen key='Intro' name='Intro' component={Intro} />
-                            <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
-                        </Stack.Navigator>
+                        <Tab.Navigator
+                            shifting={false}
+                            activeColor="#00C569"
+                            inactiveColor="#FFFFFF"
+                            barStyle={{ backgroundColor: '#313A43' }}
+                        >
+                            <Tab.Screen
+                                options={{
+                                    tabBarBadge: false,
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
+                                    tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+
+                                }}
+                                key='Home'
+                                // listeners={{
+                                //     tabPress: e => {
+                                //         currentRoute = e.target;
+                                //     }
+                                // }}
+                                // options={{
+                                //     tabBarBadge: false,
+                                //     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
+                                //     tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+
+                                // }}
+                                name='Home'
+                                component={HomeStack}
+                            />
+                            <Tab.Screen
+                                key={'RegisterProduct'}
+                                options={{
+                                    tabBarBadge: false,
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerProduct')}</Text>,
+                                    tabBarIcon: ({ focused, color }) => <View
+                                        style={{
+                                            backgroundColor: color, height: 30, width: 30,
+                                            top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
+                                        }}
+                                    >
+                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                    </View>,
+                                }}
+                                name={'RegisterProductStack'}
+                                component={StartUp}
+                            />
+                        </Tab.Navigator>
                     )
                     : (
                         <Tab.Navigator

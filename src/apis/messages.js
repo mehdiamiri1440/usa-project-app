@@ -11,7 +11,7 @@ export const fetchAllContactsList = (from, to) => {
                 //     from,
                 //     to
                 // },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -33,7 +33,7 @@ export const fetchAllGroupList = () => {
             .fetchAPI({
                 route: `group/get_groups_list`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -58,7 +58,7 @@ export const fetchUserChatHistory = (userId, msgCount = 10) => {
                     msg_count: msgCount,
                     user_id: userId
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -84,7 +84,7 @@ export const fetchGroupChats = (groupId, messageCount) => {
                     group_id: groupId,
                     message_count: messageCount,
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -112,7 +112,7 @@ export const sendMessage = (msgObject, buyAdId) => {
                         buy_ad_id: buyAdId,
                         text: msgObject.text
                     },
-                    withAuth: false,
+                    withAuth: true,
                 })
                 .then(result => {
                     resolve(result);
@@ -130,7 +130,7 @@ export const sendMessage = (msgObject, buyAdId) => {
                     route: `messanger/send_message`,
                     method: 'POST',
                     data: msgObject,
-                    withAuth: false,
+                    withAuth: true,
                 })
                 .then(result => {
                     resolve(result);
@@ -158,7 +158,7 @@ export const groupSendMessage = (msgObject) => {
                 data: {
                     msgObject
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -183,7 +183,7 @@ export const subscribeGroupForUser = (groupId) => {
                 data: {
                     group_id: groupId
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -208,7 +208,7 @@ export const fetchUserProfilePhoto = (userId) => {
                 data: {
                     user_id: userId
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -231,7 +231,7 @@ export const fetchTotalUnreadMessages = () => {
             .fetchAPI({
                 route: `get_total_unread_messages_for_current_user`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -256,7 +256,7 @@ export const fetchChannelData = (page = 1) => {
                 data: {
                     page
                 },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -279,7 +279,7 @@ export const fetchViolationReportReasons = _ => {
             .fetchAPI({
                 route: `get_report_options`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -303,7 +303,7 @@ export const sendReportReason = reportObj => {
                 route: `send_user_report`,
                 method: 'POST',
                 data: reportObj,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);

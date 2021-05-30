@@ -6,7 +6,7 @@ export const fetchUserProfile = _ => {
             .fetchAPI({
                 route: `user/profile_info`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)

@@ -82,28 +82,11 @@ const App = (props) => {
 
 
 
-    if (!loggedInUserId) {
-      AsyncStorage.getItem('@isIntroductionSeen').then(result => {
-        result = JSON.parse(result);
-
-        if (result) {
-          setInitialRoute('SignUp')
-          RootNavigation.navigate('SignUp')
-        }
-        else {
-          setInitialRoute('Intro')
-          RootNavigation.navigate('Intro')
-        }
-      })
-    }
-    else {
-      setInitialRoute(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest')
-    }
 
     if (I18nManager.isRTL) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
-      RNRestart.Restart();
+      // RNRestart.Restart();
     }
 
     if (isRegistered) {

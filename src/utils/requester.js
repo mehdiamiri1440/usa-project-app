@@ -44,16 +44,21 @@ export const getTokenFromStorage = () => {
 };
 
 
-const getRequestHeaders = async () => {
+const getRequestHeaders = async (withAuth) => {
     let token = await getTokenFromStorage()
     if (!token || !token.length)
         token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
     // console.log('token in getequestHeaders()', token)
-    return {
+
+    let headerObject = {
         'Content-Type': 'application/json; charset=utf-8',
         'X-Requested-With': 'XMLHttpRequest',
-        'Authorization': `Bearer ${token}`
     };
+
+    if (withAuth)
+        headerObject.Authorization = `Bearer ${token}`;
+
+    return headerObject;
 };
 
 
@@ -87,7 +92,7 @@ export const refreshToken = (route, method, data, withAuth, headers, token) => {
 
 
 export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
-    const headers = await getRequestHeaders();
+    const headers = await getRequestHeaders(withAuth);
     return new Promise((resolve, reject) => {
         // console.log('route', route, 'headers', headers)
         axios
