@@ -33,7 +33,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import UpgradeApp from '../screens/UpgradeApp'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
-import Requests from '../screens/Requests/Requests';
 
 import {
     HomeStack,
@@ -41,7 +40,8 @@ import {
     MyBuskoolStack,
     RegisterProductStack,
     RegisterRequestStack,
-    SpecialProductsStack
+    SpecialProductsStack,
+    RequestsStack
 }
     from './tabs';
 
@@ -665,14 +665,14 @@ const routes = props => {
                             />
 
                             {is_seller ? <Tab.Screen
-                                key={'Requests'}
+                                key={'RequestsStack'}
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
-                                name={'Requests'}
-                                component={Requests}
+                                name={'RequestsStack'}
+                                component={RequestsStack}
                                 listeners={{
                                     tabPress: e => {
                                         currentRoute = e.target;

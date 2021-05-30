@@ -35,6 +35,7 @@ import Chat from '../screens/Messages/ChatScreen';
 import Wallet from '../screens/Home/Wallet';
 import UsersSeenMobile from '../screens/Home/UsersSeenMobile';
 import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
+import Requests from '../screens/Requests/Requests';
 
 const Stack = createStackNavigator();
 
@@ -458,6 +459,38 @@ export const MessagesStack = _ => (
     </Stack.Navigator>
 )
 
+export const RequestsStack = _ => (
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
+    >
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Requests'
+            name='Requests'
+            component={Requests}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
+    </Stack.Navigator>
+)
 
 export const HomeStack = _ => {
 

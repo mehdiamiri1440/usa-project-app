@@ -170,10 +170,13 @@ class Requests extends PureComponent {
                             first_name: item.first_name,
                             last_name: item.last_name,
                         }
-                    }, _ => this.props.navigation.navigate('Chat', {
-                        shouldHideGuidAndComment: true,
-                        buyAdId: this.state.selectedBuyAdId,
-                        contact: this.state.selectedContact
+                    }, _ => this.props.navigation.navigate('RequestsStack', {
+                        screen: "Chat",
+                        params: {
+                            shouldHideGuidAndComment: true,
+                            buyAdId: this.state.selectedBuyAdId,
+                            contact: this.state.selectedContact
+                        }
                     }));
                 }
                 else {
