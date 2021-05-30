@@ -140,15 +140,13 @@ class ProductsList extends PureComponent {
     }
 
     initialCalls = _ => {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.fetchAllProducts(),
-                this.props.fetchAllProvinces(),
-                this.props.fetchAllCategories()
-            ])
-                .then(result => resolve(result))
-                .catch(error => reject(error))
-        });
+        return new Promise.all([
+            this.fetchAllProducts(),
+            this.props.fetchAllProvinces(),
+            this.props.fetchAllCategories()
+        ])
+            .then(result => resolve(result))
+            .catch(error => reject(error))
     };
 
     fetchAllProducts = (itemFromResult, scrollObject = {}) => {
