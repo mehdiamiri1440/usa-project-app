@@ -25,7 +25,7 @@ const AuthenticatedSuccessfully = props => {
     const navigateToOtherPage = _ => {
         if (!!!is_seller)
             return props.navigation.navigate('Home', { screen: 'ProductsList' });
-        return props.navigation.navigate('Requests');
+        return props.navigation.navigate('RequestsStack');
     };
 
     return (

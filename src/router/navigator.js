@@ -33,7 +33,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import UpgradeApp from '../screens/UpgradeApp'
 import Intro from '../screens/Intro'
 import SignUp from '../screens/SignUp'
-import Requests from '../screens/Requests/Requests';
 
 import {
     HomeStack,
@@ -41,7 +40,8 @@ import {
     MyBuskoolStack,
     RegisterProductStack,
     RegisterRequestStack,
-    SpecialProductsStack
+    SpecialProductsStack,
+    RequestsStack
 }
     from './tabs';
 
@@ -51,7 +51,7 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, guidModalTimeout, isModalsSeen = false;
+let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isModalsSeen = false;
 const routes = props => {
 
     const {
@@ -98,7 +98,7 @@ const routes = props => {
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
             // checkForShowingContactInfoGuid();
-            checkForShowingPromotionModal();
+            setTimeout(() => checkForShowingPromotionModal(), 5000);
             setShouldDoAsyncJobs(false);
         };
 
@@ -106,7 +106,7 @@ const routes = props => {
 
             isReadyRef.current = true;
 
-            clearTimeout(promotionModalTimeout);
+
 
             AppState.removeEventListener('change', handleAppStateChange);
 
@@ -282,15 +282,15 @@ const routes = props => {
     const handleAppBackChanges = _ => {
 
         const canGoBack = navigationRef?.current?.canGoBack();
-
-        if (canGoBack) {
-            navigationRef?.current?.goBack();
-        }
+        if (isModalsSeen)
+            closePromotionModal();
         else {
-            if (isModalsSeen)
-                closePromotionModal();
-            else
+            if (canGoBack) {
+                navigationRef?.current?.goBack();
+            }
+            else {
                 BackHandler.exitApp();
+            }
         }
         return true;
     };
@@ -666,14 +666,14 @@ const routes = props => {
                             />
 
                             {is_seller ? <Tab.Screen
-                                key={'Requests'}
+                                key={'RequestsStack'}
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
                                 }}
-                                name={'Requests'}
-                                component={Requests}
+                                name={'RequestsStack'}
+                                component={RequestsStack}
                                 listeners={{
                                     tabPress: e => {
                                         currentRoute = e.target;

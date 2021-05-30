@@ -156,7 +156,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                 }}>
                                     {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
                                 </Text>
-                                {locales('titles.extraBuyAdRequestDescriptionTextThird')}
+                                {locales('titles.is')}
 
                             </Text>
                             <Button

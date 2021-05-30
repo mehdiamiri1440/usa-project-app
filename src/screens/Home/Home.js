@@ -178,7 +178,7 @@ class Home extends React.Component {
 
     closeModal = () => {
         this.setState({ showchangeRoleModal: false }, _ => {
-            return this.props.navigation.navigate(!this.state.is_seller ? 'Home' : 'Requests')
+            return this.props.navigation.navigate(!this.state.is_seller ? 'Home' : 'RequestsStack')
         });
     }
 

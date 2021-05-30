@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import moment from 'moment';
 import Jmoment from 'moment-jalaali';
-import ShadowView from 'react-native-simple-shadow-view'
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 
 import { deviceWidth } from './index';
 

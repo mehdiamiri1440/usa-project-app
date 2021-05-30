@@ -3,7 +3,7 @@ import {
     Text, View, TouchableOpacity, Linking
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';

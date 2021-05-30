@@ -690,7 +690,7 @@ class RegisterProductSuccessfully extends Component {
 
             <TouchableOpacity
                 onPress={() => {
-                    this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
+                    this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                 }} style={{
                     marginTop: 50,
                     paddingBottom: 50,
@@ -1121,7 +1121,7 @@ class RegisterProductSuccessfully extends Component {
                                     alignItems: 'center', alignSelf: 'center', marginVertical: 20
                                 }]}
                                 onPress={() => {
-                                    this.props.navigation.navigate('Requests', { subCategoryId, subCategoryName })
+                                    this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                                 }}
                             >
                                 <Text style={styles.buttonText}>

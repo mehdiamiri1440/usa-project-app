@@ -12,7 +12,7 @@ const store = configureStore();
 
 const config = {
     screens: {
-        Requests: {
+        RequestsStack: {
             path: "buyAd-requests",
         },
         RegisterProductStack: {
@@ -174,12 +174,12 @@ const handleIncomingEvent = (url) => {
             AsyncStorage.getItem('@registerProductParams').then(result => {
                 result = JSON.parse(result);
                 if (result && result.subCategoryId && result.subCategoryName) {
-                    return navigationRef.current.navigate('Requests', {
+                    return navigationRef.current.navigate('RequestsStack', {
                         needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_'),
                         subCategoryId: result.subCategoryId, subCategoryName: result.subCategoryName
                     });
                 }
-                return navigationRef.current.navigate('Requests', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
+                return navigationRef.current.navigate('RequestsStack', { needToRefreshKey: dataGenerator.generateKey('buy_ads_from_buy_ads_requests_') });
             })
         };
         case 'wallet': {
@@ -277,11 +277,11 @@ export const routeToScreensFromNotifications = (remoteMessage = {}) => {
             }
             case 'buyAds': {
                 if (is_seller) {
-                    return navigationRef.current.navigate('Requests');
+                    return navigationRef.current.navigate('RequestsStack');
                 }
                 else {
                     return navigationRef.current.navigate('MyBuskool',
-                        { screen: 'ChangeRole', params: { parentRoute: 'Requests' } });
+                        { screen: 'ChangeRole', params: { parentRoute: 'RequestsStack' } });
                 }
             }
             case 'buyAdSuggestion': {

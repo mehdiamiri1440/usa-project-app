@@ -4,7 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';

@@ -205,7 +205,7 @@ class ContactsList extends Component {
                         {locales('labels.noChatFound')}
                     </Text>
                     <Button
-                        onPress={() => this.props.navigation.navigate(is_seller ? 'Requests' : 'Home')}
+                        onPress={() => this.props.navigation.navigate(is_seller ? 'RequestsStack' : 'Home')}
                         style={[styles.loginButton]}
                     >
                         <View style={[styles.textCenterView, styles.buttonText]}>

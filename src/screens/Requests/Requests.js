@@ -145,7 +145,7 @@ class Requests extends PureComponent {
 
     setSelectedButton = id => this.setState({ selectedButton: id });
 
-    setPromotionModalVisiblity = shouldShow => this.setState({ showDialog: shouldShow });
+    setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
     openChat = (event, item) => {
         let { userProfile = {} } = this.props;
@@ -170,10 +170,13 @@ class Requests extends PureComponent {
                             first_name: item.first_name,
                             last_name: item.last_name,
                         }
-                    }, _ => this.props.navigation.navigate('Chat', {
-                        shouldHideGuidAndComment: true,
-                        buyAdId: this.state.selectedBuyAdId,
-                        contact: this.state.selectedContact
+                    }, _ => this.props.navigation.navigate('RequestsStack', {
+                        screen: "Chat",
+                        params: {
+                            shouldHideGuidAndComment: true,
+                            buyAdId: this.state.selectedBuyAdId,
+                            contact: this.state.selectedContact
+                        }
                     }));
                 }
                 else {
@@ -487,7 +490,10 @@ class Requests extends PureComponent {
                                 this.updateFlag.current.close();
                                 this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
                             }}
-                            style={{ borderRadius: 5, backgroundColor: '#00C569', alignSelf: 'center', margin: 10, width: deviceWidth * 0.3 }}
+                            style={{
+                                borderRadius: 5, backgroundColor: '#00C569',
+                                alignSelf: 'center', margin: 10, width: deviceWidth * 0.3
+                            }}
                         >
                             <Text style={{
                                 color: 'white', textAlign: 'center', width: '100%',
@@ -730,7 +736,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton]}
+                                style={[styles.modalButton, styles.greenButton, { borderRadius: 8, elevation: 0 }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
                                     this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
@@ -951,7 +957,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         width: '80%',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        fontSize: 16
     },
     backButtonText: {
         fontFamily: 'IRANSansWeb(FaNum)_Light',

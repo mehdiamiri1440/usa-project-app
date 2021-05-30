@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import ShadowView from 'react-native-simple-shadow-view';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import SimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';

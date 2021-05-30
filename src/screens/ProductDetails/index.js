@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { Input, Label, Item, Button, Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
 import * as productListActions from '../../redux/productsList/actions';
-import ShadowView from 'react-native-simple-shadow-view'
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import * as profileActions from '../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -1507,7 +1507,7 @@ class ProductDetails extends PureComponent {
                                         {locales('titles.category')}
                                     </Text>
                                 </View>
-                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{category_name}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{sub_category_name}</Text>
                             </View>
 
                             <View style={{
