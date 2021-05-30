@@ -58,7 +58,7 @@ export const logOut = () => {
             .fetchAPI({
                 route: `logout`,
                 method: 'GET',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 AsyncStorage.multiRemove(['@Authorization', 'persist:root']).then(res => {
@@ -153,7 +153,7 @@ export const changeRole = () => {
                 route: `switch-role`,
                 method: 'POST',
                 // data:{rollName},
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 console.log('ressss', result)
@@ -177,7 +177,7 @@ export const setEvidences = evidences => {
                 route: `verify/upload-photos`,
                 method: 'POST',
                 data: evidences,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
