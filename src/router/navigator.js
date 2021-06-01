@@ -205,10 +205,10 @@ const routes = props => {
 
     const checkForShowingPromotionModal = _ => {
 
-        if (navigationRef?.current?.getCurrentRoute()?.name == 'Chat')
-            return;
+        const routeName = navigationRef?.current?.getCurrentRoute()?.name;
+        const conditions = !!loggedInUserId && is_seller && active_pakage_type == 0 && routeName == 'Chat';
 
-        if (is_seller && active_pakage_type == 0) {
+        if (conditions) {
 
             AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
                 isNewUser = JSON.parse(isNewUser);
