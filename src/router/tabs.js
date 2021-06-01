@@ -642,3 +642,36 @@ export const SpecialProductsStack = _ => {
         </Stack.Navigator>
     )
 };
+
+export const unSignedInRoutes = [
+    {
+        label: 'labels.home',
+        name: 'Home',
+        icon: 'home',
+        key: 'Home'
+    },
+    {
+        label: 'labels.requests',
+        name: 'RequestsStack',
+        icon: 'list-ul',
+        key: 'RequestsStack'
+    },
+    {
+        label: 'labels.registerProduct',
+        name: 'RegisterProductStack',
+        icon: 'plus',
+        key: 'RegisterProductStack'
+    },
+    {
+        label: 'labels.messages',
+        name: 'Messages',
+        icon: 'comment-alt',
+        key: 'Messages'
+    },
+    {
+        label: 'labels.myBuskool',
+        name: 'MyBuskool',
+        icon: 'user-alt',
+        key: 'MyBuskool'
+    },
+]

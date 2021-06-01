@@ -24,8 +24,6 @@ import moment from 'moment';
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Octicons from 'react-native-vector-icons/dist/Octicons';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -41,7 +39,8 @@ import {
     RegisterProductStack,
     RegisterRequestStack,
     SpecialProductsStack,
-    RequestsStack
+    RequestsStack,
+    unSignedInRoutes
 }
     from './tabs';
 
@@ -328,6 +327,20 @@ const routes = props => {
             <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
         </Stack.Navigator>
     )
+
+    const renderIconColors = (focused, key) => {
+        if (focused) {
+            if (key == 'RegisterProductStack')
+                return 'white';
+            return '#00c569';
+        }
+        else {
+            if (key == 'RegisterProductStack')
+                return '#00c569';
+            return 'white';
+        }
+    }
+
     return (
         <>
             {showPromotionModal ?
@@ -662,45 +675,26 @@ const routes = props => {
                             inactiveColor="#FFFFFF"
                             barStyle={{ backgroundColor: '#313A43' }}
                         >
-                            <Tab.Screen
-                                options={{
-                                    tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
-
-                                }}
-                                key='Home'
-                                // listeners={{
-                                //     tabPress: e => {
-                                //         currentRoute = e.target;
-                                //     }
-                                // }}
-                                // options={{
-                                //     tabBarBadge: false,
-                                //     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
-                                //     tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
-
-                                // }}
-                                name='Home'
-                                component={HomeStack}
-                            />
-                            <Tab.Screen
-                                key={'RegisterProduct'}
-                                options={{
-                                    tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.registerProduct')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <View
-                                        style={{
-                                            backgroundColor: color, height: 30, width: 30,
-                                            top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
-                                        }}
-                                    >
-                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
-                                    </View>,
-                                }}
-                                name={'RegisterProductStack'}
-                                component={StartUp}
-                            />
+                            {unSignedInRoutes.map((item) => (
+                                <Tab.Screen
+                                    key={item.key}
+                                    options={{
+                                        tabBarBadge: false,
+                                        tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales(item.label)}</Text>,
+                                        tabBarIcon: ({ focused }) => <View
+                                            style={item.key == 'RegisterProductStack' ? {
+                                                backgroundColor: !focused ? '#fff' : '#00C569', height: 30, width: 30,
+                                                top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
+                                            } : {}}
+                                        >
+                                            <FontAwesome5 size={18} name={item.icon} solid color={renderIconColors(focused, item.key)} />
+                                        </View>,
+                                    }}
+                                    name={item.name}
+                                    component={item.key == 'Home' ? HomeStack : StartUp}
+                                />
+                            ))
+                            }
                         </Tab.Navigator>
                     )
                     : (
@@ -721,7 +715,7 @@ const routes = props => {
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.home')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <Octicons size={25} name='home' color={color} />,
+                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} solid name='home' color={color} />,
 
                                 }}
                                 name='Home'
@@ -733,7 +727,7 @@ const routes = props => {
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
+                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='list-ul' solid color={color} />,
                                 }}
                                 name={'RequestsStack'}
                                 component={RequestsStack}
@@ -749,7 +743,7 @@ const routes = props => {
                                     options={{
                                         tabBarBadge: false,
                                         tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.suggested')}</Text>,
-                                        tabBarIcon: ({ focused, color }) => <Entypo size={25} name='list' color={color} />,
+                                        tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='list-ul' solid color={color} />,
                                     }}
                                     name={'SpecialProducts'}
                                     component={SpecialProductsStack}
@@ -832,7 +826,7 @@ const routes = props => {
                                 options={{
                                     tabBarBadge: newMessage > 0 ? newMessage : false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.messages')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <Entypo size={25} name='message' color={color} />,
+                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='comment-alt' solid color={color} />,
                                 }}
                                 name='Messages'
                                 component={MessagesStack}

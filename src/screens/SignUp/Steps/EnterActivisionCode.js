@@ -14,6 +14,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator } from '../../../utils';
 import Timer from '../../../components/timer';
 import * as authActions from '../../../redux/auth/actions'
+import * as productsListActions from '../../../redux/productsList/actions';
 import * as profileActions from '../../../redux/profile/actions'
 import ENUMS from '../../../enums';
 import NoConnection from '../../../components/noConnectionError';
@@ -58,6 +59,12 @@ const EnterActivisionCode = (props) => {
                 setValueError('');
                 if (res.payload.redirected) {
                     props.fastLogin(res.payload).then(result => {
+                        let item = {
+                            from_record_number: 0,
+                            sort_by: ENUMS.SORT_LIST.values.BM,
+                            to_record_number: 16,
+                        };
+                        props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         props.fetchUserProfile().then(_ => {
                         })
@@ -180,7 +187,7 @@ const EnterActivisionCode = (props) => {
                 >
                     <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
                     <ActivityIndicator size="small"
-                        animating={loading} color="white"
+                        animating={loading || props.loginLoading || props.userProfileLoading} color="white"
                         style={{
                             position: 'absolute', left: '20%', top: '28%',
                             width: 25, height: 25, borderRadius: 15
@@ -343,6 +350,8 @@ const mapStateToProps = state => {
         error: state.authReducer.checkActivisionCodeError,
         failed: state.authReducer.checkActivisionCodeFailed,
         message: state.authReducer.checkActivisionCodeMessage,
+        loginLoading: state.authReducer.loginLoading,
+        userProfileLoading: state.profileReducer.userProfileLoading,
 
         getAgainLoading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
         getAgainError: state.authReducer.checkAlreadySignedUpMobileNumberError,
@@ -355,7 +364,9 @@ const mapDispatchToProps = (dispatch) => {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         fastLogin: (payload) => dispatch(authActions.fastLogin(payload)),
         checkActivisionCode: (code, mobileNumber) => dispatch(authActions.checkActivisionCode(code, mobileNumber)),
-        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
+        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber)),
+        updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EnterActivisionCode)

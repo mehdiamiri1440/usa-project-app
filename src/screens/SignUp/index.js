@@ -4,6 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-community/async-storage';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import EnterActivisionCode from './Steps/EnterActivisionCode';
@@ -13,10 +14,12 @@ import UserActivity from './Steps/userActivity';
 
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
+import * as productsListActions from '../../redux/productsList/actions';
 import { deviceHeight, deviceWidth, formatter } from '../../utils';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
-import AsyncStorage from '@react-native-community/async-storage';
+import ENUMS from '../../enums';
+
 
 
 let stepsArray = [1, 2, 3, 4, 5]
@@ -146,6 +149,12 @@ class SignUp extends React.Component {
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
+                        let item = {
+                            from_record_number: 0,
+                            sort_by: ENUMS.SORT_LIST.values.BM,
+                            to_record_number: 16,
+                        };
+                        this.props.fetchAllProductsList(item, true).then(_ => this.props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         this.props.fetchUserProfile().then(_ => {
                         })
@@ -387,7 +396,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
-        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
+        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password)),
+        updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn))
 
     }
 };
