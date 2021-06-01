@@ -206,6 +206,9 @@ const routes = props => {
 
     const checkForShowingPromotionModal = _ => {
 
+        if (navigationRef?.current?.getCurrentRoute()?.name == 'Chat')
+            return;
+
         if (is_seller && active_pakage_type == 0) {
 
             AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
