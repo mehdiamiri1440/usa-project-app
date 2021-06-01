@@ -279,7 +279,6 @@ class Profile extends PureComponent {
 
         if (!loggedInUserId)
             return this.setState({ shouldShowRegistrationModal: true });
-
         analytics().logEvent('open_chat', {
             contact_id: userIdFromByUserName
         });
@@ -287,7 +286,7 @@ class Profile extends PureComponent {
     };
 
 
-    onRequestToCloseRegistrationModal = shouldOpenChat => {
+    onRequestToCloseRegistrationModal = (shouldOpenChat = false) => {
 
         this.setState({ shouldShowRegistrationModal: false }, _ => {
 
@@ -307,7 +306,7 @@ class Profile extends PureComponent {
                 is_verified
             };
 
-            if (shouldOpenChat)
+            if (shouldOpenChat == true)
                 this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo: profilePhotoFromByUserName });
         });
     };

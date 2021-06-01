@@ -48,9 +48,13 @@ const RegistrationModal = props => {
 
     const [verificationCode, setVerificationCode] = useState(null);
 
+    const [lastName, setLastName] = useState(null);
+
+    const [firstName, setFirstName] = useState(null);
+
     const [mobileNumber, setMobileNumber] = useState(null);
 
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(3);
 
     useEffect(() => {
         return () => {
@@ -71,6 +75,12 @@ const RegistrationModal = props => {
         setVerificationCode(code);
         setStep(3);
     }
+
+    const saveFullName = (fName, lName) => {
+        setFirstName(fName);
+        setLastName(lName);
+        setStep(4);
+    };
 
     const handleCloseModal = _ => {
         if (step > 1)
@@ -100,6 +110,17 @@ const RegistrationModal = props => {
                         verificationCode={verificationCode}
                         changeStep={changeStep}
                         onRequestClose={onRequestClose}
+                    />
+                );
+
+            case 3:
+                return (
+                    <GetFullName
+                        {...props}
+                        firstName={firstName}
+                        lastName={lastName}
+                        saveVerificationCode={saveFullName}
+                        changeStep={changeStep}
                     />
                 );
             default:
@@ -587,6 +608,287 @@ const GetVerificationCode = props => {
         </ScrollView>
     )
 
+};
+
+const GetFullName = props => {
+
+    const firstNameRef = useRef();
+    const lastNameRef = useRef();
+
+    const {
+
+    } = props;
+
+    const [firstName, setFirstName] = useState('');
+    const [firstNameError, setFirstNameError] = useState(null);
+    const [firstNameClicked, setFirstNameClicked] = useState(false);
+
+    const [lastName, setLastName] = useState('');
+    const [lastNameError, setLastNameError] = useState(null);
+    const [lastNameClicked, setLastNameClicked] = useState(false);
+
+    const onFirstNameChanged = value => {
+        setFirstNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.firstName') }));
+        setFirstNameClicked(!!value);
+        setFirstName(value);
+    };
+
+    const onLastNameChanged = value => {
+        setLastNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.lastName') }));
+        setLastNameClicked(!!value);
+        setLastName(value);
+    };
+
+    const onSubmit = _ => {
+
+        if (!firstName) {
+            setFirstNameError(locales('errors.fieldNeeded', { fieldName: locales('titles.firstName') }));
+            setFirstNameClicked(true);
+        }
+        else if (firstName && firstNameError) {
+            setFirstNameError(locales('errors.invalidFormat', { fieldName: locales('titles.firstName') }));
+            setFirstNameClicked(true);
+        }
+        else {
+            setFirstNameError(null);
+            setFirstNameClicked(false);
+        }
+
+        if (!lastName) {
+            setLastNameError(locales('errors.fieldNeeded', { fieldName: locales('titles.lastName') }));
+            setLastNameClicked(true);
+        }
+        else if (lastName && lastNameError) {
+            setLastNameError(locales('errors.invalidFormat', { fieldName: locales('titles.lastName') }));
+            setLastNameClicked(true);
+        }
+        else {
+            setLastNameError(null);
+            setLastNameClicked(false);
+        }
+
+        if (firstName && lastName && !firstNameError && !lastNameError)
+            props.saveFullName(firstName, lastName);
+    };
+
+    return (
+        <ScrollView
+            keyboardDismissMode='none'
+            keyboardShouldPersistTaps='handled'
+        >
+            <View>
+
+                <Text
+                    style={{
+                        color: '#555555',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 18,
+                    }}
+                >
+                    {locales('titles.fullName')}
+                    <Text
+                        style={{
+                            color: '#D44546',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 18,
+                            fontWeight: '200'
+                        }}
+                    >
+                        *
+                </Text>
+                </Text>
+
+                <Text
+                    style={{
+                        color: '#777777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginTop: 15,
+                        marginBottom: 5
+                    }}
+                >
+                    {locales('titles.enterFirstName')}
+                </Text>
+
+                <InputGroup
+                    regular
+                    style={{
+                        borderRadius: 4,
+                        // borderWidth: 2,
+                        borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
+                        paddingHorizontal: 10,
+                        backgroundColor: '#FBFBFB',
+                    }}
+                >
+                    <FontAwesome5
+                        name={
+                            firstName ? firstNameError ? 'times-circle' : 'check-circle' : firstNameClicked
+                                ? 'times-circle' : 'edit'}
+                        color={firstName ? firstNameError ? '#E41C38' : '#00C569'
+                            : firstNameClicked ? '#E41C38' : '#BDC4CC'}
+                        size={16}
+                        solid
+                        style={{
+                            marginLeft: 10,
+                        }}
+                    />
+                    <Input
+                        onSubmitEditing={onFirstNameChanged}
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        autoCompleteType='off'
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            borderRadius: 4,
+                            height: 45,
+                            flexDirection: 'row',
+                            textDecorationLine: 'none',
+                            direction: 'rtl',
+                            textAlign: 'right'
+                        }}
+                        onChangeText={onFirstNameChanged}
+                        value={firstName}
+                        placeholder={locales('titles.enterFirstName')}
+                        placeholderTextColor="#BEBEBE"
+                        ref={firstNameRef}
+
+                    />
+                </InputGroup>
+                <Label
+                    style={{
+                        height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        textAlign: !firstNameError && firstName.length ? 'left' : 'right'
+                    }}
+                >
+                    {!!firstNameError ?
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                color: '#D81A1A',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}
+                        >
+                            {firstNameError}
+                        </Text>
+                        : null
+                    }
+                </Label>
+
+                <Text
+                    style={{
+                        color: '#777777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginTop: 15,
+                        marginBottom: 5
+                    }}
+                >
+                    {locales('titles.enterLastName')}
+                </Text>
+
+                <InputGroup
+                    regular
+                    style={{
+                        borderRadius: 4,
+                        // borderWidth: 2,
+                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')),
+                        paddingHorizontal: 10,
+                        backgroundColor: '#FBFBFB',
+                    }}
+                >
+                    <FontAwesome5
+                        name={
+                            lastName ? lastNameError ? 'times-circle' : 'check-circle' : lastNameClicked
+                                ? 'times-circle' : 'edit'}
+                        color={lastName ? lastNameError ? '#E41C38' : '#00C569'
+                            : lastNameClicked ? '#E41C38' : '#BDC4CC'}
+                        size={16}
+                        solid
+                        style={{
+                            marginLeft: 10,
+                        }}
+                    />
+                    <Input
+                        onSubmitEditing={onLastNameChanged}
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        autoCompleteType='off'
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            borderRadius: 4,
+                            height: 45,
+                            flexDirection: 'row',
+                            textDecorationLine: 'none',
+                            direction: 'rtl',
+                            textAlign: 'right'
+                        }}
+                        onChangeText={onLastNameChanged}
+                        value={lastName}
+                        placeholder={locales('titles.enterLastName')}
+                        placeholderTextColor="#BEBEBE"
+                        ref={lastNameRef}
+
+                    />
+                </InputGroup>
+                <Label
+                    style={{
+                        height: 25,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        textAlign: !lastNameError && lastName.length ? 'left' : 'right'
+                    }}
+                >
+                    {!!lastNameError ?
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                color: '#D81A1A',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}
+                        >
+                            {lastNameError}
+                        </Text>
+                        : null
+                    }
+                </Label>
+
+                <Button
+                    onPress={onSubmit}
+                    style={{
+                        backgroundColor: lastName.length && firstName.length && !firstNameError && !lastNameError ?
+                            '#00C569' :
+                            '#E0E0E0',
+                        width: '45%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        elevation: 0,
+                        borderRadius: 8,
+                        height: 50
+                    }}
+                >
+                    <FontAwesome5
+                        name='arrow-left'
+                        size={15}
+                        color='white'
+                    />
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 5
+                        }}
+                    >
+                        {locales('titles.nextStep')}
+                    </Text>
+                </Button>
+
+            </View>
+
+        </ScrollView>
+    )
 };
 
 const styles = StyleSheet.create({

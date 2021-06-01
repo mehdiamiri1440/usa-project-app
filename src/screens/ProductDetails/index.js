@@ -601,7 +601,7 @@ class ProductDetails extends PureComponent {
         this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
     };
 
-    onRequestToCloseRegistrationModal = shouldOpenChat => {
+    onRequestToCloseRegistrationModal = (shouldOpenChat = false) => {
 
         this.setState({ shouldShowRegistrationModal: false }, _ => {
 
