@@ -163,9 +163,22 @@ class Profile extends PureComponent {
     }
 
     initProfileContent = _ => {
+
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name
+        } = params;
+
         return new Promise((resolve, reject) => {
-            if (this.props.route && this.props.route.params && this.props.route.params.user_name) {
-                this.props.fetchAllProfileInfo(this.props.route.params.user_name)
+            if (user_name) {
+                this.props.fetchAllProfileInfo(user_name)
                 // this.props.fetchProfileStatistics(this.props.route.params.user_name).catch(error => reject(error));
                 // this.props.fetchProfileByUserName(this.props.route.params.user_name).catch(error => reject(error));
                 // this.props.fetchProductsListByUserName(this.props.route.params.user_name).catch(error => reject(error));
@@ -279,24 +292,23 @@ class Profile extends PureComponent {
         this.setState({ shouldShowRegistrationModal: false }, _ => {
 
             const {
-                first_name,
+                firstNameFromByUserName,
+                lastNameFromByUserName,
+                userIdFromByUserName,
                 is_verified,
-                last_name,
-                user_name,
-                userId,
-                profile_photo,
+                profilePhotoFromByUserName,
             } = this.state;
 
+
             const selectedContact = {
-                first_name,
-                contact_id: userId,
-                last_name,
-                user_name,
+                first_name: firstNameFromByUserName,
+                contact_id: userIdFromByUserName,
+                last_name: lastNameFromByUserName,
                 is_verified
-            }
+            };
 
             if (shouldOpenChat)
-                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
+                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo: profilePhotoFromByUserName });
         });
     };
 
@@ -304,8 +316,18 @@ class Profile extends PureComponent {
     render() {
         const {
             profileInfo,
-            profileInfoLoading
+            profileInfoLoading,
+            userProfile = {},
+            loggedInUserId
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id: idOfLoggedInUser
+        } = user_info;
 
         let {
             selectedEvidenceModal,
@@ -595,9 +617,10 @@ class Profile extends PureComponent {
                     :
                     <ScrollView
                         refreshControl={
-                            <RefreshControl refreshing={
-                                profileInfoLoading
-                            } onRefresh={() => this.initProfileContent()} />
+                            <RefreshControl
+                                refreshing={profileInfoLoading}
+                                onRefresh={() => this.initProfileContent()}
+                            />
                         }
                         style={{ backgroundColor: 'white' }}>
                         <View style={{
@@ -670,8 +693,7 @@ class Profile extends PureComponent {
                                             }}>{locales('labels.credit')}</Text>
                                         </View>
                                     </View>
-                                    {userIdFromByUserName != (this.props.userProfile &&
-                                        this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
+                                    {userIdFromByUserName != idOfLoggedInUser ?
                                         <Button
 
                                             onPress={this.openChat}
@@ -898,16 +920,20 @@ class Profile extends PureComponent {
                             </View>
 
                         </View>
-                        <Rating
-                            userId={userIdFromByUserName}
-                            fullName={`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                            userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
-                        />
-                        <Comments
-                            userId={userIdFromByUserName}
-                            userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
-                            fullName={`${firstNameFromByUserName} ${lastNameFromByUserName}`}
-                        />
+                        {!!loggedInUserId ? <>
+                            <Rating
+                                userId={userIdFromByUserName}
+                                fullName={`${firstNameFromByUserName} ${lastNameFromByUserName}`}
+                                userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
+                            />
+                            <Comments
+                                userId={userIdFromByUserName}
+                                userName={this.props.route && this.props.route.params && this.props.route.params.user_name || ''}
+                                fullName={`${firstNameFromByUserName} ${lastNameFromByUserName}`}
+                            />
+                        </>
+                            : null
+                        }
                         <View style={{
                             width: deviceWidth, alignSelf: 'center', alignItems: 'center',
                             justifyContent: 'center', marginVertical: 10, padding: 5,

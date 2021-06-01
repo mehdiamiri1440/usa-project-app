@@ -479,8 +479,17 @@ class ProductDetails extends PureComponent {
     fetchContactInfo = (id, userId) => {
 
         const {
-            loggedInUserId
+            loggedInUserId,
+            userProfile = {}
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
 
         const contactInfoObject = {
             s_id: userId,
@@ -489,6 +498,9 @@ class ProductDetails extends PureComponent {
         }
         if (!loggedInUserId)
             return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
+
+        if (userId == loggedInUserId || !!!is_seller)
+            return;
 
         this.props.fetchSellerMobileNumber(contactInfoObject).then(result => {
 

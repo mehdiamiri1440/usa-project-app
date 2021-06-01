@@ -33,8 +33,10 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { validator, deviceHeight, deviceWidth } from '../../utils';
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
+import * as productsListActions from '../../redux/productsList/actions';
 import Header from '../header';
 import Timer from '../timer';
+import ENUMS from '../../enums';
 
 const RegistrationModal = props => {
 
@@ -320,9 +322,9 @@ const GetVerificationCode = props => {
 
     const CELL_COUNT = 4;
 
-    const [value, setValue] = useState('');
-
     const codeFieldRef = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+
+    const [value, setValue] = useState('');
 
     const [valueError, setValueError] = useState(null);
 
@@ -333,15 +335,17 @@ const GetVerificationCode = props => {
 
     const {
         mobileNumber,
+        checkActivisionCodeLoading,
+        userProfileLoading,
+        loginLoading,
         changeStep = _ => { },
         saveVerificationCode = _ => { },
         fetchUserProfile = _ => { },
         checkActivisionCode = _ => { },
-        checkActivisionCodeLoading,
-        userProfileLoading,
-        loginLoading,
         onRequestClose = _ => { },
-        fastLogin = _ => { }
+        fastLogin = _ => { },
+        updateProductsList = _ => { },
+        fetchAllProductsList = _ => { },
     } = props;
 
     const onVerificationCodeSubmited = (value) => {
@@ -357,6 +361,12 @@ const GetVerificationCode = props => {
                     fastLogin(res.payload).then(result => {
                         analytics().setUserId(result.payload.id.toString());
                         fetchUserProfile().then(_ => {
+                            let item = {
+                                from_record_number: 0,
+                                sort_by: ENUMS.SORT_LIST.values.BM,
+                                to_record_number: 16,
+                            };
+                            fetchAllProductsList(item, true).then(_ => updateProductsList(true));
                             onRequestClose(true);
                         });
 
@@ -473,7 +483,8 @@ const GetVerificationCode = props => {
                                         "#bebebe",
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }]}
-                            onLayout={getCellOnLayoutHandler(index)}>
+                            onLayout={getCellOnLayoutHandler(index)}
+                        >
                             {symbol || (isFocused ? <Cursor
                                 cursorSymbol="|"
                                 delay={500}
@@ -747,6 +758,8 @@ const mapDispatchToProps = dispatch => {
         checkActivisionCode: (code, mobileNumber) => dispatch(authActions.checkActivisionCode(code, mobileNumber)),
         fastLogin: (payload) => dispatch(authActions.fastLogin(payload)),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
+        updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
     }
 };
 
