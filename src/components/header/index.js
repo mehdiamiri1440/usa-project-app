@@ -24,7 +24,8 @@ const Header = (props = {}) => {
         isVerified,
         containerStyle = {},
         shouldShowAuthenticationRibbonFromProps = false,
-        userProfile = {}
+        userProfile = {},
+        iconName = 'arrow-right'
     } = props;
 
     const {
@@ -80,7 +81,7 @@ const Header = (props = {}) => {
                     }}
                     onPress={onBackButtonPressed ?? goBack}
                 >
-                    <FontAwesome5 name='arrow-right' size={20} color='#313A43' solid />
+                    <FontAwesome5 name={iconName} size={20} color='#313A43' solid />
                     {image
                         ?
                         <>
