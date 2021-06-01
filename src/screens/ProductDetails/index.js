@@ -31,6 +31,7 @@ import ProductImages from './ProductImages';
 import NoConnection from '../../components/noConnectionError';
 import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
+import RegistrationModal from '../../components/RegistrationModal';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -101,7 +102,10 @@ class ProductDetails extends PureComponent {
             productIdFromProductDetails: '',
             accessToContactInfoErrorMessage: '',
             walletElevatorPaymentError: '',
-            walletElevatorPaySuccessMessage: ''
+            walletElevatorPaySuccessMessage: '',
+
+            shouldShowRegistrationModal: false,
+            registrationModalReturnType: null
         }
     }
 
@@ -473,11 +477,18 @@ class ProductDetails extends PureComponent {
     };
 
     fetchContactInfo = (id, userId) => {
+
+        const {
+            loggedInUserId
+        } = this.props;
+
         const contactInfoObject = {
             s_id: userId,
             p_id: id,
             item: "PRODUCT"
         }
+        if (!loggedInUserId)
+            return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
 
         this.props.fetchSellerMobileNumber(contactInfoObject).then(result => {
 
@@ -547,6 +558,69 @@ class ProductDetails extends PureComponent {
         })
     };
 
+    openChat = () => {
+        let {
+            first_name,
+            is_verified,
+            last_name,
+            user_name,
+            userId,
+            profile_photo,
+        } = this.state;
+
+        const {
+            loggedInUserId
+        } = this.props;
+
+        if (!loggedInUserId)
+            return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 0 });
+
+        const selectedContact = {
+            first_name,
+            contact_id: userId,
+            last_name,
+            user_name,
+            is_verified
+        }
+        if (this.props?.route?.params?.productId)
+            analytics().logEvent('open_chat', {
+                product_id: this.props?.route?.params?.productId
+            });
+        this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+    };
+
+    onRequestToCloseRegistrationModal = shouldOpenChat => {
+
+        this.setState({ shouldShowRegistrationModal: false }, _ => {
+
+            const {
+                first_name,
+                is_verified,
+                last_name,
+                user_name,
+                userId,
+                profile_photo,
+                registrationModalReturnType = 0,
+                productIdFromProductDetails,
+            } = this.state;
+
+            const selectedContact = {
+                first_name,
+                contact_id: userId,
+                last_name,
+                user_name,
+                is_verified
+            }
+
+            if (registrationModalReturnType == 1)
+                this.fetchContactInfo(productIdFromProductDetails, userId);
+            else {
+                if (shouldOpenChat)
+                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
+            }
+        });
+    };
+
     render() {
         const {
             editProductLoading,
@@ -590,9 +664,7 @@ class ProductDetails extends PureComponent {
             total_count,
 
             active_pakage_type,
-            created_at,
             first_name,
-            id,
             is_verified,
             last_name,
             response_rate,
@@ -603,26 +675,16 @@ class ProductDetails extends PureComponent {
 
             description,
 
-            myuser_id,
             product_name,
-            province_id,
             province_name,
-            sub_category_id,
             sub_category_name,
-            updated_at,
 
-            address,
-            category_id,
             category_name,
-            city_id,
             city_name,
-            confirmed,
             is_elevated,
             stock,
 
-            max_sale_price,
             min_sale_amount,
-            min_sale_price,
 
             profile_photo,
 
@@ -635,17 +697,11 @@ class ProductDetails extends PureComponent {
             accessToContactInfoErrorMessage,
 
             walletElevatorPaySuccessMessage,
-            walletElevatorPaymentError
+            walletElevatorPaymentError,
+
+            shouldShowRegistrationModal
         } = this.state;
 
-
-        const selectedContact = {
-            first_name,
-            contact_id: userId,
-            last_name,
-            user_name,
-            is_verified
-        }
 
         let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
         let descriptionWithoutHtml = '';
@@ -663,6 +719,14 @@ class ProductDetails extends PureComponent {
                     closeModal={this.closeModal}
                 />
 
+                {shouldShowRegistrationModal ?
+                    <RegistrationModal
+                        visible={shouldShowRegistrationModal}
+                        onRequestClose={this.onRequestToCloseRegistrationModal}
+                        {...this.props}
+                    />
+                    : null
+                }
 
                 {(!is_seller && isContactInfoShown) ?
                     <>
@@ -2132,13 +2196,7 @@ class ProductDetails extends PureComponent {
                                 </Button>
                                 : null}
                             <Button
-                                onPress={() => {
-                                    if (this.props.route.params.productId)
-                                        analytics().logEvent('open_chat', {
-                                            product_id: this.props.route.params.productId
-                                        });
-                                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
-                                }}
+                                onPress={this.openChat}
                                 style={[styles.loginButton, {
                                     zIndex: 1,
                                     width: (!is_seller && has_phone) ? '45%' : '95%',

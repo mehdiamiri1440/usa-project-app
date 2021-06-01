@@ -26,6 +26,7 @@ import Certificates from './certificates';
 import Rating from './Rating';
 import Comments from './Comments';
 import Header from '../../components/header';
+import RegistrationModal from '../../components/RegistrationModal';
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -59,7 +60,8 @@ class Profile extends PureComponent {
             companyRegisterCodeFromByUserName: '',
             companyNameFromByUserName: '',
             descriptionFromByUserName: '',
-            productsListByUserName: []
+            productsListByUserName: [],
+            shouldShowRegistrationModal: false
         }
     }
 
@@ -239,6 +241,66 @@ class Profile extends PureComponent {
         this.setState({ selectedEvidenceModal, selectedEvidenceIndex })
     }
 
+    openChat = () => {
+
+        const {
+            loggedInUserId
+        } = this.props;
+
+
+        let {
+            firstNameFromByUserName,
+            lastNameFromByUserName,
+            userIdFromByUserName,
+            is_verified,
+            profilePhotoFromByUserName,
+        } = this.state;
+
+
+        const selectedContact = {
+            first_name: firstNameFromByUserName,
+            contact_id: userIdFromByUserName,
+            last_name: lastNameFromByUserName,
+            is_verified
+        };
+
+        if (!loggedInUserId)
+            return this.setState({ shouldShowRegistrationModal: true });
+
+        analytics().logEvent('open_chat', {
+            contact_id: userIdFromByUserName
+        });
+        this.props.navigation.navigate('Chat', { profile_photo: profilePhotoFromByUserName, contact: selectedContact })
+    };
+
+
+    onRequestToCloseRegistrationModal = shouldOpenChat => {
+
+        this.setState({ shouldShowRegistrationModal: false }, _ => {
+
+            const {
+                first_name,
+                is_verified,
+                last_name,
+                user_name,
+                userId,
+                profile_photo,
+            } = this.state;
+
+            const selectedContact = {
+                first_name,
+                contact_id: userId,
+                last_name,
+                user_name,
+                is_verified
+            }
+
+            if (shouldOpenChat)
+                this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
+        });
+    };
+
+
     render() {
         const {
             profileInfo,
@@ -278,15 +340,11 @@ class Profile extends PureComponent {
             companyNameFromByUserName,
             descriptionFromByUserName,
 
-            productsListByUserName
+            productsListByUserName,
+
+            shouldShowRegistrationModal
         } = this.state;
 
-        const selectedContact = {
-            first_name: firstNameFromByUserName,
-            contact_id: userIdFromByUserName,
-            last_name: lastNameFromByUserName,
-            is_verified
-        }
 
         return (
             <>
@@ -295,6 +353,14 @@ class Profile extends PureComponent {
                     closeModal={this.closeModal}
                 />
 
+                {shouldShowRegistrationModal ?
+                    <RegistrationModal
+                        visible={shouldShowRegistrationModal}
+                        onRequestClose={this.onRequestToCloseRegistrationModal}
+                        {...this.props}
+                    />
+                    : null
+                }
 
                 <Modal
                     animationType="slide"
@@ -608,12 +674,7 @@ class Profile extends PureComponent {
                                         this.props.userProfile.user_info && this.props.userProfile.user_info.id) ?
                                         <Button
 
-                                            onPress={() => {
-                                                analytics().logEvent('open_chat', {
-                                                    contact_id: userIdFromByUserName
-                                                });
-                                                this.props.navigation.navigate('Chat', { profile_photo: profilePhotoFromByUserName, contact: selectedContact })
-                                            }}
+                                            onPress={this.openChat}
                                             style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                         >
                                             <View
