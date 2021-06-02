@@ -119,7 +119,7 @@ const RegistrationModal = props => {
                         {...props}
                         firstName={firstName}
                         lastName={lastName}
-                        saveVerificationCode={saveFullName}
+                        saveFullName={saveFullName}
                         changeStep={changeStep}
                     />
                 );
@@ -616,7 +616,7 @@ const GetFullName = props => {
     const lastNameRef = useRef();
 
     const {
-
+        changeStep = _ => { }
     } = props;
 
     const [firstName, setFirstName] = useState('');
@@ -854,36 +854,60 @@ const GetFullName = props => {
                     }
                 </Label>
 
-                <Button
-                    onPress={onSubmit}
+                <View
                     style={{
-                        backgroundColor: lastName.length && firstName.length && !firstNameError && !lastNameError ?
-                            '#00C569' :
-                            '#E0E0E0',
-                        width: '45%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        elevation: 0,
-                        borderRadius: 8,
-                        height: 50
+                        flexDirection: 'row',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        alignSelf: 'center',
+                        alignItems: 'center'
                     }}
                 >
-                    <FontAwesome5
-                        name='arrow-left'
-                        size={15}
-                        color='white'
-                    />
-                    <Text
+                    <Button
+                        onPress={onSubmit}
                         style={{
-                            fontSize: 18,
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 5
+                            backgroundColor: lastName.length && firstName.length && !firstNameError && !lastNameError ?
+                                '#00C569' :
+                                '#E0E0E0',
+                            width: '45%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            elevation: 0,
+                            borderRadius: 8,
+                            height: 50
                         }}
                     >
-                        {locales('titles.nextStep')}
-                    </Text>
-                </Button>
+                        <FontAwesome5
+                            name='arrow-left'
+                            size={15}
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                marginHorizontal: 5
+                            }}
+                        >
+                            {locales('titles.nextStep')}
+                        </Text>
+                    </Button>
+                    <Button
+                        onPress={() => changeStep(2)}
+                        style={[styles.backButtonContainer, { borderRadius: 8 }]}
+                        rounded
+                    >
+                        <Text style={styles.backButtonText}>
+                            {locales('titles.previousStep')}
+                        </Text>
+                        <FontAwesome5
+                            name='arrow-right'
+                            size={25}
+                            color='#7E7E7E'
+                        />
+                    </Button>
+                </View>
 
             </View>
 
