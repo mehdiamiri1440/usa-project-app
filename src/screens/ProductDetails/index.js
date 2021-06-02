@@ -627,7 +627,7 @@ class ProductDetails extends PureComponent {
             if (registrationModalReturnType == 1)
                 this.fetchContactInfo(productIdFromProductDetails, userId);
             else {
-                if (shouldOpenChat)
+                if (shouldOpenChat == true)
                     this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
             }
         });
@@ -711,7 +711,10 @@ class ProductDetails extends PureComponent {
             walletElevatorPaySuccessMessage,
             walletElevatorPaymentError,
 
-            shouldShowRegistrationModal
+            shouldShowRegistrationModal,
+
+            category_id,
+            sub_category_id
         } = this.state;
 
 
@@ -735,6 +738,9 @@ class ProductDetails extends PureComponent {
                     <RegistrationModal
                         visible={shouldShowRegistrationModal}
                         onRequestClose={this.onRequestToCloseRegistrationModal}
+                        subCategoryName={sub_category_name}
+                        categoryId={category_id}
+                        subCategoryId={sub_category_id}
                         {...this.props}
                     />
                     : null

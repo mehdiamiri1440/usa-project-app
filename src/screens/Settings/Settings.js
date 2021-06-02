@@ -69,6 +69,7 @@ class Settings extends React.Component {
                     {settingRoutes.map((route, index) => {
                         return (
                             <ShadowView
+                                key={index}
                                 style={{
                                     shadowColor: 'black',
                                     shadowOpacity: 0.13,

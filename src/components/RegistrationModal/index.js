@@ -12,6 +12,8 @@ import {
     SafeAreaView,
     Keyboard,
     StyleSheet,
+    TouchableOpacity,
+    FlatList
 } from 'react-native';
 import {
     Button,
@@ -27,13 +29,17 @@ import {
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import analytics from '@react-native-firebase/analytics';
+import Svg, { Path, G, Ellipse } from "react-native-svg"
+import AsyncStorage from '@react-native-community/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { validator, deviceHeight, deviceWidth } from '../../utils';
+import { validator, deviceHeight, deviceWidth, formatter } from '../../utils';
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
+import * as registerProductActions from '../../redux/registerProduct/actions';
+import * as locationActions from '../../redux/locations/actions'
 import Header from '../header';
 import Timer from '../timer';
 import ENUMS from '../../enums';
@@ -42,9 +48,19 @@ const RegistrationModal = props => {
 
     const {
         visible = false,
-        onRequestClose = _ => { }
+        onRequestClose = _ => { },
+        subCategoryName = '',
+        categoryId = '',
+        fetchAllProductsList = _ => { },
+        updateProductsList = _ => { },
+        fetchUserProfile = _ => { },
+        login = _ => { },
+        subCategoryId,
+        loginLoading,
+        userProfileLoading,
+        submitRegisterLoading,
+        registerBuyAdRequestLoading
     } = props;
-
 
     const [verificationCode, setVerificationCode] = useState(null);
 
@@ -54,27 +70,63 @@ const RegistrationModal = props => {
 
     const [mobileNumber, setMobileNumber] = useState(null);
 
+    const [intent, setIntentType] = useState(null);
+
+    const [intentToSendBuyAdRequest, setIntentToSendBuyAdRequest] = useState(null);
+
+    const [showLoader, setShowLoader] = useState(false);
+
+    const [province, setProvince] = useState(null);
+    const [provinceName, setSelectedProvinceName] = useState(null);
+
+    const [city, setCity] = useState(null);
+    const [cityName, setSelectedCityName] = useState([]);
+
+    const [cities, setCities] = useState([]);
+
     const [step, setStep] = useState(3);
-
-    useEffect(() => {
-        return () => {
-        }
-    }, []);
-
 
     const changeStep = nextStep => {
         setStep(nextStep);
     };
 
+    const saveProvince = (selectedProvince, selectedProvinceName, cities) => {
+        setSelectedProvinceName(selectedProvinceName)
+        setProvince(selectedProvince);
+        setCities(cities);
+        setStep(6);
+    };
+
+    const saveCity = async (selectedCity, selectedCityName) => {
+
+        setSelectedCityName(selectedCityName);
+
+        setCity(selectedCity);
+
+        submitRegister().then(_ => {
+            if (intent == 1) {
+                setShowLoader(false);
+                onRequestClose(true);
+            }
+        });
+
+        if (intent == 0)
+            setStep(7);
+        else {
+            setStep(1);
+            setShowLoader(true);
+        }
+    };
+
     const saveMobileNumber = mobile => {
         setMobileNumber(mobile);
         setStep(2);
-    }
+    };
 
     const saveVerificationCode = code => {
         setVerificationCode(code);
         setStep(3);
-    }
+    };
 
     const saveFullName = (fName, lName) => {
         setFirstName(fName);
@@ -87,6 +139,61 @@ const RegistrationModal = props => {
             setStep(prevStep => prevStep - 1);
         else
             onRequestClose();
+    };
+
+    const saveIntentType = intent => {
+        setIntentType(intent);
+    };
+
+    const saveIntentToSendBuyAdRequest = intent => {
+        setIntentToSendBuyAdRequest(intent);
+    };
+
+    const submitRegister = () => {
+
+        return new Promise((resolve, reject) => {
+            const password = formatter.makeRandomString(8);
+
+            let registerObject = {
+                phone: formatter.toLatinNumbers(mobileNumber),
+                first_name: firstName,
+                last_name: lastName,
+                password,
+                user_name: '',
+                sex: 'man',
+                province: provinceName,
+                city: cityName,
+                activity_type: '1',
+                category_id: categoryId,
+                verification_code: formatter.toLatinNumbers(verificationCode)
+            };
+
+            props.submitRegister(registerObject)
+                .then(result => {
+                    AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
+                    analytics().logEvent('successfull_register', {
+                        mobile_number: mobileNumber
+                    })
+                    login(mobileNumber, password)
+                        .then((result) => {
+                            let item = {
+                                from_record_number: 0,
+                                sort_by: ENUMS.SORT_LIST.values.BM,
+                                to_record_number: 16,
+                            };
+                            fetchAllProductsList(item, true).then(_ => updateProductsList(true));
+                            analytics().setUserId(result.payload.id.toString());
+                            fetchUserProfile().then(_ => resolve(true));
+                        })
+                })
+                .catch(err => {
+                    // if (err && err.data){
+                    //     this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+                    // reject(err);
+                    // }
+                });
+
+        });
     };
 
     const renderSteps = _ => {
@@ -123,6 +230,51 @@ const RegistrationModal = props => {
                         changeStep={changeStep}
                     />
                 );
+
+            case 4:
+                return (
+                    <GetIntentType
+                        {...props}
+                        saveIntentType={saveIntentType}
+                        changeStep={changeStep}
+                    />
+                );
+
+            case 5:
+                return (
+                    <GetProvince
+                        {...props}
+                        saveProvince={saveProvince}
+                        changeStep={changeStep}
+                    />
+                );
+
+            case 6:
+                return (
+                    <GetCity
+                        {...props}
+                        province={province}
+                        city={city}
+                        cities={cities}
+                        saveCity={saveCity}
+                        changeStep={changeStep}
+                    />
+                );
+
+            case 7: {
+                return (
+                    <GetIntentToSendBuyAdRequest
+                        {...props}
+                        saveIntentToSendBuyAdRequest={saveIntentToSendBuyAdRequest}
+                        changeStep={changeStep}
+                        subCategoryName={subCategoryName}
+                        onRequestClose={onRequestClose}
+                        subCategoryId={subCategoryId}
+                        setShowLoader={setShowLoader}
+                    />
+                );
+            };
+
             default:
                 break;
         };
@@ -148,7 +300,13 @@ const RegistrationModal = props => {
                 }}
             >
 
-                {renderSteps()}
+                {((showLoader == true) && (
+                    userProfileLoading || registerBuyAdRequestLoading || submitRegisterLoading || loginLoading)
+                ) ?
+                    <Loader {...props} />
+                    :
+                    renderSteps()
+                }
             </View>
 
         </Modal>
@@ -367,6 +525,7 @@ const GetVerificationCode = props => {
         fastLogin = _ => { },
         updateProductsList = _ => { },
         fetchAllProductsList = _ => { },
+        checkAlreadySingedUpMobileNumber = _ => { }
     } = props;
 
     const onVerificationCodeSubmited = (value) => {
@@ -620,12 +779,27 @@ const GetFullName = props => {
     } = props;
 
     const [firstName, setFirstName] = useState('');
-    const [firstNameError, setFirstNameError] = useState(null);
+    const [firstNameError, setFirstNameError] = useState('');
     const [firstNameClicked, setFirstNameClicked] = useState(false);
 
     const [lastName, setLastName] = useState('');
-    const [lastNameError, setLastNameError] = useState(null);
+    const [lastNameError, setLastNameError] = useState('');
     const [lastNameClicked, setLastNameClicked] = useState(false);
+
+    const handleAutoFocus = _ => {
+
+        if (!firstName || firstNameError) {
+            firstNameRef?.current?._root.focus();
+            return;
+        }
+
+        if (!lastName || lastNameError) {
+            lastNameRef?.current?._root.focus();
+            return;
+        }
+
+        return onSubmit();
+    };
 
     const onFirstNameChanged = value => {
         setFirstNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.firstName') }));
@@ -714,7 +888,6 @@ const GetFullName = props => {
                     regular
                     style={{
                         borderRadius: 4,
-                        // borderWidth: 2,
                         borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
                         paddingHorizontal: 10,
                         backgroundColor: '#FBFBFB',
@@ -733,7 +906,7 @@ const GetFullName = props => {
                         }}
                     />
                     <Input
-                        onSubmitEditing={onFirstNameChanged}
+                        onSubmitEditing={handleAutoFocus}
                         autoCapitalize='none'
                         autoCorrect={false}
                         autoCompleteType='off'
@@ -811,7 +984,7 @@ const GetFullName = props => {
                         }}
                     />
                     <Input
-                        onSubmitEditing={onLastNameChanged}
+                        onSubmitEditing={handleAutoFocus}
                         autoCapitalize='none'
                         autoCorrect={false}
                         autoCompleteType='off'
@@ -913,6 +1086,1097 @@ const GetFullName = props => {
 
         </ScrollView>
     )
+};
+
+const GetIntentType = props => {
+
+    const {
+        changeStep = _ => { },
+        fetchAllProvinces = _ => { },
+        saveIntentType = _ => { },
+    } = props;
+
+    useEffect(_ => {
+        fetchAllProvinces();
+    });
+
+    const setIntentType = intent => {
+        saveIntentType(intent);
+        changeStep(5);
+    };
+
+    return (
+        <View>
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <TouchableOpacity
+                    onPress={_ => setIntentType(0)}
+                    activeOpacity={1}
+                    style={{
+                        borderRadius: 11,
+                        backgroundColor: '#556080',
+                        width: deviceWidth * 0.43,
+                        paddingVertical: 20,
+                        paddingHorizontal: 10,
+                        zIndex: 1000
+                    }}
+                >
+                    <Svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="52"
+                        height="53"
+                        viewBox="0 0 52 53"
+                        style={{
+                            alignSelf: 'center'
+                        }}
+                    >
+                        <G data-name="Group 111" transform="translate(-.155 .183)">
+                            <Path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M10.789 15.993a.868.868 0 010-1.71h9.5a.868.868 0 010 1.71zm15.672-.025v1.139a.2.2 0 01-.167.2 1.291 1.291 0 00-.273.048 4.352 4.352 0 00-.506.129 3.783 3.783 0 00-.886.407 3.246 3.246 0 00-.372.271 2.994 2.994 0 00-.321.311 2.961 2.961 0 00-.278.359 3.107 3.107 0 00-.506 1.771 5.146 5.146 0 00.028.539 4.048 4.048 0 00.089.486 3.037 3.037 0 00.147.428 2.381 2.381 0 00.2.372l.015.023a3.428 3.428 0 00.562.64 4.319 4.319 0 00.352.291 4.522 4.522 0 00.392.253c.276.149.592.331.875.458l.483.228.719.316c.121.061.223.111.342.177l.149.1c.043.03.081.061.114.089a.881.881 0 01.1.1l.071.091a.832.832 0 01.073.132.66.66 0 01.04.106.958.958 0 01.035.134 1.158 1.158 0 01.02.167v.3a1.655 1.655 0 01-.046.223 1.034 1.034 0 01-.086.195.759.759 0 01-.149.175l-.086.063a.828.828 0 01-.233.091 1.214 1.214 0 01-.534.025 1.346 1.346 0 01-.455-.162.964.964 0 01-.094-.068l-.094-.083a.815.815 0 01-.083-.1 1.03 1.03 0 01-.073-.109 1.75 1.75 0 01-.068-.129 1.233 1.233 0 01-.053-.134 1.232 1.232 0 01-.046-.154 1.686 1.686 0 01-.033-.182c0-.061-.015-.129-.02-.2v-.223a.112.112 0 00-.114-.111H22.83a.111.111 0 00-.078.033.106.106 0 00-.033.078 4.092 4.092 0 00.023.541c.023.167.04.334.071.506a3.478 3.478 0 00.119.445 3.328 3.328 0 00.159.4l.015.03a3.37 3.37 0 00.2.364 3.891 3.891 0 00.238.329 3.262 3.262 0 00.268.291 2.955 2.955 0 00.288.253l.023.018a3.641 3.641 0 00.319.21c.111.068.225.129.344.187s.235.1.359.152.253.083.372.119.2.051.3.071.207.043.3.058a.2.2 0 01.167.195v1.088a.691.691 0 00.091.293c.02.038 0 .068.023.068h1.313a.111.111 0 00.114-.114v-1.326a.2.2 0 01.164-.195l.167-.028a5.059 5.059 0 00.506-.124 4.2 4.2 0 00.886-.39 2.784 2.784 0 00.359-.253 2.94 2.94 0 00.326-.309 2.783 2.783 0 00.278-.359 2.512 2.512 0 00.223-.4 3.188 3.188 0 00.159-.435 3.516 3.516 0 00.094-.476 4.1 4.1 0 00.033-.506 4.464 4.464 0 00-.03-.534 3.9 3.9 0 00-.091-.483 2.783 2.783 0 00-.154-.438 2.442 2.442 0 00-.207-.374 3.462 3.462 0 00-.253-.339 3.6 3.6 0 00-.309-.314 4.023 4.023 0 00-.339-.276 4.647 4.647 0 00-.385-.253h-.018c-.134-.078-.276-.159-.428-.253s-.278-.152-.445-.235-.306-.154-.46-.228c-.253-.111-.486-.22-.726-.339l-.195-.106-.164-.1a3.112 3.112 0 01-.253-.187 1.285 1.285 0 01-.182-.2.536.536 0 01-.061-.1 1.033 1.033 0 01-.043-.106 1.086 1.086 0 01-.033-.111 1.1 1.1 0 01-.018-.132v-.263a1.918 1.918 0 01.046-.24l.04-.116a.59.59 0 01.048-.1.61.61 0 01.063-.089.759.759 0 01.167-.154.82.82 0 01.091-.051l.109-.035a.784.784 0 01.134-.025 1.424 1.424 0 01.147 0 .989.989 0 01.192.018.906.906 0 01.167.048h.013a.855.855 0 01.157.086.865.865 0 01.142.116l.015.015a.792.792 0 01.127.177 1.282 1.282 0 01.078.2v.025a2.075 2.075 0 01.056.319c0 .111.018.238.02.374a.116.116 0 00.025.073.111.111 0 00.078.033h2.839a.112.112 0 00.111-.114 4.707 4.707 0 00-.033-.574 4.345 4.345 0 00-.094-.534 3.628 3.628 0 00-.154-.486 3.289 3.289 0 00-.213-.435l-.018-.033a3.442 3.442 0 00-.278-.4 3.1 3.1 0 00-.326-.354 3.181 3.181 0 00-.377-.377 3.57 3.57 0 00-.425-.253 4.162 4.162 0 00-.951-.342h-.056a.2.2 0 01-.164-.195v-1.184a.121.121 0 00-.025-.073.111.111 0 00-.081-.033h-1.329a.116.116 0 00-.081.033.111.111 0 00-.033.078zm-6.9 12.593a.858.858 0 110 1.715H2a2 2 0 01-2-2V2a2 2 0 012-2h24.511a2 2 0 012 2v9.47a.858.858 0 01-1.715 0V2a.281.281 0 00-.083-.2.286.286 0 00-.2-.083H2a.3.3 0 00-.2.081.306.306 0 00-.081.2v26.279a.281.281 0 00.281.281h17.563zm-8.775-6.275a.886.886 0 010-1.738h7.474a.883.883 0 010 1.738zm0-12.57a.8.8 0 01-.719-.86.794.794 0 01.722-.856h9.5a.8.8 0 01.711.856.794.794 0 01-.708.86zM6.667 20.241a1.012 1.012 0 11-1.012 1.012 1.012 1.012 0 011.012-1.012zm0-6.2a1.012 1.012 0 11-1.012 1.012 1.012 1.012 0 011.012-1.008zm0-6.194a1.012 1.012 0 11-1.012 1.016 1.012 1.012 0 011.012-1.012z"
+                                transform="translate(10.984 11.494)"
+                            ></Path>
+                            <G
+                                fill="none"
+                                stroke="#fff"
+                                strokeWidth="2"
+                                data-name="Ellipse 34"
+                                transform="translate(.155 -.183)"
+                            >
+                                <Ellipse cx="26" cy="26.5" stroke="none" rx="26" ry="26.5"></Ellipse>
+                                <Ellipse cx="26" cy="26.5" rx="25" ry="25.5"></Ellipse>
+                            </G>
+                        </G>
+                    </Svg>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
+                        {locales('titles.withPrice')}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 18,
+                            color: 'white',
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('titles.iWantToBuy')}
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={_ => setIntentType(1)}
+                    activeOpacity={1}
+                    style={{
+                        borderRadius: 11,
+                        backgroundColor: '#556080',
+                        width: deviceWidth * 0.43,
+                        paddingVertical: 20,
+                        paddingHorizontal: 10
+                    }}
+                >
+                    <Svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="52"
+                        height="53"
+                        viewBox="0 0 52 53"
+                        style={{
+                            alignSelf: 'center'
+                        }}
+                    >
+                        <G data-name="Group 110" transform="translate(-.018)">
+                            <Path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M28.872 15.351v2.176a.382.382 0 01-.319.377 2.468 2.468 0 00-.522.092 8.319 8.319 0 00-.967.247 7.23 7.23 0 00-1.693.779 6.2 6.2 0 00-.711.517 5.721 5.721 0 00-.614.595 5.659 5.659 0 00-.532.687 5.939 5.939 0 00-.967 3.385 9.837 9.837 0 00.053 1.03 7.737 7.737 0 00.169.928 5.8 5.8 0 00.28.817 4.55 4.55 0 00.382.711l.029.044a6.552 6.552 0 001.074 1.223 8.254 8.254 0 00.672.556 8.644 8.644 0 00.75.484c.527.285 1.132.634 1.673.875l.924.435 1.373.6c.232.116.426.213.653.339l.285.189c.082.058.155.116.218.169a1.683 1.683 0 01.184.189l.135.174a1.591 1.591 0 01.14.251 1.261 1.261 0 01.077.2 1.831 1.831 0 01.068.256 2.213 2.213 0 01.039.319v.58a3.164 3.164 0 01-.087.426 1.977 1.977 0 01-.164.372 1.45 1.45 0 01-.285.334l-.164.121a1.581 1.581 0 01-.445.174 2.321 2.321 0 01-1.02.048 2.573 2.573 0 01-.87-.309 1.843 1.843 0 01-.179-.131l-.179-.16a1.557 1.557 0 01-.16-.184 1.969 1.969 0 01-.14-.208 3.606 3.606 0 01-.131-.247 2.358 2.358 0 01-.1-.256 2.356 2.356 0 01-.087-.295 3.224 3.224 0 01-.063-.348c0-.116-.029-.247-.039-.382v-.426a.215.215 0 00-.218-.213h-5.46a.213.213 0 00-.15.063.2.2 0 00-.063.15 7.821 7.821 0 00.044 1.035c.044.319.077.638.135.967a6.649 6.649 0 00.227.851 6.36 6.36 0 00.3.769l.029.058a6.442 6.442 0 00.387.7 7.435 7.435 0 00.455.629 6.235 6.235 0 00.513.556 5.649 5.649 0 00.551.484l.044.034a6.959 6.959 0 00.609.4 7.566 7.566 0 001.345.648c.237.09.484.16.711.227s.382.1.571.135.4.082.58.111a.377.377 0 01.319.372v2.079a1.32 1.32 0 00.174.561c.039.073 0 .131.044.131h2.51a.213.213 0 00.218-.218V41.1a.377.377 0 01.314-.372l.319-.053a9.672 9.672 0 00.967-.237 8.018 8.018 0 001.693-.745 5.321 5.321 0 00.687-.484 5.618 5.618 0 00.624-.59 5.319 5.319 0 00.532-.687 4.8 4.8 0 00.426-.759 6.094 6.094 0 00.3-.832 6.722 6.722 0 00.179-.909 7.836 7.836 0 00.063-.967 8.533 8.533 0 00-.058-1.02 7.451 7.451 0 00-.174-.924 5.319 5.319 0 00-.295-.837 4.668 4.668 0 00-.4-.716 6.618 6.618 0 00-.484-.648 6.883 6.883 0 00-.59-.6 7.687 7.687 0 00-.648-.527 9.814 9.814 0 00-.735-.484h-.034c-.256-.15-.527-.3-.817-.484s-.532-.29-.851-.45-.585-.295-.88-.435a34.25 34.25 0 01-1.388-.648l-.372-.2-.314-.184a5.95 5.95 0 01-.484-.358 2.457 2.457 0 01-.348-.392 1.025 1.025 0 01-.116-.193 1.975 1.975 0 01-.082-.2 2.077 2.077 0 01-.063-.213 2.1 2.1 0 01-.034-.251v-.5a3.667 3.667 0 01.087-.459l.077-.222a1.126 1.126 0 01.092-.189 1.165 1.165 0 01.121-.169 1.451 1.451 0 01.319-.295 1.567 1.567 0 01.174-.1l.208-.068a1.5 1.5 0 01.256-.048 2.72 2.72 0 01.28 0 1.891 1.891 0 01.368.034 1.731 1.731 0 01.319.092h.024a1.634 1.634 0 01.3.164 1.654 1.654 0 01.271.222l.029.029a1.514 1.514 0 01.242.339 2.451 2.451 0 01.15.392v.048a3.965 3.965 0 01.106.609c0 .213.034.455.039.716a.222.222 0 00.048.14.213.213 0 00.15.063h5.426a.215.215 0 00.213-.218 9 9 0 00-.063-1.1 8.3 8.3 0 00-.179-1.02 6.937 6.937 0 00-.295-.928 6.287 6.287 0 00-.406-.832l-.034-.063a6.577 6.577 0 00-.532-.769 5.915 5.915 0 00-.624-.677 6.078 6.078 0 00-.721-.721 6.823 6.823 0 00-.812-.484 7.955 7.955 0 00-1.818-.653h-.106a.377.377 0 01-.314-.372v-2.277a.232.232 0 00-.048-.14.213.213 0 00-.155-.063h-2.541a.222.222 0 00-.155.063.213.213 0 00-.063.15z"
+                                transform="translate(-3.57 -2.829)"
+                            ></Path>
+                            <G
+                                fill="none"
+                                stroke="#fff"
+                                strokeWidth="2"
+                                data-name="Ellipse 34"
+                                transform="translate(.018)"
+                            >
+                                <Ellipse cx="26" cy="26.5" stroke="none" rx="26" ry="26.5"></Ellipse>
+                                <Ellipse cx="26" cy="26.5" rx="25" ry="25.5"></Ellipse>
+                            </G>
+                        </G>
+                    </Svg>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
+                        {locales('titles.onlyWant')}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 18,
+                            color: 'white',
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('titles.getThePrice')}
+                    </Text>
+                </TouchableOpacity>
+
+            </View>
+            <Button
+                onPress={() => changeStep(3)}
+                style={[styles.backButtonContainer, { borderRadius: 8, marginTop: 50 }]}
+                rounded
+            >
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+                <FontAwesome5
+                    name='arrow-right'
+                    size={25}
+                    color='#7E7E7E'
+                />
+            </Button>
+        </View>
+    );
+};
+
+const GetProvince = props => {
+    const {
+        changeStep = _ => { },
+        saveProvince = _ => { },
+        allProvincesObject = {}
+    } = props;
+
+    let {
+        provinces: provincesFromProps = []
+    } = allProvincesObject;
+
+    const [provinces, setProvinces] = useState(provincesFromProps);
+
+    const [provinceSearch, setProvinceSearch] = useState(null);
+
+    const onProvinceSearchChanged = pSearch => {
+
+        setProvinceSearch(pSearch);
+
+        if (!pSearch)
+            return setProvinces(provincesFromProps);
+
+        const tempProvinces = provinces.filter(item => item.province_name.includes(pSearch));
+        setProvinces(tempProvinces);
+    };
+
+    const onProvinceSelected = (value) => {
+
+        if (provinces.length) {
+
+            const foundProvinceIndex = provinces.findIndex(item => item.id == value);
+
+            let cities = {};
+            let provinceName = '';
+
+            if (foundProvinceIndex > -1) {
+                cities = provinces[foundProvinceIndex].cities;
+                provinceName = provinces[foundProvinceIndex].province_name;
+            }
+
+            if (!Array.isArray(cities))
+                cities = Object.values(cities);
+
+            saveProvince(value, provinceName, cities);
+        }
+    };
+
+    const renderProvincesListEmptyComponent = _ => {
+        return (
+            <View
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    height: deviceHeight * 0.2
+                }}
+            >
+                <FontAwesome5
+                    name='list-ul'
+                    size={25}
+                    color='#38485F'
+                />
+                <Text
+                    style={{
+                        color: '#38485F',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 16,
+                        textAlign: 'center',
+                        marginVertical: 5
+                    }}
+                >
+                    {locales('labels.noProvinceFound')}
+                </Text>
+            </View>
+        );
+    };
+
+    const renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity
+                onPress={_ => onProvinceSelected(item.id)}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottomColor: '#E0E0E0',
+                    borderBottomWidth: 1,
+                    padding: 20
+                }}
+            >
+                <Text
+                    style={{
+                        color: '#38485F',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 12,
+                        width: '90%'
+                    }}
+                >
+                    {item.province_name}
+                </Text>
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    color='#38485F'
+                />
+            </TouchableOpacity>
+        );
+    };
+
+    const renderKeyExtractor = item => item.id.toString();
+
+    return (
+        <View
+            style={{
+                flex: 1,
+            }}
+        >
+            <Text
+                style={{
+                    color: '#555555',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 18,
+                }}
+            >
+                {locales('labels.selectTargetProvince')}
+            </Text>
+
+            <Text
+                style={{
+                    color: '#777777',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 14,
+                    marginTop: 15,
+                    marginBottom: 5
+                }}
+            >
+                {locales('labels.searchForTargetProvince')}
+            </Text>
+
+            <InputGroup
+                regular
+                style={{
+                    borderRadius: 4,
+                    borderColor: '#a8a8a8',
+                    paddingHorizontal: 10,
+                    backgroundColor: '#FBFBFB',
+                }}
+            >
+                <FontAwesome5
+                    name={provinceSearch ? 'times' : 'search'}
+                    color='#a8a8a8'
+                    size={16}
+                    onPress={_ => {
+                        if (provinceSearch) {
+                            setProvinceSearch(null);
+                            onProvinceSearchChanged();
+
+                        }
+                    }}
+                    solid
+                    style={{
+                        marginLeft: 10,
+                    }}
+                />
+                <Input
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    autoCompleteType='off'
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        borderRadius: 4,
+                        height: 45,
+                        flexDirection: 'row',
+                        textDecorationLine: 'none',
+                        direction: 'rtl',
+                        textAlign: 'right'
+                    }}
+                    onChangeText={onProvinceSearchChanged}
+                    value={provinceSearch}
+                    placeholder={locales('labels.searchForProvince')}
+                    placeholderTextColor="#BEBEBE"
+                />
+            </InputGroup>
+
+            <FlatList
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
+                renderItem={renderItem}
+                keyExtractor={renderKeyExtractor}
+                data={provinces}
+                style={{
+                    borderWidth: 1,
+                    borderColor: '#BDC4CC',
+                    borderRadius: 8,
+                    marginVertical: 20,
+
+                }}
+                ListEmptyComponent={renderProvincesListEmptyComponent}
+            />
+
+            <Button
+                onPress={() => changeStep(4)}
+                style={[styles.backButtonContainer, { borderRadius: 8, margin: 0 }]}
+                rounded
+            >
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+                <FontAwesome5
+                    name='arrow-right'
+                    size={25}
+                    color='#7E7E7E'
+                />
+            </Button>
+
+        </View>
+    )
+};
+
+const GetCity = props => {
+    const {
+        changeStep = _ => { },
+        saveCity = _ => { },
+        cities: citiesFromProps = []
+    } = props;
+
+    const [citySearch, setCitySearch] = useState(null);
+
+    const [cities, setCities] = useState(citiesFromProps);
+
+    const onCitySearchChanged = cSearch => {
+        setCitySearch(cSearch);
+
+        if (!cSearch)
+            return setCities(citiesFromProps);
+
+        const tempCities = cities.filter(item => item.city_name.includes(cSearch));
+        setCities(tempCities);
+    };
+
+    const onCitySelected = (value) => {
+        const cityName = cities.find(item => item.id == value)?.city_name ?? '';
+        saveCity(value, cityName);
+    };
+
+    const renderCitiesListEmptyComponent = _ => {
+        return (
+            <View
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    height: deviceHeight * 0.2
+                }}
+            >
+                <FontAwesome5
+                    name='list-ul'
+                    size={25}
+                    color='#38485F'
+                />
+                <Text
+                    style={{
+                        color: '#38485F',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 16,
+                        textAlign: 'center',
+                        marginVertical: 5
+                    }}
+                >
+                    {locales('labels.noCityFound')}
+                </Text>
+            </View>
+
+        );
+    };
+
+    const renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity
+                onPress={_ => onCitySelected(item.id)}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottomColor: '#E0E0E0',
+                    borderBottomWidth: 1,
+                    padding: 20
+                }}
+            >
+                <Text
+                    style={{
+                        color: '#38485F',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 12,
+                        width: '90%'
+                    }}
+                >
+                    {item.city_name}
+                </Text>
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    color='#38485F'
+                />
+            </TouchableOpacity>
+        );
+    };
+
+    const renderKeyExtractor = item => item.id.toString();
+
+    return (
+        <View
+            style={{
+                flex: 1,
+            }}
+        >
+            <Text
+                style={{
+                    color: '#555555',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 18,
+                }}
+            >
+                {locales('labels.selectTargetCity')}
+            </Text>
+
+            <Text
+                style={{
+                    color: '#777777',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 14,
+                    marginTop: 15,
+                    marginBottom: 5
+                }}
+            >
+                {locales('labels.searchForTargetCity')}
+            </Text>
+
+            <InputGroup
+                regular
+                style={{
+                    borderRadius: 4,
+                    borderColor: '#a8a8a8',
+                    paddingHorizontal: 10,
+                    backgroundColor: '#FBFBFB',
+                }}
+            >
+                <FontAwesome5
+                    name={citySearch ? 'times' : 'search'}
+                    color='#a8a8a8'
+                    size={16}
+                    onPress={_ => {
+                        if (citySearch) {
+                            setCitySearch(null);
+                            onCitySearchChanged();
+
+                        }
+                    }}
+                    solid
+                    style={{
+                        marginLeft: 10,
+                    }}
+                />
+                <Input
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    autoCompleteType='off'
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        borderRadius: 4,
+                        height: 45,
+                        flexDirection: 'row',
+                        textDecorationLine: 'none',
+                        direction: 'rtl',
+                        textAlign: 'right'
+                    }}
+                    onChangeText={onCitySearchChanged}
+                    value={citySearch}
+                    placeholder={locales('labels.searchForCity')}
+                    placeholderTextColor="#BEBEBE"
+                />
+            </InputGroup>
+
+            <FlatList
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
+                renderItem={renderItem}
+                keyExtractor={renderKeyExtractor}
+                data={cities}
+                style={{
+                    borderWidth: 1,
+                    borderColor: '#BDC4CC',
+                    borderRadius: 8,
+                    marginVertical: 20,
+
+                }}
+                ListEmptyComponent={renderCitiesListEmptyComponent}
+            />
+
+            <Button
+                onPress={() => changeStep(5)}
+                style={[styles.backButtonContainer, { borderRadius: 8, margin: 0 }]}
+                rounded
+            >
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+                <FontAwesome5
+                    name='arrow-right'
+                    size={25}
+                    color='#7E7E7E'
+                />
+            </Button>
+
+        </View>
+    )
+};
+
+const GetIntentToSendBuyAdRequest = props => {
+    const {
+        changeStep = _ => { },
+        subCategoryName = '',
+        onRequestClose = _ => { },
+        subCategoryId,
+        setShowLoader = _ => { }
+    } = props;
+
+    const [showBuyAdFields, setShowBuyAdFields] = useState(false);
+
+
+    const [productType, setProductType] = useState('');
+    const [productTypeError, setProductTypeError] = useState(null);
+    const [productTypeClicked, setProductTypeClicked] = useState(false);
+
+    const [amount, setAmount] = useState('');
+    const [amountError, setAmountError] = useState(null);
+    const [amountClicked, setAmountClicked] = useState(false);
+
+    const onIntentButtonClicked = type => {
+        if (type == 0) {
+            setShowBuyAdFields(false);
+            onRequestClose(true);
+        }
+        else {
+            setShowBuyAdFields(true);
+        }
+    };
+
+
+    const onProductTypeChanged = value => {
+        setProductTypeError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.productType') }));
+        setProductTypeClicked(!!value);
+        setProductType(value);
+    };
+
+    const onAmountChanged = value => {
+        setAmountError(value && (value <= 0 || value >= 1000000000) ? locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') }) : null);
+        setAmountClicked(!!value && value > 0 && value < 1000000000);
+        setAmount(value);
+    };
+
+    const onSubmit = () => {
+
+
+        if (!amount) {
+            setAmountError(locales('errors.pleaseEnterField', { fieldName: locales('titles.amountNeeded') }));
+            setAmountClicked(true);
+        }
+        else if (amount && (amount <= 0 || amount >= 1000000000)) {
+            setAmountError(locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') }));
+            setAmountClicked(true);
+        }
+        else {
+            setAmountError(null);
+            setAmountClicked(false);
+        }
+
+        if (productType && !validator.isPersianNameWithDigits(productType)) {
+            setProductTypeError(locales('errors.invalidFormat', { fieldName: locales('titles.productType') }));
+            setProductTypeClicked(true);
+        }
+        else {
+            setProductTypeError(null);
+            setProductTypeClicked(false);
+        }
+
+        if (!productTypeError && !amountError && amount && amount.length) {
+            let requestObj = {
+                name: productType,
+                requirement_amount: amount,
+                category_id: subCategoryId
+            };
+            setShowLoader(true);
+            props.registerBuyAdRequest(requestObj).then(_ => onRequestClose(true));
+        }
+    }
+        ;
+
+    return (
+        <ScrollView
+            keyboardDismissMode='none'
+            keyboardShouldPersistTaps='handled'
+            contentContainerStyle={{
+                padding: 10
+            }}
+        >
+            <Text
+                style={{
+                    color: '#555555',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 18,
+                    textAlign: 'center',
+                }}
+            >
+                {locales('titles.intentToSendRequest')}
+            </Text>
+
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    width: '100%',
+                    justifyContent: 'space-between',
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    marginTop: 30
+                }}
+            >
+                <Button
+                    onPress={_ => onIntentButtonClicked(1)}
+                    style={{
+                        backgroundColor: '#00C569',
+                        width: '45%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        elevation: 0,
+                        borderRadius: 8,
+                        height: 50
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 5
+                        }}
+                    >
+                        {locales('labels.yes')}
+                    </Text>
+                </Button>
+
+                <Button
+                    onPress={_ => onIntentButtonClicked(0)}
+                    style={{
+                        backgroundColor: '#E41C38',
+                        width: '45%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        elevation: 0,
+                        borderRadius: 8,
+                        height: 50
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 5
+                        }}
+                    >
+                        {locales('labels.no')}
+                    </Text>
+                </Button>
+            </View>
+            {showBuyAdFields ?
+                <View
+                    style={{
+                        marginTop: 70,
+                    }}
+                >
+                    <View>
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                color: '#777777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {locales('titles.type')}
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#21AD93',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200'
+                                }}
+                            >
+                                {` ${subCategoryName} `}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#777777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200'
+                                }}
+                            >
+                                {locales('titles.enterYouNeed')}
+                            </Text>
+                        </Text>
+
+                        <InputGroup
+                            regular
+                            style={{
+                                borderRadius: 4,
+                                // borderWidth: 2,
+                                borderColor: (productTypeError ? '#D50000' : ((productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8')),
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB',
+                            }}
+                        >
+                            <FontAwesome5
+                                name={
+                                    productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
+                                        ? 'times-circle' : 'edit'}
+                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                    : productTypeClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{
+                                    marginLeft: 10,
+                                }}
+                            />
+                            <Input
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                autoCompleteType='off'
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    borderRadius: 4,
+                                    height: 45,
+                                    flexDirection: 'row',
+                                    textDecorationLine: 'none',
+                                    direction: 'rtl',
+                                    textAlign: 'right'
+                                }}
+                                onChangeText={onProductTypeChanged}
+                                value={productType}
+                                placeholder={locales('titles.enterFirstName')}
+                                placeholderTextColor="#BEBEBE"
+
+                            />
+                        </InputGroup>
+                        <Label
+                            style={{
+                                height: 25,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                textAlign: !productTypeError && productType.length ? 'left' : 'right'
+                            }}
+                        >
+                            {!!productTypeError ?
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        color: '#D81A1A',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}
+                                >
+                                    {productTypeError}
+                                </Text>
+                                : null
+                            }
+                        </Label>
+
+                    </View>
+
+                    <View
+                        style={{
+                            marginTop: 50
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                color: '#777777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {locales('titles.howMuch')}
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#21AD93',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200'
+                                }}
+                            >
+                                {` ${subCategoryName} `}
+                            </Text>
+                            {productType && productType.length ?
+                                <>
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            color: '#777777',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontWeight: '200'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            color: '#21AD93',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontWeight: '200'
+                                        }}
+                                    >
+                                        {` ${productType} `}
+                                    </Text>
+                                </>
+                                :
+                                null
+                            }
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#777777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200'
+                                }}
+                            >
+                                {locales('titles.youNeed')}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 13,
+                                    color: '#E41C38',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    fontWeight: '200'
+                                }}
+                            >
+                                {` (${locales('labels.kiloGram')}) `}
+                            </Text>
+                        </Text>
+
+                        <InputGroup
+                            regular
+                            style={{
+                                borderRadius: 4,
+                                borderColor: (amountError ? '#D50000' : (amount.length ? '#00C569' : '#a8a8a8')),
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB',
+                            }}
+                        >
+                            <FontAwesome5
+                                name={
+                                    amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
+                                        ? 'times-circle' : 'edit'}
+                                color={amount ? amountError ? '#E41C38' : '#00C569'
+                                    : amountClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{
+                                    marginLeft: 10,
+                                }}
+                            />
+                            <Input
+                                autoCapitalize='none'
+                                keyboardType='number-pad'
+                                autoCorrect={false}
+                                autoCompleteType='off'
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    borderRadius: 4,
+                                    height: 45,
+                                    flexDirection: 'row',
+                                    textDecorationLine: 'none',
+                                    direction: 'rtl',
+                                    textAlign: 'right'
+                                }}
+                                onChangeText={onAmountChanged}
+                                value={amount}
+                                placeholder={locales('titles.enterFirstName')}
+                                placeholderTextColor="#BEBEBE"
+
+                            />
+                        </InputGroup>
+                        <Label
+                            style={{
+                                height: 55,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                textAlign: !amountError && amount.length ? 'left' : 'right'
+                            }}
+                        >
+                            {!!amountError ?
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        color: '#D81A1A',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    }}
+                                >
+                                    {amountError}
+                                </Text>
+                                : null
+                            }
+                        </Label>
+
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            alignSelf: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Button
+                            onPress={onSubmit}
+                            style={{
+                                backgroundColor: amount && amount.length && !amountError && !productTypeError ?
+                                    '#00C569' :
+                                    '#E0E0E0',
+                                width: '45%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                elevation: 0,
+                                borderRadius: 8,
+                                height: 50
+                            }}
+                        >
+                            <FontAwesome5
+                                name='arrow-left'
+                                size={15}
+                                color='white'
+                            />
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    marginHorizontal: 5
+                                }}
+                            >
+                                {locales('labels.justSubmit')}
+                            </Text>
+                        </Button>
+                        <Button
+                            onPress={() => changeStep(6)}
+                            style={[styles.backButtonContainer, { borderRadius: 8 }]}
+                            rounded
+                        >
+                            <Text style={styles.backButtonText}>
+                                {locales('titles.previousStep')}
+                            </Text>
+                            <FontAwesome5
+                                name='arrow-right'
+                                size={25}
+                                color='#7E7E7E'
+                            />
+                        </Button>
+                    </View>
+
+                </View>
+                :
+                <Button
+                    onPress={() => changeStep(6)}
+                    style={[styles.backButtonContainer, { borderRadius: 8 }]}
+                    rounded
+                >
+                    <Text style={styles.backButtonText}>
+                        {locales('titles.previousStep')}
+                    </Text>
+                    <FontAwesome5
+                        name='arrow-right'
+                        size={25}
+                        color='#7E7E7E'
+                    />
+                </Button>
+            }
+        </ScrollView>
+    );
+};
+
+const Loader = props => {
+    return (
+        <View
+            style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 50
+            }}
+        >
+            <ActivityIndicator
+                color='#00C569'
+                size={60}
+            />
+            <Text
+                style={{
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 16,
+                    color: '#595959',
+                    textAlign: 'center',
+                    marginTop: 20
+                }}
+            >
+                {locales('labels.pleaseWait')}
+            </Text>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -1056,8 +2320,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({
     authReducer,
-    profileReducer
+    profileReducer,
+    locationsReducer,
+    registerProductReducer,
 }) => {
+
+    const {
+        registerBuyAdRequestLoading
+    } = registerProductReducer;
 
     const {
         userProfileLoading
@@ -1066,15 +2336,27 @@ const mapStateToProps = ({
     const {
         checkAlreadySignedUpMobileNumberLoading,
         checkActivisionCodeLoading,
-        loginLoading
+        loginLoading,
+        submitRegisterLoading
     } = authReducer;
+
+    const {
+        provinceLoading,
+        allProvincesObject,
+    } = locationsReducer;
 
     return {
         checkAlreadySignedUpMobileNumberLoading,
         checkActivisionCodeLoading,
         loginLoading,
+        submitRegisterLoading,
 
-        userProfileLoading
+        userProfileLoading,
+
+        provinceLoading,
+        allProvincesObject,
+
+        registerBuyAdRequestLoading
     }
 };
 
@@ -1086,6 +2368,10 @@ const mapDispatchToProps = dispatch => {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
         fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
+        fetchAllProvinces: _ => dispatch(locationActions.fetchAllProvinces(undefined, true)),
+        submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
+        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password)),
+        registerBuyAdRequest: requestObj => dispatch(registerProductActions.registerBuyAdRequest(requestObj)),
     }
 };
 
