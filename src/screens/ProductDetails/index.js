@@ -741,6 +741,7 @@ class ProductDetails extends PureComponent {
                         subCategoryName={sub_category_name}
                         categoryId={category_id}
                         subCategoryId={sub_category_id}
+                        productName={product_name}
                         {...this.props}
                     />
                     : null

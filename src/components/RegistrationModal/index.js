@@ -59,8 +59,11 @@ const RegistrationModal = props => {
         loginLoading,
         userProfileLoading,
         submitRegisterLoading,
-        registerBuyAdRequestLoading
+        registerBuyAdRequestLoading,
+        productName
     } = props;
+
+    const [isAlreadySignedUp, setIsAlreadySignedUp] = useState(false);
 
     const [verificationCode, setVerificationCode] = useState(null);
 
@@ -72,8 +75,6 @@ const RegistrationModal = props => {
 
     const [intent, setIntentType] = useState(null);
 
-    const [intentToSendBuyAdRequest, setIntentToSendBuyAdRequest] = useState(null);
-
     const [showLoader, setShowLoader] = useState(false);
 
     const [province, setProvince] = useState(null);
@@ -84,7 +85,7 @@ const RegistrationModal = props => {
 
     const [cities, setCities] = useState([]);
 
-    const [step, setStep] = useState(3);
+    const [step, setStep] = useState(1);
 
     const changeStep = nextStep => {
         setStep(nextStep);
@@ -97,25 +98,25 @@ const RegistrationModal = props => {
         setStep(6);
     };
 
-    const saveCity = async (selectedCity, selectedCityName) => {
+    const saveCity = (selectedCity, selectedCityName) => {
 
         setSelectedCityName(selectedCityName);
 
         setCity(selectedCity);
 
-        submitRegister().then(_ => {
-            if (intent == 1) {
-                setShowLoader(false);
-                onRequestClose(true);
-            }
-        });
-
-        if (intent == 0)
+        if (intent == 1)
             setStep(7);
         else {
             setStep(1);
             setShowLoader(true);
         }
+
+        submitRegister().then(_ => {
+            if (intent == 0) {
+                setShowLoader(false);
+                onRequestClose(true);
+            }
+        });
     };
 
     const saveMobileNumber = mobile => {
@@ -143,10 +144,7 @@ const RegistrationModal = props => {
 
     const saveIntentType = intent => {
         setIntentType(intent);
-    };
-
-    const saveIntentToSendBuyAdRequest = intent => {
-        setIntentToSendBuyAdRequest(intent);
+        setStep(5);
     };
 
     const submitRegister = () => {
@@ -168,30 +166,34 @@ const RegistrationModal = props => {
                 verification_code: formatter.toLatinNumbers(verificationCode)
             };
 
-            props.submitRegister(registerObject)
-                .then(result => {
-                    AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
-                    analytics().logEvent('successfull_register', {
-                        mobile_number: mobileNumber
+            if (!isAlreadySignedUp)
+                props.submitRegister(registerObject)
+                    .then(result => {
+                        console.log('here111')
+                        AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
+                        analytics().logEvent('successfull_register', {
+                            mobile_number: mobileNumber
+                        });
+                        setIsAlreadySignedUp(true);
+                        login(mobileNumber, password)
+                            .then((result) => {
+                                console.log('here2222')
+                                let item = {
+                                    from_record_number: 0,
+                                    sort_by: ENUMS.SORT_LIST.values.BM,
+                                    to_record_number: 16,
+                                };
+                                fetchAllProductsList(item, true).then(_ => updateProductsList(true));
+                                analytics().setUserId(result.payload.id.toString());
+                                fetchUserProfile().then(_ => resolve(true));
+                            })
                     })
-                    login(mobileNumber, password)
-                        .then((result) => {
-                            let item = {
-                                from_record_number: 0,
-                                sort_by: ENUMS.SORT_LIST.values.BM,
-                                to_record_number: 16,
-                            };
-                            fetchAllProductsList(item, true).then(_ => updateProductsList(true));
-                            analytics().setUserId(result.payload.id.toString());
-                            fetchUserProfile().then(_ => resolve(true));
-                        })
-                })
-                .catch(err => {
-                    // if (err && err.data){
-                    //     this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
-                    // reject(err);
-                    // }
-                });
+                    .catch(err => {
+                        // if (err && err.data){
+                        //     this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+                        // reject(err);
+                        // }
+                    });
 
         });
     };
@@ -265,9 +267,9 @@ const RegistrationModal = props => {
                 return (
                     <GetIntentToSendBuyAdRequest
                         {...props}
-                        saveIntentToSendBuyAdRequest={saveIntentToSendBuyAdRequest}
                         changeStep={changeStep}
                         subCategoryName={subCategoryName}
+                        productName={productName}
                         onRequestClose={onRequestClose}
                         subCategoryId={subCategoryId}
                         setShowLoader={setShowLoader}
@@ -329,9 +331,18 @@ const GetMobileNumber = props => {
 
     const [mobileNumberError, setMobileNumberError] = useState(null);
 
+    useEffect(_ => {
+        if (props.mobileNumber && props.mobileNumber.length)
+            setMobileNumber(props.mobileNumber);
+    }, []);
+
     const submitMobileNumber = _ => {
+
+        // if (!!checkAlreadySignedUpMobileNumberLoading)
+        //     return;
+
         if (!mobileNumber)
-            setMobileNumberError(locales('errors.fieldNeeded', { fieldName: locales('titles.mobileNumber') }));
+            setMobileNumberError(locales('titles.enterPhoneNumber'));
 
         else if (mobileNumber && mobileNumber.length && !validator.isMobileNumber(mobileNumber))
             setMobileNumberError(locales('errors.invalidFormat', { fieldName: locales('titles.mobileNumber') }));
@@ -526,11 +537,19 @@ const GetVerificationCode = props => {
         checkAlreadySingedUpMobileNumber = _ => { }
     } = props;
 
+
+    useEffect(_ => {
+        if (props.verificationCode && props.verificationCode.length)
+            setVerificationCode(props.verificationCode);
+    }, []);
+
     const onVerificationCodeSubmited = (value) => {
-        if (!value || value.length != 4) {
+        if (!value) {
+            setValueError(locales('labels.enterCode'))
+        }
+        else if (value.length != 4) {
             setValueError(locales('errors.errorInVerificationCode'))
         }
-
         else {
             setValueError('')
             checkActivisionCode(value, mobileNumber).then((res = {}) => {
@@ -778,6 +797,13 @@ const GetFullName = props => {
     const [lastNameError, setLastNameError] = useState('');
     const [lastNameClicked, setLastNameClicked] = useState(false);
 
+    useEffect(_ => {
+        if (props.firstName && props.firstName.length && props.lastName && props.lastName.length) {
+            setFirstName(props.firstName);
+            setLastName(props.lastName);
+        }
+    }, []);
+
     const handleAutoFocus = _ => {
 
         if (!firstName || firstNameError) {
@@ -794,13 +820,13 @@ const GetFullName = props => {
     };
 
     const onFirstNameChanged = value => {
-        setFirstNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.firstName') }));
+        setFirstNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.enterItPersian', { fieldName: locales('titles.firstName') }));
         setFirstNameClicked(!!value);
         setFirstName(value);
     };
 
     const onLastNameChanged = value => {
-        setLastNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.invalidFormat', { fieldName: locales('titles.lastName') }));
+        setLastNameError((!!!value || validator.isPersianName(value)) ? null : locales('errors.enterItPersian', { fieldName: locales('titles.lastName') }));
         setLastNameClicked(!!value);
         setLastName(value);
     };
@@ -812,7 +838,7 @@ const GetFullName = props => {
             setFirstNameClicked(true);
         }
         else if (firstName && firstNameError) {
-            setFirstNameError(locales('errors.invalidFormat', { fieldName: locales('titles.firstName') }));
+            setFirstNameError(locales('errors.enterItPersian', { fieldName: locales('titles.firstName') }));
             setFirstNameClicked(true);
         }
         else {
@@ -825,7 +851,7 @@ const GetFullName = props => {
             setLastNameClicked(true);
         }
         else if (lastName && lastNameError) {
-            setLastNameError(locales('errors.invalidFormat', { fieldName: locales('titles.lastName') }));
+            setLastNameError(locales('errors.enterItPersian', { fieldName: locales('titles.lastName') }));
             setLastNameClicked(true);
         }
         else {
@@ -834,7 +860,7 @@ const GetFullName = props => {
         }
 
         if (firstName && lastName && !firstNameError && !lastNameError)
-            props.saveFullName(firstName, lastName);
+            props.saveFullName(firstName.trim(), lastName.trim());
     };
 
     return (
@@ -1091,10 +1117,6 @@ const GetIntentType = props => {
         fetchAllProvinces();
     });
 
-    const setIntentType = intent => {
-        saveIntentType(intent);
-        changeStep(5);
-    };
 
     return (
         <View>
@@ -1106,7 +1128,7 @@ const GetIntentType = props => {
                 }}
             >
                 <TouchableOpacity
-                    onPress={_ => setIntentType(0)}
+                    onPress={_ => saveIntentType(1)}
                     activeOpacity={1}
                     style={{
                         borderRadius: 11,
@@ -1169,7 +1191,7 @@ const GetIntentType = props => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={_ => setIntentType(1)}
+                    onPress={_ => saveIntentType(0)}
                     activeOpacity={1}
                     style={{
                         borderRadius: 11,
@@ -1675,13 +1697,14 @@ const GetIntentToSendBuyAdRequest = props => {
         subCategoryName = '',
         onRequestClose = _ => { },
         subCategoryId,
-        setShowLoader = _ => { }
+        setShowLoader = _ => { },
+        productName
     } = props;
 
     const [showBuyAdFields, setShowBuyAdFields] = useState(false);
 
 
-    const [productType, setProductType] = useState('');
+    const [productType, setProductType] = useState(productName);
     const [productTypeError, setProductTypeError] = useState(null);
     const [productTypeClicked, setProductTypeClicked] = useState(false);
 
@@ -1746,7 +1769,11 @@ const GetIntentToSendBuyAdRequest = props => {
                 category_id: subCategoryId
             };
             setShowLoader(true);
-            props.registerBuyAdRequest(requestObj).then(_ => onRequestClose(true));
+            props.registerBuyAdRequest(requestObj).then(_ => {
+                console.log('here33333')
+                setShowLoader(false);
+                onRequestClose(true);
+            });
         }
     }
         ;
@@ -2024,6 +2051,7 @@ const GetIntentToSendBuyAdRequest = props => {
                                 }}
                             />
                             <Input
+                                maxLength={13}
                                 autoCapitalize='none'
                                 keyboardType='number-pad'
                                 autoCorrect={false}
@@ -2141,7 +2169,7 @@ const GetIntentToSendBuyAdRequest = props => {
     );
 };
 
-const Loader = props => {
+const Loader = _ => {
     return (
         <View
             style={{
