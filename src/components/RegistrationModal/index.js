@@ -76,19 +76,28 @@ const RegistrationModal = props => {
     const [intent, setIntentType] = useState(null);
 
     const [showLoader, setShowLoader] = useState(false);
+    const [intentTypeToSendBuyAdRequest, setIntentTypeToSendBuyAdRequest] = useState(null);
 
     const [province, setProvince] = useState(null);
     const [provinceName, setSelectedProvinceName] = useState(null);
 
     const [city, setCity] = useState(null);
-    const [cityName, setSelectedCityName] = useState([]);
 
     const [cities, setCities] = useState([]);
 
     const [step, setStep] = useState(1);
 
+    useEffect(() => {
+        if (isAlreadySignedUp && intentTypeToSendBuyAdRequest == 0)
+            onRequestClose(true);
+    }, [isAlreadySignedUp]);
+
     const changeStep = nextStep => {
         setStep(nextStep);
+    };
+
+    const saveIntentTypeToSendBuyAdRequest = type => {
+        setIntentTypeToSendBuyAdRequest(type);
     };
 
     const saveProvince = (selectedProvince, selectedProvinceName, cities) => {
@@ -99,9 +108,6 @@ const RegistrationModal = props => {
     };
 
     const saveCity = (selectedCity, selectedCityName) => {
-
-        setSelectedCityName(selectedCityName);
-
         setCity(selectedCity);
 
         if (intent == 1)
@@ -111,7 +117,7 @@ const RegistrationModal = props => {
             setShowLoader(true);
         }
 
-        submitRegister().then(_ => {
+        submitRegister(selectedCityName).then(_ => {
             if (intent == 0) {
                 setShowLoader(false);
                 onRequestClose(true);
@@ -147,7 +153,7 @@ const RegistrationModal = props => {
         setStep(5);
     };
 
-    const submitRegister = () => {
+    const submitRegister = city => {
 
         return new Promise((resolve, reject) => {
             const password = formatter.makeRandomString(8);
@@ -160,7 +166,7 @@ const RegistrationModal = props => {
                 user_name: '',
                 sex: 'man',
                 province: provinceName,
-                city: cityName,
+                city,
                 activity_type: '1',
                 category_id: categoryId,
                 verification_code: formatter.toLatinNumbers(verificationCode)
@@ -169,15 +175,12 @@ const RegistrationModal = props => {
             if (!isAlreadySignedUp)
                 props.submitRegister(registerObject)
                     .then(result => {
-                        console.log('here111')
                         AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
                         analytics().logEvent('successfull_register', {
                             mobile_number: mobileNumber
                         });
-                        setIsAlreadySignedUp(true);
                         login(mobileNumber, password)
                             .then((result) => {
-                                console.log('here2222')
                                 let item = {
                                     from_record_number: 0,
                                     sort_by: ENUMS.SORT_LIST.values.BM,
@@ -185,7 +188,10 @@ const RegistrationModal = props => {
                                 };
                                 fetchAllProductsList(item, true).then(_ => updateProductsList(true));
                                 analytics().setUserId(result.payload.id.toString());
-                                fetchUserProfile().then(_ => resolve(true));
+                                fetchUserProfile().then(_ => {
+                                    setIsAlreadySignedUp(true);
+                                    resolve(true)
+                                });
                             })
                     })
                     .catch(err => {
@@ -269,8 +275,10 @@ const RegistrationModal = props => {
                         {...props}
                         changeStep={changeStep}
                         subCategoryName={subCategoryName}
+                        isAlreadySignedUp={isAlreadySignedUp}
                         productName={productName}
                         onRequestClose={onRequestClose}
+                        saveIntentTypeToSendBuyAdRequest={saveIntentTypeToSendBuyAdRequest}
                         subCategoryId={subCategoryId}
                         setShowLoader={setShowLoader}
                     />
@@ -540,7 +548,7 @@ const GetVerificationCode = props => {
 
     useEffect(_ => {
         if (props.verificationCode && props.verificationCode.length)
-            setVerificationCode(props.verificationCode);
+            setValue(props.verificationCode);
     }, []);
 
     const onVerificationCodeSubmited = (value) => {
@@ -1698,7 +1706,9 @@ const GetIntentToSendBuyAdRequest = props => {
         onRequestClose = _ => { },
         subCategoryId,
         setShowLoader = _ => { },
-        productName
+        productName,
+        isAlreadySignedUp,
+        saveIntentTypeToSendBuyAdRequest = _ => { }
     } = props;
 
     const [showBuyAdFields, setShowBuyAdFields] = useState(false);
@@ -1714,9 +1724,13 @@ const GetIntentToSendBuyAdRequest = props => {
     const [amountText, setAmountText] = useState('');
 
     const onIntentButtonClicked = type => {
+        saveIntentTypeToSendBuyAdRequest(type);
         if (type == 0) {
             setShowBuyAdFields(false);
-            onRequestClose(true);
+            if (isAlreadySignedUp)
+                onRequestClose(true);
+            else
+                setShowLoader(true);
         }
         else {
             setShowBuyAdFields(true);
@@ -1770,7 +1784,6 @@ const GetIntentToSendBuyAdRequest = props => {
             };
             setShowLoader(true);
             props.registerBuyAdRequest(requestObj).then(_ => {
-                console.log('here33333')
                 setShowLoader(false);
                 onRequestClose(true);
             });

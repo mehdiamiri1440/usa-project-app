@@ -499,7 +499,7 @@ class ProductDetails extends PureComponent {
         if (!loggedInUserId)
             return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
 
-        if (userId == loggedInUserId || !!!is_seller)
+        if (userId == loggedInUserId || !!is_seller)
             return;
 
         this.props.fetchSellerMobileNumber(contactInfoObject).then(result => {
