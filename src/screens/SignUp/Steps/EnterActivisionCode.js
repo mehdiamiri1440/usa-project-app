@@ -6,6 +6,7 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import { StackActions } from '@react-navigation/native';
 import { Button, Label } from 'native-base'
 import { connect } from 'react-redux'
 import analytics from '@react-native-firebase/analytics';
@@ -67,6 +68,15 @@ const EnterActivisionCode = (props) => {
                         props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         props.fetchUserProfile().then(_ => {
+                            const {
+                                contact,
+                                profile_photo
+                            } = props;
+                            if (contact && Object.keys(contact).length) {
+                                const popAction = StackActions.pop(1);
+                                props.navigation.dispatch(popAction);
+                                props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
                         })
                         // .catch(_ => setShowModal(true));;
                     })

@@ -27,11 +27,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-
-import UpgradeApp from '../screens/UpgradeApp'
-import Intro from '../screens/Intro'
-import SignUp from '../screens/SignUp'
-
 import {
     HomeStack,
     MessagesStack,
@@ -40,7 +35,8 @@ import {
     RegisterRequestStack,
     SpecialProductsStack,
     RequestsStack,
-    unSignedInRoutes
+    unSignedInRoutes,
+    StartUp
 }
     from './tabs';
 
@@ -85,12 +81,6 @@ const routes = props => {
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
     const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
-
-    const forFade = ({ current }) => ({
-        cardStyle: {
-            opacity: current.progress,
-        },
-    });
 
     useEffect(() => {
 
@@ -312,21 +302,6 @@ const routes = props => {
         SplashScreen.hide();
         setShouldDoAsyncJobs(true);
     };
-
-    const StartUp = _ => (
-        <Stack.Navigator
-            screenOptions={{
-                gestureDirection: 'horizontal',
-                cardStyleInterpolator: forFade,
-                gestureEnabled: true,
-                headerShown: false
-            }}
-        >
-            <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
-            <Stack.Screen key='Intro' name='Intro' component={Intro} />
-            <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
-        </Stack.Navigator>
-    )
 
     const renderIconColors = (focused, key) => {
         if (focused) {

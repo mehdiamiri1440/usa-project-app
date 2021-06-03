@@ -16,7 +16,6 @@ import Home from '../screens/Home/Home';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
-import UpgradeApp from '../screens/UpgradeApp'
 import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
 import SpecialProducts from '../screens/SpecialProducts';
@@ -36,6 +35,9 @@ import Wallet from '../screens/Home/Wallet';
 import UsersSeenMobile from '../screens/Home/UsersSeenMobile';
 import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
 import Requests from '../screens/Requests/Requests';
+import UpgradeApp from '../screens/UpgradeApp';
+import Intro from '../screens/Intro';
+import SignUp from '../screens/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +46,22 @@ const forFade = ({ current }) => ({
         opacity: current.progress,
     },
 });
+
+export const StartUp = _ => (
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+            headerShown: false
+        }}
+    >
+        <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
+        <Stack.Screen key='Intro' name='Intro' component={Intro} />
+        <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
+    </Stack.Navigator>
+)
+
 
 export const MyBuskoolStack = _ => {
     return (
@@ -561,6 +579,16 @@ export const HomeStack = _ => {
                 key='Chat'
                 name='Chat'
                 component={Chat}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='StartUp'
+                name='StartUp'
+                component={StartUp}
             />
 
         </Stack.Navigator>

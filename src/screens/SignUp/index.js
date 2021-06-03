@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, BackHandler, ScrollView } from 'react-native'
+import { StackActions } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
@@ -128,6 +129,19 @@ class SignUp extends React.Component {
             verificationCode
         } = this.state;
 
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact,
+            profile_photo
+        } = params;
+
         let registerObject = {
             phone: formatter.toLatinNumbers(mobileNumber),
             first_name: firstName,
@@ -157,6 +171,11 @@ class SignUp extends React.Component {
                         this.props.fetchAllProductsList(item, true).then(_ => this.props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         this.props.fetchUserProfile().then(_ => {
+                            if (contact && Object.keys(contact).length) {
+                                const popAction = StackActions.pop(1);
+                                this.props.navigation.dispatch(popAction);
+                                this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
                         })
                         // .catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
@@ -192,13 +211,34 @@ class SignUp extends React.Component {
             activityZone
         } = this.state;
 
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact,
+            profile_photo
+        } = params;
+
         switch (stepNumber) {
 
             case 1: {
                 return <Login mobileNumber={mobileNumber} changeStep={this.changeStep} setMobileNumber={this.setMobileNumber}  {...this.props} />
             }
             case 2: {
-                return <EnterActivisionCode setVerificationCode={this.setVerificationCode} verificationCode={verificationCode} changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
+                return <EnterActivisionCode
+                    profile_photo={profile_photo}
+                    contact={contact}
+                    setVerificationCode={this.setVerificationCode}
+                    verificationCode={verificationCode}
+                    changeStep={this.changeStep}
+                    mobileNumber={this.state.mobileNumber}
+                    {...this.props}
+                />
             }
             case 3: {
                 return <UserBasicInfo gender={gender} firstName={firstName} lastName={lastName} {...this.props} changeStep={this.changeStep} setFullNameAndGender={this.setFullNameAndGender} />
