@@ -388,7 +388,7 @@ const GetMobileNumber = props => {
             <InputGroup
                 regular
                 style={{
-                    borderRadius: 4,
+                    borderRadius: 8,
                     borderColor: (mobileNumberError ? '#D50000' :
                         (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
                             '#00C569' :
@@ -879,7 +879,7 @@ const GetFullName = props => {
                 <InputGroup
                     regular
                     style={{
-                        borderRadius: 4,
+                        borderRadius: 8,
                         borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
                         paddingHorizontal: 10,
                         backgroundColor: '#FBFBFB',
@@ -956,8 +956,7 @@ const GetFullName = props => {
                 <InputGroup
                     regular
                     style={{
-                        borderRadius: 4,
-                        // borderWidth: 2,
+                        borderRadius: 8,
                         borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')),
                         paddingHorizontal: 10,
                         backgroundColor: '#FBFBFB',
@@ -1242,8 +1241,8 @@ const GetIntentType = props => {
                 </Text>
                 <FontAwesome5
                     name='arrow-right'
-                    size={25}
-                    color='#7E7E7E'
+                    size={15}
+                    color='#909090'
                 />
             </Button>
         </View>
@@ -1392,7 +1391,7 @@ const GetProvince = props => {
             <InputGroup
                 regular
                 style={{
-                    borderRadius: 4,
+                    borderRadius: 8,
                     borderColor: '#a8a8a8',
                     paddingHorizontal: 10,
                     backgroundColor: '#FBFBFB',
@@ -1461,8 +1460,8 @@ const GetProvince = props => {
                 </Text>
                 <FontAwesome5
                     name='arrow-right'
-                    size={25}
-                    color='#7E7E7E'
+                    size={15}
+                    color='#909090'
                 />
             </Button>
 
@@ -1592,7 +1591,7 @@ const GetCity = props => {
             <InputGroup
                 regular
                 style={{
-                    borderRadius: 4,
+                    borderRadius: 8,
                     borderColor: '#a8a8a8',
                     paddingHorizontal: 10,
                     backgroundColor: '#FBFBFB',
@@ -1661,8 +1660,8 @@ const GetCity = props => {
                 </Text>
                 <FontAwesome5
                     name='arrow-right'
-                    size={25}
-                    color='#7E7E7E'
+                    size={15}
+                    color='#909090'
                 />
             </Button>
 
@@ -1689,6 +1688,7 @@ const GetIntentToSendBuyAdRequest = props => {
     const [amount, setAmount] = useState('');
     const [amountError, setAmountError] = useState(null);
     const [amountClicked, setAmountClicked] = useState(false);
+    const [amountText, setAmountText] = useState('');
 
     const onIntentButtonClicked = type => {
         if (type == 0) {
@@ -1711,6 +1711,7 @@ const GetIntentToSendBuyAdRequest = props => {
         setAmountError(value && (value <= 0 || value >= 1000000000) ? locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.amountNeeded') }) : null);
         setAmountClicked(!!value && value > 0 && value < 1000000000);
         setAmount(value);
+        setAmountText(formatter.convertUnitsToText(value));
     };
 
     const onSubmit = () => {
@@ -1754,9 +1755,6 @@ const GetIntentToSendBuyAdRequest = props => {
         <ScrollView
             keyboardDismissMode='none'
             keyboardShouldPersistTaps='handled'
-            contentContainerStyle={{
-                padding: 10
-            }}
         >
             <Text
                 style={{
@@ -1764,6 +1762,7 @@ const GetIntentToSendBuyAdRequest = props => {
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     fontSize: 18,
                     textAlign: 'center',
+                    paddingHorizontal: 15
                 }}
             >
                 {locales('titles.intentToSendRequest')}
@@ -1774,7 +1773,7 @@ const GetIntentToSendBuyAdRequest = props => {
                 style={{
                     flexDirection: 'row-reverse',
                     width: '100%',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                     alignSelf: 'center',
                     alignItems: 'center',
                     marginTop: 30
@@ -1783,8 +1782,8 @@ const GetIntentToSendBuyAdRequest = props => {
                 <Button
                     onPress={_ => onIntentButtonClicked(1)}
                     style={{
-                        backgroundColor: '#00C569',
-                        width: '45%',
+                        backgroundColor: showBuyAdFields ? '#E0E0E0' : '#00C569',
+                        width: '35%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         elevation: 0,
@@ -1808,7 +1807,7 @@ const GetIntentToSendBuyAdRequest = props => {
                     onPress={_ => onIntentButtonClicked(0)}
                     style={{
                         backgroundColor: '#E41C38',
-                        width: '45%',
+                        width: '35%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         elevation: 0,
@@ -1831,7 +1830,7 @@ const GetIntentToSendBuyAdRequest = props => {
             {showBuyAdFields ?
                 <View
                     style={{
-                        marginTop: 70,
+                        marginTop: 50,
                     }}
                 >
                     <View>
@@ -1840,6 +1839,7 @@ const GetIntentToSendBuyAdRequest = props => {
                                 fontSize: 14,
                                 color: '#777777',
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                marginBottom: 8
                             }}
                         >
                             {locales('titles.type')}
@@ -1868,8 +1868,7 @@ const GetIntentToSendBuyAdRequest = props => {
                         <InputGroup
                             regular
                             style={{
-                                borderRadius: 4,
-                                // borderWidth: 2,
+                                borderRadius: 8,
                                 borderColor: (productTypeError ? '#D50000' : ((productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8')),
                                 paddingHorizontal: 10,
                                 backgroundColor: '#FBFBFB',
@@ -1903,7 +1902,7 @@ const GetIntentToSendBuyAdRequest = props => {
                                 }}
                                 onChangeText={onProductTypeChanged}
                                 value={productType}
-                                placeholder={locales('titles.enterFirstName')}
+                                placeholder={locales('titles.enterYouNeedProduct')}
                                 placeholderTextColor="#BEBEBE"
 
                             />
@@ -1933,7 +1932,7 @@ const GetIntentToSendBuyAdRequest = props => {
 
                     <View
                         style={{
-                            marginTop: 50
+                            marginTop: 20
                         }}
                     >
                         <Text
@@ -1941,6 +1940,7 @@ const GetIntentToSendBuyAdRequest = props => {
                                 fontSize: 14,
                                 color: '#777777',
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                marginBottom: 8
                             }}
                         >
                             {locales('titles.howMuch')}
@@ -2005,7 +2005,7 @@ const GetIntentToSendBuyAdRequest = props => {
                         <InputGroup
                             regular
                             style={{
-                                borderRadius: 4,
+                                borderRadius: 8,
                                 borderColor: (amountError ? '#D50000' : (amount.length ? '#00C569' : '#a8a8a8')),
                                 paddingHorizontal: 10,
                                 backgroundColor: '#FBFBFB',
@@ -2040,30 +2040,28 @@ const GetIntentToSendBuyAdRequest = props => {
                                 }}
                                 onChangeText={onAmountChanged}
                                 value={amount}
-                                placeholder={locales('titles.enterFirstName')}
+                                placeholder={locales('titles.amountWithExample')}
                                 placeholderTextColor="#BEBEBE"
 
                             />
                         </InputGroup>
-                        <Label
-                            style={{
-                                height: 55,
+
+                        <Label style={{
+                            height: 50,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                        }}>
+
+                            {!!amountError && <Text style={{
+                                fontSize: 14, color: '#D81A1A',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                textAlign: !amountError && amount.length ? 'left' : 'right'
-                            }}
-                        >
-                            {!!amountError ?
-                                <Text
-                                    style={{
-                                        fontSize: 14,
-                                        color: '#D81A1A',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    }}
-                                >
-                                    {amountError}
-                                </Text>
-                                : null
-                            }
+                            }}> {amountError}</Text>}
+                            {!amountError && amount.length ? <Text style={{
+                                fontSize: 14, color: '#1DA1F2',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}>
+                                {amountText}</Text> : null}
+
                         </Label>
 
                     </View>
@@ -2073,7 +2071,8 @@ const GetIntentToSendBuyAdRequest = props => {
                             width: '100%',
                             justifyContent: 'space-between',
                             alignSelf: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            marginTop: 40
                         }}
                     >
                         <Button
@@ -2087,11 +2086,10 @@ const GetIntentToSendBuyAdRequest = props => {
                                 justifyContent: 'center',
                                 elevation: 0,
                                 borderRadius: 8,
-                                height: 50
                             }}
                         >
                             <FontAwesome5
-                                name='arrow-left'
+                                name='check'
                                 size={15}
                                 color='white'
                             />
@@ -2116,8 +2114,8 @@ const GetIntentToSendBuyAdRequest = props => {
                             </Text>
                             <FontAwesome5
                                 name='arrow-right'
-                                size={25}
-                                color='#7E7E7E'
+                                size={15}
+                                color='#909090'
                             />
                         </Button>
                     </View>
@@ -2126,7 +2124,7 @@ const GetIntentToSendBuyAdRequest = props => {
                 :
                 <Button
                     onPress={() => changeStep(6)}
-                    style={[styles.backButtonContainer, { borderRadius: 8 }]}
+                    style={[styles.backButtonContainer, { borderRadius: 8, marginTop: 50 }]}
                     rounded
                 >
                     <Text style={styles.backButtonText}>
@@ -2134,8 +2132,8 @@ const GetIntentToSendBuyAdRequest = props => {
                     </Text>
                     <FontAwesome5
                         name='arrow-right'
-                        size={25}
-                        color='#7E7E7E'
+                        size={15}
+                        color='#909090'
                     />
                 </Button>
             }

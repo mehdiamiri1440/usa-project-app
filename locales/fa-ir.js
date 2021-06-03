@@ -471,7 +471,7 @@ export default {
     'titles.minimumOrderWithExample': 'مثلا : 25,000',
     'titles.postComment': 'ثبت نظر',
     'titles.minimumOrder': 'حداقل میزان فروش (کیلوگرم)',
-    'titles.intentToSendRequest': 'آیا تمایل به ارسال  درخواست خرید به فروشندگان مشابه دارید؟',
+    'titles.intentToSendRequest': 'آیا تمایل به ارسال درخواست خرید به فروشندگان مشابه دارید؟',
     'titles.minimumOrderWithOutKilo': 'حداقل میزان فروش',
     'titles.writeYourFinalDescription': 'توضیحات نهایی محصول خود را بنویسید',
     'titles.veryBad': 'خیلی بد',
