@@ -476,7 +476,7 @@ class ProductDetails extends PureComponent {
             .catch(_ => { })
     };
 
-    fetchContactInfo = (id, userId) => {
+    fetchContactInfo = (id, userId, isRegistrationModalSeen) => {
 
         const {
             loggedInUserId,
@@ -496,8 +496,11 @@ class ProductDetails extends PureComponent {
             p_id: id,
             item: "PRODUCT"
         }
-        if (!loggedInUserId)
-            return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
+        if (!loggedInUserId) {
+            if (isRegistrationModalSeen != true)
+                return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
+            return;
+        }
 
         if (userId == loggedInUserId || !!is_seller)
             return;
@@ -625,7 +628,7 @@ class ProductDetails extends PureComponent {
             }
 
             if (registrationModalReturnType == 1)
-                this.fetchContactInfo(productIdFromProductDetails, userId);
+                this.fetchContactInfo(productIdFromProductDetails, userId, true);
             else {
                 if (shouldOpenChat == true)
                     this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
