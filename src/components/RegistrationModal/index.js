@@ -84,7 +84,7 @@ const RegistrationModal = props => {
 
     const [cities, setCities] = useState([]);
 
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(3);
 
     const changeStep = nextStep => {
         setStep(nextStep);
@@ -914,7 +914,7 @@ const GetFullName = props => {
                         }}
                         onChangeText={onFirstNameChanged}
                         value={firstName}
-                        placeholder={locales('titles.enterFirstName')}
+                        placeholder={locales('titles.yourName')}
                         placeholderTextColor="#BEBEBE"
                         ref={firstNameRef}
 
@@ -992,7 +992,7 @@ const GetFullName = props => {
                         }}
                         onChangeText={onLastNameChanged}
                         value={lastName}
-                        placeholder={locales('titles.enterLastName')}
+                        placeholder={locales('titles.yourFamilyName')}
                         placeholderTextColor="#BEBEBE"
                         ref={lastNameRef}
 
@@ -1025,7 +1025,8 @@ const GetFullName = props => {
                         width: '100%',
                         justifyContent: 'space-between',
                         alignSelf: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        marginTop: 20
                     }}
                 >
                     <Button
@@ -1039,7 +1040,6 @@ const GetFullName = props => {
                             justifyContent: 'center',
                             elevation: 0,
                             borderRadius: 8,
-                            height: 50
                         }}
                     >
                         <FontAwesome5
@@ -1068,8 +1068,8 @@ const GetFullName = props => {
                         </Text>
                         <FontAwesome5
                             name='arrow-right'
-                            size={25}
-                            color='#7E7E7E'
+                            size={15}
+                            color='#909090'
                         />
                     </Button>
                 </View>
@@ -2189,16 +2189,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
     },
     focusCell: {
         borderColor: 'green',

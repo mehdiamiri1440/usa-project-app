@@ -637,6 +637,8 @@ export default {
     "titles.doing": "درحال انجام",
     "titles.done": "انجام شده",
     'titles.checkCode': 'بررسی کد',
+    'titles.yourName': 'نام شما',
+    'titles.yourFamilyName': 'نام‌خانوادگی شما',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید .",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
