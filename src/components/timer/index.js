@@ -46,7 +46,50 @@ class Timer extends Component {
 
     render() {
         const { min, sec } = this.state;
-        let { substitutionText, timerStyle, isCountDownTimer, substitutionTextStyle, containerStyle, onSubstitution } = this.props;
+        let { substitutionText, timerStyle, isCountDownTimer, substitutionTextStyle, containerStyle, onSubstitution, inlineStyle = false } = this.props;
+        if (inlineStyle == true)
+            return (
+                min === 0 && sec === 0 ? (
+                    <Text
+                        onPress={() => {
+                            onSubstitution();
+                            this.restartTimer();
+                        }}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            ...substitutionTextStyle,
+                        }}>{substitutionText}</Text>
+                ) :
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 14,
+                            color: '#777777',
+                        }}
+                    >
+                        {`${locales('titles.timeToSendCodeAgain')} `}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 14,
+                                color: '#1DA1F2',
+                                fontWeight: '200'
+                            }}
+                        >
+                            {min}:{sec < 10 ? `0${sec}` : sec}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 14,
+                                color: '#777777',
+                                fontWeight: '200'
+                            }}
+                        >
+                            {` ${locales('titles.other')}`}
+                        </Text>
+                    </Text>
+            )
         return (
             <View style={containerStyle}>
                 {isCountDownTimer && (min !== 0 || sec !== 0) && <Text
@@ -61,8 +104,8 @@ class Timer extends Component {
                             this.restartTimer();
                         }}
                         style={{
-                            ...substitutionTextStyle,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            ...substitutionTextStyle,
                         }}>{substitutionText}</Text>
                 ) : (
                     <Text style={{

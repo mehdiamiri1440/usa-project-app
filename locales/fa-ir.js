@@ -482,6 +482,9 @@ export default {
     'titles.enterYourRate': 'به این کاربر از 1 تا 5 امتیاز دهید',
     "titles.userName": "نام کاربری",
     'titles.sendVerificationCodeAgain': 'ارسال مجدد رمز عبور',
+    'titles.sendCodeAgain': 'ارسال مجدد کد تایید',
+    'titles.timeToSendCodeAgain': 'ارسال مجدد کد تا',
+    'titles.other': 'دیگر',
     'titles.retry': 'تلاش مجدد',
     "titles.submitCode": 'ثبت کد',
     'titles.fullName': 'نام و نام‌خانوادگی',
@@ -633,6 +636,7 @@ export default {
     'titles.writeDown': 'را وارد کنید',
     "titles.doing": "درحال انجام",
     "titles.done": "انجام شده",
+    'titles.checkCode': 'بررسی کد',
 
     "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید .",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",

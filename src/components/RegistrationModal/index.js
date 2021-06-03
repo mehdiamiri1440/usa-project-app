@@ -84,7 +84,7 @@ const RegistrationModal = props => {
 
     const [cities, setCities] = useState([]);
 
-    const [step, setStep] = useState(3);
+    const [step, setStep] = useState(2);
 
     const changeStep = nextStep => {
         setStep(nextStep);
@@ -389,7 +389,6 @@ const GetMobileNumber = props => {
                 regular
                 style={{
                     borderRadius: 4,
-                    // borderWidth: 2,
                     borderColor: (mobileNumberError ? '#D50000' :
                         (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
                             '#00C569' :
@@ -428,10 +427,9 @@ const GetMobileNumber = props => {
                     }}
                     onChangeText={onMobileNumberChanged}
                     value={mobileNumber}
-                    placeholder={locales('titles.entermobileNumber')}
+                    placeholder='09123456789'
                     placeholderTextColor="#BEBEBE"
                     ref={mobileNumberRef}
-
                 />
             </InputGroup>
             <Label
@@ -549,10 +547,7 @@ const GetVerificationCode = props => {
                             fetchAllProductsList(item, true).then(_ => updateProductsList(true));
                             onRequestClose(true);
                         });
-
-                        // .catch(_ => setShowModal(true));;
                     })
-                    // .catch(_ => setShowModal(true));
                 }
                 else if (res.payload.status) { saveVerificationCode(value) }
                 else if (!res.payload.status) {
@@ -567,8 +562,6 @@ const GetVerificationCode = props => {
             }).catch(err => {
                 if (err && err.data)
                     setValueError(err.data.errors.phone[0])
-                // else
-                //     setShowModal(true)
             })
         }
 
@@ -606,7 +599,6 @@ const GetVerificationCode = props => {
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     fontSize: 14,
                     marginTop: 15,
-                    marginBottom: 5
                 }}
             >
                 {locales('titles.sentCodeTo')}
@@ -634,7 +626,7 @@ const GetVerificationCode = props => {
                 </Text>
             </Text>
 
-            <SafeAreaView style={[styles.root]}>
+            <SafeAreaView>
                 <CodeField
                     ref={codeFieldRef}
                     {...codeProps}
@@ -644,7 +636,7 @@ const GetVerificationCode = props => {
                         setValue(value);
                     }}
                     cellCount={CELL_COUNT}
-                    rootStyle={styles.codeFiledRoot}
+                    rootStyle={[styles.codeFiledRoot]}
                     onSubmitEditing={event => {
                         Keyboard.dismiss();
                         onVerificationCodeSubmited(event.nativeEvent.text);
@@ -657,10 +649,7 @@ const GetVerificationCode = props => {
                             key={index}
                             style={[styles.cell, isFocused && styles.focusCell,
                             {
-                                borderColor: value.length === 4 && !valueError ? "#00C569"
-                                    : value.length === 4 && valueError
-                                        ? '#de3545' :
-                                        "#bebebe",
+                                borderColor: !!valueError ? '#de3545' : value.length == 4 ? "#00C569" : "#bebebe",
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }]}
                             onLayout={getCellOnLayoutHandler(index)}
@@ -668,22 +657,20 @@ const GetVerificationCode = props => {
                             {symbol || (isFocused ? <Cursor
                                 cursorSymbol="|"
                                 delay={500}
-                            /> : null)}
+                            /> : '-')}
                         </Text>
                     )}
                 />
-                {!!valueError ?
-                    <Label style={{
-                        fontSize: 14,
-                        marginVertical: 5,
-                        color: '#D81A1A',
-                        textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light'
-                    }}>
-                        {valueError}
-                    </Label>
-                    : null
-                }
+                <Label style={{
+                    fontSize: 14,
+                    marginTop: 30,
+                    color: '#D81A1A',
+                    textAlign: 'center',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    height: 50
+                }}>
+                    {valueError}
+                </Label>
             </SafeAreaView>
 
             <View
@@ -691,29 +678,22 @@ const GetVerificationCode = props => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flex: 1,
-                    marginVertical: 10
+                    marginBottom: 20,
                 }}
             >
                 <Timer
+                    inlineStyle
                     min={2}
                     sec={0}
-                    isCountDownTimer={true}
-                    containerStyle={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                    }}
                     substitutionTextStyle={{
-                        color: '#1CC625',
+                        color: '#1DA1F2',
                         textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 14
                     }}
-                    timerStyle={{
-                        color: '#1CC625',
-                        fontSize: 18
-                    }}
+                    isCountDownTimer={true}
                     onSubstitution={() => checkAlreadySingedUpMobileNumber(mobileNumber)}
-                    substitutionText={locales('titles.sendVerificationCodeAgain')}
+                    substitutionText={locales('titles.sendCodeAgain')}
                 />
             </View>
 
@@ -728,25 +708,37 @@ const GetVerificationCode = props => {
             >
                 <Button
                     onPress={() => onVerificationCodeSubmited(value)}
-                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
+                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { paddingTop: 1 }]}
                     rounded
                 >
                     <Text style={styles.buttonText}>
-                        {locales('titles.submitCode')}
+                        {locales('titles.checkCode')}
                     </Text>
-                    <ActivityIndicator
-                        size="small"
-                        animating={!!checkActivisionCodeLoading || !!userProfileLoading || !!loginLoading}
-                        color="white"
-                        style={{
-                            position: 'absolute',
-                            left: '20%',
-                            top: '28%',
-                            width: 25,
-                            height: 25,
-                            borderRadius: 15
-                        }}
-                    />
+                    {
+                        !!checkActivisionCodeLoading || !!userProfileLoading || !!loginLoading ?
+                            <ActivityIndicator
+                                size="small"
+                                color="white"
+                                style={{
+                                    position: 'absolute',
+                                    left: '15%',
+                                    top: '30%',
+                                    borderRadius: 15
+                                }}
+                            />
+                            :
+                            <FontAwesome5
+                                color="white"
+                                size={15}
+                                name='arrow-left'
+                                style={{
+                                    position: 'absolute',
+                                    left: '17%',
+                                    top: '30%',
+                                    borderRadius: 15
+                                }}
+                            />
+                    }
                 </Button>
                 <Button
                     onPress={() => changeStep(1)}
@@ -758,8 +750,8 @@ const GetVerificationCode = props => {
                     </Text>
                     <FontAwesome5
                         name='arrow-right'
-                        size={25}
-                        color='#7E7E7E'
+                        size={15}
+                        color='#909090'
                     />
                 </Button>
             </View>
@@ -2182,16 +2174,16 @@ const Loader = props => {
 const styles = StyleSheet.create({
     root: { flex: 1, paddingHorizontal: deviceWidth * 0.06 },
     title: { textAlign: 'center', fontSize: 30 },
-    codeFiledRoot: { marginTop: 20 },
+    codeFiledRoot: { marginTop: 10, top: 20 },
     cell: {
-        width: 70,
-        backgroundColor: '#fff',
-        elevation: 1,
-        height: 60,
-        lineHeight: 65,
-        borderRadius: 5,
+        width: 75,
+        height: 50,
+        lineHeight: 50,
+        borderRadius: 8,
         fontSize: 24,
         borderWidth: 1,
+        borderColor: '#BDC4CC',
+        backgroundColor: '#FBFBFB',
         alignContent: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -2217,15 +2209,18 @@ const styles = StyleSheet.create({
 
     },
     backButtonText: {
-        color: '#7E7E7E',
-        width: '60%',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        color: '#909090',
+        width: '70%',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        fontSize: 18,
         textAlign: 'center'
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
+        borderRadius: 8,
+        elevation: 0,
+        borderWidth: 1,
+        borderColor: '#BEBEBE',
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
         alignItems: 'center',
@@ -2246,13 +2241,15 @@ const styles = StyleSheet.create({
         color: 'white',
         width: '100%',
         textAlign: 'center',
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        fontSize: 18,
+        textAlignVertical: 'center'
     },
     disableLoginButton: {
         textAlign: 'center',
-        margin: 10,
-        borderRadius: 5,
-        backgroundColor: '#B5B5B5',
+        borderRadius: 8,
+        backgroundColor: '#E0E0E0',
+        elevation: 0,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
@@ -2262,9 +2259,9 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        margin: 10,
         backgroundColor: '#00C569',
-        borderRadius: 5,
+        elevation: 0,
+        borderRadius: 8,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
