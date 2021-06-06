@@ -29,7 +29,7 @@ import {
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import analytics from '@react-native-firebase/analytics';
-import Svg, { Path, G, Ellipse } from "react-native-svg"
+import Svg, { Path, G, Ellipse } from "react-native-svg";
 import AsyncStorage from '@react-native-community/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -39,7 +39,7 @@ import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
-import * as locationActions from '../../redux/locations/actions'
+import * as locationActions from '../../redux/locations/actions';
 import Header from '../header';
 import Timer from '../timer';
 import ENUMS from '../../enums';
