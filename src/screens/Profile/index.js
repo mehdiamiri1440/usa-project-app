@@ -589,7 +589,8 @@ class Profile extends PureComponent {
                                 onRefresh={() => this.initProfileContent()}
                             />
                         }
-                        style={{ backgroundColor: 'white' }}>
+                        style={{ backgroundColor: 'white' }}
+                    >
                         <View style={{
                             paddingVertical: 20, width: '100%',
 
@@ -914,6 +915,7 @@ class Profile extends PureComponent {
                             {productsListByUserName && productsListByUserName.length ?
                                 productsListByUserName.map((item, index) => (
                                     <View
+                                        key={index}
                                         style={{
                                             marginVertical: 10,
                                             width: deviceWidth * 0.93
