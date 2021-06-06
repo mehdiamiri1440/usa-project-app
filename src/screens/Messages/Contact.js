@@ -11,7 +11,7 @@ import MessagesContext from './MessagesContext';
 
 const ContactsList = props => {
 
-    const { item, index, contactsList } = props;
+    const { item, index, contactsList, contactsListLoading } = props;
     const msgCntxt = useContext(MessagesContext);
 
 
@@ -27,7 +27,7 @@ const ContactsList = props => {
                 style={{
                     borderBottomColor: '#DDDDDD', paddingVertical: 12,
                     flexDirection: 'row-reverse', width: '100%',
-                    borderBottomWidth: index < contactsList.length - 1 ? 1 : 0
+                    borderBottomWidth: !!contactsListLoading || (index < contactsList.length - 1) ? 1 : 0
                 }}
             >
 

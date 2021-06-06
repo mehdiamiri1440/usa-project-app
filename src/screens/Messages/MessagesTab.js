@@ -145,6 +145,7 @@ class ContactsList extends Component {
                 index={index}
                 setSearchText={this.setSearchText}
                 contactsList={contactsList}
+                contactsListLoading={this.props.contactsListLoading}
                 {...this.props}
             />
         )
