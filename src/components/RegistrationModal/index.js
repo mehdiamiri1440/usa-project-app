@@ -735,7 +735,7 @@ const GetVerificationCode = props => {
             >
                 <Button
                     onPress={() => onVerificationCodeSubmited(value)}
-                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { paddingTop: 1 }]}
+                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { paddingTop: 4 }]}
                     rounded
                 >
                     <Text style={styles.buttonText}>
@@ -749,7 +749,7 @@ const GetVerificationCode = props => {
                                 style={{
                                     position: 'absolute',
                                     left: '15%',
-                                    top: '30%',
+                                    top: '40%',
                                     borderRadius: 15
                                 }}
                             />
@@ -761,7 +761,7 @@ const GetVerificationCode = props => {
                                 style={{
                                     position: 'absolute',
                                     left: '17%',
-                                    top: '30%',
+                                    top: '40%',
                                     borderRadius: 15
                                 }}
                             />
@@ -1337,13 +1337,13 @@ const GetProvince = props => {
                 }}
             >
                 <FontAwesome5
-                    name='list-ul'
+                    name='search'
                     size={25}
-                    color='#38485F'
+                    color='#BEBEBE'
                 />
                 <Text
                     style={{
-                        color: '#38485F',
+                        color: '#BEBEBE',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 16,
                         textAlign: 'center',
@@ -1536,13 +1536,13 @@ const GetCity = props => {
                 }}
             >
                 <FontAwesome5
-                    name='list-ul'
+                    name='search'
                     size={25}
-                    color='#38485F'
+                    color='#BEBEBE'
                 />
                 <Text
                     style={{
-                        color: '#38485F',
+                        color: '#BEBEBE',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 16,
                         textAlign: 'center',
