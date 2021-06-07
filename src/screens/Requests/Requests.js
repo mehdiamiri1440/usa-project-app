@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
-import { Text, View, SafeAreaView, FlatList, StyleSheet, Image, ImageBackground } from 'react-native';
+import React, { PureComponent, createRef } from 'react';
+import { Text, View, SafeAreaView, FlatList, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Icon, InputGroup, Input, Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
-import { Button } from 'native-base';
 import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -51,9 +51,12 @@ class Requests extends PureComponent {
             accessToContactInfoErrorMessage: '',
             statusCode: null,
 
-            buyAdRequestsList: []
+            buyAdRequestsList: [],
+            searchText: null
         }
     }
+
+    serachInputRef = createRef();
 
     requestsRef = React.createRef();
     updateFlag = React.createRef();
@@ -86,7 +89,6 @@ class Requests extends PureComponent {
         this.is_mounted = false;
         this.updateFlag.current.close()
     }
-
 
     componentDidUpdate(prevProps, prevState) {
         if (
@@ -135,7 +137,7 @@ class Requests extends PureComponent {
                 this.checkForFiltering()
             }).catch(error => reject(error));
         })
-    }
+    };
 
     checkForSendingMessage = (item) => {
 
@@ -199,7 +201,6 @@ class Requests extends PureComponent {
     openMobileNumberWarnModal = (shouldShow, msg, statusCode) => {
         this.setState({ showMobileNumberWarnModal: shouldShow, accessToContactInfoErrorMessage: msg, statusCode });
     };
-
 
     renderItemSeparatorComponent = index => {
 
@@ -320,7 +321,6 @@ class Requests extends PureComponent {
         )
     };
 
-
     renderItem = ({ item, index, separators }) => {
 
         const { selectedButton, buyAdRequestsList } = this.state;
@@ -350,12 +350,12 @@ class Requests extends PureComponent {
                 {is_seller && this.renderItemSeparatorComponent(index)}
             </>
         )
-    }
+    };
 
     closeModal = _ => {
         this.setState({ showModal: false });
         this.componentDidMount()
-    }
+    };
 
     closeFilters = _ => {
         this.setState({ showFilters: false }, () => {
@@ -382,7 +382,8 @@ class Requests extends PureComponent {
                 buyAdRequestsList.length ?
                 buyAdRequestsList.filter(item => item.category_id == id) : [],
             selectedFilterName: name,
-        })
+            searchText: ''
+        });
     };
 
     renderListEmptyComponent = _ => {
@@ -439,6 +440,24 @@ class Requests extends PureComponent {
         )
     };
 
+
+    handleSearch = (text) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (text && text.length)
+            tempList = tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)));
+        else
+            tempList = [...buyAdRequestsList];
+
+
+        this.setState({ buyAdRequestsList: tempList, selectedFilterName: '', searchText: text });
+    };
+
+
     render() {
 
         let {
@@ -449,7 +468,8 @@ class Requests extends PureComponent {
             selectedFilterName,
             showGoldenModal,
             showMobileNumberWarnModal,
-            statusCode
+            statusCode,
+            searchText
         } = this.state;
         return (
             <>
@@ -502,10 +522,6 @@ class Requests extends PureComponent {
                         </Button>
                     </View>
                 </RBSheet>
-
-
-
-
 
                 < Portal
                     style={{
@@ -586,11 +602,6 @@ class Requests extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal >
-
-
-
-
-
 
                 < Portal
                     style={{
@@ -677,10 +688,6 @@ class Requests extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal >
-
-
-
-
 
                 < Portal
                     style={{
@@ -777,70 +784,71 @@ class Requests extends PureComponent {
                     {...this.props}
                 />
 
-                {/* {userInfo.active_pakage_type == 0 && <View style={{
-                    shadowOffset: { width: 20, height: 20 },
-                    shadowColor: 'black',
-                    shadowOpacity: 1.0,
-                    elevation: 10, marginHorizontal: 10,
-                    backgroundColor: 'white', borderRadius: 6, padding: 6, alignItems: 'center',
-                    flexDirection: 'row-reverse', justifyContent: 'space-around', marginTop: 5
-                }}
-                >
-                    <Text style={{ color: '#666666' }}>{locales('titles.requestTooOld')}</Text>
-                    <Button
-                        small
-                        onPress={() => this.updateFlag.current.open()}
-                        style={{ backgroundColor: '#E41C38', width: '30%', borderRadius: 6 }}
-                    >
-                        <Text style={{ color: 'white', textAlign: 'center', width: '100%' }}> {locales('titles.update')}</Text>
-                    </Button>
-                </View>} */}
+                <View>
+                    <InputGroup style={{ borderRadius: 5, backgroundColor: 'white' }}>
+                        <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
+                        <Input
+                            value={searchText}
+                            ref={this.serachInputRef}
+                            onChangeText={text => this.handleSearch(text)}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                paddingBottom: 10, color: '#777', textAlignVertical: 'bottom'
+                            }}
+                            placeholderTextColor="#bebebe"
+                            placeholder={locales('labels.searchBuyAdRequest')} />
+                    </InputGroup>
+                </View>
 
+                {
+                    selectedFilterName ?
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 6,
+                                paddingVertical: 6,
+                                paddingHorizontal: 15,
+                                alignItems: 'center',
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-around',
+                                position: 'relative'
+                            }}
+                        >
+                            <Button
+                                small
+                                onPress={() => this.setState({
+                                    buyAdRequestsList: this.props.buyAdRequestsList,
+                                    selectedFilterName: ''
+                                })}
+                                style={{
+                                    borderWidth: 1,
+                                    borderColor: '#E41C38',
+                                    borderRadius: 50,
+                                    maxWidth: 250,
+                                    backgroundColor: '#fff',
+                                    height: 35,
+                                }}
+                            >
+                                <Text style={{
+                                    textAlign: 'center',
+                                    width: '100%',
+                                    color: '#777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 17
+                                }}>
+                                    {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
+                                    {/* {selectedFilterName} */}
+                                </Text>
+                                <FontAwesome5 color="#E41C38" name="times" solid style={{
+                                    fontSize: 18,
+                                    position: 'absolute',
+                                    right: 20,
+                                }} />
 
-                {selectedFilterName ? <View style={{
-                    backgroundColor: '#f6f6f6',
-                    borderRadius: 6,
-                    paddingVertical: 6,
-                    paddingHorizontal: 15,
-                    alignItems: 'center',
-                    flexDirection: 'row-reverse',
-                    justifyContent: 'space-around',
-                    position: 'relative'
-                }}
-                >
-                    <Button
-                        small
-                        onPress={() => this.setState({
-                            buyAdRequestsList: this.props.buyAdRequestsList,
-                            selectedFilterName: ''
-                        })}
-                        style={{
-                            borderWidth: 1,
-                            borderColor: '#E41C38',
-                            borderRadius: 50,
-                            maxWidth: 250,
-                            backgroundColor: '#fff',
-                            height: 35,
-                        }}
-                    >
-                        <Text style={{
-                            textAlign: 'center',
-                            width: '100%',
-                            color: '#777',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 17
-                        }}>
-                            {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
-                            {/* {selectedFilterName} */}
-                        </Text>
-                        <FontAwesome5 color="#E41C38" name="times" solid style={{
-                            fontSize: 18,
-                            position: 'absolute',
-                            right: 20,
-                        }} />
-
-                    </Button>
-                </View> : null}
+                            </Button>
+                        </View> :
+                        null
+                }
                 <View>
                     {/* 
                 <Button
@@ -889,14 +897,14 @@ class Requests extends PureComponent {
                         initialNumToRender={3}
                         maxToRenderPerBatch={3}
                         style={{
-                            marginBottom: selectedFilterName ? 92 : 45
+                            marginBottom: selectedFilterName ? 140 : 94
                         }}
                     />
 
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: selectedFilterName ? 92 : 45,
+                        bottom: selectedFilterName ? 140 : 94,
                         width: '100%',
                         righ: 0,
                         left: 0,
@@ -935,9 +943,7 @@ class Requests extends PureComponent {
             </>
         )
     }
-}
-
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -1143,8 +1149,6 @@ const styles = StyleSheet.create({
     }
 });
 
-
-
 const mapStateToProps = (state) => {
     return {
         buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
@@ -1156,7 +1160,7 @@ const mapStateToProps = (state) => {
         isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
 
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -1166,9 +1170,7 @@ const mapDispatchToProps = (dispatch) => {
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
         setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
     }
-}
-
-
+};
 
 const Wrapper = (props) => {
     const ref = React.useRef(null);
@@ -1176,6 +1178,6 @@ const Wrapper = (props) => {
     useScrollToTop(ref);
 
     return <Requests {...props} requestsRef={ref} />;
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper);

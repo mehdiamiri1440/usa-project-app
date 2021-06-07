@@ -23,6 +23,7 @@ export default {
     'errors.canNotBeLessThan': '{fieldName} نمی‌تواند کمتر از {number} باشد',
 
     "labels.man": "آقا",
+    'labels.searchBuyAdRequest': 'جستجوی درخواست خرید',
     'labels.suggestedSellers': 'فروشندگان پیشنهادی',
     'labels.yesterday': 'دیروز',
     'labels.startFromOneYear': 'شروع از یک سال',
