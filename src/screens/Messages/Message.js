@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import { ToastAndroid, View, Text, TouchableOpacity, Linking } from 'react-native';
 import Clipboard from "@react-native-community/clipboard";
 
@@ -55,21 +54,27 @@ const Message = props => {
                 }}
                 key={index}
             >
-                <ShadowView
+                <View
                     style={{
-                        maxWidth: deviceWidth * 0.75,
+                        backgroundColor: 'rgba(204,204,204,0.4)',
+                        paddingBottom: 1.5,
+                        paddingTop: 1,
+                        paddingLeft: 1.5,
+                        paddingRight: 1,
                         borderRadius: 9,
-                        paddingVertical: 3,
-                        backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
-                        shadowColor: 'black',
-                        shadowOpacity: 0.13,
-                        shadowRadius: 1,
-                        shadowOffset: { width: 0, height: 2 },
                     }}
                 >
                     <View
-                        style={{ paddingHorizontal: 10 }}
+                        style={{
+                            paddingHorizontal: 10,
+                            maxWidth: deviceWidth * 0.75,
+                            borderRadius: 9,
+                            paddingVertical: 3,
+                            backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                        }}
                     >
+
+
 
                         <Text
                             selectionColor='gray'
@@ -166,7 +171,7 @@ const Message = props => {
                             </View>
                         </TouchableOpacity>
                         : null}
-                </ShadowView>
+                </View>
             </View>
         </>
     )
