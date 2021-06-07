@@ -36,10 +36,20 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                 style={{ fontSize: 14, paddingVertical: 10, fontFamily: 'IRANSansWeb(FaNum)_Medium', textAlign: 'right', color: '#77778B' }}
             >
                 {locales('messages.userNotAuthorized')} {!is_verified ? <Text
-                    style={{ color: '#E51F38' }}>{locales('messages.likeYou')} </Text> : ''}
+                    style={{
+                        color: '#E51F38',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}>{locales('messages.likeYou')} </Text> : ''}
                 {locales('messages.nearBuskool')}
-                <Text> {locales('messages.authorize')} </Text>
-                <Text style={{ color: '#E51F38' }}>{locales('messages.notHappened')}</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                > {locales('messages.authorize')} </Text>
+                <Text style={{
+                    color: '#E51F38',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                }}>{locales('messages.notHappened')}</Text>
             </Text>
 
             <View

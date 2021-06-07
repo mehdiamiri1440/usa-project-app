@@ -1,10 +1,9 @@
 import React from 'react';
 import { Text, View, BackHandler, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-
+import { deviceWidth } from '../../../utils/deviceDimenssions';
+import Header from '../../../components/header';
 class PromotionIntro extends React.Component {
 
     constructor(props) {
@@ -44,15 +43,18 @@ class PromotionIntro extends React.Component {
     }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.backChangesHandler)
     }
 
+
+
     componentWillUnmount() {
-        BackHandler.removeEventListener()
+        BackHandler.removeEventListener('hardwareBackPress', this.backChangesHandler)
     }
+
+    backChangesHandler = _ => {
+        this.props.navigation.goBack()
+    };
 
     renderComment = (item) => {
 
@@ -115,7 +117,8 @@ class PromotionIntro extends React.Component {
                     marginTop: -16
                 }}>
                     <Text style={{
-                        color: '#7E7E7E'
+                        color: '#7E7E7E',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }}>
                         {item.text}
                     </Text>
@@ -133,37 +136,11 @@ class PromotionIntro extends React.Component {
 
         return (
             <>
-
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.myBuskool')}
-                        </Text>
-                    </View>
-                </View>
-
-
-
+                <Header
+                    title={locales('labels.myBuskool')}
+                    shouldShowAuthenticationRibbonFromProps
+                    {...this.props}
+                />
 
                 <ScrollView style={{
                     flex: 1,

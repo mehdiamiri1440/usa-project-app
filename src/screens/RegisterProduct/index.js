@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Text, View, StyleSheet, BackHandler, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, ActivityIndicator, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import { ScrollView } from 'react-native-gesture-handler';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as productActions from '../../redux/registerProduct/actions';
 import * as profileActions from '../../redux/profile/actions';
@@ -68,34 +66,53 @@ class RegisterProduct extends React.Component {
             stepNumber: 0,
             showModal: false,
             subCategoryName: '',
-            subCategoryId: null
+            subCategoryId: null,
+
+            selectedButton: null,
+            showDialog: false,
+            loaded: false
         }
     }
 
     mainContainer = React.createRef();
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
-            this.mainContainer.current.scrollTo({ y: 0 });
 
+        const { stepNumber } = this.state;
+
+        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading && stepNumber <= 6) {
+            this.mainContainer.current.scrollTo({ y: 0 });
+        }
+
+        if (this.props.resetTab) {
+            this.props.resetRegisterProduct(false);
+            this.changeStep(0);
+        }
+
+        if (this.props.resetTab && stepNumber == 7) {
+            this.props.resetRegisterProduct(false);
+            this.setState({ stepNumber: 0 })
+        }
     }
 
     componentDidMount() {
         analytics().logEvent('register_product');
         this.props.fetchUserProfile();
-        global.resetRegisterProduct = data => {
-            if (data) {
-                this.changeStep(0);
-            }
-        }
+        // global.resetRegisterProduct = data => {
+        //     if (data) {
+        //         this.changeStep(0);
+        //     }
+        // }
         if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
             this.mainContainer.current.scrollTo({ y: 0 });
+
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.state.stepNumber > 1) {
                 this.setState({ stepNumber: this.state.stepNumber - 1 })
                 return true;
             }
         })
+
         if (this.props.resetTab) {
             this.changeStep(0);
             this.props.resetRegisterProduct(false);
@@ -239,8 +256,11 @@ class RegisterProduct extends React.Component {
             formData.append("images_count", this.state.productFiles.length);
             return this.props.addNewProduct(formData).then(_ => {
                 analytics().logEvent('register_product_successfully');
+                setTimeout(() => this.setState({
+                    paymentModalVisibility: true
+                })
+                    , 1000);
                 this.setState({
-                    paymentModalVisibility: true,
                     productType: '',
                     category: '',
                     detailsArray: '',
@@ -265,9 +285,19 @@ class RegisterProduct extends React.Component {
         this.setState({ showModal: true })
     };
 
+    setSelectedButton = id => this.setState({ selectedButton: id })
+
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
-            minimumOrder, maximumPrice, minimumPrice, amount, city, province, subCategoryId, subCategoryName } = this.state
+            minimumOrder, maximumPrice, minimumPrice, amount, city,
+            province, subCategoryId, subCategoryName, selectedButton,
+        } = this.state
+
+        const {
+            product,
+            buyAds
+        } = this.props;
+
         switch (stepNumber) {
             case 0: {
                 return <GuidToRegisterProduct
@@ -311,11 +341,22 @@ class RegisterProduct extends React.Component {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
             }
             case 7: {
-                return <RegisterProductSuccessfully
-                    subCategoryId={subCategoryId}
-                    subCategoryName={subCategoryName}
-                    {...this.props}
-                />
+                return (
+                    <>
+                        <RegisterProductSuccessfully
+                            subCategoryId={subCategoryId}
+                            product={product}
+                            buyAds={buyAds}
+                            setSelectedButton={this.setSelectedButton}
+                            changeStep={this.changeStep}
+                            subCategoryName={subCategoryName}
+                            openChat={this.openChat}
+                            selectedButton={selectedButton}
+                            isUserAllowedToSendMessageLoading={this.props.isUserAllowedToSendMessageLoading}
+                            {...this.props}
+                        />
+                    </>
+                )
             }
             default:
                 break;
@@ -326,12 +367,16 @@ class RegisterProduct extends React.Component {
     closeModal = _ => {
         this.setState({ showModal: false })
         this.componentDidMount();
-    }
+    };
+
 
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
         const {
-            userProfile = {}
+            userProfile = {},
+            addNewProductMessage = [],
+            addNewProductError,
+            buyAds = []
         } = this.props;
         const {
             user_info = {}
@@ -341,11 +386,12 @@ class RegisterProduct extends React.Component {
         } = user_info
         return (
             <>
-                <Loading />
-                {stepNumber == 7 && active_pakage_type == 0 ? <PaymentModal
+
+                {/* <Loading /> */}
+                {stepNumber == 7 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
-                    routeParams={{ subCategoryId, subCategoryName }}
+                    routeParams={{ subCategoryId, subCategoryName, buyAds, changeStep: this.changeStep }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 /> : null}
@@ -389,16 +435,16 @@ class RegisterProduct extends React.Component {
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                             onPress={() => {
                                 stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
-                                this.props.navigation.goBack();
+                                    this.props.navigation.goBack();
                             }}
 
                         >
                             <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         <View style={{
                             width: '100%',
@@ -418,9 +464,7 @@ class RegisterProduct extends React.Component {
                     >
 
 
-                        {stepNumber > 0 && <View style={{
-                            borderBottomColor: '#00C569',
-                            borderBottomWidth: 2,
+                        {stepNumber > 0 && stepNumber < 7 && <View style={{
                             paddingVertical: 10,
                             width: deviceWidth, marginVertical: 5,
                             flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
@@ -431,7 +475,7 @@ class RegisterProduct extends React.Component {
 
                                 alignItems: 'stretch',
                                 alignContent: 'center', alignSelf: 'center',
-                                width: deviceWidth - 80,
+                                width: deviceWidth - 40,
 
                             }}>
                                 {stepsArray.map((item, index) => {
@@ -441,13 +485,10 @@ class RegisterProduct extends React.Component {
                                                 style={{
                                                     textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
                                                     alignSelf: 'center', alignContent: 'center',
-                                                    shadowOffset: { width: 10, height: 10 },
-                                                    shadowColor: 'black',
-                                                    shadowOpacity: 1.0,
-                                                    elevation: 5,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                     textAlignVertical: 'center', borderColor: '#FFFFFF',
                                                     backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                    width: 26, height: 26, borderRadius: 13
+                                                    width: 20, height: 20, borderRadius: 10
 
                                                 }}
                                             >
@@ -455,7 +496,7 @@ class RegisterProduct extends React.Component {
                                             </Text>
                                             {index < stepsArray.length - 1 && <View
                                                 style={{
-                                                    height: 4,
+                                                    height: 2,
                                                     flex: 1,
                                                     alignSelf: 'center',
                                                     backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
@@ -469,7 +510,30 @@ class RegisterProduct extends React.Component {
                             </View>
                         </View>}
 
-
+                        {addNewProductError && addNewProductMessage && addNewProductMessage.length ?
+                            addNewProductMessage.map((error, index) => (
+                                <View
+                                    style={{
+                                        width: deviceWidth, justifyContent: 'center', alignItems: 'center',
+                                        alignContent: 'center'
+                                    }}
+                                    key={index}
+                                >
+                                    <Text style={{
+                                        width: '100%',
+                                        color: '#E41C38',
+                                        textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        marginVertical: 10,
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 5,
+                                        borderRadius: 4
+                                    }}
+                                    >{error}
+                                    </Text>
+                                </View>
+                            ))
+                            : null}
 
 
 
@@ -506,6 +570,7 @@ const styles = StyleSheet.create({
     },
     loginFailedText: {
         textAlign: 'center',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: deviceWidth,
         color: '#155724'
     },
@@ -521,13 +586,144 @@ const styles = StyleSheet.create({
         fontSize: 26,
         bottom: 40
     },
+
+
+
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        maxWidth: 145,
+        marginVertical: 10,
+        alignSelf: 'center',
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd',
+        marginTop: 10
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+
+    },
+    buttonText: {
+        color: 'white',
+        width: '80%',
+        textAlign: 'center'
+    },
+    backButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        color: '#7E7E7E',
+        width: '60%',
+        textAlign: 'center'
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
+    redButton: {
+        backgroundColor: '#E41C39',
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    forgotPassword: {
+        marginTop: 10,
+        textAlign: 'center',
+        color: '#7E7E7E',
+        fontSize: 16,
+        padding: 10,
+    },
 })
 
 const mapStateToProps = (state) => {
+    const {
+        isUserAllowedToSendMessageLoading,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+    } = state.profileReducer;
+
     return {
         userProfile: state.profileReducer.userProfile,
         addNewProductLoading: state.registerProductReducer.addNewProductLoading,
-        resetTab: state.registerProductReducer.resetTab
+        resetTab: state.registerProductReducer.resetTab,
+        addNewProductMessage: state.registerProductReducer.addNewProductMessage,
+        addNewProductError: state.registerProductReducer.addNewProductError,
+
+        product: state.registerProductReducer.product,
+        buyAds: state.registerProductReducer.buyAds,
+
+        isUserAllowedToSendMessageLoading,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission
+
     }
 };
 
@@ -536,7 +732,8 @@ const mapDispatchToProps = (dispatch) => {
         addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
-        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name))
+        setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name)),
+        isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
     }
 };
 

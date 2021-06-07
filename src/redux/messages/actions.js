@@ -121,16 +121,82 @@ export const fetchTotalUnreadMessages = () => {
 };
 
 
+export const fetchChannelData = (page) => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .fetchChannelData(page)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_CHANNEL_DATA_FAILED,
+                        reject: actionTypes.FETCH_CHANNEL_DATA_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_CHANNEL_DATA_LOADING);
+    const success = res => action(actionTypes.FETCH_CHANNEL_DATA_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
+
+export const fetchViolationReportReasons = () => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .fetchViolationReportReasons()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_VIOLATION_REPORT_REASONS_FAILED,
+                        reject: actionTypes.FETCH_VIOLATION_REPORT_REASONS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_VIOLATION_REPORT_REASONS_LOADING);
+    const success = res => action(actionTypes.FETCH_VIOLATION_REPORT_REASONS_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
+export const sendReportReason = reportObj => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.messages
+                .sendReportReason(reportObj)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.SEND_REPORT_FAILED,
+                        reject: actionTypes.SEND_REPORT_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.SEND_REPORT_LOADING);
+    const success = res => action(actionTypes.SEND_REPORT_SUCCESSFULLY, res);
+
+    return request();
+};
+
+
 export const newMessageReceived = (message) => {
     return dispatch => dispatch(action(actionTypes.NEW_MESSAGE_RECEIVED, message));
 };
 
 
-export const emptyMessage = (message) => {
-    return dispatch => dispatch(action(actionTypes.EMPTY_MESSAGE_RECEIVED, message));
+export const doForceRefresh = (forceRefresh) => {
+    return dispatch => dispatch(action(actionTypes.DO_FORCE_REFRESH, forceRefresh));
 };
 
-
-export const isFromOutSide = (flag) => {
-    return dispatch => dispatch(action(actionTypes.IS_FROM_OUTSIDE, flag));
-};

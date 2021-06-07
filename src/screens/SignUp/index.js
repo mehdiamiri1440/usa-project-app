@@ -1,25 +1,29 @@
 import React from 'react';
-import { Text, View, StyleSheet, BackHandler } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, ScrollView } from 'react-native'
+import { StackActions } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import GetMobileNumberStep from './Steps/GetMobileNumberStep';
+import AsyncStorage from '@react-native-community/async-storage';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+
 import EnterActivisionCode from './Steps/EnterActivisionCode';
 import UserBasicInfo from './Steps/userBasicInfo';
-import UserAuthority from './Steps/userAuthority';
 import ChooseCity from './Steps/chooseCity';
 import UserActivity from './Steps/userActivity';
+
 import * as authActions from '../../redux/auth/actions';
 import * as profileActions from '../../redux/profile/actions';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { deviceHeight, deviceWidth } from '../../utils';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import * as productsListActions from '../../redux/productsList/actions';
+import { deviceHeight, deviceWidth, formatter } from '../../utils';
 import Login from '../Login/Login';
 import NoConnection from '../../components/noConnectionError';
+import ENUMS from '../../enums';
 
 
-let stepsArray = [1, 2, 3, 4, 5, 6]
+
+let stepsArray = [1, 2, 3, 4, 5]
 class SignUp extends React.Component {
     constructor(props) {
         super(props)
@@ -105,7 +109,7 @@ class SignUp extends React.Component {
     };
 
     setActivityZoneAndType = (activityZone, activityType, fromBack) => {
-        this.setState({ activityZone, activityType }, () => { if (!fromBack) this.submitRegister() });
+        this.setState({ activityZone, activityType, password: formatter.makeRandomString(8) }, () => { if (!fromBack) this.submitRegister() });
     };
 
     submitRegister = () => {
@@ -115,17 +119,31 @@ class SignUp extends React.Component {
             lastName,
             gender,
             userName,
-            password,
+            password = '',
             activityZone,
             activityType,
             city,
             province,
             provinceName,
-            cityName
+            cityName,
+            verificationCode
         } = this.state;
 
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact,
+            profile_photo
+        } = params;
+
         let registerObject = {
-            phone: mobileNumber,
+            phone: formatter.toLatinNumbers(mobileNumber),
             first_name: firstName,
             last_name: lastName,
             password,
@@ -134,16 +152,30 @@ class SignUp extends React.Component {
             province: provinceName,
             city: cityName,
             activity_type: activityType == 'buyer' ? '1' : '0',
-            category_id: activityZone
+            category_id: activityZone,
+            verification_code: formatter.toLatinNumbers(verificationCode)
         };
         this.props.submitRegister(registerObject).then(result => {
+            AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(true))
             analytics().logEvent('successfull_register', {
                 mobile_number: mobileNumber
             })
             this.setState({ successfullAlert: true }, () => {
                 setTimeout(() => {
                     this.props.login(mobileNumber, password).then((result) => {
+                        let item = {
+                            from_record_number: 0,
+                            sort_by: ENUMS.SORT_LIST.values.BM,
+                            to_record_number: 16,
+                        };
+                        this.props.fetchAllProductsList(item, true).then(_ => this.props.updateProductsList(true));
+                        analytics().setUserId(result.payload.id.toString());
                         this.props.fetchUserProfile().then(_ => {
+                            if (contact && Object.keys(contact).length) {
+                                const popAction = StackActions.pop(1);
+                                this.props.navigation.dispatch(popAction);
+                                this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
                         })
                         // .catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
@@ -179,13 +211,34 @@ class SignUp extends React.Component {
             activityZone
         } = this.state;
 
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact,
+            profile_photo
+        } = params;
+
         switch (stepNumber) {
 
             case 1: {
                 return <Login mobileNumber={mobileNumber} changeStep={this.changeStep} setMobileNumber={this.setMobileNumber}  {...this.props} />
             }
             case 2: {
-                return <EnterActivisionCode setVerificationCode={this.setVerificationCode} verificationCode={verificationCode} changeStep={this.changeStep} mobileNumber={this.state.mobileNumber} {...this.props} />
+                return <EnterActivisionCode
+                    profile_photo={profile_photo}
+                    contact={contact}
+                    setVerificationCode={this.setVerificationCode}
+                    verificationCode={verificationCode}
+                    changeStep={this.changeStep}
+                    mobileNumber={this.state.mobileNumber}
+                    {...this.props}
+                />
             }
             case 3: {
                 return <UserBasicInfo gender={gender} firstName={firstName} lastName={lastName} {...this.props} changeStep={this.changeStep} setFullNameAndGender={this.setFullNameAndGender} />
@@ -193,10 +246,10 @@ class SignUp extends React.Component {
             case 4: {
                 return <ChooseCity province={province} city={city} {...this.props} changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice} />
             }
+            // case 5: {
+            //     return <UserAuthority password={password} changeStep={this.changeStep} setUserAuthorities={this.setUserAuthorities} {...this.props} />
+            // }
             case 5: {
-                return <UserAuthority password={password} changeStep={this.changeStep} setUserAuthorities={this.setUserAuthorities} {...this.props} />
-            }
-            case 6: {
                 return <UserActivity activityType={activityType} activityZone={activityZone} changeStep={this.changeStep} setActivityZoneAndType={this.setActivityZoneAndType} setUserAuthorities={this.setUserAuthorities} {...this.props} />
             }
             default:
@@ -252,23 +305,32 @@ class SignUp extends React.Component {
                             {stepsArray.map((item, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        <Text
+                                        <ShadowView
                                             style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center',
-                                                justifyContent: 'center',
-                                                alignSelf: 'center', alignContent: 'center',
-                                                shadowOffset: { width: 10, height: 10 },
                                                 shadowColor: 'black',
-                                                shadowOpacity: 1.0,
-                                                elevation: 5,
-                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                width: 26, height: 26, borderRadius: 13
-
+                                                shadowOpacity: 0.13,
+                                                shadowRadius: 1,
+                                                shadowOffset: { width: 0, height: 2 },
                                             }}
                                         >
-                                            {item}
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center', color: 'white', alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    alignSelf: 'center', alignContent: 'center',
+                                                    shadowOffset: { width: 10, height: 10 },
+                                                    shadowColor: 'black',
+                                                    shadowOpacity: 1.0,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
+                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                    width: 26, height: 26, borderRadius: 13
+
+                                                }}
+                                            >
+                                                {item}
+                                            </Text>
+                                        </ShadowView>
                                         {index < stepsArray.length - 1 && <View
                                             style={{
                                                 height: 8,
@@ -374,7 +436,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
-        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password))
+        login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password)),
+        updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn))
 
     }
 };

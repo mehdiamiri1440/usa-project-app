@@ -12,6 +12,11 @@ import java.util.List;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
+import com.wenkesj.voice.VoicePackage;
+import com.rnim.rn.audio.ReactNativeAudioPackage;
+import com.zmxv.RNSound.RNSoundPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.brentvatne.react.ReactVideoPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -45,7 +50,7 @@ public class MainApplication extends NavigationApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    // 
+    //
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
     sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);

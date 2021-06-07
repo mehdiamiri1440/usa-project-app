@@ -1,27 +1,37 @@
 import React, { createRef, PureComponent } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+    Text,
+    View,
+    FlatList,
+    TouchableOpacity,
+    Modal,
+    StyleSheet,
+    ActivityIndicator,
+    Image,
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import ContentLoader, { Rect, Circle } from "react-content-loader/native"
+import ContentLoader, { Rect } from "react-content-loader/native"
 import { useScrollToTop } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
-import { Icon, InputGroup, Input, CardItem, Body, Item, Label, Button, Card } from 'native-base';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
-import Product from './Product';
 
+import Product from './Product';
 import NoConnection from '../../components/noConnectionError';
 import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
-// import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
+import Header from '../../components/header';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -33,24 +43,28 @@ class ProductsList extends PureComponent {
             province: '',
             sortModalFlag: false,
             locationsFlag: false,
-            refreshed: false,
             searchText: undefined,
             from_record_number: 0,
             productsListArray: [],
-            disableSubCategory: false,
-            categoryModalFlag: false,
-            to_record_number: 15,
+            subCategoriesModalFlag: false,
+            to_record_number: 16,
             sort_by: ENUMS.SORT_LIST.values.BM,
+            searchLoader: false,
             loaded: false,
             searchFlag: false,
             showModal: false,
-            selectedCategoryModal: '',
+            subCategoriesList: [],
+            cities: [],
+            totalCategoriesModalFlag: false,
+            modals: [],
+            isFilterApplied: false,
         }
 
     }
 
 
     productsListRef = createRef();
+    categoryFiltersRef = createRef();
 
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
@@ -66,34 +80,26 @@ class ProductsList extends PureComponent {
             screen_class: "product_list",
         });
 
-        this.fetchAllProducts();
         this.initialCalls().catch(error => {
             this.setState({
                 // showModal: true,
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
-        if (this.props.productDetailsId) {
-            this.props.navigation.navigate(`ProductDetails${this.props.productDetailsId}`, { productId: this.props.productDetailsId })
-        }
+
 
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.updateProductsListFlag) {
-            let item = {
+            this.setState({
+                productsListArray: [...this.props.productsListArray],
+                to_record_number: 16,
                 from_record_number: 0,
-                sort_by: ENUMS.SORT_LIST.values.BM,
-                to_record_number: 15,
-            };
-            this.props.fetchAllProductsList(item).then(result => {
-                this.setState({
-                    productsListArray: [...this.props.productsListArray],
-                    to_record_number: 15,
-                    from_record_number: 0
-                })
+                searchText: ''
             })
-            this.props.updateProductsList(false)
+            this.props.updateProductsList(false);
+            this.scrollToTop({});
         }
 
         if (
@@ -119,23 +125,9 @@ class ProductsList extends PureComponent {
             let item = {
                 from_record_number: 0,
                 sort_by: ENUMS.SORT_LIST.values.BM,
-                to_record_number: 15,
+                to_record_number: 16,
             };
-            this.props.fetchAllProductsList(item).then(result => {
-                this.setState({
-                    productsListArray: [...result.payload.products],
-                    to_record_number: 15,
-                    from_record_number: 0
-                }, () => {
-                    setTimeout(() => {
-                        if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                            this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                            this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading) {
-                            this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 });
-                        }
-                    }, 300);
-                })
-            })
+            this.fetchAllProducts(item, { needsTimeout: true, type: 'offset' })
         }
 
         if (this.state.loaded == false && this.props.productsListArray.length) {
@@ -145,59 +137,177 @@ class ProductsList extends PureComponent {
             })
         }
 
-        if (this.state.searchFlag) {
-            this.setState({ productsListArray: [...this.props.productsListArray], searchFlag: false })
-        }
-
-
-        if (this.state.refreshed) {
-            this.setState({ productsListArray: [...this.props.productsListArray], refreshed: false })
-        }
     }
 
     initialCalls = _ => {
-        return new Promise((resolve, reject) => {
-            this.props.fetchAllProvinces().catch(error => reject(error));
-            this.props.fetchAllCategories().catch(error => reject(error));
-        })
+        return new Promise.all([
+            this.fetchAllProducts(),
+            this.props.fetchAllProvinces(),
+            this.props.fetchAllCategories()
+        ])
+            .then(result => resolve(result))
+            .catch(error => reject(error))
+    };
 
-    }
+    fetchAllProducts = (itemFromResult, scrollObject = {}) => {
 
-    setShowModal = _ => {
-        this.setState({ showModal: false }, () => {
-            this.componentDidMount();
-        });
-    }
+        const {
+            from_record_number,
+            to_record_number,
+            sort_by,
+            searchText
+        } = this.state;
 
-    fetchAllProducts = () => {
-        const { from_record_number, to_record_number, sort_by, searchText } = this.state;
+        const {
+            loggedInUserId
+        } = this.props;
 
         let item = {
             from_record_number,
             sort_by,
             to_record_number,
         };
+
+        if (!!itemFromResult)
+            item = itemFromResult;
+
         if (searchText && searchText.length) {
             item = {
-                from_record_number,
-                sort_by,
+                ...item,
                 search_text: searchText,
-                to_record_number,
             };
         };
-        this.props.fetchAllProductsList(item).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-        }).catch(error => {
-            this.setState({
-                //  showModal: true,
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
+        this.props.fetchAllProductsList(item, !!loggedInUserId)
+            .then(result => {
+                this.setState({
+                    from_record_number: 0,
+                    to_record_number: 16,
+
+                    searchLoader: false,
+
+                    sortModalFlag: false,
+
+                    subCategoriesModalFlag: false,
+
+                    totalCategoriesModalFlag: false,
+
+                    locationsFlag: false,
+
+                    productsListArray: [...result?.payload?.products]
+                }, _ => this.scrollToTop({ ...scrollObject, result }));
             })
+            .catch(error => {
+                this.setState({
+                    //  showModal: true,
+                    searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
+            });
+    };
+
+    scrollToTop = ({ result, needsTimeout, type }) => {
+        let conditions = this.props.productsListRef && this.props.productsListRef != null
+            && this.props.productsListRef != undefined &&
+            this.props.productsListRef.current && this.props.productsListRef.current != null &&
+            this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 &&
+            this.props.productsListArray.length > 0 && !this.props.productsListLoading;
+
+        if (result)
+            conditions = conditions && result.payload.products.length > 0;
+
+        if (type == 'offset')
+            setTimeout(() => this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 }), 300);
+
+        else
+            if (conditions)
+                if (needsTimeout)
+                    setTimeout(() => this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                        , 300);
+                else
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+
+    };
+
+    setShowModal = _ => {
+        this.setState({ showModal: false }, () => {
+            this.componentDidMount();
         });
     };
 
+    handleSortItemClick = value => {
+        const {
+            searchText,
+            province,
+            city
+        } = this.state;
+
+        this.setState({ sort_by: value, sortModalFlag: false, productsListArray: [] }, () => {
+            let searchItem = {
+                from_record_number: 0,
+                sort_by: value,
+                to_record_number: 16,
+            };
+            if (searchText && searchText.length) {
+                searchItem = {
+                    from_record_number: 0,
+                    sort_by: value,
+                    search_text: searchText,
+                    to_record_number: 16
+                }
+            }
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+
+            this.fetchAllProducts(searchItem);
+        })
+    };
+
+    handleSubCategoryItemClick = item => {
+        const {
+            sort_by,
+            province,
+            city,
+            subCategoriesList = [],
+        } = this.state;
+
+        analytics().logEvent('apply_sort', {
+            sort_type: item.name
+        });
+
+        if (!subCategoriesList.length) {
+            this.setState({
+                searchText: item.category_name,
+                productsListArray: [],
+                modals: [],
+                isFilterApplied: true,
+                totalCategoriesModalFlag: false,
+                subCategoriesModalFlag: false
+            }, () => {
+                let searchItem = {
+                    from_record_number: 0,
+                    sort_by,
+                    search_text: item.category_name,
+                    to_record_number: 16,
+                };
+                if (province) {
+                    searchItem = { ...searchItem, province_id: province }
+                }
+                if (city) {
+                    searchItem = { ...searchItem, city_id: city }
+                }
+
+                this.categoryFiltersRef?.current.scrollToOffset({ animated: true, offset: 0 });
+
+                this.fetchAllProducts(searchItem, { needsTimeout: true });
+            });
+        }
+        else {
+            this.sortProducts(item)
+        }
+    };
 
     handleSearch = (text) => {
 
@@ -205,23 +315,19 @@ class ProductsList extends PureComponent {
         clearTimeout(myTimeout)
         const { sort_by, province, city } = this.state;
 
-        this.setState({ searchText: text });
+        this.setState({ searchText: text, searchLoader: true, isFilterApplied: false });
         let item = {
             sort_by,
             from_record_number: 0,
-            to_record_number: 15
+            to_record_number: 16
         };
         if (text)
             item = {
+                ...item,
                 search_text: text,
                 sort_by,
             };
         myTimeout = setTimeout(() => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading) {
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            }
             if (province) {
                 item = { ...item, province_id: province }
             }
@@ -229,51 +335,77 @@ class ProductsList extends PureComponent {
                 item = { ...item, city_id: city }
             }
 
-            this.props.fetchAllProductsList(item).then(_ => {
-                analytics().logEvent('search_text', {
-                    text
-                })
-                this.setState({ searchFlag: true, to_record_number: 15, from_record_number: 0 })
-            }).catch(error => {
-                this.setState({
-                    //  showModal: true, 
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                })
+            analytics().logEvent('search_text', {
+                text
             });
+            this.setState({ productsListArray: [] })
+            this.fetchAllProducts(item);
+            // this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
         }, 1500);
 
     };
 
-    sortProducts = (id, name) => {
+    submitSearching = _ => {
+        const { sort_by, province, city, searchText } = this.state;
 
-        analytics().logEvent('apply_sort', {
-            sort_type: name
+        let item = {
+            sort_by,
+            search_text: searchText,
+            from_record_number: 0,
+            to_record_number: 16
+        };
+
+        if (province) {
+            item = { ...item, province_id: province }
+        }
+        if (city) {
+            item = { ...item, city_id: city }
+        }
+
+        analytics().logEvent('search_text', {
+            text: searchText
+        });
+
+        this.setState({ productsListArray: [], isFilterApplied: false })
+        this.fetchAllProducts(item);
+    };
+
+    omitItemFromModals = category_name => {
+        let modals = [...this.state.modals];
+        const foundIndex = this.state.modals.findIndex(item => item.category_name == category_name);
+        modals.splice(foundIndex, 1);
+        this.setState({ modals });
+    };
+
+    sortProducts = ({ id, category_name, subcategories: subCategoriesList = {}, ...rest }) => {
+        subCategoriesList = Object.values(subCategoriesList);
+
+        let modals = [...this.state.modals];
+        modals.push({
+            id: dataGenerator.generateKey(`modal_${id}_`),
+            category_name,
+            subCategoriesList,
+            ...rest
         })
-        this.setState({ categoryModalFlag: true, selectedCategoryModal: name }, () => {
-            this.props.fetchAllSubCategories(id).catch(error => {
-                this.setState({
-                    // showModal: true,
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                })
-            })
+        this.setState({ subCategoriesModalFlag: true, subCategoriesList, modals }, _ => {
+            if (!this.state.subCategoriesList.length)
+                this.handleSubCategoryItemClick({ id, category_name, subcategories: [], ...rest })
         })
     };
 
-
-
-    setProvince = (value, index) => {
-        this.setState({ disableSubCategory: true })
+    setProvince = (value) => {
         let { provinces = [] } = this.props.allProvincesObject;
         if (provinces.length) {
-            this.setState({ province: value, provinceError: '', cityError: '', city: '' })
-            this.props.fetchAllProvinces(value).then(result => {
-                this.setState({ disableSubCategory: false })
-            }).catch(error => {
-                this.setState({
-                    //  showModal: true,
-                    searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                })
-            });
+
+            let cities = provinces.find(item => item.id == value)?.cities ?? {};
+
+            if (!cities || (!Array.isArray(cities) && !Object.entries(cities).length))
+                cities = {};
+
+            if (!Array.isArray(cities))
+                cities = Object.values(cities);
+
+            this.setState({ province: value, provinceError: '', cityError: '', city: '', cities })
         }
     };
 
@@ -284,18 +416,18 @@ class ProductsList extends PureComponent {
 
     searchLocation = () => {
         const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 1 });
+        this.setState({ selectedButton: 1, productsListArray: [], locationsFlag: false });
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
         if (province) {
@@ -305,123 +437,420 @@ class ProductsList extends PureComponent {
             searchItem = { ...searchItem, city_id: city }
         }
 
-        return this.props.fetchAllProductsList(searchItem).then(result => {
-            if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                this.props.productsListRef.current != undefined && result.payload.products.length > 0 && !this.props.productsListLoading)
-                this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, productsListArray: [...result.payload.products] })
-        }).catch(error => {
-            this.setState({
-                //  showModal: true, 
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });;
-
+        return this.fetchAllProducts(searchItem);
     };
 
     deleteFilter = () => {
-        const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 2 });
+        const { searchText, sort_by } = this.state;
+        this.setState({ selectedButton: 2, productsListArray: [], locationsFlag: false, city: '', province: '' });
         let searchItem = {
             from_record_number: 0,
             sort_by,
-            to_record_number: 15,
+            to_record_number: 16,
         };
         if (searchText && searchText.length) {
             searchItem = {
                 from_record_number: 0,
                 sort_by,
                 search_text: searchText,
-                to_record_number: 15
+                to_record_number: 16
             }
         }
 
-        this.props.fetchAllProductsList(searchItem).then(result => {
-            this.setState({ locationsFlag: false, from_record_number: 0, to_record_number: 15, province: '', city: '', productsListArray: [...result.payload.products] })
-        }).catch(error => {
-            this.setState({
-                //  showModal: true, 
-                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });;
+        this.fetchAllProducts(searchItem);
 
     };
 
-    renderProductListEmptyComponent = _ => {
+    onEndOfProductListReached = _ => {
+        const {
+            province,
+            city,
 
-        const { productsListLoading } = this.props;
+            productsListArray,
+
+            loaded,
+
+            sort_by,
+
+            searchText
+        } = this.state;
+
+        if (loaded && productsListArray.length >= this.state.to_record_number)
+            this.setState({
+                from_record_number: this.state.from_record_number + 16,
+                to_record_number: this.state.to_record_number + 16,
+            }, () => {
+                const {
+                    to_record_number,
+                    from_record_number,
+                } = this.state;
+
+                const {
+                    loggedInUserId
+                } = this.props;
+
+                let item = {
+                    from_record_number,
+                    sort_by,
+                    to_record_number,
+                };
+                if (searchText && searchText.length) {
+                    item = {
+                        from_record_number,
+                        sort_by,
+                        to_record_number,
+                        search_text: searchText
+                    }
+                }
+                if (province) {
+                    item = { ...item, province_id: province }
+                }
+                if (city) {
+                    item = { ...item, city_id: city }
+                }
+                this.props.fetchAllProductsList(item, !!loggedInUserId).then(_ => {
+                    this.setState({ loaded: false })
+                }).catch(error => {
+                    this.setState({
+                        // showModal: true,
+                        searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
+                    })
+                });
+            })
+    };
+
+    onProductListRefreshed = _ => {
+        const {
+            searchText,
+
+            province,
+            city,
+
+            sort_by
+        } = this.state;
+
+        const {
+            loggedInUserId
+        } = this.props;
+
+        let item = {
+            from_record_number: 0,
+            sort_by,
+            to_record_number: 16,
+        };
+        if (searchText && searchText.length) {
+            item = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+                search_text: searchText
+            }
+        }
+        if (province) {
+            item = { ...item, province_id: province }
+        }
+        if (city) {
+            item = { ...item, city_id: city }
+        }
+        this.props.fetchAllProductsList(item, !!loggedInUserId).then(result => {
+            this.setState({
+                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
+            })
+        }).catch(error => {
+            this.setState({
+                //  showModal: true,
+                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
+            })
+        });
+    };
+
+    removeFilter = _ => {
+
+        this.setState({ isFilterApplied: false, searchText: null, productsListArray: [] }, _ => {
+            const {
+                province,
+                city,
+                sort_by
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (province) {
+                searchItem = { ...searchItem, province_id: province }
+            }
+            if (city) {
+                searchItem = { ...searchItem, city_id: city }
+            }
+            this.fetchAllProducts(searchItem);
+        });
+
+    };
+
+    removeLocations = _ => {
+        this.setState({ province: null, city: null, productsListArray: [] }, _ => {
+            const {
+                sort_by,
+                searchText
+            } = this.state;
+
+            let searchItem = {
+                from_record_number: 0,
+                sort_by,
+                to_record_number: 16,
+            };
+
+            if (searchText && searchText.length) {
+                searchItem = {
+                    ...searchItem,
+                    search_text: searchText,
+                };
+            };
+            this.fetchAllProducts(searchItem);
+        });
+
+    };
+
+    renderModalItem = ({ item }) => {
+        const
+            {
+                category_name,
+                subCategoriesList
+            } = item;
+
+        const {
+            modals = []
+        } = this.state;
+
+        return (
+            <Modal
+                animationType="slide"
+                visible={modals.findIndex(item => item.category_name == category_name) > -1}
+                onRequestClose={_ => this.omitItemFromModals(category_name)}
+            >
+                <Header
+                    title={category_name}
+                    onBackButtonPressed={_ => this.omitItemFromModals(category_name)}
+                    {...this.props}
+                />
+
+                <FlatList
+                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                    data={subCategoriesList}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={this.renderSubCategoriesListItem}
+                />
+            </Modal >
+
+        )
+    };
+
+    renderSubCategoriesListEmptyComponent = _ => {
+        const {
+            subCategoriesLoading
+        } = this.props;
+
+        if (!subCategoriesLoading)
+            return (
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7,
+                    }}
+                >
+                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('labels.emptyList')}</Text>
+                </View>
+            );
+
+        return (
+            <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                    <View
+                        key={index}
+                        style={{
+                            padding: 20,
+                            flex: 1,
+                            width: '100%',
+                            height: deviceHeight * 0.1,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            borderBottomWidth: 0.7,
+                            borderBottomColor: '#BEBEBE',
+
+                        }}>
+                        <ContentLoader
+                            speed={2}
+                            width={'100%'}
+                            height={'100%'}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+
+                        >
+                            <Rect x="75%" y="20%" width="120" height="10" />
+                        </ContentLoader>
+                        <FontAwesome5 name='angle-left' size={26} color='#777' />
+                    </View>
+                )
+                )}
+            </View>
+        )
+    };
+
+    renderProductListEmptyComponent = _ => {
+        const {
+            userProfile = {},
+            productsListLoading
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller = true
+        } = user_info;
+
+        const {
+            loaded
+        } = this.state;
 
         if (!productsListLoading)
             return (
-                <View style={{
-                    alignSelf: 'center', justifyContent: 'center',
-                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.7
-                }}>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7
+                    }}
+                >
                     <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
                         {locales('titles.noProductFound')}</Text>
                     {
-                        !!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.is_seller ? <View >
-                            <Button
-                                onPress={() => this.props.navigation.navigate('RegisterProductStack')}
-
-                                style={styles.loginButton}>
-                                <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                    {locales('titles.registerNewProduct')}
-                                </Text>
-                            </Button>
-                        </View> : <View >
+                        is_seller ?
+                            <View >
                                 <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                                    onPress={() => this.props.navigation.navigate('RegisterProductStack')}
 
                                     style={styles.loginButton}>
-                                    <Text style={[styles.buttonText, { width: deviceWidth * 0.9, fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            {
+                                                width: deviceWidth * 0.9,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }]}
+                                    >
+                                        {locales('titles.registerNewProduct')}
+                                    </Text>
+                                </Button>
+                            </View>
+                            :
+                            <View >
+                                <Button
+                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                                    style={styles.loginButton}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            {
+                                                width: deviceWidth * 0.9,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }]}
+                                    >
                                         {locales('titles.registerBuyAdRequest')}
                                     </Text>
                                 </Button>
                             </View>}
                 </View>
             )
-        if (!this.state.loaded || productsListLoading) {
+        if (!loaded || productsListLoading) {
             return (
-                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
                         // <ContentLoader key={index} />
                         <View
                             key={index}
                             style={{
-                                borderRadius: 5,
-                                borderWidth: 2,
-                                borderColor: '#eee',
                                 paddingBottom: 10,
-                                marginBottom: 15
+                                marginBottom: 15,
+                                flex: 1,
+                                width: '100%',
+                                height: deviceHeight * 0.34,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-around',
+                                alignItems: 'center'
 
                             }}>
-                            <ContentLoader
-                                speed={2}
-                                width={deviceWidth}
-                                height={deviceHeight * 0.3}
-                                viewBox="0 0 500 263"
-                                backgroundColor="#f3f3f3"
-                                foregroundColor="#ecebeb"
-
+                            <View
+                                style={{
+                                    borderRadius: 12, marginHorizontal: 3, overflow: 'hidden',
+                                    borderWidth: 1, borderColor: '#eee', width: '47.5%', height: '100%'
+                                }}
                             >
+                                <ContentLoader
+                                    speed={2}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="30%" y="65%" width="100" height="10" />
+                                    <Rect x="15%" y="73%" width="120" height="10" />
+                                    <Rect x="15%" y="80%" width="120" height="10" />
+                                </ContentLoader>
+                            </View>
 
-                                <Rect x="296" y="24" rx="3" ry="3" width="88" height="10" />
-                                <Rect x="273" y="47" rx="3" ry="3" width="110" height="8" />
-                                <Rect x="79" y="96" rx="3" ry="3" width="209" height="15" />
-                                <Rect x="149" y="141" rx="3" ry="3" width="139" height="15" />
-                                <Rect x="196" y="185" rx="3" ry="3" width="93" height="15" />
-                                <Circle cx="430" cy="39" r="30" />
-                                <Rect x="17" y="30" rx="8" ry="8" width="84" height="17" />
-                                <Rect x="337" y="88" rx="3" ry="3" width="122" height="122" />
-                                <Rect x="0" y="74" rx="0" ry="0" width="472" height="2" />
-                                <Circle cx="309" cy="105" r="12" />
-                                <Circle cx="309" cy="148" r="12" />
-                                <Circle cx="309" cy="191" r="12" />
-                                <Rect x="15" y="223" rx="3" ry="3" width="445" height="46" />
-                            </ContentLoader>
+                            <View
+                                style={{
+                                    borderRadius: 12, marginHorizontal: 3, overflow: 'hidden',
+                                    borderWidth: 1, borderColor: '#eee', width: '47.5%', height: '100%'
+                                }}
+                            >
+                                <ContentLoader
+                                    speed={2}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+
+                                >
+                                    <Rect x="0" y="0" width="100%" height="60%" />
+                                    <Rect x="30%" y="65%" width="100" height="10" />
+                                    <Rect x="15%" y="73%" width="120" height="10" />
+                                    <Rect x="15%" y="80%" width="120" height="10" />
+                                </ContentLoader>
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -430,420 +859,826 @@ class ProductsList extends PureComponent {
         return null;
     };
 
+    renderItemSeparatorComponent = (leading = [{}]) => {
 
-    render() {
         const {
-            productsListObject,
-            productsListLoading,
-            productsListFailed,
-            productsListMessage,
-            productsListError,
-            subCategoriesList,
-            categoriesList,
-            categoriesLoading,
-            subCategoriesLoading,
+            userProfile = {},
+        } = this.props;
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            is_seller = true
+        } = user_info;
 
-            allProvincesObject,
-            allCitiesObject
+        const { productsListArray } = this.state;
+        const foundIndex = productsListArray.findIndex(item => item?.main?.id == leading[0]?.main?.id);
+
+        if ((foundIndex + 1) % 9 != 0)
+            return null;
+
+        return (
+
+            <LinearGradient
+                start={{ x: 0, y: 1 }}
+                end={{ x: 0.8, y: 0.2 }}
+                style={{
+                    width: deviceWidth, alignSelf: 'center',
+                    justifyContent: 'space-between', marginVertical: 20,
+                    padding: 15, overflow: 'hidden', height: 200
+                }}
+                colors={['#060446', '#21AD93']}
+            >
+                <View
+                    style={{
+                        backgroundColor: 'rgba(140,166,236,0.8)',
+                        width: 120,
+                        position: 'absolute',
+                        height: 120,
+                        borderRadius: 60,
+                        top: -60,
+                        left: 40,
+                        zIndex: 2
+                    }}
+                >
+                </View>
+                <Image
+                    style={{
+                        width: 150,
+                        height: 150,
+                        borderRadius: 75,
+                        position: 'absolute',
+                        zIndex: 1,
+                        top: 30
+                    }}
+                    source={require('../../../assets/images/photo_2021-04-14_16-12-18.jpg')}
+                />
+
+                <Text
+                    style={{
+                        fontSize: 20,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                        textAlignVertical: 'top',
+                        zIndex: 3
+                    }}
+                >
+                    {locales('titles.didNotFindProduct')}
+                </Text>
+                <Text
+                    style={{
+                        fontSize: 19,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                        textAlignVertical: 'top',
+                        zIndex: 3
+                    }}
+                >
+                    {locales('titles.registerNewBuyAdRequest')}
+                </Text>
+
+                <Button
+                    style={{
+                        backgroundColor: '#1DA1F2', borderRadius: 5,
+                        width: deviceWidth * 0.6, flexDirection: 'row-reverse',
+                        justifyContent: 'space-around', alignItems: 'center',
+                        alignSelf: 'flex-end', padding: 10
+                    }}
+                    onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                >
+                    <Text style={{
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white'
+                    }}
+                    >
+                        {is_seller ? locales('titles.registerNewProduct') : locales('titles.registerBuyAdRequest')}
+                    </Text>
+                    <FontAwesome5
+                        name='arrow-left'
+                        color='white'
+                        size={25}
+                    />
+                </Button>
+                <View
+                    style={{
+                        backgroundColor: 'rgba(0,156,131,0.8)',
+                        width: 120,
+                        height: 120,
+                        borderRadius: 60,
+                        zIndex: 2,
+                        position: 'absolute',
+                        left: -60,
+                        bottom: -60
+                    }}
+                >
+                </View>
+            </LinearGradient>
+        )
+    };
+
+    renderSortListItem = ({ item }) => {
+        const {
+            sort_by,
+        } = this.state;
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => this.handleSortItemClick(item.value)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                    color: '#e41c38'
+                }}>
+                {sort_by == item.value ?
+                    <FontAwesome5 name='check' size={26} color='#00C569' />
+                    :
+                    <FontAwesome5 name='angle-left' size={26} color='#777' />
+                }
+                <Text
+                    style={{
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: sort_by == item.value ? '#00C569' : '#777'
+                    }}
+                >
+                    {item.title}
+                </Text>
+            </TouchableOpacity>
+
+        )
+    };
+
+    renderSubCategoriesListItem = ({ item }) => {
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => this.handleSubCategoryItemClick(item)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </TouchableOpacity>
+        )
+    };
+
+    renderCategoriesListItem = (item, isFromModal) => {
+        if (!isFromModal)
+            return (
+                <TouchableOpacity
+                    onPress={() => this.sortProducts(item)}
+                    style={{
+                        borderRadius: 12,
+                        marginHorizontal: 5,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderWidth: 1,
+                        borderColor: '#EDEDED',
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30,
+                        paddingHorizontal: 15,
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            color: '#707070',
+                            fontSize: 15,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {item.category_name}
+                    </Text>
+                </TouchableOpacity>
+            );
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => this.sortProducts(item)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
+                }}>
+                <FontAwesome5 name='angle-left' size={26} color='#777' />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </TouchableOpacity>
+        )
+    };
+
+    renderProductListFooterComponent = _ => {
+        const {
+            loaded
+        } = this.state;
+
+        const {
+            productsListLoading
         } = this.props;
 
-        const { searchText, loaded, productsListArray, selectedButton,
-            categoryModalFlag, sortModalFlag, locationsFlag, sort_by, province, city, selectedCategoryModal } = this.state;
+        if (loaded && productsListLoading)
+            return (
+                <View
+                    style={{
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        marginBottom: 15
+                    }}>
+                    <ShadowView
+                        style={{
+                            backgroundColor: 'white',
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
+                            zIndex: 999,
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                            padding: 0,
+                        }}
+                    >
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                top: 14
+                            }}
+                        />
+                    </ShadowView>
+                </View>
+            )
+        return null;
+    };
 
-        let { provinces = [] } = allProvincesObject;
+    renderProductListItem = ({ item }) => {
+        return (
+            <View
+                style={{
+                    width: '47%', marginVertical: 10,
+                    marginHorizontal: 5,
+                    alignItems: 'center', justifyContent: 'center'
+                }}
+            >
+                <Product
+                    productItem={item}
+                    fetchAllProducts={this.fetchAllProducts}
+                    {...this.props}
+                />
+            </View>
 
-        let cities = [];
+        )
+    };
+
+    renderSelectedLocation = _ => {
+
+        const {
+            province,
+            city,
+            cities
+        } = this.state;
+
+        const {
+            allProvincesObject = {},
+        } = this.props;
+
+        let {
+            provinces = []
+        } = allProvincesObject;
+
+
+        let selectedLocation = '';
+
+        if (province)
+            selectedLocation = provinces.find(item => item.id == province)?.province_name;
+
+        if (city)
+            selectedLocation = cities.find(item => item.id == city)?.city_name;
+
+        if (!!selectedLocation)
+            return (
+                <TouchableOpacity
+                    onPress={() => this.removeLocations()}
+                    style={{
+                        borderRadius: 12,
+                        marginHorizontal: 5,
+                        borderColor: '#FA8888',
+                        borderWidth: 1,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#FCF6F6',
+                        minHeight: 30,
+                        paddingHorizontal: 15
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            fontSize: 15,
+                            paddingLeft: 10,
+                            color: '#E41C38',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}
+                    >
+                        {selectedLocation}
+                    </Text>
+                    <FontAwesome5 name='times' size={12} color='#E41C38' />
+                </TouchableOpacity>
+            );
+        return null;
+    };
+
+    renderFilterHeaderComponent = _ => {
+
+        const {
+            isFilterApplied,
+            searchText,
+        } = this.state;
+
+        return (
+
+            <View
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // bottom: 5
+                }}
+            >
+                {this.renderSortIcons()}
+
+                {this.renderSelectedLocation()}
+
+                {isFilterApplied ?
+                    <TouchableOpacity
+                        onPress={() => this.removeFilter()}
+                        style={{
+                            borderRadius: 12,
+                            marginHorizontal: 5,
+                            borderColor: '#FA8888',
+                            borderWidth: 1,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#FCF6F6',
+                            minHeight: 30,
+                            paddingHorizontal: 15
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                fontSize: 15,
+                                paddingLeft: 10,
+                                color: '#E41C38',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {searchText}
+                        </Text>
+                        <FontAwesome5 name='times' size={12} color='#E41C38' />
+                    </TouchableOpacity>
+                    :
+                    null}
+            </View>
+
+        )
+    };
+
+    renderAllCategoriesIcon = _ => {
+
+        return (
+            <TouchableOpacity
+                onPress={() => this.setState({ totalCategoriesModalFlag: true })}
+                style={{
+                    borderRadius: 12, marginTop: 7, marginBottom: 8,
+                    borderColor: '#EDEDED',
+                    borderWidth: 1,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                    backgroundColor: '#FAFAFA', minHeight: 30, paddingHorizontal: 15
+                }}>
+                <Text
+                    style={{
+                        textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                        color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {locales('labels.classifications')}
+                </Text>
+                <FontAwesome5 name='list' size={12} color='#707070' />
+            </TouchableOpacity>
+        )
+    };
+
+    renderSortIcons = _ => {
+        const {
+            sort_by
+        } = this.state;
+        const {
+            list,
+            values
+        } = ENUMS.SORT_LIST
+        const {
+            BM
+        } = values;
+
+        if (sort_by == BM)
+            return (
+                <TouchableOpacity
+                    onPress={() => this.setState({ sortModalFlag: true })}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#EDEDED',
+                        borderWidth: 1,
+                        paddingHorizontal: 10,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 100,
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30
+                    }}>
+                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
+                    <Text
+                        style={{
+                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {locales('labels.sort')}
+                    </Text>
+                </TouchableOpacity>
+            );
+        return (
+            <TouchableOpacity
+                onPress={() => this.handleSortItemClick(BM)}
+                style={{
+                    borderRadius: 12,
+                    marginTop: 7,
+                    marginBottom: 8,
+                    marginHorizontal: 5,
+                    borderColor: '#FA8888',
+                    borderWidth: 1,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: 120,
+                    backgroundColor: '#FCF6F6',
+                    minHeight: 30,
+                    paddingHorizontal: 10
+                }}>
+                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#E41C38' />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        fontSize: 15,
+                        paddingHorizontal: 3,
+                        color: '#E41C38',
+                        marginRight: 2,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {enumHelper.convertEnumValueToTitle(list, sort_by)}
+                </Text>
+                <FontAwesome5 name='times' size={12} color='#E41C38' />
+            </TouchableOpacity>
+        );
+    };
+
+    renderCategoriesFilterListEmptyComponent = _ => {
+        const {
+            isFilterApplied,
+            searchText
+        } = this.state;
+
+        if (isFilterApplied && searchText && searchText.length)
+            return null;
+        return (
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                    <ContentLoader
+                        key={index}
+                        speed={2}
+                        style={{
+                            marginHorizontal: 5,
+                            borderRadius: 12,
+                            width: deviceWidth * 0.2,
+                            borderWidth: 1,
+                            height: 30,
+                        }}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                    >
+                        <Rect
+                            x="0" y="0" width="100%" rx={10} ry={10} height="100%"
+                        />
+                    </ContentLoader>
+                )
+                )}
+            </View>
+        )
+
+    };
+
+    render() {
+
+        const {
+            productsListLoading,
+
+            categoriesList,
+            categoriesLoading,
+
+            allProvincesObject,
+            userProfile = {},
+
+            provinceLoading,
+            fetchCitiesLoading
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+
+        const {
+            searchText,
+            productsListArray,
+            selectedButton,
+            sortModalFlag,
+            locationsFlag,
+            province,
+            city,
+            cities,
+            showModal,
+            totalCategoriesModalFlag,
+            modals,
+            isFilterApplied
+        } = this.state;
+
+
+        let {
+            provinces = []
+        } = allProvincesObject;
+
+
         provinces = provinces.map(item => ({ ...item, value: item.id }));
-
-        if (allCitiesObject && Object.entries(allCitiesObject).length) {
-            cities = allCitiesObject.cities.map(item => ({ ...item, value: item.id }))
-        }
 
         let selectedCity = (city && cities.some(item => item.id == city)) ? cities.find(item => item.id == city).city_name : '';
 
+
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
                 <NoConnection
                     closeModal={this.setShowModal}
-                    showModal={this.state.showModal}
+                    showModal={showModal}
                 />
 
-                <Modal
-                    animationType="slide"
-                    visible={locationsFlag}
-                    onRequestClose={() => this.setState({ locationsFlag: false })}>
+                {locationsFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={locationsFlag}
+                        onRequestClose={() => this.setState({ locationsFlag: false })}>
 
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row-reverse',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: deviceWidth * 0.4, justifyContent: 'center', alignItems: 'flex-end', paddingHorizontal: 10 }}
-                            onPress={() => {
-                                this.setState({ locationsFlag: false });
-                            }}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
-
-                        <View style={{
-                            width: deviceWidth * 0.6,
-                            alignItems: 'flex-end'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {locales('labels.locationsFilter')}
-                            </Text>
-                        </View>
-                    </View>
-
-
-                    <View style={{ flex: 1, backgroundColor: '#F2F2F2' }}>
-                        <Card>
-                            <CardItem>
-                                <Body>
-                                    <View style={{ padding: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
-
-                                        <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('labels.province')}
-                                            </Label>
-                                            <Item regular
-                                                style={{
-                                                    width: deviceWidth * 0.9,
-                                                    borderRadius: 5,
-                                                    alignSelf: 'center',
-                                                    borderColor: '#a8a8a8'
-                                                }}
-                                            >
-                                                <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                    useNativeAndroidPickerStyle={false}
-                                                    onValueChange={this.setProvince}
-                                                    onOpen={() => { this.setState({ disableSubCategory: true }) }}
-                                                    style={styles}
-                                                    value={province}
-                                                    disabled={categoriesLoading}
-                                                    placeholder={{
-                                                        label: locales('labels.selectProvince'),
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    }}
-                                                    items={[...provinces.map(item => ({
-                                                        label: item.province_name, value: item.id
-                                                    }))]}
-                                                />
-                                            </Item>
-                                        </View>
-
-                                        <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                            <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('labels.city')}
-                                            </Label>
-                                            {(this.props.provinceLoading || this.props.fetchCitiesLoading) ?
-                                                <ActivityIndicator size="small" color="#00C569"
-                                                    style={{
-                                                        position: 'absolute', right: '15%', top: '2%',
-                                                        width: 50, height: 50, borderRadius: 25
-                                                    }}
-                                                /> : null}
-                                            <Item regular
-                                                style={{
-                                                    width: deviceWidth * 0.9,
-                                                    borderRadius: 5,
-                                                    alignSelf: 'center',
-                                                    borderColor: '#a8a8a8'
-                                                }}
-                                            >
-                                                <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                    useNativeAndroidPickerStyle={false}
-                                                    onValueChange={this.setCity}
-                                                    disabled={categoriesLoading || subCategoriesLoading || this.state.disableSubCategory}
-                                                    style={styles}
-                                                    value={city}
-                                                    placeholder={{
-                                                        label: locales('labels.selectCity'),
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    }}
-                                                    items={[...cities.map(item => ({
-                                                        label: item.city_name, value: item.id
-                                                    }))]}
-                                                />
-                                            </Item>
-                                        </View>
-
-                                        <View style={{
-                                            flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 45,
-                                            alignItems: 'center'
-                                        }}>
-                                            <Button
-                                                style={[styles.loginButton, { width: '50%' }]}
-                                                onPress={this.searchLocation}>
-                                                <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 1 && !!productsListLoading}
-                                                    style={{
-                                                        marginLeft: -15,
-                                                        justifyContent: 'center',
-
-                                                        width: 30, height: 30, borderRadius: 15
-                                                    }}
-                                                />
-                                                <Text style={[styles.buttonText, { alignSelf: 'center', fontSize: 16 }]}>
-                                                    {locales('labels.search')}
-                                                </Text>
-
-                                            </Button>
-                                            <Button
-                                                style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
-                                                onPress={this.deleteFilter}>
-                                                <ActivityIndicator size="small" color="white"
-                                                    animating={selectedButton == 2 && !!productsListLoading}
-                                                    style={{
-                                                        marginLeft: -15,
-                                                        justifyContent: 'center',
-
-                                                        width: 30, height: 30, borderRadius: 15
-                                                    }}
-                                                />
-                                                <Text style={[styles.buttonText, {
-                                                    alignSelf: 'center',
-                                                    fontSize: 16
-                                                }]}>
-                                                    {locales('labels.deleteFilter')}
-                                                </Text>
-
-                                            </Button>
-                                        </View>
-
-                                    </View>
-                                </Body>
-                            </CardItem>
-                        </Card>
-
-                    </View>
-
-                </Modal>
-
-                <Modal
-                    animationType="slide"
-                    visible={sortModalFlag}
-                    onRequestClose={() => this.setState({ sortModalFlag: false })}>
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.setState({ sortModalFlag: false })}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
-
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {locales('labels.sortBy')}
-                            </Text>
-                        </View>
-                    </View>
-                    <FlatList
-                        refreshing={productsListLoading || categoriesLoading}
-                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
+                        <View
                             style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
+                                flex: 1,
+                                height: deviceHeight,
+                                width: deviceWidth,
                             }}
-                        />}
-                        data={ENUMS.SORT_LIST.list}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                onPress={() => !productsListLoading && this.setState({ sort_by: item.value }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
-                                        this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                    const { searchText } = this.state;
-                                    let searchItem = {
-                                        from_record_number: 0,
-                                        sort_by: item.value,
-                                        to_record_number: 15,
-                                    };
-                                    if (searchText && searchText.length) {
-                                        searchItem = {
-                                            from_record_number: 0,
-                                            sort_by: item.value,
-                                            search_text: searchText,
-                                            to_record_number: 15
-                                        }
-                                    }
-                                    if (province) {
-                                        searchItem = { ...searchItem, province_id: province }
-                                    }
-                                    if (city) {
-                                        searchItem = { ...searchItem, city_id: city }
-                                    }
-
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ sortModalFlag: false, searchFlag: true, from_record_number: 0, to_record_number: 15 })
-                                    }).catch(error => {
-                                        this.setState({
-                                            // showModal: true, 
-                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                        })
-                                    });
-                                })}
-                                style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
-                                    color: 'red'
-                                }}>
-                                {sort_by == item.value ? <FontAwesome5 name='check' size={26} color='#00C569' /> : <FontAwesome5 name='angle-left' size={26} color='#777' />}
-                                <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: sort_by == item.value ? '#00C569' : '#777' }}>{item.title}</Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                </Modal>
-
-                <Modal
-                    animationType="slide"
-                    visible={categoryModalFlag}
-                    onRequestClose={() => this.setState({ categoryModalFlag: false })}>
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.setState({ categoryModalFlag: false })}
                         >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
+                            <Header
+                                title={locales('labels.locationsFilter')}
+                                onBackButtonPressed={_ => this.setState({ locationsFlag: false })}
+                                {...this.props}
+                            />
 
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {selectedCategoryModal}
-                            </Text>
+                            <View style={{
+                                padding: 20,
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                width: deviceWidth,
+                                height: '70%'
+                            }}>
+
+                                <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
+                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        {locales('labels.targetProvince')}
+                                    </Label>
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.9,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: '#a8a8a8'
+                                        }}
+                                    >
+                                        <RNPickerSelect
+                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={this.setProvince}
+                                            style={styles}
+                                            value={province}
+                                            disabled={categoriesLoading}
+                                            placeholder={{
+                                                label: locales('labels.pleaseSelectTargetProvince'),
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            }}
+                                            items={[...provinces.map(item => ({
+                                                label: item.province_name, value: item.id
+                                            }))]}
+                                        />
+                                    </Item>
+                                </View>
+
+                                <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
+                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        {locales('labels.targetCity')}
+                                    </Label>
+                                    {(provinceLoading || fetchCitiesLoading) ?
+                                        <ActivityIndicator size="small" color="#00C569"
+                                            style={{
+                                                position: 'absolute', right: '15%', top: '2%',
+                                                width: 50, height: 50, borderRadius: 25
+                                            }}
+                                        /> : null}
+                                    <Item regular
+                                        style={{
+                                            width: deviceWidth * 0.9,
+                                            borderRadius: 5,
+                                            alignSelf: 'center',
+                                            borderColor: '#a8a8a8'
+                                        }}
+                                    >
+                                        <RNPickerSelect
+                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                            useNativeAndroidPickerStyle={false}
+                                            onValueChange={this.setCity}
+                                            disabled={provinceLoading || !province}
+                                            style={styles}
+                                            value={city}
+                                            placeholder={{
+                                                label: locales('labels.pleaseSelectTargetCity'),
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            }}
+                                            items={[...cities.map(item => ({
+                                                label: item.city_name, value: item.id
+                                            }))]}
+                                        />
+                                    </Item>
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 25,
+                                    alignItems: 'center'
+                                }}>
+                                    <Button
+                                        style={[styles.loginButton, { width: '60%' }]}
+                                        onPress={this.searchLocation}>
+                                        <ActivityIndicator size="small" color="white"
+                                            animating={selectedButton == 1 && !!productsListLoading}
+                                            style={{
+                                                justifyContent: 'center',
+                                                position: 'absolute',
+                                                left: 40,
+                                                width: 30, height: 30, borderRadius: 15
+                                            }}
+                                        />
+                                        <Text style={[styles.buttonText, {
+                                            alignSelf: 'center', fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }]}>
+                                            {locales('labels.applyFilter')}
+                                        </Text>
+
+                                    </Button>
+                                    {/* <Button
+                                                    style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
+                                                    onPress={this.deleteFilter}>
+                                                    <ActivityIndicator size="small" color="white"
+                                                        animating={selectedButton == 2 && !!productsListLoading}
+                                                        style={{
+                                                            marginLeft: -15,
+                                                            justifyContent: 'center',
+
+                                                            width: 30, height: 30, borderRadius: 15
+                                                        }}
+                                                    />
+                                                    <Text style={[styles.buttonText, {
+                                                        alignSelf: 'center',
+                                                        fontSize: 16
+                                                    }]}>
+                                                        {locales('labels.deleteFilter')}
+                                                    </Text>
+
+                                                </Button> */}
+                                </View>
+
+                            </View>
                         </View>
-                    </View>
+                    </Modal>
+                    : null}
+
+                {sortModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={sortModalFlag}
+                        onRequestClose={() => this.setState({ sortModalFlag: false })}>
+
+                        <Header
+                            title={locales('labels.sortBy')}
+                            onBackButtonPressed={_ => this.setState({ sortModalFlag: false })}
+                            {...this.props}
+                        />
+
+                        <FlatList
+                            data={ENUMS.SORT_LIST.list}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={this.renderSortListItem}
+                        />
+                    </Modal>
+                    : null}
+
+                {!!totalCategoriesModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={!!totalCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
+
+                        <Header
+                            title={locales('titles.allOfTheCategories')}
+                            onBackButtonPressed={_ => this.setState({ totalCategoriesModalFlag: false })}
+                            {...this.props}
+                        />
+
+                        <FlatList
+                            data={categoriesList}
+                            style={{ marginVertical: 8 }}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={({ item }) => this.renderCategoriesListItem(item, true)}
+                        />
+
+                    </Modal>
+                    : null}
+
+                {modals.length ?
                     <FlatList
-                        data={subCategoriesList}
-                        keyExtractor={(item, index) => index.toString()}
-                        refreshing={subCategoriesLoading || productsListLoading}
-                        onRefresh={() => <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                position: 'absolute', right: '15%', top: '2%',
-                                width: 50, height: 50, borderRadius: 25
-                            }}
-                        />}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                onPress={() => !productsListLoading && this.setState({ searchText: item.category_name }, () => {
-                                    if (this.props.productsListRef && this.props.productsListRef != null && this.props.productsListRef != undefined &&
-                                        this.props.productsListRef.current && this.props.productsListRef.current != null &&
-                                        this.props.productsListRef.current != undefined && this.state.productsListArray.length > 0 && !this.props.productsListLoading)
-                                        setTimeout(() => {
-                                            this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
-                                        }, 300);
-
-                                    const { sort_by } = this.state;
-                                    let searchItem = {
-                                        from_record_number: 0,
-                                        sort_by,
-                                        search_text: item.category_name,
-                                        to_record_number: 15,
-                                    };
-                                    if (province) {
-                                        searchItem = { ...searchItem, province_id: province }
-                                    }
-                                    if (city) {
-                                        searchItem = { ...searchItem, city_id: city }
-                                    }
-
-                                    this.props.fetchAllProductsList(searchItem).then(_ => {
-                                        this.setState({ categoryModalFlag: false, from_record_number: 0, to_record_number: 15, searchFlag: true })
-                                    }).catch(error => {
-                                        this.setState({
-                                            //  showModal: true, 
-                                            searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                        })
-                                    });
-                                })}
-                                style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                                }}>
-                                <FontAwesome5 name='angle-left' size={26} color='#777' />
-                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{item.category_name}</Text>
-                            </TouchableOpacity>
-                        )}
+                        data={modals}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={this.renderModalItem}
                     />
-                </Modal>
+                    :
+                    null}
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('labels.products')}
-                        </Text>
-                    </View>
-                </View>
-
+                <Header
+                    title={locales('labels.products')}
+                    {...this.props}
+                />
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                             <TouchableOpacity
-                                onPress={() => !productsListLoading && this.setState({ locationsFlag: true })}
+                                onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
                                     color: (selectedCity) ||
@@ -865,176 +1700,89 @@ class ProductsList extends PureComponent {
                                     }
                                 </Text>
                             </TouchableOpacity>
-                            <Input value={searchText}
+                            <Input
+                                value={searchText}
                                 ref={this.serachInputRef}
                                 disabled={!!productsListLoading}
                                 onChangeText={text => this.handleSearch(text)}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', paddingBottom: 10, color: '#777', textAlignVertical: 'bottom' }}
+                                onSubmitEditing={this.submitSearching}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    paddingBottom: 10, color: '#777', textAlignVertical: 'bottom'
+                                }}
                                 placeholderTextColor="#bebebe"
                                 placeholder={locales('labels.searchProduct')} />
                             <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         </InputGroup>
 
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <TouchableOpacity
-                                onPress={() => !productsListLoading && this.setState({ sortModalFlag: true })}
-                                style={{
-                                    borderRadius: 18, marginVertical: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                                    minWidth: 110, backgroundColor: '#556080', minHeight: 30
-                                }}>
-                                <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#fff', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                    {locales('labels.sort')}
-                                </Text>
-                                <FontAwesome name='sort-amount-desc' size={12} color='#fff' />
-                            </TouchableOpacity>
-                            <FlatList
-                                data={categoriesList}
-                                horizontal={true}
-                                inverted={true}
-                                showsHorizontalScrollIndicator={false}
-                                style={{ marginVertical: 8 }}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        onPress={() => !productsListLoading && this.sortProducts(item.id, item.category_name)}
-                                        style={{
-                                            borderRadius: 18, marginHorizontal: 5, flexDirection: 'row',
-                                            alignItems: 'center', justifyContent: 'center',
-                                            minWidth: 85, borderWidth: 1, borderColor: '#7E7E7E', backgroundColor: '#eee', minHeight: 30
-                                        }}>
-                                        <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {item.category_name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </View>
+
+
+
                     </View>
 
                 </View>
 
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderBottomColor: '#EBEBEB',
+                        borderBottomWidth: 1,
+                        height: 50,
+                        maxHeight: 50,
+                    }}
+                >
+                    {this.renderAllCategoriesIcon()}
+
+                    <FlatList
+                        contentContainerStyle={{
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                            minWidth: '100%'
+                        }}
+                        ref={this.categoryFiltersRef}
+                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
+                        keyExtractor={(_, index) => index.toString()}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        inverted={true}
+                        ListEmptyComponent={this.renderCategoriesFilterListEmptyComponent}
+                        ListHeaderComponent={this.renderFilterHeaderComponent}
+                        renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
+                    />
+                </View>
 
                 <FlatList
-                    keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps='handled'
-                    ListEmptyComponent={this.renderProductListEmptyComponent}
-                    // getItemLayout={(data, index) => (
-                    //     { length: deviceHeight * 0.3, offset: deviceHeight * 0.3 * index, index }
-                    // )}
-                    extraData={this.state}
+                    initialNumToRender={4}
                     ref={this.props.productsListRef}
-                    onEndReached={() => {
-                        if (loaded && productsListArray.length >= this.state.to_record_number)
-                            this.setState({
-                                from_record_number: this.state.from_record_number + 15,
-                                to_record_number: this.state.to_record_number + 15,
-                            }, () => {
-                                const { from_record_number, to_record_number, sort_by, searchText } = this.state;
-
-                                let item = {
-                                    from_record_number,
-                                    sort_by,
-                                    to_record_number,
-                                };
-                                if (searchText && searchText.length) {
-                                    item = {
-                                        from_record_number,
-                                        sort_by,
-                                        to_record_number,
-                                        search_text: searchText
-                                    }
-                                }
-                                if (province) {
-                                    item = { ...item, province_id: province }
-                                }
-                                if (city) {
-                                    item = { ...item, city_id: city }
-                                }
-
-                                this.props.fetchAllProductsList(item).then(_ => {
-                                    this.setState({ loaded: false })
-                                }).catch(error => {
-                                    this.setState({
-                                        // showModal: true,
-                                        searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                                    })
-                                });
-                            })
-                    }}
-                    onEndReachedThreshold={3.5}
-                    // initialNumToRender={2}
-                    ListFooterComponent={() => {
-                        return ((loaded && productsListLoading)) ?
-                            <View style={{
-                                textAlign: 'center',
-                                alignItems: 'center',
-                                marginBottom: 15
-
-                            }}>
-                                <ActivityIndicator size="small" color="#00C569"
-                                    style={{
-                                        zIndex: 999,
-                                        width: 50, height: 50,
-                                        borderRadius: 50,
-                                        backgroundColor: '#fff',
-                                        elevation: 5,
-                                        padding: 0,
-                                    }}
-                                />
-                            </View> : null
-                    }
-                    }
-                    // initialScrollIndex={0}
-                    // refreshing={(!loaded && productsListLoading) || categoriesLoading}
-                    refreshing={false}
-                    onRefresh={() => {
-                        let item = {
-                            from_record_number: 0,
-                            sort_by: this.state.sort_by,
-                            to_record_number: 15,
-                        };
-                        if (searchText && searchText.length) {
-                            item = {
-                                from_record_number: 0,
-                                sort_by: this.state.sort_by,
-                                to_record_number: 15,
-                                search_text: this.state.searchText
-                            }
-                        }
-                        if (province) {
-                            item = { ...item, province_id: province }
-                        }
-                        if (city) {
-                            item = { ...item, city_id: city }
-                        }
-                        this.props.fetchAllProductsList(item).then(result => {
-                            this.setState({
-                                productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 15
-                            })
-                        }).catch(error => {
-                            this.setState({
-                                //  showModal: true,
-                                searchFlag: false, categoryModalFlag: false, locationsFlag: false, sortModalFlag: false
-                            })
-                        });
-                    }
-                    }
                     keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
-                    renderItem={({ item }) => <Product
-                        productItem={item}
-                        fetchAllProducts={this.fetchAllProducts}
-                        {...this.props}
-                    />}
+                    style={{ backgroundColor: 'white' }}
+                    horizontal={false}
+                    numColumns={2}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
+                    refreshing={false}
+                    onRefresh={this.onProductListRefreshed}
+                    onEndReached={this.onEndOfProductListReached}
+                    onEndReachedThreshold={3}
+                    ListEmptyComponent={this.renderProductListEmptyComponent}
+                    ListFooterComponent={this.renderProductListFooterComponent}
+                    ItemSeparatorComponent={({ _, leadingItem }) => !is_seller && this.renderItemSeparatorComponent(leadingItem)}
+                    renderItem={this.renderProductListItem}
                 />
 
-            </>
+            </View>
         )
     }
 }
 
 
 const styles = StyleSheet.create({
+    image: {
+        resizeMode: "cover",
+        width: deviceWidth,
+    },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
         padding: 10,
@@ -1051,6 +1799,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     backButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#7E7E7E',
         width: '60%',
         textAlign: 'center'
@@ -1171,58 +1920,110 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({
+    productsListReducer,
+    registerProductReducer,
+    locationsReducer,
+    profileReducer,
+    authReducer
+}) => {
+
+    const {
+        productsListObject,
+        productsListArray,
+        productsListLoading,
+        productsListError,
+        productsListFailed,
+        productsListMessage,
+
+        updateProductsListFlag
+    } = productsListReducer;
+
+    const {
+        categoriesLoading,
+        categoriesMessage,
+        categoriesError,
+        categoriesFailed,
+        categoriesList,
+        categories,
+
+        subCategoriesLoading,
+        subCategoriesMessage,
+        subCategoriesError,
+        subCategoriesFailed,
+        subCategories
+    } = registerProductReducer;
+
+    const {
+        provinceLoading,
+        provinceError,
+        provinceFailed,
+        provinceMessage,
+        allProvincesObject,
+
+        fetchCitiesLoading,
+        fetchCitiesError,
+        fetchCitiesFailed,
+        fetchCitiesMessage,
+        allCitiesObject
+    } = locationsReducer;
+
+    const {
+        userProfile
+    } = profileReducer;
+
+    const {
+        loggedInUserId
+    } = authReducer;
+
     return {
-        productsListArray: state.productsListReducer.productsListArray,
-        productsListObject: state.productsListReducer.productsListObject,
-        productsListLoading: state.productsListReducer.productsListLoading,
-        productsListError: state.productsListReducer.productsListError,
-        productsListFailed: state.productsListReducer.productsListFailed,
-        productsListMessage: state.productsListReducer.productsListMessage,
+        productsListObject,
+        productsListArray,
+        productsListLoading,
+        productsListError,
+        productsListFailed,
+        productsListMessage,
 
-        categoriesLoading: state.registerProductReducer.categoriesLoading,
-        categoriesMessage: state.registerProductReducer.categoriesMessage,
-        categoriesError: state.registerProductReducer.categoriesError,
-        categoriesFailed: state.registerProductReducer.categoriesFailed,
-        categoriesList: state.registerProductReducer.categoriesList,
-        categories: state.registerProductReducer.categories,
+        categoriesLoading,
+        categoriesMessage,
+        categoriesError,
+        categoriesFailed,
+        categoriesList,
+        categories,
 
+        subCategoriesLoading,
+        subCategoriesMessage,
+        subCategoriesError,
+        subCategoriesFailed,
+        subCategories,
 
-        subCategoriesLoading: state.registerProductReducer.subCategoriesLoading,
-        subCategoriesMessage: state.registerProductReducer.subCategoriesMessage,
-        subCategoriesError: state.registerProductReducer.subCategoriesError,
-        subCategoriesFailed: state.registerProductReducer.subCategoriesFailed,
-        subCategoriesList: state.registerProductReducer.subCategoriesList,
-        subCategories: state.registerProductReducer.subCategories,
-
-        provinceLoading: state.locationsReducer.fetchAllProvincesLoading,
-        provinceError: state.locationsReducer.fetchAllProvincesError,
-        provinceFailed: state.locationsReducer.fetchAllProvincesFailed,
-        provinceMessage: state.locationsReducer.fetchAllProvincesMessage,
-        allProvincesObject: state.locationsReducer.allProvincesObject,
-
-        fetchCitiesLoading: state.locationsReducer.fetchAllCitiesLoading,
-        fetchCitiesError: state.locationsReducer.fetchAllCitiesError,
-        fetchCitiesFailed: state.locationsReducer.fetchAllCitiesFailed,
-        fetchCitiesMessage: state.locationsReducer.fetchAllCitiesMessage,
-        allCitiesObject: state.locationsReducer.allCitiesObject,
-
-        productDetailsId: state.productsListReducer.productDetailsId,
-
-        updateProductsListFlag: state.productsListReducer.updateProductsListFlag,
-
-        userProfile: state.profileReducer.userProfile,
+        provinceLoading,
+        provinceError,
+        provinceFailed,
+        provinceMessage,
+        allProvincesObject,
 
 
+        fetchCitiesLoading,
+        fetchCitiesError,
+        fetchCitiesFailed,
+        fetchCitiesMessage,
+        allCitiesObject,
+
+        updateProductsListFlag,
+
+        userProfile,
+
+        loggedInUserId
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(false)),
-        fetchAllProductsList: item => dispatch(productsListActions.fetchAllProductsList(item, false)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
         fetchAllSubCategories: id => dispatch(registerProductActions.fetchAllSubCategories(id)),
-        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, true)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
         fetchAllDashboardData: () => dispatch(homeActions.fetchAllDashboardData()),
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),

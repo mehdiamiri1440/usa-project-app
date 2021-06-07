@@ -7,6 +7,7 @@ import messagesReducer from './messages/reducer'
 import buyAdRequestReducer from './buyAdRequest/reducer'
 import profileReducer from './profile/reducer'
 import productsListReducer from './productsList/reducer'
+import commentsAndRatingsReducer from './commentsAndRatings/reducer'
 
 export default combineReducers({
   authReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   buyAdRequestReducer,
   profileReducer,
   productsListReducer,
+  commentsAndRatingsReducer,
 });

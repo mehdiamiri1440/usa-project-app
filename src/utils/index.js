@@ -6,6 +6,7 @@ import * as domManipulatorModule from './domManipulator';
 import * as enumHelperModule from './enumHelper';
 import * as dataGeneratorModule from './dataGenerator';
 import * as parserModule from './parser';
+import * as permissionsModule from './permissions';
 
 export const deviceWidth = DeviceDimenssions.deviceWidth
 export const deviceHeight = DeviceDimenssions.deviceHeight
@@ -16,6 +17,7 @@ export const domManipulator = domManipulatorModule;
 export const enumHelper = enumHelperModule;
 export const dataGenerator = dataGeneratorModule;
 export const parser = parserModule;
+export const permissions = permissionsModule;
 
 
 

@@ -80,7 +80,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -163,11 +163,13 @@ android {
     defaultConfig {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
-            vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
-        versionCode 3
+        versionCode 19
         multiDexEnabled true
-        versionName "2.0.0.999"
+        versionName "6.0.0.0003.0"
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
     //     ndk {
     //   // Specifies the ABI configurations of your native
     //   // libraries Gradle should build and package with your APK.
@@ -227,7 +229,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-                signingConfig signingConfigs.debug
+                signingConfig signingConfigs.release
             minifyEnabled true
             // minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -254,8 +256,8 @@ dependencies {
     // For animated GIF support
     compile 'com.facebook.fresco:fresco:1.+'
     compile 'com.facebook.fresco:animated-gif:1.+'
-    implementation 'org.webkit:android-jsc:+'
     implementation project(':react-native-restart')
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-community-toolbar-android')
     implementation project(':react-native-fs')
@@ -263,6 +265,11 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-vector-icons')
+    compile project(':react-native-video')
+    compile project(':react-native-audio')
+    compile project(':react-native-sound')
+    compile project(':@react-native-community_voice')
+    implementation project(':react-native-device-info')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'

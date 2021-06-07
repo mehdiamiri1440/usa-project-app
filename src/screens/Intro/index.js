@@ -102,31 +102,31 @@ class Intro extends Component {
                     </Button>
 
                 </View> : <View style={styles.actionButtonWrapper}>
-                        <Button
-                            onPress={() => this.props.navigation.navigate('SignUp')}
-                            style={styles.actionButton}>
-                            <Text style={styles.actionButtonText}>
-                                {locales('titles.skip')}
-                            </Text>
+                    <Button
+                        onPress={() => this.props.navigation.navigate('SignUp')}
+                        style={styles.actionButton}>
+                        <Text style={styles.actionButtonText}>
+                            {locales('titles.skip')}
+                        </Text>
 
-                        </Button>
+                    </Button>
 
-                        <Button
-                            onPress={() => {
-                                if (selectedIndex == images.length - 1) {
-                                    return this.props.navigation.navigate('SignUp')
-                                }
-                                else {
-                                    this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
-                                }
-                            }}
-                            style={styles.actionButton}>
-                            <Text style={styles.actionButtonText}>
-                                {locales('titles.next')}
-                            </Text>
-                        </Button>
+                    <Button
+                        onPress={() => {
+                            if (selectedIndex == images.length - 1) {
+                                return this.props.navigation.navigate('SignUp')
+                            }
+                            else {
+                                this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
+                            }
+                        }}
+                        style={styles.actionButton}>
+                        <Text style={styles.actionButtonText}>
+                            {locales('titles.next')}
+                        </Text>
+                    </Button>
 
-                    </View>
+                </View>
                 }
             </>
         )
@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
     },
     actionButtonText: {
         color: '#556080',
-        fontSize: 18
+        fontSize: 18,
+        fontFamily: 'IRANSansWeb(FaNum)_Light'
     }
 });
 

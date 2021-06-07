@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import { Text, View, BackHandler, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, BackHandler, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 import { Button } from 'native-base';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as authActions from '../../../redux/auth/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import Home from '../../Home/Home';
-
+import Header from '../../../components/header';
 class ChangeRole extends Component {
 
     homeRef = React.createRef();
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' });
-            return true;
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackChange)
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackChange);
     }
+
+    handleBackChange = _ => {
+        this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' });
+    };
 
     changeRole = _ => {
         this.props.changeRole().then(_ => {
@@ -56,62 +55,38 @@ class ChangeRole extends Component {
 
 
         return (
-            <>
+            <View
+                ref={this.props.homeRef}
+                style={{
+                    flex: 1
+                }}
+            >
 
 
                 {changeRoleLoading ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
                         position: 'absolute',
-
-                        elevation: 5,
                         borderColor: 'black',
                         backgroundColor: 'white',
                     }}>
-                        <ActivityIndicator size="large"
+                        <ActivityIndicator size={70}
                             style={{
-                                position: 'absolute', left: '44%', top: '40%',
-
-                                elevation: 5,
+                                position: 'absolute', left: '42%', top: '40%',
+                                elevation: 0,
                                 borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                                backgroundColor: 'white', borderRadius: 25
                             }}
                             color="#00C569"
 
                         />
                     </View> : null}
 
-
-                <View
-                    ref={this.props.homeRef}
-                    style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center',
-                        backgroundColor: '#fff'
-                    }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' })}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.changeRole')}
-                        </Text>
-                    </View>
-                </View>
+                <Header
+                    onBackButtonPressed={() => this.props.navigation.navigate('MyBuskool', { screen: 'HomeIndex' })}
+                    title={locales('titles.changeRole')}
+                    {...this.props}
+                />
 
                 <View style={{
                     padding: 15,
@@ -158,7 +133,7 @@ class ChangeRole extends Component {
                     </View>
                 </View>
 
-            </>
+            </View>
         )
     }
 }

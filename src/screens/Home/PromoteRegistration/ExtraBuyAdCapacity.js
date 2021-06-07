@@ -1,17 +1,18 @@
 import React, { createRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, BackHandler, StyleSheet, Linking, RefreshControl } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Linking, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Card, InputGroup, Input, Button } from 'native-base';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
-import { formatter } from '../../../utils'
-
+import { formatter } from '../../../utils';
+import PromoteRegistration from './PromoteRegistration';
+import CreditCardPayment from './CreditCardPayment';
+import Header from '../../../components/header';
 class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
         super(props)
@@ -27,14 +28,6 @@ class ExtraBuyAdCapacity extends React.Component {
 
     componentDidMount() {
         analytics().logEvent('extra_buyAd_capacity_payment');
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
-            return true;
-        })
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener()
     }
 
 
@@ -106,34 +99,12 @@ class ExtraBuyAdCapacity extends React.Component {
                     closeModal={this.closeModal}
                 />
 
+                <Header
+                    title={locales('titles.extra‌BuyAd')}
+                    shouldShowAuthenticationRibbonFromProps
+                    {...this.props}
+                />
 
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    height: 45,
-                    elevation: 5,
-                    justifyContent: 'center'
-                }}>
-                    <TouchableOpacity
-                        style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                        onPress={() => this.props.navigation.goBack()}
-                    >
-                        <AntDesign name='arrowright' size={25} />
-                    </TouchableOpacity>
-
-                    <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                    }}>
-                        <Text
-                            style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                        >
-                            {locales('titles.extra‌BuyAd')}
-                        </Text>
-                    </View>
-                </View>
                 <ScrollView
                     ref={this.wrapperRef}
                     refreshControl={
@@ -146,7 +117,6 @@ class ExtraBuyAdCapacity extends React.Component {
                     }
                     style={{
                         paddingVertical: 30,
-                        paddingHorizontal: 15
                     }}
                 >
 
@@ -181,11 +151,12 @@ class ExtraBuyAdCapacity extends React.Component {
                             }}>
                                 {locales('titles.extraBuyAdRequestDescriptionTextFirst')}
                                 <Text style={{
-                                    color: '#00c569'
+                                    color: '#00c569',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                 }}>
                                     {locales('titles.extraBuyAdRequestDescriptionTextSecend')}
                                 </Text>
-                                {locales('titles.extraBuyAdRequestDescriptionTextThird')}
+                                {locales('titles.is')}
 
                             </Text>
                             <Button
@@ -230,6 +201,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                         textAlign: 'center',
                                         color: '#777',
                                         paddingTop: 5,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         fontSize: 14
                                     }}>
                                         {locales('labels.extraBuyAdDescription')}
@@ -287,7 +259,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                         <InputGroup
                                             regular
                                             style={{
-                                                backgroundColor: 'red',
+                                                backgroundColor: '#e41c38',
                                                 flexDirection: 'row-reverse',
                                                 justifyContent: "space-between",
                                                 paddingLeft: 0,
@@ -408,9 +380,10 @@ class ExtraBuyAdCapacity extends React.Component {
                             </View>
                         </Card>
 
-
+                        <PromoteRegistration isUsedAsComponent={true} showBothPackages={false} {...this.props} />
                     </View>
                 </ScrollView>
+                <CreditCardPayment />
             </>
         )
     }

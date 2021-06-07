@@ -1,12 +1,13 @@
 import { requester } from '../utils';
 
-export const fetchAllProvinces = provinceId => {
+export const fetchAllProvinces = (provinceId, cascade_list) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `location/get_location_info`,
                 method: 'POST',
                 data: {
+                    cascade_list,
                     province_id: provinceId
                 },
                 withAuth: false,

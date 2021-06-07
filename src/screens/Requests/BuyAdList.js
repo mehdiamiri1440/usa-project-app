@@ -1,170 +1,512 @@
+import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
-import React, { memo } from 'react';
-import { View, Image, Text, ActivityIndicator } from 'react-native';
+import { View, Image, Text, ActivityIndicator, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
-import { locale } from 'moment';
+import { deviceWidth, validator } from '../../utils';
+import * as buyAdActions from '../../redux/buyAdRequest/actions';
 
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, buyAdRequestsList, userProfile = {}, isUserAllowedToSendMessageLoading } = props;
+    const { item, index, selectedButton, userProfile = {},
+        isUserAllowedToSendMessageLoading, openMobileNumberWarnModal = _ => { },
+        contactInfoLoading,
+        setPromotionModalVisiblity = _ => { },
+        buyerMobileNumberLoading
+    } = props;
     const { user_info = {} } = userProfile;
     const { active_pakage_type } = user_info;
+
+    const [isContactInfoShown, setIsContactInfoShown] = useState(false);
+    const [mobileNumber, setMobileNumber] = useState(false);
+
+    const fetchContactInfo = ({ id, is_golden }) => {
+        const shouldShowPromotionModal = !!is_golden && active_pakage_type == 0;
+        if (shouldShowPromotionModal) {
+            setPromotionModalVisiblity(true)
+        }
+        else {
+            props.setSelectedButton(id);
+            const contactInfoObject = {
+                b_id: item.myuser_id,
+                ba_id: item.id,
+                item: "BUYAD"
+            }
+            props.fetchBuyerMobileNumber(contactInfoObject).then(result => {
+                const {
+                    payload = {}
+                } = result;
+                const {
+                    phone,
+                    status
+                } = payload;
+                if (status == true && !!phone) {
+                    item.isContactInfoShown = true;
+                    item.mobileNumber = phone;
+                    setMobileNumber(phone);
+                    setIsContactInfoShown(true);
+                }
+            })
+                .catch(err => {
+                    const {
+                        response = {}
+                    } = err;
+                    const {
+                        data = {},
+                        status: statusCode
+                    } = response;
+                    const {
+                        msg,
+                        status,
+                    } = data;
+                    if (status == false) {
+                        openMobileNumberWarnModal(true, msg, statusCode);
+                    }
+                });
+        }
+    };
+
+
+    const openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
+
     return (
+
         <View
             style={{
-                padding: 10,
-                backgroundColor: '#FFFFFF',
-                width: '100%',
-                borderColor: !!item.is_golden ? '#c7a84f' : '#aaa',
-                borderWidth: 1,
-                borderColor: '#ddd'
+                padding: 20,
+                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#FDFDFD' : '#FFFFFF',
+                width: '95%',
+                alignSelf: 'center',
+                borderRadius: 12,
+                marginVertical: 20,
+                borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
+                borderWidth: 0.8,
+                borderRightWidth: !!item.is_golden ? 12 : 1,
+                borderBottomWidth: item.is_golden ? 0.8 : 1
             }}
             key={item.id}
         >
 
-            <View >
-                {/* blur items */}
-                {item.is_golden && active_pakage_type == 0 ?
+            {item.is_golden && active_pakage_type == 0 ?
 
-                    <View style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        left: 0,
-                        top: 0,
-                        zIndex: 1
-                    }}>
-                        <Image source={require('../../../assets/images/blur-items.jpg')}
-                            style={{
-                                width: '100%',
-                                height: '100%'
-                            }}
-                        />
-                        <Text style={{
+                <View style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    marginTop: 13,
+                    left: 0,
+                    top: 0,
+                    zIndex: 1
+                }}>
+
+                    <Image source={require('../../../assets/images/blur-items.jpg')}
+                        style={{
+                            width: deviceWidth * 0.915,
+                            height: '80%'
+                        }}
+                    />
+
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            marginVertical: 5,
+                            right: -25,
                             position: 'absolute',
-                            width: '100%',
-                            top: 50,
-                            fontSize: 23,
-                            textAlign: 'center',
-                            // backgroundColor: 'red',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            zIndex: 2
-                        }}>
-                            {item.subcategory_name}
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+
+                        <FontAwesome5
+                            solid
+                            name='user-circle'
+                            color='#adadad'
+                            size={16}
+                        />
+                        <Text
+                            style={{
+                                marginHorizontal: 5,
+                                color: '#adadad',
+                                fontSize: 15,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}
+                        >
+                            {`${item.first_name} ${item.last_name}`}
                         </Text>
                     </View>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            position: 'absolute',
+                            top: 48,
+                            textAlign: 'center',
+                            left: deviceWidth * 0.29,
+                            fontSize: 20,
+                            color: '#7e7e7e'
+                        }}
+                    >
+                        {locales('labels.buyer')} <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontWeight: '200',
+                                fontSize: 20,
+                                textAlign: 'center',
+                                color: '#556083',
+                                marginHorizontal: 2
+                            }}
+                        >
+                            {` ${item.subcategory_name}`}
+                        </Text>
+                        {item.is_golden && active_pakage_type == 0 ?
+                            <Text> </Text>
+                            :
+                            item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        marginHorizontal: 2,
+                                        fontWeight: '200',
+                                        textAlign: 'center',
+                                        color: '#7e7e7e'
+                                    }}
+                                >
+                                    {locales('labels.fromType')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#556083',
+                                        fontSize: 20,
+                                        fontWeight: '200',
+                                        textAlign: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 2
+                                    }}
+                                >
+                                    {` ${item.name} `}
+                                </Text>
+                            </> : null
 
+                        }
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 18,
+                                marginHorizontal: 2,
+                                fontWeight: '200',
+                                color: '#7e7e7e'
+                            }}
+                        >
+                            {locales('labels.is')}
+                        </Text>
+                    </Text>
+
+                </View>
+
+                : null}
+
+            <View
+                style={{
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    marginTop: 0,
+                    flexDirection: 'row-reverse'
+                }}
+            >
+
+                <FontAwesome5
+                    solid
+                    name='user-circle'
+                    color='#adadad'
+                    size={16}
+                />
+                <Text
+                    style={{
+                        marginHorizontal: 5,
+                        color: '#adadad',
+                        fontSize: 15,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {`${item.first_name} ${item.last_name}`}
+                </Text>
+            </View>
+
+            {item.is_golden && active_pakage_type == 0 ?
+                <Text style={{ textAlign: 'center' }}>...</Text>
+                :
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row-reverse',
+                        marginVertical: -5,
+                        minHeight: 70
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            textAlign: 'center',
+                            fontSize: 18,
+                            color: '#7e7e7e'
+                        }}
+                    >
+                        {locales('labels.buyer')}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlign: 'center',
+                                fontSize: 18,
+                                color: '#e41c38',
+                                fontWeight: '200',
+                                marginHorizontal: 2
+                            }}
+                        >
+                            {` ${formatter.convertedNumbersToTonUnit(item.requirement_amount)}`} <Text
+                                style={{
+                                    color: '#556083',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontWeight: '200',
+                                    fontSize: 18,
+                                    marginHorizontal: 2
+                                }}
+                            >
+                                {`${item.subcategory_name} `}
+                            </Text>
+                        </Text>
+                        {item.is_golden && active_pakage_type == 0 ?
+                            <Text> </Text>
+                            :
+                            item.name ? <>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 18,
+                                        textAlign: 'center',
+                                        marginHorizontal: 2,
+                                        fontWeight: '200',
+                                        color: '#7e7e7e'
+                                    }}
+                                >
+                                    {locales('labels.fromType')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#556083',
+                                        textAlign: 'center',
+                                        fontSize: 18,
+                                        fontWeight: '200',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        marginHorizontal: 2
+                                    }}
+                                >
+                                    {` ${item.name} `}
+                                </Text>
+                            </> : null
+
+                        }
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                fontWeight: '200',
+                                textAlign: 'center',
+                                marginHorizontal: 2,
+                                color: '#7e7e7e'
+                            }}
+                        >
+                            {locales('labels.is')}
+                        </Text>
+                    </Text>
+
+                </View>
+            }
+
+            <View style={{
+                marginVertical: 5,
+                flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center'
+            }}>
+                {item.has_msg ?
+                    <View
+                        style={{ flexDirection: 'row-reverse', marginHorizontal: 30 }}
+                    >
+                        <MaterialCommunityIcons
+                            onPress={() => {
+                                return Toast.show({
+                                    text: locales('titles.remianedCapacityToSendMessageToBuyer'),
+                                    position: "bottom",
+                                    style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
+                                    textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                                    duration: 2000
+                                })
+                            }
+                            }
+                            name='comment-alert' size={25} color={'#777777'} />
+                        <Text style={{ color: '#556083', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
+                    </View>
                     : null}
                 <View>
                     <Text
                         numberOfLines={1}
                         style={{
-                            marginVertical: 5,
+                            marginVertical: 5, marginRight: 60,
                             flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                        }}
-                    >
-                        {item.is_golden && active_pakage_type == 0 ? `${item.subcategory_name} | ${item.subcategory_name} ` : `${item.category_name} | ${item.subcategory_name} ${!!item.name ? `| ${item.name}` : ''}`}</Text>
-                </View>
-
-
-                <View>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            marginVertical: 5,
-                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
-                        }}
-                    >
-
-                        {item.is_golden && active_pakage_type == 0 ? `${locales('titles.requirementQuantity')} : نامشخص` : `${locales('titles.requirementQuantity')} : ${formatter.numberWithCommas(item.requirement_amount)} ${locales('labels.kiloGram')}`}
-                    </Text>
-                </View>
-
-                <View>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            marginVertical: 5,
-                            flexWrap: 'wrap', width: '100%', textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#333333'
+                            color: '#556083',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16,
                         }}
                     >
                         {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : item.register_date}
                     </Text>
                 </View>
-
-
-
-                <View style={{
-                    marginVertical: 5,
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <Text style={{ color: '#E41C38', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, }}>+{item.reply_capacity}</Text>
-                    <MaterialCommunityIcons
-                        onPress={() => {
-                            return Toast.show({
-                                text: locales('titles.remianedCapacityToSendMessageToBuyer'),
-                                position: "bottom",
-                                style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
-                                duration: 2000
-                            })
-                        }
-                        }
-                        name='comment-alert' size={25} color={'#777777'} />
-                </View>
-
             </View>
+            <View style={{
+                marginVertical: 15,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                width: deviceWidth * 0.89,
+                paddingHorizontal: 5,
+                alignSelf: 'center',
+                justifyContent: 'center'
+            }}
+            >
+                {item.has_phone ?
+                    <Button
+                        small
+                        onPress={() => fetchContactInfo(item)}
+                        style={{
+                            borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
+                            width: item.has_msg ? '47%' : '70%',
+                            zIndex: 1000,
+                            position: 'relative',
+                            alignSelf: 'center',
+                            marginHorizontal: 15
 
-            <View style={{ marginVertical: 5 }}>
+                        }}
+                    >
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={!item.isContactInfoShown ?
+                                (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
+                                    : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                                : ['#E0E0E0', '#E0E0E0']}
+                            style={{
+                                width: '100%',
+                                paddingHorizontal: 10,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 8,
+                                paddingLeft: 20,
+                                padding: 8,
+                                elevation: 0
+                            }}
+                        >
+                            {buyerMobileNumberLoading && selectedButton == item.id ?
+                                <ActivityIndicator
+                                    size={20}
+                                    color={(!item.is_golden ? 'white' : '#333')}
+                                    animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                />
+                                :
+                                <FontAwesome5
+                                    solid
+                                    name='phone-square-alt'
+                                    color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                    size={20} />
+                            }
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    marginHorizontal: 3,
+                                    fontSize: 18,
+                                    color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
+                                    paddingHorizontal: 3
+                                }}
+                            >
+                                {locales('labels.contactInfo')}
+                            </Text>
 
-                <Button
+                        </LinearGradient>
+
+                    </Button>
+                    : null}
+                {item.has_msg ? <Button
                     small
-                    onPress={event => props.openChat(event, item)}
+                    onPress={event => {
+                        event.stopPropagation()
+                        props.openChat(event, item)
+                    }}
                     style={{
-                        borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                        width: "80%",
+                        width: item.has_phone ? '47%' : '70%',
+                        zIndex: 1000,
+                        elevation: 0,
+                        marginHorizontal: 15,
                         position: 'relative',
                         alignSelf: 'center',
-
                     }}
                 >
                     <LinearGradient
                         start={{ x: 0, y: 0.51, z: 1 }}
                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                        colors={!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f']}
+                        colors={item.has_phone ? ['#fff', '#fff']
+                            : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                        }
                         style={{
                             width: '100%',
+                            borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
                             paddingHorizontal: 10,
                             flexDirection: 'row-reverse',
+                            borderWidth: 1,
                             alignItems: 'center',
                             textAlign: 'center',
                             justifyContent: 'center',
-                            height: 35,
-                            borderRadius: 6,
-                            elevation: 2
+                            borderRadius: 8,
+                            padding: 8,
+                            elevation: 0
                         }}
                     >
 
-                        <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={14} />
+                        <MaterialCommunityIcons
+                            name='message'
+                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                            size={20}
+                        />
                         <Text style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 14,
-                            color: !item.is_golden ? 'white' : '#333',
+                            fontSize: 18,
+                            color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
                             paddingHorizontal: 3
                         }}>
                             {locales('labels.messageToBuyer')}
 
 
                         </Text>
-                        <ActivityIndicator size={20} color={!item.is_golden ? 'white' : '#333'}
+                        <ActivityIndicator size={20}
+                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                             animating={selectedButton == item.id &&
                                 !!isUserAllowedToSendMessageLoading}
                             style={{
@@ -177,23 +519,159 @@ const BuyAdList = props => {
                     </LinearGradient>
 
                 </Button>
-
+                    : null
+                }
             </View>
+            {(item.isContactInfoShown) ?
+                <>
+                    <View
+                        style={{
+                            zIndex: 1,
+                            flexDirection: 'row-reverse',
+                            paddingVertical: 25,
+                            alignItems: 'center',
+                            width: deviceWidth * 0.83,
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                color: '#404B55'
+                            }}>
+                            {locales('titles.phoneNumber')}
+                        </Text>
+                        <TouchableOpacity
+                            onPress={_ => openCallPad(item.mobileNumber)}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: '#404B55', fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold', marginHorizontal: 5
+                                }}
+                            >
+                                {item.mobileNumber}
+                            </Text>
+                            <FontAwesome5
+                                name='phone-square-alt'
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View
+                        style={{
+                            backgroundColor: '#FFFBE5',
+                            borderRadius: 12,
+                            alignSelf: 'center',
+                            padding: 20,
+                            width: deviceWidth * 0.85,
+                            zIndex: 1,
+                            bottom: -10
+                        }}
+                    >
+
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <FontAwesome5
+                                color='#404B55'
+                                size={25}
+                                name='exclamation-circle'
+                            />
+                            <Text
+                                style={{
+                                    color: '#404B55',
+                                    marginHorizontal: 5,
+                                    fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}
+                            >
+                                {locales('titles.buskoolSuggesstion')}
+                            </Text>
+                        </View>
+                        <Text
+                            style={{
+                                marginVertical: 15,
+                                color: '#666666',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            }}
+                        >
+                            {locales('labels.buskoolSuggestionDescription')}
+                        </Text>
+                    </View>
+                </>
+                : null}
+
         </View>
 
     )
 }
 
+const styles = StyleSheet.create({
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        borderRadius: 4,
+        backgroundColor: '#00C569',
+        color: 'white',
+        elevation: 0
+    },
+    margin5: {
+        margin: 5
+    },
+    textWhite: {
+        color: "#fff"
+    },
+    textCenterView: {
+        justifyContent: 'center',
+        flexDirection: "row-reverse",
+    },
+    textSize18: {
+        fontSize: 18
+    },
+    textBold: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        width: '100%',
+        textAlign: 'center'
+    },
+});
+
 const arePropsEqual = (prevProps, nextProps) => {
     // console.log('prevprops', prevProps, 'nextPRops', nextProps)
-    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList || prevProps.item == nextProps.item || !nextProps.buyAdRequestsList || !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length || !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading || prevProps.isUserAllowedToSendMessageLoading)
+    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
+        prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
+        !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||
+        !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading
+        || prevProps.isUserAllowedToSendMessageLoading)
         return false
     return true;
 }
 
 const mapStateToProps = state => {
     return {
-        userProfile: state.profileReducer.userProfile
+        userProfile: state.profileReducer.userProfile,
+        buyerMobileNumberLoading: state.buyAdRequestReducer.buyerMobileNumberLoading
+    }
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        fetchBuyerMobileNumber: contactInfoObject => dispatch(buyAdActions.fetchBuyerMobileNumber(contactInfoObject)),
     }
 }
-export default connect(mapStateToProps)(memo(BuyAdList, arePropsEqual))
+export default connect(mapStateToProps, mapDispatchToProps)(memo(BuyAdList, arePropsEqual))

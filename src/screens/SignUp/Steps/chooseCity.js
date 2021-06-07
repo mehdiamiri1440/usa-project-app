@@ -41,7 +41,8 @@ class ChooseCity extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.allCitiesObject &&
             Object.entries(this.props.allCitiesObject).length &&
-            this.props.allCitiesObject.cities.length && this.props.city) {
+            this.props.allCitiesObject.cities && this.props.allCitiesObject.cities.length
+            && this.props.city) {
             const { province, city } = this.props;
             this.setState({ province, city, loaded: true })
         }
@@ -78,7 +79,9 @@ class ChooseCity extends React.Component {
 
         if (isProvinceValid && isCityValid) {
             const provinceName = this.props.allProvincesObject.provinces.find(item => item.id == province).province_name;
-            const cityName = this.props.allCitiesObject.cities.find(item => item.id == city).city_name;
+            const cityName = this.props.allCitiesObject &&
+                Object.entries(this.props.allCitiesObject).length && this.props.allCitiesObject.cities
+                ? this.props.allCitiesObject.cities.find(item => item.id == city).city_name : '';
             this.props.setCityAndProvice(city, province, provinceName, cityName);
         }
         else {
@@ -126,8 +129,7 @@ class ChooseCity extends React.Component {
         let cities = [];
 
         provinces = provinces.map(item => ({ ...item, value: item.province_name }));
-
-        if (allCitiesObject && Object.entries(allCitiesObject).length) {
+        if (allCitiesObject && Object.entries(allCitiesObject).length && allCitiesObject.cities) {
             cities = allCitiesObject.cities.map(item => ({ ...item, value: item.city_name }))
         }
 
@@ -189,7 +191,10 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!provinceError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{provinceError}</Label>}
+                        {!!provinceError && <Label style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                        }}>{provinceError}</Label>}
                     </View>
 
                     <View style={[styles.labelInputPadding, { marginTop: 30 }]}>
@@ -234,7 +239,10 @@ class ChooseCity extends React.Component {
                                 }))]}
                             />
                         </Item>
-                        {!!cityError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>{cityError}</Label>}
+                        {!!cityError && <Label style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                        }}>{cityError}</Label>}
                     </View>
 
                     <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
@@ -290,6 +298,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -354,6 +363,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         color: '#7E7E7E'
     },
@@ -415,7 +425,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId)),
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, false)),
         fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
     }
 }

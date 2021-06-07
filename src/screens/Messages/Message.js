@@ -8,16 +8,17 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
-import { validator } from '../../utils';
-
+import { validator, parser } from '../../utils';
 const Message = props => {
+
 
     const {
         item,
         index,
         separators,
         contact,
-        loggedInUserId
+        loggedInUserId,
+        prevMessage
     } = props;
     const { contact_id: id } = contact;
 
@@ -37,120 +38,142 @@ const Message = props => {
             }
         })
             .catch(_ => { })
-    }
+    };
 
     return (
-        <View
-            style={{
-                width: deviceWidth,
-                paddingHorizontal: 10,
-                paddingVertical: 0,
-                marginTop: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
-                flex: 1,
-                alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
-            }}
-            key={index}
-        >
+        <>
+            {parser.showDate(item, prevMessage)}
             <View
                 style={{
-
-                    elevation: 1,
-                    maxWidth: deviceWidth * 0.75, paddingHorizontal: 10, borderRadius: 9, paddingVertical: 3,
-                    backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                    width: deviceWidth,
+                    paddingHorizontal: 10,
+                    paddingVertical: 0,
+                    marginTop: index == separators.length - 1 ? 50 : (index < separators.length - 1 && separators[index].receiver_id == separators[index + 1].receiver_id ? 5 : 7),
+                    flex: 1,
+                    alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
                 }}
+                key={index}
             >
-                <Text
-                    selectionColor='gray'
-                    suppressHighlighting
-                    selectable
-                    onPress={() => {
-                        ToastAndroid.showWithGravityAndOffset(
-                            locales('titles.copiedToClipboard'),
-                            ToastAndroid.LONG,
-                            ToastAndroid.BOTTOM,
-                            5,
-                            20)
-                        Clipboard.setString(item.text)
-                    }}
+                <View
                     style={{
-                        zIndex: 999999,
-                        textAlign: 'right',
-                        fontSize: showPhoneFormat ? 18 : 16,
-                        color: showPhoneFormat ? '#5188B8' : '#333333'
-
-                    }}>
-                    {item.text}
-                </Text>
-                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
-                    {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
-                        style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                        name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
-                        color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
-                        <Feather name='clock' size={14} color='#617D8A'
-                            style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                        />
-                    )
-                    }
-                    <Text
+                        backgroundColor: 'rgba(204,204,204,0.4)',
+                        paddingBottom: 1.5,
+                        paddingTop: 1,
+                        paddingLeft: 1.5,
+                        paddingRight: 1,
+                        borderRadius: 9,
+                    }}
+                >
+                    <View
                         style={{
-                            color: showPhoneFormat ? '#5188B8' : '#333333',
-                            fontSize: 12
-                        }}>
-                        {Jmoment(item.created_at).format('jYY/jM/jD , hh:mm A ')}
-                    </Text>
-                </View>
-                {showPhoneFormat ?
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={() => openCallPad(item.text)}
+                            paddingHorizontal: 10,
+                            maxWidth: deviceWidth * 0.75,
+                            borderRadius: 9,
+                            paddingVertical: 3,
+                            backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                        }}
                     >
-                        <View
+
+
+
+                        <Text
+                            selectionColor='gray'
+                            suppressHighlighting
+                            selectable
+                            onPress={() => {
+                                ToastAndroid.showWithGravityAndOffset(
+                                    locales('titles.copiedToClipboard'),
+                                    ToastAndroid.LONG,
+                                    ToastAndroid.BOTTOM,
+                                    5,
+                                    20)
+                                Clipboard.setString(item.text)
+                            }}
                             style={{
-                                width: 210,
-                                backgroundColor: '#4FA992',
+                                zIndex: 999999,
+                                textAlign: 'right',
+                                fontSize: showPhoneFormat ? 18 : 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                color: showPhoneFormat ? '#5188B8' : '#333333'
 
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-
-                                flexDirection: 'row-reverse',
-
-                                paddingVertical: 5,
-                                marginHorizontal: -10,
-                                marginBottom: -5,
-                                borderBottomLeftRadius: 8,
-                                borderBottomRightRadius: 8,
-                                bottom: 2,
-                                marginTop: 7,
-                                overflow: "hidden",
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-
+                            }}>
+                            {item.text}
+                        </Text>
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
+                            {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
+                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
+                                color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
+                                <Feather name='clock' size={14} color='#617D8A'
+                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                />
+                            )
+                            }
+                            <Text
+                                style={{
+                                    color: showPhoneFormat ? '#5188B8' : '#333333',
+                                    fontSize: 12,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}>
+                                {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
+                            </Text>
+                        </View>
+                    </View>
+                    {showPhoneFormat ?
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => openCallPad(item.text)}
+                            style={{
+                                bottom: -4,
                             }}
                         >
-                            <Text style={{
-                                color: 'white',
-                                fontSize: 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            }}>
-                                {locales('labels.call')}
+                            <View
+                                style={{
+                                    width: 210,
+                                    backgroundColor: '#4FA992',
 
-                            </Text>
-                            <Text style={{
-                                // position: 'absolute',
-                                // left: 0,
-                                marginRight: 10
-                            }}>
-                                <FontAwesome name='phone'
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
 
-                                    color='white' size={18} />
-                            </Text>
+                                    flexDirection: 'row-reverse',
 
-                        </View>
-                    </TouchableOpacity>
-                    : null}
+                                    paddingVertical: 5,
+                                    marginHorizontal: -10,
+                                    marginBottom: -5,
+                                    borderBottomLeftRadius: 8,
+                                    borderBottomRightRadius: 8,
+                                    marginTop: 7,
+                                    overflow: "hidden",
+                                    borderTopRightRadius: 0,
+                                    borderTopLeftRadius: 0,
+
+                                }}
+                            >
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}>
+                                    {locales('labels.call')}
+
+                                </Text>
+                                <Text style={{
+                                    // position: 'absolute',
+                                    // left: 0,
+                                    marginRight: 10
+                                }}>
+                                    <FontAwesome name='phone'
+
+                                        color='white' size={18} />
+                                </Text>
+
+                            </View>
+                        </TouchableOpacity>
+                        : null}
+                </View>
             </View>
-        </View>
+        </>
     )
 }
 

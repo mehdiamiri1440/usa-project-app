@@ -56,7 +56,7 @@ export const addNewProduct = productObject => {
                 route: `user/add_product`,
                 method: 'POST',
                 data: productObject,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -76,7 +76,7 @@ export const checkUserPermissionToRegisterProduct = () => {
             .fetchAPI({
                 route: `is_user_allowed_to_register_product`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -98,15 +98,35 @@ export const registerBuyAdRequest = requestObj => {
                 route: `user/add_buyAd`,
                 method: 'POST',
                 data: requestObj,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && !err.response)
-                    // return reject(err.response);
-                    return reject(err);
+                // if (err && !err.response)
+                // return reject(err.response);
+                return reject(err);
+
+            });
+    });
+};
+
+export const fetchBuyAdsAfterPayment = _ => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_related_buyAds_to_my_product`,
+                method: 'POST',
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                // if (err && !err.response)
+                // return reject(err.response);
+                return reject(err);
 
             });
     });

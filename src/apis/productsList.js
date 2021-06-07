@@ -1,14 +1,15 @@
 import { requester } from '../utils';
 
 
-export const fetchAllProductsList = (item, special_products) => {
+export const fetchAllProductsList = (item, special_products, isLoggedIn = true) => {
     return new Promise((resolve, reject) => {
+        const route = isLoggedIn ? `app/get_product_list` : `user/get_product_list`;
         requester
             .fetchAPI({
-                route: `user/get_product_list`,
+                route,
                 method: 'POST',
                 data: { ...item, special_products: special_products ? true : false },
-                withAuth: false,
+                withAuth: !!isLoggedIn,
             })
             .then(result => {
                 resolve(result);
@@ -54,7 +55,7 @@ export const fetchAllMyProducts = user_name => {
                 route: `get_product_list_by_user_name`,
                 method: 'POST',
                 data: { user_name },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -77,7 +78,7 @@ export const editProduct = item => {
                 route: `edit_product`,
                 method: 'POST',
                 data: item,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -99,7 +100,7 @@ export const deleteProduct = id => {
                 route: `delete_product_by_id`,
                 method: 'POST',
                 data: { product_id: id },
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -137,14 +138,22 @@ export const fetchProductDetails = id => {
 
 
 
-export const setProductDetailsId = id => {
+export const fetchSellerMobileNumber = contactInfoObject => {
     return new Promise((resolve, reject) => {
-        if (id) {
-            resolve(id)
-        }
-        else {
-            reject(false)
-        }
+        requester
+            .fetchAPI({
+                route: `get_seller_phone_number`,
+                method: 'POST',
+                data: contactInfoObject,
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                // return reject(err.response);
+                return reject(err);
+
+            });
     });
 };
-

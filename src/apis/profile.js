@@ -6,7 +6,7 @@ export const fetchUserProfile = _ => {
             .fetchAPI({
                 route: `user/profile_info`,
                 method: 'POST',
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result)
@@ -126,9 +126,96 @@ export const editProfile = item => {
                 resolve(result)
             })
             .catch(err => {
+                // if (err && !err.response)
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const fetchAccountBalance = _ => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_my_account_balance`,
+                method: 'POST',
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
                 if (err && !err.response)
-                    // return reject(err.response);
+                    //     return reject(err.response);
                     return reject(err);
+
+
+            });
+    });
+};
+
+export const setPhoneNumberViewPermission = permission => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `set_phone_number_view_permission`,
+                method: 'POST',
+                data: {
+                    permission
+                },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const fetchUserContactInfoViewers = _ => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get_phone_number_viewers_list`,
+                method: 'POST',
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                if (err && !err.response)
+                    //     return reject(err.response);
+                    return reject(err);
+
+
+            });
+    });
+};
+
+export const walletElevatorPay = id => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `wallet-expend/elevator`,
+                method: 'POST',
+                data: { product_id: id },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
 
             });
     });

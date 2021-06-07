@@ -6,7 +6,11 @@ class Payment extends Component {
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light'
+                    }}
+                > textInComponent </Text>
             </View>
         )
     }

@@ -2,7 +2,7 @@ import actionTypes from './actionTypes';
 const INITIAL_STATE = {
     loginLoading: false,
     loginFailed: false,
-    loggedInUserId: '',
+    loggedInUserId: null,
     loginError: false,
     is_buyer: 0,
     is_seller: 0,
@@ -56,7 +56,7 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: true,
                 loginFailed: false,
                 loginError: false,
-                loggedInUserId: '',
+                loggedInUserId: null,
                 loginMessage: null
             };
         };
@@ -81,7 +81,7 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: false,
                 loginFailed: true,
                 loginError: false,
-                loggedInUserId: '',
+                loggedInUserId: null,
                 loginMessage: msg
             };
         };
@@ -91,7 +91,7 @@ export default (state = INITIAL_STATE, action) => {
                 loginLoading: false,
                 loginFailed: false,
                 checkAlreadySignedUpMobileNumberLoading: false,
-                loggedInUserId: '',
+                loggedInUserId: null,
                 loginError: true,
                 loginMessage: null
             };
@@ -309,6 +309,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 logOutLoading: true,
                 logOutFailed: false,
+                loggedInUserId: null,
                 logOutError: false,
                 logOutMessage: null
             };
@@ -320,12 +321,7 @@ export default (state = INITIAL_STATE, action) => {
                 logOutFailed: false,
                 logOutError: false,
                 logOutMessage: null,
-
-                loginLoading: false,
-                loginFailed: false,
-                loginError: false,
-                loggedInUserId: '',
-                loginMessage: null,
+                loggedInUserId: null,
             };
         };
         case actionTypes.LOGOUT_FAILED: {
@@ -334,6 +330,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 logOutLoading: false,
                 logOutFailed: true,
+                loggedInUserId: null,
                 logOutError: false,
                 logOutMessage: msg
             };
@@ -341,6 +338,7 @@ export default (state = INITIAL_STATE, action) => {
         case actionTypes.LOGOUT_REJECT: {
             return {
                 ...state,
+                loggedInUserId: null,
                 logOutLoading: false,
                 logOutFailed: false,
                 logOutError: true,

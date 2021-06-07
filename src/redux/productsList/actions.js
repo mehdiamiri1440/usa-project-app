@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllProductsList = (item, isSpecial) => {
+export const fetchAllProductsList = (item, isSpecial, isLoggedIn) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.productsList
-                .fetchAllProductsList(item, isSpecial)
+                .fetchAllProductsList(item, isSpecial, isLoggedIn)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -162,28 +162,6 @@ export const fetchProductDetails = id => {
     return request();
 };
 
-export const setProductDetailsId = id => {
-    const request = () => {
-        return dispatch => {
-            dispatch(loading());
-            return API.productsList
-                .setProductDetailsId(id)
-                .then(res => dispatch(success(res)))
-                .catch(err => {
-                    dispatch(generateErrorAction(err, {
-                        failure: actionTypes.SET_PRODUCT_DETAILS_ID_FAILED,
-                        reject: actionTypes.SET_PRODUCT_DETAILS_ID_REJECT
-                    }));
-                    throw err;
-                });
-        };
-    };
-    const loading = () => action(actionTypes.SET_PRODUCT_DETAILS_ID_LOADING);
-    const success = res => action(actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY, res);
-
-    return request();
-};
-
 export const fetchAllProductInfo = id => {
     const request = () => {
         return dispatch => {
@@ -208,6 +186,30 @@ export const fetchAllProductInfo = id => {
 
     return request();
 };
+
+
+export const fetchSellerMobileNumber = contactInfoObject => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.productsList
+                .fetchSellerMobileNumber(contactInfoObject)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_SELLER_MOBILE_NUMBER_FAILED,
+                        reject: actionTypes.FETCH_SELLER_MOBILE_NUMBER_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_SELLER_MOBILE_NUMBER_LOADING);
+    const success = res => action(actionTypes.FETCH_SELLER_MOBILE_NUMBER_SUCCESSFULLY, res);
+
+    return request();
+};
+
 
 export const updateProductsList = flag => {
     return dispatch => dispatch(action(actionTypes.UPDATE_PRODUCTS_LIST, flag));

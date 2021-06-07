@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { Animated } from 'react-native';
 
 import Dashboard from '../screens/Home/Dashboard';
 import ContactUs from '../screens/Home/ContactUs';
@@ -16,7 +16,6 @@ import Home from '../screens/Home/Home';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
-import UpgradeApp from '../screens/UpgradeApp'
 import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
 import SpecialProducts from '../screens/SpecialProducts';
@@ -29,14 +28,50 @@ import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCa
 import ProductsList from '../screens/ProductsList';
 import RegisterProductSuccessfully from '../screens/RegisterProduct/RegisterProductSuccessfully';
 import Messages from '../screens/Messages';
-import MyRequests from '../screens/Home/MyRequests'
-
+import MyRequests from '../screens/Home/MyRequests';
+import Channel from '../screens/Messages/Channel';
+import Chat from '../screens/Messages/ChatScreen';
+import Wallet from '../screens/Home/Wallet';
+import UsersSeenMobile from '../screens/Home/UsersSeenMobile';
+import ContactInfoGuid from '../screens/Home/ContactInfoGuid';
+import Requests from '../screens/Requests/Requests';
+import UpgradeApp from '../screens/UpgradeApp';
+import Intro from '../screens/Intro';
+import SignUp from '../screens/SignUp';
 
 const Stack = createStackNavigator();
+
+const forFade = ({ current }) => ({
+    cardStyle: {
+        opacity: current.progress,
+    },
+});
+
+export const StartUp = _ => (
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+            headerShown: false
+        }}
+    >
+        <Stack.Screen key='SignUp' name='SignUp' component={SignUp} />
+        <Stack.Screen key='Intro' name='Intro' component={Intro} />
+        <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
+    </Stack.Navigator>
+)
+
 
 export const MyBuskoolStack = _ => {
     return (
         <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+
+            }}
             initialRouteName={global.initialProfileRoute}
         // initialRouteName={'ChangeRole'}
         >
@@ -221,13 +256,58 @@ export const MyBuskoolStack = _ => {
                 name='MyRequests'
                 component={MyRequests}
             />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Wallet'
+                name='Wallet'
+                component={Wallet}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='UsersSeenMobile'
+                name='UsersSeenMobile'
+                component={UsersSeenMobile}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='ContactInfoGuid'
+                name='ContactInfoGuid'
+                component={ContactInfoGuid}
+            />
+
         </Stack.Navigator >
     )
 };
 
-
 export const RegisterProductStack = _ => (
     <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+        }}
         initialRouteName={'RegisterProduct'}
         headerMode='none'
     >
@@ -271,11 +351,27 @@ export const RegisterProductStack = _ => (
             component={UpgradeApp}
         />
 
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
     </Stack.Navigator>
 )
 
 export const RegisterRequestStack = _ => (
     <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
         initialRouteName={'RegisterRequest'}
     >
 
@@ -307,19 +403,36 @@ export const RegisterRequestStack = _ => (
             component={UpgradeApp}
         />
 
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
     </Stack.Navigator>
 )
 
 export const MessagesStack = _ => (
-    <Stack.Navigator>
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
+    >
 
         <Stack.Screen
             options={({ navigation, route }) => ({
                 headerShown: false,
                 title: null,
             })}
-            key='Message'
-            name='Messages'
+            key='MessagesIndex'
+            name='MessagesIndex'
             component={Messages}
         />
 
@@ -332,13 +445,81 @@ export const MessagesStack = _ => (
             name={`Profile`}
             component={Profile}
         />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`Channel`}
+            component={Channel}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`ProductDetails`}
+            component={ProductDetails}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
     </Stack.Navigator>
 )
 
+export const RequestsStack = _ => (
+    <Stack.Navigator
+        screenOptions={{
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: forFade,
+            gestureEnabled: true,
+
+        }}
+    >
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Requests'
+            name='Requests'
+            component={Requests}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Chat'
+            name='Chat'
+            component={Chat}
+        />
+
+    </Stack.Navigator>
+)
 
 export const HomeStack = _ => {
+
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+            }}
+        >
             <Stack.Screen
                 options={({ navigation, route }) => ({
                     headerShown: false,
@@ -390,13 +571,40 @@ export const HomeStack = _ => {
                 component={Profile}
             />
 
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
+            />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='StartUp'
+                name='StartUp'
+                component={StartUp}
+            />
+
         </Stack.Navigator>
     )
 };
 
 export const SpecialProductsStack = _ => {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                gestureDirection: 'horizontal',
+                cardStyleInterpolator: forFade,
+                gestureEnabled: true,
+
+            }}
+        >
 
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -449,6 +657,49 @@ export const SpecialProductsStack = _ => {
                 component={Profile}
             />
 
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Chat'
+                name='Chat'
+                component={Chat}
+            />
+
         </Stack.Navigator>
     )
 };
+
+export const unSignedInRoutes = [
+    {
+        label: 'labels.home',
+        name: 'Home',
+        icon: 'home',
+        key: 'Home'
+    },
+    {
+        label: 'labels.requests',
+        name: 'RequestsStack',
+        icon: 'list-ul',
+        key: 'RequestsStack'
+    },
+    {
+        label: 'labels.registerProduct',
+        name: 'RegisterProductStack',
+        icon: 'plus',
+        key: 'RegisterProductStack'
+    },
+    {
+        label: 'labels.messages',
+        name: 'Messages',
+        icon: 'comment-alt',
+        key: 'Messages'
+    },
+    {
+        label: 'labels.myBuskool',
+        name: 'MyBuskool',
+        icon: 'user-alt',
+        key: 'MyBuskool'
+    },
+]

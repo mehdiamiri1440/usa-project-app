@@ -8,16 +8,28 @@ const Second = props => {
     return (
         <View
             style={{ flex: 1 }}>
-            <Text>second</Text>
+            <Text
+                style={{
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                }}
+            >second</Text>
             <Button
                 onPress={() => props.setStep(3)}
             >
-                <Text>next</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                >next</Text>
             </Button>
             <Button
                 onPress={() => props.setStep(1)}
             >
-                <Text>prev</Text>
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    }}
+                >prev</Text>
             </Button>
         </View>
     )

@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { deviceWidth } from '../../utils/deviceDimenssions';
+import Header from '../../components/header';
 
 
 class Filters extends Component {
@@ -91,35 +91,11 @@ class Filters extends Component {
                     animationType="slide"
                     visible={subCategoriesModal}
                     onRequestClose={() => this.setState({ subCategoriesModal: false })}>
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.setState({ subCategoriesModal: false })}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
-
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {selectedCategoryName}
-                            </Text>
-                        </View>
-                    </View>
-
+                    <Header
+                        title={selectedCategoryName}
+                        onBackButtonPressed={_ => this.setState({ subCategoriesModal: false })}
+                        {...this.props}
+                    />
 
                     <FlatList
                         ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -166,48 +142,40 @@ class Filters extends Component {
                     visible={showFilters}
                     onRequestClose={() => this.props.closeFilters()}>
 
-                    <View style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        height: 45,
-                        elevation: 5,
-                        justifyContent: 'center'
-                    }}>
-                        <TouchableOpacity
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => this.props.closeFilters()}
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity>
+                    <Header
+                        title={locales('titles.categories')}
+                        onBackButtonPressed={_ => this.props.closeFilters()}
+                        {...this.props}
+                    />
 
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center'
-                        }}>
-                            <Text
-                                style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}
-                            >
-                                {locales('titles.categories')}
-                            </Text>
-                        </View>
-                    </View>
                     {this.props.categoriesLoading ? <View style={{
                         width: deviceWidth,
                         padding: 20,
                         justifyContent: "center", alignItems: 'center'
                     }}>
-                        <ActivityIndicator size="small" color="#00C569"
+                        <ShadowView
                             style={{
+                                shadowColor: 'black',
+                                shadowOpacity: 0.13,
+                                shadowRadius: 1,
+                                shadowOffset: { width: 0, height: 2 },
                                 zIndex: 999,
                                 width: 50, height: 50,
                                 borderRadius: 50,
-                                backgroundColor: '#fff',
-                                elevation: 5,
+                                backgroundColor: 'white',
                                 padding: 0,
                             }}
-                        /></View> : null}
+                        >
+                            <ActivityIndicator size="small" color="#00C569"
+                                style={{
+                                    top: 14
+                                }}
+                            />
+                        </ShadowView>
+                    </View>
+                        :
+                        null
+                    }
                     <FlatList
                         data={categoriesList}
                         refreshing={this.props.categoriesLoading}

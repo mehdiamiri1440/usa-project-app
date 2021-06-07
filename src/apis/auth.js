@@ -1,11 +1,14 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { requester } from '../utils';
+import RnRestart from 'react-native-restart';
+import DeviceInfo from 'react-native-device-info';
 
+const device_id = DeviceInfo.getUniqueId();
 
 const storeData = (payload) => {
     return new Promise((resolve, _) => {
         if (payload.token)
-            AsyncStorage.setItem('@Authorization', payload.token).then(_ => {
+            AsyncStorage.setItem('@Authorization', JSON.stringify(payload.token)).then(_ => {
                 resolve(payload);
             })
         else
@@ -23,6 +26,7 @@ export const login = (mobileNumber, password) => {
                 method: 'POST',
                 withAuth: false,
                 data: {
+                    device_id,
                     phone: mobileNumber,
                     password,
                     client: 'mobile'
@@ -54,17 +58,17 @@ export const logOut = () => {
             .fetchAPI({
                 route: `logout`,
                 method: 'GET',
-                withAuth: false,
+                withAuth: true,
             })
-            .then(async (result) => {
-                result = await AsyncStorage.removeItem('@Authorization')
-                resolve(result);
+            .then(result => {
+                AsyncStorage.multiRemove(['@Authorization', 'persist:root']).then(res => {
+                    resolve(result);
+                })
             })
             .catch(err => {
                 if (err && !err.response)
                     // return reject(err.response);
                     return reject(err);
-
             });
     });
 };
@@ -104,7 +108,8 @@ export const checkActivisionCode = (code, mobileNumber) => {
                 data: {
                     phone: mobileNumber,
                     verification_code: code,
-                    client: 'mobile'
+                    client: 'mobile',
+                    device_id,
                 }
             })
             .then(result => {
@@ -148,7 +153,7 @@ export const changeRole = () => {
                 route: `switch-role`,
                 method: 'POST',
                 // data:{rollName},
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 console.log('ressss', result)
@@ -172,7 +177,7 @@ export const setEvidences = evidences => {
                 route: `verify/upload-photos`,
                 method: 'POST',
                 data: evidences,
-                withAuth: false,
+                withAuth: true,
             })
             .then(result => {
                 resolve(result);
@@ -198,7 +203,8 @@ export const submitRegister = ({
     city,
     activity_type = '',
     // national_code,
-    category_id
+    category_id,
+    verification_code
 }) => {
     return new Promise((resolve, reject) => {
         requester
@@ -217,7 +223,8 @@ export const submitRegister = ({
                     city,
                     activity_type,
                     // national_code,
-                    category_id
+                    category_id,
+                    verification_code
                 }
             })
             .then(result => {

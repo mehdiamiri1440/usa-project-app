@@ -6,6 +6,7 @@ import * as messages from './messages';
 import * as buyAdRequest from './buyAdRequest';
 import * as profile from './profile';
 import * as productsList from './productsList';
+import * as commentsAndRatings from './commentsAndRatings';
 
 export default {
     auth,
@@ -15,5 +16,6 @@ export default {
     messages,
     buyAdRequest,
     profile,
-    productsList
+    productsList,
+    commentsAndRatings,
 };

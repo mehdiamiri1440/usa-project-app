@@ -4,13 +4,13 @@ import {
 } from '../actions';
 import actionTypes from './actionTypes';
 import API from '../../apis'
-export const fetchAllProvinces = provinceId => {
+export const fetchAllProvinces = (provinceId, cascade_list) => {
     const request = () => {
         return dispatch => {
             if (!provinceId) {
                 dispatch(loading());
                 return API.locations
-                    .fetchAllProvinces()
+                    .fetchAllProvinces(provinceId, cascade_list)
                     .then(res => dispatch(success(res)))
                     .catch(err => {
                         dispatch(generateErrorAction(err, {

@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center'
     },
     backButtonContainer: {

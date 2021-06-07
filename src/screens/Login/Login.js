@@ -140,6 +140,7 @@ class Login extends React.Component {
                                         autoCapitalize='none'
                                         autoCorrect={false}
                                         autoCompleteType='off'
+                                        onSubmitEditing={this.onLogin}
                                         keyboardType='number-pad'
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -159,7 +160,11 @@ class Login extends React.Component {
 
                                     />
                                 </Item>
-                                {!!mobileNumberError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center' }}>{mobileNumberError}</Label>}
+                                {!!mobileNumberError && <Label style={{
+                                    fontSize: 14, color: '#D81A1A',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlign: 'center'
+                                }}>{mobileNumberError}</Label>}
                             </View>
                             <View style={[styles.labelInputPadding]}>
                                 <Button
@@ -270,7 +275,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 20,
         textAlign: 'center',
-        color: '#7E7E7E'
+        color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light'
     }
 });
 const mapStateToProps = state => {

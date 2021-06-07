@@ -2,10 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -128,6 +127,19 @@ class ProductMoreDetails extends Component {
         }
     }
     pickerRef = React.createRef();
+
+    componentDidMount() {
+        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        //     this.props.changeStep(5)
+        //     return false;
+        // })
+    }
+
+    componentWillUnmount() {
+        // BackHandler.removeEventListener();
+    }
+
+
     onSubmit = () => {
         let { detailsArray } = this.state;
         if (detailsArray.some(item => item.itemKey && !item.itemValue)) {
@@ -153,8 +165,10 @@ class ProductMoreDetails extends Component {
                 state.detailsArray[index].itemKey = '';
                 state.detailsArray[index].itemValue = '';
                 state.detailsArray[index].error = '';
-                state.defaultFieldsOptions[selectedIndex].alreadySelected = false;
-                state.defaultFieldsOptions[selectedIndex].selectedIndex = null;
+                if (selectedIndex > -1) {
+                    state.defaultFieldsOptions[selectedIndex].alreadySelected = false;
+                    state.defaultFieldsOptions[selectedIndex].selectedIndex = null;
+                }
                 return '';
             });
         }
@@ -171,10 +185,13 @@ class ProductMoreDetails extends Component {
             })
         }
         this.setState(state => {
+            console.log('state', state.defaultFieldsOptions, 'index', selectedIndex)
             this.state.detailsArray[index].itemKey = value;
             state.deletedIndexes.push(selectedIndex);
-            state.defaultFieldsOptions[selectedIndex].alreadySelected = true;
-            state.defaultFieldsOptions[selectedIndex].selectedIndex = selectedIndex;
+            if (selectedIndex > -1) {
+                state.defaultFieldsOptions[selectedIndex].alreadySelected = true;
+                state.defaultFieldsOptions[selectedIndex].selectedIndex = selectedIndex;
+            }
             state.defaultFieldsOptions.forEach(item => {
                 if (item.selectedIndex && state.deletedIndexes.indexOf(item.selectedIndex) < 0) {
                     item.alreadySelected = false;
@@ -222,73 +239,70 @@ class ProductMoreDetails extends Component {
 
         return (
             <>
+                <ScrollView>
 
-                {!!this.props.addNewProductMessage &&
-                    this.props.addNewProductMessage.length && <View style={styles.loginFailedContainer}>
-                        <Text style={styles.loginFailedText}>{this.props.addNewProductMessage}</Text>
-                    </View>}
-                <View
-                    style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
-                    <Text
-                        style={{
-                            marginBottom: 10,
-                            color: '#666666',
-                            fontSize: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            paddingHorizontal: 10
-                        }}
-                    >
-                        {locales('labels.addMoreDetails')}
-                    </Text>
-                    <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
+                    <View
+                        style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
+                        <Text
+                            style={{
+                                marginBottom: 10,
+                                color: '#666666',
+                                fontSize: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                paddingHorizontal: 10
+                            }}
+                        >
+                            {locales('labels.addMoreDetails')}
+                        </Text>
+                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth, alignItems: 'center', justifyContent: 'center' }}>
 
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
+                            <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.45, alignItems: 'center', justifyContent: 'center' }}>
+                                <Text
+                                    style={{
+                                        color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
                             </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.boxing')}
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.boxing')}
+                                </Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row-reverse', width: deviceWidth * 0.6,
+                                alignItems: 'center', justifyContent: 'center'
+                            }}>
+                                <Text
+                                    style={{
+                                        color: '#E41C38',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.example')} :
                             </Text>
+                                <Text
+                                    style={{
+                                        color: '#666666',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {locales('labels.8kMotherBox')}
+                                </Text>
+                            </View>
+
+
                         </View>
-
-                        <View style={{ flexDirection: 'row-reverse', width: deviceWidth * 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text
-                                style={{
-                                    color: 'red',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.example')} :
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#666666',
-                                    fontSize: 14,
-                                }}
-                            >
-                                {locales('labels.8kMotherBox')}
-                            </Text>
-                        </View>
-
-
-                    </View>
-                    <ScrollView style={{
-                        height: deviceHeight * 0.35,
-                        marginVertical: 10,
-                        backgroundColor: '#eee',
-                        paddingBottom: 50,
-                        elevation: 2
-                    }}>
                         {detailsArray.map((detail, index) => (
                             <>
                                 {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
@@ -298,7 +312,6 @@ class ProductMoreDetails extends Component {
                                         paddingBottom: 0,
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        marginVertical: 7
                                     }}>
                                     <TouchableOpacity
                                         onPress={() => this.deleteRow(index)}
@@ -308,7 +321,7 @@ class ProductMoreDetails extends Component {
                                             height: 45,
                                             width: 30
                                         }}>
-                                        <FontAwesome name='trash' color='red' size={25} />
+                                        <FontAwesome5 name='trash' color='#E41C38' size={16} />
                                     </TouchableOpacity>
 
                                     <View style={{
@@ -320,6 +333,7 @@ class ProductMoreDetails extends Component {
                                             <Item regular
                                                 style={{
                                                     height: 45,
+                                                    marginVertical: 10,
                                                     backgroundColor: '#fff',
                                                     overflow: "hidden",
                                                     alignSelf: 'center',
@@ -330,7 +344,9 @@ class ProductMoreDetails extends Component {
                                                 }}
                                             >
                                                 <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                                    Icon={() => <FontAwesome5 name='angle-down' size={18} style={{
+                                                        top: 3
+                                                    }} color='gray' />}
                                                     useNativeAndroidPickerStyle={false}
                                                     onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
                                                     style={styles}
@@ -359,7 +375,7 @@ class ProductMoreDetails extends Component {
                             /> */}
                                         <View style={{
                                             flex: 1,
-
+                                            marginVertical: 10,
                                         }}>
                                             <Item error={detail.error} regular style={{
                                                 height: 45,
@@ -400,62 +416,68 @@ class ProductMoreDetails extends Component {
                                 label={locales('titles.writeDescription')}
                             /> */}
                                 </View>}
-                                {!!detail.error && detail.error.length && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{detail.error}</Label>}
+                                <Label style={{
+                                    fontSize: 14, marginTop: -8, marginRight: 2,
+                                    height: 20,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    color: '#D81A1A', width: deviceWidth * 0.9
+                                }}>{!!detail.error && detail.error.length && detail.error}</Label>
                             </>
                         )
                         )}
 
 
 
-                    </ScrollView>
-                    <View style={{
-                        marginVertical: 0, flexDirection: 'row',
-                        width: deviceWidth, justifyContent: 'space-between',
+                        <View style={{
+                            marginVertical: 0, flexDirection: 'row',
+                            width: deviceWidth, justifyContent: 'space-between',
 
-                    }}>
-                        <Button
-                            onPress={() => this.addMoreRow()}
-                            style={[styles.addMoreButton, {
-                                borderWidth: 1,
-                                borderColor: '#00C569'
-                            }]}
-                            rounded
-                        >
-                            <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                            <AntDesign name='plus' size={25} color='#00C569' />
-                        </Button>
+                        }}>
+                            <Button
+                                onPress={() => this.addMoreRow()}
+                                style={[styles.addMoreButton, {
+                                    borderWidth: 1,
+                                    elevation: 0,
+                                    borderColor: '#00C569'
+                                }]}
+                                rounded
+                            >
+                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                                <FontAwesome5 name='plus' size={14} color='#00C569' />
+                            </Button>
+                        </View>
+                        <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                            <Button
+                                onPress={() => this.onSubmit()}
+                                style={[styles.loginButton]}
+                                rounded
+                            >
+                                <ActivityIndicator size="small" color="white"
+                                    animating={!!this.props.addNewProductLoading}
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        fontSize: 20,
+                                        marginLeft: -30
+                                    }}
+                                />
+                                <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
+
+                            </Button>
+                            <Button
+                                onPress={() => this.props.changeStep(5)}
+                                style={[styles.backButtonContainer]}
+                                rounded
+                            >
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
+                            </Button>
+                        </View>
+
                     </View>
-                    <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-
-                        <Button
-                            onPress={() => this.onSubmit()}
-                            style={[styles.loginButton, { flex: 1 }]}
-                            rounded
-                        >
-                            <ActivityIndicator size="small" color="white"
-                                animating={!!this.props.addNewProductLoading}
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: 15,
-                                    fontSize: 20,
-                                    marginLeft: -30
-                                }}
-                            />
-                            <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
-
-                        </Button>
-                        <Button
-                            onPress={() => this.props.changeStep(5)}
-                            style={[styles.backButtonContainer, { flex: 1 }]}
-                            rounded
-                        >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                        </Button>
-                    </View>
-
-                </View>
+                </ScrollView>
             </>
         )
     }
@@ -476,34 +498,40 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        width: '60%',
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     addMoreButtonText: {
         color: '#00C569',
-        width: '60%',
-        textAlign: 'center'
+        marginRight: 5,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        textAlign: 'center',
+        fontSize: 13
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
     backButtonContainer: {
         textAlign: 'center',
-        margin: 10,
+        borderWidth: 1,
+        borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: '37%',
+        elevation: 0,
+        margin: 10,
     },
     disableLoginButton: {
         textAlign: 'center',
         margin: 10,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         backgroundColor: '#B5B5B5',
         borderRadius: 5,
         alignSelf: 'flex-start',
@@ -512,19 +540,23 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        width: '37%',
         backgroundColor: '#00C569',
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
     addMoreButton: {
         textAlign: 'center',
         margin: 10,
+        height: 35,
         backgroundColor: 'white',
         borderRadius: 5,
-        width: deviceWidth * 0.45,
+        paddingHorizontal: 10,
+        // width: '30%',
         color: '#00C569',
         alignItems: 'center',
         alignSelf: 'flex-start',
@@ -567,6 +599,7 @@ const styles = StyleSheet.create({
     },
     userText: {
         flexWrap: 'wrap',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,

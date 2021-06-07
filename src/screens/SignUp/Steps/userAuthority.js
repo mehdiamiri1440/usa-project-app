@@ -3,7 +3,6 @@ import { Text, View, TouchableOpacity, StyleSheet, I18nManager } from 'react-nat
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
-import Spin from '../../../components/loading/loading';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import { validator } from '../../../utils';
 
@@ -124,7 +123,10 @@ class UserAuthority extends React.Component {
                 </View> */}
                 <View style={[styles.labelInputPadding, { marginTop: -10 }]}>
                     <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterPassword')} <Text style={{ color: 'red' }}>({locales('titles.8CharLeast')})</Text>
+                        {locales('titles.enterPassword')} <Text style={{
+                            color: '#e41c38',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}>({locales('titles.8CharLeast')})</Text>
                     </Label>
                     <Item regular style={{
                         borderRadius: 5,
@@ -152,7 +154,11 @@ class UserAuthority extends React.Component {
 
                         />
                     </Item>
-                    {!!passwordError && <Label style={{ fontSize: 14, textAlign: 'center', color: '#D81A1A' }}>{passwordError}</Label>}
+                    {!!passwordError && <Label style={{
+                        fontSize: 14, textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A'
+                    }}>{passwordError}</Label>}
                 </View>
                 {/* <View style={styles.textInputPadding}>
                     <OutlinedTextField
@@ -238,6 +244,7 @@ const styles = StyleSheet.create({
     },
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -324,6 +331,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         fontSize: 20,
         padding: 20,
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
         color: '#7E7E7E'
     }

@@ -48,7 +48,6 @@ const INITIAL_STATE = {
     productDetailsError: false,
     productDetailsMessage: null,
 
-    productDetailsId: null,
 
     productDetailsInfoLoading: false,
     productDetailsInfo: [],
@@ -56,8 +55,14 @@ const INITIAL_STATE = {
     productDetailsInfoError: false,
     productDetailsInfoMessage: null,
 
-    updateProductsListFlag: false
+    updateProductsListFlag: false,
 
+
+    sellerMobileNumberLoading: false,
+    sellerMobileNumberFailed: false,
+    sellerMobileNumberError: false,
+    sellerMobileNumberMessage: null,
+    sellerMobileNumber: {},
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -391,33 +396,6 @@ export default (state = INITIAL_STATE, action) => {
         };
 
 
-        case actionTypes.SET_PRODUCT_DETAILS_ID_LOADING: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_SUCCESSFULLY: {
-            return {
-                ...state,
-                productDetailsId: action.payload
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_FAILED: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-        case actionTypes.SET_PRODUCT_DETAILS_ID_REJECT: {
-            return {
-                ...state,
-                productDetailsId: null
-            };
-        };
-
-
-
         case actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_LOADING: {
             return {
                 ...state,
@@ -466,6 +444,49 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
 
+
+        case actionTypes.FETCH_SELLER_MOBILE_NUMBER_LOADING: {
+            return {
+                ...state,
+                sellerMobileNumber: {},
+                sellerMobileNumberLoading: true,
+                sellerMobileNumberFailed: false,
+                sellerMobileNumberError: false,
+                sellerMobileNumberMessage: null
+            };
+        };
+        case actionTypes.FETCH_SELLER_MOBILE_NUMBER_SUCCESSFULLY: {
+            let { msg = '' } = action.payload
+            return {
+                ...state,
+                sellerMobileNumber: { ...action.payload },
+                sellerMobileNumberLoading: false,
+                sellerMobileNumberFailed: false,
+                sellerMobileNumberError: false,
+                sellerMobileNumberMessage: msg,
+            };
+        };
+        case actionTypes.FETCH_SELLER_MOBILE_NUMBER_FAILED: {
+            const { msg = '' } = action.payload;
+            return {
+                ...state,
+                sellerMobileNumber: {},
+                sellerMobileNumberLoading: false,
+                sellerMobileNumberFailed: true,
+                sellerMobileNumberError: false,
+                sellerMobileNumberMessage: msg
+            };
+        };
+        case actionTypes.FETCH_SELLER_MOBILE_NUMBER_REJECT: {
+            return {
+                ...state,
+                sellerMobileNumber: {},
+                sellerMobileNumberLoading: false,
+                sellerMobileNumberFailed: false,
+                sellerMobileNumberError: true,
+                sellerMobileNumberMessage: ''
+            };
+        };
 
         default:
             return state

@@ -63,7 +63,6 @@ class UserActivity extends React.Component {
         }
 
         if (isActivityTypeValid && isActivityZoneValid) {
-
             this.props.setActivityZoneAndType(selectedCategoryId, activityType, false);
         }
         else {
@@ -156,7 +155,11 @@ class UserActivity extends React.Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                {!!activityTypeError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
+                {!!activityTypeError && <Label style={{
+                    fontSize: 14,
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                }}>
                     {activityTypeError}</Label>}
 
                 <View style={styles.labelInputPadding}>
@@ -200,7 +203,11 @@ class UserActivity extends React.Component {
                             }))]}
                         />
                     </Item>
-                    {!!activityZoneError && <Label style={{ fontSize: 14, color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9 }}>
+                    {!!activityZoneError && <Label style={{
+                        fontSize: 14,
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        color: '#D81A1A', textAlign: 'center', width: deviceWidth * 0.9
+                    }}>
                         {activityZoneError}</Label>}
                 </View>
                 {/* 
@@ -256,6 +263,7 @@ class UserActivity extends React.Component {
 const styles = StyleSheet.create({
     backButtonText: {
         color: '#7E7E7E',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         width: '60%',
         textAlign: 'center'
     },
@@ -384,6 +392,7 @@ const styles = StyleSheet.create({
     userText: {
         flexWrap: 'wrap',
         paddingTop: '3%',
+        fontFamily: 'IRANSansWeb(FaNum)_Light',
         fontSize: 20,
         padding: 20,
         textAlign: 'center',
