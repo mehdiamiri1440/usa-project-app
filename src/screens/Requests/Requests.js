@@ -30,6 +30,9 @@ import ENUMS from '../../enums';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
+
+let myTimeout;
+
 class Requests extends PureComponent {
     constructor(props) {
         super(props);
@@ -435,11 +438,14 @@ class Requests extends PureComponent {
     };
 
     scrollToTop = _ => {
+        clearTimeout(myTimeout);
         if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
             this.props.requestsRef.current && this.props.requestsRef.current != null &&
-            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
-            setTimeout(() => {
-                this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
+            this.props.buyAdRequestsList && this.props.buyAdRequestsList.length &&
+            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList &&
+            this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
+            myTimeout = setTimeout(() => {
+                this.props.requestsRef?.current?.scrollToIndex({ animated: true, index: 0 });
             }, 300);
         }
     };
