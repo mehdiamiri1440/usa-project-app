@@ -1,5 +1,5 @@
 import React, { PureComponent, createRef } from 'react';
-import { Text, View, SafeAreaView, FlatList, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, View, SafeAreaView, Modal, FlatList, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Icon, InputGroup, Input, Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -13,7 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
 import AsyncStorage from '@react-native-community/async-storage';
 
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { deviceWidth, deviceHeight, enumHelper } from '../../utils';
 import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productActions from '../../redux/registerProduct/actions';
@@ -26,6 +26,7 @@ import BuyAdList from './BuyAdList';
 import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
 import Header from '../../components/header';
+import ENUMS from '../../enums';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -52,7 +53,9 @@ class Requests extends PureComponent {
             statusCode: null,
 
             buyAdRequestsList: [],
-            searchText: null
+            searchText: null,
+            sortModalFlag: false,
+            sort_by: ENUMS.SORT_LIST.values.BM,
         }
     }
 
@@ -358,15 +361,7 @@ class Requests extends PureComponent {
     };
 
     closeFilters = _ => {
-        this.setState({ showFilters: false }, () => {
-            if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
-                this.props.requestsRef.current && this.props.requestsRef.current != null &&
-                this.props.requestsRef.current != undefined && this.state.buyAdRequestsList && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
-                setTimeout(() => {
-                    this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
-                }, 300);
-            }
-        })
+        this.setState({ showFilters: false }, () => this.scrollToTop());
     };
 
     selectedFilter = (id, name) => {
@@ -424,7 +419,6 @@ class Requests extends PureComponent {
             <View style={{
                 alignSelf: 'center', justifyContent: 'center',
                 alignContent: 'center', alignItems: 'center',
-                flex: 1,
                 width: deviceWidth * 0.9, height: deviceHeight * 0.7
             }}>
                 <Entypo name='list' size={80} color='#BEBEBE' />
@@ -440,6 +434,15 @@ class Requests extends PureComponent {
         )
     };
 
+    scrollToTop = _ => {
+        if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
+            this.props.requestsRef.current && this.props.requestsRef.current != null &&
+            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList && this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
+            setTimeout(() => {
+                this.props.requestsRef?.current.scrollToIndex({ animated: true, index: 0 });
+            }, 300);
+        }
+    };
 
     handleSearch = (text) => {
         const {
@@ -454,9 +457,140 @@ class Requests extends PureComponent {
             tempList = [...buyAdRequestsList];
 
 
-        this.setState({ buyAdRequestsList: tempList, selectedFilterName: '', searchText: text });
+        this.setState({ buyAdRequestsList: tempList, selectedFilterName: '', searchText: text }, _ => this.scrollToTop());
     };
 
+    handleSortItemClick = value => {
+        const {
+            buyAdRequestsList = []
+        } = this.state;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (!!value && value != 'BM') {
+            tempList.forEach(item => item.date = new Date(item.created_at));
+            tempList = tempList.sort((a, b) => b.date - a.date);
+        }
+
+        else {
+            tempList = [...this.props.buyAdRequestsList];
+        }
+        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList })
+    };
+
+    renderSortListItem = ({ item }) => {
+        const {
+            sort_by,
+        } = this.state;
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => this.handleSortItemClick(item.value)}
+                style={{
+                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
+                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth,
+                    color: '#e41c38'
+                }}>
+                {sort_by == item.value ?
+                    <FontAwesome5 name='check' size={26} color='#00C569' />
+                    :
+                    <FontAwesome5 name='angle-left' size={26} color='#777' />
+                }
+                <Text
+                    style={{
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: sort_by == item.value ? '#00C569' : '#777'
+                    }}
+                >
+                    {item.title}
+                </Text>
+            </TouchableOpacity>
+
+        )
+    };
+
+    renderSortIcons = _ => {
+        const {
+            sort_by
+        } = this.state;
+        const {
+            list,
+            values
+        } = ENUMS.SORT_LIST
+        const {
+            BM
+        } = values;
+
+        if (sort_by == BM)
+            return (
+                <TouchableOpacity
+                    onPress={() => this.setState({ sortModalFlag: true })}
+                    style={{
+                        borderRadius: 12,
+                        marginTop: 7,
+                        marginBottom: 8,
+                        marginHorizontal: 5,
+                        borderColor: '#EDEDED',
+                        borderWidth: 1,
+                        paddingHorizontal: 10,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        alignSelf: 'flex-end',
+                        justifyContent: 'center',
+                        maxWidth: 100,
+                        backgroundColor: '#FFFFFF',
+                        minHeight: 30
+                    }}>
+                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
+                    <Text
+                        style={{
+                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {locales('labels.sort')}
+                    </Text>
+                </TouchableOpacity>
+            );
+        return (
+            <TouchableOpacity
+                onPress={() => this.handleSortItemClick(BM)}
+                style={{
+                    borderRadius: 12,
+                    marginTop: 7,
+                    marginBottom: 8,
+                    marginHorizontal: 5,
+                    borderColor: '#FA8888',
+                    borderWidth: 1,
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    maxWidth: 120,
+                    alignSelf: 'flex-end',
+                    backgroundColor: '#FCF6F6',
+                    minHeight: 30,
+                    paddingHorizontal: 10
+                }}>
+                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#E41C38' />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        fontSize: 15,
+                        paddingHorizontal: 3,
+                        color: '#E41C38',
+                        marginRight: 2,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {enumHelper.convertEnumValueToTitle(list, sort_by)}
+                </Text>
+                <FontAwesome5 name='times' size={12} color='#E41C38' />
+            </TouchableOpacity>
+        );
+    };
 
     render() {
 
@@ -469,7 +603,8 @@ class Requests extends PureComponent {
             showGoldenModal,
             showMobileNumberWarnModal,
             statusCode,
-            searchText
+            searchText,
+            sortModalFlag
         } = this.state;
         return (
             <>
@@ -477,6 +612,26 @@ class Requests extends PureComponent {
                     showModal={this.state.showModal}
                     closeModal={this.closeModal}
                 />
+
+                {sortModalFlag ?
+                    <Modal
+                        animationType="slide"
+                        visible={sortModalFlag}
+                        onRequestClose={() => this.setState({ sortModalFlag: false })}>
+
+                        <Header
+                            title={locales('labels.sortBy')}
+                            onBackButtonPressed={_ => this.setState({ sortModalFlag: false })}
+                            {...this.props}
+                        />
+
+                        <FlatList
+                            data={ENUMS.SORT_LIST.list.filter(item => item.value == 'RD' || item.value == 'BM')}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={this.renderSortListItem}
+                        />
+                    </Modal>
+                    : null}
 
                 <RBSheet
                     ref={this.updateFlag}
@@ -784,8 +939,10 @@ class Requests extends PureComponent {
                     {...this.props}
                 />
 
-                <View>
-                    <InputGroup style={{ borderRadius: 5, backgroundColor: 'white' }}>
+                <View
+                    style={{ backgroundColor: 'white', borderBottomWidth: 1, borderColor: '#EDEDED' }}
+                >
+                    <InputGroup style={{ borderRadius: 5, backgroundColor: 'white', paddingHorizontal: 10 }}>
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         <Input
                             value={searchText}
@@ -798,6 +955,7 @@ class Requests extends PureComponent {
                             placeholderTextColor="#bebebe"
                             placeholder={locales('labels.searchBuyAdRequest')} />
                     </InputGroup>
+                    {this.renderSortIcons()}
                 </View>
 
                 {
@@ -897,14 +1055,14 @@ class Requests extends PureComponent {
                         initialNumToRender={3}
                         maxToRenderPerBatch={3}
                         style={{
-                            marginBottom: selectedFilterName ? 140 : 94
+                            marginBottom: selectedFilterName ? 140 : 136
                         }}
                     />
 
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: selectedFilterName ? 140 : 94,
+                        bottom: selectedFilterName ? 140 : 136,
                         width: '100%',
                         righ: 0,
                         left: 0,
