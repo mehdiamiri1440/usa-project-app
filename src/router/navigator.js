@@ -577,9 +577,9 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
                                 onPress={() => {
-                                    Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                                    Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps').then((supported) => {
                                         if (!!supported) {
-                                            Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                                            Linking.openURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
                                         } else {
                                             Linking.openURL('https://play.google.com')
                                         }
