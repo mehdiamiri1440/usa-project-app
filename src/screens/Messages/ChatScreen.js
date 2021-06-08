@@ -481,7 +481,10 @@ class ChatScreen extends Component {
 
         return (
             <View style={styles.container}>
-                <ImageBackground source={require('../../../assets/images/whatsapp-wallpaper.png')} style={styles.image}>
+                <ImageBackground
+                    source={require('../../../assets/images/whatsapp-wallpaper.png')}
+                    style={styles.image}
+                >
 
                     {showViolationReportFlag ? <ViolationReport
                         {...this.props}
