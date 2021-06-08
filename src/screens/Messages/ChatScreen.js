@@ -81,25 +81,6 @@ class ChatScreen extends Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
     }
 
-    handleIncomingMessage = _ => {
-        const { route = {} } = this.props;
-        const { params = {} } = route;
-        const { contact = {} } = params;
-
-        unsubscribe = messaging().onMessage(async remoteMessage => {
-            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
-                if (contact && contact.contact_id == remoteMessage.data.senderId)
-                    this.pushNewMessageToChatList(remoteMessage);
-            }
-        });
-    };
-
-    handleGoBack = _ => {
-        this.props.doForceRefresh(true);
-        this.props.navigation.goBack();
-        return true;
-    };
-
     checkForShowingRatingCard = _ => {
 
         const {
@@ -149,6 +130,25 @@ class ChatScreen extends Component {
             });
 
         });
+    };
+
+    handleIncomingMessage = _ => {
+        const { route = {} } = this.props;
+        const { params = {} } = route;
+        const { contact = {} } = params;
+
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
+                if (contact && contact.contact_id == remoteMessage.data.senderId)
+                    this.pushNewMessageToChatList(remoteMessage);
+            }
+        });
+    };
+
+    handleGoBack = _ => {
+        this.props.doForceRefresh(true);
+        this.props.navigation.goBack();
+        return true;
     };
 
     handleGuid = _ => {
@@ -243,49 +243,6 @@ class ChatScreen extends Component {
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })
-    }
-
-    sendMessage = () => {
-        const { route = {} } = this.props;
-        const { params = {} } = route;
-        const { contact = {} } = params;
-        let { messageText } = this.state;
-        let userChatHistory = [...this.state.userChatHistory].reverse();
-        let msgObject = {
-            sender_id: formatter.toStandard(this.props.loggedInUserId),
-            receiver_id: formatter.toStandard(contact.contact_id),
-            text: formatter.toStandard(messageText),
-            created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
-        }
-
-        if (messageText && messageText.length && messageText.trim()) {
-            userChatHistory.push({ ...msgObject });
-            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
-            this.setState({
-                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
-                messageText: '',
-                isFirstLoad: false,
-                shouldShowRatingCard: false
-            });
-            this.props.sendMessage(msgObject).then((result) => {
-                setTimeout(() => {
-                    if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
-                        this.scrollViewRef.current && this.scrollViewRef.current != null &&
-                        this.scrollViewRef.current != undefined &&
-                        result.payload.message && this.state.userChatHistory.length > 0 &&
-                        !this.props.userChatHistoryLoading)
-                        this.scrollViewRef?.current.scrollToIndex({ animated: true, index: 0 });
-                }, 10);
-                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                //     .then(() => {
-                //         this.setState(state => {
-                //             state.loaded = false;
-                //             return '';
-                //         })
-                //     })
-            });
-
-        }
     };
 
     hideUnAuthorizedUserChatPopUp = () => {
@@ -356,6 +313,51 @@ class ChatScreen extends Component {
                 AsyncStorage.setItem('@ratedChats', JSON.stringify(result))
             })
         })
+    };
+
+    sendMessage = () => {
+        const { route = {} } = this.props;
+        const { params = {} } = route;
+        const { contact = {} } = params;
+        let { messageText } = this.state;
+        let userChatHistory = [...this.state.userChatHistory].reverse();
+        let msgObject = {
+            sender_id: formatter.toStandard(this.props.loggedInUserId),
+            receiver_id: formatter.toStandard(contact.contact_id),
+            text: formatter.toStandard(messageText),
+            created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
+        }
+
+        if (messageText && messageText.length && messageText.trim()) {
+            userChatHistory.push({ ...msgObject });
+            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
+            this.setState({
+                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
+                messageText: '',
+                isFirstLoad: false,
+                shouldShowRatingCard: false
+            });
+            this.props.sendMessage(msgObject).then((result) => {
+                this.scrollToTop(result);
+                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
+                //     .then(() => {
+                //         this.setState(state => {
+                //             state.loaded = false;
+                //             return '';
+                //         })
+                //     })
+            });
+
+        }
+    };
+
+    scrollToTop = (result) => {
+        if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
+            this.scrollViewRef.current && this.scrollViewRef.current != null &&
+            this.scrollViewRef.current != undefined &&
+            result.payload.message && this.state.userChatHistory.length > 0 &&
+            !this.props.userChatHistoryLoading)
+            this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: 0 });
     };
 
     onEndReached = _ => {
@@ -596,7 +598,10 @@ class ChatScreen extends Component {
                             width: deviceWidth
                         }}>
                         <TouchableOpacity
-                            style={{ flexDirection: 'row-reverse', width: '21%' }}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                width: '21%'
+                            }}
                             onPress={() => {
                                 Jmoment.locale('fa')
                                 this.handleGoBack();
@@ -607,13 +612,16 @@ class ChatScreen extends Component {
                                     alignItems: 'flex-end', paddingHorizontal: 5
                                 }}
                             >
-                                <AntDesign name='arrowright' size={25}
+                                <AntDesign
+                                    name='arrowright'
+                                    size={25}
                                 />
                             </View>
                             <Image
                                 style={{
                                     borderRadius: 20,
-                                    width: 40, height: 40
+                                    width: 40,
+                                    height: 40
                                 }}
                                 source={profile_photo || contact.profile_photo ?
                                     { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo || contact.profile_photo}` }
@@ -633,14 +641,26 @@ class ChatScreen extends Component {
                                 width: '55%',
                                 alignItems: 'flex-end',
                             }}>
-                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }}
+                            >
                                 <View
-                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', maxWidth: '58%', top: -2 }}
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        maxWidth: '58%',
+                                        top: -2
+                                    }}
                                 >
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontSize: 17, marginLeft: 2,
+                                            fontSize: 17,
+                                            marginLeft: 2,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light'
                                         }}
                                     >
@@ -666,14 +686,20 @@ class ChatScreen extends Component {
 
                         {showReportText === true ?
                             <TouchableOpacity
-                                style={{ flexDirection: 'row-reverse', width: '24%' }}
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    width: '24%'
+                                }}
                                 onPress={_ => this.setState({ showViolationReportFlag: true })}
                             >
                                 <FontAwesome5
                                     size={13}
                                     name='exclamation-circle'
                                     color='#BBBBBB'
-                                    style={{ marginTop: 5, marginHorizontal: 3 }}
+                                    style={{
+                                        marginTop: 5,
+                                        marginHorizontal: 3
+                                    }}
                                 />
                                 <Text
                                     style={{
@@ -697,10 +723,15 @@ class ChatScreen extends Component {
                                 shadowRadius: detectToShowCommentAndGuid ? 0 : 5,
                                 shadowOffset: { width: 0, height: 2 },
                                 borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                                backgroundColor: 'white',
+                                width: 50,
+                                height: 50,
+                                borderRadius: 25
                             }}
                         >
-                            <ActivityIndicator size="large" color="#00C569"
+                            <ActivityIndicator
+                                size="large"
+                                color="#00C569"
                                 style={{ top: 7 }}
                             />
                         </ShadowView>
@@ -708,6 +739,7 @@ class ChatScreen extends Component {
 
 
                     <FlatList
+                        ref={this.scrollViewRef}
                         data={userChatHistory}
                         ListFooterComponentStyle={{ padding: 10 }}
                         ListFooterComponent={this.renderListFooterComponent}
@@ -718,20 +750,26 @@ class ChatScreen extends Component {
                         keyboardShouldPersistTaps='handled'
                         initialNumToRender={3}
                         windowSize={10}
-                        ref={this.scrollViewRef}
-                        style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
+                        style={{
+                            marginBottom: 60,
+                            paddingTop: 2,
+                            height: '100%'
+                        }}
                         extraData={this.state}
                         onEndReached={this.onEndReached}
-                        onEndReachedThreshold={0.5}
+                        onEndReachedThreshold={10}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
                     />
 
                     <View
                         style={{
-                            position: 'absolute', bottom: 0, paddingTop: 3,
+                            position: 'absolute',
+                            bottom: 0,
+                            paddingTop: 3,
                             zIndex: detectToShowCommentAndGuid ? 0 : 1,
-                            width: deviceWidth, paddingBottom: 10,
+                            width: deviceWidth,
+                            paddingBottom: 10,
                             flexDirection: 'row-reverse',
                         }}
                     >
@@ -758,20 +796,29 @@ class ChatScreen extends Component {
                                 marginHorizontal: 10
                             }}
                         >
-                            <MaterialCommunityIcons name='send' size={25} color='white' />
+                            <MaterialCommunityIcons
+                                name='send'
+                                size={25}
+                                color='white'
+                            />
                         </Button>
 
                         <TextInput
                             value={messageText}
                             onChangeText={this.handleMessageTextChange}
                             style={{
-                                textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 6,
-                                width: deviceWidth * 0.8, paddingHorizontal: 20,
-                                maxHeight: 100, height: 44,
+                                textAlign: 'right',
+                                backgroundColor: 'white',
+                                borderRadius: 20,
+                                paddingVertical: 6,
+                                width: deviceWidth * 0.8,
+                                paddingHorizontal: 20,
+                                maxHeight: 100,
+                                height: 44,
                                 overflow: 'scroll',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}
-                            placeholder='پیامی بگذارید'
+                            placeholder={locales('labels.putAMessage')}
                             placeholderTextColor="#BEBEBE"
                             multiline={true}
                         />
@@ -818,6 +865,5 @@ const mapDispatchToProps = (dispatch, props) => {
         checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
     }
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

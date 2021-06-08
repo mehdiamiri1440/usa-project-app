@@ -62,6 +62,14 @@ const Message = props => {
                         paddingLeft: 1.5,
                         paddingRight: 1,
                         borderRadius: 9,
+                        borderTopWidth: 0.3,
+                        borderBottomWidth: 0.7,
+                        borderLeftWidth: 0.3,
+                        borderRightWidth: 0.3,
+                        borderTopColor: 'rgba(204,204,204,0.1)',
+                        borderBottomColor: 'rgba(204,204,204,0.7)',
+                        borderRightColor: 'rgba(204,204,204,0.1)',
+                        borderLeftColor: 'rgba(204,204,204,0.1)',
                     }}
                 >
                     <View
@@ -99,12 +107,21 @@ const Message = props => {
                             }}>
                             {item.text}
                         </Text>
-                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', }}>
-                            {id == item.receiver_id && (item.created_at ? <MaterialCommunityIcons
-                                style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'} size={14}
-                                color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'} /> :
-                                <Feather name='clock' size={14} color='#617D8A'
+                        <View
+                            style={{ flexDirection: 'row-reverse', alignItems: 'center', }}
+                        >
+                            {id == item.receiver_id && (item.created_at ?
+                                <MaterialCommunityIcons
+                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                                    name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'}
+                                    size={14}
+                                    color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'}
+                                />
+                                :
+                                <Feather
+                                    name='clock'
+                                    size={14}
+                                    color='#617D8A'
                                     style={{ textAlign: 'right', paddingHorizontal: 3 }}
                                 />
                             )
@@ -114,7 +131,8 @@ const Message = props => {
                                     color: showPhoneFormat ? '#5188B8' : '#333333',
                                     fontSize: 12,
                                     fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                }}>
+                                }}
+                            >
                                 {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
                             </Text>
                         </View>
