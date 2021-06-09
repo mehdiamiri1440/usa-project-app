@@ -376,12 +376,18 @@ class ChatScreen extends Component {
 
         if (contentOffset.y > 50) {
             if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 this.setState({ showScrollToBottomButton: true });
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }
         }
-        else
+        else {
             isScrollToBottomButtonClicked = false;
+            if (showScrollToBottomButton) {
+                this.setState({ showScrollToBottomButton: false });
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+
     };
 
     onScrollToIndexFailed = _ => {
