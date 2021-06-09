@@ -948,7 +948,7 @@ class Requests extends PureComponent {
                 <View
                     style={{ backgroundColor: 'white', borderBottomWidth: 1, borderColor: '#EDEDED' }}
                 >
-                    <InputGroup style={{ borderRadius: 5, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                    <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2', paddingHorizontal: 10 }}>
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         <Input
                             value={searchText}
