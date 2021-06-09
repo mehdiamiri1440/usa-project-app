@@ -98,12 +98,18 @@ const Channel = props => {
 
         if (contentOffset.y > 50) {
             if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 setShowScrollToBottomButton(true);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }
         }
-        else
+        else {
             isScrollToBottomButtonClicked = false;
+            if (showScrollToBottomButton) {
+                setShowScrollToBottomButton(false);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+
     };
 
     const onScrollToIndexFailed = _ => {
