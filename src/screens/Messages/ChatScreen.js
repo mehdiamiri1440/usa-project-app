@@ -7,6 +7,7 @@ import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
     ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
+    LayoutAnimation, UIManager, Platform
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
@@ -27,9 +28,15 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
 import ChatRating from './ChatRating';
 
-let unsubscribe;
-Jmoment.locale('fa');
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+let unsubscribe, onEndReachedCalledDuringMomentum = true, isScrollToBottomButtonClicked = false;
 class ChatScreen extends Component {
     constructor(props) {
         super(props);
@@ -44,9 +51,9 @@ class ChatScreen extends Component {
             loaded: false,
             showGuid: false,
             showViolationReportFlag: false,
-            shouldShowRatingCard: false
+            shouldShowRatingCard: false,
+            showScrollToBottomButton: false
         };
-        Jmoment.locale('en')
     }
 
     scrollViewRef = React.createRef();
@@ -71,8 +78,9 @@ class ChatScreen extends Component {
     componentDidUpdate(prevProps, prevState) {
 
         if (prevState.loaded == false && this.props.userChatHistory.length) {
+            console.log('history length', this.props.userChatHistory)
             this.fetchSenderIds()
-            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true });
+            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory], loaded: true });
         }
 
     }
@@ -224,11 +232,14 @@ class ChatScreen extends Component {
 
         userChatHistory.unshift(message);
 
-        userChatHistory.slice(0, 60).forEach(item => {
+        userChatHistory.forEach(item => {
             if (item.is_read == undefined) {
                 item.is_read = true;
             }
-        })
+        });
+
+        this.scrollToTop();
+
         this.setState({
             userChatHistory,
             shouldShowRatingCard: false
@@ -320,7 +331,7 @@ class ChatScreen extends Component {
         const { params = {} } = route;
         const { contact = {} } = params;
         let { messageText } = this.state;
-        let userChatHistory = [...this.state.userChatHistory].reverse();
+        let userChatHistory = [...this.state.userChatHistory];
         let msgObject = {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(contact.contact_id),
@@ -329,10 +340,10 @@ class ChatScreen extends Component {
         }
 
         if (messageText && messageText.length && messageText.trim()) {
-            userChatHistory.push({ ...msgObject });
+            userChatHistory.unshift({ ...msgObject });
             AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
             this.setState({
-                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
+                userChatHistory: [...userChatHistory],
                 messageText: '',
                 isFirstLoad: false,
                 shouldShowRatingCard: false
@@ -351,24 +362,97 @@ class ChatScreen extends Component {
         }
     };
 
+    onScrollChanged = ({
+        nativeEvent = {}
+    }) => {
+
+        const {
+            contentOffset
+        } = nativeEvent;
+
+        const {
+            showScrollToBottomButton
+        } = this.state;
+
+        if (contentOffset.y > 50) {
+            if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                this.setState({ showScrollToBottomButton: true });
+            }
+        }
+        else
+            isScrollToBottomButtonClicked = false;
+    };
+
+    onScrollToIndexFailed = _ => {
+        const {
+            userChatHistory = []
+        } = this.state;
+
+        if (userChatHistory && userChatHistory.length)
+            this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: userChatHistory.length });
+    };
+
     scrollToTop = (result) => {
-        if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
-            this.scrollViewRef.current && this.scrollViewRef.current != null &&
+
+        isScrollToBottomButtonClicked = true;
+
+        this.setState({ showScrollToBottomButton: false });
+
+        let conditions = this.scrollViewRef &&
+            this.scrollViewRef != null &&
+            this.scrollViewRef != undefined &&
+            this.scrollViewRef.current &&
+            this.scrollViewRef.current != null &&
             this.scrollViewRef.current != undefined &&
-            result.payload.message && this.state.userChatHistory.length > 0 &&
-            !this.props.userChatHistoryLoading)
+            this.state.userChatHistory.length > 0 &&
+            !this.props.userChatHistoryLoading;
+
+        if (result) {
+
+            const {
+                payload = {}
+            } = result;
+
+            conditions = conditions && payload?.message;
+        }
+
+        if (conditions)
             this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: 0 });
+
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     };
 
     onEndReached = _ => {
-        const { route = {} } = this.props;
-        const { params = {} } = route;
-        const { contact = {} } = params;
-        const { loaded, userChatHistory } = this.state;
-        if (loaded && userChatHistory.length >= 9)
+
+        const {
+            route = {},
+            userChatHistoryData = {}
+        } = this.props;
+
+        const {
+            total = 300
+        } = userChatHistoryData;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact = {}
+        } = params;
+
+        const {
+            userChatHistory
+        } = this.state;
+
+        if (!onEndReachedCalledDuringMomentum && userChatHistory.length < total) {
             this.setState({ msgCount: this.state.msgCount + 25 }, () => {
-                this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }))
-            })
+                this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount);
+                onEndReachedCalledDuringMomentum = true;
+            });
+        }
+
     };
 
     keyExtractor = (_, index) => index.toString();
@@ -463,17 +547,38 @@ class ChatScreen extends Component {
     };
 
     render() {
-        let { userChatHistoryLoading, route = {}, buyAdId } = this.props;
-        const { params = {} } = route;
+
+        let {
+            userChatHistoryLoading,
+            route = {},
+            buyAdId } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
         const {
             profile_photo,
             contact,
             showReportText,
             shouldHideGuidAndComment = false
         } = params;
-        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText,
-            showGuid, showViolationReportFlag,
+
+        let {
+            first_name: firstName,
+            last_name: lastName,
+            contact_id: id,
+            user_name,
+            is_verified = 0
+        } = contact;
+
+        let {
+            userChatHistory,
+            isFirstLoad,
+            messageText,
+            showGuid,
+            showViolationReportFlag,
+            showScrollToBottomButton
         } = this.state;
 
 
@@ -485,6 +590,31 @@ class ChatScreen extends Component {
                     source={require('../../../assets/images/whatsapp-wallpaper.png')}
                     style={styles.image}
                 >
+                    {showScrollToBottomButton ?
+                        <FontAwesome5
+                            name='angle-double-down'
+                            color='white'
+                            size={18}
+                            solid
+                            onPress={_ => this.scrollToTop()}
+                            style={{
+                                backgroundColor: '#00C569',
+                                padding: 10,
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                zIndex: 1,
+                                position: 'absolute',
+                                bottom: 70,
+                                right: 10
+                            }}
+                        />
+                        : null}
 
                     {showViolationReportFlag ? <ViolationReport
                         {...this.props}
@@ -606,7 +736,6 @@ class ChatScreen extends Component {
                                 width: '21%'
                             }}
                             onPress={() => {
-                                Jmoment.locale('fa')
                                 this.handleGoBack();
                             }}>
                             <View
@@ -634,7 +763,6 @@ class ChatScreen extends Component {
                         <TouchableOpacity
                             activeOpacity={(shouldHideGuidAndComment || this.props.buyAdId) ? 1 : 0}
                             onPress={() => {
-                                Jmoment.locale('fa');
                                 if (!this.props.buyAdId && !shouldHideGuidAndComment) {
                                     this.props.navigation.navigate('Profile', { user_name });
                                 }
@@ -742,27 +870,31 @@ class ChatScreen extends Component {
 
 
                     <FlatList
+                        keyboardShouldPersistTaps='handled'
+                        keyboardDismissMode='none'
                         ref={this.scrollViewRef}
                         data={userChatHistory}
+                        extraData={this.state}
+                        keyExtractor={this.keyExtractor}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.05}
+                        onScrollToIndexFailed={this.onScrollToIndexFailed}
+                        onMomentumScrollBegin={_ => onEndReachedCalledDuringMomentum = false}
+                        onScroll={this.onScrollChanged}
                         ListFooterComponentStyle={{ padding: 10 }}
                         ListFooterComponent={this.renderListFooterComponent}
                         ListHeaderComponent={this.renderListHeaderComponent}
-                        inverted
+                        renderItem={this.renderItem}
+                        removeClippedSubviews
                         maxToRenderPerBatch={3}
-                        keyboardDismissMode='none'
-                        keyboardShouldPersistTaps='handled'
                         initialNumToRender={3}
                         windowSize={10}
+                        inverted
                         style={{
                             marginBottom: 60,
                             paddingTop: 2,
                             height: '100%'
                         }}
-                        extraData={this.state}
-                        onEndReached={this.onEndReached}
-                        onEndReachedThreshold={10}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderItem}
                     />
 
                     <View
@@ -845,15 +977,42 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state) => {
-    return {
-        userChatHistoryLoading: state.messagesReducer.userChatHistoryLoading,
-        userChatHistory: state.messagesReducer.userChatHistory,
-        loggedInUserId: state.authReducer.loggedInUserId,
-        isSenderVerified: state.messagesReducer.isSenderVerified,
-        userProfile: state.profileReducer.userProfile,
+const mapStateToProps = ({
+    messagesReducer,
+    authReducer,
+    profileReducer
+}) => {
 
-        contactsList: state.messagesReducer.contactsList,
+    const {
+        userChatHistoryData,
+        userChatHistoryLoading,
+        userChatHistory,
+
+        isSenderVerified,
+
+        contactsList
+    } = messagesReducer;
+
+    const {
+        loggedInUserId
+    } = authReducer;
+
+    const {
+        userProfile
+    } = profileReducer;
+
+    return {
+        userChatHistoryData,
+        userChatHistoryLoading,
+        userChatHistory,
+
+        isSenderVerified,
+
+        contactsList,
+
+        loggedInUserId,
+
+        userProfile
     }
 };
 

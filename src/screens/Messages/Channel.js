@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
     FlatList, View, Text, Image, TouchableOpacity,
     ActivityIndicator, Modal, Animated, Linking,
-    ImageBackground, StyleSheet
+    ImageBackground, StyleSheet,
+    LayoutAnimation, UIManager, Platform
 } from 'react-native';
 import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
@@ -18,17 +19,32 @@ import * as messagesActions from '../../redux/messages/actions';
 import { deviceWidth, parser, formatter, deviceHeight } from '../../utils';
 import Header from '../../components/header';
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+
+let isScrollToBottomButtonClicked = false, onEndReachedCalledDuringMomentum = true, firstLoad = true;
+
 const Channel = props => {
 
-    let onEndReachedCalledDuringMomentum = true;
-    let firstLoad = true;
 
     const ChannelContainerRef = useRef();
+
     const [page, setPage] = useState(1);
+
     const [selectedItem, setSelectedItem] = useState(null);
+
     let translateY = useState(new Animated.Value(0))[0];
+
     const [caption, setCaption] = useState(true);
+
     const [contents, setContents] = useState([]);
+
+    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
 
 
     useEffect(_ => {
@@ -49,6 +65,51 @@ const Channel = props => {
     const {
         total
     } = channelData;
+
+
+    const scrollToTop = _ => {
+
+        isScrollToBottomButtonClicked = true;
+        setShowScrollToBottomButton(false);
+
+        let conditions = ChannelContainerRef &&
+            ChannelContainerRef != null &&
+            ChannelContainerRef != undefined &&
+            ChannelContainerRef.current &&
+            ChannelContainerRef.current != null &&
+            ChannelContainerRef.current != undefined &&
+            contents.length > 0 &&
+            !channelDataLoading;
+
+        if (conditions)
+            ChannelContainerRef?.current?.scrollToIndex({ animated: true, index: 0 });
+
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    };
+
+    const onScrollChanged = ({
+        nativeEvent = {}
+    }) => {
+
+        const {
+            contentOffset
+        } = nativeEvent;
+
+
+        if (contentOffset.y > 50) {
+            if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setShowScrollToBottomButton(true);
+            }
+        }
+        else
+            isScrollToBottomButtonClicked = false;
+    };
+
+    const onScrollToIndexFailed = _ => {
+        if (contents && contents.length)
+            ChannelContainerRef?.current?.scrollToIndex({ animated: true, index: contents.length });
+    };
 
     const shareProfile = async _ => {
 
@@ -477,6 +538,31 @@ const Channel = props => {
 
     return (
         <>
+            {showScrollToBottomButton ?
+                <FontAwesome5
+                    name='angle-double-down'
+                    color='white'
+                    size={18}
+                    solid
+                    onPress={_ => scrollToTop()}
+                    style={{
+                        backgroundColor: '#00C569',
+                        padding: 10,
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1,
+                        position: 'absolute',
+                        bottom: 70,
+                        right: 10
+                    }}
+                />
+                : null}
             <Modal
                 visible={!!selectedItem}
                 onRequestClose={_ => setSelectedItem(null)}
@@ -608,7 +694,8 @@ const Channel = props => {
                     inverted={!!contents && !!contents.length}
                     renderItem={renderItem}
                     removeClippedSubviews
-                    legacyImplementation
+                    onScrollToIndexFailed={onScrollToIndexFailed}
+                    onScroll={onScrollChanged}
                     windowSize={8}
                     maxToRenderPerBatch={3}
                     onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
@@ -657,7 +744,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         justifyContent: "center"
     },
-})
+});
 
 const mapStateToProps = state => {
 
@@ -683,6 +770,7 @@ const mapStateToProps = state => {
         userProfile
     }
 };
+
 const mapDispatchToProps = dispatch => {
     return {
         fetchChannelData: page => dispatch(messagesActions.fetchChannelData(page)),
