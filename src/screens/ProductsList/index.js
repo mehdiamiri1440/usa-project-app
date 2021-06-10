@@ -461,6 +461,15 @@ class ProductsList extends PureComponent {
 
     };
 
+    onScrollToIndexFailed = _ => {
+        const {
+            productsListArray = []
+        } = this.state;
+
+        if (productsListArray && productsListArray.length)
+            this.props.productsListRef?.current?.scrollToIndex({ animated: true, index: productsListArray.length });
+    };
+
     onEndOfProductListReached = _ => {
         const {
             province,
@@ -474,7 +483,6 @@ class ProductsList extends PureComponent {
 
             searchText
         } = this.state;
-
         if (loaded && productsListArray.length >= this.state.to_record_number)
             this.setState({
                 from_record_number: this.state.from_record_number + 16,
@@ -1754,22 +1762,37 @@ class ProductsList extends PureComponent {
                 </View>
 
                 <FlatList
-                    initialNumToRender={4}
+                    keyboardShouldPersistTaps='handled'
+                    keyboardDismissMode='none'
                     ref={this.props.productsListRef}
-                    keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
-                    style={{ backgroundColor: 'white' }}
-                    horizontal={false}
-                    numColumns={2}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
-                    refreshing={false}
-                    onRefresh={this.onProductListRefreshed}
-                    onEndReached={this.onEndOfProductListReached}
-                    onEndReachedThreshold={3}
                     ListEmptyComponent={this.renderProductListEmptyComponent}
                     ListFooterComponent={this.renderProductListFooterComponent}
                     ItemSeparatorComponent={({ _, leadingItem }) => !is_seller && this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={this.renderProductListItem}
+                    keyExtractor={(_, index) => index.toString()}
+                    refreshing={false}
+                    onRefresh={this.onProductListRefreshed}
+                    onEndReached={this.onEndOfProductListReached}
+                    onEndReachedThreshold={3}
+                    onScrollToIndexFailed={this.onScrollToIndexFailed}
+                    removeClippedSubviews
+                    maxToRenderPerBatch={3}
+                    windowSize={10}
+                    initialNumToRender={4}
+                    numColumns={2}
+                    // getItemLayout={(data, index) => (
+                    //     { length: data.length, offset: 100 * index, index }
+                    // )}
+                    style={{
+                        backgroundColor: 'white'
+                    }}
+                    columnWrapperStyle={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'row-reverse'
+                    }}
+
                 />
 
             </View>
