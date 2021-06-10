@@ -9,8 +9,8 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { validator, parser } from '../../utils';
-const Message = props => {
 
+const Message = props => {
 
     const {
         item,
@@ -20,29 +20,25 @@ const Message = props => {
         loggedInUserId,
         prevMessage
     } = props;
+
     const { contact_id: id } = contact;
 
     const showPhoneFormat = item.sender_id != loggedInUserId && item.is_phone;
 
-    const openCallPad = phoneNumber => {
-
-        if (!validator.isMobileNumber(phoneNumber))
-            return;
-
-        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(`tel:${phoneNumber}`)
-            }
-            else {
-
-            }
-        })
-            .catch(_ => { })
+    const showToast = _ => {
+        ToastAndroid.showWithGravityAndOffset(
+            locales('titles.copiedToClipboard'),
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            5,
+            20);
+        Clipboard.setString(item.text);
     };
 
     return (
         <>
             {parser.showDate(item, prevMessage)}
+
             <View
                 style={{
                     width: deviceWidth,
@@ -52,7 +48,6 @@ const Message = props => {
                     flex: 1,
                     alignItems: id == item.receiver_id ? 'flex-end' : 'flex-start'
                 }}
-                key={index}
             >
                 <View
                     style={{
@@ -81,22 +76,11 @@ const Message = props => {
                             backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         }}
                     >
-
-
-
                         <Text
                             selectionColor='gray'
                             suppressHighlighting
                             selectable
-                            onPress={() => {
-                                ToastAndroid.showWithGravityAndOffset(
-                                    locales('titles.copiedToClipboard'),
-                                    ToastAndroid.LONG,
-                                    ToastAndroid.BOTTOM,
-                                    5,
-                                    20)
-                                Clipboard.setString(item.text)
-                            }}
+                            onPress={showToast}
                             style={{
                                 zIndex: 999999,
                                 textAlign: 'right',
@@ -107,92 +91,142 @@ const Message = props => {
                             }}>
                             {item.text}
                         </Text>
-                        <View
-                            style={{ flexDirection: 'row-reverse', alignItems: 'center', }}
-                        >
-                            {id == item.receiver_id && (item.created_at ?
-                                <MaterialCommunityIcons
-                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                    name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'}
-                                    size={14}
-                                    color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'}
-                                />
-                                :
-                                <Feather
-                                    name='clock'
-                                    size={14}
-                                    color='#617D8A'
-                                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
-                                />
-                            )
-                            }
-                            <Text
-                                style={{
-                                    color: showPhoneFormat ? '#5188B8' : '#333333',
-                                    fontSize: 12,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                }}
-                            >
-                                {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
-                            </Text>
-                        </View>
+                        <RenderDate
+                            item={item}
+                            {...props}
+                            showPhoneFormat={showPhoneFormat}
+                        />
                     </View>
-                    {showPhoneFormat ?
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => openCallPad(item.text)}
-                            style={{
-                                bottom: -4,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: 210,
-                                    backgroundColor: '#4FA992',
-
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    textAlign: 'center',
-
-                                    flexDirection: 'row-reverse',
-
-                                    paddingVertical: 5,
-                                    marginHorizontal: -10,
-                                    marginBottom: -5,
-                                    borderBottomLeftRadius: 8,
-                                    borderBottomRightRadius: 8,
-                                    marginTop: 7,
-                                    overflow: "hidden",
-                                    borderTopRightRadius: 0,
-                                    borderTopLeftRadius: 0,
-
-                                }}
-                            >
-                                <Text style={{
-                                    color: 'white',
-                                    fontSize: 16,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                }}>
-                                    {locales('labels.call')}
-
-                                </Text>
-                                <Text style={{
-                                    // position: 'absolute',
-                                    // left: 0,
-                                    marginRight: 10
-                                }}>
-                                    <FontAwesome name='phone'
-
-                                        color='white' size={18} />
-                                </Text>
-
-                            </View>
-                        </TouchableOpacity>
-                        : null}
+                    <RenderPhoneFormatMessage
+                        showPhoneFormat={showPhoneFormat}
+                        item={item}
+                        {...props}
+                        id={id}
+                    />
                 </View>
             </View>
         </>
     )
 }
+const RenderDate = props => {
+    const {
+        showPhoneFormat,
+        item,
+        id
+    } = props;
+
+    return (
+        <View
+            style={{ flexDirection: 'row-reverse', alignItems: 'center', }}
+        >
+            {id == item.receiver_id && (item.created_at ?
+                <MaterialCommunityIcons
+                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                    name={(item.is_read == 1 || item.is_read == true) ? 'check-all' : 'check'}
+                    size={14}
+                    color={(item.is_read == 1 || item.is_read == true) ? '#60CAF1' : '#617D8A'}
+                />
+                :
+                <Feather
+                    name='clock'
+                    size={14}
+                    color='#617D8A'
+                    style={{ textAlign: 'right', paddingHorizontal: 3 }}
+                />
+            )
+            }
+            <Text
+                style={{
+                    color: showPhoneFormat ? '#5188B8' : '#333333',
+                    fontSize: 12,
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                }}
+            >
+                {Jmoment(item.created_at).format('jYYYY/jMM/jDD , HH:mm ')}
+            </Text>
+        </View>
+    )
+};
+
+const RenderPhoneFormatMessage = props => {
+    const {
+        showPhoneFormat,
+        item
+    } = props;
+
+
+    const openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
+    if (showPhoneFormat)
+
+        return (
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => openCallPad(item.text)
+                }
+                style={{
+                    bottom: '9%',
+                }
+                }
+            >
+                <View
+                    style={{
+                        width: 210,
+                        backgroundColor: '#4FA992',
+
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+
+                        flexDirection: 'row-reverse',
+
+                        paddingVertical: 5,
+                        marginBottom: -5,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        marginTop: 7,
+                        overflow: "hidden",
+                        borderTopRightRadius: 0,
+                        borderTopLeftRadius: 0,
+
+                    }}
+                >
+                    <Text style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    }}>
+                        {locales('labels.call')}
+
+                    </Text>
+                    <Text style={{
+                        // position: 'absolute',
+                        // left: 0,
+                        marginRight: 10
+                    }}>
+                        <FontAwesome name='phone'
+
+                            color='white' size={18} />
+                    </Text>
+
+                </View>
+            </TouchableOpacity >
+        )
+    return null;
+};
 
 export default memo(Message);

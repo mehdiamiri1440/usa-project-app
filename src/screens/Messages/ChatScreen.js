@@ -44,7 +44,7 @@ class ChatScreen extends Component {
             messageText: '',
             isFirstLoad: true,
             from: 0,
-            to: 30,
+            to: 50,
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
@@ -463,7 +463,7 @@ class ChatScreen extends Component {
 
         if (userChatHistory.length < total_count) {
 
-            this.props.fetchUserChatHistory(contact.contact_id, from + 30, to + 30).then((result = {}) => {
+            this.props.fetchUserChatHistory(contact.contact_id, from + 50, to + 50).then((result = {}) => {
                 const {
                     payload = {}
                 } = result;
@@ -474,8 +474,8 @@ class ChatScreen extends Component {
 
                 this.setState({
                     userChatHistory: [...userChatHistory, ...messages],
-                    from: this.state.from + 30,
-                    to: this.state.to + 30
+                    from: this.state.from + 50,
+                    to: this.state.to + 50
                 });
             });
         }
@@ -895,7 +895,7 @@ class ChatScreen extends Component {
                             />
                         </ShadowView>
                         : null}
-
+                    {console.log('here', this.state.userChatHistory)}
 
                     <FlatList
                         keyboardShouldPersistTaps='handled'
@@ -905,7 +905,7 @@ class ChatScreen extends Component {
                         extraData={this.state}
                         keyExtractor={this.keyExtractor}
                         onEndReached={this.onEndReached}
-                        onEndReachedThreshold={100}
+                        onEndReachedThreshold={0.8}
                         onScrollToIndexFailed={this.onScrollToIndexFailed}
                         onScroll={this.onScrollChanged}
                         ListFooterComponentStyle={{ padding: 10 }}
@@ -914,9 +914,7 @@ class ChatScreen extends Component {
                         renderItem={this.renderItem}
                         removeClippedSubviews
                         initialNumToRender={3}
-                        maxToRenderPerBatch={to - from}
-                        updateCellsBatchingPeriod={(to - from) * 3}
-                        windowSize={((to - from) * 2) + 1}
+                        windowSize={30}
                         inverted
                         style={{
                             marginBottom: 60,
