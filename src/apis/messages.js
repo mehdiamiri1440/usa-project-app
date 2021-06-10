@@ -61,6 +61,8 @@ export const fetchUserChatHistory = (userId, msgCount = 10) => {
                 withAuth: true,
             })
             .then(result => {
+                if (result && result.messages && Array.isArray(result.messages))
+                    result.messages = result.messages.reverse();
                 resolve(result);
             })
             .catch(err => {

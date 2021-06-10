@@ -126,7 +126,7 @@ export default (state = INITIAL_STATE, action) => {
 
             return {
                 ...state,
-                userChatHistory: [...messages.reverse()],
+                userChatHistory: [...messages],
                 userChatHistoryData: { ...payload },
                 isSenderVerified: is_verified == 1 ? true : false,
                 userChatHistoryLoading: false,
