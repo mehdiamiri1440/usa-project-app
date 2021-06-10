@@ -35,7 +35,7 @@ if (
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-let unsubscribe, onEndReachedCalledDuringMomentum = true, isScrollToBottomButtonClicked = false;
+let unsubscribe, isScrollToBottomButtonClicked = false;
 class ChatScreen extends Component {
     constructor(props) {
         super(props);
@@ -44,7 +44,7 @@ class ChatScreen extends Component {
             messageText: '',
             isFirstLoad: true,
             from: 0,
-            to: 25,
+            to: 30,
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
@@ -381,7 +381,6 @@ class ChatScreen extends Component {
         const {
             showScrollToBottomButton
         } = this.state;
-
         if (contentOffset.y > 50) {
             if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
                 this.setState({ showScrollToBottomButton: true });
@@ -462,9 +461,9 @@ class ChatScreen extends Component {
             to
         } = this.state;
 
-        if (!onEndReachedCalledDuringMomentum && userChatHistory.length < total_count) {
+        if (userChatHistory.length < total_count) {
 
-            this.props.fetchUserChatHistory(contact.contact_id, from + 25, to + 25).then((result = {}) => {
+            this.props.fetchUserChatHistory(contact.contact_id, from + 30, to + 30).then((result = {}) => {
                 const {
                     payload = {}
                 } = result;
@@ -475,13 +474,11 @@ class ChatScreen extends Component {
 
                 this.setState({
                     userChatHistory: [...userChatHistory, ...messages],
-                    from: this.state.from + 25,
-                    to: this.state.to + 25
+                    from: this.state.from + 30,
+                    to: this.state.to + 30
                 });
-                onEndReachedCalledDuringMomentum = true;
             });
         }
-
     };
 
     keyExtractor = (_, index) => index.toString();
@@ -607,7 +604,9 @@ class ChatScreen extends Component {
             messageText,
             showGuid,
             showViolationReportFlag,
-            showScrollToBottomButton
+            showScrollToBottomButton,
+            to,
+            from
         } = this.state;
 
 
@@ -906,18 +905,18 @@ class ChatScreen extends Component {
                         extraData={this.state}
                         keyExtractor={this.keyExtractor}
                         onEndReached={this.onEndReached}
-                        onEndReachedThreshold={0.05}
+                        onEndReachedThreshold={100}
                         onScrollToIndexFailed={this.onScrollToIndexFailed}
-                        onMomentumScrollBegin={_ => onEndReachedCalledDuringMomentum = false}
                         onScroll={this.onScrollChanged}
                         ListFooterComponentStyle={{ padding: 10 }}
                         ListFooterComponent={this.renderListFooterComponent}
                         ListHeaderComponent={this.renderListHeaderComponent}
                         renderItem={this.renderItem}
                         removeClippedSubviews
-                        maxToRenderPerBatch={3}
                         initialNumToRender={3}
-                        windowSize={10}
+                        maxToRenderPerBatch={to - from}
+                        updateCellsBatchingPeriod={(to - from) * 3}
+                        windowSize={((to - from) * 2) + 1}
                         inverted
                         style={{
                             marginBottom: 60,
