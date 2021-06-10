@@ -48,21 +48,20 @@ export const fetchAllGroupList = () => {
 };
 
 
-export const fetchUserChatHistory = (userId, msgCount = 10) => {
+export const fetchUserChatHistory = (userId, from = 0, to = 25) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `get_user_chat_history`,
                 method: 'POST',
                 data: {
-                    msg_count: msgCount,
+                    from,
+                    to,
                     user_id: userId
                 },
                 withAuth: true,
             })
             .then(result => {
-                if (result && result.messages && Array.isArray(result.messages))
-                    result.messages = result.messages.reverse();
                 resolve(result);
             })
             .catch(err => {

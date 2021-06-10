@@ -43,7 +43,8 @@ class ChatScreen extends Component {
             keyboardHeight: 0,
             messageText: '',
             isFirstLoad: true,
-            msgCount: 25,
+            from: 0,
+            to: 25,
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
@@ -62,10 +63,14 @@ class ChatScreen extends Component {
         const { route = {} } = this.props;
         const { params = {} } = route;
         const { contact = {} } = params;
+        const {
+            from,
+            to
+        } = this.state;
 
         this.handleGuid();
 
-        this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => {
+        this.props.fetchUserChatHistory(contact.contact_id, from, to).then(_ => {
             this.checkForShowingRatingCard();
         });
 
@@ -77,7 +82,6 @@ class ChatScreen extends Component {
     componentDidUpdate(prevProps, prevState) {
 
         if (prevState.loaded == false && this.props.userChatHistory.length) {
-            console.log('history length', this.props.userChatHistory)
             this.fetchSenderIds()
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory], loaded: true });
         }
@@ -243,8 +247,13 @@ class ChatScreen extends Component {
             userChatHistory,
             shouldShowRatingCard: false
         }, () => {
+            const {
+                from,
+                to
+            } = this.state;
             Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`, {
-                msg_count: this.state.msgCount,
+                from,
+                to,
                 user_id: contact.contact_id
             })
         })
@@ -436,7 +445,7 @@ class ChatScreen extends Component {
         } = this.props;
 
         const {
-            total = 300
+            total_count
         } = userChatHistoryData;
 
         const {
@@ -448,12 +457,27 @@ class ChatScreen extends Component {
         } = params;
 
         const {
-            userChatHistory
+            userChatHistory,
+            from,
+            to
         } = this.state;
 
-        if (!onEndReachedCalledDuringMomentum && userChatHistory.length < total) {
-            this.setState({ msgCount: this.state.msgCount + 25 }, () => {
-                this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount);
+        if (!onEndReachedCalledDuringMomentum && userChatHistory.length < total_count) {
+
+            this.props.fetchUserChatHistory(contact.contact_id, from + 25, to + 25).then((result = {}) => {
+                const {
+                    payload = {}
+                } = result;
+
+                const {
+                    messages = []
+                } = payload;
+
+                this.setState({
+                    userChatHistory: [...userChatHistory, ...messages],
+                    from: this.state.from + 25,
+                    to: this.state.to + 25
+                });
                 onEndReachedCalledDuringMomentum = true;
             });
         }
@@ -1024,7 +1048,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
-        fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
+        fetchUserChatHistory: (id, from, to) => dispatch(messagesActions.fetchUserChatHistory(id, from, to)),
         sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),

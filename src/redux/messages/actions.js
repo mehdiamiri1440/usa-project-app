@@ -29,12 +29,12 @@ export const fetchAllContactsList = (from, to) => {
 };
 
 
-export const fetchUserChatHistory = (userId, msgCount) => {
+export const fetchUserChatHistory = (userId, from, to) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.messages
-                .fetchUserChatHistory(userId, msgCount)
+                .fetchUserChatHistory(userId, from, to)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
