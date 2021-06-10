@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Jmoment from 'moment-jalaali';
 import moment from 'moment';
 import { Button } from 'native-base';
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
