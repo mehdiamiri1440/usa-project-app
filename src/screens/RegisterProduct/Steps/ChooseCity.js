@@ -35,7 +35,6 @@ class ChooseCity extends React.Component {
         // )
         // if (!I18nManager.isRTL) {
         //     RNRestart.Restart();
-        //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
         // BackHandler.addEventListener('hardwareBackPress', _ => {
@@ -44,7 +43,6 @@ class ChooseCity extends React.Component {
         //         province,
         //         city,
         //     } = this.state;
-        //     console.log('prvo', province, 'city', city)
 
         //     if (city && province) {
         //         this.setState({ city: '', province })

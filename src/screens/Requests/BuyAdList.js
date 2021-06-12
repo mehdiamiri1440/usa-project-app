@@ -653,7 +653,6 @@ const styles = StyleSheet.create({
 });
 
 const arePropsEqual = (prevProps, nextProps) => {
-    // console.log('prevprops', prevProps, 'nextPRops', nextProps)
     if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
         prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
         !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||

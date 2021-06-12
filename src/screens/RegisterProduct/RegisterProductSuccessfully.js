@@ -44,9 +44,7 @@ class RegisterProductSuccessfully extends Component {
         // BackHandler.removeEventListener('hardwareBackPress');
     }
     // componentDidUpdate(prevProps, prevState) {
-    //     console.log('the', this.state.loaded, prevState.loaded)
     //     if (this.state.loaded == false && this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
-    //         console.log('called update')
     //         this.props.fetchBuyAdsAfterPayment().then(_ => {
     //             this.setState({ loaded: true })
     //         })

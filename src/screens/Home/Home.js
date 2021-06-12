@@ -79,7 +79,6 @@ class Home extends React.Component {
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
             )
         ) {
-            console.warn('therre')
             this.props.fetchUserProfile()
         }
     }

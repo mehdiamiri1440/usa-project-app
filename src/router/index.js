@@ -30,7 +30,6 @@ const registerAppWithFCM = async () => {
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
-  // console.disableYellowBox = true;
   const {
     userProfile = {},
     loggedInUserId

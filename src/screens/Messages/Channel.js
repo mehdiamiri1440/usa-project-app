@@ -520,7 +520,6 @@ const Channel = props => {
             tempPage = tempPage + 1;
             setPage(tempPage);
             props.fetchChannelData(tempPage).then(result => {
-                console.log('end reached', result);
                 setContents([...contents, ...result.payload.contents])
             });
             onEndReachedCalledDuringMomentum = true;

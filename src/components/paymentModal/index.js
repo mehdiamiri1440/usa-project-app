@@ -40,7 +40,6 @@ const PaymentModal = props => {
         if (!!routeTo.childScreen) {
             return props.navigation.navigate(parentScreen, { screen: childScreen, ...routeParams });
         }
-        console.warn('route para', routeParams)
         props.navigation.navigate(parentScreen, routeParams);
     };
 

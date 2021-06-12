@@ -893,7 +893,6 @@ class ChatScreen extends Component {
                             />
                         </ShadowView>
                         : null}
-                    {console.log('here', this.state.userChatHistory)}
 
                     <FlatList
                         keyboardShouldPersistTaps='handled'

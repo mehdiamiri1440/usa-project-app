@@ -185,7 +185,6 @@ class ProductMoreDetails extends Component {
             })
         }
         this.setState(state => {
-            console.log('state', state.defaultFieldsOptions, 'index', selectedIndex)
             this.state.detailsArray[index].itemKey = value;
             state.deletedIndexes.push(selectedIndex);
             if (selectedIndex > -1) {
@@ -265,7 +264,7 @@ class ProductMoreDetails extends Component {
                                     }}
                                 >
                                     {locales('labels.example')} :
-                            </Text>
+                                </Text>
                                 <Text
                                     style={{
                                         color: '#666666',
@@ -289,7 +288,7 @@ class ProductMoreDetails extends Component {
                                     }}
                                 >
                                     {locales('labels.example')} :
-                            </Text>
+                                </Text>
                                 <Text
                                     style={{
                                         color: '#666666',

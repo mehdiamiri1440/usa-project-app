@@ -57,18 +57,15 @@ class ContactsList extends Component {
             // this.props.emptyMessage(false)
             this.props.fetchAllContactsList(this.state.from, this.state.to);
             unsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
-                // console.log('message reciev from fcm in contacts list when notification opend app', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
             });
 
             unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
-                // console.log('message reciev from fcm in contacts list when app was in background', remoteMessage)
                 this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
             });
             unsubscribe = messaging().onMessage(async remoteMessage => {
                 if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
                     this.props.newMessageReceived(true)
-                    console.warn('message reciev from fcm in contacts list', remoteMessage)
                     this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => this.setState({ loaded: false }));
                 }
             });
@@ -78,10 +75,8 @@ class ContactsList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // console.warn('wear1111', prevState.loaded)
 
         if (prevState.loaded == false && this.props.contactsList.length) {
-            // console.warn('wear', prevState.loaded)
             this.setState({ contactsList: this.props.contactsList, contactsListData: { ...this.props.contactsListData }, loaded: true });
         }
         if (prevProps.refresh != this.props.refresh) {

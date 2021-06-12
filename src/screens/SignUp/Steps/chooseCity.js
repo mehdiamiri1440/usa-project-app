@@ -32,7 +32,6 @@ class ChooseCity extends React.Component {
         this.props.fetchAllProvinces();
         // if (!I18nManager.isRTL) {
         //     RNRestart.Restart();
-        //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
     }

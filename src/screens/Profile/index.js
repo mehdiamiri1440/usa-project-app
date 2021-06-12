@@ -223,7 +223,6 @@ class Profile extends PureComponent {
         //         // dismissed
         //     }
         // } catch (error) {
-        //     console.log(error.message);
         // }
         const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${this.props.route && this.props.route.params && this.props.route.params.user_name || ''}`;
 

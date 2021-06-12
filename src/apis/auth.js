@@ -156,7 +156,6 @@ export const changeRole = () => {
                 withAuth: true,
             })
             .then(result => {
-                console.log('ressss', result)
                 resolve(result);
             })
             .catch(err => {

@@ -33,7 +33,6 @@ const MyRequests = props => {
             props.fetchMyRequests();
             setDeleteModalFlag(false);
         })
-            .catch(error => console.warn('err', error))
     };
 
     const renderItem = ({ item }) => {

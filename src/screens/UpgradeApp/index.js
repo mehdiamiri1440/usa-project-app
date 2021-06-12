@@ -47,7 +47,6 @@ class UpgradeApp extends Component {
         download.promise
             .then(result => {
                 if (result.statusCode == 200) {
-                    console.warn('er', result)
                     RNApkInstallerN.install(filePath);
                     this.setState({ downloadingUpdate: false });
                 }
