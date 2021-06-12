@@ -154,54 +154,49 @@ const App = (props) => {
 
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1
+      }}
+    >
       {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
         <View
           style={{
+            backgroundColor: '#000546',
+            bottom: '7%',
+            paddingHorizontal: 10,
             position: 'absolute',
             alignItems: 'center',
-            justifyContent: 'flex-end',
-            zIndex: 9999,
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            width: deviceWidth,
-            height: deviceHeight,
-            flex: 1
-          }}
-        >
-          <View style={{
-            backgroundColor: '#000546',
-            bottom: 78,
-            height: 50,
-            width: deviceWidth,
-            paddingHorizontal: 10,
-            alignItems: 'center',
+            flexDirection: 'row-reverse',
             justifyContent: 'flex-start',
-            flexDirection: 'row-reverse'
+            zIndex: 9999,
+            width: deviceWidth,
+            height: 40,
           }}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 14,
-                marginHorizontal: 3,
-                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-              }}
-            >
-              {locales('labels.pleaseWait')}
-            </Text>
-            <ActivityIndicator
-              size={20}
-              color="white"
-            />
-          </View>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 14,
+              marginHorizontal: 3,
+              fontFamily: 'IRANSansWeb(FaNum)_Medium',
+            }}
+          >
+            {locales('labels.pleaseWait')}
+          </Text>
+          <ActivityIndicator
+            size={20}
+            color="white"
+          />
         </View>
-        : null}
-
+        :
+        null
+      }
       <AppNavigator
         initialRoute={initialRoute}
         loggedInUserId={loggedInUserId}
         {...props}
       />
-    </>
+    </View>
 
   )
 }

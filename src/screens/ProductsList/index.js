@@ -32,6 +32,7 @@ import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -58,6 +59,8 @@ class ProductsList extends PureComponent {
             totalCategoriesModalFlag: false,
             modals: [],
             isFilterApplied: false,
+            preFetchLoading: true,
+            showRefreshButton: false,
         }
 
     }
@@ -67,6 +70,9 @@ class ProductsList extends PureComponent {
     categoryFiltersRef = createRef();
 
     componentDidMount() {
+
+        this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
+
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -139,14 +145,83 @@ class ProductsList extends PureComponent {
 
     }
 
+    componentWillUnmount() {
+        return this.blurListener;
+    }
+
+    handleScreenBlured = _ => {
+        const {
+            productsListArray = []
+        } = this.state;
+
+        let tempProductsList = productsListArray.slice(0, 16);
+        AsyncStorage.setItem('@productsList', JSON.stringify(tempProductsList));
+
+    };
+
     initialCalls = _ => {
         return new Promise.all([
-            this.fetchAllProducts(),
+            this.getItemsFromStorage(),
             this.props.fetchAllProvinces(),
             this.props.fetchAllCategories()
         ])
             .then(result => resolve(result))
             .catch(error => reject(error))
+    };
+
+    AreArraysTheSame = (pFromProps = [], pFromState = []) => {
+        for (let iFromProps = 0; iFromProps < pFromProps.length; iFromProps++)
+            if (pFromState.every(item => item?.main?.id != pFromProps[iFromProps]?.main?.id))
+                return false;
+        return true;
+    };
+
+    getItemsFromStorage = _ => {
+        AsyncStorage.getItem('@productsList').then(resultFromStorage => {
+
+            const {
+                from_record_number,
+                to_record_number,
+                sort_by,
+            } = this.state;
+
+            const {
+                loggedInUserId
+            } = this.props;
+
+            let item = {
+                from_record_number,
+                sort_by,
+                to_record_number,
+            };
+
+            resultFromStorage = JSON.parse(resultFromStorage);
+            if (!resultFromStorage || !Array.isArray(resultFromStorage) || !resultFromStorage.length) {
+                this.fetchAllProducts();
+            }
+            else {
+                this.setState({ productsListArray: resultFromStorage, preFetchLoading: false });
+                this.props.fetchAllProductsList(item, !!loggedInUserId).then((resultFromProps = {}) => {
+
+                    const {
+                        payload = {}
+                    } = resultFromProps;
+
+                    const {
+                        products = []
+                    } = payload;
+
+
+                    if (products && products.length && resultFromStorage && resultFromStorage.length && products.length == resultFromStorage.length) {
+                        const condition = this.AreArraysTheSame(products, resultFromStorage);
+                        this.setState({ showRefreshButton: !condition });
+                    }
+                });
+            }
+        })
+            .catch(_ => {
+                this.fetchAllProducts();
+            })
     };
 
     fetchAllProducts = (itemFromResult, scrollObject = {}) => {
@@ -192,6 +267,8 @@ class ProductsList extends PureComponent {
                     totalCategoriesModalFlag: false,
 
                     locationsFlag: false,
+
+                    preFetchLoading: false,
 
                     productsListArray: [...result?.payload?.products]
                 }, _ => this.scrollToTop({ ...scrollObject, result }));
@@ -735,10 +812,11 @@ class ProductsList extends PureComponent {
         } = user_info;
 
         const {
-            loaded
+            loaded,
+            preFetchLoading
         } = this.state;
 
-        if (!productsListLoading)
+        if (!productsListLoading && !preFetchLoading)
             return (
                 <View
                     style={{
@@ -800,7 +878,7 @@ class ProductsList extends PureComponent {
                             </View>}
                 </View>
             )
-        if (!loaded || productsListLoading) {
+        if (!loaded || productsListLoading || preFetchLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
@@ -1454,7 +1532,8 @@ class ProductsList extends PureComponent {
             showModal,
             totalCategoriesModalFlag,
             modals,
-            isFilterApplied
+            isFilterApplied,
+            showRefreshButton
         } = this.state;
 
 
@@ -1475,6 +1554,56 @@ class ProductsList extends PureComponent {
                     backgroundColor: 'white'
                 }}
             >
+                {showRefreshButton ?
+                    <TouchableOpacity
+                        onPress={_ => {
+                            this.setState({
+                                from_record_number: 0,
+                                to_record_number: 16,
+
+                                searchLoader: false,
+
+                                sortModalFlag: false,
+
+                                subCategoriesModalFlag: false,
+
+                                totalCategoriesModalFlag: false,
+
+                                locationsFlag: false,
+
+                                preFetchLoading: false,
+
+                                showRefreshButton: false,
+
+                                productsListArray: [...this.props.productsListArray]
+                            });
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '30%',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 16,
+                            paddingVertical: 5,
+                            paddingHorizontal: 10,
+                            backgroundColor: 'black',
+                            zIndex: 999999999
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
+                            }}
+                        >
+                            {locales('labels.newProducts')}
+                        </Text>
+                    </TouchableOpacity>
+                    : null
+                }
                 <NoConnection
                     closeModal={this.setShowModal}
                     showModal={showModal}
@@ -1782,7 +1911,7 @@ class ProductsList extends PureComponent {
                     initialNumToRender={4}
                     numColumns={2}
                     // getItemLayout={(data, index) => (
-                    //     { length: data.length, offset: 100 * index, index }
+                    //     { length: data.length, offset: 280 * index, index }
                     // )}
                     style={{
                         backgroundColor: 'white'

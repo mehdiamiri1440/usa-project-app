@@ -37,7 +37,8 @@ class Settings extends React.Component {
                 '@IsNewSignedUpUser',
                 '@ratedChats',
                 '@sender_ids',
-                '@registerProductParams'
+                '@registerProductParams',
+                '@productsList',
             ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {

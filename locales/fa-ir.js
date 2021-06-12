@@ -25,6 +25,7 @@ export default {
     "labels.man": "آقا",
     'labels.putAMessage': 'پیامی بگذارید',
     'labels.searchBuyAdRequest': 'جستجوی درخواست خرید',
+    'labels.newProducts': 'محصولات جدید',
     'labels.suggestedSellers': 'فروشندگان پیشنهادی',
     'labels.yesterday': 'دیروز',
     'labels.startFromOneYear': 'شروع از یک سال',
