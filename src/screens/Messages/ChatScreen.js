@@ -619,16 +619,16 @@ class ChatScreen extends Component {
                     {showScrollToBottomButton ?
                         <FontAwesome5
                             name='angle-double-down'
-                            color='white'
-                            size={18}
+                            color='#333333'
+                            size={14}
                             solid
                             onPress={_ => this.scrollToTop()}
                             style={{
-                                backgroundColor: '#00C569',
+                                backgroundColor: '#FFFFFF',
                                 padding: 10,
-                                width: 40,
-                                height: 40,
-                                borderRadius: 20,
+                                width: 37,
+                                height: 37,
+                                borderRadius: 18.5,
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                                 alignItems: 'center',
