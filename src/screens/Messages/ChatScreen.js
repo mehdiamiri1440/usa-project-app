@@ -432,8 +432,6 @@ class ChatScreen extends Component {
 
         if (conditions)
             this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: 0 });
-
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     };
 
     onEndReached = _ => {
@@ -914,7 +912,8 @@ class ChatScreen extends Component {
                         renderItem={this.renderItem}
                         removeClippedSubviews
                         initialNumToRender={3}
-                        windowSize={30}
+                        maxToRenderPerBatch={5}
+                        windowSize={10}
                         inverted
                         style={{
                             marginBottom: 60,
