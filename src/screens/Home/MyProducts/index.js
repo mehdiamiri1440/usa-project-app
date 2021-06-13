@@ -45,6 +45,9 @@ class MyProducts extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
+        if (this.props.myProductsArray.length != prevProps.myProductsArray.length) {
+            this.setState({ myProductsArray: this.props.myProductsArray });
+        }
         if (this.state.loaded == false && this.props.myProductsArray.length) {
             this.setState({
                 loaded: true,
@@ -167,9 +170,6 @@ class MyProducts extends Component {
                     keyboardShouldPersistTaps='handled'
                     refreshing={myProductsLoading}
                     ListEmptyComponent={this.renderMyPorductListEmptyComponent()}
-                    // getItemLayout={(data, index) => (
-                    //     { length: deviceHeight * 0.39, offset: deviceHeight * 0.39 * index, index }
-                    // )}
                     extraData={this.state}
                     onEndReached={() => {
                         if (loaded && myProductsArray.length >= this.state.to_record_number)
@@ -181,11 +181,9 @@ class MyProducts extends Component {
                                     this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
                                         this.setState({ loaded: false })
                                     })
-                                // .catch(_ => this.setState({ showModal: true }));
                             })
                     }}
-                    // initialNumToRender={2}
-                    // initialScrollIndex={0}
+
                     onRefresh={() => {
                         if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
                             this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name).then(_ => {
@@ -194,7 +192,6 @@ class MyProducts extends Component {
                                     , refreshed: true, from_record_number: 0, to_record_number: 15
                                 })
                             })
-                        // .catch(_ => this.setState({ showModal: true }));
                     }
                     }
                     onEndReachedThreshold={0.2}

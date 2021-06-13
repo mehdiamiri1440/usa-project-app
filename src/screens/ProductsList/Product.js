@@ -134,6 +134,17 @@ class Product extends PureComponent {
 
 
     onSubmit = () => {
+        const {
+            productItem = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = productItem;
+        const {
+            user_name
+        } = user_info;
+
 
         let { minimumOrder, maximumPrice, minimumPrice, amount } = this.state;
 
@@ -184,10 +195,13 @@ class Product extends PureComponent {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchAllProducts();
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
+                    return new Promise.all([
+                        this.props.fetchAllProducts(),
+                        this.props.fetchAllMyProducts(user_name)
+                    ]);
                 });
             }).catch(_ => {
                 const { editProductMessage } = this.props;
@@ -195,10 +209,13 @@ class Product extends PureComponent {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchAllProducts();
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
+                    return new Promise.all([
+                        this.props.fetchAllProducts(),
+                        this.props.fetchAllMyProducts(user_name)
+                    ]);
                 });
             });
         }
@@ -208,15 +225,22 @@ class Product extends PureComponent {
 
     deleteProduct = id => {
         this.props.deleteProduct(id).then(_ => {
-            const { deleteProductMessage } = this.props;
+            const { deleteProductMessage, productItem = {} } = this.props;
+            const { user_info = {} } = productItem;
+            const {
+                user_name
+            } = user_info;
             this.setState({
                 showDeletationMessage: true,
                 deleteMessageText: deleteProductMessage
             }, () => {
-                this.props.fetchAllProducts();
                 setTimeout(() => {
                     this.setState({ showDeletationMessage: false, deleteProductFlag: false })
                 }, 4000);
+                return new Promise.all([
+                    this.props.fetchAllProducts(),
+                    this.props.fetchAllMyProducts(user_name)
+                ]);
             });
         }).catch(_ => {
             const { deleteProductMessage } = this.props;
@@ -224,10 +248,13 @@ class Product extends PureComponent {
                 showDeletationMessage: true,
                 deleteMessageText: deleteProductMessage
             }, () => {
-                this.props.fetchAllProducts();
                 setTimeout(() => {
                     this.setState({ showDeletationMessage: false, deleteProductFlag: false })
                 }, 4000);
+                return new Promise.all([
+                    this.props.fetchAllProducts(),
+                    this.props.fetchAllMyProducts(user_name)
+                ]);
             });
         });
     };
@@ -1711,6 +1738,7 @@ const mapDispatchToProps = (dispatch) => {
         editProduct: product => dispatch(productListActions.editProduct(product)),
         walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
+        fetchAllMyProducts: userName => dispatch(productListActions.fetchAllMyProducts(userName)),
     }
 };
 
