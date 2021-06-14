@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView,
-    RefreshControl, Linking
+    RefreshControl, Linking, ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Label, InputGroup, Button } from 'native-base';
@@ -193,7 +193,7 @@ const Wallet = props => {
                                         }}
                                     >
                                         Buskool.com
-                        </Text>
+                                    </Text>
                                 </View>
                                 <View
                                     style={{
@@ -201,37 +201,54 @@ const Wallet = props => {
                                         alignItems: 'center',
                                     }}
                                 >
+                                    {!userProfileLoading ?
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                color: 'white',
+                                                fontSize: 35,
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            {formatter.numberWithCommas(wallet_balance)} <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    color: 'white',
+                                                    fontWeight: '200',
+                                                    fontSize: 25,
+                                                }}
+                                            >
+                                                {locales('titles.toman')}
+                                            </Text>
+                                        </Text>
+                                        :
+                                        <ActivityIndicator
+                                            size={30}
+                                            color='white'
+                                        />
+                                    }
+                                </View>
+
+                                {!userProfileLoading ?
                                     <Text
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                             color: 'white',
-                                            fontSize: 35,
-                                            textAlign: 'center'
+                                            fontSize: 20,
+                                            marginHorizontal: 5
                                         }}
                                     >
-                                        {formatter.numberWithCommas(wallet_balance)} <Text
-                                            style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                color: 'white',
-                                                fontWeight: '200',
-                                                fontSize: 25,
-                                            }}
-                                        >
-                                            {locales('titles.toman')}
-                                        </Text>
+                                        {`${first_name} ${last_name}`}
                                     </Text>
-                                </View>
-
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: 'white',
-                                        fontSize: 20,
-                                        marginHorizontal: 5
-                                    }}
-                                >
-                                    {`${first_name} ${last_name}`}
-                                </Text>
+                                    :
+                                    <ActivityIndicator
+                                        size={30}
+                                        color='white'
+                                        style={{
+                                            alignSelf: 'flex-end',
+                                        }}
+                                    />
+                                }
                             </ImageBackground>
                         </TouchableOpacity>
                     </View>
@@ -290,7 +307,7 @@ const Wallet = props => {
                             }}
                         >
                             150,000
-                    </Text>
+                        </Text>
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -320,7 +337,7 @@ const Wallet = props => {
                             }}
                         >
                             100,000
-                    </Text>
+                        </Text>
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -349,7 +366,7 @@ const Wallet = props => {
                             }}
                         >
                             50,000
-                    </Text>
+                        </Text>
                         <Text
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -438,7 +455,7 @@ const Wallet = props => {
                     colors={['#21AD93', '#00C569']}
                 >
                     <TouchableOpacity
-                        onPress={onSubmit}
+                        onPress={_ => !userProfileLoading && onSubmit()}
                     >
                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.increaseInventory')}</Text>
 

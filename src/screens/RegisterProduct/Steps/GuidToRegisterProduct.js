@@ -105,6 +105,7 @@ class GuidToRegisterProduct extends React.Component {
         let {
             userPermissionToRegisterProductLoading,
             userPermissionToRegisterProductError,
+            userProfileLoading
         } = this.props;
         let { showModal } = this.state;
 
@@ -333,7 +334,7 @@ class GuidToRegisterProduct extends React.Component {
                     <TouchableOpacity
                         style={{ alignSelf: 'center' }}
                         activeOpacity={1}
-                        onPress={() => this.onSubmit()}
+                        onPress={() => !userProfileLoading && this.onSubmit()}
                     >
                         <LinearGradient
                             start={{ x: 0, y: 1 }}
@@ -561,6 +562,7 @@ const mapStateToProps = (state) => {
         userPermissionToRegisterProductFailed: state.registerProductReducer.userPermissionToRegisterProductFailed,
         isUserLimitedToRegisterProduct: state.registerProductReducer.isUserLimitedToRegisterProduct,
         userPermissionToRegisterProductStatus: state.registerProductReducer.userPermissionToRegisterProductStatus,
+        userProfileLoading: state.profileReducer.userProfileLoading,
     }
 };
 

@@ -238,6 +238,7 @@ class Home extends React.Component {
 
         return (
             <View
+                pointerEvents={!userProfileLoading ? 'auto' : 'box-only'}
                 style={{ flex: 1 }}
             >
 
@@ -753,7 +754,8 @@ class Home extends React.Component {
 
 export const WalletPreview = props => {
     const {
-        userProfile = {}
+        userProfile = {},
+        userProfileLoading
     } = props;
     const {
         user_info = {}
@@ -827,27 +829,39 @@ export const WalletPreview = props => {
                     </Text>
                 </View>
 
-                <Text
-                    style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: 'white',
-                        fontSize: 30,
-                        top: -10,
-                        marginHorizontal: 5
-                    }}
-                >
-                    {`${numberWithCommas(wallet_balance)}`} <Text
+                {!userProfileLoading ?
+                    <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             color: 'white',
-                            fontSize: 20,
-                            fontWeight: '200',
-                            marginHorizontal: 5,
+                            fontSize: 30,
+                            top: -10,
+                            marginHorizontal: 5
                         }}
                     >
-                        {locales('titles.toman')}
+                        {`${numberWithCommas(wallet_balance)}`} <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: 'white',
+                                fontSize: 20,
+                                fontWeight: '200',
+                                marginHorizontal: 5,
+                            }}
+                        >
+                            {locales('titles.toman')}
+                        </Text>
                     </Text>
-                </Text>
+                    :
+                    <ActivityIndicator
+                        size={30}
+                        color='white'
+                        style={{
+                            alignSelf: 'flex-end',
+                            top: -10,
+                            marginHorizontal: 5
+                        }}
+                    />
+                }
             </ImageBackground>
         </TouchableOpacity >
     )

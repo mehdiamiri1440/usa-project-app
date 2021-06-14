@@ -159,7 +159,7 @@ const App = (props) => {
         flex: 1
       }}
     >
-      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
+      {/* {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
         <View
           style={{
             backgroundColor: '#000546',
@@ -190,7 +190,7 @@ const App = (props) => {
         </View>
         :
         null
-      }
+      }  */}
       <AppNavigator
         initialRoute={initialRoute}
         loggedInUserId={loggedInUserId}
