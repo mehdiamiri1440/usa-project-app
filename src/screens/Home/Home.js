@@ -238,7 +238,6 @@ class Home extends React.Component {
 
         return (
             <View
-                pointerEvents={!userProfileLoading ? 'auto' : 'box-only'}
                 style={{ flex: 1 }}
             >
 
