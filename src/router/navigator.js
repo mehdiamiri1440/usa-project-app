@@ -46,7 +46,7 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isModalsSeen = false;
+let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isRatingModalsSeen = false, isModalsSeen = false;
 const routes = props => {
 
     const {
@@ -80,9 +80,13 @@ const routes = props => {
 
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
+    const [showRatingModal, setShowRatingModal] = useState(false);
+
     const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
 
     useEffect(() => {
+
+        checkForShowingRatingModal();
 
         AppState.addEventListener('change', handleAppStateChange);
 
@@ -150,6 +154,23 @@ const routes = props => {
                 }
             }
         )
+    };
+
+    const checkForShowingRatingModal = _ => {
+        if (!!loggedInUserId)
+            AsyncStorage.getItem('@ratingModalSeenUsers')
+                .then(result => {
+                    result = JSON.parse(result);
+                    if (!result || !result.length) {
+                        isRatingModalsSeen = true;
+                        return setShowRatingModal(true);
+                    }
+
+                    if (result.some(item => item == loggedInUserId))
+                        return;
+                    isRatingModalsSeen = true;
+                    return setShowRatingModal(true);
+                });
     };
 
     const checkForShowingContactInfoGuid = _ => {
@@ -250,6 +271,26 @@ const routes = props => {
         AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
     };
 
+    const closeRatingModal = _ => {
+        isRatingModalsSeen = false;
+        setShowRatingModal(false);
+        AsyncStorage.getItem('@ratingModalSeenUsers')
+            .then(result => {
+
+                result = JSON.parse(result);
+
+                if (!result || !result.length)
+                    result = [];
+
+                if (!!loggedInUserId)
+                    result.push(loggedInUserId);
+
+                result = [... new Set(result)].filter(item => !!item);
+
+                AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result))
+            });
+    };
+
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
         const routesNotToShow = [
@@ -282,6 +323,8 @@ const routes = props => {
         const canGoBack = navigationRef?.current?.canGoBack();
         if (isModalsSeen)
             closePromotionModal();
+        if (isRatingModalsSeen)
+            closeRatingModal();
         else {
             if (canGoBack) {
                 navigationRef?.current?.goBack();
@@ -318,6 +361,92 @@ const routes = props => {
 
     return (
         <>
+            {showRatingModal ?
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        onDismiss={closeRatingModal}
+                        dismissable
+                        visible={showRatingModal}
+                        style={styles.dialogWrapper}
+                    >
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={closeRatingModal}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.postComment')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+
+                            <FontAwesome5 name="star" solid color="#FFBB00" size={70} />
+
+                        </View>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={styles.mainTextDialogModal}>
+                                {locales('labels.satisfyWithBuskool')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions
+                            style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                alignItems: 'center',
+                                flexDirection: 'row-reverse',
+                                padding: 0
+                            }}>
+                            <Button
+                                style={[styles.loginButton, { width: '45%' }]}
+                                onPress={() => {
+                                    closeRatingModal();
+                                    Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                                        if (!!supported) {
+                                            Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                                        } else {
+                                            Linking.openURL('https://play.google.com')
+                                        }
+                                    })
+                                        .catch(() => {
+                                            Linking.openURL('https://play.google.com')
+                                        })
+                                }}
+                            >
+
+                                <Text style={[styles.closeButtonText, { color: 'white' }]}>
+                                    {locales('labels.yes')}
+                                </Text>
+                            </Button>
+                            <Button
+                                style={[styles.loginButton, { width: '45%', backgroundColor: '#BEBEBE' }]}
+                                onPress={closeRatingModal}
+                            >
+
+                                <Text style={[styles.closeButtonText, { color: 'white' }]}>
+                                    {locales('labels.no')}
+                                </Text>
+                            </Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal >
+                :
+                null
+            }
+
             {showPromotionModal ?
                 <Portal
                     style={{

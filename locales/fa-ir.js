@@ -220,6 +220,7 @@ export default {
     'labels.home': 'خانه',
     'labels.specialSeller': 'فروشنده ویژه',
     'labels.buyers': 'خریداران',
+    'labels.satisfyWithBuskool': 'آیا از باسکول راضی هستید ؟',
     'labels.suggestedBuyersForYou': 'خریداران پیشنهادی از طرف',
     'labels.suggestedSellersForYou': 'فروشندگان پیشنهادی از طرف',
     'labels.forYourRequest': ' برای درخواست شما',
