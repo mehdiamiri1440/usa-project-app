@@ -28,36 +28,41 @@ class ChooseCity extends React.Component {
     }
     provinceRef = React.createRef();
     cityRef = React.createRef();
+    isComponentMounted = false;
 
     componentDidMount() {
-        this.fetchLocations(false)
-        // }
-        // )
-        // if (!I18nManager.isRTL) {
-        //     RNRestart.Restart();
-        //     I18nManager.forceRTL(true);
-        // }
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+            this.fetchLocations(false)
+            // }
+            // )
+            // if (!I18nManager.isRTL) {
+            //     RNRestart.Restart();
+            //     I18nManager.forceRTL(true);
+            // }
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-        //     const {
-        //         province,
-        //         city,
-        //     } = this.state;
+            //     const {
+            //         province,
+            //         city,
+            //     } = this.state;
 
-        //     if (city && province) {
-        //         this.setState({ city: '', province })
-        //         return true;
-        //     }
+            //     if (city && province) {
+            //         this.setState({ city: '', province })
+            //         return true;
+            //     }
 
-        //     if (!city && province) {
-        //         this.setState({ province: '' })
-        //         return true;
-        //     }
-        //     if (!city && !province) {
-        //         this.props.changeStep(2);
-        //         return true;
-        //     }
-        // });
+            //     if (!city && province) {
+            //         this.setState({ province: '' })
+            //         return true;
+            //     }
+            //     if (!city && !province) {
+            //         this.props.changeStep(2);
+            //         return true;
+            //     }
+            // });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -68,11 +73,20 @@ class ChooseCity extends React.Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener();
         // if (I18nManager.isRTL) {
         //     I18nManager.forceRTL(false);
         // }
     }
+
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(3);
+        return true;
+    };
+
 
     fetchLocations = isFromUpdate => {
         // this.props.fetchAllProvinces().then(_ => {
@@ -210,7 +224,7 @@ class ChooseCity extends React.Component {
                 style={{ margin: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
+                    onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(3)}
                     style={[styles.backButtonContainer, { flex: 1 }]}
                     rounded
                 >

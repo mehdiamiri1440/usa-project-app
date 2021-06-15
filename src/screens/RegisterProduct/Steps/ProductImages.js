@@ -26,19 +26,31 @@ class ProductImages extends Component {
         }
     }
 
+    isComponentMounted = false;
     componentDidMount() {
-        const { images } = this.props;
-        this.setState({ images, loaded: true });
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
-        //     this.props.changeStep(3)
-        //     return false;
-        // })
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+            const { images } = this.props;
+            this.setState({ images, loaded: true });
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
+            //     this.props.changeStep(3)
+            //     return false;
+            // })
+        }
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener()
     }
 
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(4);
+        return true;
+    };
 
     chooseProductImage = (index) => ActionSheet.show(
         {
@@ -339,7 +351,7 @@ class ProductImages extends Component {
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
-                            onPress={() => this.props.changeStep(3)}
+                            onPress={() => this.props.changeStep(4)}
                             style={styles.backButtonContainer}
                             rounded
                         >

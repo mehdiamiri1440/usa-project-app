@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity, BackHandler } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,6 +30,7 @@ class GuidToRegisterProduct extends React.Component {
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
             Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
                 if (componentType === 'Component') {
                     analytics().logScreenView({
@@ -61,7 +62,13 @@ class GuidToRegisterProduct extends React.Component {
 
     componentWillUnmount() {
         this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
     }
+
+
+    handleHardWareBackButtonPressed = _ => {
+
+    };
 
     animateTheArrow = _ => {
         const { animation } = this.state;
@@ -90,7 +97,7 @@ class GuidToRegisterProduct extends React.Component {
 
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {
-                changeStep(1);
+                changeStep(2);
             }
             else {
                 this.setState({ showModal: true })

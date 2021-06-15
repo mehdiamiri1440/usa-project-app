@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path, G, Circle } from "react-native-svg";
 import { Button, Input, Label, InputGroup } from 'native-base';
@@ -405,6 +405,9 @@ class SelectCategory extends Component {
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
+
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+
             this.props.fetchAllCategories().then(_ => {
                 const { category, subCategory, productType, categoriesList } = this.props;
 
@@ -446,6 +449,7 @@ class SelectCategory extends Component {
 
     componentWillUnmount() {
         this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener('hardwareBackPress');
     }
 
@@ -477,6 +481,11 @@ class SelectCategory extends Component {
     //         })
     //     }
     // };
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(1);
+        return true;
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({

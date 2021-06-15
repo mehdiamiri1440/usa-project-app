@@ -1,7 +1,7 @@
 // import react-native element
 import React, { Component } from 'react';
 import { Button, Textarea, InputGroup, Label } from 'native-base';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -23,22 +23,33 @@ class ProductDecription extends Component {
 
 
     descriptionRef = React.createRef();
-
+    isComponentMounted = false;
     componentDidMount() {
-        if (this.props.description) {
-            const { description } = this.props;
-            this.descriptionRef.current.value = description;
-            this.setState({ description })
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+            if (this.props.description) {
+                const { description } = this.props;
+                this.descriptionRef.current.value = description;
+                this.setState({ description })
+            }
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
+            //     this.props.changeStep(4)
+            //     return false;
+            // })
         }
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
-        //     this.props.changeStep(4)
-        //     return false;
-        // })
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener();
     }
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(5);
+        return true;
+    };
 
     onDescriptionSubmit = field => {
         this.setState(() => ({
@@ -159,7 +170,7 @@ class ProductDecription extends Component {
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
                         </Button>
                         <Button
-                            onPress={() => this.props.changeStep(4)}
+                            onPress={() => this.props.changeStep(5)}
                             style={styles.backButtonContainer}
                             rounded
                         >

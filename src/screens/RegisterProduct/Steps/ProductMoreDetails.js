@@ -128,7 +128,14 @@ class ProductMoreDetails extends Component {
     }
     pickerRef = React.createRef();
 
+    isComponentMounted = false;
+
     componentDidMount() {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+
+        }
         // BackHandler.addEventListener('hardwareBackPress', _ => {
         //     this.props.changeStep(5)
         //     return false;
@@ -136,9 +143,16 @@ class ProductMoreDetails extends Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener();
     }
 
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(6);
+        return true;
+    };
 
     onSubmit = () => {
         let { detailsArray } = this.state;
@@ -466,7 +480,7 @@ class ProductMoreDetails extends Component {
 
                             </Button>
                             <Button
-                                onPress={() => this.props.changeStep(5)}
+                                onPress={() => this.props.changeStep(6)}
                                 style={[styles.backButtonContainer]}
                                 rounded
                             >

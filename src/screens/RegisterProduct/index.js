@@ -63,7 +63,7 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 0,
+            stepNumber: 1,
             showModal: false,
             subCategoryName: '',
             subCategoryId: null,
@@ -80,6 +80,7 @@ class RegisterProduct extends React.Component {
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed)
             analytics().logEvent('register_product');
             this.props.fetchUserProfile();
             // global.resetRegisterProduct = data => {
@@ -90,15 +91,9 @@ class RegisterProduct extends React.Component {
             if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
                 this.mainContainer.current.scrollTo({ y: 0 });
 
-            BackHandler.addEventListener('hardwareBackPress', () => {
-                if (this.state.stepNumber > 1) {
-                    this.setState({ stepNumber: this.state.stepNumber - 1 })
-                    return true;
-                }
-            })
 
             if (this.props.resetTab) {
-                this.changeStep(0);
+                this.changeStep(1);
                 this.props.resetRegisterProduct(false);
             }
         }
@@ -108,26 +103,33 @@ class RegisterProduct extends React.Component {
 
         const { stepNumber } = this.state;
 
-        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading && stepNumber <= 6) {
+        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading && stepNumber <= 7) {
             this.mainContainer.current.scrollTo({ y: 0 });
         }
 
         if (this.props.resetTab) {
             this.props.resetRegisterProduct(false);
-            this.changeStep(0);
+            this.changeStep(1);
         }
 
-        if (this.props.resetTab && stepNumber == 7) {
+        if (this.props.resetTab && stepNumber == 8) {
             this.props.resetRegisterProduct(false);
-            this.setState({ stepNumber: 0 })
+            this.setState({ stepNumber: 1 })
         }
     }
 
     componentWillUnmount() {
         this.isComponentMounted = false;
         this.setState({ successfullAlert: false })
-        BackHandler.removeEventListener();
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
     }
+
+    handleHardWareBackButtonPressed = _ => {
+        if (this.state.stepNumber > 2) {
+            this.setState({ stepNumber: this.state.stepNumber - 1 })
+            return true;
+        }
+    };
 
     changeStep = stepNumber => {
         this.setState({ stepNumber })
@@ -135,23 +137,23 @@ class RegisterProduct extends React.Component {
 
     setProductType = (productType, category, subCategory, subCategoryName) => {
         AsyncStorage.setItem('@registerProductParams', JSON.stringify({ subCategoryId: subCategory, subCategoryName }))
-        this.setState({ productType, category, subCategory, subCategoryId: subCategory, subCategoryName, stepNumber: 2 });
+        this.setState({ productType, category, subCategory, subCategoryId: subCategory, subCategoryName, stepNumber: 3 });
     };
 
     setStockAndPrice = (minimumOrder, maximumPrice, minimumPrice, amount) => {
-        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, stepNumber: 3 });
+        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount, stepNumber: 4 });
     };
 
     setCityAndProvice = (city, province) => {
-        this.setState({ city, province, stepNumber: 4 });
+        this.setState({ city, province, stepNumber: 5 });
     };
 
     setProductImages = images => {
-        this.setState({ productFiles: images, images, stepNumber: 5 });
+        this.setState({ productFiles: images, images, stepNumber: 6 });
     };
 
     setProductDescription = description => {
-        this.setState({ description, stepNumber: 6 });
+        this.setState({ description, stepNumber: 7 });
     };
 
     getItemDescription = (itemKey, defaultFieldsOptions) => {
@@ -277,7 +279,7 @@ class RegisterProduct extends React.Component {
                     images: '',
                     province: '',
                 })
-                this.changeStep(7);
+                this.changeStep(8);
             })
             // .catch(_ => this.setState({ showModal: true }))
         })
@@ -307,14 +309,15 @@ class RegisterProduct extends React.Component {
         } = this.props;
 
         switch (stepNumber) {
-            case 0: {
+            case 1: {
                 return <GuidToRegisterProduct
                     setShowModal={this.setShowModal}
                     setProductType={this.setProductType}
-                    changeStep={this.changeStep} {...this.props}
+                    changeStep={this.changeStep}
+                    {...this.props}
                 />
             }
-            case 1: {
+            case 2: {
                 return <SelectCategory
                     setProductType={this.setProductType}
                     changeStep={this.changeStep} {...this.props}
@@ -323,7 +326,7 @@ class RegisterProduct extends React.Component {
                     productType={productType}
                 />
             }
-            case 2: {
+            case 3: {
                 return <StockAndPrice
                     minimumOrder={minimumOrder}
                     maximumPrice={maximumPrice}
@@ -331,24 +334,24 @@ class RegisterProduct extends React.Component {
                     amount={amount}
                     changeStep={this.changeStep} setStockAndPrice={this.setStockAndPrice} {...this.props} />
             }
-            case 3: {
+            case 4: {
                 return <ChooseCity
                     city={city} province={province
                     } changeStep={this.changeStep} setCityAndProvice={this.setCityAndProvice}  {...this.props} />
             }
-            case 4: {
+            case 5: {
                 return <ProductImages
                     images={images} changeStep={this.changeStep} setProductImages={this.setProductImages} {...this.props} />
             }
-            case 5: {
+            case 6: {
                 return <ProductDescription
                     description={description}
                     changeStep={this.changeStep} setProductDescription={this.setProductDescription} {...this.props} />
             }
-            case 6: {
+            case 7: {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
             }
-            case 7: {
+            case 8: {
                 return (
                     <>
                         <RegisterProductSuccessfully
@@ -389,10 +392,10 @@ class RegisterProduct extends React.Component {
             <>
 
                 {/* <Loading /> */}
-                {stepNumber == 7 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
+                {stepNumber == 8 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
-                    routeParams={{ subCategoryId, subCategoryName, buyAds, changeStep: this.changeStep }}
+                    routeParams={{ subCategoryId, subCategoryName, buyAds }}
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 /> : null}
@@ -465,7 +468,7 @@ class RegisterProduct extends React.Component {
                     >
 
 
-                        {stepNumber > 0 && stepNumber < 7 && <View style={{
+                        {stepNumber > 1 && stepNumber < 8 && <View style={{
                             paddingVertical: 10,
                             width: deviceWidth, marginVertical: 5,
                             flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
@@ -488,7 +491,7 @@ class RegisterProduct extends React.Component {
                                                     alignSelf: 'center', alignContent: 'center',
                                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                     textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
+                                                    backgroundColor: stepNumber > item ? "#00C569" : '#BEBEBE',
                                                     width: 20, height: 20, borderRadius: 10
 
                                                 }}
@@ -500,7 +503,7 @@ class RegisterProduct extends React.Component {
                                                     height: 2,
                                                     flex: 1,
                                                     alignSelf: 'center',
-                                                    backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
+                                                    backgroundColor: stepNumber - 1 > item ? "#00C569" : '#BEBEBE',
                                                 }}>
                                             </View>
                                             }
