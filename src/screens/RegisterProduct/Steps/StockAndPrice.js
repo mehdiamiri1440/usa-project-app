@@ -39,19 +39,23 @@ class StockAndPrice extends Component {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
 
+    isComponentMounted = false;
 
     componentDidMount() {
-        const { minimumOrder, maximumPrice, minimumPrice, amount } = this.props;
-        this.amountRef.current.value = amount;
-        this.minimumPriceRef.current.value = minimumPrice;
-        this.maximumPriceRef.current.value = maximumPrice;
-        this.minimumOrderRef.current.value = minimumOrder;
-        this.setState({ minimumOrder, maximumPrice, minimumPrice, amount });
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
-        //     this.props.changeStep(1);
-        //     return true;
-        // });
-        this.props.fetchAllProvinces();
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            const { minimumOrder, maximumPrice, minimumPrice, amount } = this.props;
+            this.amountRef.current.value = amount;
+            this.minimumPriceRef.current.value = minimumPrice;
+            this.maximumPriceRef.current.value = maximumPrice;
+            this.minimumOrderRef.current.value = minimumOrder;
+            this.setState({ minimumOrder, maximumPrice, minimumPrice, amount });
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
+            //     this.props.changeStep(1);
+            //     return true;
+            // });
+            this.props.fetchAllProvinces();
+        }
     }
 
 
@@ -63,6 +67,7 @@ class StockAndPrice extends Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
         // BackHandler.removeEventListener()
     }
 

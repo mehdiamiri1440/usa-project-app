@@ -400,47 +400,52 @@ class SelectCategory extends Component {
 
     productTypxdeRef = React.createRef();
 
+    isComponentMounted = false;
 
     componentDidMount() {
-        this.props.fetchAllCategories().then(_ => {
-            const { category, subCategory, productType, categoriesList } = this.props;
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            this.props.fetchAllCategories().then(_ => {
+                const { category, subCategory, productType, categoriesList } = this.props;
 
-            if (this.productTypeRef && this.productTypeRef.current)
-                this.productTypeRef.current.value = productType;
+                if (this.productTypeRef && this.productTypeRef.current)
+                    this.productTypeRef.current.value = productType;
 
-            this.setState({
-                category, subCategory, productType,
-                subCategoriesTogether: categoriesList.map(item => item.subcategories),
-                categoriesList,
-                loaded: true,
-                subCategoriesList: category && categoriesList && categoriesList.length ?
-                    Object.values(categoriesList.find(item => item.id == category).subcategories)
-                    : []
-            })
+                this.setState({
+                    category, subCategory, productType,
+                    subCategoriesTogether: categoriesList.map(item => item.subcategories),
+                    categoriesList,
+                    loaded: true,
+                    subCategoriesList: category && categoriesList && categoriesList.length ?
+                        Object.values(categoriesList.find(item => item.id == category).subcategories)
+                        : []
+                })
 
-        });
+            });
 
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-        //     const {
-        //         category,
-        //         subCategory,
-        //     } = this.state;
+            //     const {
+            //         category,
+            //         subCategory,
+            //     } = this.state;
 
-        //     if (subCategory && category) {
-        //         this.setState({ subCategory: '' })
-        //     }
+            //     if (subCategory && category) {
+            //         this.setState({ subCategory: '' })
+            //     }
 
-        //     else if (category) {
-        //         this.setState({ category: '' })
-        //     }
-        //     return true;
-        // });
+            //     else if (category) {
+            //         this.setState({ category: '' })
+            //     }
+            //     return true;
+            // });
 
+        }
     }
 
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
         // BackHandler.removeEventListener('hardwareBackPress');
     }
 

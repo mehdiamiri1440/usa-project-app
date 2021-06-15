@@ -25,20 +25,25 @@ class GuidToRegisterProduct extends React.Component {
         }
     }
 
+    isComponentMounted = false;
+
     componentDidMount() {
-        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
-            if (componentType === 'Component') {
-                analytics().logScreenView({
-                    screen_name: componentName,
-                    screen_class: componentName,
-                });
-            }
-        });
-        analytics().logScreenView({
-            screen_name: "GuidToRegisterProduct",
-            screen_class: "GuidToRegisterProduct",
-        });
-        this.animateTheArrow();
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+                if (componentType === 'Component') {
+                    analytics().logScreenView({
+                        screen_name: componentName,
+                        screen_class: componentName,
+                    });
+                }
+            });
+            analytics().logScreenView({
+                screen_name: "GuidToRegisterProduct",
+                screen_class: "GuidToRegisterProduct",
+            });
+            this.animateTheArrow();
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -54,6 +59,9 @@ class GuidToRegisterProduct extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.isComponentMounted = false;
+    }
 
     animateTheArrow = _ => {
         const { animation } = this.state;
