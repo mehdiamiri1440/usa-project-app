@@ -61,6 +61,7 @@ class ProductsList extends PureComponent {
             isFilterApplied: false,
             preFetchLoading: true,
             showRefreshButton: false,
+            categoriesList: []
         }
 
     }
@@ -154,8 +155,16 @@ class ProductsList extends PureComponent {
             productsListArray = []
         } = this.state;
 
+        const {
+            categoriesList = []
+        } = this.props;
+
         let tempProductsList = productsListArray.slice(0, 16);
-        AsyncStorage.setItem('@productsList', JSON.stringify(tempProductsList));
+        AsyncStorage.multiSet([
+            ['@productsList', JSON.stringify(tempProductsList)],
+            ['@categoriesList', JSON.stringify(categoriesList)],
+        ]
+        );
 
     };
 
@@ -163,7 +172,6 @@ class ProductsList extends PureComponent {
         return new Promise.all([
             this.getItemsFromStorage(),
             this.props.fetchAllProvinces(),
-            this.props.fetchAllCategories()
         ])
             .then(result => resolve(result))
             .catch(error => reject(error))
@@ -177,7 +185,13 @@ class ProductsList extends PureComponent {
     };
 
     getItemsFromStorage = _ => {
-        AsyncStorage.getItem('@productsList').then(resultFromStorage => {
+        AsyncStorage.multiGet(['@productsList', '@categoriesList']).then(multiGetResult => {
+
+            let resultFromStorage = JSON.parse(multiGetResult[0][1]);
+            let categoriesListFromStorage = JSON.parse(multiGetResult[1][1]);
+
+            this.props.fetchAllCategories().then(_ => this.setState({ categoriesList: this.props.categoriesList }));
+            this.setState({ categoriesList: categoriesListFromStorage ?? [] });
 
             const {
                 from_record_number,
@@ -195,7 +209,6 @@ class ProductsList extends PureComponent {
                 to_record_number,
             };
 
-            resultFromStorage = JSON.parse(resultFromStorage);
             if (!resultFromStorage || !Array.isArray(resultFromStorage) || !resultFromStorage.length) {
                 this.fetchAllProducts();
             }
@@ -1502,7 +1515,6 @@ class ProductsList extends PureComponent {
         const {
             productsListLoading,
 
-            categoriesList,
             categoriesLoading,
 
             allProvincesObject,
@@ -1533,7 +1545,8 @@ class ProductsList extends PureComponent {
             totalCategoriesModalFlag,
             modals,
             isFilterApplied,
-            showRefreshButton
+            showRefreshButton,
+            categoriesList,
         } = this.state;
 
 
