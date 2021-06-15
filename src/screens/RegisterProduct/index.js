@@ -74,7 +74,35 @@ class RegisterProduct extends React.Component {
         }
     }
 
+    isComponentMounted = false;
     mainContainer = React.createRef();
+
+    componentDidMount() {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            analytics().logEvent('register_product');
+            this.props.fetchUserProfile();
+            // global.resetRegisterProduct = data => {
+            //     if (data) {
+            //         this.changeStep(0);
+            //     }
+            // }
+            if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
+                this.mainContainer.current.scrollTo({ y: 0 });
+
+            BackHandler.addEventListener('hardwareBackPress', () => {
+                if (this.state.stepNumber > 1) {
+                    this.setState({ stepNumber: this.state.stepNumber - 1 })
+                    return true;
+                }
+            })
+
+            if (this.props.resetTab) {
+                this.changeStep(0);
+                this.props.resetRegisterProduct(false);
+            }
+        }
+    }
 
     componentDidUpdate(prevProps, prevState) {
 
@@ -95,32 +123,8 @@ class RegisterProduct extends React.Component {
         }
     }
 
-    componentDidMount() {
-        analytics().logEvent('register_product');
-        this.props.fetchUserProfile();
-        // global.resetRegisterProduct = data => {
-        //     if (data) {
-        //         this.changeStep(0);
-        //     }
-        // }
-        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
-            this.mainContainer.current.scrollTo({ y: 0 });
-
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.state.stepNumber > 1) {
-                this.setState({ stepNumber: this.state.stepNumber - 1 })
-                return true;
-            }
-        })
-
-        if (this.props.resetTab) {
-            this.changeStep(0);
-            this.props.resetRegisterProduct(false);
-        }
-    }
-
-
     componentWillUnmount() {
+        this.isComponentMounted = false;
         this.setState({ successfullAlert: false })
         BackHandler.removeEventListener();
     }
@@ -128,8 +132,6 @@ class RegisterProduct extends React.Component {
     changeStep = stepNumber => {
         this.setState({ stepNumber })
     };
-
-
 
     setProductType = (productType, category, subCategory, subCategoryName) => {
         AsyncStorage.setItem('@registerProductParams', JSON.stringify({ subCategoryId: subCategory, subCategoryName }))
@@ -144,7 +146,6 @@ class RegisterProduct extends React.Component {
         this.setState({ city, province, stepNumber: 4 });
     };
 
-
     setProductImages = images => {
         this.setState({ productFiles: images, images, stepNumber: 5 });
     };
@@ -152,9 +153,10 @@ class RegisterProduct extends React.Component {
     setProductDescription = description => {
         this.setState({ description, stepNumber: 6 });
     };
+
     getItemDescription = (itemKey, defaultFieldsOptions) => {
         return defaultFieldsOptions.find((item) => itemKey == item.name).description;
-    }
+    };
 
     setDetailsArray = (detailsArray, defaultArray, defaultFieldsOptions) => {
         const { productType } = this.state;
@@ -190,6 +192,7 @@ class RegisterProduct extends React.Component {
 
 
     };
+
     toLatinNumbers = (num) => {
         if (num == null) {
             return null;
@@ -207,7 +210,7 @@ class RegisterProduct extends React.Component {
             .replace(/[\u06f0-\u06f9]/g, function (c) {
                 return c.charCodeAt(0) - 0x06f0;
             });
-    }
+    };
 
     submitAllSteps = () => {
         let {
@@ -279,13 +282,18 @@ class RegisterProduct extends React.Component {
             // .catch(_ => this.setState({ showModal: true }))
         })
 
-    }
+    };
 
     setShowModal = _ => {
         this.setState({ showModal: true })
     };
 
     setSelectedButton = id => this.setState({ selectedButton: id })
+
+    closeModal = _ => {
+        this.setState({ showModal: false })
+        this.componentDidMount();
+    };
 
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
@@ -361,14 +369,7 @@ class RegisterProduct extends React.Component {
             default:
                 break;
         }
-
     };
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount();
-    };
-
 
     render() {
         let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
@@ -556,8 +557,10 @@ class RegisterProduct extends React.Component {
                 </View >
             </>
         )
-    }
-}
+    };
+
+};
+
 const styles = StyleSheet.create({
     stepsContainer: {
         marginVertical: 5,
@@ -701,7 +704,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         padding: 10,
     },
-})
+});
 
 const mapStateToProps = (state) => {
     const {
@@ -737,4 +740,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterProduct);
