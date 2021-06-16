@@ -410,61 +410,68 @@ class RegisterRequest extends Component {
     amountRef = React.createRef();
     productTypeRef = React.createRef();
 
+    isComponentMounted = false;
+
     componentDidMount() {
-        analytics().logEvent('register_buyAd')
-        global.resetRegisterProduct = data => {
-            if (data) {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            analytics().logEvent('register_buyAd')
+            global.resetRegisterProduct = data => {
+                if (data) {
+                    this.props.navigation.navigate('RegisterRequest')
+                }
+            }
+            if (this.props.resetTab) {
+                this.props.resetRegisterProduct(false);
                 this.props.navigation.navigate('RegisterRequest')
             }
+            this.props.fetchAllCategories().then(_ => {
+                const { category, subCategory, productType, categoriesList } = this.props;
+
+                if (this.productTypeRef && this.productTypeRef.current)
+                    this.productTypeRef.current.value = productType;
+
+                this.setState({
+                    category, subCategory, productType,
+                    subCategoriesTogether: categoriesList.map(item => item.subcategories),
+                    categoriesList,
+                    loaded: true,
+                    subCategoriesList: category && categoriesList && categoriesList.length ?
+                        Object.values(categoriesList.find(item => item.id == category).subcategories)
+                        : []
+                })
+
+            });
+
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed)
         }
-        if (this.props.resetTab) {
-            this.props.resetRegisterProduct(false);
-            this.props.navigation.navigate('RegisterRequest')
-        }
-        this.props.fetchAllCategories().then(_ => {
-            const { category, subCategory, productType, categoriesList } = this.props;
-
-            if (this.productTypeRef && this.productTypeRef.current)
-                this.productTypeRef.current.value = productType;
-
-            this.setState({
-                category, subCategory, productType,
-                subCategoriesTogether: categoriesList.map(item => item.subcategories),
-                categoriesList,
-                loaded: true,
-                subCategoriesList: category && categoriesList && categoriesList.length ?
-                    Object.values(categoriesList.find(item => item.id == category).subcategories)
-                    : []
-            })
-
-        });
-
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-
-            const {
-                category,
-                subCategory,
-            } = this.state;
-
-            if (subCategory && category) {
-                this.setState({ subCategory: '' })
-                return true;
-            }
-
-            if (category) {
-                this.setState({ category: '' })
-                return true;
-            }
-            return false;
-        });
-
     }
 
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
     }
 
+    handleHardWareBackButtonPressed = _ => {
+
+        const {
+            category,
+            subCategory,
+        } = this.state;
+
+        if (subCategory && category) {
+            this.setState({ subCategory: '' })
+            return true;
+        }
+
+        if (category) {
+            this.setState({ category: '' })
+            return true;
+        }
+
+        return false;
+    };
 
     emptyState = () => {
         this.setState({
