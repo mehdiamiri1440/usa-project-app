@@ -86,6 +86,24 @@ const routes = props => {
 
     useEffect(() => {
 
+        fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+            .then(res => {
+                res.text().then(result => {
+                    const resultOfVersion = JSON.parse(result);
+                    if (
+                        '1.0.0.01' !==
+                        resultOfVersion.versionName.toString()
+                    ) {
+                        if (!resultOfVersion.forceUpdate) {
+                            setUpdateModalFlag(true);
+                        }
+                        else {
+                            navigationRef?.current?.navigate('UpgradeApp')
+                        }
+                    }
+                });
+            })
+
         checkForShowingRatingModal();
 
         AppState.addEventListener('change', handleAppStateChange);

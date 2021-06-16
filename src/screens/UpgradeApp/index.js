@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Text, View, Image, StyleSheet } from "react-native";
 import RNApkInstallerN from 'react-native-apk-installer-n';
 import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 import { Button, } from "native-base";
 import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 import LinearGradient from "react-native-linear-gradient";
@@ -31,51 +32,67 @@ class UpgradeApp extends Component {
         const { user_info = {} } = userProfile;
         const { is_seller } = user_info;
         const filePath =
-            RNFS.DocumentDirectoryPath + '/com.domain.example.apk';
-        const download = RNFS.downloadFile({
-            fromUrl: versionData.apkUrl,
-            toFile: filePath,
-            progress: data => {
-                const percentage =
-                    ((100 * data.bytesWritten) / data.contentLength) | 0;
-                this.setState({ appUpdateProgress: percentage });
-            },
-            background: true,
-            progressDivider: 1,
-        });
+            RNFS.DocumentDirectoryPath + '/com.buskool.apk';
 
-        download.promise
-            .then(result => {
-                if (result.statusCode == 200) {
-                    RNApkInstallerN.install(filePath);
-                    this.setState({ downloadingUpdate: false });
-                }
-                else {
-                    this.props.navigation.pop()
-                    if (loggedInUserId) {
-                        if (is_seller) {
-                            return this.props.navigation.navigate('RegisterProductStack');
-                        }
-                        else {
-                            this.props.navigation.navigate('RegisterRequestStack');
-                        }
-                    }
-                    else {
-                        this.props.navigation.navigate('SignUp');
-                    }
-                }
+        RNFetchBlob.config({
+            addAndroidDownloads: {
+                useDownloadManager: true,
+                title: 'awesome.apk',
+                description: 'An APK that will be installed',
+                mime: 'application/vnd.android.package-archive',
+                mediaScannable: true,
+                notification: true,
+                path: RNFetchBlob.fs.dirs.DownloadDir + "/buskool.apk" //add
+            }
+        })
+            .fetch('GET', versionData.apkUrl)
+            .then((res) => {
+                RNFetchBlob.android.actionViewIntent(res.path(), 'application/vnd.android.package-archive')
             })
-            .catch(err => {
-                this.props.navigation.pop()
-                if (loggedInUserId) {
-                    if (is_seller)
-                        this.props.navigation.navigate('RegisterProductStack')
-                    else
-                        this.props.navigation.navigate('RegisterRequestStack')
-                }
-                else
-                    this.props.navigation.navigate('SignUp')
-            });
+        // const download = RNFS.downloadFile({
+        //     fromUrl: versionData.apkUrl,
+        //     toFile: filePath,
+        //     progress: data => {
+        //         const percentage =
+        //             ((100 * data.bytesWritten) / data.contentLength) | 0;
+        //         this.setState({ appUpdateProgress: percentage });
+        //     },
+        //     background: true,
+        //     progressDivider: 1,
+        // });
+
+        // download.promise
+        //     .then(result => {
+        //         if (result.statusCode == 200) {
+        //             RNApkInstallerN.install(filePath);
+        //             this.setState({ downloadingUpdate: false });
+        //         }
+        //         else {
+        //             this.props.navigation.pop()
+        //             if (loggedInUserId) {
+        //                 if (is_seller) {
+        //                     return this.props.navigation.navigate('RegisterProductStack');
+        //                 }
+        //                 else {
+        //                     this.props.navigation.navigate('RegisterRequestStack');
+        //                 }
+        //             }
+        //             else {
+        //                 this.props.navigation.navigate('Home');
+        //             }
+        //         }
+        //     })
+        //     .catch(err => {
+        //         this.props.navigation.pop()
+        //         if (loggedInUserId) {
+        //             if (is_seller)
+        //                 this.props.navigation.navigate('RegisterProductStack')
+        //             else
+        //                 this.props.navigation.navigate('RegisterRequestStack')
+        //         }
+        //         else
+        //             this.props.navigation.navigate('Home')
+        //     });
     };
 
 
@@ -124,7 +141,7 @@ class UpgradeApp extends Component {
 
                     }}>
                         درحال بروز رسانی
-                     </Text>
+                    </Text>
                     <View
                         style={{
                             marginTop: 7,

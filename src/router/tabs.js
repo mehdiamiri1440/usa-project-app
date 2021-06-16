@@ -296,7 +296,14 @@ export const MyBuskoolStack = _ => {
                 name='ContactInfoGuid'
                 component={ContactInfoGuid}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
         </Stack.Navigator >
     )
 };
@@ -473,6 +480,14 @@ export const MessagesStack = _ => (
             name='Chat'
             component={Chat}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`UpgradeApp`}
+            component={UpgradeApp}
+        />
 
     </Stack.Navigator>
 )
@@ -505,6 +520,14 @@ export const RequestsStack = _ => (
             key='Chat'
             name='Chat'
             component={Chat}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`UpgradeApp`}
+            component={UpgradeApp}
         />
 
     </Stack.Navigator>
@@ -590,6 +613,14 @@ export const HomeStack = _ => {
                 name='StartUp'
                 component={StartUp}
             />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
 
         </Stack.Navigator>
     )
@@ -666,7 +697,14 @@ export const SpecialProductsStack = _ => {
                 name='Chat'
                 component={Chat}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
         </Stack.Navigator>
     )
 };
