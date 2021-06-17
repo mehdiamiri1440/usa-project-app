@@ -116,8 +116,6 @@ const routes = props => {
 
             isReadyRef.current = true;
 
-
-
             AppState.removeEventListener('change', handleAppStateChange);
 
             BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
@@ -1001,6 +999,7 @@ const routes = props => {
                 }
 
             </NavigationContainer >
+
             {souldShowSellerButton ?
                 <TouchableOpacity
                     activeOpacity={1}
