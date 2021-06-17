@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import DeviceInfo from 'react-native-device-info';
@@ -46,7 +45,13 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isRatingModalsSeen = false, isModalsSeen = false;
+let currentRoute = '',
+    promotionModalTimeout,
+    modalTimeout,
+    guidModalTimeout,
+    isRatingModalsSeen = false,
+    isModalsSeen = false;
+
 const routes = props => {
 
     const {
@@ -84,25 +89,13 @@ const routes = props => {
 
     const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
 
+    const [isUpgradeModuleRaised, setIsUpgradeModuleRaised] = useState(false);
+
+
     useEffect(() => {
 
-        fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-            .then(res => {
-                res.text().then(result => {
-                    const resultOfVersion = JSON.parse(result);
-                    if (
-                        '1.0.0.01' !==
-                        resultOfVersion.versionName.toString()
-                    ) {
-                        if (!resultOfVersion.forceUpdate) {
-                            setUpdateModalFlag(true);
-                        }
-                        else {
-                            navigationRef?.current?.navigate('UpgradeApp')
-                        }
-                    }
-                });
-            })
+        if (!isUpgradeModuleRaised)
+            upgradeAppFromServer();
 
         checkForShowingRatingModal();
 
@@ -133,7 +126,6 @@ const routes = props => {
     }, [loggedInUserId, shouldDoAsyncJobs, userProfile])
 
 
-    const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
 
     const handleAppStateChange = (nextAppState) => {
@@ -143,6 +135,27 @@ const routes = props => {
             // checkForShowingContactInfoGuid();
             checkForShowingPromotionModal();
         }
+    };
+
+    const upgradeAppFromServer = _ => {
+        setIsUpgradeModuleRaised(true);
+        fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+            .then(res => {
+                res.text().then(result => {
+                    const resultOfVersion = JSON.parse(result);
+                    if (
+                        DeviceInfo.getVersion().toString() !==
+                        resultOfVersion.versionName.toString()
+                    ) {
+                        if (!resultOfVersion.forceUpdate) {
+                            setUpdateModalFlag(true);
+                        }
+                        else {
+                            navigationRef?.current?.navigate('UpgradeApp')
+                        }
+                    }
+                });
+            });
     };
 
     const checkForUpdate = _ => {
