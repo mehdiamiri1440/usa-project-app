@@ -1,16 +1,12 @@
 
 
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Text, View, Image, StyleSheet } from "react-native";
-import RNApkInstallerN from 'react-native-apk-installer-n';
-import RNFS from 'react-native-fs';
+import { Text, View, Image } from "react-native";
 import RNFetchBlob from 'rn-fetch-blob';
-import { Button, } from "native-base";
-import { deviceWidth, deviceHeight } from "../../utils/deviceDimenssions";
 import LinearGradient from "react-native-linear-gradient";
 
 import * as versionData from '../../../version.json';
+import { permissions } from "../../utils";
 
 class UpgradeApp extends Component {
     constructor(props) {
@@ -21,78 +17,29 @@ class UpgradeApp extends Component {
         }
     }
 
-    componentDidMount() {
-        this.appUpdate()
+    async componentDidMount() {
+        const isAllowedToWriteInExternalStorage = await permissions.requestWriteToExternalStoragePermission();
+        if (!isAllowedToWriteInExternalStorage)
+            return this.props.navigation.navigate('Home');
+        return this.appUpdate();
     }
 
 
 
     appUpdate = () => {
-        const { userProfile = {}, loggedInUserId } = this.props;
-        const { user_info = {} } = userProfile;
-        const { is_seller } = user_info;
-        const filePath =
-            RNFS.DocumentDirectoryPath + '/com.buskool.apk';
-
         RNFetchBlob.config({
-            addAndroidDownloads: {
-                useDownloadManager: true,
-                title: 'awesome.apk',
-                description: 'An APK that will be installed',
-                mime: 'application/vnd.android.package-archive',
-                mediaScannable: true,
-                notification: true,
-                path: RNFetchBlob.fs.dirs.DownloadDir + "/buskool.apk" //add
-            }
+            path: RNFetchBlob.fs.dirs.DownloadDir + "/buskool.apk",
+            fileCache: true,
         })
             .fetch('GET', versionData.apkUrl)
-            .then((res) => {
-                RNFetchBlob.android.actionViewIntent(res.path(), 'application/vnd.android.package-archive')
+            .progress({ interval: 100 }, (received, total) => {
+                this.setState({
+                    appUpdateProgress: Math.floor(received / total * 100)
+                })
             })
-        // const download = RNFS.downloadFile({
-        //     fromUrl: versionData.apkUrl,
-        //     toFile: filePath,
-        //     progress: data => {
-        //         const percentage =
-        //             ((100 * data.bytesWritten) / data.contentLength) | 0;
-        //         this.setState({ appUpdateProgress: percentage });
-        //     },
-        //     background: true,
-        //     progressDivider: 1,
-        // });
-
-        // download.promise
-        //     .then(result => {
-        //         if (result.statusCode == 200) {
-        //             RNApkInstallerN.install(filePath);
-        //             this.setState({ downloadingUpdate: false });
-        //         }
-        //         else {
-        //             this.props.navigation.pop()
-        //             if (loggedInUserId) {
-        //                 if (is_seller) {
-        //                     return this.props.navigation.navigate('RegisterProductStack');
-        //                 }
-        //                 else {
-        //                     this.props.navigation.navigate('RegisterRequestStack');
-        //                 }
-        //             }
-        //             else {
-        //                 this.props.navigation.navigate('Home');
-        //             }
-        //         }
-        //     })
-        //     .catch(err => {
-        //         this.props.navigation.pop()
-        //         if (loggedInUserId) {
-        //             if (is_seller)
-        //                 this.props.navigation.navigate('RegisterProductStack')
-        //             else
-        //                 this.props.navigation.navigate('RegisterRequestStack')
-        //         }
-        //         else
-        //             this.props.navigation.navigate('Home')
-        //     });
+            .then((res) => {
+                return RNFetchBlob.android.actionViewIntent(res.path(), 'application/vnd.android.package-archive')
+            })
     };
 
 
@@ -140,7 +87,7 @@ class UpgradeApp extends Component {
 
 
                     }}>
-                        درحال بروز رسانی
+                        {locales('labels.inUpdating')}
                     </Text>
                     <View
                         style={{
@@ -204,16 +151,6 @@ class UpgradeApp extends Component {
             </View>
         )
     }
-}
-
-
-
-const mapStateToProps = (state) => {
-
-    return {
-        loggedInUserId: state.authReducer.loggedInUserId,
-        userProfile: state.profileReducer.userProfile,
-    }
 };
 
-export default connect(mapStateToProps)(UpgradeApp)
+export default UpgradeApp;
