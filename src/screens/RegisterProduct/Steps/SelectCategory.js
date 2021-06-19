@@ -483,7 +483,20 @@ class SelectCategory extends Component {
     // };
 
     handleHardWareBackButtonPressed = _ => {
-        this.props.changeStep(1);
+        const {
+            category,
+            subCategory,
+        } = this.state;
+
+        if (subCategory && category) {
+            this.setState({ subCategory: '' })
+        }
+
+        else if (category) {
+            this.setState({ category: '' })
+        }
+        else
+            this.props.changeStep(1);
         return true;
     };
 

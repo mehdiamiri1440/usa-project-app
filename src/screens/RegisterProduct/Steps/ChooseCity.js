@@ -83,7 +83,20 @@ class ChooseCity extends React.Component {
 
 
     handleHardWareBackButtonPressed = _ => {
-        this.props.changeStep(3);
+        const {
+            province,
+            city,
+        } = this.state;
+
+        if (city && province) {
+            this.setState({ city: '' })
+        }
+
+        else if (province) {
+            this.setState({ province: '' })
+        }
+        else
+            this.props.changeStep(3);
         return true;
     };
 
