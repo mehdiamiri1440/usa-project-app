@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Text, View, Image } from "react-native";
 import RNFetchBlob from 'rn-fetch-blob';
 import LinearGradient from "react-native-linear-gradient";
-
 import * as versionData from '../../../version.json';
 import { permissions } from "../../utils";
 
@@ -29,7 +28,6 @@ class UpgradeApp extends Component {
     appUpdate = () => {
         RNFetchBlob.config({
             path: RNFetchBlob.fs.dirs.DownloadDir + "/buskool.apk",
-            fileCache: true,
         })
             .fetch('GET', versionData.apkUrl)
             .progress({ interval: 100 }, (received, total) => {

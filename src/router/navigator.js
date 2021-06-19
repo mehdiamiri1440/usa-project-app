@@ -15,11 +15,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { REACT_APP_API_ENDPOINT_RELEASE, APP_UPDATE_TYPE } from '@env';
 import DeviceInfo from 'react-native-device-info';
 import Axios from 'axios';
-
 import moment from 'moment';
+
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -94,16 +94,18 @@ const routes = props => {
 
     useEffect(() => {
 
-        if (!isUpgradeModuleRaised)
-            upgradeAppFromServer();
-
         checkForShowingRatingModal();
 
         AppState.addEventListener('change', handleAppStateChange);
 
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
         if (shouldDoAsyncJobs) {
-            checkForUpdate();
+            if (APP_UPDATE_TYPE == 'google')
+                checkForUpdate();
+            else {
+                if (!isUpgradeModuleRaised)
+                    upgradeAppFromServer();
+            }
         }
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
@@ -735,16 +737,23 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
                                 onPress={() => {
-                                    Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps').then((supported) => {
-                                        if (!!supported) {
-                                            Linking.openURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
-                                        } else {
-                                            Linking.openURL('https://play.google.com')
-                                        }
-                                    })
-                                        .catch(() => {
-                                            Linking.openURL('https://play.google.com')
-                                        })
+                                    if (APP_UPDATE_TYPE == 'google') {
+                                        Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
+                                            .then((supported) => {
+                                                if (!!supported) {
+                                                    Linking.openURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
+                                                } else {
+                                                    Linking.openURL('https://play.google.com')
+                                                }
+                                            })
+                                            .catch(() => {
+                                                Linking.openURL('https://play.google.com')
+                                            })
+                                    }
+                                    else {
+                                        setUpdateModalFlag(false);
+                                        navigationRef?.current?.navigate('UpgradeApp');
+                                    }
                                 }}
                             >
 
