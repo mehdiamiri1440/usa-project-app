@@ -546,12 +546,12 @@ const Channel = props => {
             {showScrollToBottomButton ?
                 <FontAwesome5
                     name='angle-double-down'
-                    color='white'
+                    color='#333333'
                     size={18}
                     solid
                     onPress={_ => scrollToTop()}
                     style={{
-                        backgroundColor: '#00C569',
+                        backgroundColor: '#FFFFFF',
                         padding: 10,
                         width: 40,
                         height: 40,
