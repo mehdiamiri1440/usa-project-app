@@ -2,26 +2,17 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
-  Text,
   I18nManager,
   View,
-  ActivityIndicator,
   NativeModules
 } from 'react-native';
 import { connect } from 'react-redux';
-import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { isReadyRef } from './rootNavigation';
-import * as RootNavigation from './rootNavigation';
-import { deviceWidth, deviceHeight } from '../utils';
 import { routeToScreensFromNotifications } from './linking';
-
 import AppNavigator from './navigator';
-
-
 
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();

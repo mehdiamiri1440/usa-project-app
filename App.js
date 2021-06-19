@@ -2,15 +2,17 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
-import Router from './src/router'
+import { ToastAndroid } from 'react-native';
 import configureStore, { persistor } from './src/redux/configureStore';
+import NetInfo from "@react-native-community/netinfo";
 
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Root } from 'native-base';
+import Router from './src/router'
 
-const store = configureStore()
+const store = configureStore();
 
 const theme = {
   ...DefaultTheme,
@@ -29,6 +31,7 @@ const customTextProps = {
     direction: 'rtl',
   }
 };
+
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
@@ -43,43 +46,30 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // messaging().getInitialNotification(async remoteMessage => {
-    //   store.dispatch(messageActions.newMessageReceived(true))
-    // });
-    // messaging().onNotificationOpenedApp(async remoteMessage => {
-    //   store.dispatch(messageActions.newMessageReceived(true))
-    // });
+  netInfoStat = null;
 
-    // messaging().setBackgroundMessageHandler(async remoteMessage => {
-    //   store.dispatch(messageActions.newMessageReceived(true))
-    // });
-    // if (I18nManager.isRTL) {
-    //   I18nManager.forceRTL(false);
-    //   I18nManager.allowRTL(false);
-    //   RNRestart.Restart();
-    // }
-    // NetInfo.addEventListener(this.handleConnectivityChange);
+  componentDidMount() {
+    this.netInfoStat = NetInfo.addEventListener(this.handleConnectivityChange);
   }
 
-  // componentWillUnmount() {
-  //   NetInfo.removeEventListener(this.handleConnectivityChange);
-  // }
+  componentWillUnmoSunt() {
+    return this.netInfoStat;
+  }
 
-
-
-  // handleConnectivityChange = state => {
-  //   if (!state.isConnected) {
-  //     return ToastAndroid.showWithGravity(
-  //       'اتصال شما به اینترنت دچار مشکل شده‌است .',
-  //       ToastAndroid.LONG,
-  //       ToastAndroid.CENTER
-  //     );
-  //   }
-  // };
+  handleConnectivityChange = ({
+    isInternetReachable,
+    isConnected
+  }) => {
+    if (!isConnected || !isInternetReachable) {
+      return ToastAndroid.showWithGravity(
+        'اتصال شما به اینترنت دچار مشکل شده‌است .',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
+    }
+  };
 
   render() {
-
     return (
       <>
         <Provider store={store}>
@@ -96,5 +86,6 @@ class App extends React.Component {
       </>
     )
   }
-}
+};
+
 export default App;
