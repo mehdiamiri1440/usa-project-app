@@ -32,10 +32,6 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
-global.initialProfileRoute = 'HomeIndex';
-global.routes = [];
-global.changed = false;
-global.productIds = [];
 global.shouldShowRibbon = true;
 
 class App extends React.Component {

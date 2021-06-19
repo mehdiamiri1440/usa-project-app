@@ -72,8 +72,7 @@ export const MyBuskoolStack = _ => {
                 gestureEnabled: true,
 
             }}
-            initialRouteName={global.initialProfileRoute}
-        // initialRouteName={'ChangeRole'}
+            initialRouteName='HomeIndex'
         >
             <Stack.Screen
                 options={({ navigation, route }) => ({

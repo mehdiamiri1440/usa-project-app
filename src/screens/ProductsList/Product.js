@@ -963,9 +963,6 @@ class Product extends PureComponent {
                                     analytics().logEvent('show_product_in_seperate_page', {
                                         product_id: productId
                                     });
-                                    // this.props.navigation.setParams({ productId, key: productId })
-                                    // routes.push(productId);
-                                    // global.productIds.push(productId);
                                     this.props.navigation.navigate('ProductDetails', { productId })
                                 }}
                                 style={{

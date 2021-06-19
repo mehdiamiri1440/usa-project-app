@@ -96,7 +96,6 @@ class EditProfile extends Component {
                 setTimeout(() => {
                     this.props.fetchUserProfile();
                 }, 1000);
-                // global.initialProfileRoute = 'EditProfile'
             });
         }).catch(err => {
             if (err.data && err.data.errors)
