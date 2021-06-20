@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
+import { View, Text, Pressable, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Body, Card, CardItem, Label, InputGroup, Input, Button } from 'native-base';
@@ -641,7 +641,10 @@ class RegisterRequest extends Component {
 
     renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -669,7 +672,7 @@ class RegisterRequest extends Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };

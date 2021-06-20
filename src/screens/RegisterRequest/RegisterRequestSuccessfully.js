@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
+import { Text, View, Pressable, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -246,7 +246,10 @@ const RegisterRequestSuccessfully = props => {
                         alignSelf: 'center'
                     }}
                 >
-                    {/* <TouchableOpacity
+                    {/* <Pressable
+android_ripple={{
+color:'#ededed'
+}}
                     style={{
                         borderRadius: 6,
                         elevation: 5,
@@ -262,7 +265,10 @@ const RegisterRequestSuccessfully = props => {
                         }, 100);
                     }}
                 > */}
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         activeOpacity={1}
                         onPress={() => {
                             props.navigation.navigate('Home')
@@ -727,7 +733,10 @@ const RegisterRequestSuccessfully = props => {
                                         }}>
                                         {locales('titles.phoneNumber')}
                                     </Text>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         onPress={_ => openCallPad(item.mobileNumber)}
                                         style={{
                                             flexDirection: 'row-reverse',
@@ -747,7 +756,7 @@ const RegisterRequestSuccessfully = props => {
                                             name='phone-square-alt'
                                             size={20}
                                         />
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
 
                                 <View
@@ -826,8 +835,8 @@ const RegisterRequestSuccessfully = props => {
                             textAlign: 'center', width: '100%', color: '#00C569'
                         }, styles.textBold]}>
                         {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text> */}
-                        {/* </TouchableOpacity> */}
-                    </TouchableOpacity>
+                        {/* </Pressable> */}
+                    </Pressable>
                 </Card>
             </>
         )
@@ -999,7 +1008,7 @@ const RegisterRequestSuccessfully = props => {
                             color: '#21ad93'
                         }}>
                         {` ${locales('titles.buskool')}`}،
-                                </Text>
+                    </Text>
                     <Text
                         style={{
                             paddingHorizontal: 10,

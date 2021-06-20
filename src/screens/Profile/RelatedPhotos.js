@@ -1,7 +1,7 @@
 
 
 import React, { memo } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Text, View, FlatList, Pressable, Image } from 'react-native';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
@@ -18,7 +18,10 @@ const RelatedPhotos = props => {
             data={relatedsFromByUserName}
             horizontal
             renderItem={({ item, index }) => (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={() => { props.setSelectedImage(true, index) }}
                 >
                     <Image
@@ -34,7 +37,7 @@ const RelatedPhotos = props => {
                             uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
                         }}
                     />
-                </TouchableOpacity>
+                </Pressable>
 
             )}
             initialNumToRender={2}

@@ -1,7 +1,7 @@
 
 
 import React, { memo } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Text, View, FlatList, Pressable, Image } from 'react-native';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
@@ -32,7 +32,10 @@ const Certificates = props => {
             initialNumToRender={2}
             keyExtractor={((_, index) => index.toString())}
             renderItem={({ item, index }) => (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={() => props.setSelectedEvidence(true, index)}
                 >
                     <Image
@@ -47,7 +50,7 @@ const Certificates = props => {
                             uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item}`
                         }}
                     />
-                </TouchableOpacity>
+                </Pressable>
             )}
         />
 
