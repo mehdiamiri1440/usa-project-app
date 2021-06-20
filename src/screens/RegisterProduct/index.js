@@ -421,7 +421,10 @@ class RegisterProduct extends React.Component {
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
-                        {/* <TouchableOpacity
+                        {/* <Pressable
+android_ripple={{
+color:'#ededed'
+}}
                             style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                             onPress={() => {
                                 stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
@@ -430,7 +433,7 @@ class RegisterProduct extends React.Component {
 
                         >
                             <AntDesign name='arrowright' size={25} />
-                        </TouchableOpacity> */}
+                        </Pressable> */}
 
                         <View style={{
                             width: '100%',

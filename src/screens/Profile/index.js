@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-    Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal, Linking
+    Text, View, Pressable, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
@@ -699,7 +699,10 @@ class Profile extends PureComponent {
                                     </Text>
                                     {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                 </View>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => this.shareProfileLink()}
                                     style={{
                                         borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
@@ -719,7 +722,7 @@ class Profile extends PureComponent {
                                         </Text>
                                     </View>
 
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
 
                             {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>
