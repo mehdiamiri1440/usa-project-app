@@ -12,7 +12,6 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as productActions from '../../redux/registerProduct/actions';
 
 import { deviceWidth, deviceHeight, validator, formatter } from '../../utils';
-import NoConnection from '../../components/noConnectionError';
 import Loading from '../Loading';
 
 const CategoriesIcons = [
@@ -402,7 +401,6 @@ class RegisterRequest extends Component {
             subCategoriesList: [],
             amountClicked: false,
             productTypeClicked: false,
-            showModal: false,
             selectedSvgName: ''
         }
     }
@@ -488,7 +486,6 @@ class RegisterRequest extends Component {
             productType: '',
             isFocused: false,
             loaded: false,
-            showModal: false,
             selectedSvgName: ''
         })
     }
@@ -617,15 +614,8 @@ class RegisterRequest extends Component {
                 this.emptyState();
                 this.props.navigation.navigate('RegisterRequestSuccessfully');
             })
-            // .catch(_ => this.setState({ showModal: true }));
         }
     }
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount()
-    };
-
 
     setSelectedSubCategory = (id, isSub, index) => {
         const { subCategoriesTogether, subCategoriesList, categoriesList } = this.state;
@@ -764,7 +754,7 @@ class RegisterRequest extends Component {
             productType, category, subCategory,
             subCategoryError, categoryError, productTypeError,
             amountError,
-            showModal, subCategoriesList, categoriesList,
+            subCategoriesList, categoriesList,
             amount, productTypeClicked, amountClicked, selectedSvgName,
             amountText
         } = this.state;
@@ -775,11 +765,6 @@ class RegisterRequest extends Component {
 
         return (
             <>
-                {/* <Loading /> */}
-                <NoConnection
-                    closeModal={this.closeModal}
-                    showModal={showModal}
-                />
 
                 <View style={{
                     backgroundColor: 'white',

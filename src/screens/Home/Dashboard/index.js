@@ -8,7 +8,6 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth } from '../../../utils';
 import * as homeActions from '../../../redux/home/actions';
 import ENUMS from '../../../enums';
@@ -20,11 +19,9 @@ const Dashboard = props => {
     useEffect(() => {
         analytics().logEvent('dashboard');
         props.fetchAllDashboardData();
-        // .catch(_ => setShowModal(true));
     },
         [])
 
-    let [showModal, setShowModal] = useState(false);
 
     let {
         dashboardLoading,
@@ -55,17 +52,11 @@ const Dashboard = props => {
         is_verified
     } = dashboard;
 
-    const closeModal = _ => {
-        setShowModal(false);
-        props.fetchAllDashboardData();
-    };
+
 
     return (
         <>
-            <NoConnection
-                closeModal={closeModal}
-                showModal={showModal}
-            />
+
             {dashboardError &&
                 <View style={styles.loginFailedContainer}>
                     <Text style={styles.loginFailedText}>

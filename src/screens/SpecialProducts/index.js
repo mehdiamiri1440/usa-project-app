@@ -24,7 +24,6 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import Product from '../ProductsList/Product';
-import NoConnection from '../../components/noConnectionError';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
@@ -51,7 +50,6 @@ class SpecialProducts extends PureComponent {
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false,
-            showModal: false,
             subCategoriesList: [],
             cities: [],
             totalCategoriesModalFlag: false,
@@ -86,7 +84,6 @@ class SpecialProducts extends PureComponent {
 
         this.initialCalls().catch(error => {
             this.setState({
-                // showModal: true,
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
@@ -240,7 +237,6 @@ class SpecialProducts extends PureComponent {
             })
             .catch(error => {
                 this.setState({
-                    //  showModal: true,
                     searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                 })
             });
@@ -267,12 +263,6 @@ class SpecialProducts extends PureComponent {
                 else
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
 
-    };
-
-    setShowModal = _ => {
-        this.setState({ showModal: false }, () => {
-            this.componentDidMount();
-        });
     };
 
     handleSortItemClick = value => {
@@ -558,7 +548,6 @@ class SpecialProducts extends PureComponent {
                     this.setState({ loaded: false })
                 }).catch(error => {
                     this.setState({
-                        // showModal: true,
                         searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                     })
                 });
@@ -601,7 +590,6 @@ class SpecialProducts extends PureComponent {
             })
         }).catch(error => {
             this.setState({
-                //  showModal: true,
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });

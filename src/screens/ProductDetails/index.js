@@ -28,7 +28,6 @@ import { validator, formatter } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
-import NoConnection from '../../components/noConnectionError';
 import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
 import RegistrationModal from '../../components/RegistrationModal';
@@ -54,7 +53,6 @@ class ProductDetails extends PureComponent {
             maximumPriceError: '',
             minimumPriceError: '',
             amountError: '',
-            showModal: false,
 
             related_products: [],
             avg_score: 0,
@@ -257,7 +255,6 @@ class ProductDetails extends PureComponent {
 
     callApi = code => {
         this.props.fetchAllRelatedProducts(code)
-        // .catch(_ => this.setState({ showModal: true }));
         this.props.fetchProductDetails(code).then(_ => {
             if (this.props.productDetailsInfo.length) {
                 const {
@@ -277,7 +274,6 @@ class ProductDetails extends PureComponent {
             }
 
         })
-        // .catch(_ => this.setState({ showModal: true }))
 
     }
 
@@ -386,7 +382,6 @@ class ProductDetails extends PureComponent {
                     editionMessageText: editProductMessage
                 }, () => {
                     this.props.fetchAllProductInfo(this.props.route.params.productId)
-                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -398,7 +393,6 @@ class ProductDetails extends PureComponent {
                     editionMessageText: editProductMessage
                 }, () => {
                     this.props.fetchAllProductInfo(this.props.route.params.productId)
-                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -452,13 +446,6 @@ class ProductDetails extends PureComponent {
                 }
             })
     };
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount();
-    }
-
-
 
     openCallPad = phoneNumber => {
 
@@ -732,10 +719,6 @@ class ProductDetails extends PureComponent {
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
                 {shouldShowRegistrationModal ?
                     <RegistrationModal

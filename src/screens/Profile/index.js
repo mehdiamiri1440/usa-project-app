@@ -20,7 +20,6 @@ import * as productsListActions from '../../redux/productsList/actions';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
-import NoConnection from '../../components/noConnectionError';
 import RelatedPhotos from './RelatedPhotos';
 import Certificates from './certificates';
 import Rating from './Rating';
@@ -34,7 +33,6 @@ class Profile extends PureComponent {
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
             selectedImageIndex: -1,
-            showModal: false,
             prevUserName: '',
             loaded: false,
 
@@ -78,7 +76,6 @@ class Profile extends PureComponent {
         });
 
         this.initProfileContent()
-        // .catch(_ => this.setState({ showModal: false }))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -201,7 +198,6 @@ class Profile extends PureComponent {
             to_record_number,
         };
         this.props.fetchAllProductsList(item, !!loggedInUserId)
-        // .catch(_ => this.setState({ showModal: false }));
     };
 
     shareProfileLink = async () => {
@@ -236,11 +232,6 @@ class Profile extends PureComponent {
             .catch(() => {
                 Linking.openURL(url)
             })
-    };
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.componentDidMount();
     };
 
     setSelectedImage = (selectedImageModal, selectedImageIndex) => {
@@ -345,11 +336,6 @@ class Profile extends PureComponent {
 
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
-
                 <Modal
                     animationType="slide"
                     transparent={true}

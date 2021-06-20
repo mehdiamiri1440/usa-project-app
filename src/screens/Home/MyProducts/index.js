@@ -8,7 +8,6 @@ import ContentLoader, { Rect } from "react-content-loader/native"
 import * as productsListActions from '../../../redux/productsList/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import Product from '../../ProductsList/Product';
-import NoConnection from '../../../components/noConnectionError';
 import Header from '../../../components/header';
 import ENUMS from '../../../enums';
 class MyProducts extends Component {
@@ -25,7 +24,6 @@ class MyProducts extends Component {
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false,
-            showModal: false
         }
     }
 
@@ -68,13 +66,7 @@ class MyProducts extends Component {
     fetchAllProducts = () => {
         if (!!this.props.userProfile && !!this.props.userProfile.user_info && !!this.props.userProfile.user_info.user_name)
             this.props.fetchAllMyProducts(this.props.userProfile.user_info.user_name)
-        // .catch(_ => this.setState({ showModal: true }));
     };
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.props.fetchAllMyProducts();
-    }
 
     renderMyPorductListEmptyComponent = _ => {
         const { myProductsLoading } = this.props;
@@ -155,10 +147,6 @@ class MyProducts extends Component {
 
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
                 <Header
                     title={locales('labels.myProducts')}
                     shouldShowAuthenticationRibbonFromProps

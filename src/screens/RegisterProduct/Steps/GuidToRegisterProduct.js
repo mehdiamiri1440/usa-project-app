@@ -103,7 +103,6 @@ class GuidToRegisterProduct extends React.Component {
                 this.setState({ showModal: true })
             }
         })
-        // .catch(_ => this.props.setShowModal())
     };
 
 

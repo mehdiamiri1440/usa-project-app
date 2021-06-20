@@ -23,7 +23,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
-import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
 import Header from '../../components/header';
 import ENUMS from '../../enums';
@@ -48,7 +47,6 @@ class Requests extends PureComponent {
             selectedContact: {},
             showFilters: false,
             showGoldenModal: false,
-            showModal: false,
             selectedFilterName: '',
 
             showMobileNumberWarnModal: false,
@@ -87,7 +85,6 @@ class Requests extends PureComponent {
         if (this.is_mounted == true) {
             AsyncStorage.setItem('@registerProductParams', JSON.stringify({}))
             this.initialCalls()
-            // .catch(_ => this.setState({ showModal: true }));
         }
     }
 
@@ -194,7 +191,6 @@ class Requests extends PureComponent {
                     this.setState({ showDialog: true })
                 }
             })
-            // .catch(_ => this.setState({ showModal: true }));
         }
         else {
             analytics().logEvent('permission_denied', {
@@ -356,11 +352,6 @@ class Requests extends PureComponent {
                 {is_seller && this.renderItemSeparatorComponent(index)}
             </>
         )
-    };
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.componentDidMount()
     };
 
     closeFilters = _ => {
@@ -614,10 +605,6 @@ class Requests extends PureComponent {
         } = this.state;
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
                 {sortModalFlag ?
                     <Modal
@@ -662,7 +649,7 @@ class Requests extends PureComponent {
                     >
                         <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                             {locales('titles.buyadRequestsWith')} <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#E41C38' }}>{locales('titles.twoHoursDelay')}</Text> {locales('titles.youWillBeInformed')} .
-                                </Text>
+                        </Text>
                         <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                             {locales('titles.onTimeBuyAdRequestAndPromote')}
                         </Text>

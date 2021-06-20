@@ -15,10 +15,8 @@ import ChooseCity from './Steps/ChooseCity';
 import ProductImages from './Steps/ProductImages';
 import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
-import NoConnection from '../../components/noConnectionError';
 import PaymentModal from '../../components/paymentModal';
 import { deviceWidth, deviceHeight } from '../../utils';
-import Loading from '../Loading';
 
 let stepsArray = [1, 2, 3, 4, 5, 6];
 class RegisterProduct extends React.Component {
@@ -64,7 +62,6 @@ class RegisterProduct extends React.Component {
             description: '',
             province: '',
             stepNumber: 1,
-            showModal: false,
             subCategoryName: '',
             subCategoryId: null,
 
@@ -281,21 +278,11 @@ class RegisterProduct extends React.Component {
                 })
                 this.changeStep(8);
             })
-            // .catch(_ => this.setState({ showModal: true }))
         })
 
     };
 
-    setShowModal = _ => {
-        this.setState({ showModal: true })
-    };
-
     setSelectedButton = id => this.setState({ selectedButton: id })
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount();
-    };
 
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
@@ -311,7 +298,6 @@ class RegisterProduct extends React.Component {
         switch (stepNumber) {
             case 1: {
                 return <GuidToRegisterProduct
-                    setShowModal={this.setShowModal}
                     setProductType={this.setProductType}
                     changeStep={this.changeStep}
                     {...this.props}
@@ -425,10 +411,6 @@ class RegisterProduct extends React.Component {
 
 
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
-                    <NoConnection
-                        showModal={this.state.showModal}
-                        closeModal={this.closeModal}
-                    />
 
                     <View style={{
                         backgroundColor: 'white',

@@ -12,7 +12,6 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { numberWithCommas } from '../../../utils/formatter';
@@ -22,7 +21,6 @@ class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false,
             visibility: false,
             paymentType: 1
         }
@@ -46,11 +44,6 @@ class PromoteRegistration extends React.Component {
                 Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`);
             }
         })
-    };
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.props.fetchAllDashboardData()
     };
 
     handleScrollToTopButtonClick = () => {
@@ -356,11 +349,6 @@ class PromoteRegistration extends React.Component {
                     </View>
                 </Modal>
 
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
-
 
                 {!isUsedAsComponent ?
                     <Header
@@ -376,7 +364,6 @@ class PromoteRegistration extends React.Component {
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
                             onRefresh={() => this.props.fetchAllDashboardData()
-                                // .catch(_ => this.setState({ showModal: true }))
                             }
                         />
                     }
@@ -923,7 +910,7 @@ class PromoteRegistration extends React.Component {
                                                 textAlignVertical: 'center', paddingBottom: 5
                                             }}>
                                                 *
-                                                </Text>
+                                            </Text>
                                         </Text>
 
                                     </View>
