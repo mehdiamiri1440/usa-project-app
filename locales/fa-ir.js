@@ -256,6 +256,7 @@ export default {
     'labels.noevidenceFound': 'مدرکی یافت نشد',
     'labels.pleaseWait': ' کمی صبر کنید ...',
     'labels.redirecting': 'درحال انتقال',
+    'labels.lostInternetConnection': 'اتصال شما به اینترنت دچار مشکل شده‌است .',
     'labels.myEvidences': 'مدارک من',
     "labels.submitUserBasics": "ثبت مشخصات فردی شما",
     'labels.buyRequests': 'درخواست‌های خرید',
