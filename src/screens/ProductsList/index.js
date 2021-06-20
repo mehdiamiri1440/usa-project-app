@@ -190,8 +190,11 @@ class ProductsList extends PureComponent {
             let resultFromStorage = JSON.parse(multiGetResult[0][1]);
             let categoriesListFromStorage = JSON.parse(multiGetResult[1][1]);
 
-            this.props.fetchAllCategories().then(_ => this.setState({ categoriesList: this.props.categoriesList }));
+            this.props.fetchAllCategories()
+                .then(_ => this.setState({ categoriesList: this.props.categoriesList }))
+                .catch(_ => this.setState({ categoriesList: categoriesListFromStorage ?? [] }));
             this.setState({ categoriesList: categoriesListFromStorage ?? [] });
+
 
             const {
                 from_record_number,
@@ -650,6 +653,7 @@ class ProductsList extends PureComponent {
         if (city) {
             item = { ...item, city_id: city }
         }
+
         this.props.fetchAllProductsList(item, !!loggedInUserId).then(result => {
             this.setState({
                 productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
@@ -660,6 +664,9 @@ class ProductsList extends PureComponent {
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
+        this.props.fetchAllProvinces();
+        this.props.fetchAllCategories().then(_ => this.setState({ categoriesList: this.props.categoriesList }));
+
     };
 
     removeFilter = _ => {
