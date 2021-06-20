@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 import Jmoment from 'moment-jalaali';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -15,7 +15,10 @@ const ChannelInContactsList = ({
 }) => {
 
     return (
-        <TouchableOpacity
+        <Pressable
+            android_ripple={{
+                color: '#ededed'
+            }}
             onPress={() => props.navigation.navigate('Channel')}
             style={{
                 backgroundColor: 'white',
@@ -106,7 +109,7 @@ const ChannelInContactsList = ({
                         </Text>
                     </View> : null}
             </View>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 export default ChannelInContactsList

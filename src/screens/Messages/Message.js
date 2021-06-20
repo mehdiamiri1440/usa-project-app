@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { ToastAndroid, View, Text, Pressable, Linking } from 'react-native';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -174,7 +174,10 @@ const RenderPhoneFormatMessage = props => {
     if (showPhoneFormat)
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={() => openCallPad(item.text)
                 }
@@ -224,7 +227,7 @@ const RenderPhoneFormatMessage = props => {
                     </Text>
 
                 </View>
-            </TouchableOpacity >
+            </Pressable >
         )
     return null;
 };
