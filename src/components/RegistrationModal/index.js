@@ -12,8 +12,8 @@ import {
     SafeAreaView,
     Keyboard,
     StyleSheet,
-    TouchableOpacity,
-    FlatList
+    FlatList,
+    Pressable
 } from 'react-native';
 import {
     Button,
@@ -895,7 +895,7 @@ const GetFullName = props => {
                         }}
                     >
                         *
-                </Text>
+                    </Text>
                 </Text>
 
                 <Text
@@ -1135,7 +1135,10 @@ const GetIntentType = props => {
                     alignItems: 'center',
                 }}
             >
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={_ => saveIntentType(1)}
                     activeOpacity={1}
                     style={{
@@ -1196,9 +1199,12 @@ const GetIntentType = props => {
                     >
                         {locales('titles.iWantToBuy')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={_ => saveIntentType(0)}
                     activeOpacity={1}
                     style={{
@@ -1258,7 +1264,7 @@ const GetIntentType = props => {
                     >
                         {locales('titles.getThePrice')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
 
             </View>
             <Button
@@ -1358,7 +1364,10 @@ const GetProvince = props => {
 
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={_ => onProvinceSelected(item.id)}
                 style={{
                     flexDirection: 'row-reverse',
@@ -1384,7 +1393,7 @@ const GetProvince = props => {
                     size={20}
                     color='#38485F'
                 />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
@@ -1558,7 +1567,10 @@ const GetCity = props => {
 
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={_ => onCitySelected(item.id)}
                 style={{
                     flexDirection: 'row-reverse',
@@ -1584,7 +1596,7 @@ const GetCity = props => {
                     size={20}
                     color='#38485F'
                 />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
