@@ -4,7 +4,7 @@ import {
     Image,
     View,
     Text,
-    TouchableOpacity,
+    Pressable,
     BackHandler,
     AppState,
     StyleSheet
@@ -584,7 +584,10 @@ const routes = props => {
                                 }}
                                 colors={['#21AD93', '#00C569']}
                             >
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => {
                                         closePromotionModal();
                                         navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
@@ -596,7 +599,7 @@ const routes = props => {
                                         fontSize: 20,
                                     }]}>{locales('labels.promoteRegistration')}
                                     </Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             </LinearGradient>
                         </View>
                     </Dialog>
@@ -1011,8 +1014,11 @@ const routes = props => {
             </NavigationContainer >
 
             {souldShowSellerButton ?
-                <TouchableOpacity
-                    activeOpacity={1}
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 32.5,
+                    }}
                     onPress={_ => navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } })}
                     style={{
                         width: 65,
@@ -1037,7 +1043,7 @@ const routes = props => {
                     }}>
                         {locales('labels.buyers')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
                 : null}
         </>
     )

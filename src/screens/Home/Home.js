@@ -6,7 +6,7 @@ import { Navigation } from 'react-native-navigation';
 import { useRoute, useNavigationState } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import {
-    Text, TouchableOpacity, View, ImageBackground,
+    Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
     RefreshControl, AppState
 } from 'react-native';
@@ -317,7 +317,7 @@ class Home extends React.Component {
                     {!!is_seller ? <WalletPreview {...this.props} /> : null}
 
                     {/* 
-                    <TouchableOpacity
+                    <Pressable
                         onPress={() => this.props.navigation.navigate('Referral')}
                         style={{
                             alignContent: 'center',
@@ -409,7 +409,7 @@ class Home extends React.Component {
 
                             </Button>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
  */}
 
                     {homeRoutes.map((route, index) => {
@@ -417,7 +417,10 @@ class Home extends React.Component {
                             return null;
                         return (
                             route.name === 'PromoteRegistration' ?
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => this.handleRouteChange(route.name)}
                                     style={{
                                         alignContent: 'center',
@@ -478,9 +481,12 @@ class Home extends React.Component {
                                             {locales('labels.special')}
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                </Pressable>
                                 :
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => this.handleRouteChange(route.name)}
                                     style={{
                                         alignContent: 'center',
@@ -573,7 +579,7 @@ class Home extends React.Component {
                                                 null
                                         }
                                     </View>
-                                </TouchableOpacity>
+                                </Pressable>
 
                         )
                     })}
@@ -594,7 +600,10 @@ class Home extends React.Component {
                         alignItems: 'center', flexDirection: 'row',
                         justifyContent: 'space-between'
                     }]}>
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => !!is_seller && !changeRoleLoading && this.changeRole()}
                             style={{
                                 backgroundColor: !!!is_seller ? '#4DC0BB' : '#fff',
@@ -650,9 +659,12 @@ class Home extends React.Component {
                             }}>
                                 {locales('labels.buyer')}
                             </Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             style={{
                                 backgroundColor: !!is_seller ? '#4DC0BB' : '#fff',
                                 borderWidth: 1,
@@ -709,7 +721,7 @@ class Home extends React.Component {
                             >
                                 {locales('labels.seller')}
                             </Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
                     </View>
 
@@ -764,7 +776,10 @@ export const WalletPreview = props => {
     } = user_info;
 
     return (
-        <TouchableOpacity
+        <Pressable
+            android_ripple={{
+                color: '#ededed'
+            }}
             activeOpacity={1}
             onPress={_ => props.navigation.navigate('Wallet')}
         >
@@ -862,7 +877,7 @@ export const WalletPreview = props => {
                     />
                 }
             </ImageBackground>
-        </TouchableOpacity >
+        </Pressable >
     )
 };
 
