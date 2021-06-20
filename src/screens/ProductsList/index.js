@@ -18,6 +18,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -32,7 +33,6 @@ import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
-import AsyncStorage from '@react-native-community/async-storage';
 
 let myTimeout;
 class ProductsList extends PureComponent {
@@ -1547,7 +1547,6 @@ class ProductsList extends PureComponent {
             province,
             city,
             cities,
-            showModal,
             totalCategoriesModalFlag,
             modals,
             isFilterApplied,
@@ -1623,10 +1622,6 @@ class ProductsList extends PureComponent {
                     </TouchableOpacity>
                     : null
                 }
-                <NoConnection
-                    closeModal={this.setShowModal}
-                    showModal={showModal}
-                />
 
                 {locationsFlag ?
                     <Modal
