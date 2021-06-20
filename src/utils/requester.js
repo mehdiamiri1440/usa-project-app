@@ -1,5 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from "@react-native-community/netinfo";
+import { Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import RnRestart from 'react-native-restart';
 
@@ -18,7 +20,6 @@ export const getUrl = (route) => {
     return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
 
 };
-
 
 export const getTokenFromStorage = () => {
     const randomToken = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
@@ -43,7 +44,6 @@ export const getTokenFromStorage = () => {
     })
 };
 
-
 const getRequestHeaders = async (withAuth) => {
     let token = await getTokenFromStorage()
     if (!token || !token.length)
@@ -61,8 +61,6 @@ const getRequestHeaders = async (withAuth) => {
     return headerObject;
 };
 
-
-
 export const redirectToLogin = msg => {
     // console.log('redirected');
     // if (msg == 'The token has been blacklisted') {
@@ -77,9 +75,7 @@ export const redirectToLogin = msg => {
             RnRestart.Restart();
 
         })
-}
-
-
+};
 
 export const refreshToken = (route, method, data, withAuth, headers, token) => {
     return new Promise((resolve, reject) => {
@@ -89,10 +85,34 @@ export const refreshToken = (route, method, data, withAuth, headers, token) => {
     })
 };
 
-
+const checkInternetConnectivity = _ => NetInfo.fetch().then(({
+    isInternetReachable,
+    isConnected
+}) => {
+    if (!isConnected || !isInternetReachable) {
+        Toast.show({
+            text: locales('labels.lostInternetConnection'),
+            position: "bottom",
+            style: {
+                borderRadius: 10,
+                bottom: 100, width: '90%',
+                alignSelf: 'center', textAlign: 'center'
+            },
+            textStyle: {
+                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                textAlign: 'center'
+            },
+            duration: 3000
+        });
+    }
+}
+);
 
 export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+
+    checkInternetConnectivity();
     const headers = await getRequestHeaders(withAuth);
+
     return new Promise((resolve, reject) => {
         // console.log('route', route, 'headers', headers)
         axios
