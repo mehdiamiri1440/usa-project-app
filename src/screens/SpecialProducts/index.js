@@ -1699,8 +1699,7 @@ class SpecialProducts extends PureComponent {
             </View>
         )
     }
-}
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -1844,7 +1843,6 @@ const styles = StyleSheet.create({
     }
 });
 
-
 const mapStateToProps = ({
     productsListReducer,
     registerProductReducer,
@@ -1925,7 +1923,6 @@ const mapStateToProps = ({
     }
 };
 
-
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
@@ -1937,14 +1934,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-
 const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
 
     return <SpecialProducts {...props} productsListRef={ref} />;
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
 

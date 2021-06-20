@@ -66,7 +66,6 @@ class ProductsList extends PureComponent {
 
     }
 
-
     productsListRef = createRef();
     categoryFiltersRef = createRef();
 
