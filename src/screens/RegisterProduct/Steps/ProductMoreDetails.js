@@ -2,8 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+    View, Text, StyleSheet, ActivityIndicator,
+    BackHandler, Pressable, ScrollView
+} from "react-native";
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -326,7 +328,11 @@ class ProductMoreDetails extends Component {
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                     }}>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed',
+                                            radius: 8
+                                        }}
                                         onPress={() => this.deleteRow(index)}
                                         style={{
                                             alignItems: 'center',
@@ -335,7 +341,7 @@ class ProductMoreDetails extends Component {
                                             width: 30
                                         }}>
                                         <FontAwesome5 name='trash' color='#E41C38' size={16} />
-                                    </TouchableOpacity>
+                                    </Pressable>
 
                                     <View style={{
                                         flex: 1,

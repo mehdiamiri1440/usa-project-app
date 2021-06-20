@@ -6,7 +6,7 @@ import {
     View,
     FlatList,
     ActivityIndicator,
-    TouchableOpacity,
+    Pressable,
     ScrollView,
     Linking, BackHandler
 } from 'react-native';
@@ -541,7 +541,10 @@ class RegisterProductSuccessfully extends Component {
                                 }}>
                                 {locales('titles.phoneNumber')}
                             </Text>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={_ => this.openCallPad(item.mobileNumber)}
                                 style={{
                                     flexDirection: 'row-reverse',
@@ -561,7 +564,7 @@ class RegisterProductSuccessfully extends Component {
                                     name='phone-square-alt'
                                     size={20}
                                 />
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
 
                         <View
@@ -709,7 +712,10 @@ class RegisterProductSuccessfully extends Component {
 
         return (
 
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={() => {
                     this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                 }} style={{
@@ -740,7 +746,7 @@ class RegisterProductSuccessfully extends Component {
 
                     />
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };

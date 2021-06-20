@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ActionSheet, Button } from 'native-base';
 import {
-    TouchableOpacity, BackHandler,
+    Pressable, BackHandler,
     Image, View, Text, StyleSheet
 } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
@@ -235,7 +235,10 @@ class ProductImages extends Component {
                         justifyContent: 'flex-start',
                         alignItems: 'center',
                     }}>
-                        {images.length ? images.map((image, index) => <TouchableOpacity
+                        {images.length ? images.map((image, index) => <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             key={index}
                             onPress={() => this.chooseProductImage(index)}
                             style={{
@@ -252,7 +255,10 @@ class ProductImages extends Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.chooseProductImage(index)}
                                 style={{
                                     position: 'absolute',
@@ -266,7 +272,7 @@ class ProductImages extends Component {
                                 }}
                             >
                                 <FontAwesome name='pencil' size={25} color='white' />
-                            </TouchableOpacity>
+                            </Pressable>
                             <Image
                                 resizeMode="cover"
                                 style={{
@@ -275,7 +281,10 @@ class ProductImages extends Component {
                                     alignItems: 'center', justifyContent: 'center'
                                 }}
                                 source={{ uri: image.uri }} />
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.deleteImage(index)}
                                 style={{
                                     position: 'absolute',
@@ -289,14 +298,17 @@ class ProductImages extends Component {
                                 }}
                             >
                                 <FontAwesome name='trash' size={25} color='white' />
-                            </TouchableOpacity>
-                        </TouchableOpacity>
+                            </Pressable>
+                        </Pressable>
 
                         ) :
                             null
                         }
 
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => this.chooseProductImage()}
                             style={{
                                 margin: 7,
@@ -333,7 +345,7 @@ class ProductImages extends Component {
                                     color: '#323A42'
                                 }}
                             >{locales('labels.addImage')}</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
 
                     <View style={{

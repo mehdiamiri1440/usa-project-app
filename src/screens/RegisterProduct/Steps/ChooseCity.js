@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
+import { Pressable, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Item, Label } from 'native-base';
@@ -197,7 +197,10 @@ class ChooseCity extends React.Component {
 
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -225,7 +228,7 @@ class ChooseCity extends React.Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };

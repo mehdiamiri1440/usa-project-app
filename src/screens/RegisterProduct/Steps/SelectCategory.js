@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path, G, Circle } from "react-native-svg";
 import { Button, Input, Label, InputGroup } from 'native-base';
@@ -569,7 +569,10 @@ class SelectCategory extends Component {
 
     renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -598,7 +601,7 @@ class SelectCategory extends Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
