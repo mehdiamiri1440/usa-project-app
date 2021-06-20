@@ -1947,8 +1947,7 @@ class ProductsList extends PureComponent {
             </View>
         )
     }
-}
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -2203,14 +2202,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-
 const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
 
     return <ProductsList {...props} productsListRef={ref} />;
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
 
