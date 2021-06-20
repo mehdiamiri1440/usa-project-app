@@ -3,7 +3,7 @@ import {
     Text,
     View,
     FlatList,
-    TouchableOpacity,
+    Pressable,
     Modal,
     StyleSheet,
     ActivityIndicator,
@@ -983,7 +983,10 @@ class SpecialProducts extends PureComponent {
         } = this.state;
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSortItemClick(item.value)}
                 style={{
@@ -1005,14 +1008,17 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.title}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
 
     renderSubCategoriesListItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSubCategoryItemClick(item)}
                 style={{
@@ -1029,14 +1035,18 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
     renderCategoriesListItem = (item, isFromModal) => {
         if (!isFromModal)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.sortProducts(item)}
                     style={{
                         borderRadius: 12,
@@ -1061,11 +1071,14 @@ class SpecialProducts extends PureComponent {
                     >
                         {item.category_name}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={() => this.sortProducts(item)}
                 style={{
@@ -1082,7 +1095,7 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1172,7 +1185,11 @@ class SpecialProducts extends PureComponent {
 
         if (!!selectedLocation)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.removeLocations()}
                     style={{
                         borderRadius: 12,
@@ -1199,7 +1216,7 @@ class SpecialProducts extends PureComponent {
                         {selectedLocation}
                     </Text>
                     <FontAwesome5 name='times' size={12} color='#E41C38' />
-                </TouchableOpacity>
+                </Pressable>
             );
         return null;
     };
@@ -1228,7 +1245,11 @@ class SpecialProducts extends PureComponent {
                 {this.renderSelectedLocation()}
 
                 {isFilterApplied ?
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
@@ -1255,7 +1276,7 @@ class SpecialProducts extends PureComponent {
                             {searchText}
                         </Text>
                         <FontAwesome5 name='times' size={12} color='#E41C38' />
-                    </TouchableOpacity>
+                    </Pressable>
                     :
                     null}
             </View>
@@ -1267,7 +1288,11 @@ class SpecialProducts extends PureComponent {
 
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12, marginTop: 7, marginBottom: 8,
@@ -1285,7 +1310,7 @@ class SpecialProducts extends PureComponent {
                     {locales('labels.classifications')}
                 </Text>
                 <FontAwesome5 name='list' size={12} color='#707070' />
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1303,7 +1328,11 @@ class SpecialProducts extends PureComponent {
 
         if (sort_by == BM)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
@@ -1329,10 +1358,14 @@ class SpecialProducts extends PureComponent {
                     >
                         {locales('labels.sort')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
@@ -1364,7 +1397,7 @@ class SpecialProducts extends PureComponent {
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
@@ -1457,7 +1490,11 @@ class SpecialProducts extends PureComponent {
             >
 
                 {showRefreshButton ?
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 16
+                        }}
                         onPress={_ => {
                             this.setState({
                                 from_record_number: 0,
@@ -1503,7 +1540,7 @@ class SpecialProducts extends PureComponent {
                         >
                             {locales('labels.newProducts')}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     : null
                 }
 
@@ -1713,7 +1750,10 @@ class SpecialProducts extends PureComponent {
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
@@ -1735,7 +1775,7 @@ class SpecialProducts extends PureComponent {
                                         locales('titles.AllIran')
                                     }
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                             <Input
                                 value={searchText}
                                 ref={this.serachInputRef}
