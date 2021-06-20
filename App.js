@@ -2,9 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
-import { ToastAndroid } from 'react-native';
 import configureStore, { persistor } from './src/redux/configureStore';
-import NetInfo from "@react-native-community/netinfo";
 
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
@@ -38,36 +36,6 @@ global.locales = locales.localize;
 global.shouldShowRibbon = true;
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fromMessages: false,
-      isConnected: true
-    }
-  }
-
-  netInfoStat = null;
-
-  componentDidMount() {
-    this.netInfoStat = NetInfo.addEventListener(this.handleConnectivityChange);
-  }
-
-  componentWillUnmoSunt() {
-    return this.netInfoStat;
-  }
-
-  handleConnectivityChange = ({
-    isInternetReachable,
-    isConnected
-  }) => {
-    if (!isConnected || !isInternetReachable) {
-      return ToastAndroid.showWithGravity(
-        'اتصال شما به اینترنت دچار مشکل شده‌است .',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }
-  };
 
   render() {
     return (
