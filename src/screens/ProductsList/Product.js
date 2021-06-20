@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Linking, ActivityIndicator } from 'react-native';
+import { Image, Text, View, StyleSheet, Pressable, Linking, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Card, Input, Label, Item, Toast, Button } from 'native-base';
@@ -437,7 +437,7 @@ class Product extends PureComponent {
                                 }}>
                                     {locales('titles.thisUserIsValidated')}
                                 </Text>
-                                <TouchableOpacity
+                                <Pressable
                                     onPress={() => {
                                         return Linking.canOpenURL('https://www.buskool.com/verification').then(supported => {
                                             if (supported) {
@@ -467,7 +467,7 @@ class Product extends PureComponent {
                                     }}>
                                         {locales('titles.goForClick')}
                                     </Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             </Dialog.Content>
                             <Dialog.Actions style={{
                                 borderTopColor: '#BEBEBE',
@@ -957,8 +957,10 @@ class Product extends PureComponent {
                         <View style={[{ borderColor: active_pakage_type == 3 ? '#00C569' : '#dedede' }, styles.cardItemStyle]}>
 
 
-                            <TouchableOpacity
-                                activeOpacity={1}
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => {
                                     analytics().logEvent('show_product_in_seperate_page', {
                                         product_id: productId
@@ -1123,11 +1125,13 @@ class Product extends PureComponent {
                                         width: '95%',
                                         alignSelf: 'center'
                                     }}>
-                                    <TouchableOpacity
+                                    <Pressable
                                         onPress={() => {
                                             this.props.navigation.navigate('Profile', { user_name })
                                         }}
-                                        activeOpacity={1}
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         style={{
                                             flexDirection: 'row-reverse',
                                             // marginTop: -9,
@@ -1198,8 +1202,10 @@ class Product extends PureComponent {
                                         </View>
 
                                         {response_rate > 0 && loggedInUserId != myuser_id ?
-                                            <TouchableOpacity
-                                                activeOpacity={1}
+                                            <Pressable
+                                                android_ripple={{
+                                                    color: '#ededed'
+                                                }}
                                                 onPress={() => Toast.show({
                                                     text: locales('labels.responseRate'),
                                                     position: "bottom",
@@ -1238,11 +1244,14 @@ class Product extends PureComponent {
                                                 >
                                                     %{response_rate}
                                                 </Text>
-                                            </TouchableOpacity>
+                                            </Pressable>
                                             :
                                             loggedInUserId == myuser_id && shouldShowMyButtons
                                                 ?
-                                                <TouchableOpacity
+                                                <Pressable
+                                                    android_ripple={{
+                                                        color: '#ededed'
+                                                    }}
                                                     onPress={() => this.setState({ deleteProductFlag: true })}
                                                     style={{
                                                         alignItems: 'center',
@@ -1265,13 +1274,13 @@ class Product extends PureComponent {
                                                         {locales('labels.deleteProduct')}
                                                     </Text>
 
-                                                </TouchableOpacity>
+                                                </Pressable>
                                                 : null
                                         }
 
-                                    </TouchableOpacity>
+                                    </Pressable>
 
-                                    {/* <TouchableOpacity
+                                    {/* <Pressable
                                     style={{
                                         width: '40%',
                                         alignItems: 'flex-start',
@@ -1306,7 +1315,7 @@ class Product extends PureComponent {
                                             />
                                         </View>
                                     }
-                                </TouchableOpacity> */}
+                                </Pressable> */}
 
                                 </View>
 
@@ -1469,7 +1478,7 @@ class Product extends PureComponent {
                                     : null
                                 }
 
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     </View>
                     : null

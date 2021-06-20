@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, TouchableOpacity, Text, Image } from 'react-native';
+import { View, Pressable, Text, Image } from 'react-native';
 import Jmoment from 'moment-jalaali';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -17,7 +17,10 @@ const ContactsList = props => {
 
     return (
         (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={() => {
                     msgCntxt.resetSearch('');
                     props.navigation.navigate('Chat', { contact: item, showReportText: true })
@@ -25,8 +28,10 @@ const ContactsList = props => {
 
                 key={item.contact_id}
                 style={{
-                    borderBottomColor: '#DDDDDD', paddingVertical: 12,
-                    flexDirection: 'row-reverse', width: '100%',
+                    borderBottomColor: '#ededed',
+                    paddingVertical: 12,
+                    flexDirection: 'row-reverse',
+                    width: '100%',
                     borderBottomWidth: !!contactsListLoading || (index < contactsList.length - 1) ? 1 : 0
                 }}
             >
@@ -95,7 +100,7 @@ const ContactsList = props => {
                 </View>
 
 
-            </TouchableOpacity>
+            </Pressable>
 
         )
     )
