@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { ActionSheet, Button } from 'native-base';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
@@ -176,13 +176,16 @@ const StepOne = props => {
                     }}
                 >
                     *
-                    </Text>
+                </Text>
                 {locales('titles.uploadIdCardSample')}
             </Text>
 
             {!!!idCard.uri ?
                 <>
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={chooseImage}
                         style={{
                             // flex: 3,
@@ -216,7 +219,7 @@ const StepOne = props => {
                         <Text>
                             {locales('labels.addImage')}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     <Text
                         style={{
                             color: '#e41c38',
@@ -231,7 +234,10 @@ const StepOne = props => {
                 </>
                 :
 
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     activeOpacity={1}
                     onPress={chooseImage}
                     style={{
@@ -257,7 +263,7 @@ const StepOne = props => {
                         }}
                         source={{ uri: idCard.uri }}
                     />
-                </TouchableOpacity>
+                </Pressable>
             }
 
             <View style={{

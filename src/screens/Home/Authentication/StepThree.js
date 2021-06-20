@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { ActionSheet, Button } from 'native-base';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { connect } from 'react-redux';
@@ -201,13 +201,16 @@ const StepThree = props => {
                     }}
                 >
                     *
-                    </Text>
+                </Text>
                 {locales('labels.uploadEvidenceSample')}
             </Text>
 
             {!!!evidence.uri ?
                 <>
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={chooseImage}
                         style={{
                             height: deviceHeight * 0.23,
@@ -243,7 +246,7 @@ const StepThree = props => {
                         >
                             {locales('labels.addImage')}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     <Text
                         style={{
                             color: '#e41c38',
@@ -257,7 +260,10 @@ const StepThree = props => {
                     </Text>
                 </>
                 :
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     activeOpacity={1}
                     onPress={chooseImage}
                     style={{
@@ -281,7 +287,7 @@ const StepThree = props => {
                         }}
                         source={{ uri: evidence.uri }}
                     />
-                </TouchableOpacity>
+                </Pressable>
             }
             <View
                 style={{
