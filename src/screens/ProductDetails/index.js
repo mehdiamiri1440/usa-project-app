@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView,
-    TouchableOpacity, Linking, Share, RefreshControl,
+    Pressable, Linking, Share, RefreshControl,
     ActivityIndicator
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -776,7 +776,10 @@ class ProductDetails extends PureComponent {
                                     }}>
                                     {locales('titles.phoneNumber')}
                                 </Text>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={_ => this.openCallPad(mobileNumber)}
                                     style={{
                                         flexDirection: 'row-reverse',
@@ -796,7 +799,7 @@ class ProductDetails extends PureComponent {
                                         name='phone-square-alt'
                                         size={20}
                                     />
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
 
                             <View
@@ -1470,7 +1473,10 @@ class ProductDetails extends PureComponent {
                                     {product_name ? product_name : '---'}
                                 </Text>
                                 <View>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         onPress={() => this.shareProductLink(url)}
                                         style={{
                                             borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
@@ -1484,7 +1490,7 @@ class ProductDetails extends PureComponent {
                                             {locales('labels.share')}
                                         </Text>
 
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
                             </View>
 
@@ -1697,7 +1703,10 @@ class ProductDetails extends PureComponent {
                                 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
                             </View>
 
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })}
                                 style={{
                                     width: deviceWidth * 0.95,
@@ -1889,10 +1898,13 @@ class ProductDetails extends PureComponent {
                                     </View>
                                 </View> : null}
 
-                            </TouchableOpacity>
+                            </Pressable>
 
 
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 activeOpacity={1}
                                 onPress={() => {
                                     return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
@@ -1963,7 +1975,7 @@ class ProductDetails extends PureComponent {
                                         {locales('labels.tradeComfortabely')}
                                     </Text>
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
 
 
                             <View

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
-import { View, Text, Modal, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Modal, Pressable, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import { Button, Textarea, InputGroup, Label } from 'native-base';
 
@@ -86,7 +86,10 @@ const ViolationReport = props => {
 
     const renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={_ => handleReasonSelection(item)}
                 key={item}
                 style={{
@@ -113,7 +116,7 @@ const ViolationReport = props => {
                     color='#777777'
                     size={25}
                 />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     }
@@ -158,12 +161,15 @@ const ViolationReport = props => {
                 shadowOffset: { width: 0, height: 2 },
                 justifyContent: 'center'
             }}>
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                     onPress={onRequestToClose}
                 >
                     <FontAwesome5 name='times' size={25} color='#777777' />
-                </TouchableOpacity>
+                </Pressable>
 
                 <View style={{
                     width: '100%',
