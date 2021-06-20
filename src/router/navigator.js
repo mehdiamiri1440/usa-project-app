@@ -100,6 +100,7 @@ const routes = props => {
 
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
         if (shouldDoAsyncJobs) {
+            // console.log('there)
             if (APP_UPDATE_TYPE == 'google')
                 checkForUpdate();
             else {
