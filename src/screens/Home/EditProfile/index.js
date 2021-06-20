@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Text, View, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -480,7 +480,10 @@ class EditProfile extends Component {
                                     }}>
                                     {locales('labels.youAreNotAuthorized')}
                                 </Text>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     style={[styles.loginButton, {
                                         width: 90,
                                         alignSelf: 'center',
@@ -502,7 +505,7 @@ class EditProfile extends Component {
                                     }}>
                                         {locales('labels.editProfileAuthentication')}
                                     </Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             </View> : null}
 
                         <Card transparent>

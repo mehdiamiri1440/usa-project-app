@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Pressable, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Card } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
@@ -164,7 +164,10 @@ const Dashboard = props => {
                                     right: -15
                                 }} />
                         </View>
-                        {activePackageType < 3 && <TouchableOpacity
+                        {activePackageType < 3 && <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('PromoteRegistration')}
                             style={{
                                 backgroundColor: '#00C569',
@@ -181,7 +184,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.promoteRegistration')}</Text>
-                        </TouchableOpacity>}
+                        </Pressable>}
 
                     </ShadowView>
                 </Card>
@@ -229,7 +232,10 @@ const Dashboard = props => {
                                     right: -15
                                 }} />
                         </View>
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('ExtraProductCapacity')}
                             style={{
                                 backgroundColor: '#556080',
@@ -246,7 +252,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('titles.increaseProductRegistrationCapacity')}</Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
                     </ShadowView>
                 </Card>
@@ -295,7 +301,10 @@ const Dashboard = props => {
                                 }} />
                         </View>
 
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('ExtraBuyAdCapacity')}
                             style={{
                                 backgroundColor: '#556080',
@@ -312,7 +321,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('titles.increaseReplyCapacity')}</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     </ShadowView>
                 </Card>
 
@@ -360,7 +369,10 @@ const Dashboard = props => {
                                 }} />
                         </View>
 
-                        {!is_verified ? <TouchableOpacity
+                        {!is_verified ? <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('Authentication')}
                             style={{
                                 backgroundColor: '#556080',
@@ -376,7 +388,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.editProfileAuthentication')}</Text>
-                        </TouchableOpacity> : null}
+                        </Pressable> : null}
                     </ShadowView>
                 </Card>
 
@@ -425,7 +437,10 @@ const Dashboard = props => {
                                 }} />
                         </View>
 
-                        {!access_to_golden_buyAds ? <TouchableOpacity
+                        {!access_to_golden_buyAds ? <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('PromoteRegistration')}
                             style={{
                                 backgroundColor: '#556080',
@@ -441,7 +456,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('titles.accessToGoldens')}</Text>
-                        </TouchableOpacity> : null}
+                        </Pressable> : null}
                     </ShadowView>
                 </Card>
 
@@ -490,7 +505,10 @@ const Dashboard = props => {
                                     right: -15
                                 }} />
                         </View>
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={() => props.navigation.navigate('MyProducts')}
                             style={{
                                 backgroundColor: '#556080',
@@ -507,7 +525,7 @@ const Dashboard = props => {
                             <Text
                                 style={{ color: 'white', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
                                 {locales('labels.myProducts')}</Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
                     </ShadowView>
                 </Card>

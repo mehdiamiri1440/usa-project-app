@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Button } from 'native-base';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
