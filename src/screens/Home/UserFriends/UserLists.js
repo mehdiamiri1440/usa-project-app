@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -84,7 +84,7 @@ const UserFriends = props => {
                                             color: "#556080"
                                         }}>
                                             20%
-                                       </Text>
+                                        </Text>
 
                                         <Text style={{
                                             fontSize: 13,

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    View, Text, TouchableOpacity, ImageBackground, StyleSheet, ScrollView,
-    RefreshControl, Linking, ActivityIndicator
+    View, Text, Pressable,
+    ImageBackground, StyleSheet, ScrollView,
+    RefreshControl, Linking, ActivityIndicator,
+    TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Label, InputGroup, Button } from 'native-base';
@@ -143,7 +145,10 @@ const Wallet = props => {
                             marginTop: 10,
                         }}
                     >
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             activeOpacity={1}
                             style={{ marginTop: 10 }}
                             onPress={_ => props.navigation.navigate('Wallet')}
@@ -250,7 +255,7 @@ const Wallet = props => {
                                     />
                                 }
                             </ImageBackground>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
 
@@ -288,7 +293,11 @@ const Wallet = props => {
                         alignSelf: 'center'
                     }}
                 >
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={_ => handleInventoryByDefaultValues(150000)}
                         style={{
                             flexDirection: 'row-reverse',
@@ -316,8 +325,12 @@ const Wallet = props => {
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={_ => handleInventoryByDefaultValues(100000)}
                         style={{
                             flexDirection: 'row-reverse',
@@ -346,8 +359,12 @@ const Wallet = props => {
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={_ => handleInventoryByDefaultValues(50000)}
                         style={{
                             flexDirection: 'row-reverse',
@@ -375,7 +392,7 @@ const Wallet = props => {
                             }}>
                             {` ${locales('titles.toman')}`}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 <View style={{

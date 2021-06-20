@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    FlatList, View, Text, Image, TouchableOpacity,
+    FlatList, View, Text, Image, Pressable,
     ActivityIndicator, Modal, Animated, Linking,
     ImageBackground, StyleSheet,
     LayoutAnimation, UIManager, Platform
@@ -172,7 +172,10 @@ const Channel = props => {
         const secondTextNumberPart = secondText && secondText.length ? secondText.split(' ')[2] : '';
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={_ => redirectToProduct(product_id)}
                 style={{
                     backgroundColor: 'white',
@@ -319,7 +322,7 @@ const Channel = props => {
                         </Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -339,7 +342,10 @@ const Channel = props => {
     const renderCtaText = (cta_text, cta_link) => {
         if (cta_text && cta_text.length && cta_link && cta_link.length)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={_ => sendCtaLink(cta_link)}
                     style={{
                         flexDirection: 'row-reverse',
@@ -364,7 +370,7 @@ const Channel = props => {
                     >
                         {cta_text}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             )
         return null;
     };
@@ -396,7 +402,11 @@ const Channel = props => {
                             flexDirection: 'row-reverse'
                         }}
                     >
-                        {!!is_sharable && !cta_link && !cta_text ? <TouchableOpacity
+                        {!!is_sharable && !cta_link && !cta_text ? <Pressable
+                            android_ripple={{
+                                color: '#ededed',
+                                radius: 20
+                            }}
                             onPress={_ => forwardMessage(id)}
                             style={{
                                 backgroundColor: 'rgba(102,102,102,0.44)',
@@ -410,7 +420,7 @@ const Channel = props => {
                             }}
                         >
                             <FontAwesome5 name='share' color='white' size={20} />
-                        </TouchableOpacity> : null}
+                        </Pressable> : null}
 
                         {!is_product ? <View
                             style={{
@@ -421,7 +431,10 @@ const Channel = props => {
                                 borderRadius: 6
                             }}
                         >
-                            {file_path ? <TouchableOpacity
+                            {file_path ? <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={_ => setSelectedItem(item)}
                                 activeOpacity={1}
                             >
@@ -434,7 +447,7 @@ const Channel = props => {
                                         resizeMode: 'cover',
                                     }}
                                 />
-                            </TouchableOpacity>
+                            </Pressable>
                                 : null}
                             <View
                                 style={{
@@ -481,7 +494,10 @@ const Channel = props => {
                             : renderMessageWithProductDesign(item)}
 
                     </View>
-                    {!!is_sharable ? <TouchableOpacity
+                    {!!is_sharable ? <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={_ => forwardMessage(id)}
                         style={{
                             flexDirection: 'row-reverse',
@@ -505,7 +521,7 @@ const Channel = props => {
                         >
                             {locales('titles.sendToFriends')}
                         </Text>
-                    </TouchableOpacity> : renderCtaText(cta_text, cta_link)}
+                    </Pressable> : renderCtaText(cta_text, cta_link)}
                 </View>
             </>
 
@@ -573,7 +589,10 @@ const Channel = props => {
                 onRequestClose={_ => setSelectedItem(null)}
                 transparent={false}
             >
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     style={{
                         flexDirection: 'row-reverse',
                         height: 40,
@@ -591,7 +610,7 @@ const Channel = props => {
                     >
                         <FontAwesome5 name='times-circle' size={35} solid color='white' />
                     </View>
-                </TouchableOpacity>
+                </Pressable>
 
                 <ImageZoom
                     cropWidth={deviceWidth}
@@ -599,7 +618,10 @@ const Channel = props => {
                     imageWidth={deviceWidth}
                     imageHeight={deviceHeight * 0.9}
                 >
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         activeOpacity={1}
                         onPress={_ => {
                             !caption ? fadeIn() : fadeOut();
@@ -621,7 +643,7 @@ const Channel = props => {
                                 borderRadius: 4
                             }}
                         />
-                    </TouchableOpacity>
+                    </Pressable>
                 </ImageZoom>
                 <Animated.View
                     style={{
@@ -710,7 +732,10 @@ const Channel = props => {
                 />
             </ImageBackground>
 
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={shareProfile}
                 style={{
@@ -737,7 +762,7 @@ const Channel = props => {
                 >
                     {locales('labels.sendYourProfileToYourFriends')}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         </>
     )

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import {
-    Text, View, TouchableOpacity, Linking
+    Text, View, Pressable, Linking
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
@@ -74,7 +74,10 @@ const CreditCardPayment = props => {
                         marginTop: 20,
                     }}>
 
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
@@ -96,10 +99,13 @@ const CreditCardPayment = props => {
                             }}
                         >
                             09178928266
-                            </Text>
-                    </TouchableOpacity>
+                        </Text>
+                    </Pressable>
 
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
@@ -121,8 +127,8 @@ const CreditCardPayment = props => {
                             }}
                         >
                             09118413054
-                            </Text>
-                    </TouchableOpacity>
+                        </Text>
+                    </Pressable>
 
                 </View>
 
@@ -142,7 +148,10 @@ const CreditCardPayment = props => {
                     alignItems: 'center'
                 }}
             >
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={event => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -174,7 +183,7 @@ const CreditCardPayment = props => {
                     >
                         {locales('labels.transferAmongCreditCart')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             </ShadowView>
 
         </>

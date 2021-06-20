@@ -1,7 +1,8 @@
 import React, { createRef } from 'react';
 import {
-    Text, View, Modal, TouchableOpacity, ScrollView,
-    StyleSheet, Linking, RefreshControl
+    Text, View, Modal, Pressable, ScrollView,
+    StyleSheet, Linking, RefreshControl,
+    TouchableOpacity
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
@@ -338,12 +339,15 @@ class PromoteRegistration extends React.Component {
                             style={{ width: '70%', borderRadius: 5, marginTop: 35, alignSelf: 'center', padding: 10, margin: 20 }}
                             colors={['#21AD93', '#00C569']}
                         >
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.pay(paymentType)}
                             >
                                 <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </LinearGradient>
 
                     </View>
