@@ -545,13 +545,17 @@ class ProductsList extends PureComponent {
 
     };
 
-    onScrollToIndexFailed = _ => {
+    onScrollToIndexFailed = (error = {}) => {
         const {
-            productsListArray = []
-        } = this.state;
+            averageItemLength,
+            index
+        } = error;
 
-        if (productsListArray && productsListArray.length)
-            this.props.productsListRef?.current?.scrollToIndex({ animated: true, index: productsListArray.length });
+        console.warn('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
+        const offset = averageItemLength * index;
+
+        this.props.productsListRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => this.props.productsListRef?.current?.scrollToIndex({ index, animated: true }), 300);
     };
 
     onEndOfProductListReached = _ => {
@@ -1539,6 +1543,10 @@ class ProductsList extends PureComponent {
 
     };
 
+    // getItemLayout = (data, index) => {
+    //     return { length: 293.2, offset: 273.2 * index, index };
+    // };
+
     render() {
 
         const {
@@ -1954,9 +1962,7 @@ class ProductsList extends PureComponent {
                     windowSize={10}
                     initialNumToRender={4}
                     numColumns={2}
-                    // getItemLayout={(data, index) => (
-                    //     { length: data.length, offset: 280 * index, index }
-                    // )}
+                    // getItemLayout={this.getItemLayout}
                     style={{
                         backgroundColor: 'white'
                     }}
