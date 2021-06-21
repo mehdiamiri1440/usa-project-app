@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Modal, Text, View, TouchableOpacity, BackHandler } from 'react-native';
+import { Modal, Text, View, Pressable, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -53,12 +53,15 @@ const PaymentModal = props => {
                 elevation: 5,
                 justifyContent: 'center'
             }}>
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
                     onPress={() => closeAndNavigate()}
                 >
                     <FontAwesome5 name="times" color="#777" solid size={18} />
-                </TouchableOpacity>
+                </Pressable>
 
                 <View style={{
                     width: '100%',
