@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
+import { Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
 import {
     CodeField,
     Cursor,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, I18nManager } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { Button, Input, Item, Label, Radio } from 'native-base';
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
@@ -111,7 +111,10 @@ class UserBasicInfo extends React.Component {
                     marginTop: -20,
                     alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                 }]}>
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         style={{
                             width: deviceWidth * 0.3,
                             borderWidth: 1,
@@ -145,8 +148,11 @@ class UserBasicInfo extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>{locales('labels.woman')}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={() => this.setState({ gender: 'man', genderError: '' })}
                         style={{
                             borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
@@ -180,7 +186,7 @@ class UserBasicInfo extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>{locales('labels.man')}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
                 {!!genderError && <Label
                     style={{
