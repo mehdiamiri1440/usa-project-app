@@ -94,6 +94,7 @@ const Message = props => {
                         <RenderDate
                             item={item}
                             {...props}
+                            id={id}
                             showPhoneFormat={showPhoneFormat}
                         />
                     </View>
