@@ -201,7 +201,7 @@ const RegisterRequestSuccessfully = props => {
             });
     };
 
-    const navigateToChat = (event, { first_name, last_name, is_verified, myuser_id }) => {
+    const navigateToChat = (event, { first_name, last_name, is_verified, myuser_id }, productId) => {
         event.stopPropagation();
         event.preventDefault();
         const tempContact = {
@@ -211,7 +211,11 @@ const RegisterRequestSuccessfully = props => {
             contact_id: myuser_id
         };
         setSelectedContact({ ...tempContact });
-        props.navigation.navigate('Chat', { shouldHideGuidAndComment: true, contact: { ...tempContact } })
+        props.navigation.navigate('Chat', {
+            shouldHideGuidAndComment: true,
+            contact: { ...tempContact },
+            productId
+        })
     };
 
     const renderItem = ({ item }) => {
@@ -522,7 +526,7 @@ color:'#ededed'
 
                                 <Button
                                     small
-                                    onPress={event => navigateToChat(event, item)}
+                                    onPress={event => navigateToChat(event, item, id)}
                                     style={{
                                         width: has_phone ? '47%' : '70%',
                                         zIndex: 1000,
@@ -556,7 +560,7 @@ color:'#ededed'
                                             size={20}
                                         />
                                         <Text
-                                            onPress={event => navigateToChat(event, item)}
+                                            onPress={event => navigateToChat(event, item, id)}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 18,
@@ -669,7 +673,7 @@ color:'#ededed'
                             </View>
                             :
                             <Button
-                                onPress={event => navigateToChat(event, item)}
+                                onPress={event => navigateToChat(event, item, id)}
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
@@ -698,7 +702,7 @@ color:'#ededed'
                                         color="white"
                                     />
                                     <Text
-                                        onPress={event => navigateToChat(event, item)}
+                                        onPress={event => navigateToChat(event, item, id)}
                                         style={{
                                             color: 'white',
                                             textAlign: 'center',
@@ -707,7 +711,7 @@ color:'#ededed'
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                         }}>{locales('labels.sendMessageToSeller')}</Text>
                                     <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
-                                        onPress={event => navigateToChat(event, item)}
+                                        onPress={event => navigateToChat(event, item, id)}
                                     />
                                 </View>
                             </Button>

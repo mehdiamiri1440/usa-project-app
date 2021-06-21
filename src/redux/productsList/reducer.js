@@ -63,13 +63,6 @@ const INITIAL_STATE = {
     sellerMobileNumberError: false,
     sellerMobileNumberMessage: null,
     sellerMobileNumber: {},
-
-
-    sendReplyToProductLoading: false,
-    sendReplyToProductFailed: false,
-    sendReplyToProductError: false,
-    sendReplyToProductMessage: null,
-    sendReplyToProduct: {},
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -492,49 +485,6 @@ export default (state = INITIAL_STATE, action) => {
                 sellerMobileNumberFailed: false,
                 sellerMobileNumberError: true,
                 sellerMobileNumberMessage: ''
-            };
-        };
-
-        case actionTypes.SEND_REPLY_TO_PRODUCT_LOADING: {
-            return {
-                ...state,
-                sendReplyToProduct: {},
-                sendReplyToProductLoading: true,
-                sendReplyToProductFailed: false,
-                sendReplyToProductError: false,
-                sendReplyToProductMessage: null
-            };
-        };
-        case actionTypes.SEND_REPLY_TO_PRODUCT_SUCCESSFULLY: {
-            let { msg = '' } = action.payload
-            return {
-                ...state,
-                sendReplyToProduct: { ...action.payload },
-                sendReplyToProductLoading: false,
-                sendReplyToProductFailed: false,
-                sendReplyToProductError: false,
-                sendReplyToProductMessage: msg,
-            };
-        };
-        case actionTypes.SEND_REPLY_TO_PRODUCT_FAILED: {
-            const { msg = '' } = action.payload;
-            return {
-                ...state,
-                sendReplyToProduct: {},
-                sendReplyToProductLoading: false,
-                sendReplyToProductFailed: true,
-                sendReplyToProductError: false,
-                sendReplyToProductMessage: msg
-            };
-        };
-        case actionTypes.SEND_REPLY_TO_PRODUCT_REJECT: {
-            return {
-                ...state,
-                sendReplyToProduct: {},
-                sendReplyToProductLoading: false,
-                sendReplyToProductFailed: false,
-                sendReplyToProductError: true,
-                sendReplyToProductMessage: ''
             };
         };
 

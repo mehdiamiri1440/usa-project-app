@@ -21,7 +21,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
 import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
-import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '../../utils';
+import { formatter, validator, deviceWidth, deviceHeight } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
@@ -165,9 +165,10 @@ class ChatScreen extends Component {
     handleGuid = _ => {
         const { route = {} } = this.props;
         const { params = {} } = route;
-        const { contact = {}, shouldHideGuidAndComment } = params;
-
-        const { buyAdId } = this.props;
+        const { contact = {},
+            shouldHideGuidAndComment,
+            buyAdId
+        } = params;
 
         if (!buyAdId && !shouldHideGuidAndComment) {
 
@@ -336,16 +337,25 @@ class ChatScreen extends Component {
 
     sendMessage = () => {
         const { route = {} } = this.props;
+
         const { params = {} } = route;
-        const { contact = {} } = params;
+
+        const {
+            contact = {},
+            productId,
+            buyAdId
+        } = params;
+
         let { messageText } = this.state;
+
         let userChatHistory = [...this.state.userChatHistory];
+
         let msgObject = {
             sender_id: formatter.toStandard(this.props.loggedInUserId),
             receiver_id: formatter.toStandard(contact.contact_id),
             text: formatter.toStandard(messageText),
             created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
-        }
+        };
 
         if (messageText && messageText.length && messageText.trim()) {
             userChatHistory.unshift({ ...msgObject });
@@ -356,17 +366,10 @@ class ChatScreen extends Component {
                 isFirstLoad: false,
                 shouldShowRatingCard: false
             });
-            this.props.sendMessage(msgObject).then((result) => {
-                this.scrollToTop(result);
-                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                //     .then(() => {
-                //         this.setState(state => {
-                //             state.loaded = false;
-                //             return '';
-                //         })
-                //     })
-            });
 
+            this.props.sendMessage(msgObject, buyAdId, productId).then((result) => {
+                this.scrollToTop(result);
+            });
         }
     };
 
@@ -575,7 +578,7 @@ class ChatScreen extends Component {
         let {
             userChatHistoryLoading,
             route = {},
-            buyAdId } = this.props;
+        } = this.props;
 
         const {
             params = {}
@@ -585,7 +588,8 @@ class ChatScreen extends Component {
             profile_photo,
             contact,
             showReportText,
-            shouldHideGuidAndComment = false
+            shouldHideGuidAndComment = false,
+            buyAdId
         } = params;
 
         let {
@@ -787,9 +791,9 @@ class ChatScreen extends Component {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            activeOpacity={(shouldHideGuidAndComment || this.props.buyAdId) ? 1 : 0}
+                            activeOpacity={(shouldHideGuidAndComment || buyAdId) ? 1 : 0}
                             onPress={() => {
-                                if (!this.props.buyAdId && !shouldHideGuidAndComment) {
+                                if (!buyAdId && !shouldHideGuidAndComment) {
                                     this.props.navigation.navigate('Profile', { user_name });
                                 }
                             }}
@@ -825,7 +829,7 @@ class ChatScreen extends Component {
                                     </Text>
                                     {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                                 </View>
-                                {!showGuid && !this.props.buyAdId && !shouldHideGuidAndComment ? <Text
+                                {!showGuid && !buyAdId && !shouldHideGuidAndComment ? <Text
                                     style={{
                                         textAlign: 'right',
                                         color: '#21AD93',
@@ -1044,7 +1048,7 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
         fetchUserChatHistory: (id, from, to) => dispatch(messagesActions.fetchUserChatHistory(id, from, to)),
-        sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
+        sendMessage: (msgObject, buyAdId, productId) => dispatch(messagesActions.sendMessage(msgObject, buyAdId, productId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),

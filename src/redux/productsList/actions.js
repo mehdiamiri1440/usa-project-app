@@ -210,30 +210,6 @@ export const fetchSellerMobileNumber = contactInfoObject => {
     return request();
 };
 
-
-export const sendReplytoProduct = replyObj => {
-    const request = () => {
-        return dispatch => {
-            dispatch(loading());
-            return API.productsList
-                .sendReplytoProduct(replyObj)
-                .then(res => dispatch(success(res)))
-                .catch(err => {
-                    dispatch(generateErrorAction(err, {
-                        failure: actionTypes.SEND_REPLY_TO_PRODUCT_FAILED,
-                        reject: actionTypes.SEND_REPLY_TO_PRODUCT_REJECT
-                    }));
-                    throw err;
-                });
-        };
-    };
-    const loading = () => action(actionTypes.SEND_REPLY_TO_PRODUCT_LOADING);
-    const success = res => action(actionTypes.SEND_REPLY_TO_PRODUCT_SUCCESSFULLY, res);
-
-    return request();
-};
-
-
 export const updateProductsList = flag => {
     return dispatch => dispatch(action(actionTypes.UPDATE_PRODUCTS_LIST, flag));
 };

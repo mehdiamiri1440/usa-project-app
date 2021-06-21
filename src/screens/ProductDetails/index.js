@@ -568,6 +568,7 @@ class ProductDetails extends PureComponent {
             user_name,
             userId,
             profile_photo,
+            productIdFromProductDetails
         } = this.state;
 
         const {
@@ -588,7 +589,11 @@ class ProductDetails extends PureComponent {
             analytics().logEvent('open_chat', {
                 product_id: this.props?.route?.params?.productId
             });
-        this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+        this.props.navigation.navigate('Chat', {
+            contact: selectedContact,
+            profile_photo,
+            productId: productIdFromProductDetails
+        })
     };
 
     onRequestToCloseRegistrationModal = (shouldOpenChat = false) => {
@@ -618,7 +623,11 @@ class ProductDetails extends PureComponent {
                 this.fetchContactInfo(productIdFromProductDetails, userId, true);
             else {
                 if (shouldOpenChat == true)
-                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
+                    this.props.navigation.navigate('Chat', {
+                        contact: selectedContact,
+                        profile_photo,
+                        productId: productIdFromProductDetails
+                    });
             }
         });
     };

@@ -157,24 +157,3 @@ export const fetchSellerMobileNumber = contactInfoObject => {
             });
     });
 };
-
-
-export const sendReplytoProduct = replyObj => {
-    return new Promise((resolve, reject) => {
-        requester
-            .fetchAPI({
-                route: `send_reply_to_product`,
-                method: 'POST',
-                data: replyObj,
-                withAuth: true,
-            })
-            .then(result => {
-                resolve(result)
-            })
-            .catch(err => {
-                // return reject(err.response);
-                return reject(err);
-
-            });
-    });
-};
