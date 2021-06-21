@@ -94,13 +94,15 @@ const routes = props => {
 
     useEffect(() => {
 
+        handleInitialRoute();
+
         checkForShowingRatingModal();
 
         AppState.addEventListener('change', handleAppStateChange);
 
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
+
         if (shouldDoAsyncJobs) {
-            // console.log('there)
             if (APP_UPDATE_TYPE == 'google')
                 checkForUpdate();
             else {
@@ -135,6 +137,16 @@ const routes = props => {
         ) {
             // checkForShowingContactInfoGuid();
             checkForShowingPromotionModal();
+        }
+    };
+
+    const handleInitialRoute = _ => {
+        if (!loggedInUserId) {
+            AsyncStorage.getItem('@isIntroductionSeen').then(result => {
+                result = JSON.parse(result);
+                if (!result)
+                    navigationRef?.current?.navigate('StartUp', { screen: 'Intro' })
+            })
         }
     };
 
