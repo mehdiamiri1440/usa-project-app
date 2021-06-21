@@ -838,7 +838,9 @@ const routes = props => {
                                     key={item.key}
                                     options={{
                                         tabBarBadge: false,
-                                        tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales(item.label)}</Text>,
+                                        tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>
+                                            {locales(item.label)}
+                                        </Text>,
                                         tabBarIcon: ({ focused }) => <View
                                             style={item.key == 'RegisterProductStack' ? {
                                                 backgroundColor: !focused ? '#fff' : '#00C569', height: 30, width: 30,
