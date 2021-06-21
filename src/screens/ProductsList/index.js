@@ -62,35 +62,36 @@ class ProductsList extends PureComponent {
             categoriesList: []
         }
 
+        this.isComponentMounted = false;
     }
 
     productsListRef = createRef();
     categoryFiltersRef = createRef();
-
     componentDidMount() {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
 
-        this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
+            Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+                if (componentType === 'Component') {
+                    analytics().logScreenView({
+                        screen_name: componentName,
+                        screen_class: componentName,
+                    });
+                }
+            });
+            analytics().logScreenView({
+                screen_name: "product_list",
+                screen_class: "product_list",
+            });
 
-        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
-            if (componentType === 'Component') {
-                analytics().logScreenView({
-                    screen_name: componentName,
-                    screen_class: componentName,
-                });
-            }
-        });
-        analytics().logScreenView({
-            screen_name: "product_list",
-            screen_class: "product_list",
-        });
+            this.initialCalls().catch(error => {
+                this.setState({
+                    searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
+            });
 
-        this.initialCalls().catch(error => {
-            this.setState({
-                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });
-
-
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -143,6 +144,7 @@ class ProductsList extends PureComponent {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
         return this.blurListener;
     }
 

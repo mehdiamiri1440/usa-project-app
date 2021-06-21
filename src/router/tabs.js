@@ -60,8 +60,7 @@ export const StartUp = _ => (
         <Stack.Screen key='Intro' name='Intro' component={Intro} />
         <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
     </Stack.Navigator>
-)
-
+);
 
 export const MyBuskoolStack = _ => {
     return (
@@ -368,7 +367,7 @@ export const RegisterProductStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const RegisterRequestStack = _ => (
     <Stack.Navigator
@@ -420,7 +419,7 @@ export const RegisterRequestStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const MessagesStack = _ => (
     <Stack.Navigator
@@ -489,7 +488,7 @@ export const MessagesStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const RequestsStack = _ => (
     <Stack.Navigator
@@ -530,7 +529,7 @@ export const RequestsStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const HomeStack = _ => {
 
@@ -739,4 +738,4 @@ export const unSignedInRoutes = [
         icon: 'user-alt',
         key: 'MyBuskool'
     },
-]
+];

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, FlatList, Pressable, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
@@ -101,7 +101,10 @@ class Filters extends Component {
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => {
                                     this.setState({ subCategoriesModal: false }, () => {
                                         this.props.closeFilters()
@@ -119,7 +122,7 @@ class Filters extends Component {
                                     {item.category_name}
                                 </Text>
 
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     />
                 </Modal>
@@ -180,7 +183,10 @@ class Filters extends Component {
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.sortProducts(item.id, item.category_name)}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
@@ -191,7 +197,7 @@ class Filters extends Component {
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     />
 

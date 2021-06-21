@@ -1,5 +1,5 @@
 import React, { PureComponent, createRef } from 'react';
-import { Text, View, SafeAreaView, Modal, FlatList, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, View, SafeAreaView, Modal, FlatList, StyleSheet, Image, ImageBackground, Pressable } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Icon, InputGroup, Input, Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -481,7 +481,10 @@ class Requests extends PureComponent {
         } = this.state;
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSortItemClick(item.value)}
                 style={{
@@ -503,7 +506,7 @@ class Requests extends PureComponent {
                 >
                     {item.title}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -522,7 +525,10 @@ class Requests extends PureComponent {
 
         if (sort_by == BM)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
@@ -549,10 +555,13 @@ class Requests extends PureComponent {
                     >
                         {locales('labels.sort')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
@@ -585,7 +594,7 @@ class Requests extends PureComponent {
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
