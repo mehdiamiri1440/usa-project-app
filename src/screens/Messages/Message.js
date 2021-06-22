@@ -207,7 +207,6 @@ const RenderPhoneFormatMessage = props => {
                         flexDirection: 'row-reverse',
 
                         paddingVertical: 5,
-                        marginBottom: -5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
                         overflow: "hidden",
@@ -217,22 +216,24 @@ const RenderPhoneFormatMessage = props => {
                     }}
                 >
                     <Text style={{
+                        marginRight: 10
+                    }}>
+                        <FontAwesome
+                            name='phone'
+                            color='white'
+                            size={14}
+                        />
+                    </Text>
+                    <Text style={{
                         color: 'white',
                         fontSize: 16,
+                        marginHorizontal: 10,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     }}>
                         {locales('labels.call')}
 
                     </Text>
-                    <Text style={{
-                        // position: 'absolute',
-                        // left: 0,
-                        marginRight: 10
-                    }}>
-                        <FontAwesome name='phone'
 
-                            color='white' size={18} />
-                    </Text>
 
                 </View>
             </Pressable >
@@ -276,7 +277,6 @@ const RenderMessageWithProductIdDesign = props => {
                         flexDirection: 'row-reverse',
 
                         paddingVertical: 5,
-                        marginBottom: -5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
                         overflow: "hidden",
@@ -286,23 +286,23 @@ const RenderMessageWithProductIdDesign = props => {
                     }}
                 >
                     <Text style={{
-                        color: 'white',
-                        fontSize: 16,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    }}>
-                        {locales('labels.ProductDetails')}
-
-                    </Text>
-                    <Text style={{
                         marginRight: 10
                     }}>
                         <FontAwesome5
                             name='link'
                             color='white'
-                            size={18}
+                            size={14}
                         />
                     </Text>
+                    <Text style={{
+                        color: 'white',
+                        fontSize: 16,
+                        marginHorizontal: 5,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    }}>
+                        {locales('labels.ProductDetails')}
 
+                    </Text>
                 </View>
             </Pressable >
         )
