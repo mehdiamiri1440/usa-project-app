@@ -18,7 +18,8 @@ const Message = props => {
         separators,
         contact,
         loggedInUserId,
-        prevMessage
+        prevMessage,
+        is_seller
     } = props;
 
     const { contact_id: id } = contact;
@@ -104,11 +105,20 @@ const Message = props => {
                         {...props}
                         id={id}
                     />
+                    {!is_seller ?
+                        <RenderMessageWithProductIdDesign
+                            item={item}
+                            {...props}
+                        />
+                        :
+                        null
+                    }
                 </View>
             </View>
         </>
     )
-}
+};
+
 const RenderDate = props => {
     const {
         showPhoneFormat,
@@ -223,6 +233,75 @@ const RenderPhoneFormatMessage = props => {
                         marginRight: 10
                     }}>
                         <FontAwesome name='phone'
+
+                            color='white' size={18} />
+                    </Text>
+
+                </View>
+            </Pressable >
+        )
+    return null;
+};
+
+const RenderMessageWithProductIdDesign = props => {
+    const {
+        item = {}
+    } = props;
+
+    const {
+        p_id
+    } = item;
+
+
+    if (!!p_id)
+        return (
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                activeOpacity={1}
+                onPress={() => props.navigaiton.navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
+                style={{
+                    bottom: '9%',
+                }
+                }
+            >
+                <View
+                    style={{
+                        width: 210,
+                        backgroundColor: '#4FA992',
+
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+
+                        flexDirection: 'row-reverse',
+
+                        paddingVertical: 5,
+                        marginBottom: -5,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        marginTop: 7,
+                        overflow: "hidden",
+                        borderTopRightRadius: 0,
+                        borderTopLeftRadius: 0,
+
+                    }}
+                >
+                    <Text style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    }}>
+                        {locales('labels.ProductDetails')}
+
+                    </Text>
+                    <Text style={{
+                        // position: 'absolute',
+                        // left: 0,
+                        marginRight: 10
+                    }}>
+                        <FontAwesome name='info-circle'
 
                             color='white' size={18} />
                     </Text>

@@ -485,15 +485,30 @@ class ChatScreen extends Component {
     keyExtractor = (_, index) => index.toString();
 
     renderItem = ({ item, index, separators }) => {
-        const { route = {} } = this.props;
+        const {
+            route = {},
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+
         const { params = {} } = route;
+
         const { contact = {} } = params;
+
         return <Message
             item={item}
             loggedInUserId={this.props.loggedInUserId}
             contact={contact}
             index={index}
             separators={separators}
+            is_seller={is_seller}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
         />;
     };
