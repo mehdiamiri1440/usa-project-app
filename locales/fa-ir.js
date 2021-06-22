@@ -158,7 +158,7 @@ export default {
     'labels.specialProducts': 'ویژه‌ها',
     'labels.registerRequest': 'ثبت درخواست',
     'labels.somethingWentWrong': 'متاسفانه به مشکلی برخورده‌ایم',
-    'labels.problemHappened': 'مشکلی رخ داده است .',
+    'labels.problemHappened': 'مشکلی رخ داده است.',
     'labels.pleaseRetry': 'لطفا مجددا تلاش بفرمایید.',
     'labels.promoteRegistrationModalDescription': 'برای دسترسی به خریداران طلایی ، شماره کاربران ، ثبت محصول بیشتر و دیگر امکانات ویژه باسکول ، عضویت خود را ارتقا دهید',
     'labels.myProducts': 'محصولات من',
