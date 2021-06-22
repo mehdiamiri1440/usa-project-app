@@ -6,6 +6,7 @@ import Clipboard from "@react-native-community/clipboard";
 import Feather from 'react-native-vector-icons/dist/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import { validator, parser } from '../../utils';
@@ -73,6 +74,8 @@ const Message = props => {
                             paddingHorizontal: 10,
                             maxWidth: deviceWidth * 0.75,
                             borderRadius: 9,
+                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
                             paddingVertical: 3,
                             backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         }}
@@ -190,16 +193,11 @@ const RenderPhoneFormatMessage = props => {
                     color: '#ededed'
                 }}
                 activeOpacity={1}
-                onPress={() => openCallPad(item.text)
-                }
-                style={{
-                    bottom: '9%',
-                }
-                }
+                onPress={() => openCallPad(item.text)}
             >
                 <View
                     style={{
-                        width: 210,
+                        width: '100%',
                         backgroundColor: '#4FA992',
 
                         alignItems: 'center',
@@ -212,7 +210,6 @@ const RenderPhoneFormatMessage = props => {
                         marginBottom: -5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
-                        marginTop: 7,
                         overflow: "hidden",
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
@@ -245,8 +242,13 @@ const RenderPhoneFormatMessage = props => {
 
 const RenderMessageWithProductIdDesign = props => {
     const {
-        item = {}
+        item = {},
+        navigation = {}
     } = props;
+
+    const {
+        navigate = _ => { }
+    } = navigation;
 
     const {
         p_id
@@ -260,16 +262,12 @@ const RenderMessageWithProductIdDesign = props => {
                     color: '#ededed'
                 }}
                 activeOpacity={1}
-                onPress={() => props.navigaiton.navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
-                style={{
-                    bottom: '9%',
-                }
-                }
+                onPress={() => navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
             >
                 <View
                     style={{
-                        width: 210,
-                        backgroundColor: '#4FA992',
+                        width: '100%',
+                        backgroundColor: '#1da1f2',
 
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -281,7 +279,6 @@ const RenderMessageWithProductIdDesign = props => {
                         marginBottom: -5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
-                        marginTop: 7,
                         overflow: "hidden",
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
@@ -297,13 +294,13 @@ const RenderMessageWithProductIdDesign = props => {
 
                     </Text>
                     <Text style={{
-                        // position: 'absolute',
-                        // left: 0,
                         marginRight: 10
                     }}>
-                        <FontAwesome name='info-circle'
-
-                            color='white' size={18} />
+                        <FontAwesome5
+                            name='link'
+                            color='white'
+                            size={18}
+                        />
                     </Text>
 
                 </View>

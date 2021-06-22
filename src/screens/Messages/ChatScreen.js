@@ -510,6 +510,7 @@ class ChatScreen extends Component {
             separators={separators}
             is_seller={is_seller}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
+            {...this.props}
         />;
     };
 
