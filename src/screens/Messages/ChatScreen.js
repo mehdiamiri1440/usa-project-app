@@ -487,16 +487,7 @@ class ChatScreen extends Component {
     renderItem = ({ item, index, separators }) => {
         const {
             route = {},
-            userProfile = {}
         } = this.props;
-
-        const {
-            user_info = {}
-        } = userProfile;
-
-        const {
-            is_seller
-        } = user_info;
 
         const { params = {} } = route;
 
@@ -508,7 +499,6 @@ class ChatScreen extends Component {
             contact={contact}
             index={index}
             separators={separators}
-            is_seller={is_seller}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
             {...this.props}
         />;

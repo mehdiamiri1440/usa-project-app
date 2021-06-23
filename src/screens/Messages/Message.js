@@ -20,7 +20,6 @@ const Message = props => {
         contact,
         loggedInUserId,
         prevMessage,
-        is_seller
     } = props;
 
     const { contact_id: id } = contact;
@@ -74,8 +73,8 @@ const Message = props => {
                             paddingHorizontal: 10,
                             maxWidth: deviceWidth * 0.75,
                             borderRadius: 9,
-                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
-                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                            borderBottomRightRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
+                            borderBottomLeftRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
                             paddingVertical: 3,
                             backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         }}
@@ -276,7 +275,7 @@ const RenderMessageWithProductIdDesign = props => {
 
                         flexDirection: 'row-reverse',
 
-                        paddingVertical: 5,
+                        paddingVertical: 8,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
                         overflow: "hidden",

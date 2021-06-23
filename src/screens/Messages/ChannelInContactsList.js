@@ -28,7 +28,7 @@ const ChannelInContactsList = ({
                 alignItems: 'center',
                 height: 75,
                 borderBottomWidth: 1,
-                borderBottomColor: '#e5e5e5',
+                borderBottomColor: '#ededed',
             }}>
             <Image
                 style={{
