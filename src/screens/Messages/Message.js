@@ -108,7 +108,7 @@ const Message = props => {
                         {...props}
                         id={id}
                     />
-                    {!is_seller ?
+                    {item.sender_id != loggedInUserId ?
                         <RenderMessageWithProductIdDesign
                             item={item}
                             {...props}
@@ -300,7 +300,7 @@ const RenderMessageWithProductIdDesign = props => {
                         marginHorizontal: 5,
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     }}>
-                        {locales('labels.ProductDetails')}
+                        {locales('labels.ProductImagesAndDetails')}
 
                     </Text>
                 </View>

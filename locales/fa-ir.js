@@ -149,6 +149,7 @@ export default {
     'labels.uploadIdCardLikeSample': 'کارت ملی خود را طبق نمونه بارگذاری کنید .',
     'labels.uploadIdCardWithOwnerLikeSample': 'تصویر خود همراه با تصویر کارت ملی را طبق نمونه زیر بارگذاری کنید .',
     'labels.myProfile': "پروفایل من",
+    'labels.ProductImagesAndDetails': 'تصاویر و جزییات محصول',
     'labels.uploadIdCard': 'تصویر کارت ملی خود را اینجا بارگذاری کنید',
     'labels.category': 'دسته‌بندی محصول',
     'labels.promoteRegistration': 'ارتقا عضویت',
