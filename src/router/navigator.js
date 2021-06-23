@@ -355,7 +355,7 @@ const routes = props => {
         const shouldShow = loggedInUserId && is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
-        const isBottomMenuVisible = loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
+        const isBottomMenuVisible = ['Chat', 'Channel', 'Intro'].indexOf(currentRouteName) == -1;
 
         setShouldShowBottomMenu(isBottomMenuVisible);
 
@@ -831,7 +831,7 @@ const routes = props => {
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
-                            barStyle={{ backgroundColor: '#313A43' }}
+                            barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
                         >
                             {unSignedInRoutes.map((item) => (
                                 <Tab.Screen
