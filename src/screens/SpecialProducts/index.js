@@ -1744,7 +1744,7 @@ class SpecialProducts extends PureComponent {
 
                 <Header
                     {...this.props}
-                    title={locales('labels.specialProducts')}
+                    title={locales('labels.suggestedProducts')}
                 />
 
                 <View style={{ backgroundColor: 'white' }}>
