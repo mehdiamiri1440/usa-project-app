@@ -153,6 +153,7 @@ export default {
     'labels.uploadIdCard': 'تصویر کارت ملی خود را اینجا بارگذاری کنید',
     'labels.category': 'دسته‌بندی محصول',
     'labels.promoteRegistration': 'ارتقا عضویت',
+    'labels.thanksForCommenting': 'از نظردهی شما سپاسگزاریم',
     'labels.completeCase': 'این مورد را تکمیل کنید',
     'labels.incorrectFormat': 'فرمت نادرست است',
     'labels.relatedProducts': 'محصولات مرتبط',

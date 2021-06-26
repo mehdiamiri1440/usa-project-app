@@ -91,6 +91,8 @@ const routes = props => {
 
     const [isUpgradeModuleRaised, setIsUpgradeModuleRaised] = useState(false);
 
+    const [ratingModalSuccessPage, setRatingModalSuccessPage] = useState(false);
+
 
     useEffect(() => {
 
@@ -206,14 +208,35 @@ const routes = props => {
                 .then(result => {
                     result = JSON.parse(result);
                     if (!result || !result.length) {
-                        isRatingModalsSeen = true;
-                        return setShowRatingModal(true);
+                        result = [];
+                        result.push({
+                            userId: loggedInUserId,
+                            date: moment(),
+                            isShown: false
+                        });
+                        AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
                     }
-
-                    if (result.some(item => item == loggedInUserId))
-                        return;
-                    isRatingModalsSeen = true;
-                    return setShowRatingModal(true);
+                    else {
+                        const foundIndex = result.findIndex(item => item.userId == loggedInUserId);
+                        if (foundIndex > -1) {
+                            if (moment().diff(result[foundIndex].date, 'days') >= 5) {
+                                if (!result[foundIndex].isShown) {
+                                    result[foundIndex].isShown = true;
+                                    AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
+                                    isRatingModalsSeen = true;
+                                    return setShowRatingModal(true);
+                                }
+                            }
+                        }
+                        else {
+                            result.push({
+                                userId: loggedInUserId,
+                                date: moment(),
+                                isShown: false
+                            });
+                            AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
+                        }
+                    }
                 });
     };
 
@@ -318,21 +341,6 @@ const routes = props => {
     const closeRatingModal = _ => {
         isRatingModalsSeen = false;
         setShowRatingModal(false);
-        AsyncStorage.getItem('@ratingModalSeenUsers')
-            .then(result => {
-
-                result = JSON.parse(result);
-
-                if (!result || !result.length)
-                    result = [];
-
-                if (!!loggedInUserId)
-                    result.push(loggedInUserId);
-
-                result = [... new Set(result)].filter(item => !!item);
-
-                AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result))
-            });
     };
 
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
@@ -418,6 +426,7 @@ const routes = props => {
                         visible={showRatingModal}
                         style={styles.dialogWrapper}
                     >
+
                         <Dialog.Actions
                             style={styles.dialogHeader}
                         >
@@ -430,61 +439,96 @@ const routes = props => {
                                 {locales('titles.postComment')}
                             </Paragraph>
                         </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <FontAwesome5 name="star" solid color="#FFBB00" size={70} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('labels.satisfyWithBuskool')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions
-                            style={{
-                                justifyContent: 'center',
-                                width: '100%',
-                                alignItems: 'center',
-                                flexDirection: 'row-reverse',
-                                padding: 0
-                            }}>
-                            <Button
-                                style={[styles.loginButton, { width: '45%' }]}
-                                onPress={() => {
-                                    closeRatingModal();
-                                    Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
-                                        if (!!supported) {
-                                            Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
-                                        } else {
-                                            Linking.openURL('https://play.google.com')
-                                        }
-                                    })
-                                        .catch(() => {
-                                            Linking.openURL('https://play.google.com')
-                                        })
+                        {ratingModalSuccessPage ?
+                            <View
+                                style={{
+                                    minHeight: '25%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}
                             >
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                    }}>
 
-                                <Text style={[styles.closeButtonText, { color: 'white' }]}>
-                                    {locales('labels.yes')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.loginButton, { width: '45%', backgroundColor: '#BEBEBE' }]}
-                                onPress={closeRatingModal}
-                            >
+                                    <FontAwesome5 name="check-circle" solid color="#00C569" size={70} />
 
-                                <Text style={[styles.closeButtonText, { color: 'white' }]}>
-                                    {locales('labels.no')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.thanksForCommenting')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                            </View>
+                            :
+                            <>
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    <FontAwesome5 name="star" solid color="#FFBB00" size={70} />
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.satisfyWithBuskool')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                                <Dialog.Actions
+                                    style={{
+                                        justifyContent: 'center',
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        flexDirection: 'row-reverse',
+                                        padding: 0
+                                    }}>
+                                    <Button
+                                        style={[styles.loginButton, { width: '45%' }]}
+                                        onPress={() => {
+                                            closeRatingModal();
+                                            Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                                                if (!!supported) {
+                                                    Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                                                } else {
+                                                    Linking.openURL('https://play.google.com')
+                                                }
+                                            })
+                                                .catch(() => {
+                                                    Linking.openURL('https://play.google.com')
+                                                })
+                                        }}
+                                    >
+
+                                        <Text style={[styles.closeButtonText, { color: 'white' }]}>
+                                            {locales('labels.yes')}
+                                        </Text>
+                                    </Button>
+                                    <Button
+                                        style={[styles.loginButton, { width: '45%', backgroundColor: '#BEBEBE', elevation: 0 }]}
+                                        onPress={_ => {
+                                            setRatingModalSuccessPage(true);
+                                            setTimeout(() => {
+                                                setRatingModalSuccessPage(false);
+                                                closeRatingModal();
+                                            }, 3000);
+                                        }}
+                                    >
+
+                                        <Text style={[styles.closeButtonText, { color: 'white', elevation: 0 }]}>
+                                            {locales('labels.no')}
+                                        </Text>
+                                    </Button>
+                                </Dialog.Actions>
+                            </>
+                        }
                     </Dialog>
                 </Portal >
                 :
