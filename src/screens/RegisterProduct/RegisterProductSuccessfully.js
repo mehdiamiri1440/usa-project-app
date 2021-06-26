@@ -1147,9 +1147,7 @@ class RegisterProductSuccessfully extends Component {
                                     justifyContent: 'center', width: '75%',
                                     alignItems: 'center', alignSelf: 'center', marginVertical: 20
                                 }]}
-                                onPress={() => {
-                                    this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
-                                }}
+                                onPress={() => this.props.navigation.navigate('RequestsStack', { screen: 'Requests', params: { subCategoryId, subCategoryName } })}
                             >
                                 <Text style={styles.buttonText}>
                                     {locales('titles.seeBuyAds')}</Text>
