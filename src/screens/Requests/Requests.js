@@ -957,58 +957,61 @@ class Requests extends PureComponent {
                             placeholderTextColor="#bebebe"
                             placeholder={locales('labels.searchBuyAdRequest')} />
                     </InputGroup>
-                    {this.renderSortIcons()}
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+                        {this.renderSortIcons()}
+                        {
+                            selectedFilterName ?
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed',
+                                        radius: 8
+                                    }}
+                                    onPress={() => this.setState({
+                                        buyAdRequestsList: this.props.buyAdRequestsList,
+                                        selectedFilterName: ''
+                                    })}
+                                    style={{
+                                        borderRadius: 12,
+                                        marginTop: 7,
+                                        marginBottom: 8,
+                                        marginHorizontal: 5,
+                                        borderColor: '#FA8888',
+                                        borderWidth: 1,
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        maxWidth: 120,
+                                        alignSelf: 'flex-end',
+                                        backgroundColor: '#FCF6F6',
+                                        minHeight: 30,
+                                        paddingHorizontal: 10
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            textAlignVertical: 'center',
+                                            fontSize: 15,
+                                            color: '#E41C38',
+                                            paddingLeft: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}
+                                    >
+                                        {selectedFilterName}
+                                    </Text>
+                                    <FontAwesome5 name='times' size={12} color='#E41C38' />
+                                </Pressable>
+                                :
+                                null
+                        }
+                    </View>
                 </View>
 
-                {
-                    selectedFilterName ?
-                        <View
-                            style={{
-                                backgroundColor: 'white',
-                                borderRadius: 6,
-                                paddingVertical: 6,
-                                paddingHorizontal: 15,
-                                alignItems: 'center',
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-around',
-                                position: 'relative'
-                            }}
-                        >
-                            <Button
-                                small
-                                onPress={() => this.setState({
-                                    buyAdRequestsList: this.props.buyAdRequestsList,
-                                    selectedFilterName: ''
-                                })}
-                                style={{
-                                    borderWidth: 1,
-                                    borderColor: '#E41C38',
-                                    borderRadius: 50,
-                                    maxWidth: 250,
-                                    backgroundColor: '#fff',
-                                    height: 35,
-                                }}
-                            >
-                                <Text style={{
-                                    textAlign: 'center',
-                                    width: '100%',
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 17
-                                }}>
-                                    {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
-                                    {/* {selectedFilterName} */}
-                                </Text>
-                                <FontAwesome5 color="#E41C38" name="times" solid style={{
-                                    fontSize: 18,
-                                    position: 'absolute',
-                                    right: 20,
-                                }} />
 
-                            </Button>
-                        </View> :
-                        null
-                }
                 <View>
                     {/* 
                 <Button
