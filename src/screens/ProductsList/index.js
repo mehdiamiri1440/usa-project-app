@@ -1629,7 +1629,7 @@ class ProductsList extends PureComponent {
                                 showRefreshButton: false,
 
                                 productsListArray: [...this.props.productsListArray]
-                            }, _ => this.scrollToTop({}));
+                            }, _ => this.scrollToTop({ type: 'offset' }));
                         }}
                         style={{
                             position: 'absolute',
