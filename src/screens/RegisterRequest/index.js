@@ -764,7 +764,7 @@ class RegisterRequest extends Component {
 
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
-                CategoriesIcons.find(item => item.name == selectedSvgName).svg : null : null
+                CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
 
         return (
             <>

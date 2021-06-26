@@ -689,7 +689,7 @@ class SelectCategory extends Component {
         // subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
-                CategoriesIcons.find(item => item.name == selectedSvgName).svg : null : null
+                CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
 
         return (
             <View
