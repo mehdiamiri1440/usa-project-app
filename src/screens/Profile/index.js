@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-    Text, View, TouchableOpacity, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal, Linking
+    Text, View, Pressable, ScrollView, Image, StyleSheet, RefreshControl, Share, Modal, Linking
 } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
@@ -20,7 +20,6 @@ import * as productsListActions from '../../redux/productsList/actions';
 import Product from '../ProductsList/Product';
 import StarRating from '../../components/StarRating'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
-import NoConnection from '../../components/noConnectionError';
 import RelatedPhotos from './RelatedPhotos';
 import Certificates from './certificates';
 import Rating from './Rating';
@@ -34,7 +33,6 @@ class Profile extends PureComponent {
             selectedImageModal: false,
             selectedEvidenceIndex: -1,
             selectedImageIndex: -1,
-            showModal: false,
             prevUserName: '',
             loaded: false,
 
@@ -78,7 +76,6 @@ class Profile extends PureComponent {
         });
 
         this.initProfileContent()
-        // .catch(_ => this.setState({ showModal: false }))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -201,7 +198,6 @@ class Profile extends PureComponent {
             to_record_number,
         };
         this.props.fetchAllProductsList(item, !!loggedInUserId)
-        // .catch(_ => this.setState({ showModal: false }));
     };
 
     shareProfileLink = async () => {
@@ -223,7 +219,6 @@ class Profile extends PureComponent {
         //         // dismissed
         //     }
         // } catch (error) {
-        //     console.log(error.message);
         // }
         const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${this.props.route && this.props.route.params && this.props.route.params.user_name || ''}`;
 
@@ -237,11 +232,6 @@ class Profile extends PureComponent {
             .catch(() => {
                 Linking.openURL(url)
             })
-    };
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.componentDidMount();
     };
 
     setSelectedImage = (selectedImageModal, selectedImageIndex) => {
@@ -346,11 +336,6 @@ class Profile extends PureComponent {
 
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
-
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -714,7 +699,10 @@ class Profile extends PureComponent {
                                     </Text>
                                     {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                 </View>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => this.shareProfileLink()}
                                     style={{
                                         borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
@@ -734,7 +722,7 @@ class Profile extends PureComponent {
                                         </Text>
                                     </View>
 
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
 
                             {response_rate > 0 ? <View style={{ paddingHorizontal: 10 }}>

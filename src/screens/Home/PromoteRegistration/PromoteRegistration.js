@@ -1,7 +1,8 @@
 import React, { createRef } from 'react';
 import {
-    Text, View, Modal, TouchableOpacity, ScrollView,
-    StyleSheet, Linking, RefreshControl
+    Text, View, Modal, Pressable, ScrollView,
+    StyleSheet, Linking, RefreshControl,
+    TouchableOpacity
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
@@ -12,7 +13,6 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { numberWithCommas } from '../../../utils/formatter';
@@ -22,7 +22,6 @@ class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false,
             visibility: false,
             paymentType: 1
         }
@@ -46,11 +45,6 @@ class PromoteRegistration extends React.Component {
                 Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`);
             }
         })
-    };
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.props.fetchAllDashboardData()
     };
 
     handleScrollToTopButtonClick = () => {
@@ -345,21 +339,19 @@ class PromoteRegistration extends React.Component {
                             style={{ width: '70%', borderRadius: 5, marginTop: 35, alignSelf: 'center', padding: 10, margin: 20 }}
                             colors={['#21AD93', '#00C569']}
                         >
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.pay(paymentType)}
                             >
                                 <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </LinearGradient>
 
                     </View>
                 </Modal>
-
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
 
                 {!isUsedAsComponent ?
@@ -376,7 +368,6 @@ class PromoteRegistration extends React.Component {
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
                             onRefresh={() => this.props.fetchAllDashboardData()
-                                // .catch(_ => this.setState({ showModal: true }))
                             }
                         />
                     }
@@ -923,7 +914,7 @@ class PromoteRegistration extends React.Component {
                                                 textAlignVertical: 'center', paddingBottom: 5
                                             }}>
                                                 *
-                                                </Text>
+                                            </Text>
                                         </Text>
 
                                     </View>

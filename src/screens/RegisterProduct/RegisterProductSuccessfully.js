@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, View, FlatList, ActivityIndicator, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import {
+    Text,
+    StyleSheet,
+    Image,
+    View,
+    FlatList,
+    ActivityIndicator,
+    Pressable,
+    ScrollView,
+    Linking, BackHandler
+} from 'react-native';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
@@ -14,6 +24,7 @@ import { formatter, deviceHeight, deviceWidth, validator } from '../../utils';
 import * as productActions from '../../redux/registerProduct/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
+
 
 class RegisterProductSuccessfully extends Component {
     constructor(props) {
@@ -30,9 +41,15 @@ class RegisterProductSuccessfully extends Component {
         }
     }
 
+    isComponentMounted = false;
+
     componentDidMount() {
-        if (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
-            this.props.fetchBuyAdsAfterPayment();
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed)
+            if (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
+                this.props.fetchBuyAdsAfterPayment();
+            }
         }
         // BackHandler.addEventListener('hardwareBackPress', _ => {
         //     this.props.resetRegisterProduct(true)
@@ -41,19 +58,23 @@ class RegisterProductSuccessfully extends Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener('hardwareBackPress');
     }
     // componentDidUpdate(prevProps, prevState) {
-    //     console.log('the', this.state.loaded, prevState.loaded)
     //     if (this.state.loaded == false && this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey) {
-    //         console.log('called update')
     //         this.props.fetchBuyAdsAfterPayment().then(_ => {
     //             this.setState({ loaded: true })
     //         })
     //     }
     // }
 
-
+    handleHardWareBackButtonPressed = _ => {
+        this.props.resetRegisterProduct(1);
+        this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })
+        return true;
+    };
 
     fetchContactInfo = (item) => {
         const { id, is_golden, myuser_id } = item;
@@ -520,7 +541,10 @@ class RegisterProductSuccessfully extends Component {
                                 }}>
                                 {locales('titles.phoneNumber')}
                             </Text>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={_ => this.openCallPad(item.mobileNumber)}
                                 style={{
                                     flexDirection: 'row-reverse',
@@ -540,7 +564,7 @@ class RegisterProductSuccessfully extends Component {
                                     name='phone-square-alt'
                                     size={20}
                                 />
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
 
                         <View
@@ -688,7 +712,10 @@ class RegisterProductSuccessfully extends Component {
 
         return (
 
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={() => {
                     this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                 }} style={{
@@ -719,7 +746,7 @@ class RegisterProductSuccessfully extends Component {
 
                     />
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -1120,9 +1147,7 @@ class RegisterProductSuccessfully extends Component {
                                     justifyContent: 'center', width: '75%',
                                     alignItems: 'center', alignSelf: 'center', marginVertical: 20
                                 }]}
-                                onPress={() => {
-                                    this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
-                                }}
+                                onPress={() => this.props.navigation.navigate('RequestsStack', { screen: 'Requests', params: { subCategoryId, subCategoryName } })}
                             >
                                 <Text style={styles.buttonText}>
                                     {locales('titles.seeBuyAds')}</Text>
@@ -1316,6 +1341,7 @@ const mapDispatchToProps = (dispatch) => {
         fetchBuyAdsAfterPayment: _ => dispatch(registerProductActions.fetchBuyAdsAfterPayment()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         fetchBuyerMobileNumber: contactInfoObject => dispatch(requestActions.fetchBuyerMobileNumber(contactInfoObject)),
+        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
     }
 };
 const mapStateToProps = (state) => {

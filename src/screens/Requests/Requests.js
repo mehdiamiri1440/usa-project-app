@@ -1,5 +1,5 @@
 import React, { PureComponent, createRef } from 'react';
-import { Text, View, SafeAreaView, Modal, FlatList, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, View, SafeAreaView, Modal, FlatList, StyleSheet, Image, ImageBackground, Pressable } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Icon, InputGroup, Input, Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -23,7 +23,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import BuyAdList from './BuyAdList';
-import NoConnection from '../../components/noConnectionError';
 import Filters from './Filters';
 import Header from '../../components/header';
 import ENUMS from '../../enums';
@@ -48,7 +47,6 @@ class Requests extends PureComponent {
             selectedContact: {},
             showFilters: false,
             showGoldenModal: false,
-            showModal: false,
             selectedFilterName: '',
 
             showMobileNumberWarnModal: false,
@@ -87,7 +85,6 @@ class Requests extends PureComponent {
         if (this.is_mounted == true) {
             AsyncStorage.setItem('@registerProductParams', JSON.stringify({}))
             this.initialCalls()
-            // .catch(_ => this.setState({ showModal: true }));
         }
     }
 
@@ -194,7 +191,6 @@ class Requests extends PureComponent {
                     this.setState({ showDialog: true })
                 }
             })
-            // .catch(_ => this.setState({ showModal: true }));
         }
         else {
             analytics().logEvent('permission_denied', {
@@ -358,11 +354,6 @@ class Requests extends PureComponent {
         )
     };
 
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.componentDidMount()
-    };
-
     closeFilters = _ => {
         this.setState({ showFilters: false }, () => this.scrollToTop());
     };
@@ -490,7 +481,10 @@ class Requests extends PureComponent {
         } = this.state;
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSortItemClick(item.value)}
                 style={{
@@ -512,7 +506,7 @@ class Requests extends PureComponent {
                 >
                     {item.title}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -531,7 +525,10 @@ class Requests extends PureComponent {
 
         if (sort_by == BM)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
@@ -558,10 +555,13 @@ class Requests extends PureComponent {
                     >
                         {locales('labels.sort')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
@@ -594,7 +594,7 @@ class Requests extends PureComponent {
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
@@ -614,10 +614,6 @@ class Requests extends PureComponent {
         } = this.state;
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
                 {sortModalFlag ?
                     <Modal
@@ -662,7 +658,7 @@ class Requests extends PureComponent {
                     >
                         <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                             {locales('titles.buyadRequestsWith')} <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: '#E41C38' }}>{locales('titles.twoHoursDelay')}</Text> {locales('titles.youWillBeInformed')} .
-                                </Text>
+                        </Text>
                         <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                             {locales('titles.onTimeBuyAdRequestAndPromote')}
                         </Text>
@@ -948,7 +944,7 @@ class Requests extends PureComponent {
                 <View
                     style={{ backgroundColor: 'white', borderBottomWidth: 1, borderColor: '#EDEDED' }}
                 >
-                    <InputGroup style={{ borderRadius: 5, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                    <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2', paddingHorizontal: 10 }}>
                         <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
                         <Input
                             value={searchText}
@@ -961,58 +957,61 @@ class Requests extends PureComponent {
                             placeholderTextColor="#bebebe"
                             placeholder={locales('labels.searchBuyAdRequest')} />
                     </InputGroup>
-                    {this.renderSortIcons()}
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+                        {this.renderSortIcons()}
+                        {
+                            selectedFilterName ?
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed',
+                                        radius: 8
+                                    }}
+                                    onPress={() => this.setState({
+                                        buyAdRequestsList: this.props.buyAdRequestsList,
+                                        selectedFilterName: ''
+                                    })}
+                                    style={{
+                                        borderRadius: 12,
+                                        marginTop: 7,
+                                        marginBottom: 8,
+                                        marginHorizontal: 5,
+                                        borderColor: '#FA8888',
+                                        borderWidth: 1,
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        maxWidth: 120,
+                                        alignSelf: 'flex-end',
+                                        backgroundColor: '#FCF6F6',
+                                        minHeight: 30,
+                                        paddingHorizontal: 10
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            textAlignVertical: 'center',
+                                            fontSize: 15,
+                                            color: '#E41C38',
+                                            paddingLeft: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}
+                                    >
+                                        {selectedFilterName}
+                                    </Text>
+                                    <FontAwesome5 name='times' size={12} color='#E41C38' />
+                                </Pressable>
+                                :
+                                null
+                        }
+                    </View>
                 </View>
 
-                {
-                    selectedFilterName ?
-                        <View
-                            style={{
-                                backgroundColor: 'white',
-                                borderRadius: 6,
-                                paddingVertical: 6,
-                                paddingHorizontal: 15,
-                                alignItems: 'center',
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-around',
-                                position: 'relative'
-                            }}
-                        >
-                            <Button
-                                small
-                                onPress={() => this.setState({
-                                    buyAdRequestsList: this.props.buyAdRequestsList,
-                                    selectedFilterName: ''
-                                })}
-                                style={{
-                                    borderWidth: 1,
-                                    borderColor: '#E41C38',
-                                    borderRadius: 50,
-                                    maxWidth: 250,
-                                    backgroundColor: '#fff',
-                                    height: 35,
-                                }}
-                            >
-                                <Text style={{
-                                    textAlign: 'center',
-                                    width: '100%',
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 17
-                                }}>
-                                    {locales('titles.selectedBuyAdFilter', { fieldName: selectedFilterName })}
-                                    {/* {selectedFilterName} */}
-                                </Text>
-                                <FontAwesome5 color="#E41C38" name="times" solid style={{
-                                    fontSize: 18,
-                                    position: 'absolute',
-                                    right: 20,
-                                }} />
 
-                            </Button>
-                        </View> :
-                        null
-                }
                 <View>
                     {/* 
                 <Button

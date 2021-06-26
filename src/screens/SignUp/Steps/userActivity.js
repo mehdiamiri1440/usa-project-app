@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, View, Pressable, Image, ActivityIndicator } from 'react-native'
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { Button, Item, Label, Radio } from 'native-base';
@@ -90,7 +90,10 @@ class UserActivity extends React.Component {
                     marginTop: -20,
                     alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                 }]}>
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
                         style={{
                             width: deviceWidth * 0.4,
@@ -120,8 +123,11 @@ class UserActivity extends React.Component {
                             />
                             <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 5 }}>{locales('labels.buyer')}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         style={{
                             width: deviceWidth * 0.4,
                             borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#00C569' : '#BDC4CC'),
@@ -153,7 +159,7 @@ class UserActivity extends React.Component {
                             />
                             <Text style={{ marginHorizontal: 5, fontSize: 14, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777', top: 2 }}>{locales('labels.seller')}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
                 {!!activityTypeError && <Label style={{
                     fontSize: 14,

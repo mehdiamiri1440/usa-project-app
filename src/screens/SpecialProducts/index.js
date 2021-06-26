@@ -3,7 +3,7 @@ import {
     Text,
     View,
     FlatList,
-    TouchableOpacity,
+    Pressable,
     Modal,
     StyleSheet,
     ActivityIndicator,
@@ -18,12 +18,12 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import Product from '../ProductsList/Product';
-import NoConnection from '../../components/noConnectionError';
 import * as productsListActions from '../../redux/productsList/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as locationActions from '../../redux/locations/actions'
@@ -50,12 +50,14 @@ class SpecialProducts extends PureComponent {
             sort_by: ENUMS.SORT_LIST.values.BM,
             loaded: false,
             searchFlag: false,
-            showModal: false,
             subCategoriesList: [],
             cities: [],
             totalCategoriesModalFlag: false,
             modals: [],
             isFilterApplied: false,
+            preFetchLoading: true,
+            showRefreshButton: false,
+            categoriesList: []
         }
 
     }
@@ -64,6 +66,9 @@ class SpecialProducts extends PureComponent {
     categoryFiltersRef = createRef();
 
     componentDidMount() {
+
+        this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
+
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -79,7 +84,6 @@ class SpecialProducts extends PureComponent {
 
         this.initialCalls().catch(error => {
             this.setState({
-                // showModal: true,
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
@@ -97,37 +101,93 @@ class SpecialProducts extends PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        return this.blurListener;
+    }
+
+    handleScreenBlured = _ => {
+        const {
+            specialProductsListArray = []
+        } = this.state;
+
+        const {
+            categoriesList = []
+        } = this.props;
+
+        let tempSpecialProductsList = specialProductsListArray.slice(0, 16);
+        AsyncStorage.multiSet([
+            ['@specialProductsList', JSON.stringify(tempSpecialProductsList)],
+            ['@specialProductsCategoriesList', JSON.stringify(categoriesList)],
+        ]
+        );
+
+    };
+
     initialCalls = _ => {
         return new Promise.all([
-            this.fetchAllProducts(),
+            this.getItemsFromStorage(),
             this.props.fetchAllProvinces(),
-            this.props.fetchAllCategories()
         ])
             .then(result => resolve(result))
             .catch(error => reject(error))
     };
 
-    scrollToTop = ({ result, needsTimeout, type }) => {
-        let conditions = this.props.productsListRef && this.props.productsListRef != null
-            && this.props.productsListRef != undefined &&
-            this.props.productsListRef.current && this.props.productsListRef.current != null &&
-            this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 &&
-            this.props.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading;
+    AreArraysTheSame = (pFromProps = [], pFromState = []) => {
+        for (let iFromProps = 0; iFromProps < pFromProps.length; iFromProps++)
+            if (pFromState.every(item => item?.main?.id != pFromProps[iFromProps]?.main?.id))
+                return false;
+        return true;
+    };
 
-        if (result)
-            conditions = conditions && result.payload.products.length > 0;
+    getItemsFromStorage = _ => {
+        AsyncStorage.multiGet(['@specialProductsList', '@specialProductsCategoriesList']).then(multiGetResult => {
 
-        if (type == 'offset')
-            setTimeout(() => this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 }), 300);
+            let resultFromStorage = JSON.parse(multiGetResult[0][1]);
+            let categoriesListFromStorage = JSON.parse(multiGetResult[1][1]);
 
-        else
-            if (conditions)
-                if (needsTimeout)
-                    setTimeout(() => this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
-                        , 300);
-                else
-                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+            this.props.fetchAllCategories()
+                .then(_ => this.setState({ categoriesList: this.props.categoriesList }))
+                .catch(_ => this.setState({ categoriesList: categoriesListFromStorage ?? [] }));
+            this.setState({ categoriesList: categoriesListFromStorage ?? [] });
 
+            const {
+                from_record_number,
+                to_record_number,
+                sort_by,
+            } = this.state;
+
+            let item = {
+                from_record_number,
+                sort_by,
+                to_record_number,
+            };
+
+            if (!resultFromStorage || !Array.isArray(resultFromStorage) || !resultFromStorage.length) {
+                this.fetchAllProducts();
+            }
+            else {
+                this.setState({ specialProductsListArray: resultFromStorage, preFetchLoading: false });
+                this.props.fetchAllSpecialProductsList(item).then((resultFromProps = {}) => {
+
+                    const {
+                        payload = {}
+                    } = resultFromProps;
+
+                    const {
+                        products = []
+                    } = payload;
+
+
+                    if (products && products.length && resultFromStorage && resultFromStorage.length && products.length == resultFromStorage.length) {
+                        const condition = this.AreArraysTheSame(products, resultFromStorage);
+                        this.setState({ showRefreshButton: !condition });
+                    }
+                });
+            }
+        })
+            .catch(_ => {
+                this.fetchAllProducts();
+            })
     };
 
     fetchAllProducts = (itemFromResult, scrollObject = {}) => {
@@ -170,21 +230,39 @@ class SpecialProducts extends PureComponent {
 
                     locationsFlag: false,
 
+                    preFetchLoading: false,
+
                     specialProductsListArray: [...result?.payload?.products]
                 }, _ => this.scrollToTop({ ...scrollObject, result }));
             })
             .catch(error => {
                 this.setState({
-                    //  showModal: true,
                     searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                 })
             });
     };
 
-    setShowModal = _ => {
-        this.setState({ showModal: false }, () => {
-            this.componentDidMount();
-        });
+    scrollToTop = ({ result, needsTimeout, type }) => {
+        let conditions = this.props.productsListRef && this.props.productsListRef != null
+            && this.props.productsListRef != undefined &&
+            this.props.productsListRef.current && this.props.productsListRef.current != null &&
+            this.props.productsListRef.current != undefined && this.state.specialProductsListArray.length > 0 &&
+            this.props.specialProductsListArray.length > 0 && !this.props.specialProductsListLoading;
+
+        if (result)
+            conditions = conditions && result.payload.products.length > 0;
+
+        if (type == 'offset')
+            setTimeout(() => this.props.productsListRef.current.scrollToOffset({ animated: true, offset: 0 }), 300);
+
+        else
+            if (conditions)
+                if (needsTimeout)
+                    setTimeout(() => this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 })
+                        , 300);
+                else
+                    this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
+
     };
 
     handleSortItemClick = value => {
@@ -217,11 +295,6 @@ class SpecialProducts extends PureComponent {
 
             this.fetchAllProducts(searchItem);
         })
-    };
-
-    handleMiddleCategoryItemClick = ({ id, category_name: name, subcategories: subCategoriesList = {} }) => {
-        subCategoriesList = Object.values(subCategoriesList);
-        this.setState({ subCategoriesModalFlag: true, selectedSubCategoryModal: name, subCategoriesList })
     };
 
     handleSubCategoryItemClick = item => {
@@ -419,6 +492,15 @@ class SpecialProducts extends PureComponent {
 
     };
 
+    onScrollToIndexFailed = _ => {
+        const {
+            specialProductsListArray = []
+        } = this.state;
+
+        if (specialProductsListArray && specialProductsListArray.length)
+            this.props.productsListRef?.current?.scrollToIndex({ animated: true, index: specialProductsListArray.length });
+    };
+
     onEndOfProductListReached = _ => {
         const {
             province,
@@ -466,7 +548,6 @@ class SpecialProducts extends PureComponent {
                     this.setState({ loaded: false })
                 }).catch(error => {
                     this.setState({
-                        // showModal: true,
                         searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                     })
                 });
@@ -482,7 +563,6 @@ class SpecialProducts extends PureComponent {
 
             sort_by
         } = this.state;
-
 
         let item = {
             from_record_number: 0,
@@ -503,16 +583,19 @@ class SpecialProducts extends PureComponent {
         if (city) {
             item = { ...item, city_id: city }
         }
+
         this.props.fetchAllSpecialProductsList(item).then(result => {
             this.setState({
                 specialProductsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
             })
         }).catch(error => {
             this.setState({
-                //  showModal: true,
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
+        this.props.fetchAllProvinces();
+        this.props.fetchAllCategories().then(_ => this.setState({ categoriesList: this.props.categoriesList }));
+
     };
 
     removeFilter = _ => {
@@ -672,10 +755,11 @@ class SpecialProducts extends PureComponent {
         } = this.props;
 
         const {
-            loaded
+            loaded,
+            preFetchLoading
         } = this.state;
 
-        if (!specialProductsListLoading)
+        if (!specialProductsListLoading && !preFetchLoading)
             return (
                 <View
                     style={{
@@ -697,7 +781,8 @@ class SpecialProducts extends PureComponent {
                             textAlign: 'center'
                         }}
                     >
-                        {locales('titles.noProductFound')}</Text>
+                        {locales('titles.noProductFound')}
+                    </Text>
                     <View >
                         <Button
                             onPress={() => this.props.navigation.navigate('RegisterRequest')}
@@ -717,7 +802,7 @@ class SpecialProducts extends PureComponent {
                     </View>
                 </View>
             )
-        if (!loaded || specialProductsListLoading) {
+        if (!loaded || specialProductsListLoading || preFetchLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
@@ -747,7 +832,6 @@ class SpecialProducts extends PureComponent {
                                     height={'100%'}
                                     backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
-
                                 >
                                     <Rect x="0" y="0" width="100%" height="60%" />
                                     <Rect x="30%" y="65%" width="100" height="10" />
@@ -899,7 +983,10 @@ class SpecialProducts extends PureComponent {
         } = this.state;
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSortItemClick(item.value)}
                 style={{
@@ -921,14 +1008,17 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.title}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
 
     renderSubCategoriesListItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSubCategoryItemClick(item)}
                 style={{
@@ -945,14 +1035,18 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
     renderCategoriesListItem = (item, isFromModal) => {
         if (!isFromModal)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.sortProducts(item)}
                     style={{
                         borderRadius: 12,
@@ -977,11 +1071,14 @@ class SpecialProducts extends PureComponent {
                     >
                         {item.category_name}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={() => this.sortProducts(item)}
                 style={{
@@ -998,7 +1095,7 @@ class SpecialProducts extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1088,7 +1185,11 @@ class SpecialProducts extends PureComponent {
 
         if (!!selectedLocation)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.removeLocations()}
                     style={{
                         borderRadius: 12,
@@ -1115,7 +1216,7 @@ class SpecialProducts extends PureComponent {
                         {selectedLocation}
                     </Text>
                     <FontAwesome5 name='times' size={12} color='#E41C38' />
-                </TouchableOpacity>
+                </Pressable>
             );
         return null;
     };
@@ -1144,7 +1245,11 @@ class SpecialProducts extends PureComponent {
                 {this.renderSelectedLocation()}
 
                 {isFilterApplied ?
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
@@ -1171,7 +1276,7 @@ class SpecialProducts extends PureComponent {
                             {searchText}
                         </Text>
                         <FontAwesome5 name='times' size={12} color='#E41C38' />
-                    </TouchableOpacity>
+                    </Pressable>
                     :
                     null}
             </View>
@@ -1183,7 +1288,11 @@ class SpecialProducts extends PureComponent {
 
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12, marginTop: 7, marginBottom: 8,
@@ -1201,7 +1310,7 @@ class SpecialProducts extends PureComponent {
                     {locales('labels.classifications')}
                 </Text>
                 <FontAwesome5 name='list' size={12} color='#707070' />
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1219,7 +1328,11 @@ class SpecialProducts extends PureComponent {
 
         if (sort_by == BM)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
@@ -1245,10 +1358,14 @@ class SpecialProducts extends PureComponent {
                     >
                         {locales('labels.sort')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
@@ -1280,7 +1397,7 @@ class SpecialProducts extends PureComponent {
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
@@ -1330,7 +1447,6 @@ class SpecialProducts extends PureComponent {
         const {
             specialProductsListLoading,
 
-            categoriesList,
             categoriesLoading,
 
             allProvincesObject,
@@ -1338,6 +1454,7 @@ class SpecialProducts extends PureComponent {
             provinceLoading,
             fetchCitiesLoading,
         } = this.props;
+
 
         const {
             searchText,
@@ -1348,10 +1465,11 @@ class SpecialProducts extends PureComponent {
             province,
             city,
             cities,
-            showModal,
             totalCategoriesModalFlag,
             modals,
-            isFilterApplied
+            isFilterApplied,
+            showRefreshButton,
+            categoriesList,
         } = this.state;
 
         let {
@@ -1370,10 +1488,61 @@ class SpecialProducts extends PureComponent {
                     backgroundColor: 'white'
                 }}
             >
-                <NoConnection
-                    closeModal={this.setShowModal}
-                    showModal={showModal}
-                />
+
+                {showRefreshButton ?
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 16
+                        }}
+                        onPress={_ => {
+                            this.setState({
+                                from_record_number: 0,
+                                to_record_number: 16,
+
+                                searchLoader: false,
+
+                                sortModalFlag: false,
+
+                                subCategoriesModalFlag: false,
+
+                                totalCategoriesModalFlag: false,
+
+                                locationsFlag: false,
+
+                                preFetchLoading: false,
+
+                                showRefreshButton: false,
+
+                                specialProductsListArray: [...this.props.specialProductsListArray]
+                            });
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '30%',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 16,
+                            paddingVertical: 5,
+                            paddingHorizontal: 10,
+                            backgroundColor: 'black',
+                            zIndex: 999999999
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
+                            }}
+                        >
+                            {locales('labels.newProducts')}
+                        </Text>
+                    </Pressable>
+                    : null
+                }
 
                 {locationsFlag ?
                     <Modal
@@ -1575,13 +1744,16 @@ class SpecialProducts extends PureComponent {
 
                 <Header
                     {...this.props}
-                    title={locales('labels.specialProducts')}
+                    title={locales('labels.suggestedProducts')}
                 />
 
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
@@ -1603,7 +1775,7 @@ class SpecialProducts extends PureComponent {
                                         locales('titles.AllIran')
                                     }
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                             <Input
                                 value={searchText}
                                 ref={this.serachInputRef}
@@ -1653,29 +1825,44 @@ class SpecialProducts extends PureComponent {
                     />
                 </View>
 
+
                 <FlatList
-                    initialNumToRender={4}
+                    keyboardShouldPersistTaps='handled'
+                    keyboardDismissMode='none'
                     ref={this.props.productsListRef}
-                    keyExtractor={(_, index) => index.toString()}
                     data={specialProductsListArray}
-                    style={{ backgroundColor: 'white' }}
-                    horizontal={false}
-                    numColumns={2}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
-                    refreshing={false}
-                    onRefresh={this.onProductListRefreshed}
-                    onEndReached={this.onEndOfProductListReached}
-                    onEndReachedThreshold={3}
                     ListEmptyComponent={this.renderProductListEmptyComponent}
                     ListFooterComponent={this.renderProductListFooterComponent}
                     ItemSeparatorComponent={({ _, leadingItem }) => this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={this.renderProductListItem}
+                    keyExtractor={(_, index) => index.toString()}
+                    refreshing={false}
+                    onRefresh={this.onProductListRefreshed}
+                    onEndReached={this.onEndOfProductListReached}
+                    onEndReachedThreshold={3}
+                    onScrollToIndexFailed={this.onScrollToIndexFailed}
+                    removeClippedSubviews
+                    maxToRenderPerBatch={3}
+                    windowSize={10}
+                    initialNumToRender={4}
+                    numColumns={2}
+                    // getItemLayout={(data, index) => (
+                    //     { length: data.length, offset: 100 * index, index }
+                    // )}
+                    style={{
+                        backgroundColor: 'white'
+                    }}
+                    columnWrapperStyle={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'row-reverse'
+                    }}
+
                 />
             </View>
         )
     }
-}
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -1819,7 +2006,6 @@ const styles = StyleSheet.create({
     }
 });
 
-
 const mapStateToProps = ({
     productsListReducer,
     registerProductReducer,
@@ -1900,7 +2086,6 @@ const mapStateToProps = ({
     }
 };
 
-
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
@@ -1912,14 +2097,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-
 const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
 
     return <SpecialProducts {...props} productsListRef={ref} />;
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
 

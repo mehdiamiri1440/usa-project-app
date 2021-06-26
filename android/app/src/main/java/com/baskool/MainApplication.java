@@ -12,11 +12,7 @@ import java.util.List;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
-import com.wenkesj.voice.VoicePackage;
-import com.rnim.rn.audio.ReactNativeAudioPackage;
-import com.zmxv.RNSound.RNSoundPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.brentvatne.react.ReactVideoPackage;
 
 public class MainApplication extends NavigationApplication {
 

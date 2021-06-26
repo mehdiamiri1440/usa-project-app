@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
+import { View, Text, Pressable, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import { Body, Card, CardItem, Label, InputGroup, Input, Button } from 'native-base';
@@ -12,7 +12,6 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as productActions from '../../redux/registerProduct/actions';
 
 import { deviceWidth, deviceHeight, validator, formatter } from '../../utils';
-import NoConnection from '../../components/noConnectionError';
 import Loading from '../Loading';
 
 const CategoriesIcons = [
@@ -402,7 +401,6 @@ class RegisterRequest extends Component {
             subCategoriesList: [],
             amountClicked: false,
             productTypeClicked: false,
-            showModal: false,
             selectedSvgName: ''
         }
     }
@@ -410,61 +408,68 @@ class RegisterRequest extends Component {
     amountRef = React.createRef();
     productTypeRef = React.createRef();
 
+    isComponentMounted = false;
+
     componentDidMount() {
-        analytics().logEvent('register_buyAd')
-        global.resetRegisterProduct = data => {
-            if (data) {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            analytics().logEvent('register_buyAd')
+            global.resetRegisterProduct = data => {
+                if (data) {
+                    this.props.navigation.navigate('RegisterRequest')
+                }
+            }
+            if (this.props.resetTab) {
+                this.props.resetRegisterProduct(false);
                 this.props.navigation.navigate('RegisterRequest')
             }
+            this.props.fetchAllCategories().then(_ => {
+                const { category, subCategory, productType, categoriesList } = this.props;
+
+                if (this.productTypeRef && this.productTypeRef.current)
+                    this.productTypeRef.current.value = productType;
+
+                this.setState({
+                    category, subCategory, productType,
+                    subCategoriesTogether: categoriesList.map(item => item.subcategories),
+                    categoriesList,
+                    loaded: true,
+                    subCategoriesList: category && categoriesList && categoriesList.length ?
+                        Object.values(categoriesList.find(item => item.id == category).subcategories)
+                        : []
+                })
+
+            });
+
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed)
         }
-        if (this.props.resetTab) {
-            this.props.resetRegisterProduct(false);
-            this.props.navigation.navigate('RegisterRequest')
-        }
-        this.props.fetchAllCategories().then(_ => {
-            const { category, subCategory, productType, categoriesList } = this.props;
-
-            if (this.productTypeRef && this.productTypeRef.current)
-                this.productTypeRef.current.value = productType;
-
-            this.setState({
-                category, subCategory, productType,
-                subCategoriesTogether: categoriesList.map(item => item.subcategories),
-                categoriesList,
-                loaded: true,
-                subCategoriesList: category && categoriesList && categoriesList.length ?
-                    Object.values(categoriesList.find(item => item.id == category).subcategories)
-                    : []
-            })
-
-        });
-
-        BackHandler.addEventListener('hardwareBackPress', _ => {
-
-            const {
-                category,
-                subCategory,
-            } = this.state;
-
-            if (subCategory && category) {
-                this.setState({ subCategory: '' })
-                return true;
-            }
-
-            if (category) {
-                this.setState({ category: '' })
-                return true;
-            }
-            return false;
-        });
-
     }
 
 
     componentWillUnmount() {
-        BackHandler.removeEventListener();
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
     }
 
+    handleHardWareBackButtonPressed = _ => {
+
+        const {
+            category,
+            subCategory,
+        } = this.state;
+
+        if (subCategory && category) {
+            this.setState({ subCategory: '' })
+            return true;
+        }
+
+        if (category) {
+            this.setState({ category: '' })
+            return true;
+        }
+
+        return false;
+    };
 
     emptyState = () => {
         this.setState({
@@ -481,7 +486,6 @@ class RegisterRequest extends Component {
             productType: '',
             isFocused: false,
             loaded: false,
-            showModal: false,
             selectedSvgName: ''
         })
     }
@@ -610,15 +614,8 @@ class RegisterRequest extends Component {
                 this.emptyState();
                 this.props.navigation.navigate('RegisterRequestSuccessfully');
             })
-            // .catch(_ => this.setState({ showModal: true }));
         }
     }
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount()
-    };
-
 
     setSelectedSubCategory = (id, isSub, index) => {
         const { subCategoriesTogether, subCategoriesList, categoriesList } = this.state;
@@ -644,7 +641,10 @@ class RegisterRequest extends Component {
 
     renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -672,7 +672,7 @@ class RegisterRequest extends Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -757,22 +757,17 @@ class RegisterRequest extends Component {
             productType, category, subCategory,
             subCategoryError, categoryError, productTypeError,
             amountError,
-            showModal, subCategoriesList, categoriesList,
+            subCategoriesList, categoriesList,
             amount, productTypeClicked, amountClicked, selectedSvgName,
             amountText
         } = this.state;
 
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
-                CategoriesIcons.find(item => item.name == selectedSvgName).svg : null : null
+                CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
 
         return (
             <>
-                {/* <Loading /> */}
-                <NoConnection
-                    closeModal={this.closeModal}
-                    showModal={showModal}
-                />
 
                 <View style={{
                     backgroundColor: 'white',

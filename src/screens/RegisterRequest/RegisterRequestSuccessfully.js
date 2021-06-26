@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Text, View, TouchableOpacity, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
+import { Text, View, Pressable, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -201,7 +201,7 @@ const RegisterRequestSuccessfully = props => {
             });
     };
 
-    const navigateToChat = (event, { first_name, last_name, is_verified, myuser_id }) => {
+    const navigateToChat = (event, { first_name, last_name, is_verified, myuser_id }, productId) => {
         event.stopPropagation();
         event.preventDefault();
         const tempContact = {
@@ -211,7 +211,11 @@ const RegisterRequestSuccessfully = props => {
             contact_id: myuser_id
         };
         setSelectedContact({ ...tempContact });
-        props.navigation.navigate('Chat', { shouldHideGuidAndComment: true, contact: { ...tempContact } })
+        props.navigation.navigate('Chat', {
+            shouldHideGuidAndComment: true,
+            contact: { ...tempContact },
+            productId
+        })
     };
 
     const renderItem = ({ item }) => {
@@ -246,7 +250,10 @@ const RegisterRequestSuccessfully = props => {
                         alignSelf: 'center'
                     }}
                 >
-                    {/* <TouchableOpacity
+                    {/* <Pressable
+android_ripple={{
+color:'#ededed'
+}}
                     style={{
                         borderRadius: 6,
                         elevation: 5,
@@ -262,7 +269,10 @@ const RegisterRequestSuccessfully = props => {
                         }, 100);
                     }}
                 > */}
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         activeOpacity={1}
                         onPress={() => {
                             props.navigation.navigate('Home')
@@ -516,7 +526,7 @@ const RegisterRequestSuccessfully = props => {
 
                                 <Button
                                     small
-                                    onPress={event => navigateToChat(event, item)}
+                                    onPress={event => navigateToChat(event, item, id)}
                                     style={{
                                         width: has_phone ? '47%' : '70%',
                                         zIndex: 1000,
@@ -550,7 +560,7 @@ const RegisterRequestSuccessfully = props => {
                                             size={20}
                                         />
                                         <Text
-                                            onPress={event => navigateToChat(event, item)}
+                                            onPress={event => navigateToChat(event, item, id)}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 fontSize: 18,
@@ -663,7 +673,7 @@ const RegisterRequestSuccessfully = props => {
                             </View>
                             :
                             <Button
-                                onPress={event => navigateToChat(event, item)}
+                                onPress={event => navigateToChat(event, item, id)}
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
@@ -692,7 +702,7 @@ const RegisterRequestSuccessfully = props => {
                                         color="white"
                                     />
                                     <Text
-                                        onPress={event => navigateToChat(event, item)}
+                                        onPress={event => navigateToChat(event, item, id)}
                                         style={{
                                             color: 'white',
                                             textAlign: 'center',
@@ -701,7 +711,7 @@ const RegisterRequestSuccessfully = props => {
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                         }}>{locales('labels.sendMessageToSeller')}</Text>
                                     <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
-                                        onPress={event => navigateToChat(event, item)}
+                                        onPress={event => navigateToChat(event, item, id)}
                                     />
                                 </View>
                             </Button>
@@ -727,7 +737,10 @@ const RegisterRequestSuccessfully = props => {
                                         }}>
                                         {locales('titles.phoneNumber')}
                                     </Text>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         onPress={_ => openCallPad(item.mobileNumber)}
                                         style={{
                                             flexDirection: 'row-reverse',
@@ -747,7 +760,7 @@ const RegisterRequestSuccessfully = props => {
                                             name='phone-square-alt'
                                             size={20}
                                         />
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
 
                                 <View
@@ -826,8 +839,8 @@ const RegisterRequestSuccessfully = props => {
                             textAlign: 'center', width: '100%', color: '#00C569'
                         }, styles.textBold]}>
                         {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text> */}
-                        {/* </TouchableOpacity> */}
-                    </TouchableOpacity>
+                        {/* </Pressable> */}
+                    </Pressable>
                 </Card>
             </>
         )
@@ -999,7 +1012,7 @@ const RegisterRequestSuccessfully = props => {
                             color: '#21ad93'
                         }}>
                         {` ${locales('titles.buskool')}`}،
-                                </Text>
+                    </Text>
                     <Text
                         style={{
                             paddingHorizontal: 10,

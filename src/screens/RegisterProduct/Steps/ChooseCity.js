@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
+import { Pressable, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Item, Label } from 'native-base';
@@ -28,38 +28,41 @@ class ChooseCity extends React.Component {
     }
     provinceRef = React.createRef();
     cityRef = React.createRef();
+    isComponentMounted = false;
 
     componentDidMount() {
-        this.fetchLocations(false)
-        // }
-        // )
-        // if (!I18nManager.isRTL) {
-        //     RNRestart.Restart();
-        //     console.warn('here')
-        //     I18nManager.forceRTL(true);
-        // }
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+            this.fetchLocations(false)
+            // }
+            // )
+            // if (!I18nManager.isRTL) {
+            //     RNRestart.Restart();
+            //     I18nManager.forceRTL(true);
+            // }
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-        //     const {
-        //         province,
-        //         city,
-        //     } = this.state;
-        //     console.log('prvo', province, 'city', city)
+            //     const {
+            //         province,
+            //         city,
+            //     } = this.state;
 
-        //     if (city && province) {
-        //         this.setState({ city: '', province })
-        //         return true;
-        //     }
+            //     if (city && province) {
+            //         this.setState({ city: '', province })
+            //         return true;
+            //     }
 
-        //     if (!city && province) {
-        //         this.setState({ province: '' })
-        //         return true;
-        //     }
-        //     if (!city && !province) {
-        //         this.props.changeStep(2);
-        //         return true;
-        //     }
-        // });
+            //     if (!city && province) {
+            //         this.setState({ province: '' })
+            //         return true;
+            //     }
+            //     if (!city && !province) {
+            //         this.props.changeStep(2);
+            //         return true;
+            //     }
+            // });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -70,11 +73,33 @@ class ChooseCity extends React.Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener();
         // if (I18nManager.isRTL) {
         //     I18nManager.forceRTL(false);
         // }
     }
+
+
+    handleHardWareBackButtonPressed = _ => {
+        const {
+            province,
+            city,
+        } = this.state;
+
+        if (city && province) {
+            this.setState({ city: '' })
+        }
+
+        else if (province) {
+            this.setState({ province: '' })
+        }
+        else
+            this.props.changeStep(3);
+        return true;
+    };
+
 
     fetchLocations = isFromUpdate => {
         // this.props.fetchAllProvinces().then(_ => {
@@ -172,7 +197,10 @@ class ChooseCity extends React.Component {
 
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -200,7 +228,7 @@ class ChooseCity extends React.Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -212,7 +240,7 @@ class ChooseCity extends React.Component {
                 style={{ margin: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(2)}
+                    onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(3)}
                     style={[styles.backButtonContainer, { flex: 1 }]}
                     rounded
                 >

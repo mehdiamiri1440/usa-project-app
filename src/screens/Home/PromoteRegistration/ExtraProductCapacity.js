@@ -6,7 +6,6 @@ import { Card, InputGroup, Input, Button } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import analytics from '@react-native-firebase/analytics';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { formatter } from '../../../utils'
@@ -17,7 +16,6 @@ class ExtraProductCapacity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false,
             productCount: 1,
             productUnitPice: 25000,
             productTotalCount: 25000
@@ -44,10 +42,6 @@ class ExtraProductCapacity extends React.Component {
         })
     };
 
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.props.fetchAllDashboardData()
-    };
     changeCount = type => {
         this.setState({
             productCount: type == 'asc' ? JSON.parse(this.state.productCount) + 1 :
@@ -89,11 +83,6 @@ class ExtraProductCapacity extends React.Component {
         } = this.state;
         return (
             <>
-
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
                 <Header
                     title={locales('titles.extraProduct')}
@@ -351,7 +340,7 @@ class ExtraProductCapacity extends React.Component {
 
                                             }}>
                                             ({locales('titles.annuan')})
-                                    </Text>
+                                        </Text>
                                     </View>
                                     <View style={{
                                         marginTop: 20

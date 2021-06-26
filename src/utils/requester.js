@@ -1,5 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from "@react-native-community/netinfo";
+import { Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import RnRestart from 'react-native-restart';
 
@@ -9,30 +11,22 @@ import { dataGenerator } from '../utils';
 
 const store = configureStore();
 
-export const getUrl = (route) => {
-    // if (__DEV__) {
-    //     if (!RNEmulatorCheck.isEmulator())
-    //         return `${REACT_APP_API_ENDPOINT_REAL_DEVICE}/${route}`;
-    // }
-    // return `http://192.168.1.102:3030/${route}`;
-    return `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`;
-
-};
-
+export const getUrl = (route) => `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 export const getTokenFromStorage = () => {
-    const randomToken = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
     return new Promise((resolve, reject) => {
+        const randomToken = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
         try {
-            AsyncStorage.getItem('@Authorization').then(result => {
-                result = JSON.parse(result);
-                if (result !== null) {
-                    resolve(result);
-                }
-                else {
-                    resolve(randomToken)
-                }
-            })
+            AsyncStorage.getItem('@Authorization')
+                .then(result => {
+                    result = JSON.parse(result);
+                    if (!!result && result.length) {
+                        resolve(result);
+                    }
+                    else {
+                        resolve(randomToken)
+                    }
+                })
                 .catch(error => {
                     resolve(randomToken)
                 })
@@ -43,9 +37,10 @@ export const getTokenFromStorage = () => {
     })
 };
 
-
 const getRequestHeaders = async (withAuth) => {
-    let token = await getTokenFromStorage()
+
+    let token = await getTokenFromStorage();
+
     if (!token || !token.length)
         token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
     // console.log('token in getequestHeaders()', token)
@@ -61,25 +56,15 @@ const getRequestHeaders = async (withAuth) => {
     return headerObject;
 };
 
-
-
 export const redirectToLogin = msg => {
-    // console.log('redirected');
-    // if (msg == 'The token has been blacklisted') {
-    //     resolve(false)
-    // }
-    // else {
     store.dispatch(authActions.logOut()).then(_ => {
         RnRestart.Restart();
-        // console.log('logout after redirection')
     })
         .catch(_ => {
             RnRestart.Restart();
 
         })
-}
-
-
+};
 
 export const refreshToken = (route, method, data, withAuth, headers, token) => {
     return new Promise((resolve, reject) => {
@@ -89,12 +74,35 @@ export const refreshToken = (route, method, data, withAuth, headers, token) => {
     })
 };
 
-
+const checkInternetConnectivity = _ => NetInfo.fetch().then(({
+    isInternetReachable,
+    isConnected
+}) => {
+    if (!isConnected || !isInternetReachable) {
+        Toast.show({
+            text: locales('labels.lostInternetConnection'),
+            position: "bottom",
+            style: {
+                borderRadius: 10,
+                bottom: 100, width: '90%',
+                alignSelf: 'center', textAlign: 'center'
+            },
+            textStyle: {
+                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                textAlign: 'center'
+            },
+            duration: 3000
+        });
+    }
+}
+);
 
 export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+
+    checkInternetConnectivity();
     const headers = await getRequestHeaders(withAuth);
+
     return new Promise((resolve, reject) => {
-        // console.log('route', route, 'headers', headers)
         axios
             .request({
                 url: getUrl(route),

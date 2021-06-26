@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, AppState, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, AppState, Pressable, Linking } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -326,7 +326,7 @@ class RequestsTab extends Component {
                     </View>
                 </View>
 
-                { active_pakage_type > 0 ?
+                {active_pakage_type > 0 ?
                     <View
                         style={{
                             padding: 10,
@@ -580,7 +580,10 @@ class RequestsTab extends Component {
                                         }}>
                                         {locales('titles.phoneNumber')}
                                     </Text>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         onPress={_ => this.openCallPad(item.mobileNumber)}
                                         style={{
                                             flexDirection: 'row-reverse',
@@ -600,7 +603,7 @@ class RequestsTab extends Component {
                                             name='phone-square-alt'
                                             size={20}
                                         />
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
 
                                 <View
@@ -1261,7 +1264,10 @@ class RequestsTab extends Component {
                                     }}>
                                     {locales('titles.phoneNumber')}
                                 </Text>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={_ => this.openCallPad(item.mobileNumber)}
                                     style={{
                                         flexDirection: 'row-reverse',
@@ -1281,7 +1287,7 @@ class RequestsTab extends Component {
                                         name='phone-square-alt'
                                         size={20}
                                     />
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
 
                             <View

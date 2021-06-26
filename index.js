@@ -6,7 +6,6 @@ import App from './App';
 // YellowBox.ignoreWarnings(['Remote debugger']);
 export async function firebaseBackgroundMessage(message) {
     let notif = message['data'];
-    console.warn(notif);
     return Promise.resolve();
 }
 

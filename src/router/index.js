@@ -2,26 +2,17 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
-  Text,
   I18nManager,
   View,
-  ActivityIndicator,
   NativeModules
 } from 'react-native';
 import { connect } from 'react-redux';
-import RNRestart from 'react-native-restart';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { isReadyRef } from './rootNavigation';
-import * as RootNavigation from './rootNavigation';
-import { deviceWidth, deviceHeight } from '../utils';
 import { routeToScreensFromNotifications } from './linking';
-
 import AppNavigator from './navigator';
-
-
 
 const registerAppWithFCM = async () => {
   await messaging().registerDeviceForRemoteMessages();
@@ -30,7 +21,6 @@ const registerAppWithFCM = async () => {
 const App = (props) => {
   const RNAppUpdate = NativeModules.RNAppUpdate;
 
-  // console.disableYellowBox = true;
   const {
     userProfile = {},
     loggedInUserId
@@ -45,43 +35,6 @@ const App = (props) => {
 
 
   useEffect(() => {
-    // fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
-    //   .then(res => {
-    //     res.text().then(result => {
-    //       const resultOfVersion = JSON.parse(result);
-    //       if (
-    //         RNAppUpdate.versionName.toString() !==
-    //         resultOfVersion.versionName.toString()
-    //       ) {
-    //         if (!resultOfVersion.forceUpdate) {
-    //           setUpdateModalFlag(true);
-    //           // Alert.alert(
-    //           //     'به روز رسانی',
-    //           //     'نسخه جدیدی موجود است. آیا تمایل به  بروز رسانی دارید ؟',
-    //           //     [
-    //           //         {
-    //           //             text: 'به روز رسانی',
-    //           //             onPress: () => navigationRef.current.navigate('UpgradeApp')
-    //           //         },
-    //           //         {
-    //           //             text: 'انصراف',
-    //           //             onPress: () => { },
-    //           //             style: 'cancel'
-    //           //         },
-    //           //     ],
-    //           // );
-    //         }
-    //         else {
-    //           navigationRef.current.navigate('UpgradeApp')
-    //         }
-    //       }
-    //     });
-    //   })
-    //   .catch(err => navigationRef.current.navigate('SignUp')
-    //   );
-
-
-
 
     if (I18nManager.isRTL) {
       I18nManager.forceRTL(false);
@@ -155,54 +108,49 @@ const App = (props) => {
 
 
   return (
-    <>
-      {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
+    <View
+      style={{
+        flex: 1
+      }}
+    >
+      {/* {(!props.logOutError && !props.userProfileError && ((props.userProfileLoading && !!loggedInUserId))) ?
         <View
           style={{
+            backgroundColor: '#000546',
+            bottom: '7%',
+            paddingHorizontal: 10,
             position: 'absolute',
             alignItems: 'center',
-            justifyContent: 'flex-end',
-            zIndex: 9999,
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            width: deviceWidth,
-            height: deviceHeight,
-            flex: 1
-          }}
-        >
-          <View style={{
-            backgroundColor: '#000546',
-            bottom: 78,
-            height: 50,
-            width: deviceWidth,
-            paddingHorizontal: 10,
-            alignItems: 'center',
+            flexDirection: 'row-reverse',
             justifyContent: 'flex-start',
-            flexDirection: 'row-reverse'
+            zIndex: 9999,
+            width: deviceWidth,
+            height: 40,
           }}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 14,
-                marginHorizontal: 3,
-                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-              }}
-            >
-              {locales('labels.pleaseWait')}
-            </Text>
-            <ActivityIndicator
-              size={20}
-              color="white"
-            />
-          </View>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 14,
+              marginHorizontal: 3,
+              fontFamily: 'IRANSansWeb(FaNum)_Medium',
+            }}
+          >
+            {locales('labels.pleaseWait')}
+          </Text>
+          <ActivityIndicator
+            size={20}
+            color="white"
+          />
         </View>
-        : null}
-
+        :
+        null
+      }  */}
       <AppNavigator
         initialRoute={initialRoute}
         loggedInUserId={loggedInUserId}
         {...props}
       />
-    </>
+    </View>
 
   )
 }

@@ -77,11 +77,17 @@ const Header = (props = {}) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         position: 'absolute',
-                        right: 12,
+                        right: 0,
+                        minWidth: 40,
                     }}
                     onPress={onBackButtonPressed ?? goBack}
                 >
-                    <FontAwesome5 name={iconName} size={20} color='#313A43' solid />
+                    <FontAwesome5
+                        name={iconName}
+                        size={20}
+                        color='#313A43'
+                        solid
+                    />
                     {image
                         ?
                         <>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import { Pressable, Text, StyleSheet, View } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { deviceHeight, deviceWidth } from '../../../utils/index'
@@ -90,14 +90,17 @@ class GetMobileNumberStep extends React.Component {
                     style={styles.forgotPassword}>
                     {locales('messages.backToLogin')}
                 </Text>
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={() => this.props.navigation.navigate('Login')}
                 >
                     <Text
                         style={styles.enterText}>
                         {locales('titles.enterToBuskool')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             </>
         )
     }

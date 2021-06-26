@@ -14,6 +14,7 @@ const INITIAL_STATE = {
     userChatHistoryMessage: null,
     isSenderVerified: false,
     userChatHistory: [],
+    userChatHistoryData: {},
 
 
     sendPrivateMessageLoading: false,
@@ -105,6 +106,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [],
+                userChatHistoryData: {},
                 userChatHistoryLoading: true,
                 isSenderVerified: false,
                 userChatHistoryFailed: false,
@@ -113,10 +115,20 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
         case actionTypes.FETCH_USER_CHAT_HISTORY_SUCCESSFULLY: {
+            const {
+                payload = {}
+            } = action;
+
+            const {
+                messages = [],
+                is_verified
+            } = payload;
+
             return {
                 ...state,
-                userChatHistory: [...action.payload.messages],
-                isSenderVerified: action.payload.is_verified == 1 ? true : false,
+                userChatHistory: [...messages],
+                userChatHistoryData: { ...payload },
+                isSenderVerified: is_verified == 1 ? true : false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
                 userChatHistoryError: false,
@@ -127,6 +139,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [],
+                userChatHistoryData: {},
                 isSenderVerified: false,
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: true,
@@ -138,6 +151,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userChatHistory: [],
+                userChatHistoryData: {},
                 userChatHistoryLoading: false,
                 userChatHistoryFailed: false,
                 isSenderVerified: false,

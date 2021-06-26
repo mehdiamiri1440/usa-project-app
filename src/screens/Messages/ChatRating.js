@@ -3,7 +3,7 @@ import {
     View,
     Text,
     ActivityIndicator,
-    TouchableOpacity,
+    Pressable,
     LayoutAnimation,
     UIManager,
     Platform,
@@ -377,7 +377,10 @@ const ChatRating = props => {
                         }}
                     >
 
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={_ => doRating('good')}
                             activeOpacity={1}
                             style={{
@@ -412,9 +415,12 @@ const ChatRating = props => {
                             >
                                 {locales('titles.satisfied')}
                             </Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={_ => doRating('bad')}
                             activeOpacity={1}
                             style={{
@@ -450,7 +456,7 @@ const ChatRating = props => {
                             >
                                 {locales('titles.notSatisfied')}
                             </Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
                     </View>
                 </View>

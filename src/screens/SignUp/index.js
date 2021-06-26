@@ -18,7 +18,6 @@ import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
 import { deviceHeight, deviceWidth, formatter } from '../../utils';
 import Login from '../Login/Login';
-import NoConnection from '../../components/noConnectionError';
 import ENUMS from '../../enums';
 
 
@@ -44,7 +43,6 @@ class SignUp extends React.Component {
             city: '',
             province: '',
             stepNumber: 1,
-            showModal: false
         }
     }
 
@@ -177,16 +175,13 @@ class SignUp extends React.Component {
                                 this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
                             }
                         })
-                        // .catch(_ => this.setState({ showModal: true }));
                         this.setState({ signUpError: '' })
                     }, 100)
-                    // .catch(_ => this.setState({ showModal: true }));
                 })
             })
         }).catch(err => {
             if (err && err.data)
                 this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
-            // this.setState({ showModal: true })
         });
     };
 
@@ -258,20 +253,11 @@ class SignUp extends React.Component {
 
     };
 
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.componentDidMount();
-    };
-
     render() {
-        let { submitError, submitLoading, submitFailed, sumbitMessage } = this.props;
         let { successfullAlert, stepNumber, signUpError } = this.state;
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
+
                 <ScrollView
 
                     keyboardShouldPersistTaps='handled'

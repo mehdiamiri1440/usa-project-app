@@ -1,15 +1,11 @@
 
 
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Text, View, Image, Modal } from "react-native";
-import RNApkInstallerN from 'react-native-apk-installer-n';
-import RNFS from 'react-native-fs';
-import messaging from '@react-native-firebase/messaging';
+import { Text, View, Image } from "react-native";
+import RNFetchBlob from 'rn-fetch-blob';
 import LinearGradient from "react-native-linear-gradient";
-
 import * as versionData from '../../../version.json';
-import * as authActions from '../../redux/auth/actions';
+import { permissions } from "../../utils";
 
 class UpgradeApp extends Component {
     constructor(props) {
@@ -21,69 +17,28 @@ class UpgradeApp extends Component {
         }
     }
 
-    componentDidMount() {
-        this.appUpdate()
+    async componentDidMount() {
+        const isAllowedToWriteInExternalStorage = await permissions.requestWriteToExternalStoragePermission();
+        if (!isAllowedToWriteInExternalStorage)
+            return this.props.navigation.navigate('Home');
+        return this.appUpdate();
     }
 
 
 
     appUpdate = () => {
-        const { userProfile = {}, loggedInUserId } = this.props;
-        const { user_info = {} } = userProfile;
-        const { is_seller } = user_info;
-        const filePath =
-            RNFS.DocumentDirectoryPath + '/com.domain.example.apk';
-        const download = RNFS.downloadFile({
-            fromUrl: versionData.apkUrl,
-            toFile: filePath,
-            progress: data => {
-                const percentage =
-                    ((100 * data.bytesWritten) / data.contentLength) | 0;
-                this.setState({ appUpdateProgress: percentage });
-            },
-            background: true,
-            progressDivider: 1,
-        });
-
-        download.promise
-            .then(result => {
-                if (result.statusCode == 200) {
-                    console.warn('er', result)
-                    messaging()
-                        .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
-                            this.props.logOut().then(_ => {
-                                this.setState({ downloadingUpdate: false, visible: false }, _ => {
-                                    RNApkInstallerN.install(filePath);
-                                });
-                            });
-                        })
-                }
-                else {
-                    this.props.navigation.pop()
-                    if (loggedInUserId) {
-                        if (is_seller) {
-                            return this.props.navigation.navigate('RegisterProductStack');
-                        }
-                        else {
-                            this.props.navigation.navigate('RegisterRequestStack');
-                        }
-                    }
-                    else {
-                        this.props.navigation.navigate('SignUp');
-                    }
-                }
+        RNFetchBlob.config({
+            path: RNFetchBlob.fs.dirs.DownloadDir + "/buskool.apk",
+        })
+            .fetch('GET', versionData.apkUrl)
+            .progress({ interval: 100 }, (received, total) => {
+                this.setState({
+                    appUpdateProgress: Math.floor(received / total * 100)
+                })
             })
-            .catch(err => {
-                this.props.navigation.pop()
-                if (loggedInUserId) {
-                    if (is_seller)
-                        this.props.navigation.navigate('RegisterProductStack')
-                    else
-                        this.props.navigation.navigate('RegisterRequestStack')
-                }
-                else
-                    this.props.navigation.navigate('SignUp')
-            });
+            .then((res) => {
+                return RNFetchBlob.android.actionViewIntent(res.path(), 'application/vnd.android.package-archive')
+            })
     };
 
 
@@ -134,10 +89,16 @@ class UpgradeApp extends Component {
                             paddingVertical: 7
 
 
+                    }}>
+                        {locales('labels.inUpdating')}
+                    </Text>
+                    <View
+                        style={{
+                            marginTop: 7,
+                            marginBottom: 15,
+                            paddingHorizontal: 15
                         }}>
-                            درحال بروز رسانی
-                     </Text>
-                        <View
+                        <Text
                             style={{
                                 marginTop: 7,
                                 marginBottom: 15,
@@ -200,23 +161,6 @@ class UpgradeApp extends Component {
             </Modal>
         )
     }
-}
-
-
-
-const mapStateToProps = (state) => {
-
-    return {
-        loggedInUserId: state.authReducer.loggedInUserId,
-        userProfile: state.profileReducer.userProfile,
-    }
 };
 
-const mapDispatchToProps = dispatch => {
-
-    return {
-        logOut: _ => dispatch(authActions.logOut()),
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UpgradeApp)
+export default UpgradeApp;

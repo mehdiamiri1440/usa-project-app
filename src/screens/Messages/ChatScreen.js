@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Jmoment from 'moment-jalaali';
 import moment from 'moment';
 import { Button } from 'native-base';
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
     ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
+    LayoutAnimation, UIManager, Platform
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
@@ -21,15 +21,21 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
 import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
-import { formatter, validator, deviceWidth, deviceHeight, dataGenerator } from '../../utils';
+import { formatter, validator, deviceWidth, deviceHeight } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import ViolationReport from './ViolationReport';
 import ChatRating from './ChatRating';
 
-let unsubscribe;
-Jmoment.locale('fa');
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+let unsubscribe, isScrollToBottomButtonClicked = false;
 class ChatScreen extends Component {
     constructor(props) {
         super(props);
@@ -37,16 +43,17 @@ class ChatScreen extends Component {
             keyboardHeight: 0,
             messageText: '',
             isFirstLoad: true,
-            msgCount: 25,
+            from: 0,
+            to: 50,
             showUnAuthorizedUserPopUp: false,
             userChatHistory: [],
             prevScrollPosition: 0,
             loaded: false,
             showGuid: false,
             showViolationReportFlag: false,
-            shouldShowRatingCard: false
+            shouldShowRatingCard: false,
+            showScrollToBottomButton: false
         };
-        Jmoment.locale('en')
     }
 
     scrollViewRef = React.createRef();
@@ -56,10 +63,14 @@ class ChatScreen extends Component {
         const { route = {} } = this.props;
         const { params = {} } = route;
         const { contact = {} } = params;
+        const {
+            from,
+            to
+        } = this.state;
 
         this.handleGuid();
 
-        this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => {
+        this.props.fetchUserChatHistory(contact.contact_id, from, to).then(_ => {
             this.checkForShowingRatingCard();
         });
 
@@ -72,7 +83,7 @@ class ChatScreen extends Component {
 
         if (prevState.loaded == false && this.props.userChatHistory.length) {
             this.fetchSenderIds()
-            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory].reverse(), loaded: true });
+            this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory], loaded: true });
         }
 
     }
@@ -80,25 +91,6 @@ class ChatScreen extends Component {
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
     }
-
-    handleIncomingMessage = _ => {
-        const { route = {} } = this.props;
-        const { params = {} } = route;
-        const { contact = {} } = params;
-
-        unsubscribe = messaging().onMessage(async remoteMessage => {
-            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
-                if (contact && contact.contact_id == remoteMessage.data.senderId)
-                    this.pushNewMessageToChatList(remoteMessage);
-            }
-        });
-    };
-
-    handleGoBack = _ => {
-        this.props.doForceRefresh(true);
-        this.props.navigation.goBack();
-        return true;
-    };
 
     checkForShowingRatingCard = _ => {
 
@@ -127,6 +119,9 @@ class ChatScreen extends Component {
                 is_allowed
             } = payload;
 
+            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id)
+                return;
+
             AsyncStorage.getItem('@ratedChats').then(result => {
 
                 result = JSON.parse(result);
@@ -151,12 +146,32 @@ class ChatScreen extends Component {
         });
     };
 
+    handleIncomingMessage = _ => {
+        const { route = {} } = this.props;
+        const { params = {} } = route;
+        const { contact = {} } = params;
+
+        unsubscribe = messaging().onMessage(async remoteMessage => {
+            if (remoteMessage && remoteMessage.data.BTarget == 'messages') {
+                if (contact && contact.contact_id == remoteMessage.data.senderId)
+                    this.pushNewMessageToChatList(remoteMessage);
+            }
+        });
+    };
+
+    handleGoBack = _ => {
+        this.props.doForceRefresh(true);
+        this.props.navigation.goBack();
+        return true;
+    };
+
     handleGuid = _ => {
         const { route = {} } = this.props;
         const { params = {} } = route;
-        const { contact = {}, shouldHideGuidAndComment } = params;
-
-        const { buyAdId } = this.props;
+        const { contact = {},
+            shouldHideGuidAndComment,
+            buyAdId
+        } = params;
 
         if (!buyAdId && !shouldHideGuidAndComment) {
 
@@ -224,17 +239,25 @@ class ChatScreen extends Component {
 
         userChatHistory.unshift(message);
 
-        userChatHistory.slice(0, 60).forEach(item => {
+        userChatHistory.forEach(item => {
             if (item.is_read == undefined) {
                 item.is_read = true;
             }
-        })
+        });
+
+        this.scrollToTop();
+
         this.setState({
             userChatHistory,
             shouldShowRatingCard: false
         }, () => {
+            const {
+                from,
+                to
+            } = this.state;
             Axios.post(`${REACT_APP_API_ENDPOINT_RELEASE}/get_user_chat_history`, {
-                msg_count: this.state.msgCount,
+                from,
+                to,
                 user_id: contact.contact_id
             })
         })
@@ -243,49 +266,6 @@ class ChatScreen extends Component {
 
     handleMessageTextChange = text => {
         this.setState({ messageText: text })
-    }
-
-    sendMessage = () => {
-        const { route = {} } = this.props;
-        const { params = {} } = route;
-        const { contact = {} } = params;
-        let { messageText } = this.state;
-        let userChatHistory = [...this.state.userChatHistory].reverse();
-        let msgObject = {
-            sender_id: formatter.toStandard(this.props.loggedInUserId),
-            receiver_id: formatter.toStandard(contact.contact_id),
-            text: formatter.toStandard(messageText),
-            created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
-        }
-
-        if (messageText && messageText.length && messageText.trim()) {
-            userChatHistory.push({ ...msgObject });
-            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
-            this.setState({
-                userChatHistory: [...userChatHistory.slice(-25)].reverse(),
-                messageText: '',
-                isFirstLoad: false,
-                shouldShowRatingCard: false
-            });
-            this.props.sendMessage(msgObject).then((result) => {
-                setTimeout(() => {
-                    if (this.scrollViewRef && this.scrollViewRef != null && this.scrollViewRef != undefined &&
-                        this.scrollViewRef.current && this.scrollViewRef.current != null &&
-                        this.scrollViewRef.current != undefined &&
-                        result.payload.message && this.state.userChatHistory.length > 0 &&
-                        !this.props.userChatHistoryLoading)
-                        this.scrollViewRef?.current.scrollToIndex({ animated: true, index: 0 });
-                }, 10);
-                // this.props.fetchUserChatHistory(this.props.contact.contact_id, this.state.msgCount)
-                //     .then(() => {
-                //         this.setState(state => {
-                //             state.loaded = false;
-                //             return '';
-                //         })
-                //     })
-            });
-
-        }
     };
 
     hideUnAuthorizedUserChatPopUp = () => {
@@ -358,23 +338,164 @@ class ChatScreen extends Component {
         })
     };
 
-    onEndReached = _ => {
+    sendMessage = () => {
         const { route = {} } = this.props;
+
         const { params = {} } = route;
-        const { contact = {} } = params;
-        const { loaded, userChatHistory } = this.state;
-        if (loaded && userChatHistory.length >= 9)
-            this.setState({ msgCount: this.state.msgCount + 25 }, () => {
-                this.props.fetchUserChatHistory(contact.contact_id, this.state.msgCount).then(_ => this.setState({ loaded: false }))
-            })
+
+        const {
+            contact = {},
+            productId,
+            buyAdId
+        } = params;
+
+        let { messageText } = this.state;
+
+        let userChatHistory = [...this.state.userChatHistory];
+
+        let msgObject = {
+            sender_id: formatter.toStandard(this.props.loggedInUserId),
+            receiver_id: formatter.toStandard(contact.contact_id),
+            text: formatter.toStandard(messageText),
+            created_at: moment(new Date()).format('YYYY-MM-DD HH:mm')
+        };
+
+        if (messageText && messageText.length && messageText.trim()) {
+            userChatHistory.unshift({ ...msgObject });
+            AsyncStorage.setItem('@user/ChatHistory', JSON.stringify(userChatHistory));
+            this.setState({
+                userChatHistory: [...userChatHistory],
+                messageText: '',
+                isFirstLoad: false,
+                shouldShowRatingCard: false
+            });
+
+            this.props.sendMessage(msgObject, buyAdId, productId).then((result) => {
+                this.scrollToTop(result);
+            });
+        }
+    };
+
+    onScrollChanged = ({
+        nativeEvent = {}
+    }) => {
+
+        const {
+            contentOffset
+        } = nativeEvent;
+
+        const {
+            showScrollToBottomButton
+        } = this.state;
+        if (contentOffset.y > 50) {
+            if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
+                this.setState({ showScrollToBottomButton: true });
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+        else {
+            isScrollToBottomButtonClicked = false;
+            if (showScrollToBottomButton) {
+                this.setState({ showScrollToBottomButton: false });
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+
+    };
+
+    onScrollToIndexFailed = _ => {
+        const {
+            userChatHistory = []
+        } = this.state;
+
+        if (userChatHistory && userChatHistory.length)
+            this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: userChatHistory.length });
+    };
+
+    scrollToTop = (result) => {
+
+        isScrollToBottomButtonClicked = true;
+
+        this.setState({ showScrollToBottomButton: false });
+
+        let conditions = this.scrollViewRef &&
+            this.scrollViewRef != null &&
+            this.scrollViewRef != undefined &&
+            this.scrollViewRef.current &&
+            this.scrollViewRef.current != null &&
+            this.scrollViewRef.current != undefined &&
+            this.state.userChatHistory.length > 0 &&
+            !this.props.userChatHistoryLoading;
+
+        if (result) {
+
+            const {
+                payload = {}
+            } = result;
+
+            conditions = conditions && payload?.message;
+        }
+
+        if (conditions)
+            this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: 0 });
+    };
+
+    onEndReached = _ => {
+
+        const {
+            route = {},
+            userChatHistoryData = {}
+        } = this.props;
+
+        const {
+            total_count
+        } = userChatHistoryData;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact = {}
+        } = params;
+
+        const {
+            userChatHistory,
+            from,
+            to
+        } = this.state;
+
+        if (userChatHistory.length < total_count) {
+
+            this.props.fetchUserChatHistory(contact.contact_id, from + 50, to + 50).then((result = {}) => {
+                const {
+                    payload = {}
+                } = result;
+
+                const {
+                    messages = []
+                } = payload;
+
+                this.setState({
+                    userChatHistory: [...userChatHistory, ...messages],
+                    from: this.state.from + 50,
+                    to: this.state.to + 50
+                });
+            });
+        }
     };
 
     keyExtractor = (_, index) => index.toString();
 
     renderItem = ({ item, index, separators }) => {
-        const { route = {} } = this.props;
+        const {
+            route = {},
+        } = this.props;
+
         const { params = {} } = route;
+
         const { contact = {} } = params;
+
         return <Message
             item={item}
             loggedInUserId={this.props.loggedInUserId}
@@ -382,6 +503,7 @@ class ChatScreen extends Component {
             index={index}
             separators={separators}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
+            {...this.props}
         />;
     };
 
@@ -461,17 +583,41 @@ class ChatScreen extends Component {
     };
 
     render() {
-        let { userChatHistoryLoading, route = {}, buyAdId } = this.props;
-        const { params = {} } = route;
+
+        let {
+            userChatHistoryLoading,
+            route = {},
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
         const {
             profile_photo,
             contact,
             showReportText,
-            shouldHideGuidAndComment = false
+            shouldHideGuidAndComment = false,
+            buyAdId
         } = params;
-        let { first_name: firstName, last_name: lastName, contact_id: id, user_name, is_verified = 0 } = contact;
-        let { userChatHistory, isFirstLoad, messageText,
-            showGuid, showViolationReportFlag,
+
+        let {
+            first_name: firstName,
+            last_name: lastName,
+            contact_id: id,
+            user_name,
+            is_verified = 0
+        } = contact;
+
+        let {
+            userChatHistory,
+            isFirstLoad,
+            messageText,
+            showGuid,
+            showViolationReportFlag,
+            showScrollToBottomButton,
+            to,
+            from
         } = this.state;
 
 
@@ -479,7 +625,35 @@ class ChatScreen extends Component {
 
         return (
             <View style={styles.container}>
-                <ImageBackground source={require('../../../assets/images/whatsapp-wallpaper.png')} style={styles.image}>
+                <ImageBackground
+                    source={require('../../../assets/images/whatsapp-wallpaper.png')}
+                    style={styles.image}
+                >
+                    {showScrollToBottomButton ?
+                        <FontAwesome5
+                            name='angle-double-down'
+                            color='#333333'
+                            size={14}
+                            solid
+                            onPress={_ => this.scrollToTop()}
+                            style={{
+                                backgroundColor: '#FFFFFF',
+                                padding: 10,
+                                width: 37,
+                                height: 37,
+                                borderRadius: 18.5,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                zIndex: 1,
+                                position: 'absolute',
+                                bottom: 70,
+                                right: 10
+                            }}
+                        />
+                        : null}
 
                     {showViolationReportFlag ? <ViolationReport
                         {...this.props}
@@ -596,9 +770,11 @@ class ChatScreen extends Component {
                             width: deviceWidth
                         }}>
                         <TouchableOpacity
-                            style={{ flexDirection: 'row-reverse', width: '21%' }}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                width: '21%'
+                            }}
                             onPress={() => {
-                                Jmoment.locale('fa')
                                 this.handleGoBack();
                             }}>
                             <View
@@ -607,13 +783,16 @@ class ChatScreen extends Component {
                                     alignItems: 'flex-end', paddingHorizontal: 5
                                 }}
                             >
-                                <AntDesign name='arrowright' size={25}
+                                <AntDesign
+                                    name='arrowright'
+                                    size={25}
                                 />
                             </View>
                             <Image
                                 style={{
                                     borderRadius: 20,
-                                    width: 40, height: 40
+                                    width: 40,
+                                    height: 40
                                 }}
                                 source={profile_photo || contact.profile_photo ?
                                     { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo || contact.profile_photo}` }
@@ -621,10 +800,9 @@ class ChatScreen extends Component {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            activeOpacity={(shouldHideGuidAndComment || this.props.buyAdId) ? 1 : 0}
+                            activeOpacity={(shouldHideGuidAndComment || buyAdId) ? 1 : 0}
                             onPress={() => {
-                                Jmoment.locale('fa');
-                                if (!this.props.buyAdId && !shouldHideGuidAndComment) {
+                                if (!buyAdId && !shouldHideGuidAndComment) {
                                     this.props.navigation.navigate('Profile', { user_name });
                                 }
                             }}
@@ -633,14 +811,26 @@ class ChatScreen extends Component {
                                 width: '55%',
                                 alignItems: 'flex-end',
                             }}>
-                            <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }}
+                            >
                                 <View
-                                    style={{ flexDirection: 'row-reverse', alignItems: 'center', maxWidth: '58%', top: -2 }}
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        maxWidth: '58%',
+                                        top: -2
+                                    }}
                                 >
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontSize: 17, marginLeft: 2,
+                                            fontSize: 17,
+                                            marginLeft: 2,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light'
                                         }}
                                     >
@@ -648,7 +838,7 @@ class ChatScreen extends Component {
                                     </Text>
                                     {is_verified ? <ValidatedUserIcon  {...this.props} /> : null}
                                 </View>
-                                {!showGuid && !this.props.buyAdId && !shouldHideGuidAndComment ? <Text
+                                {!showGuid && !buyAdId && !shouldHideGuidAndComment ? <Text
                                     style={{
                                         textAlign: 'right',
                                         color: '#21AD93',
@@ -666,14 +856,20 @@ class ChatScreen extends Component {
 
                         {showReportText === true ?
                             <TouchableOpacity
-                                style={{ flexDirection: 'row-reverse', width: '24%' }}
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    width: '24%'
+                                }}
                                 onPress={_ => this.setState({ showViolationReportFlag: true })}
                             >
                                 <FontAwesome5
                                     size={13}
                                     name='exclamation-circle'
                                     color='#BBBBBB'
-                                    style={{ marginTop: 5, marginHorizontal: 3 }}
+                                    style={{
+                                        marginTop: 5,
+                                        marginHorizontal: 3
+                                    }}
                                 />
                                 <Text
                                     style={{
@@ -697,41 +893,55 @@ class ChatScreen extends Component {
                                 shadowRadius: detectToShowCommentAndGuid ? 0 : 5,
                                 shadowOffset: { width: 0, height: 2 },
                                 borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
+                                backgroundColor: 'white',
+                                width: 50,
+                                height: 50,
+                                borderRadius: 25
                             }}
                         >
-                            <ActivityIndicator size="large" color="#00C569"
+                            <ActivityIndicator
+                                size="large"
+                                color="#00C569"
                                 style={{ top: 7 }}
                             />
                         </ShadowView>
                         : null}
 
-
                     <FlatList
+                        keyboardShouldPersistTaps='handled'
+                        keyboardDismissMode='none'
+                        ref={this.scrollViewRef}
                         data={userChatHistory}
+                        extraData={this.state}
+                        keyExtractor={this.keyExtractor}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.8}
+                        onScrollToIndexFailed={this.onScrollToIndexFailed}
+                        onScroll={this.onScrollChanged}
                         ListFooterComponentStyle={{ padding: 10 }}
                         ListFooterComponent={this.renderListFooterComponent}
                         ListHeaderComponent={this.renderListHeaderComponent}
-                        inverted
-                        maxToRenderPerBatch={3}
-                        keyboardDismissMode='none'
-                        keyboardShouldPersistTaps='handled'
-                        initialNumToRender={3}
-                        windowSize={10}
-                        ref={this.scrollViewRef}
-                        style={{ marginBottom: 60, paddingTop: 2, height: '100%' }}
-                        extraData={this.state}
-                        onEndReached={this.onEndReached}
-                        onEndReachedThreshold={0.5}
-                        keyExtractor={this.keyExtractor}
                         renderItem={this.renderItem}
+                        removeClippedSubviews
+                        initialNumToRender={3}
+                        maxToRenderPerBatch={5}
+                        windowSize={10}
+                        inverted
+                        style={{
+                            marginBottom: 60,
+                            paddingTop: 2,
+                            height: '100%'
+                        }}
                     />
 
                     <View
                         style={{
-                            position: 'absolute', bottom: 0, paddingTop: 3,
+                            position: 'absolute',
+                            bottom: 0,
+                            paddingTop: 3,
                             zIndex: detectToShowCommentAndGuid ? 0 : 1,
-                            width: deviceWidth, paddingBottom: 10,
+                            width: deviceWidth,
+                            paddingBottom: 10,
                             flexDirection: 'row-reverse',
                         }}
                     >
@@ -758,20 +968,29 @@ class ChatScreen extends Component {
                                 marginHorizontal: 10
                             }}
                         >
-                            <MaterialCommunityIcons name='send' size={25} color='white' />
+                            <MaterialCommunityIcons
+                                name='send'
+                                size={25}
+                                color='white'
+                            />
                         </Button>
 
                         <TextInput
                             value={messageText}
                             onChangeText={this.handleMessageTextChange}
                             style={{
-                                textAlign: 'right', backgroundColor: 'white', borderRadius: 20, paddingVertical: 6,
-                                width: deviceWidth * 0.8, paddingHorizontal: 20,
-                                maxHeight: 100, height: 44,
+                                textAlign: 'right',
+                                backgroundColor: 'white',
+                                borderRadius: 20,
+                                paddingVertical: 6,
+                                width: deviceWidth * 0.8,
+                                paddingHorizontal: 20,
+                                maxHeight: 100,
+                                height: 44,
                                 overflow: 'scroll',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}
-                            placeholder='پیامی بگذارید'
+                            placeholder={locales('labels.putAMessage')}
                             placeholderTextColor="#BEBEBE"
                             multiline={true}
                         />
@@ -795,29 +1014,55 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state) => {
-    return {
-        userChatHistoryLoading: state.messagesReducer.userChatHistoryLoading,
-        userChatHistory: state.messagesReducer.userChatHistory,
-        loggedInUserId: state.authReducer.loggedInUserId,
-        isSenderVerified: state.messagesReducer.isSenderVerified,
-        userProfile: state.profileReducer.userProfile,
+const mapStateToProps = ({
+    messagesReducer,
+    authReducer,
+    profileReducer
+}) => {
 
-        contactsList: state.messagesReducer.contactsList,
+    const {
+        userChatHistoryData,
+        userChatHistoryLoading,
+        userChatHistory,
+
+        isSenderVerified,
+
+        contactsList
+    } = messagesReducer;
+
+    const {
+        loggedInUserId
+    } = authReducer;
+
+    const {
+        userProfile
+    } = profileReducer;
+
+    return {
+        userChatHistoryData,
+        userChatHistoryLoading,
+        userChatHistory,
+
+        isSenderVerified,
+
+        contactsList,
+
+        loggedInUserId,
+
+        userProfile
     }
 };
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
         fetchTotalUnreadMessages: () => dispatch(messagesActions.fetchTotalUnreadMessages()),
-        fetchUserChatHistory: (id, msgCount) => dispatch(messagesActions.fetchUserChatHistory(id, msgCount)),
-        sendMessage: msgObject => dispatch(messagesActions.sendMessage(msgObject, props.buyAdId)),
+        fetchUserChatHistory: (id, from, to) => dispatch(messagesActions.fetchUserChatHistory(id, from, to)),
+        sendMessage: (msgObject, buyAdId, productId) => dispatch(messagesActions.sendMessage(msgObject, buyAdId, productId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),
         checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
     }
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

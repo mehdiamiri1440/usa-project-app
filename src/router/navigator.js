@@ -4,7 +4,7 @@ import {
     Image,
     View,
     Text,
-    TouchableOpacity,
+    Pressable,
     BackHandler,
     AppState,
     StyleSheet
@@ -14,13 +14,12 @@ import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { REACT_APP_API_ENDPOINT_RELEASE, APP_UPDATE_TYPE } from '@env';
 import DeviceInfo from 'react-native-device-info';
 import Axios from 'axios';
-
 import moment from 'moment';
+
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -46,7 +45,13 @@ import * as messageActions from '../redux/messages/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
-let currentRoute = '', promotionModalTimeout, modalTimeout, guidModalTimeout, isModalsSeen = false;
+let currentRoute = '',
+    promotionModalTimeout,
+    modalTimeout,
+    guidModalTimeout,
+    isRatingModalsSeen = false,
+    isModalsSeen = false;
+
 const routes = props => {
 
     const {
@@ -80,15 +85,32 @@ const routes = props => {
 
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
+    const [showRatingModal, setShowRatingModal] = useState(false);
+
     const [shouldDoAsyncJobs, setShouldDoAsyncJobs] = useState(false);
 
+    const [isUpgradeModuleRaised, setIsUpgradeModuleRaised] = useState(false);
+
+    const [ratingModalSuccessPage, setRatingModalSuccessPage] = useState(false);
+
+
     useEffect(() => {
+
+        handleInitialRoute();
+
+        checkForShowingRatingModal();
 
         AppState.addEventListener('change', handleAppStateChange);
 
         BackHandler.addEventListener('hardwareBackPress', handleAppBackChanges);
+
         if (shouldDoAsyncJobs) {
-            checkForUpdate();
+            if (APP_UPDATE_TYPE == 'google')
+                checkForUpdate();
+            else {
+                if (!isUpgradeModuleRaised)
+                    upgradeAppFromServer();
+            }
         }
 
         if (shouldDoAsyncJobs && userProfile && typeof userProfile === 'object' && Object.values(userProfile).length) {
@@ -101,8 +123,6 @@ const routes = props => {
 
             isReadyRef.current = true;
 
-
-
             AppState.removeEventListener('change', handleAppStateChange);
 
             BackHandler.removeEventListener('hardwareBackPress', handleAppBackChanges);
@@ -111,7 +131,6 @@ const routes = props => {
     }, [loggedInUserId, shouldDoAsyncJobs, userProfile])
 
 
-    const Stack = createStackNavigator();
     const Tab = createMaterialBottomTabNavigator();
 
     const handleAppStateChange = (nextAppState) => {
@@ -121,6 +140,37 @@ const routes = props => {
             // checkForShowingContactInfoGuid();
             checkForShowingPromotionModal();
         }
+    };
+
+    const handleInitialRoute = _ => {
+        if (!loggedInUserId) {
+            AsyncStorage.getItem('@isIntroductionSeen').then(result => {
+                result = JSON.parse(result);
+                if (!result)
+                    navigationRef?.current?.navigate('StartUp', { screen: 'Intro' })
+            })
+        }
+    };
+
+    const upgradeAppFromServer = _ => {
+        setIsUpgradeModuleRaised(true);
+        fetch('https://app-download.s3.ir-thr-at1.arvanstorage.com/buskool.json')
+            .then(res => {
+                res.text().then(result => {
+                    const resultOfVersion = JSON.parse(result);
+                    if (
+                        DeviceInfo.getVersion().toString() !==
+                        resultOfVersion.versionName.toString()
+                    ) {
+                        if (!resultOfVersion.forceUpdate) {
+                            setUpdateModalFlag(true);
+                        }
+                        else {
+                            navigationRef?.current?.navigate('UpgradeApp')
+                        }
+                    }
+                });
+            });
     };
 
     const checkForUpdate = _ => {
@@ -150,6 +200,44 @@ const routes = props => {
                 }
             }
         )
+    };
+
+    const checkForShowingRatingModal = _ => {
+        if (!!loggedInUserId)
+            AsyncStorage.getItem('@ratingModalSeenUsers')
+                .then(result => {
+                    result = JSON.parse(result);
+                    if (!result || !result.length) {
+                        result = [];
+                        result.push({
+                            userId: loggedInUserId,
+                            date: moment(),
+                            isShown: false
+                        });
+                        AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
+                    }
+                    else {
+                        const foundIndex = result.findIndex(item => item.userId == loggedInUserId);
+                        if (foundIndex > -1) {
+                            if (moment().diff(result[foundIndex].date, 'days') >= 5) {
+                                if (!result[foundIndex].isShown) {
+                                    result[foundIndex].isShown = true;
+                                    AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
+                                    isRatingModalsSeen = true;
+                                    return setShowRatingModal(true);
+                                }
+                            }
+                        }
+                        else {
+                            result.push({
+                                userId: loggedInUserId,
+                                date: moment(),
+                                isShown: false
+                            });
+                            AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
+                        }
+                    }
+                });
     };
 
     const checkForShowingContactInfoGuid = _ => {
@@ -250,6 +338,11 @@ const routes = props => {
         AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
     };
 
+    const closeRatingModal = _ => {
+        isRatingModalsSeen = false;
+        setShowRatingModal(false);
+    };
+
     const handleVisiblityOfSellerButtonAndBottomMenu = _ => {
 
         const routesNotToShow = [
@@ -270,7 +363,7 @@ const routes = props => {
         const shouldShow = loggedInUserId && is_seller && !props.userProfileLoading
             && routesNotToShow.indexOf(currentRouteName) == -1;
 
-        const isBottomMenuVisible = loggedInUserId && ['Chat', 'Channel'].indexOf(currentRouteName) == -1;
+        const isBottomMenuVisible = ['Chat', 'Channel', 'Intro'].indexOf(currentRouteName) == -1;
 
         setShouldShowBottomMenu(isBottomMenuVisible);
 
@@ -282,6 +375,8 @@ const routes = props => {
         const canGoBack = navigationRef?.current?.canGoBack();
         if (isModalsSeen)
             closePromotionModal();
+        if (isRatingModalsSeen)
+            closeRatingModal();
         else {
             if (canGoBack) {
                 navigationRef?.current?.goBack();
@@ -318,6 +413,128 @@ const routes = props => {
 
     return (
         <>
+            {showRatingModal ?
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
+                    <Dialog
+                        onDismiss={closeRatingModal}
+                        dismissable
+                        visible={showRatingModal}
+                        style={styles.dialogWrapper}
+                    >
+
+                        <Dialog.Actions
+                            style={styles.dialogHeader}
+                        >
+                            <Button
+                                onPress={closeRatingModal}
+                                style={styles.closeDialogModal}>
+                                <FontAwesome5 name="times" color="#777" solid size={18} />
+                            </Button>
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('titles.postComment')}
+                            </Paragraph>
+                        </Dialog.Actions>
+                        {ratingModalSuccessPage ?
+                            <View
+                                style={{
+                                    minHeight: '25%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                    }}>
+
+                                    <FontAwesome5 name="check-circle" solid color="#00C569" size={70} />
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.thanksForCommenting')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                            </View>
+                            :
+                            <>
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    <FontAwesome5 name="star" solid color="#FFBB00" size={70} />
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.satisfyWithBuskool')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                                <Dialog.Actions
+                                    style={{
+                                        justifyContent: 'center',
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        flexDirection: 'row-reverse',
+                                        padding: 0
+                                    }}>
+                                    <Button
+                                        style={[styles.loginButton, { width: '45%' }]}
+                                        onPress={() => {
+                                            closeRatingModal();
+                                            Linking.canOpenURL('https://play.google.com/store/apps/details?id=com.buskool').then((supported) => {
+                                                if (!!supported) {
+                                                    Linking.openURL('https://play.google.com/store/apps/details?id=com.buskool')
+                                                } else {
+                                                    Linking.openURL('https://play.google.com')
+                                                }
+                                            })
+                                                .catch(() => {
+                                                    Linking.openURL('https://play.google.com')
+                                                })
+                                        }}
+                                    >
+
+                                        <Text style={[styles.closeButtonText, { color: 'white' }]}>
+                                            {locales('labels.yes')}
+                                        </Text>
+                                    </Button>
+                                    <Button
+                                        style={[styles.loginButton, { width: '45%', backgroundColor: '#BEBEBE', elevation: 0 }]}
+                                        onPress={_ => {
+                                            setRatingModalSuccessPage(true);
+                                            setTimeout(() => {
+                                                setRatingModalSuccessPage(false);
+                                                closeRatingModal();
+                                            }, 3000);
+                                        }}
+                                    >
+
+                                        <Text style={[styles.closeButtonText, { color: 'white', elevation: 0 }]}>
+                                            {locales('labels.no')}
+                                        </Text>
+                                    </Button>
+                                </Dialog.Actions>
+                            </>
+                        }
+                    </Dialog>
+                </Portal >
+                :
+                null
+            }
+
             {showPromotionModal ?
                 <Portal
                     style={{
@@ -423,7 +640,10 @@ const routes = props => {
                                 }}
                                 colors={['#21AD93', '#00C569']}
                             >
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => {
                                         closePromotionModal();
                                         navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
@@ -435,7 +655,7 @@ const routes = props => {
                                         fontSize: 20,
                                     }]}>{locales('labels.promoteRegistration')}
                                     </Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             </LinearGradient>
                         </View>
                     </Dialog>
@@ -577,16 +797,23 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
                                 onPress={() => {
-                                    Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps').then((supported) => {
-                                        if (!!supported) {
-                                            Linking.openURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
-                                        } else {
-                                            Linking.openURL('https://play.google.com')
-                                        }
-                                    })
-                                        .catch(() => {
-                                            Linking.openURL('https://play.google.com')
-                                        })
+                                    if (APP_UPDATE_TYPE == 'google') {
+                                        Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
+                                            .then((supported) => {
+                                                if (!!supported) {
+                                                    Linking.openURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
+                                                } else {
+                                                    Linking.openURL('https://play.google.com')
+                                                }
+                                            })
+                                            .catch(() => {
+                                                Linking.openURL('https://play.google.com')
+                                            })
+                                    }
+                                    else {
+                                        setUpdateModalFlag(false);
+                                        navigationRef?.current?.navigate('UpgradeApp');
+                                    }
                                 }}
                             >
 
@@ -648,14 +875,16 @@ const routes = props => {
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
-                            barStyle={{ backgroundColor: '#313A43' }}
+                            barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
                         >
                             {unSignedInRoutes.map((item) => (
                                 <Tab.Screen
                                     key={item.key}
                                     options={{
                                         tabBarBadge: false,
-                                        tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales(item.label)}</Text>,
+                                        tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>
+                                            {locales(item.label)}
+                                        </Text>,
                                         tabBarIcon: ({ focused }) => <View
                                             style={item.key == 'RegisterProductStack' ? {
                                                 backgroundColor: !focused ? '#fff' : '#00C569', height: 30, width: 30,
@@ -841,9 +1070,13 @@ const routes = props => {
                 }
 
             </NavigationContainer >
+
             {souldShowSellerButton ?
-                <TouchableOpacity
-                    activeOpacity={1}
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 32.5,
+                    }}
                     onPress={_ => navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } })}
                     style={{
                         width: 65,
@@ -868,7 +1101,7 @@ const routes = props => {
                     }}>
                         {locales('labels.buyers')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
                 : null}
         </>
     )

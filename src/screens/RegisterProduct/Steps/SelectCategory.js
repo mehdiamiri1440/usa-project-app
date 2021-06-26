@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path, G, Circle } from "react-native-svg";
 import { Button, Input, Label, InputGroup } from 'native-base';
@@ -400,47 +400,56 @@ class SelectCategory extends Component {
 
     productTypxdeRef = React.createRef();
 
+    isComponentMounted = false;
 
     componentDidMount() {
-        this.props.fetchAllCategories().then(_ => {
-            const { category, subCategory, productType, categoriesList } = this.props;
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
 
-            if (this.productTypeRef && this.productTypeRef.current)
-                this.productTypeRef.current.value = productType;
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
 
-            this.setState({
-                category, subCategory, productType,
-                subCategoriesTogether: categoriesList.map(item => item.subcategories),
-                categoriesList,
-                loaded: true,
-                subCategoriesList: category && categoriesList && categoriesList.length ?
-                    Object.values(categoriesList.find(item => item.id == category).subcategories)
-                    : []
-            })
+            this.props.fetchAllCategories().then(_ => {
+                const { category, subCategory, productType, categoriesList } = this.props;
 
-        });
+                if (this.productTypeRef && this.productTypeRef.current)
+                    this.productTypeRef.current.value = productType;
 
-        // BackHandler.addEventListener('hardwareBackPress', _ => {
+                this.setState({
+                    category, subCategory, productType,
+                    subCategoriesTogether: categoriesList.map(item => item.subcategories),
+                    categoriesList,
+                    loaded: true,
+                    subCategoriesList: category && categoriesList && categoriesList.length ?
+                        Object.values(categoriesList.find(item => item.id == category).subcategories)
+                        : []
+                })
 
-        //     const {
-        //         category,
-        //         subCategory,
-        //     } = this.state;
+            });
 
-        //     if (subCategory && category) {
-        //         this.setState({ subCategory: '' })
-        //     }
+            // BackHandler.addEventListener('hardwareBackPress', _ => {
 
-        //     else if (category) {
-        //         this.setState({ category: '' })
-        //     }
-        //     return true;
-        // });
+            //     const {
+            //         category,
+            //         subCategory,
+            //     } = this.state;
 
+            //     if (subCategory && category) {
+            //         this.setState({ subCategory: '' })
+            //     }
+
+            //     else if (category) {
+            //         this.setState({ category: '' })
+            //     }
+            //     return true;
+            // });
+
+        }
     }
 
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener('hardwareBackPress');
     }
 
@@ -472,6 +481,24 @@ class SelectCategory extends Component {
     //         })
     //     }
     // };
+
+    handleHardWareBackButtonPressed = _ => {
+        const {
+            category,
+            subCategory,
+        } = this.state;
+
+        if (subCategory && category) {
+            this.setState({ subCategory: '' })
+        }
+
+        else if (category) {
+            this.setState({ category: '' })
+        }
+        else
+            this.props.changeStep(1);
+        return true;
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
@@ -542,7 +569,10 @@ class SelectCategory extends Component {
 
     renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     width: deviceWidth,
                     borderBottomWidth: 1,
@@ -571,7 +601,7 @@ class SelectCategory extends Component {
                     </Text>
                 </View>
                 <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
@@ -659,7 +689,7 @@ class SelectCategory extends Component {
         // subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
-                CategoriesIcons.find(item => item.name == selectedSvgName).svg : null : null
+                CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
 
         return (
             <View

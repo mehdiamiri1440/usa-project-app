@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, I18nManager, ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -32,7 +32,6 @@ class ChooseCity extends React.Component {
         this.props.fetchAllProvinces();
         // if (!I18nManager.isRTL) {
         //     RNRestart.Restart();
-        //     console.warn('here')
         //     I18nManager.forceRTL(true);
         // }
     }

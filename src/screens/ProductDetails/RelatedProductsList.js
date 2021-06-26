@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, FlatList, Pressable, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { Card } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -27,7 +27,10 @@ const RelatedProductsList = props => {
 
     const renderItem = useCallback(
         ({ item }) => (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 style={{
                     borderRadius: 12,
                     margin: 10,
@@ -77,7 +80,7 @@ const RelatedProductsList = props => {
                         }, styles.textBold]}>
                         {locales('titles.stockQuantity')} {formatter.convertedNumbersToTonUnit(item.stock)} </Text>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
 
         ), []);
 

@@ -66,7 +66,7 @@ class Intro extends Component {
                     <Button
                         onPress={() => {
                             if (selectedIndex == images.length - 1) {
-                                return this.props.navigation.navigate('SignUp')
+                                return this.props.navigation.navigate('Home', { screen: 'ProductsList' })
                             }
                             else {
                                 this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))
@@ -103,7 +103,7 @@ class Intro extends Component {
 
                 </View> : <View style={styles.actionButtonWrapper}>
                     <Button
-                        onPress={() => this.props.navigation.navigate('SignUp')}
+                        onPress={() => this.props.navigation.navigate('Home', { screen: 'ProductsList' })}
                         style={styles.actionButton}>
                         <Text style={styles.actionButtonText}>
                             {locales('titles.skip')}
@@ -114,7 +114,7 @@ class Intro extends Component {
                     <Button
                         onPress={() => {
                             if (selectedIndex == images.length - 1) {
-                                return this.props.navigation.navigate('SignUp')
+                                return this.props.navigation.navigate('Home', { screen: 'ProductsList' })
                             }
                             else {
                                 this.setState({ nextButton: true }, () => this.setState({ nextButton: false }))

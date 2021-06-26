@@ -60,8 +60,7 @@ export const StartUp = _ => (
         <Stack.Screen key='Intro' name='Intro' component={Intro} />
         <Stack.Screen key='UpgradeApp' name='UpgradeApp' component={UpgradeApp} />
     </Stack.Navigator>
-)
-
+);
 
 export const MyBuskoolStack = _ => {
     return (
@@ -72,8 +71,7 @@ export const MyBuskoolStack = _ => {
                 gestureEnabled: true,
 
             }}
-            initialRouteName={global.initialProfileRoute}
-        // initialRouteName={'ChangeRole'}
+            initialRouteName='HomeIndex'
         >
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -296,7 +294,14 @@ export const MyBuskoolStack = _ => {
                 name='ContactInfoGuid'
                 component={ContactInfoGuid}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
         </Stack.Navigator >
     )
 };
@@ -362,7 +367,7 @@ export const RegisterProductStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const RegisterRequestStack = _ => (
     <Stack.Navigator
@@ -414,7 +419,7 @@ export const RegisterRequestStack = _ => (
         />
 
     </Stack.Navigator>
-)
+);
 
 export const MessagesStack = _ => (
     <Stack.Navigator
@@ -473,9 +478,17 @@ export const MessagesStack = _ => (
             name='Chat'
             component={Chat}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`UpgradeApp`}
+            component={UpgradeApp}
+        />
 
     </Stack.Navigator>
-)
+);
 
 export const RequestsStack = _ => (
     <Stack.Navigator
@@ -506,9 +519,17 @@ export const RequestsStack = _ => (
             name='Chat'
             component={Chat}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`UpgradeApp`}
+            component={UpgradeApp}
+        />
 
     </Stack.Navigator>
-)
+);
 
 export const HomeStack = _ => {
 
@@ -590,6 +611,14 @@ export const HomeStack = _ => {
                 name='StartUp'
                 component={StartUp}
             />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
 
         </Stack.Navigator>
     )
@@ -666,7 +695,14 @@ export const SpecialProductsStack = _ => {
                 name='Chat'
                 component={Chat}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UpgradeApp`}
+                component={UpgradeApp}
+            />
         </Stack.Navigator>
     )
 };
@@ -702,4 +738,4 @@ export const unSignedInRoutes = [
         icon: 'user-alt',
         key: 'MyBuskool'
     },
-]
+];

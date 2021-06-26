@@ -7,6 +7,7 @@ const device_id = DeviceInfo.getUniqueId();
 
 const storeData = (payload) => {
     return new Promise((resolve, _) => {
+        AsyncStorage.removeItem('@productsList')
         if (payload.token)
             AsyncStorage.setItem('@Authorization', JSON.stringify(payload.token)).then(_ => {
                 resolve(payload);
@@ -156,7 +157,6 @@ export const changeRole = () => {
                 withAuth: true,
             })
             .then(result => {
-                console.log('ressss', result)
                 resolve(result);
             })
             .catch(err => {

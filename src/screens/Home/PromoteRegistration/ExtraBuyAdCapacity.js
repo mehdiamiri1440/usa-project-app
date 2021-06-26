@@ -6,7 +6,6 @@ import { Card, InputGroup, Input, Button } from 'native-base';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import NoConnection from '../../../components/noConnectionError';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import * as homeActions from '../../../redux/home/actions';
 import { formatter } from '../../../utils';
@@ -17,7 +16,6 @@ class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false,
             buyAdCount: 1,
             buyAdUnitPice: 25000,
             buyAdTotalCount: 25000,
@@ -42,13 +40,6 @@ class ExtraBuyAdCapacity extends React.Component {
             }
         })
     };
-
-
-    closeModal = _ => {
-        this.setState({ showModal: false });
-        this.props.fetchAllDashboardData()
-    };
-
 
     changeCount = type => {
         this.setState({
@@ -94,11 +85,6 @@ class ExtraBuyAdCapacity extends React.Component {
         return (
             <>
 
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
-
                 <Header
                     title={locales('titles.extra‌BuyAd')}
                     shouldShowAuthenticationRibbonFromProps
@@ -111,7 +97,6 @@ class ExtraBuyAdCapacity extends React.Component {
                         <RefreshControl
                             refreshing={this.props.dashboardLoading}
                             onRefresh={() => this.props.fetchAllDashboardData()
-                                // .catch(_ => this.setState({ showModal: true }))
                             }
                         />
                     }
@@ -363,7 +348,7 @@ class ExtraBuyAdCapacity extends React.Component {
 
                                             }}>
                                             ({locales('titles.annuan')})
-                                    </Text>
+                                        </Text>
                                     </View>
                                     <View style={{
                                         marginTop: 20

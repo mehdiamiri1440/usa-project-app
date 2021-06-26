@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    FlatList, View, Text, Image, TouchableOpacity,
+    FlatList, View, Text, Image, Pressable,
     ActivityIndicator, Modal, Animated, Linking,
-    ImageBackground, StyleSheet
+    ImageBackground, StyleSheet,
+    LayoutAnimation, UIManager, Platform
 } from 'react-native';
 import { connect } from "react-redux";
 import Svg, { Path, G } from "react-native-svg"
@@ -18,17 +19,32 @@ import * as messagesActions from '../../redux/messages/actions';
 import { deviceWidth, parser, formatter, deviceHeight } from '../../utils';
 import Header from '../../components/header';
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+
+let isScrollToBottomButtonClicked = false, onEndReachedCalledDuringMomentum = true, firstLoad = true;
+
 const Channel = props => {
 
-    let onEndReachedCalledDuringMomentum = true;
-    let firstLoad = true;
 
     const ChannelContainerRef = useRef();
+
     const [page, setPage] = useState(1);
+
     const [selectedItem, setSelectedItem] = useState(null);
+
     let translateY = useState(new Animated.Value(0))[0];
+
     const [caption, setCaption] = useState(true);
+
     const [contents, setContents] = useState([]);
+
+    const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
 
 
     useEffect(_ => {
@@ -49,6 +65,57 @@ const Channel = props => {
     const {
         total
     } = channelData;
+
+
+    const scrollToTop = _ => {
+
+        isScrollToBottomButtonClicked = true;
+        setShowScrollToBottomButton(false);
+
+        let conditions = ChannelContainerRef &&
+            ChannelContainerRef != null &&
+            ChannelContainerRef != undefined &&
+            ChannelContainerRef.current &&
+            ChannelContainerRef.current != null &&
+            ChannelContainerRef.current != undefined &&
+            contents.length > 0 &&
+            !channelDataLoading;
+
+        if (conditions)
+            ChannelContainerRef?.current?.scrollToIndex({ animated: true, index: 0 });
+
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    };
+
+    const onScrollChanged = ({
+        nativeEvent = {}
+    }) => {
+
+        const {
+            contentOffset
+        } = nativeEvent;
+
+
+        if (contentOffset.y > 50) {
+            if (!isScrollToBottomButtonClicked && !showScrollToBottomButton) {
+                setShowScrollToBottomButton(true);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+        else {
+            isScrollToBottomButtonClicked = false;
+            if (showScrollToBottomButton) {
+                setShowScrollToBottomButton(false);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            }
+        }
+
+    };
+
+    const onScrollToIndexFailed = _ => {
+        if (contents && contents.length)
+            ChannelContainerRef?.current?.scrollToIndex({ animated: true, index: contents.length });
+    };
 
     const shareProfile = async _ => {
 
@@ -105,7 +172,10 @@ const Channel = props => {
         const secondTextNumberPart = secondText && secondText.length ? secondText.split(' ')[2] : '';
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 onPress={_ => redirectToProduct(product_id)}
                 style={{
                     backgroundColor: 'white',
@@ -252,7 +322,7 @@ const Channel = props => {
                         </Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -272,7 +342,10 @@ const Channel = props => {
     const renderCtaText = (cta_text, cta_link) => {
         if (cta_text && cta_text.length && cta_link && cta_link.length)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     onPress={_ => sendCtaLink(cta_link)}
                     style={{
                         flexDirection: 'row-reverse',
@@ -297,7 +370,7 @@ const Channel = props => {
                     >
                         {cta_text}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             )
         return null;
     };
@@ -329,7 +402,11 @@ const Channel = props => {
                             flexDirection: 'row-reverse'
                         }}
                     >
-                        {!!is_sharable && !cta_link && !cta_text ? <TouchableOpacity
+                        {!!is_sharable && !cta_link && !cta_text ? <Pressable
+                            android_ripple={{
+                                color: '#ededed',
+                                radius: 20
+                            }}
                             onPress={_ => forwardMessage(id)}
                             style={{
                                 backgroundColor: 'rgba(102,102,102,0.44)',
@@ -343,7 +420,7 @@ const Channel = props => {
                             }}
                         >
                             <FontAwesome5 name='share' color='white' size={20} />
-                        </TouchableOpacity> : null}
+                        </Pressable> : null}
 
                         {!is_product ? <View
                             style={{
@@ -354,7 +431,10 @@ const Channel = props => {
                                 borderRadius: 6
                             }}
                         >
-                            {file_path ? <TouchableOpacity
+                            {file_path ? <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={_ => setSelectedItem(item)}
                                 activeOpacity={1}
                             >
@@ -367,7 +447,7 @@ const Channel = props => {
                                         resizeMode: 'cover',
                                     }}
                                 />
-                            </TouchableOpacity>
+                            </Pressable>
                                 : null}
                             <View
                                 style={{
@@ -414,7 +494,10 @@ const Channel = props => {
                             : renderMessageWithProductDesign(item)}
 
                     </View>
-                    {!!is_sharable ? <TouchableOpacity
+                    {!!is_sharable ? <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         onPress={_ => forwardMessage(id)}
                         style={{
                             flexDirection: 'row-reverse',
@@ -438,7 +521,7 @@ const Channel = props => {
                         >
                             {locales('titles.sendToFriends')}
                         </Text>
-                    </TouchableOpacity> : renderCtaText(cta_text, cta_link)}
+                    </Pressable> : renderCtaText(cta_text, cta_link)}
                 </View>
             </>
 
@@ -453,7 +536,6 @@ const Channel = props => {
             tempPage = tempPage + 1;
             setPage(tempPage);
             props.fetchChannelData(tempPage).then(result => {
-                console.log('end reached', result);
                 setContents([...contents, ...result.payload.contents])
             });
             onEndReachedCalledDuringMomentum = true;
@@ -477,12 +559,40 @@ const Channel = props => {
 
     return (
         <>
+            {showScrollToBottomButton ?
+                <FontAwesome5
+                    name='angle-double-down'
+                    color='#333333'
+                    size={18}
+                    solid
+                    onPress={_ => scrollToTop()}
+                    style={{
+                        backgroundColor: '#FFFFFF',
+                        padding: 10,
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1,
+                        position: 'absolute',
+                        bottom: 70,
+                        right: 10
+                    }}
+                />
+                : null}
             <Modal
                 visible={!!selectedItem}
                 onRequestClose={_ => setSelectedItem(null)}
                 transparent={false}
             >
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
                     style={{
                         flexDirection: 'row-reverse',
                         height: 40,
@@ -500,7 +610,7 @@ const Channel = props => {
                     >
                         <FontAwesome5 name='times-circle' size={35} solid color='white' />
                     </View>
-                </TouchableOpacity>
+                </Pressable>
 
                 <ImageZoom
                     cropWidth={deviceWidth}
@@ -508,7 +618,10 @@ const Channel = props => {
                     imageWidth={deviceWidth}
                     imageHeight={deviceHeight * 0.9}
                 >
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
                         activeOpacity={1}
                         onPress={_ => {
                             !caption ? fadeIn() : fadeOut();
@@ -530,7 +643,7 @@ const Channel = props => {
                                 borderRadius: 4
                             }}
                         />
-                    </TouchableOpacity>
+                    </Pressable>
                 </ImageZoom>
                 <Animated.View
                     style={{
@@ -608,7 +721,8 @@ const Channel = props => {
                     inverted={!!contents && !!contents.length}
                     renderItem={renderItem}
                     removeClippedSubviews
-                    legacyImplementation
+                    onScrollToIndexFailed={onScrollToIndexFailed}
+                    onScroll={onScrollChanged}
                     windowSize={8}
                     maxToRenderPerBatch={3}
                     onMomentumScrollBegin={() => onEndReachedCalledDuringMomentum = false}
@@ -618,7 +732,10 @@ const Channel = props => {
                 />
             </ImageBackground>
 
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={shareProfile}
                 style={{
@@ -645,7 +762,7 @@ const Channel = props => {
                 >
                     {locales('labels.sendYourProfileToYourFriends')}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         </>
     )
@@ -657,7 +774,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         justifyContent: "center"
     },
-})
+});
 
 const mapStateToProps = state => {
 
@@ -683,6 +800,7 @@ const mapStateToProps = state => {
         userProfile
     }
 };
+
 const mapDispatchToProps = dispatch => {
     return {
         fetchChannelData: page => dispatch(messagesActions.fetchChannelData(page)),

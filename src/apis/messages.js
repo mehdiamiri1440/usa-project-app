@@ -48,14 +48,15 @@ export const fetchAllGroupList = () => {
 };
 
 
-export const fetchUserChatHistory = (userId, msgCount = 10) => {
+export const fetchUserChatHistory = (userId, from = 0, to = 25) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `get_user_chat_history`,
                 method: 'POST',
                 data: {
-                    msg_count: msgCount,
+                    from,
+                    to,
                     user_id: userId
                 },
                 withAuth: true,
@@ -100,9 +101,8 @@ export const fetchGroupChats = (groupId, messageCount) => {
 
 
 
-export const sendMessage = (msgObject, buyAdId) => {
+export const sendMessage = (msgObject, buyAdId, productId) => {
     return new Promise((resolve, reject) => {
-
         if (buyAdId != undefined) {
             requester
                 .fetchAPI({
@@ -124,6 +124,29 @@ export const sendMessage = (msgObject, buyAdId) => {
 
                 });
         }
+
+        else if (productId != undefined) {
+            requester
+                .fetchAPI({
+                    route: `send_reply_to_product`,
+                    method: 'POST',
+                    data: {
+                        product_id: productId,
+                        text: msgObject.text
+                    },
+                    withAuth: true,
+                })
+                .then(result => {
+                    resolve(result);
+                })
+                .catch(err => {
+                    if (err && !err.response)
+                        // return reject(err.response);
+                        return reject(err);
+
+                });
+        }
+
         else {
             requester
                 .fetchAPI({

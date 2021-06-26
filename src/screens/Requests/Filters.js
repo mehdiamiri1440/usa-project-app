@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, FlatList, Pressable, Modal, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
@@ -37,15 +37,11 @@ class Filters extends Component {
             let subCategory = this.state.categoriesList.some(item => item.id == id) ?
                 this.state.categoriesList.find(item => item.id == id).subcategories : {};
 
-            console.log('333', subCategory, 'list', this.state.categoriesList, 'some', this.state.categoriesList.some(item => item.id == id),
-                'find', this.state.categoriesList.find(item => item.id == id))
-
             if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
                 subCategory = {}
             }
 
             subCategory = Object.values(!!subCategory ? subCategory : {});
-            console.log('444', subCategory)
 
             this.setState({
                 subCategoriesModal: true,
@@ -54,16 +50,12 @@ class Filters extends Component {
             }, () => {
                 if (this.state.subCategoriesList.length <= 0) {
                     this.props.fetchAllCategories()
-                    console.log('22222', id, 'name', name, 'categrory',
-                        this.state.categoriesList, 'category len', this.state.categoriesList.length,
-                        'sub', this.state.subCategoriesList, 'sub len', this.state.subCategoriesList.length)
                     this.setState({ subCategoriesModal: false })
                     this.props.closeFilters()
                 }
             })
         }
         else {
-            console.warn('1111', id, name, this.state.categoriesList, this.state.categoriesList.length)
             this.setState({ subCategoriesModal: false }, () => {
                 this.props.closeFilters()
             })
@@ -109,7 +101,10 @@ class Filters extends Component {
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => {
                                     this.setState({ subCategoriesModal: false }, () => {
                                         this.props.closeFilters()
@@ -127,7 +122,7 @@ class Filters extends Component {
                                     {item.category_name}
                                 </Text>
 
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     />
                 </Modal>
@@ -188,7 +183,10 @@ class Filters extends Component {
                         style={{ marginVertical: 8 }}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.sortProducts(item.id, item.category_name)}
                                 style={{
                                     borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
@@ -199,7 +197,7 @@ class Filters extends Component {
                                 <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
                                     {item.category_name}
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     />
 

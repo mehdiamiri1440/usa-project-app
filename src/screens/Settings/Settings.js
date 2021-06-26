@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -37,7 +37,8 @@ class Settings extends React.Component {
                 '@IsNewSignedUpUser',
                 '@ratedChats',
                 '@sender_ids',
-                '@registerProductParams'
+                '@registerProductParams',
+                '@productsList',
             ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
@@ -77,7 +78,10 @@ class Settings extends React.Component {
                                     shadowOffset: { width: 0, height: 2 },
                                 }}
                             >
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={() => this.handleRouteChange(route.name)}
                                     style={{
                                         alignContent: 'center',
@@ -110,7 +114,7 @@ class Settings extends React.Component {
                                             <FontAwesome5 color={'#666666'} size={25} name='angle-left' />
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                </Pressable>
                             </ShadowView>
                         )
                     })}

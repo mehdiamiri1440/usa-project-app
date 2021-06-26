@@ -3,7 +3,7 @@ import {
     Text,
     View,
     FlatList,
-    TouchableOpacity,
+    Pressable,
     Modal,
     StyleSheet,
     ActivityIndicator,
@@ -18,12 +18,12 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 import Product from './Product';
-import NoConnection from '../../components/noConnectionError';
 import * as homeActions from '../../redux/home/actions';
 import * as profileActions from '../../redux/profile/actions';
 import * as productsListActions from '../../redux/productsList/actions';
@@ -52,42 +52,46 @@ class ProductsList extends PureComponent {
             searchLoader: false,
             loaded: false,
             searchFlag: false,
-            showModal: false,
             subCategoriesList: [],
             cities: [],
             totalCategoriesModalFlag: false,
             modals: [],
             isFilterApplied: false,
+            preFetchLoading: true,
+            showRefreshButton: false,
+            categoriesList: []
         }
 
+        this.isComponentMounted = false;
     }
-
 
     productsListRef = createRef();
     categoryFiltersRef = createRef();
-
     componentDidMount() {
-        Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
-            if (componentType === 'Component') {
-                analytics().logScreenView({
-                    screen_name: componentName,
-                    screen_class: componentName,
-                });
-            }
-        });
-        analytics().logScreenView({
-            screen_name: "product_list",
-            screen_class: "product_list",
-        });
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
 
-        this.initialCalls().catch(error => {
-            this.setState({
-                // showModal: true,
-                searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
-            })
-        });
+            Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
+                if (componentType === 'Component') {
+                    analytics().logScreenView({
+                        screen_name: componentName,
+                        screen_class: componentName,
+                    });
+                }
+            });
+            analytics().logScreenView({
+                screen_name: "product_list",
+                screen_class: "product_list",
+            });
 
+            this.initialCalls().catch(error => {
+                this.setState({
+                    searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
+                })
+            });
 
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -139,14 +143,99 @@ class ProductsList extends PureComponent {
 
     }
 
+    componentWillUnmount() {
+        this.isComponentMounted = false;
+        return this.blurListener;
+    }
+
+    handleScreenBlured = _ => {
+        const {
+            productsListArray = []
+        } = this.state;
+
+        const {
+            categoriesList = []
+        } = this.props;
+
+        let tempProductsList = productsListArray.slice(0, 16);
+        AsyncStorage.multiSet([
+            ['@productsList', JSON.stringify(tempProductsList)],
+            ['@categoriesList', JSON.stringify(categoriesList)],
+        ]
+        );
+
+    };
+
     initialCalls = _ => {
         return new Promise.all([
-            this.fetchAllProducts(),
+            this.getItemsFromStorage(),
             this.props.fetchAllProvinces(),
-            this.props.fetchAllCategories()
         ])
             .then(result => resolve(result))
             .catch(error => reject(error))
+    };
+
+    AreArraysTheSame = (pFromProps = [], pFromState = []) => {
+        for (let iFromProps = 0; iFromProps < pFromProps.length; iFromProps++)
+            if (pFromState.every(item => item?.main?.id != pFromProps[iFromProps]?.main?.id))
+                return false;
+        return true;
+    };
+
+    getItemsFromStorage = _ => {
+        AsyncStorage.multiGet(['@productsList', '@categoriesList']).then(multiGetResult => {
+
+            let resultFromStorage = JSON.parse(multiGetResult[0][1]);
+            let categoriesListFromStorage = JSON.parse(multiGetResult[1][1]);
+
+            this.props.fetchAllCategories()
+                .then(_ => this.setState({ categoriesList: this.props.categoriesList }))
+                .catch(_ => this.setState({ categoriesList: categoriesListFromStorage ?? [] }));
+            this.setState({ categoriesList: categoriesListFromStorage ?? [] });
+
+
+            const {
+                from_record_number,
+                to_record_number,
+                sort_by,
+            } = this.state;
+
+            const {
+                loggedInUserId
+            } = this.props;
+
+            let item = {
+                from_record_number,
+                sort_by,
+                to_record_number,
+            };
+
+            if (!resultFromStorage || !Array.isArray(resultFromStorage) || !resultFromStorage.length) {
+                this.fetchAllProducts();
+            }
+            else {
+                this.setState({ productsListArray: resultFromStorage, preFetchLoading: false });
+                this.props.fetchAllProductsList(item, !!loggedInUserId).then((resultFromProps = {}) => {
+
+                    const {
+                        payload = {}
+                    } = resultFromProps;
+
+                    const {
+                        products = []
+                    } = payload;
+
+
+                    if (products && products.length && resultFromStorage && resultFromStorage.length && products.length == resultFromStorage.length) {
+                        const condition = this.AreArraysTheSame(products, resultFromStorage);
+                        this.setState({ showRefreshButton: !condition });
+                    }
+                });
+            }
+        })
+            .catch(_ => {
+                this.fetchAllProducts();
+            })
     };
 
     fetchAllProducts = (itemFromResult, scrollObject = {}) => {
@@ -193,12 +282,13 @@ class ProductsList extends PureComponent {
 
                     locationsFlag: false,
 
+                    preFetchLoading: false,
+
                     productsListArray: [...result?.payload?.products]
                 }, _ => this.scrollToTop({ ...scrollObject, result }));
             })
             .catch(error => {
                 this.setState({
-                    //  showModal: true,
                     searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                 })
             });
@@ -225,12 +315,6 @@ class ProductsList extends PureComponent {
                 else
                     this.props.productsListRef.current.scrollToIndex({ animated: true, index: 0 });
 
-    };
-
-    setShowModal = _ => {
-        this.setState({ showModal: false }, () => {
-            this.componentDidMount();
-        });
     };
 
     handleSortItemClick = value => {
@@ -461,6 +545,19 @@ class ProductsList extends PureComponent {
 
     };
 
+    onScrollToIndexFailed = (error = {}) => {
+        const {
+            averageItemLength,
+            index
+        } = error;
+
+        console.warn('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
+        const offset = averageItemLength * index;
+
+        this.props.productsListRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => this.props.productsListRef?.current?.scrollToIndex({ index, animated: true }), 300);
+    };
+
     onEndOfProductListReached = _ => {
         const {
             province,
@@ -474,7 +571,6 @@ class ProductsList extends PureComponent {
 
             searchText
         } = this.state;
-
         if (loaded && productsListArray.length >= this.state.to_record_number)
             this.setState({
                 from_record_number: this.state.from_record_number + 16,
@@ -512,7 +608,6 @@ class ProductsList extends PureComponent {
                     this.setState({ loaded: false })
                 }).catch(error => {
                     this.setState({
-                        // showModal: true,
                         searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
                     })
                 });
@@ -552,16 +647,19 @@ class ProductsList extends PureComponent {
         if (city) {
             item = { ...item, city_id: city }
         }
+
         this.props.fetchAllProductsList(item, !!loggedInUserId).then(result => {
             this.setState({
                 productsListArray: [...result.payload.products], from_record_number: 0, to_record_number: 16
             })
         }).catch(error => {
             this.setState({
-                //  showModal: true,
                 searchFlag: false, subCategoriesModalFlag: false, locationsFlag: false, sortModalFlag: false
             })
         });
+        this.props.fetchAllProvinces();
+        this.props.fetchAllCategories().then(_ => this.setState({ categoriesList: this.props.categoriesList }));
+
     };
 
     removeFilter = _ => {
@@ -727,10 +825,11 @@ class ProductsList extends PureComponent {
         } = user_info;
 
         const {
-            loaded
+            loaded,
+            preFetchLoading
         } = this.state;
 
-        if (!productsListLoading)
+        if (!productsListLoading && !preFetchLoading)
             return (
                 <View
                     style={{
@@ -792,7 +891,7 @@ class ProductsList extends PureComponent {
                             </View>}
                 </View>
             )
-        if (!loaded || productsListLoading) {
+        if (!loaded || productsListLoading || preFetchLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5, marginTop: 10 }}>
                     {[1, 2, 3, 4, 5, 6].map((_, index) =>
@@ -983,7 +1082,10 @@ class ProductsList extends PureComponent {
         } = this.state;
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSortItemClick(item.value)}
                 style={{
@@ -1005,14 +1107,17 @@ class ProductsList extends PureComponent {
                 >
                     {item.title}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
 
         )
     };
 
     renderSubCategoriesListItem = ({ item }) => {
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={_ => this.handleSubCategoryItemClick(item)}
                 style={{
@@ -1029,14 +1134,18 @@ class ProductsList extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
     renderCategoriesListItem = (item, isFromModal) => {
         if (!isFromModal)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.sortProducts(item)}
                     style={{
                         borderRadius: 12,
@@ -1061,11 +1170,14 @@ class ProductsList extends PureComponent {
                     >
                         {item.category_name}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
                 activeOpacity={1}
                 onPress={() => this.sortProducts(item)}
                 style={{
@@ -1082,7 +1194,7 @@ class ProductsList extends PureComponent {
                 >
                     {item.category_name}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1174,7 +1286,11 @@ class ProductsList extends PureComponent {
 
         if (!!selectedLocation)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.removeLocations()}
                     style={{
                         borderRadius: 12,
@@ -1201,7 +1317,7 @@ class ProductsList extends PureComponent {
                         {selectedLocation}
                     </Text>
                     <FontAwesome5 name='times' size={12} color='#E41C38' />
-                </TouchableOpacity>
+                </Pressable>
             );
         return null;
     };
@@ -1230,7 +1346,11 @@ class ProductsList extends PureComponent {
                 {this.renderSelectedLocation()}
 
                 {isFilterApplied ?
-                    <TouchableOpacity
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 12
+                        }}
                         onPress={() => this.removeFilter()}
                         style={{
                             borderRadius: 12,
@@ -1257,7 +1377,7 @@ class ProductsList extends PureComponent {
                             {searchText}
                         </Text>
                         <FontAwesome5 name='times' size={12} color='#E41C38' />
-                    </TouchableOpacity>
+                    </Pressable>
                     :
                     null}
             </View>
@@ -1268,7 +1388,11 @@ class ProductsList extends PureComponent {
     renderAllCategoriesIcon = _ => {
 
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12, marginTop: 7, marginBottom: 8,
@@ -1286,7 +1410,7 @@ class ProductsList extends PureComponent {
                     {locales('labels.classifications')}
                 </Text>
                 <FontAwesome5 name='list' size={12} color='#707070' />
-            </TouchableOpacity>
+            </Pressable>
         )
     };
 
@@ -1304,7 +1428,11 @@ class ProductsList extends PureComponent {
 
         if (sort_by == BM)
             return (
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                        radius: 12
+                    }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
                         borderRadius: 12,
@@ -1330,10 +1458,14 @@ class ProductsList extends PureComponent {
                     >
                         {locales('labels.sort')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             );
         return (
-            <TouchableOpacity
+            <Pressable
+                android_ripple={{
+                    color: '#ededed',
+                    radius: 12
+                }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
                     borderRadius: 12,
@@ -1365,7 +1497,7 @@ class ProductsList extends PureComponent {
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
                 <FontAwesome5 name='times' size={12} color='#E41C38' />
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
@@ -1411,12 +1543,15 @@ class ProductsList extends PureComponent {
 
     };
 
+    // getItemLayout = (data, index) => {
+    //     return { length: 293.2, offset: 273.2 * index, index };
+    // };
+
     render() {
 
         const {
             productsListLoading,
 
-            categoriesList,
             categoriesLoading,
 
             allProvincesObject,
@@ -1443,10 +1578,11 @@ class ProductsList extends PureComponent {
             province,
             city,
             cities,
-            showModal,
             totalCategoriesModalFlag,
             modals,
-            isFilterApplied
+            isFilterApplied,
+            showRefreshButton,
+            categoriesList,
         } = this.state;
 
 
@@ -1467,10 +1603,60 @@ class ProductsList extends PureComponent {
                     backgroundColor: 'white'
                 }}
             >
-                <NoConnection
-                    closeModal={this.setShowModal}
-                    showModal={showModal}
-                />
+                {showRefreshButton ?
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed',
+                            radius: 16
+                        }}
+                        onPress={_ => {
+                            this.setState({
+                                from_record_number: 0,
+                                to_record_number: 16,
+
+                                searchLoader: false,
+
+                                sortModalFlag: false,
+
+                                subCategoriesModalFlag: false,
+
+                                totalCategoriesModalFlag: false,
+
+                                locationsFlag: false,
+
+                                preFetchLoading: false,
+
+                                showRefreshButton: false,
+
+                                productsListArray: [...this.props.productsListArray]
+                            }, _ => this.scrollToTop({ type: 'offset' }));
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '30%',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 16,
+                            paddingVertical: 5,
+                            paddingHorizontal: 10,
+                            backgroundColor: 'black',
+                            zIndex: 999999999
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+
+                            }}
+                        >
+                            {locales('labels.newProducts')}
+                        </Text>
+                    </Pressable>
+                    : null
+                }
 
                 {locationsFlag ?
                     <Modal
@@ -1677,7 +1863,10 @@ class ProductsList extends PureComponent {
                 <View style={{ backgroundColor: 'white' }}>
                     <View style={{ marginTop: 5, padding: 4 }}>
                         <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.setState({ locationsFlag: true })}
                                 style={{ flexDirection: 'row' }}>
                                 <Entypo name='location-pin' size={25} style={{
@@ -1699,7 +1888,7 @@ class ProductsList extends PureComponent {
                                         locales('titles.AllIran')
                                     }
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                             <Input
                                 value={searchText}
                                 ref={this.serachInputRef}
@@ -1754,29 +1943,41 @@ class ProductsList extends PureComponent {
                 </View>
 
                 <FlatList
-                    initialNumToRender={4}
+                    keyboardShouldPersistTaps='handled'
+                    keyboardDismissMode='none'
                     ref={this.props.productsListRef}
-                    keyExtractor={(_, index) => index.toString()}
                     data={productsListArray}
-                    style={{ backgroundColor: 'white' }}
-                    horizontal={false}
-                    numColumns={2}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row-reverse' }}
-                    refreshing={false}
-                    onRefresh={this.onProductListRefreshed}
-                    onEndReached={this.onEndOfProductListReached}
-                    onEndReachedThreshold={3}
                     ListEmptyComponent={this.renderProductListEmptyComponent}
                     ListFooterComponent={this.renderProductListFooterComponent}
                     ItemSeparatorComponent={({ _, leadingItem }) => !is_seller && this.renderItemSeparatorComponent(leadingItem)}
                     renderItem={this.renderProductListItem}
+                    keyExtractor={(_, index) => index.toString()}
+                    refreshing={false}
+                    onRefresh={this.onProductListRefreshed}
+                    onEndReached={this.onEndOfProductListReached}
+                    onEndReachedThreshold={3}
+                    onScrollToIndexFailed={this.onScrollToIndexFailed}
+                    removeClippedSubviews
+                    maxToRenderPerBatch={3}
+                    windowSize={10}
+                    initialNumToRender={4}
+                    numColumns={2}
+                    // getItemLayout={this.getItemLayout}
+                    style={{
+                        backgroundColor: 'white'
+                    }}
+                    columnWrapperStyle={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'row-reverse'
+                    }}
+
                 />
 
             </View>
         )
     }
-}
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -2031,14 +2232,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-
 const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
 
     return <ProductsList {...props} productsListRef={ref} />;
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
 

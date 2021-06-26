@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, BackHandler, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
+import { Text, View, BackHandler, Pressable, Image, ScrollView, FlatList } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import { deviceWidth } from '../../../utils/deviceDimenssions';
@@ -320,12 +320,15 @@ class PromotionIntro extends React.Component {
                             end={{ x: 0.8, y: 0.2 }}
                             colors={['#00C569', '#21AD93']}
                         >
-                            <TouchableOpacity style={{
-                                paddingHorizontal: 20,
-                                paddingVertical: 5,
-                                flexDirection: 'row',
-                                justifyContent: 'space-around'
-                            }}>
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }} style={{
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 5,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-around'
+                                }}>
                                 <FontAwesome5 style={{ paddingTop: 3 }} size={25} name='arrow-left' color="#fff" />
                                 <Text style={{
                                     color: '#fff',
@@ -334,7 +337,7 @@ class PromotionIntro extends React.Component {
                                 }}>
                                     افزایش میزان فروش
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </LinearGradient>
                     </View>
 
@@ -384,14 +387,17 @@ class PromotionIntro extends React.Component {
                                 colors={['#556080', '#556080']}
                             >
 
-                                <TouchableOpacity style={{
-                                    paddingHorizontal: 20,
-                                    paddingVertical: 5,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }} style={{
+                                        paddingHorizontal: 20,
+                                        paddingVertical: 5,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
 
-                                }}>
+                                    }}>
 
                                     <Text style={{
                                         color: '#fff',
@@ -402,7 +408,7 @@ class PromotionIntro extends React.Component {
                                     </Text>
                                     <FontAwesome5 style={{ paddingTop: 3, marginHorizontal: 5 }} size={15} name='comment-alt' solid color="#fff" />
 
-                                </TouchableOpacity>
+                                </Pressable>
                             </LinearGradient>
                             <LinearGradient
                                 style={{
@@ -418,13 +424,16 @@ class PromotionIntro extends React.Component {
                                 colors={['#00C569', '#21AD93']}
                             >
 
-                                <TouchableOpacity style={{
-                                    paddingHorizontal: 20,
-                                    paddingVertical: 5,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}>
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }} style={{
+                                        paddingHorizontal: 20,
+                                        paddingVertical: 5,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
 
                                     <Text style={{
                                         color: '#fff',
@@ -435,7 +444,7 @@ class PromotionIntro extends React.Component {
                                     </Text>
                                     <FontAwesome5 style={{ marginHorizontal: 5 }} size={20} name='phone-square' color="#fff" />
 
-                                </TouchableOpacity>
+                                </Pressable>
                             </LinearGradient>
                         </View>
                     </View>

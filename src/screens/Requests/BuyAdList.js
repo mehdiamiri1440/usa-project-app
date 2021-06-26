@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
-import { View, Image, Text, ActivityIndicator, StyleSheet, Linking, TouchableOpacity } from 'react-native';
+import { View, Image, Text, ActivityIndicator, StyleSheet, Linking, Pressable } from 'react-native';
 import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -542,7 +542,10 @@ const BuyAdList = props => {
                             }}>
                             {locales('titles.phoneNumber')}
                         </Text>
-                        <TouchableOpacity
+                        <Pressable
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
                             onPress={_ => openCallPad(item.mobileNumber)}
                             style={{
                                 flexDirection: 'row-reverse',
@@ -562,7 +565,7 @@ const BuyAdList = props => {
                                 name='phone-square-alt'
                                 size={20}
                             />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
 
                     <View
@@ -653,7 +656,6 @@ const styles = StyleSheet.create({
 });
 
 const arePropsEqual = (prevProps, nextProps) => {
-    // console.log('prevprops', prevProps, 'nextPRops', nextProps)
     if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
         prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
         !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,7 +12,6 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { validator, formatter } from '../../utils'
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions';
-import NoConnection from '../../components/noConnectionError';
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -21,7 +20,6 @@ class Login extends React.Component {
             mobileNumberError: '',
             password: '',
             mobileNumberStatus: '',
-            showModal: false
         }
     }
     mobileNumberRef = React.createRef();
@@ -88,7 +86,6 @@ class Login extends React.Component {
             this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
                 this.props.setMobileNumber(mobileNumber);
             })
-            // .catch(_ => { ; this.setState({ showModal: true }) });
         }
         else {
             this.setState({ mobileNumberError })
@@ -96,11 +93,9 @@ class Login extends React.Component {
     };
 
     closeModal = _ => {
-        this.setState({ showModal: false });
         this.props.checkAlreadySingedUpMobileNumber(this.state.mobileNumber).then(_ => {
             this.props.setMobileNumber(this.state.mobileNumber);
         })
-        // .catch(_ => { ; this.setState({ showModal: true }) });
     }
 
     render() {
@@ -109,10 +104,7 @@ class Login extends React.Component {
 
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
+
                 <ScrollView
                     keyboardShouldPersistTaps='handled'
                 >

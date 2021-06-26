@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Linking, Pressable } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -58,7 +58,10 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                     width: '100%',
                     justifyContent: 'flex-start', alignSelf: 'center', alignItems: 'flex-end'
                 }}>
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                    }}
                     onPress={() => props.hideUnAuthorizedUserChatPopUp()}
                     activeOpacity={1}
                     style={{ marginVertical: 15, marginHorizontal: 5, justifyContent: 'center' }}>
@@ -66,9 +69,12 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                         textAlign: 'center',
                         color: "#33B398", fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}>{locales('titles.gotIt')}</Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                    }}
                     activeOpacity={1}
                     onPress={() => linkToVerification()}
                     style={{ flexDirection: 'row-reverse' }}>
@@ -76,7 +82,7 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                     <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', marginHorizontal: 3, color: '#337AB7' }}>
                         {locales('titles.moreDetails')}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
 
         </View>

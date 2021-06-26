@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView,
-    TouchableOpacity, Linking, Share, RefreshControl,
+    Pressable, Linking, Share, RefreshControl,
     ActivityIndicator
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -28,7 +28,6 @@ import { validator, formatter } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
-import NoConnection from '../../components/noConnectionError';
 import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
 import RegistrationModal from '../../components/RegistrationModal';
@@ -54,7 +53,6 @@ class ProductDetails extends PureComponent {
             maximumPriceError: '',
             minimumPriceError: '',
             amountError: '',
-            showModal: false,
 
             related_products: [],
             avg_score: 0,
@@ -257,7 +255,6 @@ class ProductDetails extends PureComponent {
 
     callApi = code => {
         this.props.fetchAllRelatedProducts(code)
-        // .catch(_ => this.setState({ showModal: true }));
         this.props.fetchProductDetails(code).then(_ => {
             if (this.props.productDetailsInfo.length) {
                 const {
@@ -277,7 +274,6 @@ class ProductDetails extends PureComponent {
             }
 
         })
-        // .catch(_ => this.setState({ showModal: true }))
 
     }
 
@@ -386,7 +382,6 @@ class ProductDetails extends PureComponent {
                     editionMessageText: editProductMessage
                 }, () => {
                     this.props.fetchAllProductInfo(this.props.route.params.productId)
-                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -398,7 +393,6 @@ class ProductDetails extends PureComponent {
                     editionMessageText: editProductMessage
                 }, () => {
                     this.props.fetchAllProductInfo(this.props.route.params.productId)
-                    // .catch(_ => this.setState({ showModal: true }));
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -452,13 +446,6 @@ class ProductDetails extends PureComponent {
                 }
             })
     };
-
-    closeModal = _ => {
-        this.setState({ showModal: false })
-        this.componentDidMount();
-    }
-
-
 
     openCallPad = phoneNumber => {
 
@@ -581,6 +568,7 @@ class ProductDetails extends PureComponent {
             user_name,
             userId,
             profile_photo,
+            productIdFromProductDetails
         } = this.state;
 
         const {
@@ -601,7 +589,11 @@ class ProductDetails extends PureComponent {
             analytics().logEvent('open_chat', {
                 product_id: this.props?.route?.params?.productId
             });
-        this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo })
+        this.props.navigation.navigate('Chat', {
+            contact: selectedContact,
+            profile_photo,
+            productId: productIdFromProductDetails
+        })
     };
 
     onRequestToCloseRegistrationModal = (shouldOpenChat = false) => {
@@ -631,7 +623,11 @@ class ProductDetails extends PureComponent {
                 this.fetchContactInfo(productIdFromProductDetails, userId, true);
             else {
                 if (shouldOpenChat == true)
-                    this.props.navigation.navigate('Chat', { contact: selectedContact, profile_photo });
+                    this.props.navigation.navigate('Chat', {
+                        contact: selectedContact,
+                        profile_photo,
+                        productId: productIdFromProductDetails
+                    });
             }
         });
     };
@@ -732,10 +728,6 @@ class ProductDetails extends PureComponent {
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
         return (
             <>
-                <NoConnection
-                    showModal={this.state.showModal}
-                    closeModal={this.closeModal}
-                />
 
                 {shouldShowRegistrationModal ?
                     <RegistrationModal
@@ -793,7 +785,10 @@ class ProductDetails extends PureComponent {
                                     }}>
                                     {locales('titles.phoneNumber')}
                                 </Text>
-                                <TouchableOpacity
+                                <Pressable
+                                    android_ripple={{
+                                        color: '#ededed'
+                                    }}
                                     onPress={_ => this.openCallPad(mobileNumber)}
                                     style={{
                                         flexDirection: 'row-reverse',
@@ -813,7 +808,7 @@ class ProductDetails extends PureComponent {
                                         name='phone-square-alt'
                                         size={20}
                                     />
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
 
                             <View
@@ -1487,7 +1482,10 @@ class ProductDetails extends PureComponent {
                                     {product_name ? product_name : '---'}
                                 </Text>
                                 <View>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed'
+                                        }}
                                         onPress={() => this.shareProductLink(url)}
                                         style={{
                                             borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
@@ -1501,7 +1499,7 @@ class ProductDetails extends PureComponent {
                                             {locales('labels.share')}
                                         </Text>
 
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
                             </View>
 
@@ -1714,7 +1712,10 @@ class ProductDetails extends PureComponent {
                                 }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
                             </View>
 
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={() => this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })}
                                 style={{
                                     width: deviceWidth * 0.95,
@@ -1906,10 +1907,13 @@ class ProductDetails extends PureComponent {
                                     </View>
                                 </View> : null}
 
-                            </TouchableOpacity>
+                            </Pressable>
 
 
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 activeOpacity={1}
                                 onPress={() => {
                                     return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_BLOG_RELEASE}/راهنمای-خرید-امن`).then(supported => {
@@ -1980,7 +1984,7 @@ class ProductDetails extends PureComponent {
                                         {locales('labels.tradeComfortabely')}
                                     </Text>
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
 
 
                             <View

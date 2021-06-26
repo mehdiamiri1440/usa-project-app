@@ -2,8 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+    View, Text, StyleSheet, ActivityIndicator,
+    BackHandler, Pressable, ScrollView
+} from "react-native";
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -128,7 +130,14 @@ class ProductMoreDetails extends Component {
     }
     pickerRef = React.createRef();
 
+    isComponentMounted = false;
+
     componentDidMount() {
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+
+        }
         // BackHandler.addEventListener('hardwareBackPress', _ => {
         //     this.props.changeStep(5)
         //     return false;
@@ -136,9 +145,16 @@ class ProductMoreDetails extends Component {
     }
 
     componentWillUnmount() {
+        this.isComponentMounted = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         // BackHandler.removeEventListener();
     }
 
+
+    handleHardWareBackButtonPressed = _ => {
+        this.props.changeStep(6);
+        return true;
+    };
 
     onSubmit = () => {
         let { detailsArray } = this.state;
@@ -185,7 +201,6 @@ class ProductMoreDetails extends Component {
             })
         }
         this.setState(state => {
-            console.log('state', state.defaultFieldsOptions, 'index', selectedIndex)
             this.state.detailsArray[index].itemKey = value;
             state.deletedIndexes.push(selectedIndex);
             if (selectedIndex > -1) {
@@ -265,7 +280,7 @@ class ProductMoreDetails extends Component {
                                     }}
                                 >
                                     {locales('labels.example')} :
-                            </Text>
+                                </Text>
                                 <Text
                                     style={{
                                         color: '#666666',
@@ -289,7 +304,7 @@ class ProductMoreDetails extends Component {
                                     }}
                                 >
                                     {locales('labels.example')} :
-                            </Text>
+                                </Text>
                                 <Text
                                     style={{
                                         color: '#666666',
@@ -313,7 +328,11 @@ class ProductMoreDetails extends Component {
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                     }}>
-                                    <TouchableOpacity
+                                    <Pressable
+                                        android_ripple={{
+                                            color: '#ededed',
+                                            radius: 8
+                                        }}
                                         onPress={() => this.deleteRow(index)}
                                         style={{
                                             alignItems: 'center',
@@ -322,7 +341,7 @@ class ProductMoreDetails extends Component {
                                             width: 30
                                         }}>
                                         <FontAwesome5 name='trash' color='#E41C38' size={16} />
-                                    </TouchableOpacity>
+                                    </Pressable>
 
                                     <View style={{
                                         flex: 1,
@@ -467,7 +486,7 @@ class ProductMoreDetails extends Component {
 
                             </Button>
                             <Button
-                                onPress={() => this.props.changeStep(5)}
+                                onPress={() => this.props.changeStep(6)}
                                 style={[styles.backButtonContainer]}
                                 rounded
                             >

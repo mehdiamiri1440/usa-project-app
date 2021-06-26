@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
+import { Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
 import {
     CodeField,
     Cursor,
@@ -18,10 +18,6 @@ import * as authActions from '../../../redux/auth/actions'
 import * as productsListActions from '../../../redux/productsList/actions';
 import * as profileActions from '../../../redux/profile/actions'
 import ENUMS from '../../../enums';
-import NoConnection from '../../../components/noConnectionError';
-
-
-
 
 const EnterActivisionCode = (props) => {
 
@@ -35,7 +31,6 @@ const EnterActivisionCode = (props) => {
         value,
         setValue,
     });
-    let [showModal, setShowModal] = useState(false);
     let [flag, setFlag] = useState(false)
 
     const activisionCodeRef = React.createRef();
@@ -78,9 +73,7 @@ const EnterActivisionCode = (props) => {
                                 props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
                             }
                         })
-                        // .catch(_ => setShowModal(true));;
                     })
-                    // .catch(_ => setShowModal(true));
                 }
                 else if (res.payload.status) { props.setVerificationCode(value) }
                 else if (!res.payload.status) {
@@ -95,25 +88,13 @@ const EnterActivisionCode = (props) => {
             }).catch(err => {
                 if (err && err.data)
                     setValueError(err.data.errors.phone[0])
-                // else
-                //     setShowModal(true)
             })
         }
 
     };
 
-    const closeModal = _ => {
-        setShowModal(false);
-        props.checkActivisionCode(value, mobileNumber);
-    }
-
-
     return (
         <>
-            <NoConnection
-                showModal={showModal}
-                closeModal={closeModal}
-            />
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
                 {locales('messages.enterCode', { fieldName: mobileNumber })}
@@ -182,7 +163,7 @@ const EnterActivisionCode = (props) => {
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                     }}
                     timerStyle={{ color: '#1CC625', fontSize: 18 }}
-                    onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber).catch(_ => setShowModal(true))}
+                    onSubstitution={() => props.checkAlreadySingedUpMobileNumber(mobileNumber)}
                     substitutionText={locales('titles.sendVerificationCodeAgain')}
                 />
             </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, FlatList, View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, FlatList, View, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Card, CardItem, Body, Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -33,7 +33,6 @@ const MyRequests = props => {
             props.fetchMyRequests();
             setDeleteModalFlag(false);
         })
-            .catch(error => console.warn('err', error))
     };
 
     const renderItem = ({ item }) => {
@@ -365,7 +364,10 @@ const MyRequests = props => {
                                 </Text>
                             </View>
                                 : null} */}
-                            <TouchableOpacity
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
                                 onPress={_ => setDeleteModalFlag(true)}
                                 style={{
                                     flexDirection: 'row-reverse',
@@ -391,7 +393,7 @@ const MyRequests = props => {
                                 >
                                     {locales('labels.deleteThisRequest')}
                                 </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </Body>
                     </CardItem>
                 </Card>
