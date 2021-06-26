@@ -119,6 +119,9 @@ class ChatScreen extends Component {
                 is_allowed
             } = payload;
 
+            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id)
+                return;
+
             AsyncStorage.getItem('@ratedChats').then(result => {
 
                 result = JSON.parse(result);
