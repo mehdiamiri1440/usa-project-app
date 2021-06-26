@@ -14,18 +14,19 @@ const store = configureStore();
 export const getUrl = (route) => `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 export const getTokenFromStorage = () => {
-    const randomToken = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
     return new Promise((resolve, reject) => {
+        const randomToken = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
         try {
-            AsyncStorage.getItem('@Authorization').then(result => {
-                result = JSON.parse(result);
-                if (result !== null) {
-                    resolve(result);
-                }
-                else {
-                    resolve(randomToken)
-                }
-            })
+            AsyncStorage.getItem('@Authorization')
+                .then(result => {
+                    result = JSON.parse(result);
+                    if (!!result && result.length) {
+                        resolve(result);
+                    }
+                    else {
+                        resolve(randomToken)
+                    }
+                })
                 .catch(error => {
                     resolve(randomToken)
                 })
@@ -37,7 +38,9 @@ export const getTokenFromStorage = () => {
 };
 
 const getRequestHeaders = async (withAuth) => {
-    let token = await getTokenFromStorage()
+
+    let token = await getTokenFromStorage();
+
     if (!token || !token.length)
         token = `${Math.random()}_${dataGenerator.generateKey('random_token')}_abcdefffmmtteoa`;
     // console.log('token in getequestHeaders()', token)
@@ -54,14 +57,8 @@ const getRequestHeaders = async (withAuth) => {
 };
 
 export const redirectToLogin = msg => {
-    // console.log('redirected');
-    // if (msg == 'The token has been blacklisted') {
-    //     resolve(false)
-    // }
-    // else {
     store.dispatch(authActions.logOut()).then(_ => {
         RnRestart.Restart();
-        // console.log('logout after redirection')
     })
         .catch(_ => {
             RnRestart.Restart();
@@ -106,7 +103,6 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
     const headers = await getRequestHeaders(withAuth);
 
     return new Promise((resolve, reject) => {
-        // console.log('route', route, 'headers', headers)
         axios
             .request({
                 url: getUrl(route),
