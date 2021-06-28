@@ -131,8 +131,19 @@ class ProductDetails extends PureComponent {
             screen_class: "product_view",
         });
 
+        const {
+            route = {}
+        } = this.props;
 
-        if (this.props.route.params.productId) {
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
+        if (productId) {
             this.props.fetchAllProductInfo(this.props.route.params.productId);
         }
     }
@@ -140,18 +151,46 @@ class ProductDetails extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
+        const {
+            route = {}
+        } = this.props;
 
-        if (prevProps.route.params.productId != this.props.route.params.productId) {
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
+        const {
+            route: prevPropsRoute = {}
+        } = prevProps;
+
+        const {
+            params: prevPropsParams = {}
+        } = prevPropsRoute;
+
+        const {
+            productId: prevPropsProductId
+        } = prevPropsParams;
+
+        if (prevPropsProductId != productId) {
             this.setState({ loaded: false });
-            this.props.fetchAllProductInfo(this.props.route.params.productId);
+            this.props.fetchAllProductInfo(productId);
         }
         if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo.length) {
+
             const {
-                main,
+                productDetailsInfo = []
+            } = this.props;
+
+            const {
+                main = {},
                 photos,
-                profile_info,
-                user_info
-            } = this.props.productDetailsInfo[0].product;
+                profile_info = {},
+                user_info = {}
+            } = productDetailsInfo[0].product;
 
             const {
                 profile_photo
@@ -200,7 +239,7 @@ class ProductDetails extends PureComponent {
 
             const {
                 related_products
-            } = this.props.productDetailsInfo[1];
+            } = productDetailsInfo[1];
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
@@ -1791,7 +1830,7 @@ class ProductDetails extends PureComponent {
                                     <View style={{
                                         justifyContent: 'center',
                                         alignItems: 'flex-end',
-                                        width: '50%',
+                                        width: '80%',
                                         marginHorizontal: 10
                                     }}
                                     >
@@ -1809,7 +1848,7 @@ class ProductDetails extends PureComponent {
                                                     maxWidth: '88%',
                                                     color: '#474747',
                                                 }}>
-                                                {`${first_name} ${last_name}`}
+                                                {`${first_name} ${last_name}اااااااااااااااااااببببببببببببببببببببببببببببببببببببببببببببب`}
                                             </Text>
                                             {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                         </View>
@@ -1846,7 +1885,14 @@ class ProductDetails extends PureComponent {
                                         }
                                     </View>
 
-                                    <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        position: 'absolute',
+                                        right: 0
+                                    }}
+                                    >
                                         <Text style={{
                                             textAlign: 'center',
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
