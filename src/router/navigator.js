@@ -284,7 +284,7 @@ const routes = props => {
     const checkForShowingPromotionModal = _ => {
 
         const routeName = navigationRef?.current?.getCurrentRoute()?.name;
-        const conditions = !!loggedInUserId && is_seller && active_pakage_type == 0 && routeName == 'Chat';
+        const conditions = !!loggedInUserId && is_seller && active_pakage_type == 0 && routeName != 'Chat';
 
         if (conditions) {
 
