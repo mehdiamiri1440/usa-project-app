@@ -48,6 +48,7 @@ class Requests extends PureComponent {
             showFilters: false,
             showGoldenModal: false,
             selectedFilterName: '',
+            selectedFilterId: null,
 
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
@@ -88,11 +89,6 @@ class Requests extends PureComponent {
         }
     }
 
-    componentWillUnmount() {
-        this.is_mounted = false;
-        this.updateFlag.current.close()
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (
             (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
@@ -116,22 +112,9 @@ class Requests extends PureComponent {
         }
     }
 
-    checkForFiltering = async () => {
-        let isFilter = await this.checkForFilterParamsAvailability();
-        if (isFilter) {
-            this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
-        }
-    }
-
-    checkForFilterParamsAvailability = () => {
-        return new Promise((resolve, reject) => {
-            if (this.props.route?.params?.subCategoryId >= 0 && this.props.route?.params?.subCategoryName) {
-                resolve(true)
-            }
-            else {
-                resolve(false)
-            }
-        })
+    componentWillUnmount() {
+        this.is_mounted = false;
+        this.updateFlag.current.close()
     }
 
     initialCalls = () => {
@@ -142,8 +125,22 @@ class Requests extends PureComponent {
         })
     };
 
-    checkForSendingMessage = (item) => {
+    checkForFiltering = async () => {
+        let isFilter = await this.checkForFilterParamsAvailability();
+        if (isFilter) {
+            this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
+        }
+    };
 
+    checkForFilterParamsAvailability = () => {
+        return new Promise((resolve, reject) => {
+            if (this.props.route?.params?.subCategoryId >= 0 && this.props.route?.params?.subCategoryName) {
+                resolve(true)
+            }
+            else {
+                resolve(false)
+            }
+        })
     };
 
     hideDialog = () => this.setState({ showDialog: false });
@@ -202,6 +199,103 @@ class Requests extends PureComponent {
 
     openMobileNumberWarnModal = (shouldShow, msg, statusCode) => {
         this.setState({ showMobileNumberWarnModal: shouldShow, accessToContactInfoErrorMessage: msg, statusCode });
+    };
+
+    onRefresh = () => {
+        this.props.fetchAllBuyAdRequests().then(result => {
+            this.setState({ buyAdRequestsList: result.payload.buyAds }, _ => {
+                const {
+                    selectedFilterId,
+                    selectedFilterName,
+                    sort_by,
+                    searchText
+                } = this.state;
+
+                if (searchText)
+                    this.handleSearch(searchText);
+
+                else if (selectedFilterName && selectedFilterId)
+                    this.selectedFilter(selectedFilterId, selectedFilterName);
+
+                this.handleSortItemClick(sort_by);
+            })
+        });
+    };
+
+    scrollToTop = _ => {
+        clearTimeout(myTimeout);
+        if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
+            this.props.requestsRef.current && this.props.requestsRef.current != null &&
+            this.props.buyAdRequestsList && this.props.buyAdRequestsList.length &&
+            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList &&
+            this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
+            myTimeout = setTimeout(() => {
+                this.props.requestsRef?.current?.scrollToIndex({ animated: true, index: 0 });
+            }, 300);
+        }
+    };
+
+    closeFilters = _ => {
+        this.setState({ showFilters: false }, () => this.scrollToTop());
+    };
+
+    selectedFilter = (id, name) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
+        analytics().logEvent('buyAd_filter', {
+            category: name
+        })
+        this.setState({
+            selectedFilterName: name,
+            selectedFilterId: id,
+            searchText: ''
+        }, _ => {
+            this.setState({
+                buyAdRequestsList: buyAdRequestsList &&
+                    buyAdRequestsList.length ?
+                    buyAdRequestsList.filter(item => item.category_id == id) : [],
+            })
+        });
+    };
+
+    handleSearch = (text) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (text && text.length)
+            tempList = [...tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)))];
+        else
+            tempList = [...buyAdRequestsList];
+
+        this.setState({ selectedFilterName: '', searchText: text }, _ => {
+            this.setState({
+                buyAdRequestsList: [...tempList]
+            })
+            this.scrollToTop()
+        });
+    };
+
+    handleSortItemClick = value => {
+        const {
+            buyAdRequestsList = []
+        } = this.state;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (!!value && value != 'BM') {
+            tempList.forEach(item => item.date = new Date(item.created_at));
+            tempList = tempList.sort((a, b) => b.date - a.date);
+        }
+
+        else {
+            tempList = [...this.props.buyAdRequestsList];
+        }
+        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList })
     };
 
     renderItemSeparatorComponent = index => {
@@ -354,27 +448,6 @@ class Requests extends PureComponent {
         )
     };
 
-    closeFilters = _ => {
-        this.setState({ showFilters: false }, () => this.scrollToTop());
-    };
-
-    selectedFilter = (id, name) => {
-        const {
-            buyAdRequestsList = []
-        } = this.props;
-
-        analytics().logEvent('buyAd_filter', {
-            category: name
-        })
-        this.setState({
-            buyAdRequestsList: buyAdRequestsList &&
-                buyAdRequestsList.length ?
-                buyAdRequestsList.filter(item => item.category_id == id) : [],
-            selectedFilterName: name,
-            searchText: ''
-        });
-    };
-
     renderListEmptyComponent = _ => {
 
         const {
@@ -426,53 +499,6 @@ class Requests extends PureComponent {
                 </Text>
             </View>
         )
-    };
-
-    scrollToTop = _ => {
-        clearTimeout(myTimeout);
-        if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
-            this.props.requestsRef.current && this.props.requestsRef.current != null &&
-            this.props.buyAdRequestsList && this.props.buyAdRequestsList.length &&
-            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList &&
-            this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
-            myTimeout = setTimeout(() => {
-                this.props.requestsRef?.current?.scrollToIndex({ animated: true, index: 0 });
-            }, 300);
-        }
-    };
-
-    handleSearch = (text) => {
-        const {
-            buyAdRequestsList = []
-        } = this.props;
-
-        let tempList = [...buyAdRequestsList];
-
-        if (text && text.length)
-            tempList = tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)));
-        else
-            tempList = [...buyAdRequestsList];
-
-
-        this.setState({ buyAdRequestsList: tempList, selectedFilterName: '', searchText: text }, _ => this.scrollToTop());
-    };
-
-    handleSortItemClick = value => {
-        const {
-            buyAdRequestsList = []
-        } = this.state;
-
-        let tempList = [...buyAdRequestsList];
-
-        if (!!value && value != 'BM') {
-            tempList.forEach(item => item.date = new Date(item.created_at));
-            tempList = tempList.sort((a, b) => b.date - a.date);
-        }
-
-        else {
-            tempList = [...this.props.buyAdRequestsList];
-        }
-        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList })
     };
 
     renderSortListItem = ({ item }) => {
@@ -1044,11 +1070,7 @@ class Requests extends PureComponent {
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={false}
-                        onRefresh={() => {
-                            this.props.fetchAllBuyAdRequests().then(result => {
-                                this.setState({ buyAdRequestsList: result.payload.buyAds })
-                            });
-                        }}
+                        onRefresh={this.onRefresh}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={this.renderListEmptyComponent}
