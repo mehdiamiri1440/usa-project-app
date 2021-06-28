@@ -1848,7 +1848,7 @@ class ProductDetails extends PureComponent {
                                                     maxWidth: '88%',
                                                     color: '#474747',
                                                 }}>
-                                                {`${first_name} ${last_name}اااااااااااااااااااببببببببببببببببببببببببببببببببببببببببببببب`}
+                                                {`${first_name} ${last_name}`}
                                             </Text>
                                             {is_verified ? <ValidatedUserIcon {...this.props} /> : null}
                                         </View>
