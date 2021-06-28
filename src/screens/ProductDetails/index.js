@@ -144,7 +144,7 @@ class ProductDetails extends PureComponent {
         } = params;
 
         if (productId) {
-            this.props.fetchAllProductInfo(this.props.route.params.productId);
+            this.props.fetchAllProductInfo(productId);
         }
     }
 
