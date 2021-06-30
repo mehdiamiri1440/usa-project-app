@@ -235,6 +235,19 @@ class Requests extends PureComponent {
         }
     };
 
+    onScrollToIndexFailed = (error = {}) => {
+        const {
+            averageItemLength,
+            index
+        } = error;
+
+        console.log('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
+        const offset = averageItemLength * index;
+
+        this.props.requestsRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => this.props.requestsRef?.current?.scrollToIndex({ index, animated: true }), 300);
+    };
+
     closeFilters = _ => {
         this.setState({ showFilters: false }, () => this.scrollToTop());
     };
@@ -275,8 +288,7 @@ class Requests extends PureComponent {
         this.setState({ selectedFilterName: '', searchText: text }, _ => {
             this.setState({
                 buyAdRequestsList: [...tempList]
-            })
-            this.scrollToTop()
+            }, _ => this.scrollToTop());
         });
     };
 
@@ -1076,6 +1088,7 @@ class Requests extends PureComponent {
                         ListEmptyComponent={this.renderListEmptyComponent}
                         data={buyAdRequestsList}
                         extraData={this.state}
+                        onScrollToIndexFailed={this.onScrollToIndexFailed}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                         windowSize={10}
