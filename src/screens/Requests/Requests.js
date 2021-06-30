@@ -269,7 +269,7 @@ class Requests extends PureComponent {
                 buyAdRequestsList: buyAdRequestsList &&
                     buyAdRequestsList.length ?
                     buyAdRequestsList.filter(item => item.category_id == id) : [],
-            })
+            });
         });
     };
 
@@ -307,7 +307,7 @@ class Requests extends PureComponent {
         else {
             tempList = [...this.props.buyAdRequestsList];
         }
-        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList })
+        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
     };
 
     renderItemSeparatorComponent = index => {
@@ -1012,7 +1012,7 @@ class Requests extends PureComponent {
                                     onPress={() => this.setState({
                                         buyAdRequestsList: this.props.buyAdRequestsList,
                                         selectedFilterName: ''
-                                    })}
+                                    }, _ => this.scrollToTop())}
                                     style={{
                                         borderRadius: 12,
                                         marginTop: 7,
