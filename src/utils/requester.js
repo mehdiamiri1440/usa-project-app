@@ -98,10 +98,9 @@ const checkInternetConnectivity = _ => NetInfo.fetch().then(({
 );
 
 export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
-
     checkInternetConnectivity();
     const headers = await getRequestHeaders(withAuth);
-
+    // console.log('route', route, 'headers', headers)
     return new Promise((resolve, reject) => {
         axios
             .request({
@@ -129,7 +128,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     } = err.response.data;
 
                     const conditions = status == false && refresh == true && token && !!token.length;
-                    // console.log('conditions', conditions, 'status', status, 'refresh', refresh, 'token', token, 'token.length', token.length)
+                    // console.log('route', route, 'conditions', conditions, 'status', status, 'refresh', refresh, 'token', token, 'token.length', token.length)
                     if (conditions) {
                         const tokenSaved = await refreshToken(route, method, data, withAuth, headers, token)
                         // console.log('new token saved', tokenSaved)
@@ -140,12 +139,13 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                             // .catch(err => reject(err))
                         }
                         else {
-                            // console.log('new token not saved')
+                            // console.log('111', 'route', route, err, err.response)
                             reject(err)
                         }
                     }
                     else {
                         // console.log('conditions were false and redirect happened with this route-->>', route)
+                        // console.log('2222', 'route', route, err, err.response)
                         redirectToLogin(msg);
                     }
                 }
@@ -154,7 +154,14 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                     reject(err.response.data);
                 }
 
+                else if (err.response && err.response.status === 403) {
+                    // console.log('333', 'route', route, err, err?.status, err.response)
+                    resolve(fetchAPI({ route, method, data, withAuth }));
+                    reject(err);
+                }
+
                 else {
+                    // console.log('4444', 'route', route, err, err?.status, err.response)
                     // console.log('something unknowns', err)
                     reject(err);
                 }
