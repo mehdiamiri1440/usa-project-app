@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator, BackHandler } from 'react-native';
 import { ActionSheet, Button } from 'native-base';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { connect } from 'react-redux';
@@ -21,9 +21,18 @@ const StepThree = props => {
 
 
     useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', handleBackButtonPressed);
         if (props.evidence)
             setEvidence(props.evidence);
+        return _ => {
+            BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPressed);
+        }
     }, []);
+
+    const handleBackButtonPressed = _ => {
+        props.changeStep(2);
+        return true;
+    };
 
     const chooseImage = _ => ActionSheet.show(
         {

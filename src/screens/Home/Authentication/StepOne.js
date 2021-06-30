@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, BackHandler } from 'react-native';
 import { ActionSheet, Button } from 'native-base';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
@@ -16,9 +16,17 @@ const StepOne = props => {
     const [idCardError, setIdCardError] = useState('');
 
     useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', handleBackButtonPressed);
         if (props.idCard)
             setIdCard(props.idCard);
+        return _ => {
+            BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPressed);
+        }
     }, []);
+
+    const handleBackButtonPressed = _ => {
+        return false;
+    };
 
     const chooseImage = _ => ActionSheet.show(
         {
