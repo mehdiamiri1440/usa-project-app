@@ -44,7 +44,7 @@ import Header from '../header';
 import Timer from '../timer';
 import ENUMS from '../../enums';
 
-const RegistrationModal = props => {
+const RegisterationModal = props => {
 
     const {
         visible = false,
@@ -2413,4 +2413,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationModal);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterationModal);

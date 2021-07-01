@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text, Pressable, Linking } from 'react-native';
+import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -20,6 +20,11 @@ const Message = props => {
         contact,
         loggedInUserId,
         prevMessage,
+        active_pakage_type,
+        handlePromotionModalVisiblity = _ => { },
+        handleEditPriceModalVisiblity = _ => { },
+        productDetailsLoading,
+        selectedMessageId
     } = props;
 
     const { contact_id: id } = contact;
@@ -73,8 +78,8 @@ const Message = props => {
                             paddingHorizontal: 10,
                             maxWidth: deviceWidth * 0.75,
                             borderRadius: 9,
-                            borderBottomRightRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
-                            borderBottomLeftRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
+                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
                             paddingVertical: 3,
                             backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         }}
@@ -104,17 +109,18 @@ const Message = props => {
                     <RenderPhoneFormatMessage
                         showPhoneFormat={showPhoneFormat}
                         item={item}
-                        {...props}
+                        handlePromotionModalVisiblity={handlePromotionModalVisiblity}
+                        handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
+                        active_pakage_type={active_pakage_type}
+                        selectedMessageId={selectedMessageId}
+                        productDetailsLoading={productDetailsLoading}
                         id={id}
+                        {...props}
                     />
-                    {item.sender_id != loggedInUserId ?
-                        <RenderMessageWithProductIdDesign
-                            item={item}
-                            {...props}
-                        />
-                        :
-                        null
-                    }
+                    <RenderMessageWithProductIdDesign
+                        item={item}
+                        {...props}
+                    />
                 </View>
             </View>
         </>
@@ -243,7 +249,13 @@ const RenderPhoneFormatMessage = props => {
 const RenderMessageWithProductIdDesign = props => {
     const {
         item = {},
-        navigation = {}
+        navigation = {},
+        loggedInUserId,
+        active_pakage_type,
+        handlePromotionModalVisiblity = _ => { },
+        handleEditPriceModalVisiblity = _ => { },
+        productDetailsLoading,
+        selectedMessageId
     } = props;
 
     const {
@@ -255,7 +267,112 @@ const RenderMessageWithProductIdDesign = props => {
     } = item;
 
 
-    if (!!p_id)
+    if (!!p_id) {
+        if (item.sender_id == loggedInUserId) {
+            if (active_pakage_type != 0)
+                return (
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
+                        activeOpacity={1}
+                        onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
+                    >
+                        <View
+                            style={{
+                                width: '100%',
+                                backgroundColor: '#1da1f2',
+
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+
+                                flexDirection: 'row-reverse',
+
+                                paddingVertical: 8,
+                                borderBottomLeftRadius: 8,
+                                borderBottomRightRadius: 8,
+                                overflow: "hidden",
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+
+                            }}
+                        >
+                            {productDetailsLoading && item.id == selectedMessageId
+                                ?
+                                <ActivityIndicator
+                                    animating={productDetailsLoading}
+                                    size={20}
+                                    color='white'
+                                />
+                                :
+                                <FontAwesome5
+                                    name='link'
+                                    color='white'
+                                    size={14}
+                                />
+                            }
+                            <Text style={{
+                                color: 'white',
+                                fontSize: 16,
+                                marginHorizontal: 5,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}>
+                                {locales('labels.editPrice')}
+                            </Text>
+                        </View>
+                    </Pressable >
+                );
+            return (
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    activeOpacity={1}
+                    onPress={() => handlePromotionModalVisiblity(true)}
+                >
+                    <View
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#1da1f2',
+
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+
+                            flexDirection: 'row-reverse',
+
+                            paddingVertical: 8,
+                            borderBottomLeftRadius: 8,
+                            borderBottomRightRadius: 8,
+                            overflow: "hidden",
+                            borderTopRightRadius: 0,
+                            borderTopLeftRadius: 0,
+
+                        }}
+                    >
+                        <Text style={{
+                            marginRight: 10
+                        }}>
+                            <FontAwesome5
+                                name='link'
+                                color='white'
+                                size={14}
+                            />
+                        </Text>
+                        <Text style={{
+                            color: 'white',
+                            fontSize: 16,
+                            marginHorizontal: 5,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        }}>
+                            {locales('titles.promoteRegistration')}
+
+                        </Text>
+                    </View>
+                </Pressable >
+            );
+        }
         return (
             <Pressable
                 android_ripple={{
@@ -304,7 +421,8 @@ const RenderMessageWithProductIdDesign = props => {
                     </Text>
                 </View>
             </Pressable >
-        )
+        );
+    }
     return null;
 };
 
