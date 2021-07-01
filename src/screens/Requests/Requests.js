@@ -150,12 +150,28 @@ class Requests extends PureComponent {
     setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
     openChat = (event, item) => {
-        let { userProfile = {} } = this.props;
+        let {
+            userProfile = {},
+            loggedInUserId
+        } = this.props;
+
         const { user_info = {} } = userProfile;
+
         const { active_pakage_type } = user_info;
+
 
         event.preventDefault();
         event.stopPropagation();
+
+        const selectedContact = {
+            contact_id: item.myuser_id,
+            first_name: item.first_name,
+            last_name: item.last_name,
+        };
+
+        if (!loggedInUserId)
+            return this.props.navigation.navigate('StartUp', { screen: 'SignUp' });
+
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
@@ -167,11 +183,7 @@ class Requests extends PureComponent {
                     }
                     this.setState({
                         selectedBuyAdId: item.id,
-                        selectedContact: {
-                            contact_id: item.myuser_id,
-                            first_name: item.first_name,
-                            last_name: item.last_name,
-                        }
+                        selectedContact
                     }, _ => this.props.navigation.navigate('RequestsStack', {
                         screen: "Chat",
                         params: {
@@ -1347,16 +1359,40 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
-    return {
-        buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
-        buyAdRequestsList: state.buyAdRequestReducer.buyAdRequestList,
-        buyAdRequests: state.buyAdRequestReducer.buyAdRequest,
-        userProfile: state.profileReducer.userProfile,
-        isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
-        isUserAllowedToSendMessagePermission: state.profileReducer.isUserAllowedToSendMessagePermission,
-        isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
+const mapStateToProps = ({
+    buyAdRequestReducer,
+    profileReducer,
+    authReducer
+}) => {
 
+    const {
+        buyAdRequestLoading,
+        buyAdRequestList,
+        buyAdRequest
+    } = buyAdRequestReducer;
+
+    const {
+        userProfile,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+        isUserAllowedToSendMessageLoading
+    } = profileReducer;
+
+    const {
+        loggedInUserId
+    } = authReducer;
+
+    return {
+        buyAdRequestLoading,
+        buyAdRequestsList: buyAdRequestList,
+        buyAdRequests: buyAdRequest,
+
+        userProfile,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+        isUserAllowedToSendMessageLoading,
+
+        loggedInUserId,
     }
 };
 

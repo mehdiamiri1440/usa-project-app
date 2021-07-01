@@ -395,6 +395,20 @@ const routes = props => {
                 return '#00c569';
             return 'white';
         }
+    };
+
+    const mapRouteNamesToComponents = item => {
+        switch (item.key) {
+
+            case 'Home':
+                return HomeStack;
+
+            case 'RequestsStack':
+                return RequestsStack;
+
+            default:
+                return StartUp;
+        }
     }
 
     return (
@@ -881,7 +895,7 @@ const routes = props => {
                                         </View>,
                                     }}
                                     name={item.name}
-                                    component={item.key == 'Home' ? HomeStack : StartUp}
+                                    component={mapRouteNamesToComponents(item)}
                                 />
                             ))
                             }
