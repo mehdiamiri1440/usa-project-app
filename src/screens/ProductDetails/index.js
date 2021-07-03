@@ -452,12 +452,30 @@ class ProductDetails extends PureComponent {
 
 
     elevatorPay = () => {
-        if (this.props.productDetailsInfo.length)
-            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`).then(supported => {
-                if (supported) {
-                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`);
-                }
-            })
+
+        const {
+            productDetailsInfo = []
+        } = this.props;
+
+        const {
+            product = {}
+        } = productDetailsInfo[0];
+
+        const {
+            main = {}
+        } = product;
+
+        const {
+            id
+        } = main;
+
+        if (productDetailsInfo)
+            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${id}`)
+                .then(supported => {
+                    if (supported) {
+                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${id}`);
+                    }
+                })
     };
 
     openCallPad = phoneNumber => {
@@ -1071,7 +1089,7 @@ class ProductDetails extends PureComponent {
                                 <Text style={styles.buttonText}>{locales('titles.portalPay')}
                                 </Text>
                             </Button>
-                            {/* <Button
+                            <Button
                                 style={[styles.modalButton,
                                 {
                                     backgroundColor: '#151C2E', width: '50%', maxWidth: 170
@@ -1088,7 +1106,7 @@ class ProductDetails extends PureComponent {
                                 <Text style={styles.buttonText}>
                                     {locales('titles.walletPay')}
                                 </Text>
-                            </Button> */}
+                            </Button>
                         </View>
 
                         {walletElevatorPaymentError ? <Text

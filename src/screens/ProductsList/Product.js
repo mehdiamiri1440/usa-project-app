@@ -281,7 +281,6 @@ class Product extends PureComponent {
             })
         })
             .catch(error => {
-
                 const {
                     response = {}
                 } = error;
@@ -797,7 +796,7 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>{locales('titles.portalPay')}
                                 </Text>
                             </Button>
-                            {/* <Button
+                            <Button
                                 style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170 }]}
                                 onPress={_ => this.doWalletElevatorPay(productId)}
                             >
@@ -811,7 +810,7 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>
                                     {locales('titles.walletPay')}
                                 </Text>
-                            </Button> */}
+                            </Button>
                         </View>
 
                         {walletElevatorPaymentError ? <Text
