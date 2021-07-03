@@ -173,10 +173,10 @@ class ChatScreen extends Component {
         });
     };
 
-    handleGoBack = _ => {
+    handleGoBack = fromHeader => {
         this.props.doForceRefresh(true);
-        this.props.navigation.goBack();
-        return true;
+        if (fromHeader == true)
+            this.props.navigation.goBack();
     };
 
     handleGuid = _ => {
@@ -1145,9 +1145,7 @@ class ChatScreen extends Component {
                                 flexDirection: 'row-reverse',
                                 width: '21%'
                             }}
-                            onPress={() => {
-                                this.handleGoBack();
-                            }}>
+                            onPress={() => this.handleGoBack(true)}>
                             <View
                                 style={{
                                     justifyContent: 'center',

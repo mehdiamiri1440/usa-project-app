@@ -11,6 +11,8 @@ import { dataGenerator } from '../utils';
 
 const store = configureStore();
 
+let apiCallsCount = 0;
+
 export const getUrl = (route) => `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 export const getTokenFromStorage = () => {
@@ -155,6 +157,9 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 }
 
                 else if (err.response && err.response.status === 403) {
+                    if (apiCallsCount >= 1)
+                        return redirectToLogin();
+                    apiCallsCount = apiCallsCount + 1;
                     // console.log('333', 'route', route, err, err?.status, err.response)
                     resolve(fetchAPI({ route, method, data, withAuth }));
                     reject(err);
