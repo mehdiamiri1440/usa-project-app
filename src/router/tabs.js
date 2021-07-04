@@ -524,6 +524,15 @@ export const RequestsStack = _ => (
                 headerShown: false,
                 title: null,
             })}
+            key='StartUp'
+            name='StartUp'
+            component={StartUp}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
             name={`UpgradeApp`}
             component={UpgradeApp}
         />
