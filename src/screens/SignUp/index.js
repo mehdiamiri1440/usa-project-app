@@ -137,7 +137,8 @@ class SignUp extends React.Component {
 
         const {
             contact,
-            profile_photo
+            profile_photo,
+            isFromRequests
         } = params;
 
         let registerObject = {
@@ -167,12 +168,33 @@ class SignUp extends React.Component {
                             to_record_number: 16,
                         };
                         this.props.fetchAllProductsList(item, true).then(_ => this.props.updateProductsList(true));
+
                         analytics().setUserId(result.payload.id.toString());
-                        this.props.fetchUserProfile().then(_ => {
+                        this.props.fetchUserProfile().then((userProfileResult = {}) => {
+
+                            const {
+                                payload = {}
+                            } = userProfileResult;
+
+                            const {
+                                user_info = {}
+                            } = payload;
+
+                            const {
+                                is_seller
+                            } = user_info;
+
+                            const popAction = StackActions.pop(1);
                             if (contact && Object.keys(contact).length) {
-                                const popAction = StackActions.pop(1);
                                 this.props.navigation.dispatch(popAction);
                                 this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
+                            if (isFromRequests == true) {
+                                AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
+                                this.props.navigation.dispatch(popAction);
+                                if (is_seller)
+                                    return this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                return this.props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
                         this.setState({ signUpError: '' })
@@ -216,7 +238,8 @@ class SignUp extends React.Component {
 
         const {
             contact,
-            profile_photo
+            profile_photo,
+            isFromRequests
         } = params;
 
         switch (stepNumber) {
@@ -228,6 +251,7 @@ class SignUp extends React.Component {
                 return <EnterActivisionCode
                     profile_photo={profile_photo}
                     contact={contact}
+                    isFromRequests={isFromRequests}
                     setVerificationCode={this.setVerificationCode}
                     verificationCode={verificationCode}
                     changeStep={this.changeStep}
@@ -424,8 +448,7 @@ const mapDispatchToProps = (dispatch) => {
         submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
         login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password)),
         updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
-        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn))
-
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
     }
 };
 
