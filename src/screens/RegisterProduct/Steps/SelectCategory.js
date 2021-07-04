@@ -394,7 +394,7 @@ class SelectCategory extends Component {
             showProductTypeFlag: true,
             selectedSvgName: ''
         }
-    }
+    };
 
     productTypxdeRef = React.createRef();
 
@@ -443,7 +443,6 @@ class SelectCategory extends Component {
 
         }
     }
-
 
     componentWillUnmount() {
         this.isComponentMounted = false;
@@ -507,7 +506,6 @@ class SelectCategory extends Component {
         }));
     };
 
-
     onSubmit = () => {
 
         let { productType, category, subCategory, subCategoryName } = this.state;
@@ -541,7 +539,7 @@ class SelectCategory extends Component {
         if (!productTypeError && !categoryError && !subCategoryError) {
             this.props.setProductType(productType, category, subCategory, subCategoryName);
         }
-    }
+    };
 
     setSelectedSubCategory = (id, isSub, index) => {
         const { subCategoriesTogether, subCategoriesList, categoriesList } = this.state;
@@ -564,6 +562,73 @@ class SelectCategory extends Component {
         }
     };
 
+    subCategoriesListFooterComponent = _ => {
+        return (
+
+            <View
+                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
+            >
+                <Button
+                    onPress={() => this.setState({ category: '' })}
+                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
+                    rounded
+                >
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                    <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
+                </Button>
+            </View>
+        )
+    };
+
+    handleProductTypeExample = _ => {
+        const {
+            selectedSvgName
+        } = this.state;
+
+        switch (selectedSvgName) {
+            case 'میوه': {
+                return locales('titles.mazafati');
+            };
+            case 'صیفی': {
+                return locales('titles.matinSaderati');
+            };
+            case 'غلات': {
+                return locales('titles.hendi1121');
+            };
+            case 'خشکبار': {
+                return locales('titles.pesteFandoghi');
+            };
+            case 'ادویه': {
+                return locales('titles.zaferanNegini');
+            };
+            case 'دامپروری': {
+                return locales('titles.asalChehelGiyah');
+            };
+            default:
+                return locales('titles.mazafati');
+        }
+    };
+
+    renderListEmptyComponent = _ => {
+        const {
+            categoriesLoading
+        } = this.props;
+
+        return (
+            !categoriesLoading ? <View style={{
+                alignSelf: 'center', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center',
+                width: deviceWidth, height: deviceHeight * 0.7
+            }}>
+                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                <Text style={{
+                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}>
+                    {locales('labels.emptyList')}</Text>
+            </View> : null
+        )
+    };
 
     renderItem = ({ item, index }) => {
         return (
@@ -603,76 +668,6 @@ class SelectCategory extends Component {
 
         )
     };
-
-    subCategoriesListFooterComponent = _ => {
-        return (
-
-            <View
-                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
-            >
-                <Button
-                    onPress={() => this.setState({ category: '' })}
-                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
-                    rounded
-                >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
-                </Button>
-            </View>
-        )
-    };
-
-
-    renderListEmptyComponent = _ => {
-        const {
-            categoriesLoading
-        } = this.props;
-
-        return (
-            !categoriesLoading ? <View style={{
-                alignSelf: 'center', justifyContent: 'center',
-                alignContent: 'center', alignItems: 'center',
-                width: deviceWidth, height: deviceHeight * 0.7
-            }}>
-                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                <Text style={{
-                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    fontSize: 17, padding: 15, textAlign: 'center'
-                }}>
-                    {locales('labels.emptyList')}</Text>
-            </View> : null
-        )
-    };
-
-    handleProductTypeExample = _ => {
-        const {
-            selectedSvgName
-        } = this.state;
-
-        switch (selectedSvgName) {
-            case 'میوه': {
-                return locales('titles.mazafati');
-            };
-            case 'صیفی': {
-                return locales('titles.matinSaderati');
-            };
-            case 'غلات': {
-                return locales('titles.hendi1121');
-            };
-            case 'خشکبار': {
-                return locales('titles.pesteFandoghi');
-            };
-            case 'ادویه': {
-                return locales('titles.zaferanNegini');
-            };
-            case 'دامپروری': {
-                return locales('titles.asalChehelGiyah');
-            };
-            default:
-                return locales('titles.mazafati');
-        }
-    }
-
 
     render() {
 
@@ -992,7 +987,8 @@ class SelectCategory extends Component {
 
             </View >
         );
-    }
+    };
+
 };
 
 const styles = StyleSheet.create({
