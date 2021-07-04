@@ -628,7 +628,7 @@ class Product extends PureComponent {
                                     alignItems: 'center'
                                 }}>
                                     <Button
-                                        style={[styles.loginButton, { width: '50%' }]}
+                                        style={[styles.loginButton, { width: '50%', elevation: 0 }]}
                                         onPress={() => this.onSubmit()}>
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
                                             {locales('titles.submitChanges')}
@@ -787,7 +787,7 @@ class Product extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170, elevation: 0 }]}
                                 onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' }, () => {
                                     return this.elevatorPay()
                                 })}
@@ -797,7 +797,7 @@ class Product extends PureComponent {
                                 </Text>
                             </Button>
                             <Button
-                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170 }]}
+                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170, elevation: 0 }]}
                                 onPress={_ => this.doWalletElevatorPay(productId)}
                             >
                                 <ActivityIndicator
