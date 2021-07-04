@@ -9,7 +9,6 @@ import * as registerProductActions from '../../../redux/registerProduct/actions'
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
 
-
 const CategoriesIcons = [
     {
         name: 'صیفی',
@@ -374,7 +373,6 @@ const CategoriesIcons = [
         </Svg>
     },
 ];
-
 class SelectCategory extends Component {
     constructor(props) {
         super(props);
@@ -995,7 +993,7 @@ class SelectCategory extends Component {
             </View >
         );
     }
-}
+};
 
 const styles = StyleSheet.create({
     textInputPadding: {
@@ -1083,9 +1081,7 @@ const styles = StyleSheet.create({
         left: 10,
         top: 13,
     }
-})
-
-
+});
 
 const mapStateToProps = (state) => {
     return {
@@ -1105,6 +1101,7 @@ const mapStateToProps = (state) => {
         subCategories: state.registerProductReducer.subCategories,
     }
 };
+
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
