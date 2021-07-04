@@ -30,7 +30,7 @@ import ENUMS from '../../enums';
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
 
-let myTimeout;
+let myTimeout, screenFocusedFlag;
 
 class Requests extends PureComponent {
     constructor(props) {
@@ -82,6 +82,8 @@ class Requests extends PureComponent {
             screen_class: "buyAds",
         });
 
+        screenFocusedFlag = this.props.navigation.addListener('focus', this.handleScreenFocused);
+
         this.is_mounted = true;
         if (this.is_mounted == true) {
             AsyncStorage.setItem('@registerProductParams', JSON.stringify({}))
@@ -91,7 +93,9 @@ class Requests extends PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            (this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey &&
+                (!prevProps.route || !prevProps.route.params))
             ||
             (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
@@ -114,14 +118,35 @@ class Requests extends PureComponent {
 
     componentWillUnmount() {
         this.is_mounted = false;
-        this.updateFlag.current.close()
+        this.updateFlag.current.close();
+        return screenFocusedFlag;
     }
 
     initialCalls = () => {
         return new Promise((resolve, reject) => {
-            this.props.fetchAllBuyAdRequests().then(() => {
+            const {
+                loggedInUserId
+            } = this.props;
+            this.props.fetchAllBuyAdRequests(!!loggedInUserId).then(() => {
                 this.checkForFiltering()
             }).catch(error => reject(error));
+        })
+    };
+
+    handleScreenFocused = _ => {
+        AsyncStorage.getItem('@isBuyAdRequestsFocuesd').then(result => {
+            result = JSON.parse(result);
+            if (result == true) {
+                AsyncStorage.removeItem('@isBuyAdRequestsFocuesd');
+                this.setState({
+                    buyAdRequestsList: [],
+                    selectedFilterId: null,
+                    selectedFilterName: '',
+                    sort_by: ENUMS.SORT_LIST.values.BM,
+                    searchText: null
+                });
+                this.onRefresh();
+            }
         })
     };
 
@@ -169,8 +194,8 @@ class Requests extends PureComponent {
             last_name: item.last_name,
         };
 
-        if (!loggedInUserId)
-            return this.props.navigation.navigate('StartUp', { screen: 'SignUp' });
+        if (!!!loggedInUserId)
+            return this.props.navigation.navigate('StartUp', { screen: 'SignUp', params: { isFromRequests: true } });
 
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })
@@ -214,7 +239,10 @@ class Requests extends PureComponent {
     };
 
     onRefresh = () => {
-        this.props.fetchAllBuyAdRequests().then(result => {
+        const {
+            loggedInUserId
+        } = this.props
+        this.props.fetchAllBuyAdRequests(!!loggedInUserId).then(result => {
             this.setState({ buyAdRequestsList: result.payload.buyAds }, _ => {
                 const {
                     selectedFilterId,
@@ -443,8 +471,15 @@ class Requests extends PureComponent {
 
     renderItem = ({ item, index, separators }) => {
 
-        const { selectedButton, buyAdRequestsList } = this.state;
-        const { isUserAllowedToSendMessageLoading, userProfile = {} } = this.props;
+        const {
+            selectedButton,
+            buyAdRequestsList
+        } = this.state;
+        const {
+            isUserAllowedToSendMessageLoading,
+            userProfile = {},
+            loggedInUserId
+        } = this.props;
         const {
             user_info = {}
         } = userProfile;
@@ -466,6 +501,7 @@ class Requests extends PureComponent {
                     openMobileNumberWarnModal={this.openMobileNumberWarnModal}
                     buyAdRequestsList={buyAdRequestsList}
                     separators={separators}
+                    loggedInUserId={loggedInUserId}
                 />
                 {is_seller && this.renderItemSeparatorComponent(index)}
             </>
@@ -1398,7 +1434,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
+        fetchAllBuyAdRequests: (isLoggedIn) => dispatch(buyAdRequestActions.fetchAllBuyAdRequests(isLoggedIn)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
