@@ -392,7 +392,9 @@ class SelectCategory extends Component {
             subCategoriesTogether: [],
             showParentCategoriesFlag: true,
             showProductTypeFlag: true,
-            selectedSvgName: ''
+            selectedSvgName: '',
+            filteringLists: [],
+            parentList: []
         }
     };
 
@@ -407,7 +409,7 @@ class SelectCategory extends Component {
             BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
 
             this.props.fetchAllCategories().then(_ => {
-                const { category, subCategory, productType, categoriesList } = this.props;
+                const { category, subCategory, productType, categoriesList, parentList } = this.props;
 
                 if (this.productTypeRef && this.productTypeRef.current)
                     this.productTypeRef.current.value = productType;
@@ -416,6 +418,8 @@ class SelectCategory extends Component {
                     category, subCategory, productType,
                     subCategoriesTogether: categoriesList.map(item => item.subcategories),
                     categoriesList,
+                    filteringLists: categoriesList,
+                    parentList: parentList && parentList.length ? parentList : [categoriesList],
                     loaded: true,
                     subCategoriesList: category && categoriesList && categoriesList.length ?
                         Object.values(categoriesList.find(item => item.id == category).subcategories)
@@ -424,77 +428,16 @@ class SelectCategory extends Component {
 
             });
 
-            // BackHandler.addEventListener('hardwareBackPress', _ => {
-
-            //     const {
-            //         category,
-            //         subCategory,
-            //     } = this.state;
-
-            //     if (subCategory && category) {
-            //         this.setState({ subCategory: '' })
-            //     }
-
-            //     else if (category) {
-            //         this.setState({ category: '' })
-            //     }
-            //     return true;
-            // });
-
         }
     }
 
     componentWillUnmount() {
         this.isComponentMounted = false;
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
-        // BackHandler.removeEventListener('hardwareBackPress');
     }
 
-    // setCategory = (id) => {
-    //     if (id >= 0) {
-
-    //         let subCategory = this.props.categoriesList.some(item => item.id == id) ?
-    //             this.props.categoriesList.find(item => item.id == id).subcategories : {};
-    //         subCategory = Object.values(subCategory);
-
-    //         this.setState({
-    //             categoryError: '',
-    //             category: id,
-    //             subCategoriesList: subCategory,
-    //         })
-    //     }
-    // };
-
-    // setSubCategory = (id) => {
-    //     if (id >= 0) {
-    //         let subCategory = this.state.subCategoriesList.some(item => item.id == id) ?
-    //             this.state.subCategoriesList.find(item => item.id == id).id : {};
-
-
-    //         this.setState({
-    //             subCategoryError: '',
-    //             subCategory,
-    //             subCategoryName: this.state.subCategoriesList.find(item => item.id == id).category_name
-    //         })
-    //     }
-    // };
-
     handleHardWareBackButtonPressed = _ => {
-        const {
-            category,
-            subCategory,
-        } = this.state;
-
-        if (subCategory && category) {
-            this.setState({ subCategory: '' })
-        }
-
-        else if (category) {
-            this.setState({ category: '' })
-        }
-        else
-            this.props.changeStep(1);
-        return true;
+        return this.handleGoToPrevStep();
     };
 
     onProductTypeSubmit = (field) => {
@@ -506,9 +449,23 @@ class SelectCategory extends Component {
         }));
     };
 
+    handleGoToPrevStep = _ => {
+
+        let tempList = this.state.parentList;
+        this.setState({ filteringLists: tempList[tempList.length - 1], subCategory: null }, _ => {
+            tempList.pop();
+            this.setState({ parentList: tempList }, _ => {
+                if (!this.state.filteringLists)
+                    this.props.changeStep(1);
+                return true;
+            });
+        });
+        return true;
+    };
+
     onSubmit = () => {
 
-        let { productType, category, subCategory, subCategoryName } = this.state;
+        let { productType, category, subCategory, subCategoryName, parentList } = this.state;
         let productTypeError = '', categoryError = '', subCategoryError = '';
 
 
@@ -522,43 +479,15 @@ class SelectCategory extends Component {
             productTypeError = '';
         }
 
-        if (!category) {
-            categoryError = locales('titles.categoryError');
-        }
-        else {
-            categoryError = '';
-        }
-
         if (!subCategory) {
             subCategoryError = locales('titles.subCategoryError');
         }
         else {
             subCategoryError = '';
         }
-        this.setState({ submitButtonClick: true, productTypeError, subCategoryError, categoryError })
-        if (!productTypeError && !categoryError && !subCategoryError) {
-            this.props.setProductType(productType, category, subCategory, subCategoryName);
-        }
-    };
-
-    setSelectedSubCategory = (id, isSub, index) => {
-        const { subCategoriesTogether, subCategoriesList, categoriesList } = this.state;
-        if (!isSub) {
-            let selectedSubs = [];
-            subCategoriesTogether.forEach(item => {
-                selectedSubs.push(Object.values(item).filter(sub => sub.parent_id == id))
-            })
-            selectedSubs = selectedSubs.filter(item => item && item.length).flatMap(item => item)
-            this.setState({
-                subCategoriesList: selectedSubs, category: id,
-                selectedSvgName: categoriesList.find(item => item.id == id).category_name
-            });
-        }
-        else {
-            this.setState({
-                subCategory: id,
-                subCategoryName: subCategoriesList && subCategoriesList.length ? subCategoriesList.find(item => item.id == id).category_name : ''
-            })
+        this.setState({ submitButtonClick: true, productTypeError, subCategoryError })
+        if (!productTypeError && !subCategoryError) {
+            this.props.setProductType(productType, category, subCategory, subCategoryName, parentList);
         }
     };
 
@@ -569,7 +498,7 @@ class SelectCategory extends Component {
                 style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={() => this.setState({ category: '' })}
+                    onPress={_ => this.handleGoToPrevStep()}
                     style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
@@ -630,6 +559,24 @@ class SelectCategory extends Component {
         )
     };
 
+    handleFilterItemClicked = ({
+        id,
+        category_name,
+        subcategories: subCategoriesList = {},
+        parent_id,
+        ...rest
+    }) => {
+
+        subCategoriesList = Object.values(subCategoriesList);
+        this.setState({
+            parentList: [...this.state.parentList, this.state.filteringLists],
+            filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
+            subCategory: subCategoriesList.length ? '' : id,
+            subCategoryName: subCategoriesList.length ? '' : category_name,
+        }, _ => console.log('parnt', this.state.parentList));
+
+    };
+
     renderItem = ({ item, index }) => {
         return (
             <Pressable
@@ -644,7 +591,7 @@ class SelectCategory extends Component {
                     padding: 20,
                     flexDirection: 'row-reverse'
                 }}
-                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories, index)}
+                onPress={_ => this.handleFilterItemClicked(item)}
             >
                 <View
                     style={{
@@ -671,15 +618,22 @@ class SelectCategory extends Component {
 
     render() {
 
-        let { productType, category, subCategoriesList, categoriesList,
-            subCategory, productTypeError, submitButtonClick, selectedSvgName } = this.state;
+        let {
+            productType,
+            category,
+            subCategoriesList,
+            categoriesList,
+            subCategory,
+            productTypeError,
+            submitButtonClick,
+            selectedSvgName,
+            filteringLists
+        } = this.state;
 
         const {
             categoriesLoading
         } = this.props;
-        // categoriesList = categoriesList || this.props.categoriesList;
-        // categoriesList = categoriesList.map(item => ({ ...item, value: item.category_name }));
-        // subCategoriesList = subCategoriesList.map(item => ({ ...item, value: item.category_name }));
+
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
                 CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
@@ -721,156 +675,143 @@ class SelectCategory extends Component {
                         animating={categoriesLoading} />
                     : null}
 
-                {!category ?
+                {!subCategory
+                    ?
                     <FlatList
-                        data={categoriesList}
+                        data={filteringLists}
                         ListEmptyComponent={this.renderListEmptyComponent}
                         keyExtractor={(item) => item.id.toString()}
+                        ListFooterComponent={this.subCategoriesListFooterComponent}
                         refreshing={categoriesLoading}
                         renderItem={this.renderItem}
                     />
-                    : null}
 
-                {
-                    !subCategory && category ?
-                        <FlatList
-                            data={subCategoriesList}
-                            ListEmptyComponent={this.renderListEmptyComponent}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={this.renderItem}
-                            ListFooterComponent={this.subCategoriesListFooterComponent}
-                        />
-                        : null
-                }
-                {
-                    category && subCategory ?
-                        <View style={{
-                            paddingHorizontal: 20
-                        }}
+                    :
+                    <View style={{
+                        paddingHorizontal: 20
+                    }}
+                    >
+                        <Text
+                            style={{
+                                color: '#555555', marginVertical: 20,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
+                            }}
                         >
+                            {`${locales('titles.type')} `}
                             <Text
                                 style={{
-                                    color: '#555555', marginVertical: 20,
+                                    color: '#21AD93', paddingHorizontal: 50,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                 }}
                             >
-                                {`${locales('titles.type')} `}
-                                <Text
-                                    style={{
-                                        color: '#21AD93', paddingHorizontal: 50,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
-                                    }}
-                                >
-                                    {
-                                        subCategoriesList && subCategoriesList.length ?
-                                            subCategoriesList.find(item => item.id == subCategory).category_name
-                                            : null
-                                    }
-                                </Text>
-                                <Text
-                                    style={{
-                                        marginHorizontal: 10, color: '#555555',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
-                                    }}
-                                >
-                                    {` ${locales('titles.enterYours')}`} <Text
-                                        style={{
-                                            color: '#D44546',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        }}
-                                    >*</Text>
-                                </Text>
+                                {
+                                    subCategoriesList && subCategoriesList.length ?
+                                        subCategoriesList.find(item => item.id == subCategory).category_name
+                                        : null
+                                }
                             </Text>
                             <Text
                                 style={{
-                                    marginVertical: 10,
-                                    color: '#777777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16
+                                    marginHorizontal: 10, color: '#555555',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                 }}
                             >
-                                {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
-                            </Text>
-                            <InputGroup
-                                regular
-                                style={{
-                                    borderRadius: 4,
-                                    borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
-                                        submitButtonClick ? '#E41C38' : '#666',
-                                    paddingHorizontal: 10,
-                                    backgroundColor: '#FBFBFB'
-                                }}
-                            >
-                                <FontAwesome5 name={
-                                    productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
-                                        ? 'times-circle' : 'edit'}
-                                    color={productType ? productTypeError ? '#E41C38' : '#00C569'
-                                        : submitButtonClick ? '#E41C38' : '#BDC4CC'}
-                                    size={16}
-                                    solid
+                                {` ${locales('titles.enterYours')}`} <Text
                                     style={{
-                                        marginLeft: 10
-                                    }}
-                                />
-                                <Input
-                                    autoCapitalize='none'
-                                    autoCorrect={false}
-                                    autoCompleteType='off'
-                                    style={{
-                                        textDecorationLine: 'none',
+                                        color: '#D44546',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        fontSize: 14,
-                                        height: 45,
-                                        direction: 'rtl',
-                                        borderRadius: 4,
-                                        textAlign: 'right',
                                     }}
-                                    onSubmitEditing={this.onSubmit}
-                                    onChangeText={this.onProductTypeSubmit}
-                                    value={productType}
-                                    placeholderTextColor="#BEBEBE"
-                                    placeholder={locales('titles.enterYourProductType')}
-                                    ref={this.productTypeRef}
-                                />
-                            </InputGroup>
-                            <Label style={{
-                                height: 30,
+                                >*</Text>
+                            </Text>
+                        </Text>
+                        <Text
+                            style={{
+                                marginVertical: 10,
+                                color: '#777777',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
+                        </Text>
+                        <InputGroup
+                            regular
+                            style={{
+                                borderRadius: 4,
+                                borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
+                                    submitButtonClick ? '#E41C38' : '#666',
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB'
+                            }}
+                        >
+                            <FontAwesome5 name={
+                                productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                    ? 'times-circle' : 'edit'}
+                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{
+                                    marginLeft: 10
+                                }}
+                            />
+                            <Input
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                autoCompleteType='off'
+                                style={{
+                                    textDecorationLine: 'none',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    height: 45,
+                                    direction: 'rtl',
+                                    borderRadius: 4,
+                                    textAlign: 'right',
+                                }}
+                                onSubmitEditing={this.onSubmit}
+                                onChangeText={this.onProductTypeSubmit}
+                                value={productType}
+                                placeholderTextColor="#BEBEBE"
+                                placeholder={locales('titles.enterYourProductType')}
+                                ref={this.productTypeRef}
+                            />
+                        </InputGroup>
+                        <Label style={{
+                            height: 30,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}>
+                            {!!productTypeError && <Text style={{
+                                fontSize: 14, color: '#D81A1A',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}>
-                                {!!productTypeError && <Text style={{
-                                    fontSize: 14, color: '#D81A1A',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                }}>
-                                    {productTypeError}
-                                </Text>}
-                            </Label>
-                            <View style={{
-                                marginTop: 50,
-                                flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
-                            }}>
-                                <Button
-                                    onPress={() => this.onSubmit()}
-                                    style={!this.state.category || !this.state.subCategory || !productType ||
-                                        !validator.isPersianNameWithDigits(productType)
-                                        ? styles.disableLoginButton : styles.loginButton}
-                                    rounded
-                                >
-                                    <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
-                                    <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                                </Button>
-                                <Button
-                                    onPress={() => this.setState({ productType: '', subCategory: '' })}
-                                    style={[styles.backButtonContainer, { width: '37%', elevation: 0, marginRight: 40 }]}
-                                    rounded
-                                >
-                                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                    <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} s color='#7E7E7E' />
-                                </Button>
-                            </View>
-
+                                {productTypeError}
+                            </Text>}
+                        </Label>
+                        <View style={{
+                            marginTop: 50,
+                            flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
+                        }}>
+                            <Button
+                                onPress={() => this.onSubmit()}
+                                style={!this.state.subCategory || !productType ||
+                                    !validator.isPersianNameWithDigits(productType)
+                                    ? styles.disableLoginButton : styles.loginButton}
+                                rounded
+                            >
+                                <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
+                                <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                            </Button>
+                            <Button
+                                onPress={_ => this.handleGoToPrevStep()}
+                                style={[styles.backButtonContainer, { width: '37%', elevation: 0, marginRight: 40 }]}
+                                rounded
+                            >
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} s color='#7E7E7E' />
+                            </Button>
                         </View>
-                        :
-                        null
+
+                    </View>
                 }
 
                 {/* 
