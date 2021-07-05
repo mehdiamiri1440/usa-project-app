@@ -9,6 +9,7 @@ import * as registerProductActions from '../../../redux/registerProduct/actions'
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
 
+let screenFocused;
 const CategoriesIcons = [
     {
         name: 'صیفی',
@@ -406,6 +407,8 @@ class SelectCategory extends Component {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
 
+            screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
+
             BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
 
             this.props.fetchAllCategories().then(_ => {
@@ -436,7 +439,13 @@ class SelectCategory extends Component {
     componentWillUnmount() {
         this.isComponentMounted = false;
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+        return screenFocused;
     }
+
+    handleScreenFocused = _ => {
+        if (!this.state.filteringLists || !this.state.filteringLists.length)
+            this.setState({ filteringLists: this.props.categoriesList });
+    };
 
     handleHardWareBackButtonPressed = _ => {
         return this.handleGoToPrevStep();

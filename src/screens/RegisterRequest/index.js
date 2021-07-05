@@ -13,6 +13,7 @@ import * as productActions from '../../redux/registerProduct/actions';
 
 import { deviceWidth, deviceHeight, validator, formatter } from '../../utils';
 
+let screenFocused;
 const CategoriesIcons = [
     {
         name: 'صیفی',
@@ -412,6 +413,9 @@ class RegisterRequest extends Component {
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
+
+            screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
+
             analytics().logEvent('register_buyAd')
             global.resetRegisterProduct = data => {
                 if (data) {
@@ -451,7 +455,13 @@ class RegisterRequest extends Component {
     componentWillUnmount() {
         this.isComponentMounted = false;
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+        return screenFocused;
     }
+
+    handleScreenFocused = _ => {
+        if (!this.state.filteringLists || !this.state.filteringLists.length)
+            this.setState({ filteringLists: this.props.categoriesList });
+    };
 
     handleHardWareBackButtonPressed = _ => {
         return this.handleGoToPrevStep();
@@ -581,7 +591,7 @@ class RegisterRequest extends Component {
                 style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={() => this.setState({ category: '' })}
+                    onPress={this.handleGoToPrevStep}
                     style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
@@ -611,16 +621,16 @@ class RegisterRequest extends Component {
     };
 
     handleGoToPrevStep = _ => {
-
         let tempList = this.state.parentList;
         this.setState({
             filteringLists: tempList[tempList.length - 1],
             parentList: tempList.slice(0, tempList.length - 1),
             subCategory: null
         });
+        console.warn(tempList)
         tempList.pop();
         if (!tempList || !tempList.length)
-            return false;
+            this.props.navigation.goBack();
         return true;
     };
 
@@ -1072,7 +1082,7 @@ class RegisterRequest extends Component {
                                             <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
                                         </Button>
                                         <Button
-                                            onPress={() => this.setState({ productType: '', subCategory: '' })}
+                                            onPress={this.handleGoToPrevStep}
                                             style={[styles.backButtonContainer, { width: '37%' }]}
                                             rounded
                                         >
