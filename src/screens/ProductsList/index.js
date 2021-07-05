@@ -67,6 +67,7 @@ class ProductsList extends PureComponent {
 
     productsListRef = createRef();
     categoryFiltersRef = createRef();
+
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
