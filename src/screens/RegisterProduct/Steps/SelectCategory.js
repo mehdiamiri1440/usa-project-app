@@ -415,7 +415,9 @@ class SelectCategory extends Component {
                     this.productTypeRef.current.value = productType;
 
                 this.setState({
-                    category, subCategory, productType,
+                    category,
+                    subCategory,
+                    productType,
                     subCategoriesTogether: categoriesList.map(item => item.subcategories),
                     categoriesList,
                     filteringLists: categoriesList,
@@ -447,20 +449,6 @@ class SelectCategory extends Component {
             productTypeError: (!field || validator.isPersianNameWithDigits(field)) ?
                 '' : locales('titles.productTypeInvalid')
         }));
-    };
-
-    handleGoToPrevStep = _ => {
-
-        let tempList = this.state.parentList;
-        this.setState({ filteringLists: tempList[tempList.length - 1], subCategory: null }, _ => {
-            tempList.pop();
-            this.setState({ parentList: tempList }, _ => {
-                if (!this.state.filteringLists)
-                    this.props.changeStep(1);
-                return true;
-            });
-        });
-        return true;
     };
 
     onSubmit = () => {
@@ -577,7 +565,21 @@ class SelectCategory extends Component {
 
     };
 
-    renderItem = ({ item, index }) => {
+    handleGoToPrevStep = _ => {
+
+        let tempList = this.state.parentList;
+        this.setState({
+            filteringLists: tempList[tempList.length - 1],
+            parentList: tempList.slice(0, tempList.length - 1),
+            subCategory: null,
+        });
+        tempList.pop();
+        if (!tempList || !tempList.length)
+            this.props.changeStep(1);
+        return true;
+    };
+
+    renderItem = ({ item }) => {
         return (
             <Pressable
                 android_ripple={{
@@ -813,118 +815,6 @@ class SelectCategory extends Component {
 
                     </View>
                 }
-
-                {/* 
-
-                <View style={styles.labelInputPadding}>
-                    <View style={{
-                        flexDirection: 'row-reverse'
-                    }}>
-                        <Label style={{ position: 'relative', color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.category')}
-                        </Label>
-                        {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                        /> : null}
-                    </View>
-                    <Item regular
-                        style={{
-                            width: deviceWidth * 0.9,
-                            borderRadius: 5,
-                            alignSelf: 'center',
-                            borderColor: category ? '#00C569' : categoryError ? '#D50000' : '#a8a8a8'
-                        }}
-                    >
-                        <RNPickerSelect
-                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                            useNativeAndroidPickerStyle={false}
-                            onValueChange={this.setCategory}
-                            style={styles}
-                            value={category}
-
-                            placeholder={{
-                                label: locales('labels.selectCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-
-                            }}
-                            items={[...categoriesList.map(item => ({
-                                label: item.category_name, value: item.id
-                            }))]}
-                        />
-                    </Item>
-                    {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
-                </View> */}
-                {/* 
-                <View style={styles.labelInputPadding}>
-                    <View style={{
-                        flexDirection: 'row-reverse'
-                    }}>
-                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                            {locales('labels.subCategory')}
-                        </Label>
-                        {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                            style={{
-                                width: 30, height: 30, borderRadius: 15
-                            }}
-                        /> : null}
-                    </View>
-                    <Item regular
-                        style={{
-                            width: deviceWidth * 0.9,
-                            borderRadius: 5,
-                            alignSelf: 'center',
-                            borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
-                        }}
-                    >
-                        <RNPickerSelect
-                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                            useNativeAndroidPickerStyle={false}
-                            onValueChange={this.setSubCategory}
-                            style={styles}
-                            value={subCategory}
-                            placeholder={{
-                                label: locales('labels.selectSubCategory'),
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            }}
-                            items={[...subCategoriesList.map(item => ({
-                                label: item.category_name, value: item.id
-                            }))]}
-                        />
-                    </Item>
-                    {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
-                </View>
-
-                <View style={styles.labelInputPadding}>
-                    <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterYourProductType')}
-                    </Label>
-
-
-                    <Item regular style={{
-                        borderColor: (productTypeError ? '#D50000' : (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'), borderRadius: 5, padding: 3
-                    }}>
-                        <Input
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            autoCompleteType='off'
-                            style={{
-                                textDecorationLine: 'none',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 14,
-                                height: 45,
-                                backgroundColor: '#fff',
-                                direction: 'rtl',
-                                textAlign: 'right'
-                            }}
-                            onChangeText={this.onProductTypeSubmit}
-                            value={productType}
-                            placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.productTypeWithExample')}
-                            ref={this.productTypeRef}
-                        />
-                    </Item>
-                    {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-
-                </View> */}
 
             </View >
         );
