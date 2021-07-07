@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
 import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -281,7 +282,7 @@ const RenderMessageWithProductIdDesign = props => {
                         <View
                             style={{
                                 width: '100%',
-                                backgroundColor: '#1da1f2',
+                                backgroundColor: '#556080',
 
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -289,7 +290,7 @@ const RenderMessageWithProductIdDesign = props => {
 
                                 flexDirection: 'row-reverse',
 
-                                paddingVertical: 8,
+                                paddingVertical: 5,
                                 borderBottomLeftRadius: 8,
                                 borderBottomRightRadius: 8,
                                 overflow: "hidden",
@@ -307,7 +308,7 @@ const RenderMessageWithProductIdDesign = props => {
                                 />
                                 :
                                 <FontAwesome5
-                                    name='link'
+                                    name='edit'
                                     color='white'
                                     size={14}
                                 />
@@ -315,11 +316,17 @@ const RenderMessageWithProductIdDesign = props => {
                             <Text style={{
                                 color: 'white',
                                 fontSize: 16,
-                                marginHorizontal: 5,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                marginRight: 5,
+                                marginLeft: 10,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}>
                                 {locales('labels.editPrice')}
                             </Text>
+                            <FontAwesome5
+                                name='angle-left'
+                                color='white'
+                                size={14}
+                            />
                         </View>
                     </Pressable >
                 );
@@ -331,10 +338,12 @@ const RenderMessageWithProductIdDesign = props => {
                     activeOpacity={1}
                     onPress={() => handlePromotionModalVisiblity(true)}
                 >
-                    <View
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
                         style={{
                             width: '100%',
-                            backgroundColor: '#1da1f2',
+                            backgroundColor: '#21AD93',
 
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -342,20 +351,21 @@ const RenderMessageWithProductIdDesign = props => {
 
                             flexDirection: 'row-reverse',
 
-                            paddingVertical: 8,
+                            paddingVertical: 5,
                             borderBottomLeftRadius: 8,
                             borderBottomRightRadius: 8,
                             overflow: "hidden",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0,
-
                         }}
+                        colors={['#4DC0BB', '#21AD93']}
                     >
+
                         <Text style={{
                             marginRight: 10
                         }}>
                             <FontAwesome5
-                                name='link'
+                                name='chess-queen'
                                 color='white'
                                 size={14}
                             />
@@ -363,13 +373,19 @@ const RenderMessageWithProductIdDesign = props => {
                         <Text style={{
                             color: 'white',
                             fontSize: 16,
-                            marginHorizontal: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            marginRight: 5,
+                            marginLeft: 10,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}>
-                            {locales('titles.promoteRegistration')}
+                            {locales('titles.inquireSecretary')}
 
                         </Text>
-                    </View>
+                        <FontAwesome5
+                            name='angle-left'
+                            color='white'
+                            size={14}
+                        />
+                    </LinearGradient>
                 </Pressable >
             );
         }
@@ -384,7 +400,7 @@ const RenderMessageWithProductIdDesign = props => {
                 <View
                     style={{
                         width: '100%',
-                        backgroundColor: '#1da1f2',
+                        backgroundColor: '#5D9FD8',
 
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -392,7 +408,7 @@ const RenderMessageWithProductIdDesign = props => {
 
                         flexDirection: 'row-reverse',
 
-                        paddingVertical: 8,
+                        paddingVertical: 5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
                         overflow: "hidden",
@@ -405,7 +421,7 @@ const RenderMessageWithProductIdDesign = props => {
                         marginRight: 10
                     }}>
                         <FontAwesome5
-                            name='link'
+                            name='clipboard-check'
                             color='white'
                             size={14}
                         />
@@ -413,12 +429,18 @@ const RenderMessageWithProductIdDesign = props => {
                     <Text style={{
                         color: 'white',
                         fontSize: 16,
-                        marginHorizontal: 5,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        marginRight: 5,
+                        marginLeft: 10,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     }}>
                         {locales('labels.ProductImagesAndDetails')}
 
                     </Text>
+                    <FontAwesome5
+                        name='angle-left'
+                        color='white'
+                        size={14}
+                    />
                 </View>
             </Pressable >
         );

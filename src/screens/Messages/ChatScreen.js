@@ -11,7 +11,7 @@ import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
     ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
-    LayoutAnimation, UIManager, Platform, Modal
+    LayoutAnimation, UIManager, Platform, Modal, Pressable
 } from 'react-native';
 import { Dialog, Paragraph } from 'react-native-paper';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -19,6 +19,7 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -798,41 +799,139 @@ class ChatScreen extends Component {
                                 visible={shouldShowPromotionModal}
                                 style={{ ...styles.dialogWrapper }}
                             >
-                                <Dialog.Actions
-                                    style={styles.dialogHeader}
-                                >
-                                    <Button
-                                        onPress={_ => this.handlePromotionModalVisiblity(false)}
-                                        style={styles.closeDialogModal}>
-                                        <FontAwesome5 name="times" color="#777" solid size={18} />
-                                    </Button>
-                                    <Paragraph style={styles.headerTextDialogModal}>
-                                        {locales('labels.editPrice')}
-                                    </Paragraph>
-                                </Dialog.Actions>
                                 <View
                                     style={{
+                                        backgroundColor: '#E7F9FF',
+                                        width: '100%',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        minHeight: '22%',
-                                        paddingVertical: 20
+                                        alignSelf: 'center',
                                     }}
                                 >
-                                    <Button
-                                        onPress={_ => {
-                                            this.handlePromotionModalVisiblity(false);
-                                            this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                    <FontAwesome5
+                                        onPress={_ => this.handlePromotionModalVisiblity(false)}
+                                        solid
+                                        size={20}
+                                        color='#808C9B'
+                                        name='times'
+                                        style={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            paddingVertical: 10,
+                                            paddingHorizontal: 15
                                         }}
-                                        style={styles.loginButton}
+                                    />
+
+                                    <Image
+                                        style={{
+                                            width: '90%',
+                                            marginVertical: 20,
+                                            alignSelf: 'center'
+                                        }}
+                                        resizeMode='contain'
+                                        source={require('../../../assets/images/11077.png')}
+                                    />
+                                    <View
+                                        style={{
+                                            width: deviceWidth * 2,
+                                            height: deviceWidth * 2,
+                                            borderTopLeftRadius: deviceWidth * 1.5,
+                                            borderTopRightRadius: deviceWidth * 1.5,
+                                            zIndex: -10,
+                                            backgroundColor: 'white',
+                                            top: 100,
+                                            position: 'absolute'
+                                        }}
                                     >
-                                        <Text style={[styles.buttonText, {
-                                            alignSelf: 'center',
+
+                                    </View>
+                                </View>
+
+                                <View
+                                    style={{
+                                        paddingHorizontal: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: '#555555',
+                                            textAlign: 'right',
+                                            fontSize: 15,
+                                            paddingHorizontal: 10,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 20,
-                                        }]}>
-                                            {locales('titles.promoteRegistration')}
+                                            marginVertical: 10
+                                        }}
+                                    >
+                                        {locales('titles.hello')}
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#374761',
+                                            textAlign: 'right',
+                                            fontSize: 22,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        }}
+                                    >
+                                        {locales('titles.imDelsa')} <Text
+                                            style={{
+                                                color: '#38485F',
+                                                fontSize: 15,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                marginVertical: 15,
+                                                fontWeight: '200'
+                                            }}
+                                        >
+                                            ({locales('titles.BuskoolBot')})
                                         </Text>
-                                    </Button>
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#555555',
+                                            fontSize: 14,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            marginVertical: 5
+                                        }}
+                                    >
+                                        {locales('titles.DelsaPromotionModalText')}
+                                    </Text>
+
+                                    <LinearGradient
+                                        start={{ x: 0, y: 1 }}
+                                        end={{ x: 0.8, y: 0.2 }}
+                                        style={{
+                                            width: '70%',
+                                            borderRadius: 8,
+                                            alignSelf: 'center',
+                                            padding: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            margin: 20,
+                                            minHeight: 60,
+                                        }}
+                                        colors={['#21AD93', '#00C569']}
+                                    >
+                                        <Pressable
+                                            android_ripple={{
+                                                color: '#ededed'
+                                            }}
+                                            onPress={() => {
+                                                this.handlePromotionModalVisiblity(false)
+                                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                            }}
+                                        >
+                                            <Text style={[styles.buttonText, {
+                                                alignSelf: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 20,
+                                            }]}>{locales('labels.promoteRegistration')}
+                                            </Text>
+                                        </Pressable>
+                                    </LinearGradient>
                                 </View>
                             </Dialog>
                         </Modal>
