@@ -34,6 +34,10 @@ setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
 global.shouldShowRibbon = true;
+global.meInfo = {
+  is_seller: 0,
+  loggedInUserId: ''
+};
 
 class App extends React.Component {
 

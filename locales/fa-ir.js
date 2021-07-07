@@ -100,6 +100,7 @@ export default {
     'labels.emptySeenUsersList': 'هنوز کاربری شماره تماس شما را ندیده است',
     'labels.comment': 'نظر',
     "labels.seller": "فروشنده",
+    'labels.DelsaPromotionModalDescription': 'سلام، من دلسا هستم-ربات خودکار باسکول- اگر مایل هستید بازاریابی بیشتری برای محصولات شما انجام بدهم، کافی است نوع عضویت خود را ارتقا دهید.',
     'labels.chatWithSeller': 'چت با فروشنده',
     'labels.chat': 'چت',
     'labels.safeShop': 'خرید امن',

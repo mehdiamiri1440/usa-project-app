@@ -71,7 +71,6 @@ const EnterActivisionCode = (props) => {
                         props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         props.fetchUserProfile().then((userProfileResult = {}) => {
-
                             const {
                                 payload = {}
                             } = userProfileResult;
@@ -81,14 +80,60 @@ const EnterActivisionCode = (props) => {
                             } = payload;
 
                             const {
-                                is_seller
+                                is_seller,
+                                id
                             } = user_info;
 
                             const {
                                 contact,
                                 profile_photo,
                                 isFromRequests,
+                                route = {},
                             } = props;
+
+                            const {
+                                params = {}
+                            } = route;
+
+                            const {
+                                parentRoute,
+                            } = params;
+
+                            if (parentRoute)
+                                switch (parentRoute) {
+                                    case 'buyers': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
+                                        return props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'Messages', childRoute: 'MessagesIndex',
+                                                    routeParams: { tabIndex: 1 }
+                                                }
+                                            });
+
+                                    };
+                                    case 'pricing': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                        return props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'MyBuskool', childRoute: 'PromoteRegistration'
+                                                }
+                                            });
+
+                                    };
+                                    case 'msg': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('MyBuskool', { screen: 'MessagesIndex' });
+                                    };
+                                    default:
+                                        break;
+                                }
+
+                            global.meInfo.is_seller = is_seller;
+                            global.meInfo.loggedInUserId = id;
 
                             const popAction = StackActions.pop(1);
                             if (contact && Object.keys(contact).length) {

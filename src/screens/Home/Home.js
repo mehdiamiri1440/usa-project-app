@@ -155,7 +155,18 @@ class Home extends React.Component {
 
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
+            const {
+                userProfile = {}
+            } = this.props;
+            const {
+                user_info = {}
+            } = userProfile;
+            const {
+                id
+            } = user_info;
 
+            global.meInfo.is_seller = roleAfterChangePanel;
+            global.meInfo.loggedInUserId = id;
             let item = {
                 from_record_number: 0,
                 sort_by: ENUMS.SORT_LIST.values.BM,

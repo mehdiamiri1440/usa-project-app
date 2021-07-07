@@ -138,7 +138,8 @@ class SignUp extends React.Component {
         const {
             contact,
             profile_photo,
-            isFromRequests
+            isFromRequests,
+            parentRoute
         } = params;
 
         let registerObject = {
@@ -181,8 +182,45 @@ class SignUp extends React.Component {
                             } = payload;
 
                             const {
-                                is_seller
+                                is_seller,
+                                id
                             } = user_info;
+
+                            if (parentRoute)
+                                switch (parentRoute) {
+                                    case 'buyers': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
+                                        return this.props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'Messages', childRoute: 'MessagesIndex',
+                                                    routeParams: { tabIndex: 1 }
+                                                }
+                                            });
+
+                                    };
+                                    case 'pricing': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                        return this.props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'MyBuskool', childRoute: 'PromoteRegistration'
+                                                }
+                                            });
+
+                                    };
+                                    case 'msg': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('MyBuskool', { screen: 'MessagesIndex' });
+                                    };
+                                    default:
+                                        break;
+                                }
+
+                            global.meInfo.is_seller = is_seller;
+                            global.meInfo.loggedInUserId = id;
 
                             const popAction = StackActions.pop(1);
                             if (contact && Object.keys(contact).length) {
@@ -241,7 +279,6 @@ class SignUp extends React.Component {
             profile_photo,
             isFromRequests
         } = params;
-
         switch (stepNumber) {
 
             case 1: {
