@@ -627,7 +627,6 @@ class RegisterRequest extends Component {
             parentList: tempList.slice(0, tempList.length - 1),
             subCategory: null
         });
-        console.warn(tempList)
         tempList.pop();
         if (!tempList || !tempList.length)
             this.props.navigation.goBack();
@@ -862,7 +861,7 @@ class RegisterRequest extends Component {
 
                             {categoriesLoading ? <ActivityIndicator size={50} color="#00C569" style={{ marginTop: deviceHeight * 0.13 }}
                                 animating={categoriesLoading} /> : null}
-                            {!subCategory
+                            {!subCategory && !categoriesLoading
                                 ?
                                 <FlatList
                                     data={filteringLists}
