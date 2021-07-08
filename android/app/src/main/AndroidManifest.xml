@@ -105,7 +105,7 @@
         <data android:scheme="https" android:host="buskool.com" android:pathPrefix="/pricing" />
         <data android:scheme="https" android:host="buskool.com" android:pathPrefix="/buyers" />
         <data android:scheme="https" android:host="buskool.com" android:pathPrefix="/msg" />
-s
+
         <data android:scheme="https" android:host="alidelkhosh.ir" android:pathPrefix="/pricing" />
         <data android:scheme="https" android:host="alidelkhosh.ir" android:pathPrefix="/buyers" />
         <data android:scheme="https" android:host="alidelkhosh.ir" android:pathPrefix="/msg" />
