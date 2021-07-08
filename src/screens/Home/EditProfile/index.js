@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -10,6 +10,7 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 
 import * as profileActions from '../../../redux/profile/actions';
 import { permissions, deviceHeight, deviceWidth } from '../../../utils';
@@ -217,9 +218,33 @@ class EditProfile extends Component {
 
     };
 
+    shareProfile = async _ => {
 
+        const {
+            userProfile = {}
+        } = this.props;
 
+        const {
+            user_info = {}
+        } = userProfile;
 
+        const {
+            user_name
+        } = user_info;
+
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
+            }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
+    };
 
     render() {
         const {
@@ -685,6 +710,39 @@ class EditProfile extends Component {
 
                     </View>
                 </ScrollView>
+
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    activeOpacity={1}
+                    onPress={this.shareProfile}
+                    style={{
+                        width: deviceWidth,
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#4eb9fb',
+                        padding: 10
+                    }}
+                >
+                    <FontAwesome
+                        name='address-card'
+                        color='white'
+                        size={20}
+                    />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            marginHorizontal: 7,
+                            fontSize: 16
+                        }}
+                    >
+                        {locales('labels.sendYourProfileToYourFriends')}
+                    </Text>
+                </Pressable>
+
             </>
         )
     }
