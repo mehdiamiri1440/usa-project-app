@@ -289,7 +289,7 @@ class Requests extends PureComponent {
     };
 
     closeFilters = _ => {
-        this.setState({ showFilters: false }, () => this.scrollToTop());
+        this.setState({ showFilters: false }, _ => setTimeout(() => this.scrollToTop(), 300));
     };
 
     selectedFilter = (id, name) => {
