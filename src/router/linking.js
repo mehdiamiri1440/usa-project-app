@@ -86,8 +86,16 @@ const config = {
 };
 
 const linking = {
-    prefixes: ["buskool://", "https://www.buskool.com", "http://www.buskool.com",
-        "http://www.alidelkhosh.ir", "https://www.alidelkhosh.ir",
+    prefixes: [
+        "buskool://",
+        "https://www.buskool.com",
+        "http://www.buskool.com",
+        "http://www.alidelkhosh.ir",
+        "https://www.alidelkhosh.ir",
+        "http://alidelkhosh.ir",
+        "http://buskool.com",
+        "https://alidelkhosh.ir",
+        "https://buskool.com"
     ],
     config,
     getInitialURL: async _ => {
