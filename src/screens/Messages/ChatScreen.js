@@ -801,7 +801,6 @@ class ChatScreen extends Component {
                             >
                                 <View
                                     style={{
-                                        backgroundColor: '#E7F9FF',
                                         width: '100%',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -832,20 +831,6 @@ class ChatScreen extends Component {
                                         resizeMode='contain'
                                         source={require('../../../assets/images/11077.png')}
                                     />
-                                    <View
-                                        style={{
-                                            width: deviceWidth * 2,
-                                            height: deviceWidth * 2,
-                                            borderTopLeftRadius: deviceWidth * 1.5,
-                                            borderTopRightRadius: deviceWidth * 1.5,
-                                            zIndex: -10,
-                                            backgroundColor: 'white',
-                                            top: 100,
-                                            position: 'absolute'
-                                        }}
-                                    >
-
-                                    </View>
                                 </View>
 
                                 <View
