@@ -68,6 +68,7 @@ class ChatScreen extends Component {
             productMinSalePriceError: null,
             productMinSalePriceClicked: false,
             shouldShowEditionSuccessfullText: false,
+            shouldShowDelsaAdvertisement: false
         };
     }
 
@@ -109,12 +110,32 @@ class ChatScreen extends Component {
 
     checkForShowingRatingCard = _ => {
 
+        let shouldShowDelsaAdvertisement = false,
+            chatWithProductToShowDelsa = true,
+            chatWithProductToShowComment = true,
+            loggedInUserStatusToShowDelsaAd = true;
+
         const {
             route = {},
+            userProfile = {}
         } = this.props;
-        const { params = {} } = route;
 
-        const { contact = {} } = params;
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller,
+            active_pakage_type
+        } = user_info;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact = {}
+        } = params;
 
         const {
             contact_id
@@ -123,6 +144,9 @@ class ChatScreen extends Component {
         const {
             userChatHistory = []
         } = this.state;
+
+        if (!is_seller || active_pakage_type != 0)
+            loggedInUserStatusToShowDelsaAd = false;
 
         this.props.checkUserAutorityToPostComment(contact_id).then((result = {}) => {
 
@@ -134,8 +158,10 @@ class ChatScreen extends Component {
                 is_allowed
             } = payload;
 
-            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id)
-                return;
+            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id) {
+                chatWithProductToShowDelsa = true;
+                chatWithProductToShowComment = false;
+            }
 
             AsyncStorage.getItem('@ratedChats').then(result => {
 
@@ -148,16 +174,25 @@ class ChatScreen extends Component {
 
                 const closeButtonPassedTime = !foundTime ? true : moment().diff(foundTime, 'hours') >= 24;
 
-                const conidtions = (is_allowed) &&
+                const closeButtonOppositeForDelsa = !foundTime ? false : moment().diff(foundTime, 'hours') < 24;
+
+                shouldShowDelsaAdvertisement = (loggedInUserStatusToShowDelsaAd &&
+                    closeButtonOppositeForDelsa &&
+                    chatWithProductToShowDelsa
+                ) &&
+                    (userChatHistory && userChatHistory.length &&
+                        userChatHistory[0] && userChatHistory[0].created_at &&
+                        moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10);
+
+                const conidtions = (is_allowed && chatWithProductToShowComment) &&
                     (closeButtonPassedTime) &&
                     (userChatHistory && userChatHistory.length &&
                         userChatHistory[0] && userChatHistory[0].created_at &&
                         moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10
                     );
 
-                this.setState({ shouldShowRatingCard: conidtions });
+                this.setState({ shouldShowRatingCard: conidtions, shouldShowDelsaAdvertisement });
             });
-
         });
     };
 
@@ -264,7 +299,8 @@ class ChatScreen extends Component {
 
         this.setState({
             userChatHistory,
-            shouldShowRatingCard: false
+            shouldShowRatingCard: false,
+            shouldShowDelsaAdvertisement: false
         }, () => {
             const {
                 from,
@@ -382,7 +418,8 @@ class ChatScreen extends Component {
                 userChatHistory: [...userChatHistory],
                 messageText: '',
                 isFirstLoad: false,
-                shouldShowRatingCard: false
+                shouldShowRatingCard: false,
+                shouldShowDelsaAdvertisement: false
             });
 
             this.props.sendMessage(msgObject, buyAdId, productId).then((result) => {
@@ -486,8 +523,12 @@ class ChatScreen extends Component {
 
     handlePromotionModalVisiblity = shouldShowPromotionModal => {
         this.setState({
-            shouldShowPromotionModal
+            shouldShowPromotionModal,
         });
+    };
+
+    setDelsaAdVisiblity = shouldShowDelsaAdvertisement => {
+        this.setState({ shouldShowDelsaAdvertisement })
     };
 
     handleEditPriceModalVisiblity = (productId, messageId) => {
@@ -683,7 +724,8 @@ class ChatScreen extends Component {
         const {
             showUnAuthorizedUserPopUp,
             shouldShowRatingCard,
-            userChatHistory
+            userChatHistory,
+            shouldShowDelsaAdvertisement
         } = this.state;
 
         return (
@@ -697,16 +739,25 @@ class ChatScreen extends Component {
                     : null}
 
                 {
-                    (userChatHistory.length && shouldShowRatingCard)
+                    userChatHistory.length
                         ?
-                        <ChatRating
-                            firstName={firstName}
-                            lastName={lastName}
-                            userId={id}
-                            closeRatingCard={this.closeRatingCard}
-                            {...this.props}
-                        />
-
+                        (
+                            shouldShowRatingCard ?
+                                <ChatRating
+                                    firstName={firstName}
+                                    lastName={lastName}
+                                    userId={id}
+                                    closeRatingCard={this.closeRatingCard}
+                                    {...this.props}
+                                />
+                                : shouldShowDelsaAdvertisement
+                                    ? <DelsaAdvertisementComponent
+                                        handlePromotionModalVisiblity={this.handlePromotionModalVisiblity}
+                                        setDelsaAdVisiblity={this.setDelsaAdVisiblity}
+                                        {...this.props}
+                                    />
+                                    : null
+                        )
                         : null
                 }
             </View>
@@ -1454,6 +1505,90 @@ class ChatScreen extends Component {
         )
     }
 }
+
+const DelsaAdvertisementComponent = props => {
+
+    const {
+        handlePromotionModalVisiblity = _ => { },
+        setDelsaAdVisiblity = _ => { }
+    } = props;
+
+    return (
+        <ShadowView
+            style={{
+                shadowColor: 'black',
+                shadowOpacity: 0.13,
+                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 2 },
+                backgroundColor: '#EDF8E6',
+                borderRadius: 8,
+                padding: 10,
+                marginVertical: 10,
+                width: '95%',
+                alignSelf: 'center',
+            }}>
+            <FontAwesome5
+                onPress={_ => setDelsaAdVisiblity(false)}
+                solid
+                size={20}
+                color='#808C9B'
+                name='times'
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    paddingVertical: 10,
+                    paddingHorizontal: 15,
+                    zIndex: 1
+                }}
+            />
+            <Text
+                style={{
+                    textAlign: 'center',
+                    fontSize: 18,
+                    color: '#313A43',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    marginVertical: 20
+                }}
+            >
+                {locales('labels.inquireYourOwnSecretary')}
+            </Text>
+            <Button
+                onPress={_ => handlePromotionModalVisiblity(true)}
+                style={{
+                    elevation: 0,
+                    backgroundColor: '#4DC0BB',
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                    alignSelf: 'center',
+                    width: '50%',
+                    marginVertical: 10,
+                }}
+            >
+                <FontAwesome5
+                    name='info-circle'
+                    size={16}
+                    color='white'
+                    style={{
+                        marginHorizontal: 8
+                    }}
+                />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 16,
+                        color: 'white',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {locales('titles.moreDetails')}
+                </Text>
+            </Button>
+        </ShadowView>
+    )
+};
 
 const styles = StyleSheet.create({
     container: {
