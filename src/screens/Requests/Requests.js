@@ -466,6 +466,7 @@ class Requests extends PureComponent {
                     </View>
                 </LinearGradient>
             </ImageBackground>
+
         )
     };
 
@@ -503,7 +504,7 @@ class Requests extends PureComponent {
                     separators={separators}
                     loggedInUserId={loggedInUserId}
                 />
-                {is_seller && this.renderItemSeparatorComponent(index)}
+                {is_seller ? this.renderItemSeparatorComponent(index) : null}
             </>
         )
     };
@@ -1097,35 +1098,18 @@ class Requests extends PureComponent {
                     </View>
                 </View>
 
-
                 <View>
-                    {/* 
-                <Button
-                            style={{
-                                flex: 2,
-                                justifyContent: 'center',
-                                backgroundColor: '#e51c38',
-                                marginRight: 15,
-                                borderRadius: 4
-                            }}
-                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
-                            <Text style={{
-                                textAlign: 'center',
-                                color: '#fff',
-                            }}>
-                                {locales('labels.deleteFilter')}
-                            </Text>
-                        </Button> */}
                 </View>
                 <SafeAreaView
-                    // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60, backgroundColor: 'white' }}
                 >
-                    {showFilters ? <Filters
-                        selectedFilter={this.selectedFilter}
-                        closeFilters={this.closeFilters}
-                        showFilters={showFilters}
-                    /> : null}
+                    {showFilters ?
+                        <Filters
+                            selectedFilter={this.selectedFilter}
+                            closeFilters={this.closeFilters}
+                            showFilters={showFilters}
+                        />
+                        : null}
 
                     <FlatList
                         ref={this.props.requestsRef}
@@ -1176,9 +1160,14 @@ class Requests extends PureComponent {
                             }}>
                                 {locales('titles.categories')}
                             </Text>
-                            <FontAwesome5 name="filter" solid color="#fff" style={{
-                                marginHorizontal: 5
-                            }} />
+                            <FontAwesome5
+                                name="filter"
+                                solid
+                                color="#fff"
+                                style={{
+                                    marginHorizontal: 5
+                                }}
+                            />
 
                         </Button>
 
