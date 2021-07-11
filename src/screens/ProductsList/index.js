@@ -72,6 +72,7 @@ class ProductsList extends PureComponent {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
             this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
+            this.screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
 
             Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
                 if (componentType === 'Component') {
@@ -146,8 +147,34 @@ class ProductsList extends PureComponent {
 
     componentWillUnmount() {
         this.isComponentMounted = false;
+        this.screenFocused;
         return this.blurListener;
     }
+
+    handleScreenFocused = _ => {
+        if (global.refreshProductList) {
+
+            global.refreshProductList = false;
+
+            this.setState({
+                selectedButton: null,
+                city: '',
+                province: '',
+                sortModalFlag: false,
+                locationsFlag: false,
+                searchText: undefined,
+                from_record_number: 0,
+                subCategoriesModalFlag: false,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                searchLoader: false,
+                searchFlag: false,
+                subCategoriesList: [],
+                cities: [],
+                totalCategoriesModalFlag: false,
+                isFilterApplied: false,
+            });
+        }
+    };
 
     handleScreenBlured = _ => {
         const {

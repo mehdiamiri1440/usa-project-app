@@ -173,6 +173,7 @@ class Home extends React.Component {
                 to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(_ => {
+                global.refreshProductList = true;
                 this.props.updateProductsList(true);
 
                 this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
