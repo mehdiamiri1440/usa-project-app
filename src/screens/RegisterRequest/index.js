@@ -417,15 +417,6 @@ class RegisterRequest extends Component {
             screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
 
             analytics().logEvent('register_buyAd')
-            global.resetRegisterProduct = data => {
-                if (data) {
-                    this.props.navigation.navigate('RegisterRequest')
-                }
-            }
-            if (this.props.resetTab) {
-                this.props.resetRegisterProduct(false);
-                this.props.navigation.navigate('RegisterRequest')
-            }
             this.props.fetchAllCategories().then(_ => {
                 const { category, subCategory, productType, categoriesList, parentList } = this.props;
 
@@ -452,8 +443,40 @@ class RegisterRequest extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.props.resetrRegisterRequestTab) {
+            const {
+                parentList,
+                categoriesList
+            } = this.props;
+
+            this.setState({
+                amountError: '',
+                amount: '',
+                amountText: '',
+                category: '',
+                subCategory: '',
+                productTypeError: '',
+                categoryError: '',
+                subCategoryError: '',
+                productType: '',
+                submitButtonClick: false,
+                isFocused: false,
+                loaded: false,
+                amountClicked: false,
+                productTypeClicked: false,
+                selectedSvgName: '',
+                filteringLists: [],
+                filteringLists: categoriesList,
+                parentList: parentList && parentList.length ? parentList : [categoriesList],
+            })
+            this.props.resetRegisterRequest(false);
+            this.props.navigation.navigate('RegisterRequest')
+        }
+    }
+
     componentWillUnmount() {
-        this.isComponentMounted = false;
+        this.isComponentMounted = false
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
         return screenFocused;
     }
@@ -743,7 +766,8 @@ class RegisterRequest extends Component {
             amount,
             amountClicked,
             amountError,
-            parentList
+            parentList,
+            amountText
         } = this.state;
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
@@ -1210,13 +1234,14 @@ const mapStateToProps = (state) => {
         registerBuyAdRequest: state.registerProductReducer.registerBuyAdRequest,
         registerBuyAdRequestMessage: state.registerProductReducer.registerBuyAdRequestMessage,
         registerBuyAdRequestError: state.registerProductReducer.registerBuyAdRequestError,
+        resetrRegisterRequestTab: state.registerProductReducer.resetrRegisterRequestTab,
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         registerBuyAdRequest: requestObj => dispatch(registerProductActions.registerBuyAdRequest(requestObj)),
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
-        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab))
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab))
 
     }
 };
