@@ -704,8 +704,9 @@ class SelectCategory extends Component {
                     >
                         <Text
                             style={{
-                                color: '#555555', marginVertical: 20,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
+                                color: '#555555',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 18
                             }}
                         >
                             {`${locales('titles.type')} `}
@@ -737,7 +738,7 @@ class SelectCategory extends Component {
                         </Text>
                         <Text
                             style={{
-                                marginVertical: 10,
+                                marginVertical: 5,
                                 color: '#777777',
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 16
