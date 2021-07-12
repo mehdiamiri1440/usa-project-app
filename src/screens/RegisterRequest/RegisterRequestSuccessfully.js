@@ -274,12 +274,8 @@ color:'#ededed'
                             color: '#ededed'
                         }}
                         activeOpacity={1}
-                        onPress={() => {
-                            props.navigation.navigate('Home')
-                            setTimeout(() => {
-                                return props.navigation.navigate('ProductDetails', { productId: id })
-                            }, 100);
-                        }}>
+                        onPress={() => props.navigation.navigate('ProductDetails', { productId: id })}
+                    >
                         <View
                             style={{
                                 flexDirection: 'row-reverse',

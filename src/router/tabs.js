@@ -407,7 +407,14 @@ export const RegisterRequestStack = _ => (
             name={`UpgradeApp`}
             component={UpgradeApp}
         />
-
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`ProductDetails`}
+            component={ProductDetails}
+        />
         <Stack.Screen
             options={({ navigation, route }) => ({
                 headerShown: false,
