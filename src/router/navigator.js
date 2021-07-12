@@ -994,8 +994,8 @@ const routes = props => {
                                     key={'RegisterRequest'}
                                     listeners={{
                                         tabPress: e => {
-                                            if (!!global.resetRegisterRequest)
-                                                global.resetRegisterRequest(true)
+                                            if (navigationRef?.current?.getCurrentRoute()?.name == 'RegisterRequest')
+                                                props.resetRegisterRequest(true)
                                             currentRoute = e.target;
                                         },
                                     }}
@@ -1234,6 +1234,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch) => {
     return {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
         doForceRefresh: forceRefresh => dispatch(messageActions.doForceRefresh(forceRefresh)),
     }
 };

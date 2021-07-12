@@ -43,7 +43,10 @@ const INITIAL_STATE = {
 
     products: [],
     product: {},
-    buyAds: []
+    buyAds: [],
+
+    resetTab: false,
+    resetrRegisterRequestTab: false
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -394,6 +397,13 @@ export default (state = INITIAL_STATE, action) => {
                 addNewProductMessage: [],
                 product: {},
                 buyAds: []
+            }
+        }
+
+        case actionTypes.RESET_REGISTER_REQUEST_TAB: {
+            return {
+                ...state,
+                resetrRegisterRequestTab: action.payload.resetTab,
             }
         }
         default:
