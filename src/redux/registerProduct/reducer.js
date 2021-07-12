@@ -221,7 +221,14 @@ export default (state = INITIAL_STATE, action) => {
                 userPermissionToRegisterProductError: false,
                 userPermissionToRegisterProductMessage: null,
                 isUserLimitedToRegisterProduct: false,
-                userPermissionToRegisterProductStatus: false
+                userPermissionToRegisterProductStatus: false,
+                addNewProductLoading: false,
+                addNewProductFailed: false,
+                buyAdsAfterPaymentList: [],
+                addNewProductError: false,
+                addNewProductMessage: [],
+                product: {},
+                buyAds: []
             };
         };
         case actionTypes.CHECK_USER_PERMISSION_TO_REGISTER_PRODUCT_SUCCESSFULLY: {
@@ -379,7 +386,14 @@ export default (state = INITIAL_STATE, action) => {
         case actionTypes.RESET_REGISTER_PRODUCT_TAB: {
             return {
                 ...state,
-                resetTab: action.payload.resetTab
+                resetTab: action.payload.resetTab,
+                addNewProductLoading: false,
+                addNewProductFailed: false,
+                buyAdsAfterPaymentList: [],
+                addNewProductError: false,
+                addNewProductMessage: [],
+                product: {},
+                buyAds: []
             }
         }
         default:
