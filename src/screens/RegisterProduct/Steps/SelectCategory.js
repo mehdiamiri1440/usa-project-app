@@ -632,13 +632,13 @@ class SelectCategory extends Component {
         let {
             productType,
             category,
-            subCategoriesList,
             categoriesList,
             subCategory,
             productTypeError,
             submitButtonClick,
             selectedSvgName,
-            filteringLists
+            filteringLists,
+            parentList
         } = this.state;
 
         const {
@@ -716,8 +716,8 @@ class SelectCategory extends Component {
                                 }}
                             >
                                 {
-                                    subCategoriesList && subCategoriesList.length ?
-                                        subCategoriesList.find(item => item.id == subCategory).category_name
+                                    parentList && parentList.length ?
+                                        parentList[parentList.length - 1].find(item => item.id == subCategory)?.category_name
                                         : null
                                 }
                             </Text>

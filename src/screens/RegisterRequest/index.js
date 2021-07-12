@@ -736,17 +736,15 @@ class RegisterRequest extends Component {
             category,
             subCategory,
             productTypeError,
-            subCategoriesList, categoriesList,
+            categoriesList,
             selectedSvgName,
             filteringLists,
-            submitButtonClick,
             productTypeClicked,
             amount,
             amountClicked,
             amountError,
-            amountText
+            parentList
         } = this.state;
-
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
                 CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
@@ -893,8 +891,8 @@ class RegisterRequest extends Component {
                                                 }}
                                             >
                                                 {
-                                                    subCategoriesList && subCategoriesList.length ?
-                                                        subCategoriesList.find(item => item.id == subCategory).category_name
+                                                    parentList && parentList.length ?
+                                                        parentList[parentList.length - 1].find(item => item.id == subCategory)?.category_name
                                                         : null
                                                 }
                                             </Text>
