@@ -463,7 +463,7 @@ class SelectCategory extends Component {
     onSubmit = () => {
 
         let { productType, category, subCategory, subCategoryName, parentList } = this.state;
-        let productTypeError = '', categoryError = '', subCategoryError = '';
+        let productTypeError = '', subCategoryError = '';
 
 
         if (!productType) {
@@ -570,7 +570,7 @@ class SelectCategory extends Component {
             filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
             subCategory: subCategoriesList.length ? '' : id,
             subCategoryName: subCategoriesList.length ? '' : category_name,
-        }, _ => console.log('parnt', this.state.parentList));
+        });
 
     };
 
