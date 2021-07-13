@@ -232,7 +232,7 @@ class SignUp extends React.Component {
                                 this.props.navigation.dispatch(popAction);
                                 if (is_seller)
                                     return this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
-                                return this.props.navigation.navigate('Home', { screen: 'ProductsList' });
+                                return this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' });
                             }
                         })
                         this.setState({ signUpError: '' })
