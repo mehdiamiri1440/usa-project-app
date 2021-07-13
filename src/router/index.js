@@ -31,7 +31,8 @@ const App = (props) => {
   let { is_seller, id } = user_info;
   global.meInfo.is_seller = is_seller;
   global.meInfo.loggedInUserId = id;
-  const [initialRoute, setInitialRoute] = useState(!!is_seller ? 'RegisterProductStack' : 'RegisterRequest');
+
+  const [initialRoute, setInitialRoute] = useState(!!is_seller ? 'RegisterProductStack' : 'RegisterRequestStack');
   let [isRegistered, setIsRegistered] = useState(registerAppWithFCM());
 
 

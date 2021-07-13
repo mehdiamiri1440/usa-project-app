@@ -435,7 +435,7 @@ class Requests extends PureComponent {
                             justifyContent: 'space-around', alignItems: 'center',
                             alignSelf: 'flex-end', padding: 10
                         }}
-                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequestStack')}
                     >
                         <Text style={{
                             fontSize: 18,

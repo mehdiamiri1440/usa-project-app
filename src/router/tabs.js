@@ -377,7 +377,7 @@ export const RegisterRequestStack = _ => (
             gestureEnabled: true,
 
         }}
-        initialRouteName={'RegisterRequest'}
+        initialRouteName='RegisterRequest'
     >
 
         <Stack.Screen

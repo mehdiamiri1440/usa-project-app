@@ -902,7 +902,7 @@ class ProductsList extends PureComponent {
                             :
                             <View >
                                 <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                                    onPress={() => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                                     style={styles.loginButton}
                                 >
                                     <Text
@@ -1071,7 +1071,7 @@ class ProductsList extends PureComponent {
                         justifyContent: 'space-around', alignItems: 'center',
                         alignSelf: 'flex-end', padding: 10
                     }}
-                    onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                    onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequestStack')}
                 >
                     <Text style={{
                         fontSize: 18,

@@ -293,11 +293,11 @@ export const routeToScreensFromNotifications = (remoteMessage = {}) => {
             }
             case 'registerBuyAd': {
                 if (!is_seller) {
-                    return navigationRef.current.navigate('RegisterRequest');
+                    return navigationRef.current.navigate('RegisterRequestStack', { screen: 'RegisterRequest' });
                 }
                 else {
                     return navigationRef.current.navigate('MyBuskool',
-                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
+                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequestStack', childRoute: 'RegisterRequest' } });
                 }
             }
             case 'specialProducts': {
@@ -340,7 +340,7 @@ export const routeToScreensFromNotifications = (remoteMessage = {}) => {
                 }
             }
             default:
-                return navigationRef.current.navigate('Home');
+                break;
         }
     }
     else {

@@ -785,7 +785,7 @@ class SpecialProducts extends PureComponent {
                     </Text>
                     <View >
                         <Button
-                            onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                            onPress={() => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                             style={styles.loginButton}
                         >
                             <Text
@@ -944,7 +944,7 @@ class SpecialProducts extends PureComponent {
                         justifyContent: 'space-around', alignItems: 'center',
                         alignSelf: 'flex-end', padding: 10
                     }}
-                    onPress={_ => this.props.navigation.navigate('RegisterRequest')}
+                    onPress={_ => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                 >
                     <Text style={{
                         fontSize: 18,

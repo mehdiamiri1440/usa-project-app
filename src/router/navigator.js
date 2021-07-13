@@ -903,7 +903,7 @@ const routes = props => {
                     )
                     : (
                         <Tab.Navigator
-                            initialRouteName={is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
+                            initialRouteName={initialRoute}
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
@@ -958,10 +958,8 @@ const routes = props => {
                                     }}
                                 />}
 
-
-
                             {is_seller ? <Tab.Screen
-                                key={'RegisterProduct'}
+                                key={'RegisterProductStack'}
                                 listeners={{
                                     tabPress: e => {
                                         if (currentRoute.includes('RegisterProductStack')) {
@@ -991,7 +989,7 @@ const routes = props => {
                             />
                                 :
                                 <Tab.Screen
-                                    key={'RegisterRequest'}
+                                    key={'RegisterRequestStack'}
                                     listeners={{
                                         tabPress: e => {
                                             if (navigationRef?.current?.getCurrentRoute()?.name == 'RegisterRequest')
@@ -1010,7 +1008,7 @@ const routes = props => {
                                             <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
                                         </View>,
                                     }}
-                                    name={'RegisterRequest'}
+                                    name={'RegisterRequestStack'}
                                     component={RegisterRequestStack}
                                 />}
 
