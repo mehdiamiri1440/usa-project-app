@@ -111,7 +111,6 @@ class ChatScreen extends Component {
     checkForShowingRatingCard = _ => {
 
         let shouldShowDelsaAdvertisement = false,
-            chatWithProductToShowDelsa = true,
             chatWithProductToShowComment = true,
             loggedInUserStatusToShowDelsaAd = true;
 
@@ -158,10 +157,9 @@ class ChatScreen extends Component {
                 is_allowed
             } = payload;
 
-            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id) {
-                chatWithProductToShowDelsa = true;
+            if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id)
                 chatWithProductToShowComment = false;
-            }
+
 
             AsyncStorage.getItem('@ratedChats').then(result => {
 
@@ -174,24 +172,15 @@ class ChatScreen extends Component {
 
                 const closeButtonPassedTime = !foundTime ? true : moment().diff(foundTime, 'hours') >= 24;
 
-                const closeButtonOppositeForDelsa = !foundTime ? false : moment().diff(foundTime, 'hours') < 24;
+                const passedTimeFromLastMessage = userChatHistory && userChatHistory.length &&
+                    userChatHistory[0] && userChatHistory[0].created_at &&
+                    moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10;
 
-                shouldShowDelsaAdvertisement = (loggedInUserStatusToShowDelsaAd &&
-                    closeButtonOppositeForDelsa &&
-                    chatWithProductToShowDelsa
-                ) &&
-                    (userChatHistory && userChatHistory.length &&
-                        userChatHistory[0] && userChatHistory[0].created_at &&
-                        moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10);
+                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage;
 
-                const conidtions = (is_allowed && chatWithProductToShowComment) &&
-                    (closeButtonPassedTime) &&
-                    (userChatHistory && userChatHistory.length &&
-                        userChatHistory[0] && userChatHistory[0].created_at &&
-                        moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10
-                    );
+                shouldShowDelsaAdvertisement = loggedInUserStatusToShowDelsaAd && !shouldShowRatingCard && passedTimeFromLastMessage;
 
-                this.setState({ shouldShowRatingCard: conidtions, shouldShowDelsaAdvertisement });
+                this.setState({ shouldShowRatingCard, shouldShowDelsaAdvertisement });
             });
         });
     };
