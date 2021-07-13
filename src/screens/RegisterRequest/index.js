@@ -471,7 +471,7 @@ class RegisterRequest extends Component {
                 parentList: parentList && parentList.length ? parentList : [categoriesList],
             })
             this.props.resetRegisterRequest(false);
-            this.props.navigation.navigate('RegisterRequest')
+            this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })
         }
     }
 
@@ -614,7 +614,7 @@ class RegisterRequest extends Component {
                 style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={this.handleGoToPrevStep}
+                    onPress={_ => this.handleGoToPrevStep(true)}
                     style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
@@ -643,7 +643,7 @@ class RegisterRequest extends Component {
 
     };
 
-    handleGoToPrevStep = _ => {
+    handleGoToPrevStep = fromBackButton => {
         let tempList = this.state.parentList;
         this.setState({
             filteringLists: tempList[tempList.length - 1],
@@ -651,8 +651,12 @@ class RegisterRequest extends Component {
             subCategory: null
         });
         tempList.pop();
-        if (!tempList || !tempList.length)
-            this.props.navigation.goBack();
+        if (!tempList || !tempList.length) {
+            if (fromBackButton == true)
+                this.props.navigation.goBack()
+            else
+                return false;
+        }
         return true;
     };
 
