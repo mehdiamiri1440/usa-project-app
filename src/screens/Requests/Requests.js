@@ -334,7 +334,8 @@ class Requests extends PureComponent {
 
     handleSortItemClick = value => {
         const {
-            buyAdRequestsList = []
+            buyAdRequestsList = [],
+            selectedFilterId
         } = this.state;
 
         let tempList = [...buyAdRequestsList];
@@ -347,6 +348,10 @@ class Requests extends PureComponent {
         else {
             tempList = [...this.props.buyAdRequestsList];
         }
+
+        if (selectedFilterId)
+            tempList = tempList.filter(item => item.category_id == selectedFilterId);
+
         this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
     };
 
