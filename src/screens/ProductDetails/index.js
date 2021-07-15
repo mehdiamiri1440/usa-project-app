@@ -179,7 +179,7 @@ class ProductDetails extends PureComponent {
             this.setState({ loaded: false });
             this.props.fetchAllProductInfo(productId);
         }
-        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo.length) {
+        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
 
             const {
                 productDetailsInfo = []
@@ -238,7 +238,7 @@ class ProductDetails extends PureComponent {
             } = review_info;
 
             const {
-                related_products
+                related_products = []
             } = productDetailsInfo[1];
 
             this.setState({
@@ -701,7 +701,7 @@ class ProductDetails extends PureComponent {
             minimumPriceError,
             amountError,
 
-            related_products,
+            related_products = [],
             avg_score,
             total_count,
 
@@ -713,7 +713,7 @@ class ProductDetails extends PureComponent {
             user_name,
             userId,
 
-            photos,
+            photos = [],
 
             description,
 
