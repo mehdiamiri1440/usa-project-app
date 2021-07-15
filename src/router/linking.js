@@ -37,6 +37,21 @@ const config = {
                 Authentication: {
                     path: "verification",
                 },
+                ChangeRole: {
+                    path: "change-role/:parentRoute/:childRoute/:routeParams?",
+                    parse: {
+                        parentRoute: parentRoute => `${parentRoute}`,
+                        childRoute: childRoute => `${childRoute}`,
+                        routeParams: routeParams => JSON.parse(routeParams)
+                    }
+                },
+                SignUp: {
+                    path: "sign-up/:parentRoute?/:targetRoute?",
+                    parse: {
+                        parentRoute: parentRoute => `${parentRoute}`,
+                        targetRoute: targetRoute => `${targetRoute}`
+                    }
+                },
             },
         },
         RegisterProductSuccessfully: {
@@ -57,11 +72,11 @@ const config = {
                     },
                 },
                 MessagesIndex: {
-                    path: 'messenger/:tabIndex',
+                    path: 'buyers/:tabIndex',
                     parse: {
-                        tabIndex: tabIndex => tabIndex == 'buy-ads' ? 1 : 0
+                        tabIndex: tabIndex => Number(tabIndex)
                     },
-                }
+                },
             }
         },
         SpecialProducts: {
@@ -71,8 +86,16 @@ const config = {
 };
 
 const linking = {
-    prefixes: ["buskool://", "https://www.buskool.com", "http://www.buskool.com",
-        "http://www.alidelkhosh.ir", "https://www.alidelkhosh.ir",
+    prefixes: [
+        "buskool://",
+        "https://www.buskool.com",
+        "http://www.buskool.com",
+        "http://www.alidelkhosh.ir",
+        "https://www.alidelkhosh.ir",
+        "http://alidelkhosh.ir",
+        "http://buskool.com",
+        "https://alidelkhosh.ir",
+        "https://buskool.com"
     ],
     config,
     getInitialURL: async _ => {
@@ -93,17 +116,43 @@ const linking = {
 
     },
     getStateFromPath: (path, options) => {
+
         if (path.includes('seller'))
             path = path.replace("/seller/", "")
 
-        if (path.includes('buyer'))
-            path = path.replace("/buyer/", "")
+        if (path.includes('buyers')) {
+            if (!global.meInfo.loggedInUserId)
+                path = path.replace('/buyers', "/sign-up/buyers")
+
+            else if (global.meInfo.is_seller == 1) {
+                path = path.replace("/buyers", `/buyers/1`)
+            }
+            else {
+                const routeParams = JSON.stringify({ tabIndex: 1 });
+                path = path.replace('/buyers', `/change-role/Messages/MessagesIndex/${routeParams}`)
+            }
+        }
+
+        if (path.includes('pricing')) {
+            if (!global.meInfo.loggedInUserId)
+                path = path.replace('/pricing', "/sign-up/pricing");
+            else if (global.meInfo.is_seller == 0) {
+                path = path.replace('/pricing', `/change-role/MyBuskool/PromoteRegistration`)
+            }
+        }
+
+        if (path.includes('msg')) {
+            if (!global.meInfo.loggedInUserId)
+                path = path.replace('/msg', "/sign-up/msg")
+            else
+                path = path.replace("/msg", `/buyers/0`)
+        }
 
         if (path.includes('profile'))
             path = path.replace("/profile/", "")
-
         return getStateFromPath(path, options);
     },
+
     subscribe: (listener) => {
         const onReceiveURL = ({ url }) => {
             handleIncomingEvent(url)
@@ -134,7 +183,7 @@ let counter = 0;
 
 const handleIncomingEvent = (url) => {
     if (url) {
-        if (!url.includes('wwww')) {
+        if (!url.includes('www')) {
             url = url.split('://')[1]
         }
         else {
@@ -203,9 +252,6 @@ const handleIncomingEvent = (url) => {
     }
 };
 
-
-
-
 export const routeToScreensFromNotifications = (remoteMessage = {}) => {
 
     const { userProfile = {} } = store.getState().profileReducer;
@@ -247,11 +293,11 @@ export const routeToScreensFromNotifications = (remoteMessage = {}) => {
             }
             case 'registerBuyAd': {
                 if (!is_seller) {
-                    return navigationRef.current.navigate('RegisterRequest');
+                    return navigationRef.current.navigate('RegisterRequestStack', { screen: 'RegisterRequest' });
                 }
                 else {
                     return navigationRef.current.navigate('MyBuskool',
-                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequest', childRoute: 'RegisterRequest' } });
+                        { screen: 'ChangeRole', params: { parentRoute: 'RegisterRequestStack', childRoute: 'RegisterRequest' } });
                 }
             }
             case 'specialProducts': {
@@ -294,7 +340,7 @@ export const routeToScreensFromNotifications = (remoteMessage = {}) => {
                 }
             }
             default:
-                return navigationRef.current.navigate('Home');
+                break;
         }
     }
     else {

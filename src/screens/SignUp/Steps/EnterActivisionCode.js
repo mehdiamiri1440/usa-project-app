@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react'
-import { Text, StyleSheet, View, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
+import {
+    Text,
+    StyleSheet,
+    View,
+    SafeAreaView,
+    ActivityIndicator,
+    Keyboard
+} from 'react-native';
 import {
     CodeField,
     Cursor,
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions } from '@react-navigation/native';
-import { Button, Label } from 'native-base'
-import { connect } from 'react-redux'
+import { Button, Label } from 'native-base';
+import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import { deviceHeight, deviceWidth } from '../../../utils/index'
+
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { validator } from '../../../utils';
+
+import { deviceHeight, deviceWidth } from '../../../utils';
 import Timer from '../../../components/timer';
-import * as authActions from '../../../redux/auth/actions'
+import * as authActions from '../../../redux/auth/actions';
 import * as productsListActions from '../../../redux/productsList/actions';
-import * as profileActions from '../../../redux/profile/actions'
+import * as profileActions from '../../../redux/profile/actions';
 import ENUMS from '../../../enums';
 
 const EnterActivisionCode = (props) => {
@@ -33,9 +42,8 @@ const EnterActivisionCode = (props) => {
     });
     let [flag, setFlag] = useState(false)
 
-    const activisionCodeRef = React.createRef();
 
-    let { verificationCode, message, loading, error, mobileNumber, getAgainLoading } = props
+    let { verificationCode, loading, mobileNumber } = props
 
 
     useEffect(() => {
@@ -62,15 +70,82 @@ const EnterActivisionCode = (props) => {
                         };
                         props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
-                        props.fetchUserProfile().then(_ => {
+                        props.fetchUserProfile().then((userProfileResult = {}) => {
+                            const {
+                                payload = {}
+                            } = userProfileResult;
+
+                            const {
+                                user_info = {}
+                            } = payload;
+
+                            const {
+                                is_seller,
+                                id
+                            } = user_info;
+
                             const {
                                 contact,
-                                profile_photo
+                                profile_photo,
+                                isFromRequests,
+                                route = {},
                             } = props;
+
+                            const {
+                                params = {}
+                            } = route;
+
+                            const {
+                                parentRoute,
+                            } = params;
+
+                            if (parentRoute)
+                                switch (parentRoute) {
+                                    case 'buyers': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
+                                        return props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'Messages', childRoute: 'MessagesIndex',
+                                                    routeParams: { tabIndex: 1 }
+                                                }
+                                            });
+
+                                    };
+                                    case 'pricing': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                        return props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'MyBuskool', childRoute: 'PromoteRegistration'
+                                                }
+                                            });
+
+                                    };
+                                    case 'msg': {
+                                        if (is_seller)
+                                            return props.navigation.navigate('MyBuskool', { screen: 'MessagesIndex' });
+                                    };
+                                    default:
+                                        break;
+                                }
+
+                            global.meInfo.is_seller = is_seller;
+                            global.meInfo.loggedInUserId = id;
+
+                            const popAction = StackActions.pop(1);
                             if (contact && Object.keys(contact).length) {
-                                const popAction = StackActions.pop(1);
                                 props.navigation.dispatch(popAction);
                                 props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
+                            if (isFromRequests == true) {
+                                AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
+                                props.navigation.dispatch(popAction);
+                                if (is_seller)
+                                    return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
                     })
@@ -196,7 +271,8 @@ const EnterActivisionCode = (props) => {
             </View>
         </>
     )
-}
+};
+
 const styles = StyleSheet.create({
     root: { flex: 1, paddingHorizontal: deviceWidth * 0.06 },
     title: { textAlign: 'center', fontSize: 30 },

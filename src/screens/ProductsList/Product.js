@@ -73,12 +73,17 @@ class Product extends PureComponent {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.productItem
             && Object.entries(this.props.productItem).length) {
+
+            const {
+                main = {}
+            } = this.props.productItem;
+
             const {
                 max_sale_price = '',
                 min_sale_price = '',
                 stock = '',
                 min_sale_amount = ''
-            } = this.props.productItem.main;
+            } = main;
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
@@ -281,7 +286,6 @@ class Product extends PureComponent {
             })
         })
             .catch(error => {
-
                 const {
                     response = {}
                 } = error;
@@ -321,7 +325,13 @@ class Product extends PureComponent {
             width = deviceWidth * 0.97,
             shouldShowMyButtons = false
         } = this.props;
-        const { main, photos, profile_info, user_info } = this.props.productItem;
+
+        const {
+            main = {},
+            photos = [],
+            profile_info = {},
+            user_info = {}
+        } = this.props.productItem;
         const {
             address,
             category_id,
@@ -629,7 +639,7 @@ class Product extends PureComponent {
                                     alignItems: 'center'
                                 }}>
                                     <Button
-                                        style={[styles.loginButton, { width: '50%' }]}
+                                        style={[styles.loginButton, { width: '50%', elevation: 0 }]}
                                         onPress={() => this.onSubmit()}>
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
                                             {locales('titles.submitChanges')}
@@ -788,7 +798,7 @@ class Product extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170, elevation: 0 }]}
                                 onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' }, () => {
                                     return this.elevatorPay()
                                 })}
@@ -797,8 +807,8 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>{locales('titles.portalPay')}
                                 </Text>
                             </Button>
-                            {/* <Button
-                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170 }]}
+                            <Button
+                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170, elevation: 0 }]}
                                 onPress={_ => this.doWalletElevatorPay(productId)}
                             >
                                 <ActivityIndicator
@@ -811,7 +821,7 @@ class Product extends PureComponent {
                                 <Text style={styles.buttonText}>
                                     {locales('titles.walletPay')}
                                 </Text>
-                            </Button> */}
+                            </Button>
                         </View>
 
                         {walletElevatorPaymentError ? <Text

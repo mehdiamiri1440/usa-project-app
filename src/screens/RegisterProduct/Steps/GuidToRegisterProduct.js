@@ -97,7 +97,7 @@ class GuidToRegisterProduct extends React.Component {
 
         checkUserPermissionToRegisterProduct().then((result) => {
             if (result.payload.status && !result.payload.is_limited) {
-                changeStep(2);
+                this.props.resetAndChangeStep();
             }
             else {
                 this.setState({ showModal: true })

@@ -6,12 +6,12 @@ import actionTypes from './actionTypes';
 import API from '../../apis'
 
 
-export const fetchAllBuyAdRequests = () => {
+export const fetchAllBuyAdRequests = (isLoggedIn) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.buyAdRequest
-                .fetchAllBuyAdRequests()
+                .fetchAllBuyAdRequests(isLoggedIn)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

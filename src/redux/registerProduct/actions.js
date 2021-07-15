@@ -143,3 +143,5 @@ export const setSubCategoryIdFromRegisterProduct = (id, name) => dispatch => dis
 
 export const resetRegisterProduct = resetTab => dispatch => dispatch(action(actionTypes.RESET_REGISTER_PRODUCT_TAB, { resetTab }));
 
+export const resetRegisterRequest = resetTab => dispatch => dispatch(action(actionTypes.RESET_REGISTER_REQUEST_TAB, { resetTab }));
+

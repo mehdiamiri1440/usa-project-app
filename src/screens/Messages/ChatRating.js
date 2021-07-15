@@ -136,18 +136,19 @@ const ChatRating = props => {
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                     >
-                        <Text
-                            onPress={_ => refRBSheet?.current?.close()}
-                            style={{ width: '100%', textAlign: 'right', paddingHorizontal: 20 }}>
-                            <FontAwesome5 name='times' size={20} color='#777777' />
-                        </Text>
 
-
-                        <View style={{ padding: 20, width: '100%', marginTop: 20 }}>
-                            <Label
+                        <View style={{
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            width: '100%'
+                        }}
+                        >
+                            <Text
                                 style={{
-                                    color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 15, marginVertical: 5
+                                    color: '#777777',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 15,
+                                    marginVertical: 5,
                                 }}
                             >
                                 {ratingType == 'good' ?
@@ -159,7 +160,7 @@ const ChatRating = props => {
                                         fontSize: 17,
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         color: '#00C886',
-                                        fontWeight: '200'
+                                        fontWeight: '200',
                                     }}
                                 >
                                     {` ${firstName} ${lastName} `}
@@ -168,13 +169,14 @@ const ChatRating = props => {
                                     style={{
                                         fontSize: 15,
                                         fontWeight: '200',
-                                        color: '#777777', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        color: '#777777',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
                                     }}
                                 >
                                     {locales('titles.secondWriteHere')}
                                 </Text>
-                            </Label>
+                            </Text>
                             <InputGroup
                                 regular
                                 style={{

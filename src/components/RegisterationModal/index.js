@@ -44,7 +44,7 @@ import Header from '../header';
 import Timer from '../timer';
 import ENUMS from '../../enums';
 
-const RegistrationModal = props => {
+const RegisterationModal = props => {
 
     const {
         visible = false,
@@ -188,7 +188,20 @@ const RegistrationModal = props => {
                                 };
                                 fetchAllProductsList(item, true).then(_ => updateProductsList(true));
                                 analytics().setUserId(result.payload.id.toString());
-                                fetchUserProfile().then(_ => {
+                                fetchUserProfile().then((result = {}) => {
+                                    const {
+                                        payload = {}
+                                    } = result;
+                                    const {
+                                        user_info = {},
+                                        id
+                                    } = payload;
+                                    const {
+                                        is_seller
+                                    } = user_info;
+
+                                    global.meInfo.is_seller = is_seller;
+                                    global.meInfo.loggedInUserId = id;
                                     setIsAlreadySignedUp(true);
                                     resolve(true)
                                 });
@@ -565,7 +578,21 @@ const GetVerificationCode = props => {
                 if (res.payload.redirected) {
                     fastLogin(res.payload).then(result => {
                         analytics().setUserId(result.payload.id.toString());
-                        fetchUserProfile().then(_ => {
+                        fetchUserProfile().then((result = {}) => {
+                            const {
+                                payload = {}
+                            } = result;
+                            const {
+                                user_info = {}
+                            } = payload;
+                            const {
+                                is_seller,
+                                id
+                            } = user_info;
+
+                            global.meInfo.is_seller = is_seller;
+                            global.meInfo.loggedInUserId = id;
+
                             let item = {
                                 from_record_number: 0,
                                 sort_by: ENUMS.SORT_LIST.values.BM,
@@ -2413,4 +2440,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationModal);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterationModal);

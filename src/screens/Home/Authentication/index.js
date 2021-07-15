@@ -88,6 +88,7 @@ const Authentication = props => {
                 return <StepOne
                     idCard={idCard}
                     handleIdCardChange={handleIdCardChange}
+                    changeStep={changeStep}
                     {...props}
                 />;
 

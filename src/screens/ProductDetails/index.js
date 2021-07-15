@@ -30,7 +30,7 @@ import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
 import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
-import RegistrationModal from '../../components/RegistrationModal';
+import RegisterationModal from '../../components/RegisterationModal';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -102,8 +102,8 @@ class ProductDetails extends PureComponent {
             walletElevatorPaymentError: '',
             walletElevatorPaySuccessMessage: '',
 
-            shouldShowRegistrationModal: false,
-            registrationModalReturnType: null
+            shouldShowRegisterationModal: false,
+            RegisterationModalReturnType: null
         }
     }
 
@@ -131,27 +131,66 @@ class ProductDetails extends PureComponent {
             screen_class: "product_view",
         });
 
+        const {
+            route = {}
+        } = this.props;
 
-        if (this.props.route.params.productId) {
-            this.props.fetchAllProductInfo(this.props.route.params.productId);
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
+        if (productId) {
+            this.props.fetchAllProductInfo(productId);
         }
     }
 
 
     componentDidUpdate(prevProps, prevState) {
 
+        const {
+            route = {}
+        } = this.props;
 
-        if (prevProps.route.params.productId != this.props.route.params.productId) {
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
+        const {
+            route: prevPropsRoute = {}
+        } = prevProps;
+
+        const {
+            params: prevPropsParams = {}
+        } = prevPropsRoute;
+
+        const {
+            productId: prevPropsProductId
+        } = prevPropsParams;
+
+        if (prevPropsProductId != productId) {
             this.setState({ loaded: false });
-            this.props.fetchAllProductInfo(this.props.route.params.productId);
+            this.props.fetchAllProductInfo(productId);
         }
-        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo.length) {
+        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+
             const {
-                main,
+                productDetailsInfo = []
+            } = this.props;
+
+            const {
+                main = {},
                 photos,
-                profile_info,
-                user_info
-            } = this.props.productDetailsInfo[0].product;
+                profile_info = {},
+                user_info = {}
+            } = productDetailsInfo[0].product;
 
             const {
                 profile_photo
@@ -199,8 +238,8 @@ class ProductDetails extends PureComponent {
             } = review_info;
 
             const {
-                related_products
-            } = this.props.productDetailsInfo[1];
+                related_products = []
+            } = productDetailsInfo[1];
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
@@ -251,32 +290,6 @@ class ProductDetails extends PureComponent {
             });
         }
     }
-
-
-    callApi = code => {
-        this.props.fetchAllRelatedProducts(code)
-        this.props.fetchProductDetails(code).then(_ => {
-            if (this.props.productDetailsInfo.length) {
-                const {
-                    max_sale_price,
-                    min_sale_price,
-                    stock,
-                    min_sale_amount
-                } = this.props.productDetailsInfo[0].product.main;
-
-                this.setState({
-                    minimumOrder: min_sale_amount.toString(),
-                    maximumPrice: max_sale_price.toString(),
-                    minimumPrice: min_sale_price.toString(),
-                    amount: stock.toString(),
-                    loaded: true
-                });
-            }
-
-        })
-
-    }
-
 
     showFullSizeImage = index => {
         this.setState({ showFullSizeImageModal: true, selectedImage: index })
@@ -439,12 +452,30 @@ class ProductDetails extends PureComponent {
 
 
     elevatorPay = () => {
-        if (this.props.productDetailsInfo.length)
-            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`).then(supported => {
-                if (supported) {
-                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productDetailsInfo[0].product.main.id}`);
-                }
-            })
+
+        const {
+            productDetailsInfo = []
+        } = this.props;
+
+        const {
+            product = {}
+        } = productDetailsInfo[0];
+
+        const {
+            main = {}
+        } = product;
+
+        const {
+            id
+        } = main;
+
+        if (productDetailsInfo)
+            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${id}`)
+                .then(supported => {
+                    if (supported) {
+                        Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${id}`);
+                    }
+                })
     };
 
     openCallPad = phoneNumber => {
@@ -463,7 +494,7 @@ class ProductDetails extends PureComponent {
             .catch(_ => { })
     };
 
-    fetchContactInfo = (id, userId, isRegistrationModalSeen) => {
+    fetchContactInfo = (id, userId, isRegisterationModalSeen) => {
 
         const {
             loggedInUserId,
@@ -484,8 +515,8 @@ class ProductDetails extends PureComponent {
             item: "PRODUCT"
         }
         if (!loggedInUserId) {
-            if (isRegistrationModalSeen != true)
-                return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 1 });
+            if (isRegisterationModalSeen != true)
+                return this.setState({ shouldShowRegisterationModal: true, RegisterationModalReturnType: 1 });
             return;
         }
 
@@ -576,7 +607,7 @@ class ProductDetails extends PureComponent {
         } = this.props;
 
         if (!loggedInUserId)
-            return this.setState({ shouldShowRegistrationModal: true, registrationModalReturnType: 0 });
+            return this.setState({ shouldShowRegisterationModal: true, RegisterationModalReturnType: 0 });
 
         const selectedContact = {
             first_name,
@@ -596,9 +627,9 @@ class ProductDetails extends PureComponent {
         })
     };
 
-    onRequestToCloseRegistrationModal = (shouldOpenChat = false) => {
+    onRequestToCloseRegisterationModal = (shouldOpenChat = false) => {
 
-        this.setState({ shouldShowRegistrationModal: false }, _ => {
+        this.setState({ shouldShowRegisterationModal: false }, _ => {
 
             const {
                 first_name,
@@ -607,7 +638,7 @@ class ProductDetails extends PureComponent {
                 user_name,
                 userId,
                 profile_photo,
-                registrationModalReturnType = 0,
+                RegisterationModalReturnType = 0,
                 productIdFromProductDetails,
             } = this.state;
 
@@ -619,7 +650,7 @@ class ProductDetails extends PureComponent {
                 is_verified
             }
 
-            if (registrationModalReturnType == 1)
+            if (RegisterationModalReturnType == 1)
                 this.fetchContactInfo(productIdFromProductDetails, userId, true);
             else {
                 if (shouldOpenChat == true)
@@ -670,7 +701,7 @@ class ProductDetails extends PureComponent {
             minimumPriceError,
             amountError,
 
-            related_products,
+            related_products = [],
             avg_score,
             total_count,
 
@@ -682,7 +713,7 @@ class ProductDetails extends PureComponent {
             user_name,
             userId,
 
-            photos,
+            photos = [],
 
             description,
 
@@ -710,7 +741,7 @@ class ProductDetails extends PureComponent {
             walletElevatorPaySuccessMessage,
             walletElevatorPaymentError,
 
-            shouldShowRegistrationModal,
+            shouldShowRegisterationModal,
 
             category_id,
             sub_category_id
@@ -729,10 +760,10 @@ class ProductDetails extends PureComponent {
         return (
             <>
 
-                {shouldShowRegistrationModal ?
-                    <RegistrationModal
-                        visible={shouldShowRegistrationModal}
-                        onRequestClose={this.onRequestToCloseRegistrationModal}
+                {shouldShowRegisterationModal ?
+                    <RegisterationModal
+                        visible={shouldShowRegisterationModal}
+                        onRequestClose={this.onRequestToCloseRegisterationModal}
                         subCategoryName={sub_category_name}
                         categoryId={category_id}
                         subCategoryId={sub_category_id}
@@ -1058,7 +1089,7 @@ class ProductDetails extends PureComponent {
                                 <Text style={styles.buttonText}>{locales('titles.portalPay')}
                                 </Text>
                             </Button>
-                            {/* <Button
+                            <Button
                                 style={[styles.modalButton,
                                 {
                                     backgroundColor: '#151C2E', width: '50%', maxWidth: 170
@@ -1075,7 +1106,7 @@ class ProductDetails extends PureComponent {
                                 <Text style={styles.buttonText}>
                                     {locales('titles.walletPay')}
                                 </Text>
-                            </Button> */}
+                            </Button>
                         </View>
 
                         {walletElevatorPaymentError ? <Text
@@ -1791,7 +1822,7 @@ class ProductDetails extends PureComponent {
                                     <View style={{
                                         justifyContent: 'center',
                                         alignItems: 'flex-end',
-                                        width: '50%',
+                                        width: '80%',
                                         marginHorizontal: 10
                                     }}
                                     >
@@ -1846,7 +1877,14 @@ class ProductDetails extends PureComponent {
                                         }
                                     </View>
 
-                                    <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        position: 'absolute',
+                                        right: 0
+                                    }}
+                                    >
                                         <Text style={{
                                             textAlign: 'center',
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -2550,7 +2588,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
         fetchAllRelatedProducts: id => dispatch(productListActions.fetchAllRelatedProducts(id)),
         editProduct: product => dispatch(productListActions.editProduct(product)),
         fetchAllProductInfo: id => dispatch(productListActions.fetchAllProductInfo(id)),

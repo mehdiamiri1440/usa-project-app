@@ -1,10 +1,9 @@
 import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
-import { View, Image, Text, ActivityIndicator, StyleSheet, Linking, Pressable } from 'react-native';
+import { View, Image, Text, ActivityIndicator, Linking, Pressable } from 'react-native';
 import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { formatter } from '../../utils';
@@ -14,16 +13,24 @@ import * as buyAdActions from '../../redux/buyAdRequest/actions';
 
 const BuyAdList = props => {
 
-    const { item, index, selectedButton, userProfile = {},
-        isUserAllowedToSendMessageLoading, openMobileNumberWarnModal = _ => { },
-        contactInfoLoading,
+    const {
+        item,
+        index,
+        selectedButton,
+        userProfile = {},
+        isUserAllowedToSendMessageLoading,
+        openMobileNumberWarnModal = _ => { },
         setPromotionModalVisiblity = _ => { },
-        buyerMobileNumberLoading
+        buyerMobileNumberLoading,
+        loggedInUserId
     } = props;
+
     const { user_info = {} } = userProfile;
-    const { active_pakage_type } = user_info;
+
+    const { active_pakage_type = 0 } = user_info;
 
     const [isContactInfoShown, setIsContactInfoShown] = useState(false);
+
     const [mobileNumber, setMobileNumber] = useState(false);
 
     const fetchContactInfo = ({ id, is_golden }) => {
@@ -72,7 +79,6 @@ const BuyAdList = props => {
         }
     };
 
-
     const openCallPad = phoneNumber => {
 
         if (!validator.isMobileNumber(phoneNumber))
@@ -88,7 +94,6 @@ const BuyAdList = props => {
         })
             .catch(_ => { })
     };
-
 
     return (
 
@@ -454,71 +459,72 @@ const BuyAdList = props => {
 
                     </Button>
                     : null}
-                {item.has_msg ? <Button
-                    small
-                    onPress={event => {
-                        event.stopPropagation()
-                        props.openChat(event, item)
-                    }}
-                    style={{
-                        width: item.has_phone ? '47%' : '70%',
-                        zIndex: 1000,
-                        elevation: 0,
-                        marginHorizontal: 15,
-                        position: 'relative',
-                        alignSelf: 'center',
-                    }}
-                >
-                    <LinearGradient
-                        start={{ x: 0, y: 0.51, z: 1 }}
-                        end={{ x: 0.8, y: 0.2, z: 1 }}
-                        colors={item.has_phone ? ['#fff', '#fff']
-                            : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
-                        }
+                {(item.has_msg || !!!loggedInUserId) ?
+                    <Button
+                        small
+                        onPress={event => {
+                            event.stopPropagation()
+                            props.openChat(event, item)
+                        }}
                         style={{
-                            width: '100%',
-                            borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
-                            paddingHorizontal: 10,
-                            flexDirection: 'row-reverse',
-                            borderWidth: 1,
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 8,
-                            padding: 8,
-                            elevation: 0
+                            width: item.has_phone ? '47%' : '70%',
+                            zIndex: 1000,
+                            elevation: 0,
+                            marginHorizontal: 15,
+                            position: 'relative',
+                            alignSelf: 'center',
                         }}
                     >
-
-                        <MaterialCommunityIcons
-                            name='message'
-                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                            size={20}
-                        />
-                        <Text style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 18,
-                            color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
-                            paddingHorizontal: 3
-                        }}>
-                            {locales('labels.messageToBuyer')}
-
-
-                        </Text>
-                        <ActivityIndicator size={20}
-                            color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                            animating={selectedButton == item.id &&
-                                !!isUserAllowedToSendMessageLoading}
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={item.has_phone ? ['#fff', '#fff']
+                                : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                            }
                             style={{
-                                position: 'relative',
-                                width: 10, height: 10, borderRadius: 5,
-                                marginLeft: -10,
-                                marginRight: 5
+                                width: '100%',
+                                borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
+                                paddingHorizontal: 10,
+                                flexDirection: 'row-reverse',
+                                borderWidth: 1,
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 8,
+                                padding: 8,
+                                elevation: 0
                             }}
-                        />
-                    </LinearGradient>
+                        >
 
-                </Button>
+                            <MaterialCommunityIcons
+                                name='message'
+                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                size={20}
+                            />
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
+                                color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
+                                paddingHorizontal: 3
+                            }}>
+                                {locales('labels.messageToBuyer')}
+
+
+                            </Text>
+                            <ActivityIndicator size={20}
+                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                animating={selectedButton == item.id &&
+                                    !!isUserAllowedToSendMessageLoading}
+                                style={{
+                                    position: 'relative',
+                                    width: 10, height: 10, borderRadius: 5,
+                                    marginLeft: -10,
+                                    marginRight: 5
+                                }}
+                            />
+                        </LinearGradient>
+
+                    </Button>
                     : null
                 }
             </View>
@@ -621,57 +627,35 @@ const BuyAdList = props => {
     )
 }
 
-const styles = StyleSheet.create({
-    loginButton: {
-        textAlign: 'center',
-        margin: 10,
-        borderRadius: 4,
-        backgroundColor: '#00C569',
-        color: 'white',
-        elevation: 0
-    },
-    margin5: {
-        margin: 5
-    },
-    textWhite: {
-        color: "#fff"
-    },
-    textCenterView: {
-        justifyContent: 'center',
-        flexDirection: "row-reverse",
-    },
-    textSize18: {
-        fontSize: 18
-    },
-    textBold: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 18,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        width: '100%',
-        textAlign: 'center'
-    },
-});
-
 const arePropsEqual = (prevProps, nextProps) => {
-    if (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
+    if (prevProps.loggedInUserId !== nextProps.loggedInUserId || (prevProps.buyAdRequestsList == nextProps.buyAdRequestsList ||
         prevProps.item == nextProps.item || !nextProps.buyAdRequestsList ||
         !prevProps.buyAdRequestsList || !prevProps.buyAdRequestsList.length ||
         !nextProps.buyAdRequestsList.length || nextProps.isUserAllowedToSendMessageLoading
-        || prevProps.isUserAllowedToSendMessageLoading)
+        || prevProps.isUserAllowedToSendMessageLoading))
         return false
     return true;
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({
+    profileReducer,
+    buyAdRequestReducer
+}) => {
+
+    const {
+        buyerMobileNumberLoading
+    } = buyAdRequestReducer;
+
+    const {
+        userProfile
+    } = profileReducer;
+
     return {
-        userProfile: state.profileReducer.userProfile,
-        buyerMobileNumberLoading: state.buyAdRequestReducer.buyerMobileNumberLoading
+        userProfile,
+        buyerMobileNumberLoading
     }
 };
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         fetchBuyerMobileNumber: contactInfoObject => dispatch(buyAdActions.fetchBuyerMobileNumber(contactInfoObject)),
     }

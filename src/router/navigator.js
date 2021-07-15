@@ -7,9 +7,10 @@ import {
     Pressable,
     BackHandler,
     AppState,
-    StyleSheet
+    StyleSheet,
+    Modal
 } from 'react-native';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Dialog, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
@@ -48,9 +49,7 @@ import linking from './linking';
 let currentRoute = '',
     promotionModalTimeout,
     modalTimeout,
-    guidModalTimeout,
-    isRatingModalsSeen = false,
-    isModalsSeen = false;
+    guidModalTimeout;
 
 const routes = props => {
 
@@ -223,7 +222,6 @@ const routes = props => {
                                 if (!result[foundIndex].isShown) {
                                     result[foundIndex].isShown = true;
                                     AsyncStorage.setItem('@ratingModalSeenUsers', JSON.stringify(result));
-                                    isRatingModalsSeen = true;
                                     return setShowRatingModal(true);
                                 }
                             }
@@ -284,8 +282,7 @@ const routes = props => {
     const checkForShowingPromotionModal = _ => {
 
         const routeName = navigationRef?.current?.getCurrentRoute()?.name;
-        const conditions = !!loggedInUserId && is_seller && active_pakage_type == 0 && routeName == 'Chat';
-
+        const conditions = !!loggedInUserId && is_seller && active_pakage_type == 0 && routeName != 'Chat';
         if (conditions) {
 
             AsyncStorage.getItem('@IsNewSignedUpUser').then(isNewUser => {
@@ -293,7 +290,6 @@ const routes = props => {
                 if (isNewUser == true) {
                     AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
                         promotionModalTimeout = setTimeout(() => {
-                            isModalsSeen = true;
                             setShowPromotionModal(true);
                         }, 3600000);
                     })
@@ -307,7 +303,6 @@ const routes = props => {
                             if (moment().diff(result, 'days') >= 1) {
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
                                 if (!updateModalFlag) {
-                                    isModalsSeen = true;
                                     setShowPromotionModal(true);
                                 }
                             }
@@ -318,7 +313,6 @@ const routes = props => {
                         }
                         else {
                             if (!updateModalFlag) {
-                                isModalsSeen = true;
                                 setShowPromotionModal(true);
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
                             }
@@ -333,13 +327,11 @@ const routes = props => {
     };
 
     const closePromotionModal = _ => {
-        isModalsSeen = false;
         setShowPromotionModal(false);
         AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
     };
 
     const closeRatingModal = _ => {
-        isRatingModalsSeen = false;
         setShowRatingModal(false);
     };
 
@@ -373,17 +365,11 @@ const routes = props => {
     const handleAppBackChanges = _ => {
 
         const canGoBack = navigationRef?.current?.canGoBack();
-        if (isModalsSeen)
-            closePromotionModal();
-        if (isRatingModalsSeen)
-            closeRatingModal();
+        if (canGoBack) {
+            navigationRef?.current?.goBack();
+        }
         else {
-            if (canGoBack) {
-                navigationRef?.current?.goBack();
-            }
-            else {
-                BackHandler.exitApp();
-            }
+            BackHandler.exitApp();
         }
         return true;
     };
@@ -409,17 +395,31 @@ const routes = props => {
                 return '#00c569';
             return 'white';
         }
+    };
+
+    const mapRouteNamesToComponents = item => {
+        switch (item.key) {
+
+            case 'Home':
+                return HomeStack;
+
+            case 'RequestsStack':
+                return RequestsStack;
+
+            default:
+                return StartUp;
+        }
     }
 
     return (
         <>
             {showRatingModal ?
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
+                <Modal
+                    onDismiss={closeRatingModal}
+                    onRequestClose={closeRatingModal}
+                    visible={showRatingModal}
+                    transparent={true}
+                >
                     <Dialog
                         onDismiss={closeRatingModal}
                         dismissable
@@ -530,17 +530,17 @@ const routes = props => {
                             </>
                         }
                     </Dialog>
-                </Portal >
+                </Modal >
                 :
                 null
             }
 
             {showPromotionModal ?
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-                    }}
+                <Modal
+                    onRequestClose={closePromotionModal}
+                    visible={showPromotionModal}
+                    transparent={true}
+                    onDismiss={closePromotionModal}
                 >
                     <Dialog
                         onDismiss={closePromotionModal}
@@ -659,18 +659,19 @@ const routes = props => {
                             </LinearGradient>
                         </View>
                     </Dialog>
-                </Portal>
+                </Modal>
                 :
                 null
             }
 
             {contactInfoGuidModal ?
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                <Modal
+                    onRequestClose={() => setShowContactInfoGuidModal(false)}
+                    visible={contactInfoGuidModal}
+                    transparent={true}
+                    onDismiss={() => setShowContactInfoGuidModal(false)}
 
-                    }}>
+                >
                     <Dialog
                         onDismiss={() => setShowContactInfoGuidModal(false)}
                         dismissable
@@ -741,18 +742,17 @@ const routes = props => {
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal >
+                </Modal >
                 :
                 null
             }
 
             {updateModalFlag ?
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
+                <Modal
+                    onRequestClose={_ => isForceUpdate ? null : setUpdateModalFlag(false)}
+                    visible={updateModalFlag}
+                    transparent={true}
+                >
                     <Dialog
                         visible={updateModalFlag}
                         style={styles.dialogWrapper}
@@ -835,7 +835,7 @@ const routes = props => {
                             </Button> : null}
                         </Dialog.Actions>
                     </Dialog>
-                </Portal >
+                </Modal >
                 :
                 null
             }
@@ -895,7 +895,7 @@ const routes = props => {
                                         </View>,
                                     }}
                                     name={item.name}
-                                    component={item.key == 'Home' ? HomeStack : StartUp}
+                                    component={mapRouteNamesToComponents(item)}
                                 />
                             ))
                             }
@@ -903,7 +903,7 @@ const routes = props => {
                     )
                     : (
                         <Tab.Navigator
-                            initialRouteName={is_seller ? 'RegisterProductStack' : 'RegisterRequest'}
+                            initialRouteName={initialRoute}
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
@@ -958,10 +958,8 @@ const routes = props => {
                                     }}
                                 />}
 
-
-
                             {is_seller ? <Tab.Screen
-                                key={'RegisterProduct'}
+                                key={'RegisterProductStack'}
                                 listeners={{
                                     tabPress: e => {
                                         if (currentRoute.includes('RegisterProductStack')) {
@@ -991,11 +989,11 @@ const routes = props => {
                             />
                                 :
                                 <Tab.Screen
-                                    key={'RegisterRequest'}
+                                    key={'RegisterRequestStack'}
                                     listeners={{
                                         tabPress: e => {
-                                            if (!!global.resetRegisterRequest)
-                                                global.resetRegisterRequest(true)
+                                            if (navigationRef?.current?.getCurrentRoute()?.name == 'RegisterRequest')
+                                                props.resetRegisterRequest(true)
                                             currentRoute = e.target;
                                         },
                                     }}
@@ -1010,7 +1008,7 @@ const routes = props => {
                                             <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
                                         </View>,
                                     }}
-                                    name={'RegisterRequest'}
+                                    name={'RegisterRequestStack'}
                                     component={RegisterRequestStack}
                                 />}
 
@@ -1234,6 +1232,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch) => {
     return {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
         doForceRefresh: forceRefresh => dispatch(messageActions.doForceRefresh(forceRefresh)),
     }
 };

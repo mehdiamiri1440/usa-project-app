@@ -53,7 +53,7 @@ export const fetchProfileStatistics = user_name => {
                 data: {
                     user_name
                 },
-                withAuth: true,
+                withAuth: false,
             })
             .then(result => {
                 resolve(result)
@@ -76,7 +76,7 @@ export const fetchProfileByUserName = user_name => {
                 data: {
                     user_name
                 },
-                withAuth: true,
+                withAuth: false,
             })
             .then(result => {
                 resolve(result)
@@ -99,7 +99,7 @@ export const fetchProductsListByUserName = user_name => {
                 data: {
                     user_name
                 },
-                withAuth: true,
+                withAuth: false,
             })
             .then(result => {
                 resolve(result)

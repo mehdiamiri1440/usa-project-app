@@ -155,13 +155,25 @@ class Home extends React.Component {
 
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
+            const {
+                userProfile = {}
+            } = this.props;
+            const {
+                user_info = {}
+            } = userProfile;
+            const {
+                id
+            } = user_info;
 
+            global.meInfo.is_seller = roleAfterChangePanel;
+            global.meInfo.loggedInUserId = id;
             let item = {
                 from_record_number: 0,
                 sort_by: ENUMS.SORT_LIST.values.BM,
                 to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(_ => {
+                global.refreshProductList = true;
                 this.props.updateProductsList(true);
 
                 this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {

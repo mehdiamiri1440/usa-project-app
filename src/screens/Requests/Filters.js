@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, Pressable, Modal, ActivityIndicator } from 'react-native'
+import {
+    Text,
+    View,
+    FlatList,
+    Pressable,
+    Modal,
+    ActivityIndicator
+} from 'react-native'
+import ContentLoader, { Rect } from "react-content-loader/native"
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import * as registerProductActions from '../../redux/registerProduct/actions';
-import { deviceWidth } from '../../utils/deviceDimenssions';
+import { deviceWidth, dataGenerator, deviceHeight } from '../../utils';
 import Header from '../../components/header';
-
-
 class Filters extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +23,8 @@ class Filters extends Component {
             subCategoriesList: [],
             categoriesList: [],
             loaded: false,
-            selectedCategoryName: ''
+            modals: [],
+            subCategoriesModalFlag: false
         }
     }
 
@@ -31,44 +38,226 @@ class Filters extends Component {
         }
     }
 
-    sortProducts = (id = '', name = '') => {
-        if (!!id && !!name && this.state.categoriesList.length) {
+    sortProducts = ({ id, category_name, subcategories: subCategoriesList = {}, ...rest }) => {
+        subCategoriesList = Object.values(subCategoriesList);
 
-            let subCategory = this.state.categoriesList.some(item => item.id == id) ?
-                this.state.categoriesList.find(item => item.id == id).subcategories : {};
+        let modals = [...this.state.modals];
+        modals.push({
+            id: dataGenerator.generateKey(`modal_${id}_`),
+            category_name,
+            subCategoriesList,
+            ...rest
+        })
+        this.setState({ subCategoriesModalFlag: true, subCategoriesList, modals }, _ => {
+            if (!this.state.subCategoriesList.length)
+                this.handleSubCategoryItemClick({ id, category_name, subcategories: [], ...rest })
+        })
+    };
 
-            if (subCategory == null || subCategory == undefined || !subCategory || typeof subCategory == 'undefined') {
-                subCategory = {}
-            }
+    omitItemFromModals = category_name => {
+        let modals = [...this.state.modals];
+        const foundIndex = this.state.modals.findIndex(item => item.category_name == category_name);
+        modals.splice(foundIndex, 1);
+        this.setState({ modals });
+    };
 
-            subCategory = Object.values(!!subCategory ? subCategory : {});
+    renderSubCategoriesListEmptyComponent = _ => {
+        const {
+            subCategoriesLoading,
+            categoriesLoading
+        } = this.props;
 
+        if (!subCategoriesLoading && !categoriesLoading)
+            return (
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.7,
+                    }}
+                >
+                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                    <Text
+                        style={{
+                            color: '#7E7E7E',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 17,
+                            padding: 15,
+                            textAlign: 'center'
+                        }}
+                    >
+                        {locales('labels.emptyList')}</Text>
+                </View>
+            );
+
+        return (
+            <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 10 }}>
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                    <View
+                        key={index}
+                        style={{
+                            padding: 20,
+                            flex: 1,
+                            width: '100%',
+                            height: deviceHeight * 0.1,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            borderBottomWidth: 0.7,
+                            borderBottomColor: '#BEBEBE',
+
+                        }}>
+                        <ContentLoader
+                            speed={2}
+                            width={'100%'}
+                            height={'100%'}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+
+                        >
+                            <Rect x="75%" y="20%" width="120" height="10" />
+                        </ContentLoader>
+                        <FontAwesome5 name='angle-left' size={26} color='#777' />
+                    </View>
+                )
+                )}
+            </View>
+        )
+    };
+
+    handleSubCategoryItemClick = item => {
+        const {
+            subCategoriesList = [],
+        } = this.state;
+
+        analytics().logEvent('apply_sort', {
+            sort_type: item.name
+        });
+
+        if (!subCategoriesList.length) {
             this.setState({
-                subCategoriesModal: true,
-                selectedCategoryName: name,
-                subCategoriesList: subCategory
+                modals: [],
+                subCategoriesModalFlag: false
             }, () => {
-                if (this.state.subCategoriesList.length <= 0) {
-                    this.props.fetchAllCategories()
-                    this.setState({ subCategoriesModal: false })
-                    this.props.closeFilters()
-                }
-            })
+                this.props.closeFilters();
+                this.props.selectedFilter(item.id, item.category_name);
+            });
         }
         else {
-            this.setState({ subCategoriesModal: false }, () => {
-                this.props.closeFilters()
-            })
-            this.props.fetchAllCategories()
+            this.sortProducts(item)
         }
+    };
+
+    renderSubCategoriesListItem = ({ item }) => {
+        return (
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                activeOpacity={1}
+                onPress={_ => this.handleSubCategoryItemClick(item)}
+                style={{
+                    borderBottomWidth: 0.7,
+                    justifyContent: 'space-between',
+                    padding: 20,
+                    borderBottomColor: '#BEBEBE',
+                    flexDirection: 'row',
+                    width: deviceWidth
+                }}>
+                <FontAwesome5
+                    name='angle-left'
+                    size={26}
+                    color='#777'
+                />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </Pressable>
+        )
+    };
+
+    renderModalItem = ({ item }) => {
+        const
+            {
+                category_name,
+                subCategoriesList
+            } = item;
+
+        const {
+            modals = []
+        } = this.state;
+
+        return (
+            <Modal
+                animationType="slide"
+                visible={modals.findIndex(item => item.category_name == category_name) > -1}
+                onRequestClose={_ => this.omitItemFromModals(category_name)}
+            >
+                <Header
+                    title={category_name}
+                    onBackButtonPressed={_ => this.omitItemFromModals(category_name)}
+                    {...this.props}
+                />
+
+                <FlatList
+                    ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                    data={subCategoriesList}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={this.renderSubCategoriesListItem}
+                />
+            </Modal >
+
+        )
+    };
+
+    renderCategoriesListItem = ({ item }) => {
+        return (
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                activeOpacity={1}
+                onPress={() => this.sortProducts(item)}
+                style={{
+                    borderBottomWidth: 0.7,
+                    justifyContent: 'space-between',
+                    padding: 20,
+                    borderBottomColor: '#BEBEBE',
+                    flexDirection: 'row',
+                    width: deviceWidth
+                }}
+            >
+                <FontAwesome5
+                    name='angle-left'
+                    size={26}
+                    color='#777'
+                />
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: '#777',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    }}
+                >
+                    {item.category_name}
+                </Text>
+            </Pressable>
+        )
     };
 
     render() {
 
         const {
-            subCategoriesModal,
-            subCategoriesList,
-            selectedCategoryName
+            modals
         } = this.state;
 
         const {
@@ -79,151 +268,73 @@ class Filters extends Component {
 
         return (
             <>
-                <Modal
-                    animationType="slide"
-                    visible={subCategoriesModal}
-                    onRequestClose={() => this.setState({ subCategoriesModal: false })}>
-                    <Header
-                        title={selectedCategoryName}
-                        onBackButtonPressed={_ => this.setState({ subCategoriesModal: false })}
-                        {...this.props}
-                    />
+                {!!showFilters ?
+                    <Modal
+                        animationType="slide"
+                        visible={!!showFilters}
+                        onRequestClose={() => this.props.closeFilters()}>
 
+                        <Header
+                            title={locales('titles.allOfTheCategories')}
+                            onBackButtonPressed={_ => this.props.closeFilters()}
+                            {...this.props}
+                        />
+
+                        <FlatList
+                            data={categoriesList}
+                            ListEmptyComponent={this.renderSubCategoriesListEmptyComponent}
+                            style={{ marginVertical: 8 }}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={this.renderCategoriesListItem}
+                        />
+
+                    </Modal>
+                    : null}
+
+                {modals.length ?
                     <FlatList
-                        ListEmptyComponent={() => (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text
-                                style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                {locales('labels.emptyList')}
-                            </Text>
-                        </View>)}
-                        refreshing={this.props.categoriesLoading}
-                        data={subCategoriesList}
-                        style={{ marginVertical: 8 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                android_ripple={{
-                                    color: '#ededed'
-                                }}
-                                onPress={() => {
-                                    this.setState({ subCategoriesModal: false }, () => {
-                                        this.props.closeFilters()
-                                        this.props.selectedFilter(item.id, item.category_name)
-                                    })
-                                }}
-                                style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                                }}
-                            >
-                                <FontAwesome5 name='angle-left' size={30} color='#777' />
-
-                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                    {item.category_name}
-                                </Text>
-
-                            </Pressable>
-                        )}
+                        data={modals}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={this.renderModalItem}
                     />
-                </Modal>
-
-
-
-
-
-
-                <Modal
-                    animationType="slide"
-                    visible={showFilters}
-                    onRequestClose={() => this.props.closeFilters()}>
-
-                    <Header
-                        title={locales('titles.categories')}
-                        onBackButtonPressed={_ => this.props.closeFilters()}
-                        {...this.props}
-                    />
-
-                    {this.props.categoriesLoading ? <View style={{
-                        width: deviceWidth,
-                        padding: 20,
-                        justifyContent: "center", alignItems: 'center'
-                    }}>
-                        <ShadowView
-                            style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
-                                zIndex: 999,
-                                width: 50, height: 50,
-                                borderRadius: 50,
-                                backgroundColor: 'white',
-                                padding: 0,
-                            }}
-                        >
-                            <ActivityIndicator size="small" color="#00C569"
-                                style={{
-                                    top: 14
-                                }}
-                            />
-                        </ShadowView>
-                    </View>
-                        :
-                        null
-                    }
-                    <FlatList
-                        data={categoriesList}
-                        refreshing={this.props.categoriesLoading}
-                        ListEmptyComponent={() => !this.props.categoriesLoading && (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text
-                                style={{ color: '#BEBEBE', fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                {locales('labels.emptyList')}
-                            </Text>
-                        </View>)}
-                        style={{ marginVertical: 8 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                android_ripple={{
-                                    color: '#ededed'
-                                }}
-                                onPress={() => this.sortProducts(item.id, item.category_name)}
-                                style={{
-                                    borderBottomWidth: 0.7, justifyContent: 'space-between', padding: 20,
-                                    borderBottomColor: '#BEBEBE', flexDirection: 'row', width: deviceWidth
-                                }}
-                            >
-                                <FontAwesome5 name='angle-left' size={30} color='#777' />
-                                <Text style={{ fontSize: 18, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                    {item.category_name}
-                                </Text>
-                            </Pressable>
-                        )}
-                    />
-
-
-
-                </Modal>
+                    :
+                    null}
             </>
         )
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({
+    registerProductReducer
+}) => {
+
+    const {
+        categories,
+        categoriesList,
+        categoriesFailed,
+        categoriesError,
+        categoriesMessage,
+        categoriesLoading,
+
+        subCategoriesLoading,
+    } = registerProductReducer;
+
     return {
-        categoriesLoading: state.registerProductReducer.categoriesLoading,
-        categoriesMessage: state.registerProductReducer.categoriesMessage,
-        categoriesError: state.registerProductReducer.categoriesError,
-        categoriesFailed: state.registerProductReducer.categoriesFailed,
-        categoriesList: state.registerProductReducer.categoriesList,
-        categories: state.registerProductReducer.categories,
+        categories,
+        categoriesList,
+        categoriesFailed,
+        categoriesError,
+        categoriesMessage,
+        categoriesLoading,
+
+        subCategoriesLoading,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true, true)),
+        fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true, true))
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Filters)
+export default connect(mapStateToProps, mapDispatchToProps)(Filters);

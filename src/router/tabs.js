@@ -377,7 +377,7 @@ export const RegisterRequestStack = _ => (
             gestureEnabled: true,
 
         }}
-        initialRouteName={'RegisterRequest'}
+        initialRouteName='RegisterRequest'
     >
 
         <Stack.Screen
@@ -407,7 +407,14 @@ export const RegisterRequestStack = _ => (
             name={`UpgradeApp`}
             component={UpgradeApp}
         />
-
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`ProductDetails`}
+            component={ProductDetails}
+        />
         <Stack.Screen
             options={({ navigation, route }) => ({
                 headerShown: false,
@@ -518,6 +525,15 @@ export const RequestsStack = _ => (
             key='Chat'
             name='Chat'
             component={Chat}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='StartUp'
+            name='StartUp'
+            component={StartUp}
         />
         <Stack.Screen
             options={({ navigation, route }) => ({

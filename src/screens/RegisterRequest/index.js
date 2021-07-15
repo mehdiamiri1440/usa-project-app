@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, Pressable, ScrollView, StyleSheet, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { Body, Card, CardItem, Label, InputGroup, Input, Button } from 'native-base';
+import { Label, InputGroup, Input, Button } from 'native-base';
 import Svg, { Path, G, Circle } from "react-native-svg";
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -12,8 +12,8 @@ import * as registerProductActions from '../../redux/registerProduct/actions';
 import * as productActions from '../../redux/registerProduct/actions';
 
 import { deviceWidth, deviceHeight, validator, formatter } from '../../utils';
-import Loading from '../Loading';
 
+let screenFocused;
 const CategoriesIcons = [
     {
         name: 'صیفی',
@@ -378,9 +378,6 @@ const CategoriesIcons = [
         </Svg>
     },
 ];
-
-
-
 class RegisterRequest extends Component {
     constructor(props) {
         super(props)
@@ -395,13 +392,16 @@ class RegisterRequest extends Component {
             categoryError: '',
             subCategoryError: '',
             productType: '',
+            submitButtonClick: false,
             isFocused: false,
             loaded: false,
             categoriesList: [],
             subCategoriesList: [],
             amountClicked: false,
             productTypeClicked: false,
-            selectedSvgName: ''
+            selectedSvgName: '',
+            filteringLists: [],
+            parentList: []
         }
     }
 
@@ -413,26 +413,24 @@ class RegisterRequest extends Component {
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
+
+            screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
+
             analytics().logEvent('register_buyAd')
-            global.resetRegisterProduct = data => {
-                if (data) {
-                    this.props.navigation.navigate('RegisterRequest')
-                }
-            }
-            if (this.props.resetTab) {
-                this.props.resetRegisterProduct(false);
-                this.props.navigation.navigate('RegisterRequest')
-            }
             this.props.fetchAllCategories().then(_ => {
-                const { category, subCategory, productType, categoriesList } = this.props;
+                const { category, subCategory, productType, categoriesList, parentList } = this.props;
 
                 if (this.productTypeRef && this.productTypeRef.current)
                     this.productTypeRef.current.value = productType;
 
                 this.setState({
-                    category, subCategory, productType,
+                    category,
+                    subCategory,
+                    productType,
                     subCategoriesTogether: categoriesList.map(item => item.subcategories),
                     categoriesList,
+                    filteringLists: categoriesList,
+                    parentList: parentList && parentList.length ? parentList : [categoriesList],
                     loaded: true,
                     subCategoriesList: category && categoriesList && categoriesList.length ?
                         Object.values(categoriesList.find(item => item.id == category).subcategories)
@@ -445,30 +443,51 @@ class RegisterRequest extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.props.resetrRegisterRequestTab) {
+            const {
+                parentList,
+                categoriesList
+            } = this.props;
 
-    componentWillUnmount() {
-        this.isComponentMounted = false;
-        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+            this.setState({
+                amountError: '',
+                amount: '',
+                amountText: '',
+                category: '',
+                subCategory: '',
+                productTypeError: '',
+                categoryError: '',
+                subCategoryError: '',
+                productType: '',
+                submitButtonClick: false,
+                isFocused: false,
+                loaded: false,
+                amountClicked: false,
+                productTypeClicked: false,
+                selectedSvgName: '',
+                filteringLists: [],
+                filteringLists: categoriesList,
+                parentList: parentList && parentList.length ? parentList : [categoriesList],
+            })
+            this.props.resetRegisterRequest(false);
+            this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })
+        }
     }
 
+    componentWillUnmount() {
+        this.isComponentMounted = false
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
+        return screenFocused;
+    }
+
+    handleScreenFocused = _ => {
+        if (!this.state.filteringLists || !this.state.filteringLists.length)
+            this.setState({ filteringLists: this.props.categoriesList });
+    };
+
     handleHardWareBackButtonPressed = _ => {
-
-        const {
-            category,
-            subCategory,
-        } = this.state;
-
-        if (subCategory && category) {
-            this.setState({ subCategory: '' })
-            return true;
-        }
-
-        if (category) {
-            this.setState({ category: '' })
-            return true;
-        }
-
-        return false;
+        return this.handleGoToPrevStep();
     };
 
     emptyState = () => {
@@ -488,30 +507,7 @@ class RegisterRequest extends Component {
             loaded: false,
             selectedSvgName: ''
         })
-    }
-
-
-    // setCategory = (value) => {
-    //     this.setState({ disableSubCategory: true })
-    //     let { categoriesList = [] } = this.props;
-    //     if (categoriesList.length && value) {
-    //         this.setState({ category: value, categoryError: '', subCategoryError: '', subCategory: '' })
-    //         this.props.fetchAllSubCategories(categoriesList.some(item => item.id == value) ? categoriesList.find(item => item.id == value).id : undefined).then(_ => {
-    //             this.setState({ disableSubCategory: false })
-    //         })
-    //     }
-    // };
-
-
-    // setSubCategory = (value) => {
-    //     if (!!value)
-    //         this.setState({
-    //             subCategoryError: '', subCategory: value
-    //         }, () => {
-    //         })
-    // };
-
-
+    };
 
     onAmountSubmit = field => {
         this.setState(() => ({
@@ -551,13 +547,11 @@ class RegisterRequest extends Component {
                 amountClicked: false
             }));
         }
-    }
-
-
+    };
 
     onProductTypeSubmit = (field) => {
         this.setState(() => ({
-            productTypeClicked: !!field,
+            submitButtonClick: false,
             productType: field,
             productTypeError: (!field || validator.isPersianNameWithDigits(field)) ?
                 '' : locales('titles.productTypeInvalid')
@@ -566,8 +560,8 @@ class RegisterRequest extends Component {
 
     onSubmit = () => {
 
-        let { productType, category, subCategory, amount } = this.state;
-        let productTypeError = '', categoryError = '', subCategoryError = '', amountError = '';
+        let { productType, subCategory, amount } = this.state;
+        let productTypeError = '', subCategoryError = '', amountError = '';
 
         if (!amount) {
             amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.amountNeeded') })
@@ -579,22 +573,11 @@ class RegisterRequest extends Component {
             amountError = '';
         }
 
-
-        // if (!productType) {
-        //     productTypeError = locales('titles.productTypeEmpty');
-        // }
         if (productType && !validator.isPersianNameWithDigits(productType)) {
             productTypeError = locales('titles.productTypeInvalid');
         }
         else {
             productTypeError = '';
-        }
-
-        if (!category) {
-            categoryError = locales('titles.categoryError');
-        }
-        else {
-            categoryError = '';
         }
 
         if (!subCategory) {
@@ -603,8 +586,16 @@ class RegisterRequest extends Component {
         else {
             subCategoryError = '';
         }
-        this.setState({ productTypeError, subCategoryError, categoryError, productTypeError, amountError, amountClicked: true })
-        if (!categoryError && !subCategoryError && !amountError && !productTypeError) {
+        this.setState({
+            submitButtonClick: true,
+            productTypeError,
+            subCategoryError,
+            productTypeError,
+            amountError,
+            amountClicked: true
+        });
+
+        if (!subCategoryError && !amountError && !productTypeError) {
             let requestObj = {
                 name: productType,
                 requirement_amount: amount,
@@ -615,66 +606,6 @@ class RegisterRequest extends Component {
                 this.props.navigation.navigate('RegisterRequestSuccessfully');
             })
         }
-    }
-
-    setSelectedSubCategory = (id, isSub, index) => {
-        const { subCategoriesTogether, subCategoriesList, categoriesList } = this.state;
-        if (!isSub) {
-            let selectedSubs = [];
-            subCategoriesTogether.forEach(item => {
-                selectedSubs.push(Object.values(item).filter(sub => sub.parent_id == id))
-            })
-            selectedSubs = selectedSubs.filter(item => item && item.length).flatMap(item => item)
-            this.setState({
-                subCategoriesList: selectedSubs, category: id,
-                selectedSvgName: categoriesList.find(item => item.id == id).category_name
-            });
-        }
-        else {
-            this.setState({
-                subCategory: id,
-                subCategoryName: subCategoriesList && subCategoriesList.length ? subCategoriesList.find(item => item.id == id).category_name : ''
-            })
-        }
-    };
-
-
-    renderItem = ({ item, index }) => {
-        return (
-            <Pressable
-                android_ripple={{
-                    color: '#ededed'
-                }}
-                style={{
-                    width: deviceWidth,
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#E0E0E0',
-                    justifyContent: 'space-between',
-                    padding: 20,
-                    flexDirection: 'row-reverse'
-                }}
-                onPress={_ => this.setSelectedSubCategory(item.id, !item.subcategories, index)}
-            >
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                    }}
-                >
-                    <Text
-                        style={{
-                            color: '#38485F',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            marginHorizontal: 15,
-                            fontSize: 18
-                        }}
-                    >
-                        {item.category_name}
-                    </Text>
-                </View>
-                <FontAwesome5 name='angle-left' size={25} color='gray' />
-            </Pressable>
-
-        )
     };
 
     subCategoriesListFooterComponent = _ => {
@@ -683,7 +614,7 @@ class RegisterRequest extends Component {
                 style={{ marginVertical: 20, alignSelf: 'flex-end' }}
             >
                 <Button
-                    onPress={() => this.setState({ category: '' })}
+                    onPress={_ => this.handleGoToPrevStep(true)}
                     style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
                     rounded
                 >
@@ -694,27 +625,39 @@ class RegisterRequest extends Component {
         )
     };
 
+    handleFilterItemClicked = ({
+        id,
+        category_name,
+        subcategories: subCategoriesList = {},
+        parent_id,
+        ...rest
+    }) => {
 
-    renderListEmptyComponent = _ => {
+        subCategoriesList = Object.values(subCategoriesList);
+        this.setState({
+            parentList: [...this.state.parentList, this.state.filteringLists],
+            filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
+            subCategory: subCategoriesList.length ? '' : id,
+            subCategoryName: subCategoriesList.length ? '' : category_name,
+        });
 
-        const {
-            categoriesLoading
-        } = this.props;
+    };
 
-        return (
-            !categoriesLoading ? <View style={{
-                alignSelf: 'center', justifyContent: 'center',
-                alignContent: 'center', alignItems: 'center',
-                width: deviceWidth, height: deviceHeight * 0.7
-            }}>
-                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                <Text style={{
-                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    fontSize: 17, padding: 15, textAlign: 'center'
-                }}>
-                    {locales('labels.emptyList')}</Text>
-            </View> : null
-        )
+    handleGoToPrevStep = fromBackButton => {
+        let tempList = this.state.parentList;
+        this.setState({
+            filteringLists: tempList[tempList.length - 1],
+            parentList: tempList.slice(0, tempList.length - 1),
+            subCategory: null
+        });
+        tempList.pop();
+        if (!tempList || !tempList.length) {
+            if (fromBackButton == true)
+                this.props.navigation.goBack()
+            else
+                return false;
+        }
+        return true;
     };
 
     handleProductTypeExample = _ => {
@@ -746,22 +689,90 @@ class RegisterRequest extends Component {
         }
     };
 
+    renderItem = ({ item }) => {
+        return (
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                style={{
+                    width: deviceWidth,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E0E0E0',
+                    justifyContent: 'space-between',
+                    padding: 20,
+                    flexDirection: 'row-reverse'
+                }}
+                onPress={_ => this.handleFilterItemClicked(item)}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+
+                    <Text
+                        style={{
+                            color: '#38485F',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            marginHorizontal: 15,
+                            fontSize: 18
+                        }}
+                    >
+                        {item.category_name}
+                    </Text>
+                </View>
+                <FontAwesome5 name='angle-left' size={25} color='gray' />
+            </Pressable>
+
+        )
+    };
+
+    renderListEmptyComponent = _ => {
+
+        const {
+            categoriesLoading
+        } = this.props;
+
+        return (
+            !categoriesLoading ? <View style={{
+                alignSelf: 'center', justifyContent: 'center',
+                alignContent: 'center', alignItems: 'center',
+                width: deviceWidth, height: deviceHeight * 0.7
+            }}>
+                <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                <Text style={{
+                    color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 17, padding: 15, textAlign: 'center'
+                }}>
+                    {locales('labels.emptyList')}</Text>
+            </View> : null
+        )
+    };
 
     render() {
 
-
-        let { subCategoriesLoading, categoriesLoading,
-            registerBuyAdRequestMessage, registerBuyAdRequestError } = this.props;
+        let {
+            categoriesLoading,
+            registerBuyAdRequestMessage,
+            registerBuyAdRequestError
+        } = this.props;
 
         let {
-            productType, category, subCategory,
-            subCategoryError, categoryError, productTypeError,
+            productType,
+            category,
+            subCategory,
+            productTypeError,
+            categoriesList,
+            selectedSvgName,
+            filteringLists,
+            productTypeClicked,
+            amount,
+            amountClicked,
             amountError,
-            subCategoriesList, categoriesList,
-            amount, productTypeClicked, amountClicked, selectedSvgName,
+            parentList,
             amountText
         } = this.state;
-
         const categoryIcon = categoriesList && categoriesList.length && category ?
             categoriesList.some(item => item.category_name == selectedSvgName) ?
                 CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
@@ -874,33 +885,21 @@ class RegisterRequest extends Component {
                                 </View>
                             </> : null}
 
-                            {!category ?
-                                <FlatList
-                                    data={categoriesList}
-                                    ListEmptyComponent={this.renderListEmptyComponent}
-                                    keyExtractor={(item) => item.id.toString()}
-                                    renderItem={this.renderItem}
-                                />
-                                : null}
-
-                            {
-                                !subCategory && category ?
+                            {categoriesLoading ?
+                                <ActivityIndicator size={50} color="#00C569" style={{ marginTop: deviceHeight * 0.13 }}
+                                    animating={categoriesLoading} /> :
+                                !subCategory
+                                    ?
                                     <FlatList
-                                        data={subCategoriesList}
+                                        data={filteringLists}
                                         ListEmptyComponent={this.renderListEmptyComponent}
                                         keyExtractor={(item) => item.id.toString()}
-                                        renderItem={this.renderItem}
                                         ListFooterComponent={this.subCategoriesListFooterComponent}
+                                        refreshing={categoriesLoading}
+                                        renderItem={this.renderItem}
                                     />
-                                    : null
-                            }
 
-                            {categoriesLoading ? <ActivityIndicator size={50} color="#00C569" style={{ marginTop: deviceHeight * 0.13 }}
-                                animating={categoriesLoading} /> : null}
-
-                            {
-                                category && subCategory ?
-                                    <View style={{
+                                    : <View style={{
                                         paddingHorizontal: 15
                                     }}
                                     >
@@ -920,8 +919,8 @@ class RegisterRequest extends Component {
                                                 }}
                                             >
                                                 {
-                                                    subCategoriesList && subCategoriesList.length ?
-                                                        subCategoriesList.find(item => item.id == subCategory).category_name
+                                                    parentList && parentList.length ?
+                                                        parentList[parentList.length - 1].find(item => item.id == subCategory)?.category_name
                                                         : null
                                                 }
                                             </Text>
@@ -1096,7 +1095,7 @@ class RegisterRequest extends Component {
                                         }}>
                                             <Button
                                                 onPress={() => this.onSubmit()}
-                                                style={!this.state.category || !this.state.subCategory || !amount ||
+                                                style={!this.state.subCategory || !amount ||
                                                     (productType ? !validator.isPersianNameWithDigits(productType) : null)
                                                     ? styles.disableLoginButton : styles.loginButton}
                                                 rounded
@@ -1109,7 +1108,7 @@ class RegisterRequest extends Component {
                                                 <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
                                             </Button>
                                             <Button
-                                                onPress={() => this.setState({ productType: '', subCategory: '' })}
+                                                onPress={this.handleGoToPrevStep}
                                                 style={[styles.backButtonContainer, { width: '37%' }]}
                                                 rounded
                                             >
@@ -1119,197 +1118,7 @@ class RegisterRequest extends Component {
                                         </View>
 
                                     </View>
-                                    :
-                                    null
                             }
-                            {/* <View style={{
-
-                                    width: '100%'
-                                }}>
-
-                                    <View style={styles.labelInputPadding}>
-                                        <View style={{
-                                            flexDirection: 'row-reverse',
-
-                                        }}>
-                                            <Label style={{ position: 'relative', color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                                {locales('labels.category')}
-                                            </Label>
-                                            {!!categoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                                            /> : null}
-                                        </View>
-                                        <Item regular
-                                            style={{
-                                                width: '100%',
-                                                borderRadius: 5,
-                                                alignSelf: 'center',
-                                                borderColor: category ? '#00C569' : categoryError ? '#D50000' : '#a8a8a8'
-                                            }}
-                                        >
-                                            <RNPickerSelect
-                                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                useNativeAndroidPickerStyle={false}
-                                                onValueChange={this.setCategory}
-                                                disabled={categoriesLoading}
-                                                style={styles}
-                                                value={category}
-                                                placeholder={{
-                                                    label: locales('labels.selectCategory'),
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                }}
-                                                items={[...categoriesList.map(item => ({
-                                                    label: item.category_name, value: item.id
-                                                }))]}
-                                            />
-                                        </Item>
-                                        {!!categoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{categoryError}</Label>}
-                                    </View>
-
-                                    <View style={styles.labelInputPadding}>
-                                        <View style={{
-                                            flexDirection: 'row-reverse'
-                                        }}>
-                                            <Label style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 15, padding: 5 }}>
-                                                {locales('titles.productName')}
-                                            </Label>
-                                            {!!subCategoriesLoading ? <ActivityIndicator size="small" color="#00C569"
-                                                style={{
-                                                    width: 30, height: 30, borderRadius: 15
-                                                }}
-                                            /> : null}
-                                        </View>
-                                        <Item regular
-                                            style={{
-                                                width: '100%',
-                                                borderRadius: 5,
-                                                alignSelf: 'center',
-                                                borderColor: subCategory ? '#00C569' : subCategoryError ? '#D50000' : '#a8a8a8'
-                                            }}
-                                        >
-                                            <RNPickerSelect
-                                                Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                                useNativeAndroidPickerStyle={false}
-                                                onValueChange={this.setSubCategory}
-                                                style={styles}
-                                                disabled={this.state.disableSubCategory || categoriesLoading || subCategoriesLoading}
-                                                value={subCategory}
-                                                placeholder={{
-                                                    label: locales('titles.selectProductName'),
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                }}
-                                                items={[...subCategoriesList.map(item => ({
-                                                    label: item.category_name, value: item.id
-                                                }))]}
-                                            />
-                                        </Item>
-                                        {!!subCategoryError && <Label style={{ fontSize: 14, color: '#D81A1A', width: deviceWidth * 0.9 }}>{subCategoryError}</Label>}
-                                    </View>
-
-
-                                    <View style={styles.labelInputPadding}>
-                                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.enterYourProductType')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: (productTypeError ? '#D50000' :
-                                                (productType.length && validator.isPersianNameWithDigits(productType)) ? '#00C569' : '#a8a8a8'),
-                                            borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                style={{
-                                                    width: '100%',
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    textDecorationLine: 'none',
-                                                    fontSize: 14,
-                                                    height: 45,
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                onChangeText={this.onProductTypeSubmit}
-                                                value={productType}
-                                                placeholderTextColor="#BEBEBE"
-                                                placeholder={locales('titles.productTypeWithExample')}
-                                                ref={this.productTypeRef}
-                                            />
-                                        </Item>
-                                        {!!productTypeError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{productTypeError}</Label>}
-
-                                    </View>
-
-
-
-                                    <View style={styles.labelInputPadding}>
-                                        <Label style={{ color: '#333', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.requestQuantity')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                style={{
-                                                    width: '100%',
-                                                    fontFamily: 'IRANSansWeb(FaNum)',
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none',
-                                                    fontSize: 14,
-                                                    height: 45,
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                onChangeText={this.onAmountSubmit}
-                                                value={amount}
-                                                placeholderTextColor="#BEBEBE"
-
-                                                placeholder={locales('titles.maximumPriceWithExample')}
-                                                ref={this.amountRef}
-
-                                            />
-                                        </Item>
-                                        {!!amountError && <Label style={{ fontSize: 14, color: '#D81A1A' }}>{amountError}</Label>}
-                                        {!amountError ? <Label style={{ fontSize: 14, color: '#777', fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>{amount.length ? amountText : null}</Label> : null}
-                                    </View>
-
-
-
-                                    <View style={[styles.labelInputPadding], {
-                                        alignSelf: 'center', justifyContent: 'center',
-                                        alignItems: 'center',
-
-                                    }}>
-
-                                        <Button
-                                            onPress={() => this.onSubmit()}
-                                            style={[!this.state.category || !this.state.subCategory || !amount
-
-                                                ? styles.disableLoginButton : styles.loginButton, {
-                                                marginBottom: 25,
-                                                marginTop: 25
-                                            }]}
-
-                                        >
-                                            <ActivityIndicator size="small"
-                                                animating={!!this.props.registerBuyAdRequestLoading} color="white"
-                                                style={{
-                                                    position: 'relative',
-                                                    marginRight: -30,
-                                                    width: 25, height: 25, borderRadius: 15
-                                                }}
-                                            />
-                                            <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
-
-
-                                        </Button>
-
-                                    </View>
-                                </View>
-                            */}
                         </View>
                     </ScrollView>
                 </View>
@@ -1429,13 +1238,14 @@ const mapStateToProps = (state) => {
         registerBuyAdRequest: state.registerProductReducer.registerBuyAdRequest,
         registerBuyAdRequestMessage: state.registerProductReducer.registerBuyAdRequestMessage,
         registerBuyAdRequestError: state.registerProductReducer.registerBuyAdRequestError,
+        resetrRegisterRequestTab: state.registerProductReducer.resetrRegisterRequestTab,
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         registerBuyAdRequest: requestObj => dispatch(registerProductActions.registerBuyAdRequest(requestObj)),
         fetchAllCategories: () => dispatch(registerProductActions.fetchAllCategories(true)),
-        resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab))
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab))
 
     }
 };

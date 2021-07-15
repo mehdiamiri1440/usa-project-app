@@ -26,6 +26,7 @@ if (
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
+let clearBlur;
 
 let isScrollToBottomButtonClicked = false, onEndReachedCalledDuringMomentum = true, firstLoad = true;
 
@@ -48,14 +49,24 @@ const Channel = props => {
 
 
     useEffect(_ => {
+
+        clearBlur = props.navigation.addListener('blur', handleScreenBlured);
+
         if (firstLoad) {
             props.fetchChannelData(page).then(result => {
                 setContents([...result.payload.contents])
             });
             firstLoad = false;
         }
-        return _ => props.fetchAllContactsList()
+        return _ => {
+            props.fetchAllContactsList()
+            return clearBlur;
+        }
     }, []);
+
+    const handleScreenBlured = _ => {
+        firstLoad = true;
+    }
 
     const {
         channelDataLoading,

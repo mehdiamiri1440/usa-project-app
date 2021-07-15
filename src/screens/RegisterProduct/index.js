@@ -67,7 +67,8 @@ class RegisterProduct extends React.Component {
 
             selectedButton: null,
             showDialog: false,
-            loaded: false
+            loaded: false,
+            parentList: []
         }
     }
 
@@ -129,12 +130,12 @@ class RegisterProduct extends React.Component {
     };
 
     changeStep = stepNumber => {
-        this.setState({ stepNumber })
+        this.setState({ stepNumber });
     };
 
-    setProductType = (productType, category, subCategory, subCategoryName) => {
+    setProductType = (productType, category, subCategory, subCategoryName, parentList) => {
         AsyncStorage.setItem('@registerProductParams', JSON.stringify({ subCategoryId: subCategory, subCategoryName }))
-        this.setState({ productType, category, subCategory, subCategoryId: subCategory, subCategoryName, stepNumber: 3 });
+        this.setState({ productType, category, subCategory, subCategoryId: subCategory, subCategoryName, stepNumber: 3, parentList });
     };
 
     setStockAndPrice = (minimumOrder, maximumPrice, minimumPrice, amount) => {
@@ -284,10 +285,28 @@ class RegisterProduct extends React.Component {
 
     setSelectedButton = id => this.setState({ selectedButton: id })
 
+    resetAndChangeStep = _ => {
+        this.setState({
+            productType: '',
+            category: '',
+            detailsArray: '',
+            minimumOrder: '',
+            maximumPrice: '',
+            minimumPrice: '',
+            amount: '',
+            subCategory: '',
+            city: '',
+            description: '',
+            images: '',
+            province: '',
+        }, _ => this.changeStep(2));
+    }
+
     renderSteps = () => {
         let { stepNumber, category, subCategory, productType, images, description,
             minimumOrder, maximumPrice, minimumPrice, amount, city,
             province, subCategoryId, subCategoryName, selectedButton,
+            parentList
         } = this.state
 
         const {
@@ -298,7 +317,7 @@ class RegisterProduct extends React.Component {
         switch (stepNumber) {
             case 1: {
                 return <GuidToRegisterProduct
-                    setProductType={this.setProductType}
+                    resetAndChangeStep={this.resetAndChangeStep}
                     changeStep={this.changeStep}
                     {...this.props}
                 />
@@ -306,10 +325,12 @@ class RegisterProduct extends React.Component {
             case 2: {
                 return <SelectCategory
                     setProductType={this.setProductType}
-                    changeStep={this.changeStep} {...this.props}
+                    changeStep={this.changeStep}
                     category={category}
                     subCategory={subCategory}
                     productType={productType}
+                    parentList={parentList}
+                    {...this.props}
                 />
             }
             case 3: {

@@ -67,10 +67,12 @@ class ProductsList extends PureComponent {
 
     productsListRef = createRef();
     categoryFiltersRef = createRef();
+
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
             this.blurListener = this.props.navigation.addListener('blur', this.handleScreenBlured);
+            this.screenFocused = this.props.navigation.addListener('focus', this.handleScreenFocused);
 
             Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
                 if (componentType === 'Component') {
@@ -145,8 +147,34 @@ class ProductsList extends PureComponent {
 
     componentWillUnmount() {
         this.isComponentMounted = false;
+        this.screenFocused;
         return this.blurListener;
     }
+
+    handleScreenFocused = _ => {
+        if (global.refreshProductList) {
+
+            global.refreshProductList = false;
+
+            this.setState({
+                selectedButton: null,
+                city: '',
+                province: '',
+                sortModalFlag: false,
+                locationsFlag: false,
+                searchText: undefined,
+                from_record_number: 0,
+                subCategoriesModalFlag: false,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                searchLoader: false,
+                searchFlag: false,
+                subCategoriesList: [],
+                cities: [],
+                totalCategoriesModalFlag: false,
+                isFilterApplied: false,
+            });
+        }
+    };
 
     handleScreenBlured = _ => {
         const {
@@ -874,7 +902,7 @@ class ProductsList extends PureComponent {
                             :
                             <View >
                                 <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterRequest')}
+                                    onPress={() => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                                     style={styles.loginButton}
                                 >
                                     <Text
@@ -1043,7 +1071,7 @@ class ProductsList extends PureComponent {
                         justifyContent: 'space-around', alignItems: 'center',
                         alignSelf: 'flex-end', padding: 10
                     }}
-                    onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                    onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequestStack')}
                 >
                     <Text style={{
                         fontSize: 18,

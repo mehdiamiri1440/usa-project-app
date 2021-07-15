@@ -137,7 +137,9 @@ class SignUp extends React.Component {
 
         const {
             contact,
-            profile_photo
+            profile_photo,
+            isFromRequests,
+            parentRoute
         } = params;
 
         let registerObject = {
@@ -167,12 +169,70 @@ class SignUp extends React.Component {
                             to_record_number: 16,
                         };
                         this.props.fetchAllProductsList(item, true).then(_ => this.props.updateProductsList(true));
+
                         analytics().setUserId(result.payload.id.toString());
-                        this.props.fetchUserProfile().then(_ => {
+                        this.props.fetchUserProfile().then((userProfileResult = {}) => {
+
+                            const {
+                                payload = {}
+                            } = userProfileResult;
+
+                            const {
+                                user_info = {}
+                            } = payload;
+
+                            const {
+                                is_seller,
+                                id
+                            } = user_info;
+
+                            if (parentRoute)
+                                switch (parentRoute) {
+                                    case 'buyers': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 1 } });
+                                        return this.props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'Messages', childRoute: 'MessagesIndex',
+                                                    routeParams: { tabIndex: 1 }
+                                                }
+                                            });
+
+                                    };
+                                    case 'pricing': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                        return this.props.navigation.navigate('MyBuskool',
+                                            {
+                                                screen: 'ChangeRole', params: {
+                                                    parentRoute: 'MyBuskool', childRoute: 'PromoteRegistration'
+                                                }
+                                            });
+
+                                    };
+                                    case 'msg': {
+                                        if (is_seller)
+                                            return this.props.navigation.navigate('MyBuskool', { screen: 'MessagesIndex' });
+                                    };
+                                    default:
+                                        break;
+                                }
+
+                            global.meInfo.is_seller = is_seller;
+                            global.meInfo.loggedInUserId = id;
+
+                            const popAction = StackActions.pop(1);
                             if (contact && Object.keys(contact).length) {
-                                const popAction = StackActions.pop(1);
                                 this.props.navigation.dispatch(popAction);
                                 this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
+                            }
+                            if (isFromRequests == true) {
+                                AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
+                                this.props.navigation.dispatch(popAction);
+                                if (is_seller)
+                                    return this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                return this.props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
                         this.setState({ signUpError: '' })
@@ -216,9 +276,9 @@ class SignUp extends React.Component {
 
         const {
             contact,
-            profile_photo
+            profile_photo,
+            isFromRequests
         } = params;
-
         switch (stepNumber) {
 
             case 1: {
@@ -228,6 +288,7 @@ class SignUp extends React.Component {
                 return <EnterActivisionCode
                     profile_photo={profile_photo}
                     contact={contact}
+                    isFromRequests={isFromRequests}
                     setVerificationCode={this.setVerificationCode}
                     verificationCode={verificationCode}
                     changeStep={this.changeStep}
@@ -424,8 +485,7 @@ const mapDispatchToProps = (dispatch) => {
         submitRegister: (registerObject) => dispatch(authActions.submitRegister(registerObject)),
         login: (mobileNumber, password) => dispatch(authActions.login(mobileNumber, password)),
         updateProductsList: flag => dispatch(productsListActions.updateProductsList(flag)),
-        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn))
-
+        fetchAllProductsList: (item, isLoggedIn) => dispatch(productsListActions.fetchAllProductsList(item, false, isLoggedIn)),
     }
 };
 

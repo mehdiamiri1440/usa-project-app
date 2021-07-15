@@ -30,7 +30,7 @@ import ENUMS from '../../enums';
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
 
-let myTimeout;
+let myTimeout, screenFocusedFlag;
 
 class Requests extends PureComponent {
     constructor(props) {
@@ -48,6 +48,7 @@ class Requests extends PureComponent {
             showFilters: false,
             showGoldenModal: false,
             selectedFilterName: '',
+            selectedFilterId: null,
 
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
@@ -81,6 +82,8 @@ class Requests extends PureComponent {
             screen_class: "buyAds",
         });
 
+        screenFocusedFlag = this.props.navigation.addListener('focus', this.handleScreenFocused);
+
         this.is_mounted = true;
         if (this.is_mounted == true) {
             AsyncStorage.setItem('@registerProductParams', JSON.stringify({}))
@@ -88,14 +91,11 @@ class Requests extends PureComponent {
         }
     }
 
-    componentWillUnmount() {
-        this.is_mounted = false;
-        this.updateFlag.current.close()
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (
-            (this.props.route && this.props.route.params && this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
+            (this.props.route && this.props.route.params &&
+                this.props.route.params.needToRefreshKey &&
+                (!prevProps.route || !prevProps.route.params))
             ||
             (prevProps.route && prevProps.route.params && this.props.route && this.props.route.params &&
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
@@ -116,12 +116,46 @@ class Requests extends PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        this.is_mounted = false;
+        this.updateFlag.current.close();
+        return screenFocusedFlag;
+    }
+
+    initialCalls = () => {
+        return new Promise((resolve, reject) => {
+            const {
+                loggedInUserId
+            } = this.props;
+            this.props.fetchAllBuyAdRequests(!!loggedInUserId).then(() => {
+                this.checkForFiltering()
+            }).catch(error => reject(error));
+        })
+    };
+
+    handleScreenFocused = _ => {
+        AsyncStorage.getItem('@isBuyAdRequestsFocuesd').then(result => {
+            result = JSON.parse(result);
+            if (result == true) {
+                AsyncStorage.removeItem('@isBuyAdRequestsFocuesd');
+                this.setState({
+                    buyAdRequestsList: [],
+                    selectedFilterId: null,
+                    selectedFilterName: '',
+                    sort_by: ENUMS.SORT_LIST.values.BM,
+                    searchText: null
+                });
+                this.onRefresh();
+            }
+        })
+    };
+
     checkForFiltering = async () => {
         let isFilter = await this.checkForFilterParamsAvailability();
         if (isFilter) {
             this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
         }
-    }
+    };
 
     checkForFilterParamsAvailability = () => {
         return new Promise((resolve, reject) => {
@@ -132,18 +166,6 @@ class Requests extends PureComponent {
                 resolve(false)
             }
         })
-    }
-
-    initialCalls = () => {
-        return new Promise((resolve, reject) => {
-            this.props.fetchAllBuyAdRequests().then(() => {
-                this.checkForFiltering()
-            }).catch(error => reject(error));
-        })
-    };
-
-    checkForSendingMessage = (item) => {
-
     };
 
     hideDialog = () => this.setState({ showDialog: false });
@@ -153,12 +175,28 @@ class Requests extends PureComponent {
     setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
     openChat = (event, item) => {
-        let { userProfile = {} } = this.props;
+        let {
+            userProfile = {},
+            loggedInUserId
+        } = this.props;
+
         const { user_info = {} } = userProfile;
+
         const { active_pakage_type } = user_info;
+
 
         event.preventDefault();
         event.stopPropagation();
+
+        const selectedContact = {
+            contact_id: item.myuser_id,
+            first_name: item.first_name,
+            last_name: item.last_name,
+        };
+
+        if (!!!loggedInUserId)
+            return this.props.navigation.navigate('StartUp', { screen: 'SignUp', params: { isFromRequests: true } });
+
         if (!item.is_golden || (item.is_golden && active_pakage_type > 0)) {
             this.setState({ selectedButton: item.id })
             this.props.isUserAllowedToSendMessage(item.id).then(() => {
@@ -170,11 +208,7 @@ class Requests extends PureComponent {
                     }
                     this.setState({
                         selectedBuyAdId: item.id,
-                        selectedContact: {
-                            contact_id: item.myuser_id,
-                            first_name: item.first_name,
-                            last_name: item.last_name,
-                        }
+                        selectedContact
                     }, _ => this.props.navigation.navigate('RequestsStack', {
                         screen: "Chat",
                         params: {
@@ -202,6 +236,123 @@ class Requests extends PureComponent {
 
     openMobileNumberWarnModal = (shouldShow, msg, statusCode) => {
         this.setState({ showMobileNumberWarnModal: shouldShow, accessToContactInfoErrorMessage: msg, statusCode });
+    };
+
+    onRefresh = () => {
+        const {
+            loggedInUserId
+        } = this.props
+        this.props.fetchAllBuyAdRequests(!!loggedInUserId).then(result => {
+            this.setState({ buyAdRequestsList: result.payload.buyAds }, _ => {
+                const {
+                    selectedFilterId,
+                    selectedFilterName,
+                    sort_by,
+                    searchText
+                } = this.state;
+
+                if (searchText)
+                    this.handleSearch(searchText);
+
+                else if (selectedFilterName && selectedFilterId)
+                    this.selectedFilter(selectedFilterId, selectedFilterName);
+
+                this.handleSortItemClick(sort_by);
+            })
+        });
+    };
+
+    scrollToTop = _ => {
+        clearTimeout(myTimeout);
+        if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
+            this.props.requestsRef.current && this.props.requestsRef.current != null &&
+            this.props.buyAdRequestsList && this.props.buyAdRequestsList.length &&
+            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList &&
+            this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
+            myTimeout = setTimeout(() => {
+                this.props.requestsRef?.current?.scrollToIndex({ animated: true, index: 0 });
+            }, 300);
+        }
+    };
+
+    onScrollToIndexFailed = (error = {}) => {
+        const {
+            averageItemLength,
+            index
+        } = error;
+
+        console.log('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
+        const offset = averageItemLength * index;
+
+        this.props.requestsRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => this.props.requestsRef?.current?.scrollToIndex({ index, animated: true }), 300);
+    };
+
+    closeFilters = _ => {
+        this.setState({ showFilters: false }, _ => setTimeout(() => this.scrollToTop(), 300));
+    };
+
+    selectedFilter = (id, name) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
+        analytics().logEvent('buyAd_filter', {
+            category: name
+        })
+        this.setState({
+            selectedFilterName: name,
+            selectedFilterId: id,
+            searchText: ''
+        }, _ => {
+            this.setState({
+                buyAdRequestsList: buyAdRequestsList &&
+                    buyAdRequestsList.length ?
+                    buyAdRequestsList.filter(item => item.category_id == id) : [],
+            });
+        });
+    };
+
+    handleSearch = (text) => {
+        const {
+            buyAdRequestsList = []
+        } = this.props;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (text && text.length)
+            tempList = [...tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)))];
+        else
+            tempList = [...buyAdRequestsList];
+
+        this.setState({ selectedFilterName: '', searchText: text }, _ => {
+            this.setState({
+                buyAdRequestsList: [...tempList]
+            }, _ => this.scrollToTop());
+        });
+    };
+
+    handleSortItemClick = value => {
+        const {
+            buyAdRequestsList = [],
+            selectedFilterId
+        } = this.state;
+
+        let tempList = [...buyAdRequestsList];
+
+        if (!!value && value != 'BM') {
+            tempList.forEach(item => item.date = new Date(item.created_at));
+            tempList = tempList.sort((a, b) => b.date - a.date);
+        }
+
+        else {
+            tempList = [...this.props.buyAdRequestsList];
+        }
+
+        if (selectedFilterId)
+            tempList = tempList.filter(item => item.category_id == selectedFilterId);
+
+        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
     };
 
     renderItemSeparatorComponent = index => {
@@ -289,7 +440,7 @@ class Requests extends PureComponent {
                             justifyContent: 'space-around', alignItems: 'center',
                             alignSelf: 'flex-end', padding: 10
                         }}
-                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequest')}
+                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequestStack')}
                     >
                         <Text style={{
                             fontSize: 18,
@@ -320,13 +471,21 @@ class Requests extends PureComponent {
                     </View>
                 </LinearGradient>
             </ImageBackground>
+
         )
     };
 
     renderItem = ({ item, index, separators }) => {
 
-        const { selectedButton, buyAdRequestsList } = this.state;
-        const { isUserAllowedToSendMessageLoading, userProfile = {} } = this.props;
+        const {
+            selectedButton,
+            buyAdRequestsList
+        } = this.state;
+        const {
+            isUserAllowedToSendMessageLoading,
+            userProfile = {},
+            loggedInUserId
+        } = this.props;
         const {
             user_info = {}
         } = userProfile;
@@ -348,31 +507,11 @@ class Requests extends PureComponent {
                     openMobileNumberWarnModal={this.openMobileNumberWarnModal}
                     buyAdRequestsList={buyAdRequestsList}
                     separators={separators}
+                    loggedInUserId={loggedInUserId}
                 />
-                {is_seller && this.renderItemSeparatorComponent(index)}
+                {is_seller ? this.renderItemSeparatorComponent(index) : null}
             </>
         )
-    };
-
-    closeFilters = _ => {
-        this.setState({ showFilters: false }, () => this.scrollToTop());
-    };
-
-    selectedFilter = (id, name) => {
-        const {
-            buyAdRequestsList = []
-        } = this.props;
-
-        analytics().logEvent('buyAd_filter', {
-            category: name
-        })
-        this.setState({
-            buyAdRequestsList: buyAdRequestsList &&
-                buyAdRequestsList.length ?
-                buyAdRequestsList.filter(item => item.category_id == id) : [],
-            selectedFilterName: name,
-            searchText: ''
-        });
     };
 
     renderListEmptyComponent = _ => {
@@ -426,53 +565,6 @@ class Requests extends PureComponent {
                 </Text>
             </View>
         )
-    };
-
-    scrollToTop = _ => {
-        clearTimeout(myTimeout);
-        if (this.props.requestsRef && this.props.requestsRef != null && this.props.requestsRef != undefined &&
-            this.props.requestsRef.current && this.props.requestsRef.current != null &&
-            this.props.buyAdRequestsList && this.props.buyAdRequestsList.length &&
-            this.props.requestsRef.current != undefined && this.state.buyAdRequestsList &&
-            this.state.buyAdRequestsList.length > 0 && !this.props.buyAdRequestLoading) {
-            myTimeout = setTimeout(() => {
-                this.props.requestsRef?.current?.scrollToIndex({ animated: true, index: 0 });
-            }, 300);
-        }
-    };
-
-    handleSearch = (text) => {
-        const {
-            buyAdRequestsList = []
-        } = this.props;
-
-        let tempList = [...buyAdRequestsList];
-
-        if (text && text.length)
-            tempList = tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)));
-        else
-            tempList = [...buyAdRequestsList];
-
-
-        this.setState({ buyAdRequestsList: tempList, selectedFilterName: '', searchText: text }, _ => this.scrollToTop());
-    };
-
-    handleSortItemClick = value => {
-        const {
-            buyAdRequestsList = []
-        } = this.state;
-
-        let tempList = [...buyAdRequestsList];
-
-        if (!!value && value != 'BM') {
-            tempList.forEach(item => item.date = new Date(item.created_at));
-            tempList = tempList.sort((a, b) => b.date - a.date);
-        }
-
-        else {
-            tempList = [...this.props.buyAdRequestsList];
-        }
-        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList })
     };
 
     renderSortListItem = ({ item }) => {
@@ -974,7 +1066,7 @@ class Requests extends PureComponent {
                                     onPress={() => this.setState({
                                         buyAdRequestsList: this.props.buyAdRequestsList,
                                         selectedFilterName: ''
-                                    })}
+                                    }, _ => this.scrollToTop())}
                                     style={{
                                         borderRadius: 12,
                                         marginTop: 7,
@@ -1011,49 +1103,29 @@ class Requests extends PureComponent {
                     </View>
                 </View>
 
-
                 <View>
-                    {/* 
-                <Button
-                            style={{
-                                flex: 2,
-                                justifyContent: 'center',
-                                backgroundColor: '#e51c38',
-                                marginRight: 15,
-                                borderRadius: 4
-                            }}
-                            onPress={() => this.setState({ buyAdRequestsList: this.props.buyAdRequestsList })}>
-                            <Text style={{
-                                textAlign: 'center',
-                                color: '#fff',
-                            }}>
-                                {locales('labels.deleteFilter')}
-                            </Text>
-                        </Button> */}
                 </View>
                 <SafeAreaView
-                    // style={{ padding: 10, height: userInfo.active_pakage_type == 0 ? (deviceHeight * 0.783) : userInfo.active_pakage_type !== 3 ? (deviceHeight * 0.82) : (deviceHeight * 0.8) }}
                     style={{ height: '100%', paddingBottom: 60, backgroundColor: 'white' }}
                 >
-                    {showFilters ? <Filters
-                        selectedFilter={this.selectedFilter}
-                        closeFilters={this.closeFilters}
-                        showFilters={showFilters}
-                    /> : null}
+                    {showFilters ?
+                        <Filters
+                            selectedFilter={this.selectedFilter}
+                            closeFilters={this.closeFilters}
+                            showFilters={showFilters}
+                        />
+                        : null}
 
                     <FlatList
                         ref={this.props.requestsRef}
                         refreshing={false}
-                        onRefresh={() => {
-                            this.props.fetchAllBuyAdRequests().then(result => {
-                                this.setState({ buyAdRequestsList: result.payload.buyAds })
-                            });
-                        }}
+                        onRefresh={this.onRefresh}
                         keyboardDismissMode='on-drag'
                         keyboardShouldPersistTaps='handled'
                         ListEmptyComponent={this.renderListEmptyComponent}
                         data={buyAdRequestsList}
                         extraData={this.state}
+                        onScrollToIndexFailed={this.onScrollToIndexFailed}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={this.renderItem}
                         windowSize={10}
@@ -1093,9 +1165,14 @@ class Requests extends PureComponent {
                             }}>
                                 {locales('titles.categories')}
                             </Text>
-                            <FontAwesome5 name="filter" solid color="#fff" style={{
-                                marginHorizontal: 5
-                            }} />
+                            <FontAwesome5
+                                name="filter"
+                                solid
+                                color="#fff"
+                                style={{
+                                    marginHorizontal: 5
+                                }}
+                            />
 
                         </Button>
 
@@ -1312,22 +1389,46 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
-    return {
-        buyAdRequestLoading: state.buyAdRequestReducer.buyAdRequestLoading,
-        buyAdRequestsList: state.buyAdRequestReducer.buyAdRequestList,
-        buyAdRequests: state.buyAdRequestReducer.buyAdRequest,
-        userProfile: state.profileReducer.userProfile,
-        isUserAllowedToSendMessage: state.profileReducer.isUserAllowedToSendMessage,
-        isUserAllowedToSendMessagePermission: state.profileReducer.isUserAllowedToSendMessagePermission,
-        isUserAllowedToSendMessageLoading: state.profileReducer.isUserAllowedToSendMessageLoading,
+const mapStateToProps = ({
+    buyAdRequestReducer,
+    profileReducer,
+    authReducer
+}) => {
 
+    const {
+        buyAdRequestLoading,
+        buyAdRequestList,
+        buyAdRequest
+    } = buyAdRequestReducer;
+
+    const {
+        userProfile,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+        isUserAllowedToSendMessageLoading
+    } = profileReducer;
+
+    const {
+        loggedInUserId
+    } = authReducer;
+
+    return {
+        buyAdRequestLoading,
+        buyAdRequestsList: buyAdRequestList,
+        buyAdRequests: buyAdRequest,
+
+        userProfile,
+        isUserAllowedToSendMessage,
+        isUserAllowedToSendMessagePermission,
+        isUserAllowedToSendMessageLoading,
+
+        loggedInUserId,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllBuyAdRequests: () => dispatch(buyAdRequestActions.fetchAllBuyAdRequests()),
+        fetchAllBuyAdRequests: (isLoggedIn) => dispatch(buyAdRequestActions.fetchAllBuyAdRequests(isLoggedIn)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),

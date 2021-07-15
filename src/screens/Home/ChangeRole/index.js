@@ -28,6 +28,12 @@ class ChangeRole extends Component {
     changeRole = _ => {
         this.props.changeRole().then(_ => {
             this.props.fetchUserProfile().then(_ => {
+                const { userProfile = {}, changeRoleLoading } = this.props;
+                const { user_info = {} } = userProfile;
+                let { is_seller, id } = user_info;
+                global.meInfo.is_seller = is_seller;
+                global.meInfo.loggedInUserId = id;
+
                 if (this.props.route && this.props.route.params) {
                     const {
                         route
@@ -109,7 +115,7 @@ class ChangeRole extends Component {
                     </View>
                     <View style={styles.mainWrapperTextDialogModal}>
                         <Text style={styles.mainTextDialogModal}>
-                            {locales('labels.changeRole', { fieldName: is_seller ? locales('labels.seller') : locales('labels.buyer') })}
+                            {locales('labels.changeRole', { fieldName: is_seller ? locales('labels.buyer') : locales('labels.seller') })}
 
                         </Text>
 

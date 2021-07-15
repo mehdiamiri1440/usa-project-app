@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Button } from 'native-base';
+import {
+    Button,
+    Input,
+    Label,
+    InputGroup
+} from 'native-base';
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
     ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
-    LayoutAnimation, UIManager, Platform
+    LayoutAnimation, UIManager, Platform, Modal, Pressable
 } from 'react-native';
+import { Dialog, Paragraph } from 'react-native-paper';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -20,6 +27,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import Message from './Message';
 import * as messagesActions from '../../redux/messages/actions';
+import * as productListActions from '../../redux/productsList/actions';
 import * as CommentsAndRatingsActions from '../../redux/commentsAndRatings/actions';
 import { formatter, validator, deviceWidth, deviceHeight } from '../../utils';
 import ChatWithUnAuthorizedUserPopUp from './ChatWithUnAuthorizedUserPopUp';
@@ -52,7 +60,15 @@ class ChatScreen extends Component {
             showGuid: false,
             showViolationReportFlag: false,
             shouldShowRatingCard: false,
-            showScrollToBottomButton: false
+            showScrollToBottomButton: false,
+            shouldShowPromotionModal: false,
+            shouldShowEditPriceModal: false,
+            selectedMessageId: null,
+            productMinSalePrice: null,
+            productMinSalePriceError: null,
+            productMinSalePriceClicked: false,
+            shouldShowEditionSuccessfullText: false,
+            shouldShowDelsaAdvertisement: false
         };
     }
 
@@ -94,12 +110,31 @@ class ChatScreen extends Component {
 
     checkForShowingRatingCard = _ => {
 
+        let shouldShowDelsaAdvertisement = false,
+            chatWithProductToShowComment = true,
+            loggedInUserStatusToShowDelsaAd = true;
+
         const {
             route = {},
+            userProfile = {}
         } = this.props;
-        const { params = {} } = route;
 
-        const { contact = {} } = params;
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller,
+            active_pakage_type
+        } = user_info;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            contact = {}
+        } = params;
 
         const {
             contact_id
@@ -108,6 +143,9 @@ class ChatScreen extends Component {
         const {
             userChatHistory = []
         } = this.state;
+
+        if (!is_seller || active_pakage_type != 0)
+            loggedInUserStatusToShowDelsaAd = false;
 
         this.props.checkUserAutorityToPostComment(contact_id).then((result = {}) => {
 
@@ -120,7 +158,8 @@ class ChatScreen extends Component {
             } = payload;
 
             if (userChatHistory && userChatHistory.length && userChatHistory.length == 1 && !!userChatHistory[0].p_id)
-                return;
+                chatWithProductToShowComment = false;
+
 
             AsyncStorage.getItem('@ratedChats').then(result => {
 
@@ -133,16 +172,16 @@ class ChatScreen extends Component {
 
                 const closeButtonPassedTime = !foundTime ? true : moment().diff(foundTime, 'hours') >= 24;
 
-                const conidtions = (is_allowed) &&
-                    (closeButtonPassedTime) &&
-                    (userChatHistory && userChatHistory.length &&
-                        userChatHistory[0] && userChatHistory[0].created_at &&
-                        moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10
-                    );
+                const passedTimeFromLastMessage = userChatHistory && userChatHistory.length &&
+                    userChatHistory[0] && userChatHistory[0].created_at &&
+                    moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10;
 
-                this.setState({ shouldShowRatingCard: conidtions });
+                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage;
+
+                shouldShowDelsaAdvertisement = loggedInUserStatusToShowDelsaAd && !shouldShowRatingCard && passedTimeFromLastMessage;
+
+                this.setState({ shouldShowRatingCard, shouldShowDelsaAdvertisement });
             });
-
         });
     };
 
@@ -159,10 +198,10 @@ class ChatScreen extends Component {
         });
     };
 
-    handleGoBack = _ => {
+    handleGoBack = fromHeader => {
         this.props.doForceRefresh(true);
-        this.props.navigation.goBack();
-        return true;
+        if (fromHeader == true)
+            this.props.navigation.goBack();
     };
 
     handleGuid = _ => {
@@ -249,7 +288,8 @@ class ChatScreen extends Component {
 
         this.setState({
             userChatHistory,
-            shouldShowRatingCard: false
+            shouldShowRatingCard: false,
+            shouldShowDelsaAdvertisement: false
         }, () => {
             const {
                 from,
@@ -367,7 +407,8 @@ class ChatScreen extends Component {
                 userChatHistory: [...userChatHistory],
                 messageText: '',
                 isFirstLoad: false,
-                shouldShowRatingCard: false
+                shouldShowRatingCard: false,
+                shouldShowDelsaAdvertisement: false
             });
 
             this.props.sendMessage(msgObject, buyAdId, productId).then((result) => {
@@ -440,6 +481,70 @@ class ChatScreen extends Component {
             this.scrollViewRef?.current?.scrollToIndex({ animated: true, index: 0 });
     };
 
+    onProductMinSalePriceChanged = field => {
+
+        this.setState(() => ({
+            productMinSalePriceError: '',
+            productMinSalePrice: field,
+            productMinSalePriceClicked: true
+        }));
+        if (field) {
+            if (validator.isNumber(field))
+                this.setState(() => ({
+                    productMinSalePrice: field,
+                    productMinSalePriceError: '',
+                    productMinSalePriceClicked: true
+                }));
+            if (field <= 0) {
+                this.setState(() => ({
+                    productMinSalePriceError: locales('errors.canNotBeZero', { fieldName: locales('titles.minPriceNeeded') }),
+                    productMinSalePriceClicked: true
+                }));
+            }
+        }
+        else
+            this.setState(() => ({
+                productMinSalePrice: '',
+                productMinSalePriceClicked: false,
+                productMinSalePriceError: '',
+            }));
+    };
+
+    handlePromotionModalVisiblity = shouldShowPromotionModal => {
+        this.setState({
+            shouldShowPromotionModal,
+        });
+    };
+
+    setDelsaAdVisiblity = shouldShowDelsaAdvertisement => {
+        this.setState({ shouldShowDelsaAdvertisement })
+    };
+
+    handleEditPriceModalVisiblity = (productId, messageId) => {
+        this.setState({ selectedMessageId: messageId });
+        this.props.fetchProductDetails(productId)
+            .then(_ => {
+
+                const {
+                    productDetails = {}
+                } = this.props;
+
+                const {
+                    main = {}
+                } = productDetails;
+
+                const {
+                    min_sale_price
+                } = main;
+
+                this.setState({
+                    shouldShowEditPriceModal: true,
+                    selectedMessageId: null,
+                    productMinSalePrice: min_sale_price.toString()
+                });
+            });
+    };
+
     onEndReached = _ => {
 
         const {
@@ -485,20 +590,99 @@ class ChatScreen extends Component {
         }
     };
 
+    editProductMinSalePrice = _ => {
+        const {
+            productDetails = {}
+        } = this.props;
+
+        const {
+            main = {}
+        } = productDetails;
+
+        const {
+            id,
+            stock,
+            min_sale_amount,
+            max_sale_price
+        } = main;
+
+        const {
+            productMinSalePrice
+        } = this.state;
+        const editObj = {
+            product_id: id,
+            stock,
+            min_sale_amount,
+            max_sale_price,
+            min_sale_price: parseInt(productMinSalePrice)
+        };
+
+        let isProductMinSalePriceInValid = '';
+
+        if (!productMinSalePrice) {
+            isProductMinSalePriceInValid = locales('errors.pleaseEnterField', { fieldName: locales('titles.minPriceNeeded') })
+        }
+        else if (productMinSalePrice && productMinSalePrice <= 0) {
+            isProductMinSalePriceInValid = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minPriceNeeded') })
+        }
+        else {
+            isProductMinSalePriceInValid = '';
+        }
+
+        if (!!isProductMinSalePriceInValid)
+            this.setState({
+                productMinSalePriceError: isProductMinSalePriceInValid,
+                productMinSalePriceClicked: true
+            });
+        else {
+            this.props.editProduct(editObj).then(_ => {
+                this.setState({
+                    productMinSalePriceClicked: false,
+                    productMinSalePriceError: null,
+                    shouldShowEditionSuccessfullText: true
+                }, _ => setTimeout(() => {
+                    this.setState({
+                        shouldShowEditionSuccessfullText: false,
+                        shouldShowEditPriceModal: false,
+                    })
+                }, 3000));
+            });
+        }
+    };
+
     keyExtractor = (_, index) => index.toString();
 
     renderItem = ({ item, index, separators }) => {
         const {
             route = {},
+            userProfile = {},
+            productDetailsLoading
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
 
         const { params = {} } = route;
 
         const { contact = {} } = params;
 
+        const {
+            selectedMessageId
+        } = this.state;
+
         return <Message
             item={item}
+            active_pakage_type={active_pakage_type}
             loggedInUserId={this.props.loggedInUserId}
+            selectedMessageId={selectedMessageId}
+            handlePromotionModalVisiblity={this.handlePromotionModalVisiblity}
+            handleEditPriceModalVisiblity={this.handleEditPriceModalVisiblity}
+            productDetailsLoading={productDetailsLoading}
             contact={contact}
             index={index}
             separators={separators}
@@ -529,7 +713,8 @@ class ChatScreen extends Component {
         const {
             showUnAuthorizedUserPopUp,
             shouldShowRatingCard,
-            userChatHistory
+            userChatHistory,
+            shouldShowDelsaAdvertisement
         } = this.state;
 
         return (
@@ -543,16 +728,25 @@ class ChatScreen extends Component {
                     : null}
 
                 {
-                    (userChatHistory.length && shouldShowRatingCard)
+                    userChatHistory.length
                         ?
-                        <ChatRating
-                            firstName={firstName}
-                            lastName={lastName}
-                            userId={id}
-                            closeRatingCard={this.closeRatingCard}
-                            {...this.props}
-                        />
-
+                        (
+                            shouldShowRatingCard ?
+                                <ChatRating
+                                    firstName={firstName}
+                                    lastName={lastName}
+                                    userId={id}
+                                    closeRatingCard={this.closeRatingCard}
+                                    {...this.props}
+                                />
+                                : shouldShowDelsaAdvertisement
+                                    ? <DelsaAdvertisementComponent
+                                        handlePromotionModalVisiblity={this.handlePromotionModalVisiblity}
+                                        setDelsaAdVisiblity={this.setDelsaAdVisiblity}
+                                        {...this.props}
+                                    />
+                                    : null
+                        )
                         : null
                 }
             </View>
@@ -587,6 +781,7 @@ class ChatScreen extends Component {
         let {
             userChatHistoryLoading,
             route = {},
+            editProductLoading
         } = this.props;
 
         const {
@@ -616,10 +811,13 @@ class ChatScreen extends Component {
             showGuid,
             showViolationReportFlag,
             showScrollToBottomButton,
-            to,
-            from
+            shouldShowPromotionModal,
+            shouldShowEditPriceModal,
+            productMinSalePriceError,
+            productMinSalePrice,
+            productMinSalePriceClicked,
+            shouldShowEditionSuccessfullText
         } = this.state;
-
 
         const detectToShowCommentAndGuid = showGuid && !buyAdId;
 
@@ -629,6 +827,303 @@ class ChatScreen extends Component {
                     source={require('../../../assets/images/whatsapp-wallpaper.png')}
                     style={styles.image}
                 >
+
+                    {shouldShowPromotionModal ?
+                        <Modal
+                            onRequestClose={_ => this.handlePromotionModalVisiblity(false)}
+                            visible={shouldShowPromotionModal}
+                            transparent={true}
+                        >
+                            <Dialog
+                                onDismiss={_ => this.handlePromotionModalVisiblity(false)}
+                                visible={shouldShowPromotionModal}
+                                style={{ ...styles.dialogWrapper }}
+                            >
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                    }}
+                                >
+                                    <FontAwesome5
+                                        onPress={_ => this.handlePromotionModalVisiblity(false)}
+                                        solid
+                                        size={20}
+                                        color='#808C9B'
+                                        name='times'
+                                        style={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            paddingVertical: 10,
+                                            paddingHorizontal: 15
+                                        }}
+                                    />
+
+                                    <Image
+                                        style={{
+                                            width: '90%',
+                                            marginVertical: 20,
+                                            alignSelf: 'center'
+                                        }}
+                                        resizeMode='contain'
+                                        source={require('../../../assets/images/11077.png')}
+                                    />
+                                </View>
+
+                                <View
+                                    style={{
+                                        paddingHorizontal: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: '#555555',
+                                            textAlign: 'right',
+                                            fontSize: 15,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginVertical: 10
+                                        }}
+                                    >
+                                        {locales('titles.hello')}
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#374761',
+                                            textAlign: 'right',
+                                            fontSize: 22,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        }}
+                                    >
+                                        {locales('titles.imDelsa')} <Text
+                                            style={{
+                                                color: '#38485F',
+                                                fontSize: 15,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                marginVertical: 15,
+                                                fontWeight: '200'
+                                            }}
+                                        >
+                                            ({locales('titles.BuskoolBot')})
+                                        </Text>
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            color: '#555555',
+                                            fontSize: 14,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            marginVertical: 5
+                                        }}
+                                    >
+                                        {locales('titles.DelsaPromotionModalText')}
+                                    </Text>
+
+                                    <LinearGradient
+                                        start={{ x: 0, y: 1 }}
+                                        end={{ x: 0.8, y: 0.2 }}
+                                        style={{
+                                            width: '70%',
+                                            borderRadius: 8,
+                                            alignSelf: 'center',
+                                            padding: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            margin: 20,
+                                            minHeight: 60,
+                                        }}
+                                        colors={['#21AD93', '#00C569']}
+                                    >
+                                        <Pressable
+                                            android_ripple={{
+                                                color: '#ededed'
+                                            }}
+                                            onPress={() => {
+                                                this.handlePromotionModalVisiblity(false)
+                                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                            }}
+                                        >
+                                            <Text style={[styles.buttonText, {
+                                                alignSelf: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 20,
+                                            }]}>{locales('labels.promoteRegistration')}
+                                            </Text>
+                                        </Pressable>
+                                    </LinearGradient>
+                                </View>
+                            </Dialog>
+                        </Modal>
+                        : null
+                    }
+
+                    {shouldShowEditPriceModal ?
+                        <Modal
+                            onRequestClose={_ => this.setState({ shouldShowEditPriceModal: false })}
+                            visible={shouldShowEditPriceModal}
+                            transparent={true}
+                        >
+                            <Dialog
+                                onDismiss={_ => this.setState({ shouldShowEditPriceModal: false })}
+                                visible={shouldShowEditPriceModal}
+                                style={{ ...styles.dialogWrapper }}
+                            >
+
+                                <Dialog.Actions
+                                    style={styles.dialogHeader}
+                                >
+                                    <Button
+                                        onPress={_ => this.setState({ shouldShowEditPriceModal: false })}
+                                        style={styles.closeDialogModal}>
+                                        <FontAwesome5 name="times" color="#777" solid size={18} />
+                                    </Button>
+                                    <Paragraph style={styles.headerTextDialogModal}>
+                                        {locales('labels.editPrice')}
+                                    </Paragraph>
+                                </Dialog.Actions>
+
+                                {!shouldShowEditionSuccessfullText ?
+                                    <>
+                                        <View
+                                            style={{
+                                                backgroundColor: '#E7F9FF',
+                                                width: '100%',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center',
+                                                marginTop: 20
+                                            }}
+                                        >
+                                            <FontAwesome5
+                                                onPress={_ => this.setState({ shouldShowEditPriceModal: false })}
+                                                solid
+                                                size={20}
+                                                color='#808C9B'
+                                                name='times'
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: 0,
+                                                    top: 0,
+                                                    paddingVertical: 10,
+                                                    paddingHorizontal: 15
+                                                }}
+                                            />
+                                        </View>
+                                        <View
+                                            style={{
+                                                paddingHorizontal: 10,
+                                            }}
+                                        >
+                                            <InputGroup
+                                                regular
+                                                style={{
+                                                    borderRadius: 4,
+                                                    borderColor: productMinSalePrice ? productMinSalePriceError ? '#E41C38' : '#00C569' :
+                                                        productMinSalePriceClicked ? '#E41C38' : '#666',
+                                                    paddingHorizontal: 10,
+                                                    backgroundColor: '#FBFBFB'
+                                                }}
+                                            >
+                                                <FontAwesome5 name={
+                                                    productMinSalePrice ? productMinSalePriceError ?
+                                                        'times-circle' : 'check-circle' : productMinSalePriceClicked
+                                                        ? 'times-circle' : 'edit'}
+                                                    color={productMinSalePrice ? productMinSalePriceError ? '#E41C38' : '#00C569'
+                                                        : productMinSalePriceClicked ? '#E41C38' : '#BDC4CC'}
+                                                    size={16}
+                                                    solid
+                                                    style={{
+                                                        marginLeft: 10
+                                                    }}
+                                                />
+                                                <Input
+                                                    autoCapitalize='none'
+                                                    autoCorrect={false}
+                                                    keyboardType='number-pad'
+                                                    autoCompleteType='off'
+                                                    style={{
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        fontSize: 14,
+                                                        height: 45,
+                                                        flexDirection: 'row',
+                                                        borderRadius: 4,
+                                                        textDecorationLine: 'none',
+                                                        direction: 'rtl',
+                                                        textAlign: 'right'
+                                                    }}
+                                                    onChangeText={this.onProductMinSalePriceChanged}
+                                                    value={productMinSalePrice}
+                                                    placeholderTextColor="#BEBEBE"
+                                                    placeholder={locales('titles.enterMinPrice')}
+
+                                                />
+                                            </InputGroup>
+                                            <Label style={{
+                                                fontSize: 14, color: '#D81A1A', height: 25,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}>
+                                                {!!productMinSalePriceError ? productMinSalePriceError : null}
+                                            </Label>
+
+                                            <Button
+                                                onPress={this.editProductMinSalePrice}
+                                                style={!productMinSalePrice || productMinSalePriceError
+                                                    ? styles.disableLoginButton : styles.loginButton}
+                                            >
+                                                <Text style={[styles.buttonText, {
+                                                    alignSelf: 'center',
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    fontSize: 20,
+                                                }]}>{locales('titles.submitChanges')}
+                                                </Text>
+                                                {editProductLoading ?
+                                                    <ActivityIndicator
+                                                        size={20}
+                                                        color='white'
+                                                        animating={editProductLoading}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            left: '5%'
+                                                        }}
+                                                    />
+                                                    : null
+                                                }
+                                            </Button>
+                                        </View>
+                                    </>
+                                    :
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            minHeight: '22%',
+                                            paddingVertical: 20
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            name="check-circle"
+                                            color="#00C569"
+                                            size={70}
+                                            style={{
+                                                marginVertical: 20
+                                            }}
+                                        />
+                                        <Text style={styles.mainTextDialogModal}>
+                                            {locales('titles.editionsDone')}
+                                        </Text>
+                                    </View>
+                                }
+                            </Dialog>
+                        </Modal>
+                        : null
+                    }
+
                     {showScrollToBottomButton ?
                         <FontAwesome5
                             name='angle-double-down'
@@ -774,9 +1269,7 @@ class ChatScreen extends Component {
                                 flexDirection: 'row-reverse',
                                 width: '21%'
                             }}
-                            onPress={() => {
-                                this.handleGoBack();
-                            }}>
+                            onPress={() => this.handleGoBack(true)}>
                             <View
                                 style={{
                                     justifyContent: 'center',
@@ -1002,6 +1495,90 @@ class ChatScreen extends Component {
     }
 }
 
+const DelsaAdvertisementComponent = props => {
+
+    const {
+        handlePromotionModalVisiblity = _ => { },
+        setDelsaAdVisiblity = _ => { }
+    } = props;
+
+    return (
+        <ShadowView
+            style={{
+                shadowColor: 'black',
+                shadowOpacity: 0.13,
+                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 2 },
+                backgroundColor: '#EDF8E6',
+                borderRadius: 8,
+                padding: 10,
+                marginVertical: 10,
+                width: '95%',
+                alignSelf: 'center',
+            }}>
+            <FontAwesome5
+                onPress={_ => setDelsaAdVisiblity(false)}
+                solid
+                size={20}
+                color='#808C9B'
+                name='times'
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    paddingVertical: 10,
+                    paddingHorizontal: 15,
+                    zIndex: 1
+                }}
+            />
+            <Text
+                style={{
+                    textAlign: 'center',
+                    fontSize: 18,
+                    color: '#313A43',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    marginVertical: 20
+                }}
+            >
+                {locales('labels.inquireYourOwnSecretary')}
+            </Text>
+            <Button
+                onPress={_ => handlePromotionModalVisiblity(true)}
+                style={{
+                    elevation: 0,
+                    backgroundColor: '#4DC0BB',
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                    alignSelf: 'center',
+                    width: '50%',
+                    marginVertical: 10,
+                }}
+            >
+                <FontAwesome5
+                    name='info-circle'
+                    size={16}
+                    color='white'
+                    style={{
+                        marginHorizontal: 8
+                    }}
+                />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 16,
+                        color: 'white',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {locales('titles.moreDetails')}
+                </Text>
+            </Button>
+        </ShadowView>
+    )
+};
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -1012,13 +1589,134 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         justifyContent: "center"
     },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        width: '100%',
+        textAlign: 'center'
+    },
+    disableLoginButton: {
+        textAlign: 'center',
+        margin: 10,
+        borderRadius: 5,
+        backgroundColor: '#B5B5B5',
+        width: '55%',
+        color: 'white',
+        elevation: 0,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    loginButton: {
+        textAlign: 'center',
+        margin: 10,
+        backgroundColor: '#00C569',
+        borderRadius: 5,
+        width: '55%',
+        elevation: 0,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        justifyContent: 'center'
+    },
+    dialogWrapper: {
+        borderRadius: 12,
+        padding: 0,
+        margin: 0,
+        overflow: "hidden"
+    },
+    dialogHeader: {
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e5e5',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+    },
+    closeDialogModal: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        padding: 15,
+        height: '100%',
+        backgroundColor: 'transparent',
+        elevation: 0
+    },
+    headerTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        textAlign: 'center',
+        fontSize: 17,
+        paddingTop: 11,
+        color: '#474747'
+    },
+    mainWrapperTextDialogModal: {
+        width: '100%',
+        marginBottom: 0
+    },
+    mainTextDialogModal: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#777',
+        textAlign: 'center',
+        fontSize: 15,
+        paddingHorizontal: 15,
+        width: '100%'
+    },
+    modalButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        maxWidth: 145,
+        color: 'white',
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    modalCloseButton: {
+        textAlign: 'center',
+        width: '100%',
+        fontSize: 16,
+        color: 'white',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        elevation: 0,
+        borderRadius: 0,
+        backgroundColor: '#ddd'
+    },
+    closeButtonText: {
+        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        color: '#555',
+    },
+    dialogIcon: {
+        height: 80,
+        width: 80,
+        textAlign: 'center',
+        borderWidth: 4,
+        borderRadius: 80,
+        paddingTop: 5,
+        marginTop: 20
+    },
+    greenButton: {
+        backgroundColor: '#00C569',
+    },
 });
 
 const mapStateToProps = ({
     messagesReducer,
     authReducer,
-    profileReducer
+    profileReducer,
+    productsListReducer
 }) => {
+
+    const {
+        productDetailsLoading,
+        productDetails,
+        editProductLoading
+    } = productsListReducer;
 
     const {
         userChatHistoryData,
@@ -1049,7 +1747,11 @@ const mapStateToProps = ({
 
         loggedInUserId,
 
-        userProfile
+        userProfile,
+
+        productDetailsLoading,
+        productDetails,
+        editProductLoading
     }
 };
 
@@ -1062,6 +1764,8 @@ const mapDispatchToProps = (dispatch, props) => {
         doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),
         checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
+        fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),
+        editProduct: product => dispatch(productListActions.editProduct(product)),
     }
 };
 

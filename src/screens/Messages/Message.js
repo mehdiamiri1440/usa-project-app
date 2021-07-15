@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text, Pressable, Linking } from 'react-native';
+import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -20,6 +21,11 @@ const Message = props => {
         contact,
         loggedInUserId,
         prevMessage,
+        active_pakage_type,
+        handlePromotionModalVisiblity = _ => { },
+        handleEditPriceModalVisiblity = _ => { },
+        productDetailsLoading,
+        selectedMessageId
     } = props;
 
     const { contact_id: id } = contact;
@@ -73,8 +79,8 @@ const Message = props => {
                             paddingHorizontal: 10,
                             maxWidth: deviceWidth * 0.75,
                             borderRadius: 9,
-                            borderBottomRightRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
-                            borderBottomLeftRadius: (!!item.p_id && item.sender_id != loggedInUserId) || showPhoneFormat ? 0 : 9,
+                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
                             paddingVertical: 3,
                             backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                         }}
@@ -104,17 +110,18 @@ const Message = props => {
                     <RenderPhoneFormatMessage
                         showPhoneFormat={showPhoneFormat}
                         item={item}
-                        {...props}
+                        handlePromotionModalVisiblity={handlePromotionModalVisiblity}
+                        handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
+                        active_pakage_type={active_pakage_type}
+                        selectedMessageId={selectedMessageId}
+                        productDetailsLoading={productDetailsLoading}
                         id={id}
+                        {...props}
                     />
-                    {item.sender_id != loggedInUserId ?
-                        <RenderMessageWithProductIdDesign
-                            item={item}
-                            {...props}
-                        />
-                        :
-                        null
-                    }
+                    <RenderMessageWithProductIdDesign
+                        item={item}
+                        {...props}
+                    />
                 </View>
             </View>
         </>
@@ -243,7 +250,13 @@ const RenderPhoneFormatMessage = props => {
 const RenderMessageWithProductIdDesign = props => {
     const {
         item = {},
-        navigation = {}
+        navigation = {},
+        loggedInUserId,
+        active_pakage_type,
+        handlePromotionModalVisiblity = _ => { },
+        handleEditPriceModalVisiblity = _ => { },
+        productDetailsLoading,
+        selectedMessageId
     } = props;
 
     const {
@@ -255,7 +268,127 @@ const RenderMessageWithProductIdDesign = props => {
     } = item;
 
 
-    if (!!p_id)
+    if (!!p_id) {
+        if (item.sender_id == loggedInUserId) {
+            if (active_pakage_type != 0)
+                return (
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
+                        activeOpacity={1}
+                        onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
+                    >
+                        <View
+                            style={{
+                                width: '100%',
+                                backgroundColor: '#556080',
+
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+
+                                flexDirection: 'row-reverse',
+
+                                paddingVertical: 5,
+                                borderBottomLeftRadius: 8,
+                                borderBottomRightRadius: 8,
+                                overflow: "hidden",
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+
+                            }}
+                        >
+                            {productDetailsLoading && item.id == selectedMessageId
+                                ?
+                                <ActivityIndicator
+                                    animating={productDetailsLoading}
+                                    size={20}
+                                    color='white'
+                                />
+                                :
+                                <FontAwesome5
+                                    name='edit'
+                                    color='white'
+                                    size={14}
+                                />
+                            }
+                            <Text style={{
+                                color: 'white',
+                                fontSize: 16,
+                                marginRight: 5,
+                                marginLeft: 10,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }}>
+                                {locales('labels.editPrice')}
+                            </Text>
+                            <FontAwesome5
+                                name='angle-left'
+                                color='white'
+                                size={14}
+                            />
+                        </View>
+                    </Pressable >
+                );
+            return (
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    activeOpacity={1}
+                    onPress={() => handlePromotionModalVisiblity(true)}
+                >
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        style={{
+                            width: '100%',
+                            backgroundColor: '#21AD93',
+
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+
+                            flexDirection: 'row-reverse',
+
+                            paddingVertical: 5,
+                            borderBottomLeftRadius: 8,
+                            borderBottomRightRadius: 8,
+                            overflow: "hidden",
+                            borderTopRightRadius: 0,
+                            borderTopLeftRadius: 0,
+                        }}
+                        colors={['#4DC0BB', '#21AD93']}
+                    >
+
+                        <Text style={{
+                            marginRight: 10
+                        }}>
+                            <FontAwesome5
+                                name='chess-queen'
+                                color='white'
+                                size={14}
+                            />
+                        </Text>
+                        <Text style={{
+                            color: 'white',
+                            fontSize: 16,
+                            marginRight: 5,
+                            marginLeft: 10,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        }}>
+                            {locales('titles.inquireSecretary')}
+
+                        </Text>
+                        <FontAwesome5
+                            name='angle-left'
+                            color='white'
+                            size={14}
+                        />
+                    </LinearGradient>
+                </Pressable >
+            );
+        }
         return (
             <Pressable
                 android_ripple={{
@@ -267,7 +400,7 @@ const RenderMessageWithProductIdDesign = props => {
                 <View
                     style={{
                         width: '100%',
-                        backgroundColor: '#1da1f2',
+                        backgroundColor: '#5D9FD8',
 
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -275,7 +408,7 @@ const RenderMessageWithProductIdDesign = props => {
 
                         flexDirection: 'row-reverse',
 
-                        paddingVertical: 8,
+                        paddingVertical: 5,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
                         overflow: "hidden",
@@ -288,7 +421,7 @@ const RenderMessageWithProductIdDesign = props => {
                         marginRight: 10
                     }}>
                         <FontAwesome5
-                            name='link'
+                            name='clipboard-check'
                             color='white'
                             size={14}
                         />
@@ -296,15 +429,22 @@ const RenderMessageWithProductIdDesign = props => {
                     <Text style={{
                         color: 'white',
                         fontSize: 16,
-                        marginHorizontal: 5,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        marginRight: 5,
+                        marginLeft: 10,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                     }}>
                         {locales('labels.ProductImagesAndDetails')}
 
                     </Text>
+                    <FontAwesome5
+                        name='angle-left'
+                        color='white'
+                        size={14}
+                    />
                 </View>
             </Pressable >
-        )
+        );
+    }
     return null;
 };
 

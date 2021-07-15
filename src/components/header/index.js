@@ -6,6 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth } from '../../utils';
 import ValidatedUserIcon from '../validatedUserIcon';
+import { deviceHeight } from '../../utils/deviceDimenssions';
 
 if (
     Platform.OS === "android" &&
@@ -190,7 +191,7 @@ const Header = (props = {}) => {
                         style={{
                             flexDirection: 'row-reverse',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <View
@@ -214,7 +215,7 @@ const Header = (props = {}) => {
                         <Text style={{
                             color: 'white',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 16,
+                            fontSize: deviceWidth > 500 ? 16 : deviceWidth * 0.035,
                             marginHorizontal: 10,
                             textAlign: 'center',
                             textAlignVertical: 'center',
