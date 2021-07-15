@@ -73,12 +73,17 @@ class Product extends PureComponent {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.loaded == false && this.props.productItem
             && Object.entries(this.props.productItem).length) {
+
+            const {
+                main = {}
+            } = this.props.productItem;
+
             const {
                 max_sale_price = '',
                 min_sale_price = '',
                 stock = '',
                 min_sale_amount = ''
-            } = this.props.productItem.main;
+            } = main;
 
             this.setState({
                 minimumOrder: min_sale_amount.toString(),
@@ -320,7 +325,13 @@ class Product extends PureComponent {
             width = deviceWidth * 0.97,
             shouldShowMyButtons = false
         } = this.props;
-        const { main, photos, profile_info, user_info } = this.props.productItem;
+
+        const {
+            main = {},
+            photos = [],
+            profile_info = {},
+            user_info = {}
+        } = this.props.productItem;
         const {
             address,
             category_id,
