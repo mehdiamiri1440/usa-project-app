@@ -102,7 +102,20 @@ class ProductsList extends PureComponent {
                 productsListArray: [...this.props.productsListArray],
                 to_record_number: 16,
                 from_record_number: 0,
-                searchText: ''
+                searchText: '',
+                selectedButton: null,
+                city: '',
+                province: '',
+                sortModalFlag: false,
+                locationsFlag: false,
+                subCategoriesModalFlag: false,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                searchLoader: false,
+                searchFlag: false,
+                subCategoriesList: [],
+                cities: [],
+                totalCategoriesModalFlag: false,
+                isFilterApplied: false,
             })
             this.props.updateProductsList(false);
             this.scrollToTop({});
