@@ -639,8 +639,12 @@ class RegisterRequest extends Component {
             filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
             subCategory: subCategoriesList.length ? '' : id,
             subCategoryName: subCategoriesList.length ? '' : category_name,
+        }, _ => {
+            const {
+                parentList = []
+            } = this.state;
+            this.setState({ selectedSvgName: parentList[parentList.length - 2].find(item => item.id == parent_id)?.category_name })
         });
-
     };
 
     handleGoToPrevStep = fromBackButton => {
