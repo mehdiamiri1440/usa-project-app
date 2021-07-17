@@ -1308,6 +1308,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignSelf: 'center',
         justifyContent: 'center',
+        elevation: 0
     },
     modalCloseButton: {
         textAlign: 'center',
