@@ -532,7 +532,7 @@ export default {
     'titles.enterFirstName': 'نام خود را وارد نمایید',
     'titles.idCardSample': 'نمونه تصویر از کارت ملی',
     'titles.idCardSampleWithOwner': 'نمونه تصویر کارت ملی در کنار تصویر شما',
-    'titles.evidencePhotosThirdDescription': 'از این اسناد (اجاره نامه یا جواز کسب یا سند مالکیت) که به نام فرد دارنده کارت ملی است .',
+    'titles.evidencePhotosThirdDescription': 'از این اسناد (جواز کسب یا سند مالکیت) که به نام فرد دارنده کارت ملی است .',
     'titles.oneOf': 'یکی',
     'titles.image': 'تصویر',
     'titles.iWantToBuy': 'می‌خواهم بخرم',
