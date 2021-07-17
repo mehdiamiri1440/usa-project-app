@@ -107,7 +107,7 @@ class Filters extends Component {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             borderBottomWidth: 0.7,
-                            borderBottomColor: '#BEBEBE',
+                            borderBottomColor: '#e0e0e0',
 
                         }}>
                         <ContentLoader
@@ -120,7 +120,7 @@ class Filters extends Component {
                         >
                             <Rect x="75%" y="20%" width="120" height="10" />
                         </ContentLoader>
-                        <FontAwesome5 name='angle-left' size={26} color='#777' />
+                        <FontAwesome5 name='angle-left' size={26} color='#bebebe' />
                     </View>
                 )
                 )}
@@ -163,19 +163,19 @@ class Filters extends Component {
                     borderBottomWidth: 0.7,
                     justifyContent: 'space-between',
                     padding: 20,
-                    borderBottomColor: '#BEBEBE',
+                    borderBottomColor: '#e0e0e0',
                     flexDirection: 'row',
                     width: deviceWidth
                 }}>
                 <FontAwesome5
                     name='angle-left'
                     size={26}
-                    color='#777'
+                    color='#bebebe'
                 />
                 <Text
                     style={{
                         fontSize: 18,
-                        color: '#777',
+                        color: '#555',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}
                 >
@@ -231,7 +231,7 @@ class Filters extends Component {
                     borderBottomWidth: 0.7,
                     justifyContent: 'space-between',
                     padding: 20,
-                    borderBottomColor: '#BEBEBE',
+                    borderBottomColor: '#e0e0e0',
                     flexDirection: 'row',
                     width: deviceWidth
                 }}
@@ -239,12 +239,12 @@ class Filters extends Component {
                 <FontAwesome5
                     name='angle-left'
                     size={26}
-                    color='#777'
+                    color='#bebebe'
                 />
                 <Text
                     style={{
                         fontSize: 18,
-                        color: '#777',
+                        color: '#555',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}
                 >

@@ -629,7 +629,7 @@ class SelectCategory extends Component {
                         {item.category_name}
                     </Text>
                 </View>
-                <FontAwesome5 name='angle-left' size={25} color='gray' />
+                <FontAwesome5 name='angle-left' size={25} color='#bebebe' />
             </Pressable>
 
         )
