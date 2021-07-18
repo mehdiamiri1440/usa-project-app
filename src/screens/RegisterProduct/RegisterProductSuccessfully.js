@@ -231,28 +231,34 @@ class RegisterProductSuccessfully extends Component {
                                 >
                                     {` ${item.subcategory_name} `}
                                 </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontWeight: '200',
-                                        fontSize: 18,
-                                        marginHorizontal: 2,
-                                        color: '#777777'
-                                    }}
-                                >
-                                    {locales('labels.fromType')}
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontWeight: '200',
-                                        color: '#556083',
-                                        fontSize: 18,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        marginHorizontal: 2
-                                    }}
-                                >
-                                    {` ${item.name} `}
-                                </Text>
+                                {item.name ?
+                                    <>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontWeight: '200',
+                                                fontSize: 18,
+                                                marginHorizontal: 2,
+                                                color: '#777777'
+                                            }}
+                                        >
+                                            {locales('labels.fromType')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontWeight: '200',
+                                                color: '#556083',
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                marginHorizontal: 2
+                                            }}
+                                        >
+                                            {` ${item.name} `}
+                                        </Text>
+                                    </>
+                                    :
+                                    null
+                                }
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -337,28 +343,34 @@ class RegisterProductSuccessfully extends Component {
                                     }}
                                 > {formatter.convertedNumbersToTonUnit(item.requirement_amount)}</Text> {`${item.subcategory_name} `}
                             </Text>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontWeight: '200',
-                                    fontSize: 18,
-                                    marginHorizontal: 2,
-                                    color: '#777777'
-                                }}
-                            >
-                                {locales('labels.fromType')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#556083',
-                                    fontWeight: '200',
-                                    fontSize: 18,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    marginHorizontal: 2
-                                }}
-                            >
-                                {` ${item.name} `}
-                            </Text>
+                            {item.name ?
+                                <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontWeight: '200',
+                                            fontSize: 18,
+                                            marginHorizontal: 2,
+                                            color: '#777777'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: '#556083',
+                                            fontWeight: '200',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginHorizontal: 2
+                                        }}
+                                    >
+                                        {` ${item.name} `}
+                                    </Text>
+                                </>
+                                :
+                                null
+                            }
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
