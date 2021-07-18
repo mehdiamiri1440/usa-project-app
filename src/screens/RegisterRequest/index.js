@@ -401,7 +401,8 @@ class RegisterRequest extends Component {
             productTypeClicked: false,
             selectedSvgName: '',
             filteringLists: [],
-            parentList: []
+            parentList: [],
+            isFirstStep: true
         }
     }
 
@@ -418,7 +419,7 @@ class RegisterRequest extends Component {
 
             analytics().logEvent('register_buyAd')
             this.props.fetchAllCategories().then(_ => {
-                const { category, subCategory, productType, categoriesList, parentList } = this.props;
+                const { category, subCategory, productType, categoriesList = [], parentList = [] } = this.props;
 
                 if (this.productTypeRef && this.productTypeRef.current)
                     this.productTypeRef.current.value = productType;
@@ -433,7 +434,7 @@ class RegisterRequest extends Component {
                     parentList: parentList && parentList.length ? parentList : [categoriesList],
                     loaded: true,
                     subCategoriesList: category && categoriesList && categoriesList.length ?
-                        Object.values(categoriesList.find(item => item.id == category).subcategories)
+                        Object.values(categoriesList.find(item => item.id == category)?.subcategories)
                         : []
                 })
 
@@ -609,20 +610,27 @@ class RegisterRequest extends Component {
     };
 
     subCategoriesListFooterComponent = _ => {
-        return (
-            <View
-                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
-            >
-                <Button
-                    onPress={_ => this.handleGoToPrevStep(true)}
-                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
-                    rounded
+
+        const {
+            isFirstStep
+        } = this.state;
+
+        if (!isFirstStep)
+            return (
+                <View
+                    style={{ marginVertical: 20, alignSelf: 'flex-end' }}
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
-                </Button>
-            </View>
-        )
+                    <Button
+                        onPress={_ => this.handleGoToPrevStep(true)}
+                        style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
+                        rounded
+                    >
+                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                        <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
+                    </Button>
+                </View>
+            );
+        return null;
     };
 
     handleFilterItemClicked = ({
@@ -639,11 +647,15 @@ class RegisterRequest extends Component {
             filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
             subCategory: subCategoriesList.length ? '' : id,
             subCategoryName: subCategoriesList.length ? '' : category_name,
+            isFirstStep: false
         }, _ => {
             const {
                 parentList = []
             } = this.state;
-            this.setState({ selectedSvgName: parentList[parentList.length - 2].find(item => item.id == parent_id)?.category_name })
+            this.setState({
+                selectedSvgName: parentList && parentList.length >= 2 ?
+                    parentList[parentList.length - 2].find(item => item.id == parent_id)?.category_name : 'میوه'
+            })
         });
     };
 
@@ -652,7 +664,8 @@ class RegisterRequest extends Component {
         this.setState({
             filteringLists: tempList[tempList.length - 1],
             parentList: tempList.slice(0, tempList.length - 1),
-            subCategory: null
+            subCategory: null,
+            isFirstStep: tempList.length - 1 <= 1
         });
         tempList.pop();
         if (!tempList || !tempList.length) {
@@ -774,7 +787,7 @@ class RegisterRequest extends Component {
             amount,
             amountClicked,
             amountError,
-            parentList,
+            parentList = [],
             amountText
         } = this.state;
         const categoryIcon = categoriesList && categoriesList.length && category ?
