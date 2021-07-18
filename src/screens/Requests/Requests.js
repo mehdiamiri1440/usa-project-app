@@ -1065,7 +1065,8 @@ class Requests extends PureComponent {
                                     }}
                                     onPress={() => this.setState({
                                         buyAdRequestsList: this.props.buyAdRequestsList,
-                                        selectedFilterName: ''
+                                        selectedFilterName: '',
+                                        selectedFilterId: null
                                     }, _ => this.scrollToTop())}
                                     style={{
                                         borderRadius: 12,
