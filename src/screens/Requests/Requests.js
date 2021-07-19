@@ -1140,7 +1140,7 @@ class Requests extends PureComponent {
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: selectedFilterName ? 140 : 136,
+                        bottom: 140,
                         width: '100%',
                         righ: 0,
                         left: 0,
@@ -1155,7 +1155,7 @@ class Requests extends PureComponent {
                                 flex: 3,
                                 justifyContent: 'center',
                                 backgroundColor: '#556080',
-                                borderRadius: 4
+                                borderRadius: 8
                             }}
                             onPress={() => this.setState({ showFilters: true })}>
                             <Text style={{
