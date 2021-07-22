@@ -166,6 +166,7 @@ export default {
     'labels.somethingWentWrong': 'متاسفانه به مشکلی برخورده‌ایم',
     'labels.problemHappened': 'مشکلی رخ داده است.',
     'labels.pleaseRetry': 'لطفا دوباره تلاش بفرمایید.',
+    'labels.uploading': 'در حال بارگذاری ...',
     'labels.retry': 'تلاش مجدد',
     'labels.promoteRegisterationModalDescription': 'برای دسترسی به خریداران طلایی ، شماره کاربران ، ثبت محصول بیشتر و دیگر امکانات ویژه باسکول ، عضویت خود را ارتقا دهید',
     'labels.myProducts': 'محصولات من',
