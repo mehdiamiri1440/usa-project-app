@@ -1,3 +1,0 @@
-export default {
-    FETCH_UPLOAD_PERCENTAGE: 'FETCH_UPLOAD_PERCENTAGE'
-}
