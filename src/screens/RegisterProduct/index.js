@@ -257,7 +257,8 @@ class RegisterProduct extends React.Component {
                 formData.append("image_" + i, file);
             }
             formData.append("images_count", this.state.productFiles.length);
-            return this.props.addNewProduct(formData).then(_ => {
+
+            return this.props.addNewProduct(formData).then(result => {
                 analytics().logEvent('register_product_successfully');
                 setTimeout(() => this.setState({
                     paymentModalVisibility: true
@@ -395,6 +396,7 @@ class RegisterProduct extends React.Component {
         const {
             active_pakage_type
         } = user_info
+
         return (
             <>
 
@@ -722,6 +724,10 @@ const mapStateToProps = (state) => {
         isUserAllowedToSendMessagePermission,
     } = state.profileReducer;
 
+    const {
+        uploadPercentage
+    } = state.uploadReducer;
+
     return {
         userProfile: state.profileReducer.userProfile,
         addNewProductLoading: state.registerProductReducer.addNewProductLoading,
@@ -734,7 +740,8 @@ const mapStateToProps = (state) => {
 
         isUserAllowedToSendMessageLoading,
         isUserAllowedToSendMessage,
-        isUserAllowedToSendMessagePermission
+        isUserAllowedToSendMessagePermission,
+        uploadPercentage
 
     }
 };
