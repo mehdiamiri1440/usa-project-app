@@ -634,7 +634,7 @@ class Requests extends PureComponent {
                         alignItems: 'center',
                         alignSelf: 'flex-end',
                         justifyContent: 'center',
-                        maxWidth: 100,
+                        maxWidth: '30%',
                         backgroundColor: '#FFFFFF',
                         minHeight: 30
                     }}>
@@ -1140,7 +1140,7 @@ class Requests extends PureComponent {
                     <View style={{
                         position: 'absolute',
                         zIndex: 1,
-                        bottom: 140,
+                        bottom: '26%',
                         width: '100%',
                         righ: 0,
                         left: 0,

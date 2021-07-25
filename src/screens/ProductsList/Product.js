@@ -683,7 +683,8 @@ class Product extends PureComponent {
                                 onPress={() => this.setState({ editionFlag: false })}
                             >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                <Text style={styles.closeButtonText}>
+                                    {locales('titles.close')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
