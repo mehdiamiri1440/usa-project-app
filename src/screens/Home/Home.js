@@ -523,7 +523,7 @@ class Home extends React.Component {
                                                 colors={['#c7a84f', '#f4eb97', '#c7a84f']}
                                                 style={{
                                                     borderRadius: 5,
-                                                    backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
+                                                    backgroundColor: '#c7a84f',
                                                     padding: 5,
                                                     width: deviceWidth * 0.1,
                                                     height: deviceWidth * 0.1,
@@ -533,14 +533,14 @@ class Home extends React.Component {
                                                 {route.icon}
 
                                             </BgLinearGradient> :
-                                            <View style={{
-                                                backgroundColor: route.name === 'SuggestedBuyers' ||
-                                                    route.name === 'SpecialProducts' ? '#c7a84f' : '#fff',
-                                                justifyContent: 'center',
-                                                width: deviceWidth * 0.1,
-                                                height: deviceWidth * 0.1,
-                                                alignItems: 'center',
-                                            }}>
+                                            <View
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    width: deviceWidth * 0.1,
+                                                    height: deviceWidth * 0.1,
+                                                    alignItems: 'center',
+                                                }}
+                                            >
                                                 {route.icon}
                                             </View>
                                         }
