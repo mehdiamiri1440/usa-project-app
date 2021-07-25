@@ -23,7 +23,7 @@ const ProductImages = props => {
                     ImageComponent={FastImage}
                     inactiveDotColor='rgba(0,0,0,0.7)'
                     sliderBoxHeight='100%'
-                    dotStyle={{ width: 10, height: 10, borderRadius: 5, marginTop: -40, marginHorizontal: -3 }}
+                    dotStyle={{ width: 10, height: 10, borderRadius: 5, marginTop: -40, marginHorizontal: photosWithCompletePath.length > 2 ? '-0.8%' : '-0.3%' }}
                     images={photosWithCompletePath}
                     imageLoadingColor='#e41c38'
                     resizeMode='cover'
