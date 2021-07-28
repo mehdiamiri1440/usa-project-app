@@ -215,11 +215,13 @@ class Home extends React.Component {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
+            user_name
         } = user_info;
 
         if (!!is_seller) {
             this.setState({ isPageRefreshedFromPullingDown: true })
+            this.props.fetchProfileStatistics(user_name);
             this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
         }
     };
@@ -1045,13 +1047,9 @@ const ProfilePreview = props => {
 
     const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
 
-    useFocusEffect(
-        useCallback(() => {
-            props.fetchProfileStatistics(user_name);
-        }, [])
-    );
-
-
+    useEffect(_ => {
+        props.fetchProfileStatistics(user_name);
+    }, [is_seller]);
 
     const onScrollToIndexFailed = (error = {}) => {
         const {
@@ -1411,7 +1409,10 @@ const ProfileAccomplishes = props => {
     } = profile;
 
     const renderProfileAccomplishmentRate = _ => {
-        return 'ضعیف'
+        return {
+            text: 'ضعیف',
+            color: '#313A43'
+        }
     };
 
     const onProfileAccomplishmentItemButtonPressed = _ => {
@@ -1499,6 +1500,11 @@ const ProfileAccomplishes = props => {
         )
     };
 
+    const {
+        text,
+        color
+    } = renderProfileAccomplishmentRate();
+
     return (
         <View
             style={{
@@ -1531,8 +1537,14 @@ const ProfileAccomplishes = props => {
                     >
                         {locales('labels.profileAccomplishes')}
                     </Text>
-                    <Text>
-                        {renderProfileAccomplishmentRate()}
+                    <Text
+                        style={{
+                            color,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16
+                        }}
+                    >
+                        {` ${text}`}
                     </Text>
                 </View>
                 <FontAwesome5
@@ -1587,6 +1599,7 @@ const ProfileAccomplishes = props => {
                 <FlatList
                     renderItem={renderProfileAccomplishmentItems}
                     data={[1, 2, 3, 4, 5]}
+                    style={{ marginTop: 20 }}
                     keyExtractor={(item) => item.toString()}
                     showsHorizontalScrollIndicator={false}
                     horizontal
