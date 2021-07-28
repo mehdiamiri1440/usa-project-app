@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
-import { useRoute, useNavigationState } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
@@ -11,8 +10,9 @@ import {
     RefreshControl, AppState, Animated, TranslateXTransform,
     FlatList, LayoutAnimation, UIManager, Platform
 } from 'react-native';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { useScrollToTop, useIsFocused } from '@react-navigation/native';
+import { useScrollToTop, useIsFocused, useRoute, useNavigationState, useFocusEffect } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
 
@@ -45,7 +45,8 @@ class Home extends React.Component {
         this.state = {
             showchangeRoleModal: false,
             loaded: false,
-            is_seller: false
+            is_seller: false,
+            isPageRefreshedFromPullingDown: false
         }
     }
 
@@ -76,7 +77,6 @@ class Home extends React.Component {
             is_seller
         } = user_info;
         this.setState({ is_seller: !!is_seller });
-        this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
@@ -98,22 +98,7 @@ class Home extends React.Component {
     }
 
     initMyBuskool = _ => {
-        const {
-            userProfile = {}
-        } = this.props;
-
-        const {
-            user_info = {}
-        } = userProfile;
-
-        const {
-            user_name
-        } = user_info;
-
-        return Promise.all([
-            this.props.fetchUserProfile(),
-            this.props.fetchProfileStatistics(user_name)
-        ])
+        this.props.fetchUserProfile();
     };
 
     handleAppStateChange = (nextAppState) => {
@@ -233,8 +218,10 @@ class Home extends React.Component {
             is_seller
         } = user_info;
 
-        if (!!is_seller)
-            this.props.fetchUserProfile();
+        if (!!is_seller) {
+            this.setState({ isPageRefreshedFromPullingDown: true })
+            this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
+        }
     };
 
 
@@ -274,7 +261,8 @@ class Home extends React.Component {
 
         const {
             showchangeRoleModal,
-            is_seller
+            is_seller,
+            isPageRefreshedFromPullingDown
         } = this.state;
 
         const {
@@ -355,7 +343,7 @@ class Home extends React.Component {
                 <ScrollView
                     refreshControl={
                         <RefreshControl
-                            refreshing={userProfileLoading}
+                            refreshing={isPageRefreshedFromPullingDown}
                             onRefresh={this.onRefresh}
                         />
                     }
@@ -635,25 +623,43 @@ class Home extends React.Component {
                                                     >
                                                         {locales('labels.credit')} :
                                                     </Text>
-                                                    <Text
-                                                        style={{
-                                                            color: '#1DA1F2',
-                                                            fontSize: 15,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                            marginHorizontal: 5
-                                                        }}
-                                                    >
-                                                        {numberWithCommas(wallet_balance)}
-                                                    </Text>
-                                                    <Text
-                                                        style={{
-                                                            color: '#1DA1F2',
-                                                            fontSize: 15,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        }}
-                                                    >
-                                                        {locales('titles.toman')}
-                                                    </Text>
+                                                    {!userProfileLoading ?
+                                                        <>
+                                                            <Text
+                                                                style={{
+                                                                    color: '#1DA1F2',
+                                                                    fontSize: 15,
+                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                    marginHorizontal: 5
+                                                                }}
+                                                            >
+                                                                {numberWithCommas(wallet_balance)}
+                                                            </Text>
+                                                            <Text
+                                                                style={{
+                                                                    color: '#1DA1F2',
+                                                                    fontSize: 15,
+                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                }}
+                                                            >
+                                                                {locales('titles.toman')}
+                                                            </Text>
+                                                        </>
+                                                        : <ContentLoader
+                                                            speed={2}
+                                                            width={deviceWidth * 0.13}
+                                                            height={deviceWidth * 0.08}
+                                                            backgroundColor="#f3f3f3"
+                                                            foregroundColor="#ecebeb"
+                                                            style={{
+                                                                alignSelf: 'center',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            <Rect x="20%" y="30%" width="30" height="10" />
+                                                        </ContentLoader>
+                                                    }
                                                 </View>
                                                 : null
                                         }
@@ -997,6 +1003,7 @@ const ProfilePreview = props => {
 
     const {
         userProfile = {},
+        userProfileLoading,
         navigation = {},
         profileStatistics,
         profileStatisticsLoading
@@ -1036,9 +1043,14 @@ const ProfilePreview = props => {
 
     const flatListRef = useRef();
 
-    const [selectedIndex, setSelectedIndex] = useState(0);
-
     const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
+
+    useFocusEffect(
+        useCallback(() => {
+            props.fetchProfileStatistics(user_name);
+        }, [])
+    );
+
 
 
     const onScrollToIndexFailed = (error = {}) => {
@@ -1108,49 +1120,66 @@ const ProfilePreview = props => {
                         </BgLinearGradient>
                         : null
                     } */}
-                    <Image
-                        source={profile_photo && profile_photo.length ?
-                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
-                            :
-                            require('../../../assets/icons/user.png')
-                        }
-                        style={{
-                            width: 70,
-                            height: 70,
-                            borderRadius: 35,
-                            // position: active_pakage_type > 0 ? 'absolute' : 'relative'
-                        }}
-                    />
-                    <View
-                        style={{
-                            marginHorizontal: 15,
-                            width: '66%',
-                            justifyContent: 'space-between',
-                            marginBottom: 2
-                        }}
-                    >
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 20,
-                                color: '#333333',
-                            }}
+                    {userProfileLoading ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.42}
+                            height={deviceWidth * 0.18}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
                         >
-                            {`${first_name} ${last_name}`}
-                        </Text>
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 16,
-                                marginTop: 2,
-                                color: '#00C569',
-                            }}
-                        >
-                            {renderActivePackageTypeText()}
-                        </Text>
-                    </View>
+                            <Circle cx='77%' cy="50%" r="35" />
+                            <Rect x="1%" y="30%" width="90" height="10" />
+                            <Rect x="1%" y="60%" width="90" height="10" />
+                        </ContentLoader>
+                        :
+                        <>
+                            <Image
+                                source={profile_photo && profile_photo.length ?
+                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                    :
+                                    require('../../../assets/icons/user.png')
+                                }
+                                style={{
+                                    width: 70,
+                                    height: 70,
+                                    borderRadius: 35,
+                                    // position: active_pakage_type > 0 ? 'absolute' : 'relative'
+                                }}
+                            />
+                            <View
+                                style={{
+                                    marginHorizontal: 15,
+                                    width: '66%',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 2
+                                }}
+                            >
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 20,
+                                        color: '#333333',
+                                    }}
+                                >
+                                    {`${first_name} ${last_name}`}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 16,
+                                        marginTop: 2,
+                                        color: '#00C569',
+                                    }}
+                                >
+                                    {renderActivePackageTypeText()}
+                                </Text>
+                            </View>
+                        </>
+                    }
                 </View>
                 <FontAwesome5
                     name='angle-left'
@@ -1174,15 +1203,31 @@ const ProfilePreview = props => {
                         alignItems: 'center'
                     }}
                 >
-                    <Text
-                        style={{
-                            color: '#21AD93',
-                            fontSize: 22,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                        }}
-                    >
-                        {!!is_seller ? product_count : buyAd_count}
-                    </Text>
+                    {(profileStatisticsLoading || userProfileLoading) ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.13}
+                            height={deviceWidth * 0.08}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Rect x="20%" y="30%" width="30" height="10" />
+                        </ContentLoader>
+                        : <Text
+                            style={{
+                                color: '#21AD93',
+                                fontSize: 22,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}
+                        >
+                            {!!is_seller ? product_count : buyAd_count}
+                        </Text>
+                    }
                     <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1199,15 +1244,31 @@ const ProfilePreview = props => {
                         alignItems: 'center'
                     }}
                 >
-                    <Text
-                        style={{
-                            color: '#21AD93',
-                            fontSize: 22,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                        }}
-                    >
-                        {reputation_score}
-                    </Text>
+                    {profileStatisticsLoading ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.13}
+                            height={deviceWidth * 0.08}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Rect x="20%" y="30%" width="30" height="10" />
+                        </ContentLoader>
+                        : <Text
+                            style={{
+                                color: '#21AD93',
+                                fontSize: 22,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}
+                        >
+                            {reputation_score}
+                        </Text>
+                    }
                     <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1224,15 +1285,31 @@ const ProfilePreview = props => {
                         alignItems: 'center'
                     }}
                 >
-                    <Text
-                        style={{
-                            color: '#21AD93',
-                            fontSize: 22,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                        }}
-                    >
-                        {total_count}
-                    </Text>
+                    {profileStatisticsLoading ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.13}
+                            height={deviceWidth * 0.08}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Rect x="20%" y="30%" width="30" height="10" />
+                        </ContentLoader>
+                        : <Text
+                            style={{
+                                color: '#21AD93',
+                                fontSize: 22,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}
+                        >
+                            {total_count}
+                        </Text>
+                    }
                     <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
