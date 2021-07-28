@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -8,8 +8,10 @@ import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState
+    RefreshControl, AppState, Animated, TranslateXTransform,
+    FlatList, LayoutAnimation, UIManager, Platform
 } from 'react-native';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { useScrollToTop, useIsFocused } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
@@ -28,6 +30,14 @@ import { versionName } from '../../../version.json';
 import { homeRoutes, sellerSpecialRoutes, buyerSpecialRoutes } from './HomeRoutes';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
+import { navigate } from '../../router/rootNavigation';
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 class Home extends React.Component {
 
     constructor(props) {
@@ -66,7 +76,7 @@ class Home extends React.Component {
             is_seller
         } = user_info;
         this.setState({ is_seller: !!is_seller });
-
+        this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
@@ -79,7 +89,7 @@ class Home extends React.Component {
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
             )
         ) {
-            this.props.fetchUserProfile()
+            this.initMyBuskool();
         }
     }
 
@@ -87,6 +97,24 @@ class Home extends React.Component {
         AppState.removeEventListener('change', this.handleAppStateChange)
     }
 
+    initMyBuskool = _ => {
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            user_name
+        } = user_info;
+
+        return Promise.all([
+            this.props.fetchUserProfile(),
+            this.props.fetchProfileStatistics(user_name)
+        ])
+    };
 
     handleAppStateChange = (nextAppState) => {
         const {
@@ -104,7 +132,7 @@ class Home extends React.Component {
             routes[routes.length - 1].name != 'Authentication' &&
             isFocused
         ) {
-            this.props.fetchUserProfile();
+            this.initMyBuskool();
         }
     };
 
@@ -239,6 +267,7 @@ class Home extends React.Component {
 
         const {
             userProfileLoading,
+            userProfile = {},
             changeRoleLoading,
             productsListLoading
         } = this.props;
@@ -247,6 +276,13 @@ class Home extends React.Component {
             showchangeRoleModal,
             is_seller
         } = this.state;
+
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            wallet_balance = 0
+        } = user_info;
 
         return (
             <View
@@ -325,8 +361,13 @@ class Home extends React.Component {
                     }
                     ref={this.props.homeRef}
                     style={{ backgroundColor: 'white', flex: 1, paddingTop: 20 }}>
-
-                    {!!is_seller ? <WalletPreview {...this.props} /> : null}
+                    <ProfilePreview
+                        {...this.props}
+                    />
+                    <ProfileAccomplishes
+                        {...this.props}
+                    />
+                    {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
                     {/* 
                     <Pressable
@@ -474,9 +515,18 @@ class Home extends React.Component {
                                         </Text>
                                     </View>
                                     <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={'#21AD93'} size={25} name='angle-left' />
-                                        </Text>
+                                        <FontAwesome5
+                                            style={{
+                                                textAlign: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                left: -15
+                                            }}
+                                            color={'#21AD93'}
+                                            size={25}
+                                            name='angle-left'
+                                        />
                                         <Text style={{
                                             fontSize: 14,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -553,10 +603,60 @@ class Home extends React.Component {
                                             {locales(route.label)}
                                         </Text>
                                     </View>
+
                                     <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'} size={25} name='angle-left' />
-                                        </Text>
+                                        <FontAwesome5
+                                            color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'}
+                                            size={25}
+                                            style={{
+                                                textAlign: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                left: -15
+                                            }}
+                                            name='angle-left'
+                                        />
+                                        {
+                                            route.name == 'Wallet' && !!is_seller ?
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row-reverse',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: '#666666',
+                                                            fontSize: 15,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                        }}
+                                                    >
+                                                        {locales('labels.credit')} :
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            color: '#1DA1F2',
+                                                            fontSize: 15,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            marginHorizontal: 5
+                                                        }}
+                                                    >
+                                                        {numberWithCommas(wallet_balance)}
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            color: '#1DA1F2',
+                                                            fontSize: 15,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        }}
+                                                    >
+                                                        {locales('titles.toman')}
+                                                    </Text>
+                                                </View>
+                                                : null
+                                        }
                                         {route.name == 'Authentication' ?
 
                                             <View
@@ -893,6 +993,534 @@ export const WalletPreview = props => {
     )
 };
 
+const ProfilePreview = props => {
+
+    const {
+        userProfile = {},
+        navigation = {},
+        profileStatistics,
+        profileStatisticsLoading
+    } = props;
+
+    const {
+        product_count,
+        buyAd_count,
+        reputation_score,
+        rating_info = {}
+    } = profileStatistics;
+
+    const {
+        navigate = _ => { }
+    } = navigation;
+
+    const {
+        user_info = {},
+        profile = {},
+    } = userProfile;
+
+    const {
+        total_count
+    } = rating_info;
+
+    const {
+        first_name = '',
+        last_name = '',
+        is_seller,
+        user_name,
+        active_pakage_type
+    } = user_info;
+
+    const {
+        profile_photo
+    } = profile;
+
+    const flatListRef = useRef();
+
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
+
+
+    const onScrollToIndexFailed = (error = {}) => {
+        const {
+            averageItemLength,
+            index
+        } = error;
+
+        const offset = averageItemLength * index;
+
+        flatListRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => flatListRef?.current?.scrollToIndex({ index, animated: true }), 300);
+    };
+
+    const renderActivePackageTypeText = _ => {
+        if (!!is_seller)
+            switch (active_pakage_type) {
+                case 0:
+                    return locales('labels.normalMembership');
+                case 1:
+                    return locales('labels.basicMembership');
+                case 3:
+                    return locales('labels.specialMembership');
+                default:
+                    return locales('labels.basicMembership');
+            }
+        else
+            return locales('labels.buyer');
+    };
+
+    return (
+        <Pressable
+            android_ripple={{
+                color: '#ededed'
+            }}
+            style={{
+                paddingHorizontal: 10
+            }}
+            onPress={() => navigate('MyBuskool', { screen: 'Profile', params: { user_name } })}
+        >
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+                    {/* {active_pakage_type > 0 ?
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#A6CEFF', '#2ED8A7']}
+                            style={{
+                                width: 78,
+                                height: 78,
+                                borderRadius: 39,
+                                right: 4,
+                            }}
+                        >
+                        </BgLinearGradient>
+                        : null
+                    } */}
+                    <Image
+                        source={profile_photo && profile_photo.length ?
+                            { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                            :
+                            require('../../../assets/icons/user.png')
+                        }
+                        style={{
+                            width: 70,
+                            height: 70,
+                            borderRadius: 35,
+                            // position: active_pakage_type > 0 ? 'absolute' : 'relative'
+                        }}
+                    />
+                    <View
+                        style={{
+                            marginHorizontal: 15,
+                            width: '66%',
+                            justifyContent: 'space-between',
+                            marginBottom: 2
+                        }}
+                    >
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 20,
+                                color: '#333333',
+                            }}
+                        >
+                            {`${first_name} ${last_name}`}
+                        </Text>
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16,
+                                marginTop: 2,
+                                color: '#00C569',
+                            }}
+                        >
+                            {renderActivePackageTypeText()}
+                        </Text>
+                    </View>
+                </View>
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    solid
+                    color='#666666'
+                />
+            </View>
+
+            <View
+                style={{
+                    marginTop: 20,
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-around',
+                    alignItems: 'center'
+                }}
+            >
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#21AD93',
+                            fontSize: 22,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {!!is_seller ? product_count : buyAd_count}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            color: '#666666'
+                        }}
+                    >
+                        {!!is_seller ? locales('labels.product') : locales('labels.requests')}
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#21AD93',
+                            fontSize: 22,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {reputation_score}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            color: '#666666'
+                        }}
+                    >
+                        {locales('labels.credit')}
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#21AD93',
+                            fontSize: 22,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}
+                    >
+                        {total_count}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            color: '#666666'
+                        }}
+                    >
+                        {locales('labels.submittedComments')}
+                    </Text>
+                </View>
+            </View>
+
+            <Pressable
+
+                onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+            >
+                <BgLinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.2 }}
+                    colors={['#0B0E13', '#38485F']}
+                    style={{
+                        borderTopLeftRadius: 12,
+                        borderTopRightRadius: 12,
+                        padding: 10,
+                        marginTop: 10,
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Animated.FlatList
+                        style={{ maxHeight: 25 }}
+                        ref={flatListRef}
+                        onScrollToIndexFailed={onScrollToIndexFailed}
+                        renderItem={({ item }) => (
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    color: 'white'
+                                }}
+                            >
+                                {item}
+                            </Text>
+                        )}
+                        data={flatListArray}
+                        keyExtractor={item => item}
+                    />
+                    <FontAwesome5
+                        name='angle-left'
+                        color='white'
+                        size={20}
+                    />
+                </BgLinearGradient>
+            </Pressable>
+        </Pressable>
+    )
+};
+
+const ProfileAccomplishes = props => {
+    const [isOpen, setIsOpen] = useState(true);
+    const {
+        userProfile = {},
+        navigation = {},
+        profileStatistics,
+        profileStatisticsLoading
+    } = props;
+
+    const {
+        product_count,
+        buyAd_count,
+        reputation_score,
+        rating_info = {}
+    } = profileStatistics;
+
+    const {
+        navigate = _ => { }
+    } = navigation;
+
+    const {
+        user_info = {},
+        profile = {},
+    } = userProfile;
+
+    const {
+        total_count
+    } = rating_info;
+
+    const {
+        first_name,
+        last_name,
+        is_seller,
+        user_name,
+        active_pakage_type
+    } = user_info;
+
+    const {
+        profile_photo
+    } = profile;
+
+    const renderProfileAccomplishmentRate = _ => {
+        return 'ضعیف'
+    };
+
+    const onProfileAccomplishmentItemButtonPressed = _ => {
+    };
+
+    const handleIsOpenArrowPressed = _ => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setIsOpen(!isOpen);
+    };
+
+    const renderProfileAccomplishmentItems = ({ item }) => {
+        return (
+            <View
+                style={{
+                    padding: 15,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    margin: 10,
+                    borderColor: '#999999',
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+                    <FontAwesome5
+                        name='phone-square'
+                        color='#313A43'
+                        solid
+                        size={20}
+                    />
+                    <Text
+                        style={{
+                            color: '#313A43',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 16,
+                            marginHorizontal: 5,
+                            textAlignVertical: 'center',
+
+                        }}
+                    >
+                        {locales('titles.completePhoneInfo')}
+                    </Text>
+                </View>
+                <Text
+                    style={{
+                        color: '#7E7E7E',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginHorizontal: 5,
+                        textAlignVertical: 'center',
+
+                    }}
+                >
+                    {locales('titles.profileAccomplishmentItemsText')}
+                </Text>
+                <Button
+                    onPress={onProfileAccomplishmentItemButtonPressed}
+                    style={{
+                        elevation: 0,
+                        backgroundColor: '#00C569',
+                        padding: 10,
+                        borderRadius: 8,
+                        width: deviceWidth * 0.5,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        marginTop: 20
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                        }}
+                    >
+                        {locales('titles.completeInformation')}
+                    </Text>
+                </Button>
+            </View>
+        )
+    };
+
+    return (
+        <View
+            style={{
+                borderTopColor: '#EBEBEB',
+                borderTopWidth: 10,
+                borderBottomColor: '#EBEBEB',
+                borderBottomWidth: 10,
+                padding: 20
+            }}
+        >
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#555555',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16
+                        }}
+                    >
+                        {locales('labels.profileAccomplishes')}
+                    </Text>
+                    <Text>
+                        {renderProfileAccomplishmentRate()}
+                    </Text>
+                </View>
+                <FontAwesome5
+                    solid
+                    onPress={handleIsOpenArrowPressed}
+                    name={`angle-${isOpen ? 'up' : 'down'}`}
+                    color='#666666'
+                    style={{
+                        padding: 10,
+                        width: 40,
+                        height: 40
+                    }}
+                    size={20}
+                />
+            </View>
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: 10,
+                }}
+            >
+                {[1, 2, 3, 4].map(item => (
+                    <View
+                        key={item}
+                        style={{
+                            borderRadius: 7,
+                            backgroundColor: '#00C569',
+                            width: '23.5%',
+                            height: 6,
+                        }}
+                    >
+                    </View>
+                ))
+                }
+            </View>
+            <Text
+                style={{
+                    color: '#999999',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 14,
+                    marginTop: 10,
+                    width: '100%'
+                }}
+            >
+                {locales('labels.profileAccomplishmentText')}
+            </Text>
+
+            {isOpen ?
+                <FlatList
+                    renderItem={renderProfileAccomplishmentItems}
+                    data={[1, 2, 3, 4, 5]}
+                    keyExtractor={(item) => item.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    inverted
+                />
+                : null
+            }
+        </View>
+    )
+};
+
 const styles = StyleSheet.create({
     image: {
         resizeMode: "cover",
@@ -1129,6 +1757,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         updateProductsList: flag => dispatch(productListActions.updateProductsList(flag)),
         fetchAllProductsList: item => dispatch(productListActions.fetchAllProductsList(item, false)),
+        fetchProfileStatistics: user_name => dispatch(profileActions.fetchProfileStatistics(user_name)),
     }
 }
 const mapStateToProps = state => {
@@ -1145,7 +1774,9 @@ const mapStateToProps = state => {
 
     const {
         userProfile,
-        userProfileLoading
+        userProfileLoading,
+        profileStatistics,
+        profileStatisticsLoading,
     } = profileReducer;
 
 
@@ -1160,7 +1791,10 @@ const mapStateToProps = state => {
         productsListLoading,
 
         userProfile,
-        userProfileLoading
+        userProfileLoading,
+
+        profileStatistics,
+        profileStatisticsLoading,
     }
 }
 
