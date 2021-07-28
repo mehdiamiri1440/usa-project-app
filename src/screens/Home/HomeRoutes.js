@@ -10,6 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 
 export const homeRoutes = [
     // { label: 'labels.dashboard', icon: <MaterialCommunityIcons size={25} name='desktop-mac-dashboard' color='white' />, name: 'PromotionIntro' },
+    { label: 'labels.yourWallet', icon: <FontAwesome5 size={25} name='wallet' color='#556080' />, name: 'Wallet' },
     { label: 'labels.dashboard', icon: <FontAwesome5 size={25} name='chart-line' color='#556080' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user' solid color='#556080' />, name: 'EditProfile' },
     { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='#556080' />, name: 'SuggestedBuyers' },
@@ -37,7 +38,8 @@ export const sellerSpecialRoutes = [
     'Dashboard',
     'SuggestedBuyers',
     'ContactInfoGuid',
-    'MyProducts'
+    'MyProducts',
+    'Wallet'
 ]
 
 export const buyerSpecialRoutes = [
