@@ -12,8 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import { permissions } from '../../../utils';
+import { deviceWidth, deviceHeight, permissions } from '../../../utils';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
