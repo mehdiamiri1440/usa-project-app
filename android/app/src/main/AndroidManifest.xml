@@ -28,6 +28,8 @@
   tools:targetApi="28"
   android:supportsRtl="true"
   android:theme="@style/AppTheme"
+  android:hardwareAccelerated="false"
+  android:largeHeap="true"
   android:requestLegacyExternalStorage="true"
   >
     <receiver android:name="io.invertase.firebase.notifications.RNFirebaseBackgroundNotificationActionReceiver" android:exported="true">
