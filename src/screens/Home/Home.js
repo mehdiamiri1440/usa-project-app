@@ -1512,88 +1512,93 @@ const ProfileAccomplishes = props => {
                 borderTopWidth: 10,
                 borderBottomColor: '#EBEBEB',
                 borderBottomWidth: 10,
-                padding: 20
             }}
         >
             <View
                 style={{
-                    flexDirection: 'row-reverse',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
+                    paddingHorizontal: 10
                 }}
             >
                 <View
                     style={{
                         flexDirection: 'row-reverse',
-                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                     }}
                 >
-                    <Text
-                        style={{
-                            color: '#555555',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('labels.profileAccomplishes')}
-                    </Text>
-                    <Text
-                        style={{
-                            color,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 16
-                        }}
-                    >
-                        {` ${text}`}
-                    </Text>
-                </View>
-                <FontAwesome5
-                    solid
-                    onPress={handleIsOpenArrowPressed}
-                    name={`angle-${isOpen ? 'up' : 'down'}`}
-                    color='#666666'
-                    style={{
-                        padding: 10,
-                        width: 40,
-                        height: 40
-                    }}
-                    size={20}
-                />
-            </View>
-
-            <View
-                style={{
-                    flexDirection: 'row-reverse',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginTop: 10,
-                }}
-            >
-                {[1, 2, 3, 4].map(item => (
                     <View
-                        key={item}
                         style={{
-                            borderRadius: 7,
-                            backgroundColor: '#00C569',
-                            width: '23.5%',
-                            height: 6,
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
                         }}
                     >
+                        <Text
+                            style={{
+                                color: '#555555',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {locales('labels.profileAccomplishes')}
+                        </Text>
+                        <Text
+                            style={{
+                                color,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {` ${text}`}
+                        </Text>
                     </View>
-                ))
-                }
+                    <FontAwesome5
+                        solid
+                        onPress={handleIsOpenArrowPressed}
+                        name={`angle-${isOpen ? 'up' : 'down'}`}
+                        color='#666666'
+                        style={{
+                            padding: 10,
+                            width: 40,
+                            height: 40
+                        }}
+                        size={20}
+                    />
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: 10,
+                    }}
+                >
+                    {[1, 2, 3, 4].map(item => (
+                        <View
+                            key={item}
+                            style={{
+                                borderRadius: 7,
+                                backgroundColor: '#00C569',
+                                width: '23.5%',
+                                height: 6,
+                            }}
+                        >
+                        </View>
+                    ))
+                    }
+                </View>
+                <Text
+                    style={{
+                        color: '#999999',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginTop: 10,
+                        width: '100%'
+                    }}
+                >
+                    {locales('labels.profileAccomplishmentText')}
+                </Text>
             </View>
-            <Text
-                style={{
-                    color: '#999999',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    fontSize: 14,
-                    marginTop: 10,
-                    width: '100%'
-                }}
-            >
-                {locales('labels.profileAccomplishmentText')}
-            </Text>
 
             {isOpen ?
                 <FlatList
