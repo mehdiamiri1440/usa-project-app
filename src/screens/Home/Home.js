@@ -1593,26 +1593,28 @@ const ProfileAccomplishes = props => {
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 14,
                         marginTop: 10,
-                        width: '100%'
+                        width: '100%',
+                        marginBottom: isOpen ? 0 : 10
                     }}
                 >
                     {locales('labels.profileAccomplishmentText')}
                 </Text>
             </View>
 
-            {isOpen ?
-                <FlatList
-                    renderItem={renderProfileAccomplishmentItems}
-                    data={[1, 2, 3, 4, 5]}
-                    style={{ marginTop: 20 }}
-                    keyExtractor={(item) => item.toString()}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    inverted
-                />
-                : null
+            {
+                isOpen ?
+                    <FlatList
+                        renderItem={renderProfileAccomplishmentItems}
+                        data={[1, 2, 3, 4, 5]}
+                        style={{ marginTop: 20 }}
+                        keyExtractor={(item) => item.toString()}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        inverted
+                    />
+                    : null
             }
-        </View>
+        </View >
     )
 };
 
