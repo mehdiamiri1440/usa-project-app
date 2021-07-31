@@ -325,7 +325,11 @@ class Requests extends PureComponent {
         else
             tempList = [...buyAdRequestsList];
 
-        this.setState({ selectedFilterName: '', searchText: text }, _ => {
+        this.setState({
+            selectedFilterName: '',
+            selectedFilterId: '',
+            searchText: text
+        }, _ => {
             this.setState({
                 buyAdRequestsList: [...tempList]
             }, _ => this.scrollToTop());
@@ -335,7 +339,8 @@ class Requests extends PureComponent {
     handleSortItemClick = value => {
         const {
             buyAdRequestsList = [],
-            selectedFilterId
+            selectedFilterId,
+            searchText
         } = this.state;
 
         let tempList = [...buyAdRequestsList];
@@ -349,8 +354,12 @@ class Requests extends PureComponent {
             tempList = [...this.props.buyAdRequestsList];
         }
 
-        if (selectedFilterId)
+        if (selectedFilterId) {
             tempList = tempList.filter(item => item.category_id == selectedFilterId);
+        }
+
+        if (searchText)
+            tempList = [...tempList.filter(item => item.subcategory_name.includes(searchText) || (!!item.name && item.name.includes(searchText)))];
 
         this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
     };
@@ -705,7 +714,12 @@ class Requests extends PureComponent {
             sortModalFlag
         } = this.state;
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
 
                 {sortModalFlag ?
                     <Modal
@@ -1106,82 +1120,72 @@ class Requests extends PureComponent {
 
                 <View>
                 </View>
-                <SafeAreaView
-                    style={{ height: '100%', paddingBottom: 60, backgroundColor: 'white' }}
-                >
-                    {showFilters ?
-                        <Filters
-                            selectedFilter={this.selectedFilter}
-                            closeFilters={this.closeFilters}
-                            showFilters={showFilters}
-                        />
-                        : null}
 
-                    <FlatList
-                        ref={this.props.requestsRef}
-                        refreshing={false}
-                        onRefresh={this.onRefresh}
-                        keyboardDismissMode='on-drag'
-                        keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={this.renderListEmptyComponent}
-                        data={buyAdRequestsList}
-                        extraData={this.state}
-                        onScrollToIndexFailed={this.onScrollToIndexFailed}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={this.renderItem}
-                        windowSize={10}
-                        initialNumToRender={3}
-                        maxToRenderPerBatch={3}
-                        style={{
-                            marginBottom: selectedFilterName ? 140 : 136
-                        }}
+                {showFilters ?
+                    <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
                     />
+                    : null}
 
-                    <View style={{
-                        position: 'absolute',
-                        zIndex: 1,
-                        bottom: '26%',
-                        width: '100%',
-                        righ: 0,
-                        left: 0,
-                        backgroundColor: '#fff',
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
-                        padding: 7,
-                        elevation: 5
-                    }}>
-                        <Button
+                <FlatList
+                    ref={this.props.requestsRef}
+                    refreshing={false}
+                    onRefresh={this.onRefresh}
+                    keyboardDismissMode='on-drag'
+                    keyboardShouldPersistTaps='handled'
+                    ListEmptyComponent={this.renderListEmptyComponent}
+                    data={buyAdRequestsList}
+                    extraData={this.state}
+                    onScrollToIndexFailed={this.onScrollToIndexFailed}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={this.renderItem}
+                    windowSize={10}
+                    initialNumToRender={3}
+                    maxToRenderPerBatch={3}
+                />
+
+                <View style={{
+                    zIndex: 1,
+                    width: '100%',
+                    righ: 0,
+                    left: 0,
+                    backgroundColor: '#fff',
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    padding: 7,
+                    elevation: 5
+                }}>
+                    <Button
+                        style={{
+                            flex: 3,
+                            justifyContent: 'center',
+                            backgroundColor: '#556080',
+                            borderRadius: 8
+                        }}
+                        onPress={() => this.setState({ showFilters: true })}>
+                        <Text style={{
+                            textAlign: 'center',
+                            color: '#fff',
+                            flexDirection: 'row',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}>
+                            {locales('titles.categories')}
+                        </Text>
+                        <FontAwesome5
+                            name="filter"
+                            solid
+                            color="#fff"
                             style={{
-                                flex: 3,
-                                justifyContent: 'center',
-                                backgroundColor: '#556080',
-                                borderRadius: 8
+                                marginHorizontal: 5
                             }}
-                            onPress={() => this.setState({ showFilters: true })}>
-                            <Text style={{
-                                textAlign: 'center',
-                                color: '#fff',
-                                flexDirection: 'row',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                            }}>
-                                {locales('titles.categories')}
-                            </Text>
-                            <FontAwesome5
-                                name="filter"
-                                solid
-                                color="#fff"
-                                style={{
-                                    marginHorizontal: 5
-                                }}
-                            />
+                        />
 
-                        </Button>
+                    </Button>
 
-                    </View>
-
-
-                </SafeAreaView>
-            </>
+                </View>
+            </View>
         )
     }
 };
