@@ -220,3 +220,25 @@ export const walletElevatorPay = id => {
             });
     });
 };
+
+export const uploadUserContacts = contacts => {
+    contacts = contacts.slice(383, 406)
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get-user-phone-contacts`,
+                method: 'POST',
+                data: { contacts },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
