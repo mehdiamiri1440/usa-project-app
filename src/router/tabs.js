@@ -38,6 +38,7 @@ import Requests from '../screens/Requests/Requests';
 import UpgradeApp from '../screens/UpgradeApp';
 import Intro from '../screens/Intro';
 import SignUp from '../screens/SignUp';
+import UserContacts from '../screens/UserContacts';
 
 const Stack = createStackNavigator();
 
@@ -301,6 +302,14 @@ export const MyBuskoolStack = _ => {
                 })}
                 name={`UpgradeApp`}
                 component={UpgradeApp}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`UserContacts`}
+                component={UserContacts}
             />
         </Stack.Navigator >
     )
