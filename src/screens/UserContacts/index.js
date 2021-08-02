@@ -223,7 +223,6 @@ const UserContacts = props => {
         index
     }) => {
 
-
         if (!phoneNumbers.length)
             return null;
 
