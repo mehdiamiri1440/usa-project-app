@@ -250,3 +250,25 @@ export const walletElevatorPay = id => {
 
     return request();
 };
+
+export const uploadUserContacts = contacts => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .uploadUserContacts(contacts)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.UPLOAD_USER_CONTACTS_FAILED,
+                        reject: actionTypes.UPLOAD_USER_CONTACTS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.UPLOAD_USER_CONTACTS_LOADING);
+    const success = res => action(actionTypes.UPLOAD_USER_CONTACTS_SUCCESSFULLY, res);
+
+    return request();
+};

@@ -61,6 +61,12 @@ const INITIAL_STATE = {
     walletElevatorPayMessage: null,
     walletElevatorPay: {},
 
+    uploadUserContactsLoading: false,
+    uploadUserContactsFailed: false,
+    uploadUserContactsError: false,
+    uploadUserContactsMessage: null,
+    uploadUserContacts: {},
+
     profileInfoLoading: false,
     profileInfoFailed: false,
     profileInfoError: false,
@@ -482,10 +488,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
 
-
-
-
-
         case actionTypes.WALLET_ELEVATOR_PAY_LOADING: {
             return {
                 ...state,
@@ -529,6 +531,52 @@ export default (state = INITIAL_STATE, action) => {
                 walletElevatorPayFailed: false,
                 walletElevatorPayError: true,
                 walletElevatorPayMessage: [...description]
+            };
+        };
+
+        case actionTypes.UPLOAD_USER_CONTACTS_LOADING: {
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: true,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_SUCCESSFULLY: {
+            return {
+                ...state,
+                uploadUserContacts: { ...action.payload },
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null,
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_FAILED: {
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: true,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: true,
+                uploadUserContactsMessage: [...description]
             };
         };
 
