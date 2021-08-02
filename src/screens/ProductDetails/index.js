@@ -31,6 +31,7 @@ import ProductImages from './ProductImages';
 import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
 import RegisterationModal from '../../components/RegisterationModal';
+import ContactsListModal from '../../components/contactsListModal';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -103,7 +104,9 @@ class ProductDetails extends PureComponent {
             walletElevatorPaySuccessMessage: '',
 
             shouldShowRegisterationModal: false,
-            RegisterationModalReturnType: null
+            RegisterationModalReturnType: null,
+
+            showContactListModal: false,
         }
     }
 
@@ -432,6 +435,7 @@ class ProductDetails extends PureComponent {
     };
 
     shareProductLink = async (url) => {
+        this.setState({ showContactListModal: false });
         if (this.props.route.params.productId)
             analytics().logEvent('product_share', {
                 product_id: this.props.route.params.productId
@@ -452,8 +456,6 @@ class ProductDetails extends PureComponent {
         } catch (error) {
         }
     };
-
-
 
     elevatorPay = () => {
 
@@ -667,6 +669,10 @@ class ProductDetails extends PureComponent {
         });
     };
 
+    onRequestCloseContactListModal = _ => {
+        this.setState({ showContactListModal: false });
+    };
+
     render() {
         const {
             editProductLoading,
@@ -750,7 +756,9 @@ class ProductDetails extends PureComponent {
             shouldShowRegisterationModal,
 
             category_id,
-            sub_category_id
+            sub_category_id,
+
+            showContactListModal
         } = this.state;
 
 
@@ -763,6 +771,16 @@ class ProductDetails extends PureComponent {
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
         return (
             <>
+                {showContactListModal ?
+                    <ContactsListModal
+                        visible={showContactListModal}
+                        onRequestClose={this.onRequestCloseContactListModal}
+                        onReject={_ => this.shareProductLink(url)}
+                        sharingUrlPostFix={this.getProductUrl()}
+                        {...this.props}
+                    />
+                    : null
+                }
 
                 {shouldShowRegisterationModal ?
                     <RegisterationModal
@@ -1331,8 +1349,8 @@ class ProductDetails extends PureComponent {
                 </Portal > : null}
 
                 <Modal
-                    animationType="slide"
-                    transparent={true}
+                    animationType="fade"
+                    transparent
                     visible={showFullSizeImageModal}
                     onRequestClose={() => this.setState({ showFullSizeImageModal: false })}
                 >
@@ -1556,7 +1574,7 @@ class ProductDetails extends PureComponent {
                                             android_ripple={{
                                                 color: '#ededed'
                                             }}
-                                            onPress={() => this.shareProductLink(url)}
+                                            onPress={_ => this.setState({ showContactListModal: true })}
                                             style={{
                                                 borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
                                                 flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
