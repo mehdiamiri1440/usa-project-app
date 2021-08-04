@@ -11,10 +11,13 @@ import {
     Platform,
     ToastAndroid,
     Pressable,
-    Share
+    Share,
+    Animated,
+    StyleSheet
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { useAnimatedStyle, interpolate, Extrapolate } from 'react-native-reanimated';
 import Svg, {
     Path
 } from "react-native-svg";
@@ -72,6 +75,12 @@ const UserContacts = props => {
     const [copyOfuserContacts, setCopyOfuserContacts] = useState([]);
 
     const [searchText, setSearchText] = useState('');
+
+    // const [scrollYPos, setScrollYPos] = useState(10);
+
+    // const [eleHeight, setEleHeight] = useState(0);
+
+    // const translateY = React.useRef(new Animated.Value(0)).current;
 
     useEffect(_ => {
         getContacts();
@@ -410,7 +419,202 @@ const UserContacts = props => {
         getContacts(true);
     };
 
+    // const onScrollChanged = ({ nativeEvent }) => {
+    //     const {
+    //         contentInset,
+    //         contentOffset,
+    //         contentSize,
+    //         layoutMeasurement,
+    //         zoomScale
+    //     } = nativeEvent;
+    //     setScrollYPos(contentInset.y);
+    //     setEleHeight(contentSize.height);
+    //     translateY.setValue(-1 * contentOffset.y)
+    // };
+
     const renderListHeaderComponent = _ => {
+
+        return (
+            <View
+            // style={{
+            //     transform: [{ translateY }]
+            // }}
+            >
+                <View
+                    style={{
+                        padding: 10
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'right',
+                            color: '#666',
+                            fontSize: 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        }}
+                    >
+                        {locales('titles.shareInviteLink')}
+                    </Text>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            backgroundColor: '#EEEEEE',
+                            alignItems: 'center',
+                            marginVertical: 10,
+                            justifyContent: 'space-between',
+                            alignSelf: 'center',
+                            borderRadius: 12
+                        }}
+                    >
+                        <Text
+                            onPress={showToast}
+                            style={{
+                                textAlign: 'center',
+                                backgroundColor: '#02C09E',
+                                color: 'white',
+                                fontSize: 16,
+                                borderRadius: 12,
+                                padding: 10,
+                                width: '25%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
+                        >
+                            {locales('titles.copy')}
+                        </Text>
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                textAlign: 'left',
+                                backgroundColor: '#EEEEEE',
+                                fontSize: 16,
+                                borderRadius: 12,
+                                padding: 10,
+                                width: '75%',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
+                        >
+                            {completeUrlToShare}
+                        </Text>
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Pressable
+                            onPress={_ => shareToExternalApp(undefined, 'whatsApp')}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+                                borderRadius: 12,
+                                width: '30%',
+                                borderWidth: 1,
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <FontAwesome5
+                                name='whatsapp'
+                                solid
+                                color='#2ecc71'
+                                size={20}
+                            />
+                            <Text
+                                style={{
+                                    color: '#000',
+                                    marginHorizontal: 5
+                                }}
+                            >
+                                {locales('titles.whatsApp')}
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            onPress={_ => shareToExternalApp(undefined, 'sms')}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+                                borderRadius: 12,
+                                width: '30%',
+                                borderWidth: 1,
+                                marginHorizontal: 20,
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <FontAwesome5
+                                name='sms'
+                                solid
+                                color='#1abc9c'
+                                size={20}
+                            />
+                            <Text
+                                style={{
+                                    color: '#000',
+                                    marginHorizontal: 5
+                                }}
+                            >
+                                {locales('labels.sms')}
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            onPress={onSharePressed}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+                                borderRadius: 12,
+                                width: '30%',
+                                borderWidth: 1,
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <FontAwesome5
+                                name='ellipsis-h'
+                                solid
+                                color='#555'
+                                size={20}
+                            />
+                            <Text
+                                style={{
+                                    color: '#000',
+                                    marginHorizontal: 5
+                                }}
+                            >
+                                {locales('titles.others')}
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+                <Text
+                    style={{
+                        paddingTop: 10,
+                        paddingHorizontal: 15,
+                        color: 'black',
+                        textAlignVertical: 'center',
+                        textAlign: 'right',
+                        width: '100%',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    }}
+                >
+                    {locales('titles.yourContacts')}
+                </Text>
+                {
+                    renderSearchBar()
+                }
+            </View>
+        )
+    };
+
+    const renderSearchBar = _ => {
         return (
             <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
                 <Input
@@ -448,177 +652,22 @@ const UserContacts = props => {
                 {...props}
             />
 
-            <View
-                style={{
-                    padding: 10
-                }}
-            >
-                <Text
-                    style={{
-                        textAlign: 'right',
-                        color: '#666',
-                        fontSize: 16,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    }}
-                >
-                    {locales('titles.shareInviteLink')}
-                </Text>
 
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        backgroundColor: '#EEEEEE',
-                        alignItems: 'center',
-                        marginVertical: 10,
-                        justifyContent: 'space-between',
-                        alignSelf: 'center',
-                        borderRadius: 12
-                    }}
-                >
-                    <Text
-                        onPress={showToast}
-                        style={{
-                            textAlign: 'center',
-                            backgroundColor: '#02C09E',
-                            color: 'white',
-                            fontSize: 16,
-                            borderRadius: 12,
-                            padding: 10,
-                            width: '25%',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}
-                    >
-                        {locales('titles.copy')}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            textAlign: 'left',
-                            backgroundColor: '#EEEEEE',
-                            fontSize: 16,
-                            borderRadius: 12,
-                            padding: 10,
-                            width: '75%',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}
-                    >
-                        {completeUrlToShare}
-                    </Text>
-                </View>
+            {renderListHeaderComponent()}
 
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Pressable
-                        onPress={_ => shareToExternalApp(undefined, 'whatsApp')}
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'space-around',
-                            borderRadius: 12,
-                            width: '30%',
-                            borderWidth: 1,
-                            borderColor: '#e0e0e0',
-                            padding: 10,
-                        }}
-                    >
-                        <FontAwesome5
-                            name='whatsapp'
-                            solid
-                            color='#2ecc71'
-                            size={20}
-                        />
-                        <Text
-                            style={{
-                                color: '#000',
-                                marginHorizontal: 5
-                            }}
-                        >
-                            {locales('titles.whatsApp')}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={_ => shareToExternalApp(undefined, 'sms')}
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'space-around',
-                            borderRadius: 12,
-                            width: '30%',
-                            borderWidth: 1,
-                            marginHorizontal: 20,
-                            borderColor: '#e0e0e0',
-                            padding: 10,
-                        }}
-                    >
-                        <FontAwesome5
-                            name='sms'
-                            solid
-                            color='#1abc9c'
-                            size={20}
-                        />
-                        <Text
-                            style={{
-                                color: '#000',
-                                marginHorizontal: 5
-                            }}
-                        >
-                            {locales('labels.sms')}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={onSharePressed}
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'space-around',
-                            borderRadius: 12,
-                            width: '30%',
-                            borderWidth: 1,
-                            borderColor: '#e0e0e0',
-                            padding: 10,
-                        }}
-                    >
-                        <FontAwesome5
-                            name='ellipsis-h'
-                            solid
-                            color='#555'
-                            size={20}
-                        />
-                        <Text
-                            style={{
-                                color: '#000',
-                                marginHorizontal: 5
-                            }}
-                        >
-                            {locales('titles.others')}
-                        </Text>
-                    </Pressable>
-                </View>
-            </View>
-
-            <Text
-                style={{
-                    paddingTop: 10,
-                    paddingHorizontal: 15,
-                    color: 'black',
-                    textAlignVertical: 'center',
-                    textAlign: 'right',
-                    width: '100%',
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                }}
-            >
-                {locales('titles.yourContacts')}
-            </Text>
-            {
-                renderListHeaderComponent()
-            }
             <FlatList
+                // onScroll={onScrollChanged}
+                // scrollEventThrottle={16}
+                // style={[{
+                //     zIndex: 999,
+                //     bottom: translateY.interpolate({
+                //         inputRange: [0, 10],
+                //         outputRange: [0, 10],
+                //     })
+                // },
+                // ]}
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
                 data={userContacts}
                 ListEmptyComponent={renderListEmptyComponent}
                 renderItem={renderItem}
