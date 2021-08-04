@@ -1,25 +1,21 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState, Animated, TranslateXTransform,
-    FlatList, LayoutAnimation, UIManager, Platform
+    RefreshControl, AppState, Animated
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { useScrollToTop, useIsFocused, useRoute, useNavigationState, useFocusEffect } from '@react-navigation/native';
+import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-
 
 import * as productListActions from '../../redux/productsList/actions';
 import * as authActions from '../../redux/auth/actions';
@@ -30,14 +26,6 @@ import { versionName } from '../../../version.json';
 import { homeRoutes, sellerSpecialRoutes, buyerSpecialRoutes } from './HomeRoutes';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
-import { navigate } from '../../router/rootNavigation';
-
-if (
-    Platform.OS === "android" &&
-    UIManager.setLayoutAnimationEnabledExperimental
-) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 class Home extends React.Component {
 
     constructor(props) {
@@ -354,9 +342,7 @@ class Home extends React.Component {
                     <ProfilePreview
                         {...this.props}
                     />
-                    <ProfileAccomplishes
-                        {...this.props}
-                    />
+
                     {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
                     {/* 
@@ -1364,257 +1350,6 @@ const ProfilePreview = props => {
                 </BgLinearGradient>
             </Pressable>
         </Pressable>
-    )
-};
-
-const ProfileAccomplishes = props => {
-    const [isOpen, setIsOpen] = useState(true);
-    const {
-        userProfile = {},
-        navigation = {},
-        profileStatistics,
-        profileStatisticsLoading
-    } = props;
-
-    const {
-        product_count,
-        buyAd_count,
-        reputation_score,
-        rating_info = {}
-    } = profileStatistics;
-
-    const {
-        navigate = _ => { }
-    } = navigation;
-
-    const {
-        user_info = {},
-        profile = {},
-    } = userProfile;
-
-    const {
-        total_count
-    } = rating_info;
-
-    const {
-        first_name,
-        last_name,
-        is_seller,
-        user_name,
-        active_pakage_type
-    } = user_info;
-
-    const {
-        profile_photo
-    } = profile;
-
-    const renderProfileAccomplishmentRate = _ => {
-        return {
-            text: 'ضعیف',
-            color: '#313A43'
-        }
-    };
-
-    const onProfileAccomplishmentItemButtonPressed = _ => {
-    };
-
-    const handleIsOpenArrowPressed = _ => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setIsOpen(!isOpen);
-    };
-
-    const renderProfileAccomplishmentItems = ({ item }) => {
-        return (
-            <View
-                style={{
-                    padding: 15,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    margin: 10,
-                    borderColor: '#999999',
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        alignItems: 'center',
-                    }}
-                >
-                    <FontAwesome5
-                        name='phone-square'
-                        color='#313A43'
-                        solid
-                        size={20}
-                    />
-                    <Text
-                        style={{
-                            color: '#313A43',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 16,
-                            marginHorizontal: 5,
-                            textAlignVertical: 'center',
-
-                        }}
-                    >
-                        {locales('titles.completePhoneInfo')}
-                    </Text>
-                </View>
-                <Text
-                    style={{
-                        color: '#7E7E7E',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 14,
-                        marginHorizontal: 5,
-                        textAlignVertical: 'center',
-
-                    }}
-                >
-                    {locales('titles.profileAccomplishmentItemsText')}
-                </Text>
-                <Button
-                    onPress={onProfileAccomplishmentItemButtonPressed}
-                    style={{
-                        elevation: 0,
-                        backgroundColor: '#00C569',
-                        padding: 10,
-                        borderRadius: 8,
-                        width: deviceWidth * 0.5,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        marginTop: 20
-                    }}
-                >
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 16,
-                        }}
-                    >
-                        {locales('titles.completeInformation')}
-                    </Text>
-                </Button>
-            </View>
-        )
-    };
-
-    const {
-        text,
-        color
-    } = renderProfileAccomplishmentRate();
-
-    return (
-        <View
-            style={{
-                borderTopColor: '#EBEBEB',
-                borderTopWidth: 10,
-                borderBottomColor: '#EBEBEB',
-                borderBottomWidth: 10,
-            }}
-        >
-            <View
-                style={{
-                    paddingHorizontal: 10
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}
-                >
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: '#555555',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16
-                            }}
-                        >
-                            {locales('labels.profileAccomplishes')}
-                        </Text>
-                        <Text
-                            style={{
-                                color,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16
-                            }}
-                        >
-                            {` ${text}`}
-                        </Text>
-                    </View>
-                    <FontAwesome5
-                        solid
-                        onPress={handleIsOpenArrowPressed}
-                        name={`angle-${isOpen ? 'up' : 'down'}`}
-                        color='#666666'
-                        style={{
-                            padding: 10,
-                            width: 40,
-                            height: 40
-                        }}
-                        size={20}
-                    />
-                </View>
-
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: 10,
-                    }}
-                >
-                    {[1, 2, 3, 4].map(item => (
-                        <View
-                            key={item}
-                            style={{
-                                borderRadius: 7,
-                                backgroundColor: '#00C569',
-                                width: '23.5%',
-                                height: 6,
-                            }}
-                        >
-                        </View>
-                    ))
-                    }
-                </View>
-                <Text
-                    style={{
-                        color: '#999999',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 14,
-                        marginTop: 10,
-                        width: '100%',
-                        marginBottom: isOpen ? 0 : 10
-                    }}
-                >
-                    {locales('labels.profileAccomplishmentText')}
-                </Text>
-            </View>
-
-            {
-                isOpen ?
-                    <FlatList
-                        renderItem={renderProfileAccomplishmentItems}
-                        data={[1, 2, 3, 4, 5]}
-                        style={{ marginTop: 20 }}
-                        keyExtractor={(item) => item.toString()}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        inverted
-                    />
-                    : null
-            }
-        </View >
     )
 };
 
