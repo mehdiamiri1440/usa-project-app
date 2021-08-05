@@ -404,8 +404,8 @@ const UserContacts = props => {
                         foregroundColor="#ecebeb"
                         style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
                     >
-                        <Circle cx='95%' cy="40%" r="20" />
-                        <Rect x="65%" y="35%" width="90" height="10" />
+                        <Circle cx='90%' cy="40%" r="20" />
+                        <Rect x="55%" y="35%" width="90" height="10" />
                         <Circle cx='30%' cy="40%" r="12" />
                         <Circle cx='20%' cy="40%" r="12" />
                         <Circle cx='10%' cy="40%" r="12" />
