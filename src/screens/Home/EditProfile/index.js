@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
-    FlatList, LayoutAnimation, UIManager, Platform
+    FlatList, LayoutAnimation, UIManager, Platform, Modal
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
@@ -45,9 +45,29 @@ const ProfileAccomplishmentItemsArray = [
         parentRoute: 'MyBuskool',
         childRoute: 'Authentication',
         params: {},
-        title: 'labels.authentication',
-        text: 'titles.profileAccomplishmentItemsText',
-        buttonText: 'labels.editProfileAuthentication',
+        title: 'titles.introduceToFirends',
+        text: 'labels.shareBuskoolWithFriendsText',
+        buttonText: 'titles.introduceToFirends',
+        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
+    },
+    {
+        id: 3,
+        parentRoute: 'MyBuskool',
+        childRoute: 'Authentication',
+        params: {},
+        title: 'titles.aboutYou',
+        text: 'labels.writeDescriptionText',
+        buttonText: 'titles.aboutYou',
+        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
+    },
+    {
+        id: 4,
+        parentRoute: 'MyBuskool',
+        childRoute: 'Authentication',
+        params: {},
+        title: 'titles.profilePicture',
+        text: 'labels.selectProfilePicText',
+        buttonText: 'titles.profilePicture',
         icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
     },
 ];
@@ -565,6 +585,8 @@ class EditProfile extends Component {
                             </View> : null}
 
                         <ProfileAccomplishes
+                            handleDescriptionChange={this.handleDescriptionChange}
+                            openActionSheet={this.openActionSheet}
                             {...this.props}
                         />
 
@@ -779,7 +801,16 @@ class EditProfile extends Component {
 };
 
 const ProfileAccomplishes = props => {
+
+    const {
+        handleDescriptionChange = _ => { },
+    } = props;
+
     const [isOpen, setIsOpen] = useState(true);
+
+    const [descriptionTextModalVisiblity, setDescriptionTextModalVisiblity] = useState(false);
+
+    const [description, setDescription] = useState('');
 
     const renderProfileAccomplishmentRate = _ => {
         return {
@@ -788,9 +819,24 @@ const ProfileAccomplishes = props => {
         }
     };
 
-    const onProfileAccomplishmentItemButtonPressed = item => {
-        // you can write a switch case for each of the item and omit this dynamic coding for routing
-        return props.navigation.navigate(item.parentRoute, { screen: item.childRoute, params: { ...item.params } });
+    const onProfileAccomplishmentItemButtonPressed = ({ title }) => {
+        switch (title) {
+            case 'labels.authentication':
+                return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
+
+            case 'titles.introduceToFirends':
+                break;
+
+            case 'titles.aboutYou':
+                setDescriptionTextModalVisiblity(true);
+                break;
+
+            case 'titles.profilePicture':
+                return props.openActionSheet();
+
+            default:
+                break;
+        }
     };
 
     const handleIsOpenArrowPressed = _ => {
@@ -875,114 +921,187 @@ const ProfileAccomplishes = props => {
         color
     } = renderProfileAccomplishmentRate();
 
+    const handleDescriptionTextChange = text => {
+        setDescription(text);
+    }
+    const closeDescriptionTextModal = _ => {
+        if (description.length < 10)
+            handleDescriptionTextChange('');
+        else
+            handleDescriptionChange(text);
+        setDescriptionTextModalVisiblity(false)
+    }
     return (
-        <View
-            style={{
-                borderBottomColor: '#EBEBEB',
-                borderBottomWidth: 10,
-            }}
-        >
+        <>
+            {descriptionTextModalVisiblity ?
+                <Modal
+                    animationType='fade'
+                    transparent={false}
+                    visible={descriptionTextModalVisiblity}
+                    onRequestClose={_ => setDescriptionTextModalVisiblity(false)}
+                >
+                    <View
+                        style={{
+                            flex: 1
+                        }}
+                    >
+                        <Textarea
+                            onChangeText={handleDescriptionTextChange}
+                            value={description}
+                            style={{
+                                borderRadius: 4,
+                                overflow: 'hidden',
+                                backgroundColor: '#fff',
+                                paddingHorizontal: 15,
+                                paddingVertical: 2,
+                                borderWidth: 1,
+                                borderColor: '#999999',
+                                color: '#333',
+                                fontSize: 13,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                height: deviceHeight * 0.25,
+                            }}
+                            bordered
+                            placeholderTextColor="#BEBEBE"
+                            placeholder={locales('titles.headerDescription')}
+                        />
+                        <Button
+                            onPress={closeDescriptionTextModal}
+                            style={{
+                                elevation: 0,
+                                backgroundColor: '#00C569',
+                                padding: 10,
+                                borderRadius: 8,
+                                width: deviceWidth * 0.5,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                marginTop: 20
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                }}
+                            >
+                                {locales('titles.close')}
+                            </Text>
+                        </Button>
+                    </View>
+                </Modal>
+                :
+                null}
             <View
                 style={{
-                    paddingHorizontal: 10
+                    borderBottomColor: '#EBEBEB',
+                    borderBottomWidth: 10,
                 }}
             >
                 <View
                     style={{
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
+                        paddingHorizontal: 10
                     }}
                 >
                     <View
                         style={{
                             flexDirection: 'row-reverse',
-                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
                         }}
                     >
-                        <Text
-                            style={{
-                                color: '#555555',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16
-                            }}
-                        >
-                            {locales('labels.profileAccomplishes')}
-                        </Text>
-                        <Text
-                            style={{
-                                color,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16
-                            }}
-                        >
-                            {` ${text}`}
-                        </Text>
-                    </View>
-                    <FontAwesome5
-                        solid
-                        onPress={handleIsOpenArrowPressed}
-                        name={`angle-${isOpen ? 'up' : 'down'}`}
-                        color='#666666'
-                        style={{
-                            padding: 10,
-                            width: 40,
-                            height: 40
-                        }}
-                        size={20}
-                    />
-                </View>
-
-                <View
-                    style={{
-                        flexDirection: 'row-reverse',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: 10,
-                    }}
-                >
-                    {[1, 2, 3, 4].map(item => (
                         <View
-                            key={item}
                             style={{
-                                borderRadius: 7,
-                                backgroundColor: '#00C569',
-                                width: '23.5%',
-                                height: 6,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
                             }}
                         >
+                            <Text
+                                style={{
+                                    color: '#555555',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16
+                                }}
+                            >
+                                {locales('labels.profileAccomplishes')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16
+                                }}
+                            >
+                                {` ${text}`}
+                            </Text>
                         </View>
-                    ))
-                    }
-                </View>
-                <Text
-                    style={{
-                        color: '#999999',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 14,
-                        marginTop: 10,
-                        width: '100%',
-                        marginBottom: isOpen ? 0 : 10
-                    }}
-                >
-                    {locales('labels.profileAccomplishmentText')}
-                </Text>
-            </View>
+                        <FontAwesome5
+                            solid
+                            onPress={handleIsOpenArrowPressed}
+                            name={`angle-${isOpen ? 'up' : 'down'}`}
+                            color='#666666'
+                            style={{
+                                padding: 10,
+                                width: 40,
+                                height: 40
+                            }}
+                            size={20}
+                        />
+                    </View>
 
-            {
-                isOpen ?
-                    <FlatList
-                        renderItem={renderProfileAccomplishmentItems}
-                        data={ProfileAccomplishmentItemsArray}
-                        style={{ marginTop: 20 }}
-                        keyExtractor={(item) => item.id.toString()}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        inverted
-                    />
-                    : null
-            }
-        </View >
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            marginTop: 10,
+                        }}
+                    >
+                        {[1, 2, 3, 4].map(item => (
+                            <View
+                                key={item}
+                                style={{
+                                    borderRadius: 7,
+                                    backgroundColor: '#00C569',
+                                    width: '23.5%',
+                                    height: 6,
+                                }}
+                            >
+                            </View>
+                        ))
+                        }
+                    </View>
+                    <Text
+                        style={{
+                            color: '#999999',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            marginTop: 10,
+                            width: '100%',
+                            marginBottom: isOpen ? 0 : 10
+                        }}
+                    >
+                        {locales('labels.profileAccomplishmentText')}
+                    </Text>
+                </View>
+
+                {
+                    isOpen ?
+                        <FlatList
+                            renderItem={renderProfileAccomplishmentItems}
+                            data={ProfileAccomplishmentItemsArray}
+                            style={{ marginTop: 20 }}
+                            keyExtractor={(item) => item.id.toString()}
+                            showsHorizontalScrollIndicator={false}
+                            horizontal
+                            inverted
+                        />
+                        : null
+                }
+            </View >
+        </>
     )
 };
 
