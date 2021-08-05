@@ -14,6 +14,7 @@ import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
 import * as profileActions from '../../../redux/profile/actions';
 import { permissions, deviceHeight, deviceWidth } from '../../../utils';
@@ -27,6 +28,29 @@ if (
 ) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
+
+const ProfileAccomplishmentItemsArray = [
+    {
+        id: 1,
+        parentRoute: 'MyBuskool',
+        childRoute: 'Authentication',
+        params: {},
+        title: 'labels.authentication',
+        text: 'titles.profileAccomplishmentItemsText',
+        buttonText: 'labels.editProfileAuthentication',
+        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
+    },
+    {
+        id: 2,
+        parentRoute: 'MyBuskool',
+        childRoute: 'Authentication',
+        params: {},
+        title: 'labels.authentication',
+        text: 'titles.profileAccomplishmentItemsText',
+        buttonText: 'labels.editProfileAuthentication',
+        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
+    },
+];
 class EditProfile extends Component {
     constructor(props) {
         super(props)
@@ -564,7 +588,7 @@ class EditProfile extends Component {
                                     paddingHorizontal: 15,
                                     paddingVertical: 2,
                                     borderWidth: 1,
-                                    borderColor: '#777',
+                                    borderColor: '#999999',
                                     color: '#333',
                                     fontSize: 13,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -764,7 +788,9 @@ const ProfileAccomplishes = props => {
         }
     };
 
-    const onProfileAccomplishmentItemButtonPressed = _ => {
+    const onProfileAccomplishmentItemButtonPressed = item => {
+        // you can write a switch case for each of the item and omit this dynamic coding for routing
+        return props.navigation.navigate(item.parentRoute, { screen: item.childRoute, params: { ...item.params } });
     };
 
     const handleIsOpenArrowPressed = _ => {
@@ -789,12 +815,7 @@ const ProfileAccomplishes = props => {
                         alignItems: 'center',
                     }}
                 >
-                    <FontAwesome5
-                        name='phone-square'
-                        color='#313A43'
-                        solid
-                        size={20}
-                    />
+                    {item.icon}
                     <Text
                         style={{
                             color: '#313A43',
@@ -805,7 +826,7 @@ const ProfileAccomplishes = props => {
 
                         }}
                     >
-                        {locales('titles.completePhoneInfo')}
+                        {locales(item.title)}
                     </Text>
                 </View>
                 <Text
@@ -818,10 +839,10 @@ const ProfileAccomplishes = props => {
 
                     }}
                 >
-                    {locales('titles.profileAccomplishmentItemsText')}
+                    {locales(item.text)}
                 </Text>
                 <Button
-                    onPress={onProfileAccomplishmentItemButtonPressed}
+                    onPress={_ => onProfileAccomplishmentItemButtonPressed(item)}
                     style={{
                         elevation: 0,
                         backgroundColor: '#00C569',
@@ -842,7 +863,7 @@ const ProfileAccomplishes = props => {
                             fontSize: 16,
                         }}
                     >
-                        {locales('titles.completeInformation')}
+                        {locales(item.buttonText)}
                     </Text>
                 </Button>
             </View>
@@ -952,9 +973,9 @@ const ProfileAccomplishes = props => {
                 isOpen ?
                     <FlatList
                         renderItem={renderProfileAccomplishmentItems}
-                        data={[1, 2, 3, 4, 5]}
+                        data={ProfileAccomplishmentItemsArray}
                         style={{ marginTop: 20 }}
-                        keyExtractor={(item) => item.toString()}
+                        keyExtractor={(item) => item.id.toString()}
                         showsHorizontalScrollIndicator={false}
                         horizontal
                         inverted
