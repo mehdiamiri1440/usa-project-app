@@ -1,5 +1,8 @@
-import React, { Component } from 'react';
-import { Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking } from 'react-native';
+import React, { Component, useState } from 'react';
+import {
+    Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
+    FlatList, LayoutAnimation, UIManager, Platform
+} from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -17,6 +20,13 @@ import { permissions, deviceHeight, deviceWidth } from '../../../utils';
 import Header from '../../../components/header';
 
 let myTimeout;
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 class EditProfile extends Component {
     constructor(props) {
         super(props)
@@ -424,19 +434,16 @@ class EditProfile extends Component {
                     keyboardShouldPersistTaps='handled'
                     style={{
                         paddingVertical: 30,
-                        paddingHorizontal: 15,
                         backgroundColor: '#fff'
                     }}
                 >
-
 
                     <View style={{
                         paddingBottom: 60
 
                     }}>
 
-                        <View
-                        >
+                        <View>
 
                             <View
                                 style={{
@@ -533,182 +540,181 @@ class EditProfile extends Component {
                                 </Pressable>
                             </View> : null}
 
-                        <Card transparent>
-                            <View style={{
-                                paddingHorizontal: 10
+                        <ProfileAccomplishes
+                            {...this.props}
+                        />
+
+                        <View style={{
+                            paddingHorizontal: 10
+                        }}>
+                            <Text style={{
+                                marginTop: 10,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#333'
                             }}>
+                                {locales('labels.writeAboutYourActivity')}
+                            </Text>
+                            <Textarea
+                                onChangeText={this.handleDescriptionChange}
+                                value={description}
+                                style={{
+                                    borderRadius: 4,
+                                    overflow: 'hidden',
+                                    backgroundColor: '#fff',
+                                    paddingHorizontal: 15,
+                                    paddingVertical: 2,
+                                    borderWidth: 1,
+                                    borderColor: '#777',
+                                    color: '#333',
+                                    fontSize: 13,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    height: deviceHeight * 0.25,
+                                }}
+                                bordered
+                                placeholderTextColor="#BEBEBE"
+                                placeholder={locales('titles.headerDescription')} />
 
-                                <Text style={{
-                                    marginTop: 10,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    color: '#333'
-                                }}>
-                                    {locales('labels.writeAboutYourActivity')}
-                                </Text>
+                        </View>
 
-                                <Textarea
-                                    onChangeText={this.handleDescriptionChange}
-                                    value={description}
-                                    style={{
-                                        borderRadius: 4,
-                                        overflow: 'hidden',
-                                        backgroundColor: '#fff',
-                                        paddingHorizontal: 15,
-                                        paddingVertical: 2,
-                                        borderWidth: 1,
-                                        borderColor: '#777',
-                                        color: '#333',
-                                        fontSize: 13,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        height: deviceHeight * 0.25,
-                                    }}
-                                    bordered
-                                    placeholderTextColor="#BEBEBE"
-                                    placeholder={locales('titles.headerDescription')} />
-
-                            </View>
-
+                        <View
+                            activeOpacity={1}
+                            style={{
+                                backgroundColor: '#F5FBFF',
+                                borderRadius: 12,
+                                alignSelf: 'center',
+                                paddingVertical: 20,
+                                paddingHorizontal: 10,
+                                marginTop: 20,
+                                width: '95%'
+                            }}
+                        >
 
                             <View
-                                activeOpacity={1}
                                 style={{
-                                    backgroundColor: '#F5FBFF',
-                                    borderRadius: 12,
-                                    alignSelf: 'center',
-                                    padding: 20,
-                                    marginTop: 20,
-                                    width: deviceWidth * 0.88
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center'
                                 }}
                             >
-
-                                <View
-                                    style={{
-                                        flexDirection: 'row-reverse',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <FontAwesome5
-                                        color='#404B55'
-                                        size={25}
-                                        solid
-                                        name='exclamation-circle'
-                                    />
-                                    <Text
-                                        style={{
-                                            color: '#404B55',
-                                            marginHorizontal: 5,
-                                            fontSize: 18,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        }}
-                                    >
-                                        {locales('labels.contactInfo')}
-                                    </Text>
-                                </View>
+                                <FontAwesome5
+                                    color='#404B55'
+                                    size={25}
+                                    solid
+                                    name='exclamation-circle'
+                                />
                                 <Text
                                     style={{
-                                        marginVertical: 15,
+                                        color: '#404B55',
+                                        marginHorizontal: 5,
+                                        fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    }}
+                                >
+                                    {locales('labels.contactInfo')}
+                                </Text>
+                            </View>
+                            <Text
+                                style={{
+                                    marginVertical: 15,
+                                    color: '#666666',
+                                    fontSize: 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                }}
+                            >
+                                {is_seller ? locales('labels.contactInfoDescription') : locales('titles.buyersPermissionForContactInfo')}
+                            </Text>
+
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    marginVertical: 10,
+                                }}
+                            >
+                                <Checkbox
+                                    disabled={!!phoneNumberViewPermissionLoading}
+                                    status={shouldShowContactInfo ? 'checked' : 'unchecked'}
+                                    onPress={this.handleContactInfoCheckBoxChange}
+                                    color='#00C569'
+                                />
+                                <Text
+                                    onPress={this.handleContactInfoCheckBoxChange}
+                                    style={{
                                         color: '#666666',
                                         fontSize: 16,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     }}
                                 >
-                                    {is_seller ? locales('labels.contactInfoDescription') : locales('titles.buyersPermissionForContactInfo')}
+                                    {locales('labels.limitAccess')}
                                 </Text>
+                                <ActivityIndicator
+                                    animating={!!phoneNumberViewPermissionLoading}
+                                    color='#00C569'
+                                    style={{ marginHorizontal: 5 }}
+                                />
+                            </View>
 
-                                <View
+                        </View>
+
+                        <View style={{
+                            marginTop: 20
+                        }}>
+                            <Button
+                                style={[styles.loginButton, { alignSelf: 'center' }]}
+                                onPress={this.editProfile}>
+                                <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
+                                    {locales('titles.submitChanges')}
+                                </Text>
+                                <ActivityIndicator size="small"
+                                    animating={!!editProfileLoading} color="white"
                                     style={{
-                                        flexDirection: 'row-reverse',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'center',
-                                        marginVertical: 10,
+                                        position: 'absolute', left: '28%', top: '28%',
+                                        width: 25, height: 25, borderRadius: 15
                                     }}
-                                >
-                                    <Checkbox
-                                        disabled={!!phoneNumberViewPermissionLoading}
-                                        status={shouldShowContactInfo ? 'checked' : 'unchecked'}
-                                        onPress={this.handleContactInfoCheckBoxChange}
-                                        color='#00C569'
-                                    />
-                                    <Text
-                                        onPress={this.handleContactInfoCheckBoxChange}
+                                />
+                            </Button>
+                            {imageSizeError ?
+                                <Text style={{
+                                    width: '100%',
+                                    color: 'black',
+                                    marginVertical: 10,
+                                    paddingHorizontal: 15,
+                                    backgroundColor: '#E41C38',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    paddingVertical: 5,
+                                    borderRadius: 4
+                                }}
+                                >{locales('errors.imageSizeError')}</Text>
+                                : null}
+
+                            {editProfileError && editProfileMessage && editProfileMessage.length ?
+                                editProfileMessage.map((error, index) => (
+                                    <View
                                         style={{
-                                            color: '#666666',
-                                            fontSize: 16,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            width: deviceWidth, justifyContent: 'center', alignItems: 'center',
+                                            alignContent: 'center'
                                         }}
+                                        key={index}
                                     >
-                                        {locales('labels.limitAccess')}
-                                    </Text>
-                                    <ActivityIndicator
-                                        animating={!!phoneNumberViewPermissionLoading}
-                                        color='#00C569'
-                                        style={{ marginHorizontal: 5 }}
-                                    />
-                                </View>
-
-                            </View>
-
-
-                            <View style={{
-                                marginTop: 20
-                            }}>
-                                <Button
-                                    style={[styles.loginButton, { alignSelf: 'center' }]}
-                                    onPress={this.editProfile}>
-                                    <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
-                                        {locales('titles.submitChanges')}
-                                    </Text>
-                                    <ActivityIndicator size="small"
-                                        animating={!!editProfileLoading} color="white"
-                                        style={{
-                                            position: 'absolute', left: '28%', top: '28%',
-                                            width: 25, height: 25, borderRadius: 15
+                                        <Text style={{
+                                            width: '100%',
+                                            color: '#E41C38',
+                                            textAlign: 'center',
+                                            marginVertical: 10,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            paddingHorizontal: 15,
+                                            paddingVertical: 5,
+                                            borderRadius: 4
                                         }}
-                                    />
-                                </Button>
-                                {imageSizeError ?
-                                    <Text style={{
-                                        width: '100%',
-                                        color: 'black',
-                                        marginVertical: 10,
-                                        paddingHorizontal: 15,
-                                        backgroundColor: '#E41C38',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                        paddingVertical: 5,
-                                        borderRadius: 4
-                                    }}
-                                    >{locales('errors.imageSizeError')}</Text>
-                                    : null}
-
-                                {editProfileError && editProfileMessage && editProfileMessage.length ?
-                                    editProfileMessage.map((error, index) => (
-                                        <View
-                                            style={{
-                                                width: deviceWidth, justifyContent: 'center', alignItems: 'center',
-                                                alignContent: 'center'
-                                            }}
-                                            key={index}
-                                        >
-                                            <Text style={{
-                                                width: '100%',
-                                                color: '#E41C38',
-                                                textAlign: 'center',
-                                                marginVertical: 10,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                paddingHorizontal: 15,
-                                                paddingVertical: 5,
-                                                borderRadius: 4
-                                            }}
-                                            >{error}
-                                            </Text>
-                                        </View>
-                                    ))
-                                    : null}
-                            </View>
-                        </Card>
-
+                                        >{error}
+                                        </Text>
+                                    </View>
+                                ))
+                                : null}
+                        </View>
 
                     </View>
+
                 </ScrollView>
 
                 <Pressable
@@ -746,9 +752,218 @@ class EditProfile extends Component {
             </>
         )
     }
-}
+};
 
+const ProfileAccomplishes = props => {
+    const [isOpen, setIsOpen] = useState(true);
 
+    const renderProfileAccomplishmentRate = _ => {
+        return {
+            text: 'ضعیف',
+            color: '#313A43'
+        }
+    };
+
+    const onProfileAccomplishmentItemButtonPressed = _ => {
+    };
+
+    const handleIsOpenArrowPressed = _ => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setIsOpen(!isOpen);
+    };
+
+    const renderProfileAccomplishmentItems = ({ item }) => {
+        return (
+            <View
+                style={{
+                    padding: 15,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    margin: 10,
+                    borderColor: '#999999',
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+                    <FontAwesome5
+                        name='phone-square'
+                        color='#313A43'
+                        solid
+                        size={20}
+                    />
+                    <Text
+                        style={{
+                            color: '#313A43',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 16,
+                            marginHorizontal: 5,
+                            textAlignVertical: 'center',
+
+                        }}
+                    >
+                        {locales('titles.completePhoneInfo')}
+                    </Text>
+                </View>
+                <Text
+                    style={{
+                        color: '#7E7E7E',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginHorizontal: 5,
+                        textAlignVertical: 'center',
+
+                    }}
+                >
+                    {locales('titles.profileAccomplishmentItemsText')}
+                </Text>
+                <Button
+                    onPress={onProfileAccomplishmentItemButtonPressed}
+                    style={{
+                        elevation: 0,
+                        backgroundColor: '#00C569',
+                        padding: 10,
+                        borderRadius: 8,
+                        width: deviceWidth * 0.5,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        marginTop: 20
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                        }}
+                    >
+                        {locales('titles.completeInformation')}
+                    </Text>
+                </Button>
+            </View>
+        )
+    };
+
+    const {
+        text,
+        color
+    } = renderProfileAccomplishmentRate();
+
+    return (
+        <View
+            style={{
+                borderBottomColor: '#EBEBEB',
+                borderBottomWidth: 10,
+            }}
+        >
+            <View
+                style={{
+                    paddingHorizontal: 10
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: '#555555',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {locales('labels.profileAccomplishes')}
+                        </Text>
+                        <Text
+                            style={{
+                                color,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {` ${text}`}
+                        </Text>
+                    </View>
+                    <FontAwesome5
+                        solid
+                        onPress={handleIsOpenArrowPressed}
+                        name={`angle-${isOpen ? 'up' : 'down'}`}
+                        color='#666666'
+                        style={{
+                            padding: 10,
+                            width: 40,
+                            height: 40
+                        }}
+                        size={20}
+                    />
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: 10,
+                    }}
+                >
+                    {[1, 2, 3, 4].map(item => (
+                        <View
+                            key={item}
+                            style={{
+                                borderRadius: 7,
+                                backgroundColor: '#00C569',
+                                width: '23.5%',
+                                height: 6,
+                            }}
+                        >
+                        </View>
+                    ))
+                    }
+                </View>
+                <Text
+                    style={{
+                        color: '#999999',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginTop: 10,
+                        width: '100%',
+                        marginBottom: isOpen ? 0 : 10
+                    }}
+                >
+                    {locales('labels.profileAccomplishmentText')}
+                </Text>
+            </View>
+
+            {
+                isOpen ?
+                    <FlatList
+                        renderItem={renderProfileAccomplishmentItems}
+                        data={[1, 2, 3, 4, 5]}
+                        style={{ marginTop: 20 }}
+                        keyExtractor={(item) => item.toString()}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        inverted
+                    />
+                    : null
+            }
+        </View >
+    )
+};
 
 const styles = StyleSheet.create({
     loginFailedContainer: {
@@ -934,6 +1149,9 @@ const mapStateToProps = (state) => {
         phoneNumberViewPermissionError,
         phoneNumberViewPermissionMessage,
         phoneNumberViewPermission,
+
+        profileStatistics,
+        profileStatisticsLoading,
     } = state.profileReducer;
 
     return {
@@ -950,6 +1168,9 @@ const mapStateToProps = (state) => {
         phoneNumberViewPermissionError,
         phoneNumberViewPermissionMessage,
         phoneNumberViewPermission,
+
+        profileStatistics,
+        profileStatisticsLoading,
     }
 };
 
