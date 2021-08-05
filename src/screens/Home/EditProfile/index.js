@@ -921,14 +921,15 @@ const ProfileAccomplishes = props => {
         color
     } = renderProfileAccomplishmentRate();
 
-    const handleDescriptionTextChange = text => {
-        setDescription(text);
-    }
+    const handleDescriptionTextChange = descriptionText => {
+        setDescription(descriptionText);
+    };
+
     const closeDescriptionTextModal = _ => {
         if (description.length < 10)
             handleDescriptionTextChange('');
         else
-            handleDescriptionChange(text);
+            handleDescriptionChange(description);
         setDescriptionTextModalVisiblity(false)
     }
     return (
@@ -945,26 +946,37 @@ const ProfileAccomplishes = props => {
                             flex: 1
                         }}
                     >
-                        <Textarea
-                            onChangeText={handleDescriptionTextChange}
-                            value={description}
-                            style={{
-                                borderRadius: 4,
-                                overflow: 'hidden',
-                                backgroundColor: '#fff',
-                                paddingHorizontal: 15,
-                                paddingVertical: 2,
-                                borderWidth: 1,
-                                borderColor: '#999999',
-                                color: '#333',
-                                fontSize: 13,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                height: deviceHeight * 0.25,
-                            }}
-                            bordered
-                            placeholderTextColor="#BEBEBE"
-                            placeholder={locales('titles.headerDescription')}
-                        />
+                        <View style={{
+                            paddingHorizontal: 10
+                        }}>
+                            <Text style={{
+                                marginTop: 10,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#333'
+                            }}>
+                                {locales('labels.writeAboutYourActivity')}
+                            </Text>
+                            <Textarea
+                                onChangeText={handleDescriptionTextChange}
+                                value={description}
+                                style={{
+                                    borderRadius: 4,
+                                    overflow: 'hidden',
+                                    backgroundColor: '#fff',
+                                    paddingHorizontal: 15,
+                                    paddingVertical: 2,
+                                    borderWidth: 1,
+                                    borderColor: '#999999',
+                                    color: '#333',
+                                    fontSize: 13,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    height: deviceHeight * 0.25,
+                                }}
+                                bordered
+                                placeholderTextColor="#BEBEBE"
+                                placeholder={locales('titles.headerDescription')}
+                            />
+                        </View>
                         <Button
                             onPress={closeDescriptionTextModal}
                             style={{
