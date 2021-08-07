@@ -1,14 +1,14 @@
 import React, { Component, useState } from 'react';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
-    FlatList, LayoutAnimation, UIManager, Platform, Modal, Permission
+    FlatList, LayoutAnimation, UIManager, Platform, Modal
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { Button, Textarea, ActionSheet } from 'native-base';
+import { Button, Textarea, ActionSheet, InputGroup, Label } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -17,8 +17,7 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
 import * as profileActions from '../../../redux/profile/actions';
-import { permissions, deviceHeight, deviceWidth } from '../../../utils';
-import ContactsListModal from '../../../components/contactsListModal';
+import { permissions, deviceHeight, deviceWidth, validator } from '../../../utils';
 import Header from '../../../components/header';
 
 let myTimeout;
@@ -29,49 +28,6 @@ if (
 ) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-
-const ProfileAccomplishmentItemsArray = [
-    {
-        id: 1,
-        parentRoute: 'MyBuskool',
-        childRoute: 'Authentication',
-        params: {},
-        title: 'labels.authentication',
-        text: 'titles.profileAccomplishmentItemsText',
-        buttonText: 'labels.editProfileAuthentication',
-        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
-    },
-    {
-        id: 2,
-        parentRoute: 'MyBuskool',
-        childRoute: 'Authentication',
-        params: {},
-        title: 'titles.introduceToFirends',
-        text: 'labels.shareBuskoolWithFriendsText',
-        buttonText: 'titles.introduceToFirends',
-        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
-    },
-    {
-        id: 3,
-        parentRoute: 'MyBuskool',
-        childRoute: 'Authentication',
-        params: {},
-        title: 'titles.aboutYou',
-        text: 'labels.writeDescriptionText',
-        buttonText: 'titles.aboutYou',
-        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
-    },
-    {
-        id: 4,
-        parentRoute: 'MyBuskool',
-        childRoute: 'Authentication',
-        params: {},
-        title: 'titles.profilePicture',
-        text: 'labels.selectProfilePicText',
-        buttonText: 'titles.profilePicture',
-        icon: <MaterialIcons size={25} name='verified-user' color='#556080' />
-    },
-];
 class EditProfile extends Component {
     constructor(props) {
         super(props)
@@ -92,10 +48,54 @@ class EditProfile extends Component {
             showSubmitEditionModal: false,
             shouldShowContactInfo: false,
             showViewPermissionModal: false,
-            showContactListModal: false,
+            ProfileAccomplishmentItemsArray: [
+                {
+                    id: 1,
+                    parentRoute: 'MyBuskool',
+                    childRoute: 'Authentication',
+                    params: {},
+                    title: 'labels.authentication',
+                    text: 'titles.profileAccomplishmentItemsText',
+                    buttonText: 'labels.editProfileAuthentication',
+                    icon: <MaterialIcons size={25} name='verified-user' color='#556080' />,
+                    shouldShow: true
+                },
+                {
+                    id: 2,
+                    parentRoute: 'MyBuskool',
+                    childRoute: 'Authentication',
+                    params: {},
+                    title: 'titles.introduceToFirends',
+                    text: 'labels.shareBuskoolWithFriendsText',
+                    buttonText: 'titles.introduceToFirends',
+                    icon: <FontAwesome5 size={20} name='share-alt' color='#556080' />,
+                    shouldShow: true
+                },
+                {
+                    id: 3,
+                    parentRoute: 'MyBuskool',
+                    childRoute: 'Authentication',
+                    params: {},
+                    title: 'titles.aboutYou',
+                    text: 'labels.writeDescriptionText',
+                    buttonText: 'titles.aboutYou',
+                    icon: <MaterialIcons size={25} name='article' color='#556080' />,
+                    shouldShow: true
+                },
+                {
+                    id: 4,
+                    parentRoute: 'MyBuskool',
+                    childRoute: 'Authentication',
+                    params: {},
+                    title: 'titles.profilePicture',
+                    text: 'labels.selectProfilePicText',
+                    buttonText: 'titles.profilePicture',
+                    icon: <FontAwesome5 size={25} name='user-circle' color='#556080' solid />,
+                    shouldShow: true
+                },
+            ]
         }
     }
-
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
@@ -129,6 +129,20 @@ class EditProfile extends Component {
 
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
+            let tempList = [...this.state.ProfileAccomplishmentItemsArray];
+
+            tempList.forEach(item => {
+                if (item.title == 'titles.profilePicture')
+                    item.shouldShow = !profile_photo;
+
+                if (item.title == 'titles.aboutYou')
+                    item.shouldShow = !description;
+
+                if (item.title == 'labels.authentication')
+                    item.shouldShow = !is_verified;
+
+            });
+
             this.setState({
                 loaded: true,
                 profile_photo: stateProfilePhoto,
@@ -141,42 +155,46 @@ class EditProfile extends Component {
                 is_verified,
                 description,
                 shouldShowContactInfo: phone_allowed,
+                ProfileAccomplishmentItemsArray: tempList
+
             });
         }
     }
     editProfile = _ => {
+        return new Promise((resolve, reject) => {
+            this.setState({ editErrors: [] });
 
-        this.setState({ editErrors: [] });
+            let formData = new FormData();
 
-        let formData = new FormData();
+            const {
+                profile_photo,
+                is_company,
+                company_name,
+                company_register_code,
+                public_phone,
+                description
+            } = this.state;
 
-        const {
-            profile_photo,
-            is_company,
-            company_name,
-            company_register_code,
-            public_phone,
-            description
-        } = this.state;
+            formData.append('description', description);
+            formData.append('public_phone', public_phone);
+            formData.append('is_company', is_company);
+            formData.append('company_register_code', company_register_code);
+            formData.append('company_name', company_name);
+            if (!!profile_photo && profile_photo.type)
+                formData.append('profile_photo', profile_photo);
 
-        formData.append('description', description);
-        formData.append('public_phone', public_phone);
-        formData.append('is_company', is_company);
-        formData.append('company_register_code', company_register_code);
-        formData.append('company_name', company_name);
-        if (!!profile_photo && profile_photo.type)
-            formData.append('profile_photo', profile_photo);
-
-        this.props.editProfile(formData).then(result => {
-            this.setState({ showSubmitEditionModal: true }, () => {
-                setTimeout(() => {
-                    this.props.fetchUserProfile();
-                }, 1000);
+            this.props.editProfile(formData).then(result => {
+                resolve(true);
+                this.setState({ showSubmitEditionModal: true }, () => {
+                    setTimeout(() => {
+                        this.props.fetchUserProfile();
+                    }, 1000);
+                });
+            }).catch(err => {
+                if (err.data && err.data.errors)
+                    this.setState({ editErrors: Object.values(err.data.errors) });
             });
-        }).catch(err => {
-            if (err.data && err.data.errors)
-                this.setState({ editErrors: Object.values(err.data.errors) });
-        });
+        })
     };
 
 
@@ -193,16 +211,16 @@ class EditProfile extends Component {
         })
     };
 
-    openActionSheet = _ => ActionSheet.show(
+    openActionSheet = fromAccomplishment => ActionSheet.show(
         {
             options: [locales('labels.camera'), locales('labels.gallery')],
         },
-        buttonIndex => this.onActionSheetClicked(buttonIndex)
+        buttonIndex => this.onActionSheetClicked(buttonIndex, fromAccomplishment)
     );
 
     handleDescriptionChange = description => this.setState({ description });
 
-    onActionSheetClicked = async (buttonIndex) => {
+    onActionSheetClicked = async (buttonIndex, fromAccomplishment) => {
         const options = {
             width: 300,
             height: 400,
@@ -253,7 +271,11 @@ class EditProfile extends Component {
                         state.profile_photo = resultObj;
 
                         return '';
-                    }
+                    },
+                        _ => {
+                            if (fromAccomplishment)
+                                this.editProfile();
+                        }
                     )
                 });
                 break;
@@ -282,7 +304,11 @@ class EditProfile extends Component {
                         state.profile_photo = resultObj;
 
                         return '';
-                    }
+                    },
+                        _ => {
+                            if (fromAccomplishment)
+                                this.editProfile();
+                        }
                     )
                 });
                 break;
@@ -321,50 +347,6 @@ class EditProfile extends Component {
             })
     };
 
-
-    onRequestCloseContactListModal = _ => {
-        this.setState({ showContactListModal: false });
-    };
-
-    shareProfileLink = () => {
-
-        const {
-            userProfile = {},
-        } = this.props;
-
-        const {
-            user_info = {}
-        } = userProfile;
-
-        const {
-            id,
-            user_name
-        } = user_info;
-
-        this.setState({ showContactListModal: false });
-        analytics().logEvent('profile_share', {
-            contact_id: id
-        });
-
-        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
-
-        Linking.canOpenURL(url).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(url)
-            } else {
-                Linking.openURL(url)
-            }
-        })
-            .catch(() => {
-                Linking.openURL(url)
-            })
-    };
-
-
-    setShowContactListModal = _ => {
-        this.setState({ showContactListModal: true });
-    };
-
     render() {
         const {
             editProfileLoading,
@@ -396,22 +378,10 @@ class EditProfile extends Component {
             showSubmitEditionModal,
             shouldShowContactInfo,
             showViewPermissionModal,
-            showContactListModal
         } = this.state;
 
         return (
             <>
-
-                {showContactListModal ?
-                    <ContactsListModal
-                        visible={showContactListModal}
-                        onRequestClose={this.onRequestCloseContactListModal}
-                        onReject={this.shareProfileLink}
-                        sharingUrlPostFix={`/shared-profile/${user_name}`}
-                        {...this.props}
-                    />
-                    : null
-                }
 
                 {userProfileLoading ?
                     <View style={{
@@ -666,7 +636,8 @@ class EditProfile extends Component {
                         <ProfileAccomplishes
                             handleDescriptionChange={this.handleDescriptionChange}
                             openActionSheet={this.openActionSheet}
-                            setShowContactListModal={this.setShowContactListModal}
+                            ProfileAccomplishmentItemsArrayFromProps={this.state.ProfileAccomplishmentItemsArray}
+                            editProfileFromParent={this.editProfile}
                             {...this.props}
                         />
 
@@ -884,7 +855,11 @@ const ProfileAccomplishes = props => {
 
     const {
         handleDescriptionChange = _ => { },
+        editProfileFromParent = _ => { },
+        ProfileAccomplishmentItemsArrayFromProps = []
     } = props;
+
+    const ProfileAccomplishmentItemsArray = ProfileAccomplishmentItemsArrayFromProps.filter(item => item.shouldShow);
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -892,11 +867,35 @@ const ProfileAccomplishes = props => {
 
     const [description, setDescription] = useState('');
 
+    const [descriptionClicked, setDescriptionClicked] = useState(false);
+
+    const [descriptionError, setDescriptionError] = useState('');
+
     const renderProfileAccomplishmentRate = _ => {
-        return {
-            text: 'ضعیف',
-            color: '#313A43'
-        }
+        switch (ProfileAccomplishmentItemsArray.length) {
+            case 4:
+                return {
+                    text: 'ضعیف',
+                    color: '#313A43'
+                };
+            case 3:
+                return {
+                    text: 'متوسط',
+                    color: 'orange'
+                };
+            case 2:
+                return {
+                    text: 'خوب',
+                    color: 'green'
+                }
+            case 1:
+                return {
+                    text: 'عالی',
+                    color: 'blue'
+                };
+            default:
+                break;
+        };
     };
 
     const onProfileAccomplishmentItemButtonPressed = ({ title }) => {
@@ -905,7 +904,6 @@ const ProfileAccomplishes = props => {
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
 
             case 'titles.introduceToFirends':
-                props.setShowContactListModal();
                 break;
 
             case 'titles.aboutYou':
@@ -913,7 +911,7 @@ const ProfileAccomplishes = props => {
                 break;
 
             case 'titles.profilePicture':
-                return props.openActionSheet();
+                return props.openActionSheet(true);
 
             default:
                 break;
@@ -962,8 +960,10 @@ const ProfileAccomplishes = props => {
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 14,
                         marginHorizontal: 5,
+                        textAlign: 'center',
                         textAlignVertical: 'center',
-
+                        width: deviceWidth * 0.6,
+                        marginVertical: 10
                     }}
                 >
                     {locales(item.text)}
@@ -979,7 +979,6 @@ const ProfileAccomplishes = props => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         alignSelf: 'center',
-                        marginTop: 20
                     }}
                 >
                     <Text
@@ -1002,17 +1001,43 @@ const ProfileAccomplishes = props => {
         color
     } = renderProfileAccomplishmentRate();
 
-    const handleDescriptionTextChange = descriptionText => {
-        setDescription(descriptionText);
+    const handleDescriptionTextChange = field => {
+        setDescription(field);
+        setDescriptionClicked(!!field);
+        setDescriptionError((!field || validator.isValidDescription(field)) ? '' : locales('errors.invalidDescription'));
     };
 
-    const closeDescriptionTextModal = _ => {
-        if (description.length < 10)
-            handleDescriptionTextChange('');
-        else
+    const onSubmit = _ => {
+
+        if (!description) {
+            setDescriptionClicked(true);
+            setDescriptionError(locales('errors.fieldNeeded', { fieldName: locales('titles.headerDescription') }));
+        }
+
+        else if (description && !validator.isValidDescription(description)) {
+            setDescriptionClicked(true);
+            setDescriptionError(locales('errors.invalidDescription'));
+        }
+
+        else if (description && description.length < 100) {
+            setDescriptionClicked(true);
+            setDescriptionError(locales('errors.canNotBeLessThanChar', { fieldName: locales('titles.headerDescription'), number: '100' }));
+        }
+
+        else {
+            setDescriptionClicked(false);
+            setDescriptionError('');
+        }
+
+        if (description && !descriptionError && description.length > 100) {
+            setDescriptionClicked(false);
             handleDescriptionChange(description);
-        setDescriptionTextModalVisiblity(false)
-    }
+            editProfileFromParent().then(_ => {
+                setDescriptionTextModalVisiblity(false)
+            });
+        }
+    };
+
     return (
         <>
             {descriptionTextModalVisiblity ?
@@ -1022,67 +1047,152 @@ const ProfileAccomplishes = props => {
                     visible={descriptionTextModalVisiblity}
                     onRequestClose={_ => setDescriptionTextModalVisiblity(false)}
                 >
+
+                    <Header
+                        title={locales('titles.aboutYou')}
+                        onBackButtonPressed={_ => setDescriptionTextModalVisiblity(false)}
+                    />
+
                     <View
                         style={{
-                            flex: 1
+                            flex: 1,
+                            marginTop: 10,
+                            padding: 10
                         }}
                     >
-                        <View style={{
-                            paddingHorizontal: 10
+                        <Text style={{
+                            marginTop: 10,
+                            marginBottom: 5,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: '#333'
                         }}>
-                            <Text style={{
-                                marginTop: 10,
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                color: '#333'
+                            {locales('labels.writeAboutYourActivity')}
+                        </Text>
+                        <InputGroup
+                            regular
+                            style={{
+                                borderRadius: 4,
+                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#666',
+                                paddingLeft: 15,
+                                paddingHorizontal: 10,
+                                backgroundColor: '#FBFBFB'
                             }}>
-                                {locales('labels.writeAboutYourActivity')}
-                            </Text>
+                            <FontAwesome5 name={
+                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                    ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{ position: 'absolute', top: 10, left: 10 }}
+                            />
                             <Textarea
                                 onChangeText={handleDescriptionTextChange}
+                                error=''
                                 value={description}
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                placeholderTextColor='#777777'
+                                placeholder={locales('titles.descriptionWithExample')}
                                 style={{
+                                    paddingTop: 10,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%',
+                                    minHeight: deviceHeight * 0.7,
                                     borderRadius: 4,
                                     overflow: 'hidden',
-                                    backgroundColor: '#fff',
                                     paddingHorizontal: 15,
                                     paddingVertical: 2,
-                                    borderWidth: 1,
-                                    borderColor: '#999999',
                                     color: '#333',
                                     fontSize: 13,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    height: deviceHeight * 0.25,
                                 }}
-                                bordered
                                 placeholderTextColor="#BEBEBE"
                                 placeholder={locales('titles.headerDescription')}
                             />
-                        </View>
-                        <Button
-                            onPress={closeDescriptionTextModal}
+                        </InputGroup>
+                        <Label style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            height: 20, fontSize: 14, color: '#D81A1A'
+                        }}>
+                            {!!descriptionError && descriptionError}
+                        </Label>
+                        <View
                             style={{
-                                elevation: 0,
-                                backgroundColor: '#00C569',
-                                padding: 10,
-                                borderRadius: 8,
-                                width: deviceWidth * 0.5,
-                                justifyContent: 'center',
+                                flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                alignSelf: 'center',
-                                marginTop: 20
+                                justifyContent: 'space-between'
                             }}
                         >
-                            <Text
+                            <Button
+                                onPress={_ => setDescriptionTextModalVisiblity(false)}
                                 style={{
-                                    textAlign: 'center',
-                                    color: 'white',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16,
+                                    elevation: 0,
+                                    backgroundColor: '#eee',
+                                    padding: 10,
+                                    borderRadius: 8,
+                                    width: deviceWidth * 0.45,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    marginTop: 20
                                 }}
                             >
-                                {locales('titles.close')}
-                            </Text>
-                        </Button>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        color: 'black',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    {locales('titles.close')}
+                                </Text>
+                            </Button>
+
+                            <Button
+                                onPress={onSubmit}
+                                style={{
+                                    elevation: 0,
+                                    backgroundColor: description && !descriptionError ? '#00C569' : '#eee',
+                                    padding: 10,
+                                    borderRadius: 8,
+                                    width: deviceWidth * 0.45,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    marginTop: 20
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        color: 'white',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    {locales('labels.justSubmit')}
+                                </Text>
+                                {props.editProfileLoading ?
+                                    <ActivityIndicator
+                                        size={20}
+                                        style={{
+                                            position: 'absolute',
+                                            left: '20%',
+                                            top: '40%',
+                                            elevation: 0,
+                                            borderRadius: 25
+                                        }}
+                                        color="white"
+
+                                    />
+                                    : null}
+                            </Button>
+                        </View>
                     </View>
                 </Modal>
                 :
@@ -1152,12 +1262,12 @@ const ProfileAccomplishes = props => {
                             marginTop: 10,
                         }}
                     >
-                        {[1, 2, 3, 4].map(item => (
+                        {[1, 2, 3, 4].map((item, index, self) => (
                             <View
                                 key={item}
                                 style={{
                                     borderRadius: 7,
-                                    backgroundColor: '#00C569',
+                                    backgroundColor: index < self.length - (ProfileAccomplishmentItemsArray.length) ? '#00C569' : '#eee',
                                     width: '23.5%',
                                     height: 6,
                                 }}

@@ -21,6 +21,7 @@ export default {
     'errors.pleaseEnterField': 'لطفا {fieldName} را وارد کنید',
     'errors.canNotBeZero': '{fieldName} باید بزرگتر از صفر باشد',
     'errors.canNotBeLessThan': '{fieldName} نمی‌تواند کمتر از {number} باشد',
+    'errors.canNotBeLessThanChar': '{fieldName} نمی‌تواند کمتر از {number} کارکتر باشد',
 
     "labels.man": "آقا",
     'labels.putAMessage': 'پیامی بگذارید',
