@@ -1,14 +1,14 @@
 import React, { Component, useState } from 'react';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
-    FlatList, LayoutAnimation, UIManager, Platform, Modal
+    FlatList, LayoutAnimation, UIManager, Platform, Modal, Permission
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { Card, Button, Textarea, ActionSheet } from 'native-base';
+import { Button, Textarea, ActionSheet } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -18,6 +18,7 @@ import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
 import * as profileActions from '../../../redux/profile/actions';
 import { permissions, deviceHeight, deviceWidth } from '../../../utils';
+import ContactsListModal from '../../../components/contactsListModal';
 import Header from '../../../components/header';
 
 let myTimeout;
@@ -90,22 +91,42 @@ class EditProfile extends Component {
             is_verified: false,
             showSubmitEditionModal: false,
             shouldShowContactInfo: false,
-            showViewPermissionModal: false
+            showViewPermissionModal: false,
+            showContactListModal: false,
         }
     }
 
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
-        if (this.props.userProfile && Object.entries(this.props.userProfile).length) {
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            profile = {},
+            user_info = {}
+        } = userProfile;
+
+        if (userProfile && Object.entries(userProfile).length) {
+
             const {
                 profile_photo,
                 is_company,
                 company_name,
                 company_register_code,
                 public_phone,
-                description } = this.props.userProfile.profile;
-            const { first_name, last_name, is_verified, phone_allowed } = this.props.userProfile.user_info;
+                description
+            } = profile;
+
+            const {
+                first_name,
+                last_name,
+                is_verified,
+                phone_allowed
+            } = user_info;
+
             let stateProfilePhoto = { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` };
 
             this.setState({
@@ -300,6 +321,50 @@ class EditProfile extends Component {
             })
     };
 
+
+    onRequestCloseContactListModal = _ => {
+        this.setState({ showContactListModal: false });
+    };
+
+    shareProfileLink = () => {
+
+        const {
+            userProfile = {},
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id,
+            user_name
+        } = user_info;
+
+        this.setState({ showContactListModal: false });
+        analytics().logEvent('profile_share', {
+            contact_id: id
+        });
+
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
+            }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
+    };
+
+
+    setShowContactListModal = _ => {
+        this.setState({ showContactListModal: true });
+    };
+
     render() {
         const {
             editProfileLoading,
@@ -315,7 +380,8 @@ class EditProfile extends Component {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
+            user_name
         } = user_info;
 
         const {
@@ -329,11 +395,24 @@ class EditProfile extends Component {
 
             showSubmitEditionModal,
             shouldShowContactInfo,
-            showViewPermissionModal
+            showViewPermissionModal,
+            showContactListModal
         } = this.state;
 
         return (
             <>
+
+                {showContactListModal ?
+                    <ContactsListModal
+                        visible={showContactListModal}
+                        onRequestClose={this.onRequestCloseContactListModal}
+                        onReject={this.shareProfileLink}
+                        sharingUrlPostFix={`/shared-profile/${user_name}`}
+                        {...this.props}
+                    />
+                    : null
+                }
+
                 {userProfileLoading ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
@@ -587,6 +666,7 @@ class EditProfile extends Component {
                         <ProfileAccomplishes
                             handleDescriptionChange={this.handleDescriptionChange}
                             openActionSheet={this.openActionSheet}
+                            setShowContactListModal={this.setShowContactListModal}
                             {...this.props}
                         />
 
@@ -825,6 +905,7 @@ const ProfileAccomplishes = props => {
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
 
             case 'titles.introduceToFirends':
+                props.setShowContactListModal();
                 break;
 
             case 'titles.aboutYou':
