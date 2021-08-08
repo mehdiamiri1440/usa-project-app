@@ -526,7 +526,8 @@ const UserContacts = props => {
                             <Text
                                 style={{
                                     color: '#000',
-                                    marginHorizontal: 5
+                                    marginHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 }}
                             >
                                 {locales('titles.whatsApp')}
@@ -555,7 +556,8 @@ const UserContacts = props => {
                             <Text
                                 style={{
                                     color: '#000',
-                                    marginHorizontal: 5
+                                    marginHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 }}
                             >
                                 {locales('labels.sms')}
@@ -583,7 +585,8 @@ const UserContacts = props => {
                             <Text
                                 style={{
                                     color: '#000',
-                                    marginHorizontal: 5
+                                    marginHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 }}
                             >
                                 {locales('titles.others')}
