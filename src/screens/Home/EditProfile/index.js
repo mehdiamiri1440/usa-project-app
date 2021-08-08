@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef } from 'react';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
     FlatList, LayoutAnimation, UIManager, Platform, Modal
@@ -99,7 +99,17 @@ class EditProfile extends Component {
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
+        this.init();
 
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.userProfile != this.props.userProfile)
+            this.init();
+    };
+
+
+    init = _ => {
         const {
             userProfile = {}
         } = this.props;
@@ -159,8 +169,9 @@ class EditProfile extends Component {
 
             });
         }
-    }
-    editProfile = _ => {
+    };
+
+    editProfile = (descriptionFromChild) => {
         return new Promise((resolve, reject) => {
             this.setState({ editErrors: [] });
 
@@ -175,7 +186,7 @@ class EditProfile extends Component {
                 description
             } = this.state;
 
-            formData.append('description', description);
+            formData.append('description', descriptionFromChild ?? description);
             formData.append('public_phone', public_phone);
             formData.append('is_company', is_company);
             formData.append('company_register_code', company_register_code);
@@ -758,7 +769,7 @@ class EditProfile extends Component {
                         }}>
                             <Button
                                 style={[styles.loginButton, { alignSelf: 'center' }]}
-                                onPress={this.editProfile}>
+                                onPress={_ => this.editProfile()}>
                                 <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
                                     {locales('titles.submitChanges')}
                                 </Text>
@@ -852,6 +863,8 @@ class EditProfile extends Component {
 };
 
 const ProfileAccomplishes = props => {
+
+    const profileItemsRef = useRef();
 
     const {
         handleDescriptionChange = _ => { },
@@ -1032,7 +1045,8 @@ const ProfileAccomplishes = props => {
         if (description && !descriptionError && description.length > 100) {
             setDescriptionClicked(false);
             handleDescriptionChange(description);
-            editProfileFromParent().then(_ => {
+            editProfileFromParent(description).then(_ => {
+                profileItemsRef?.current?.scrollToIndex({ index: 0 });
                 setDescriptionTextModalVisiblity(false)
             });
         }
@@ -1293,6 +1307,7 @@ const ProfileAccomplishes = props => {
                 {
                     isOpen ?
                         <FlatList
+                            ref={profileItemsRef}
                             renderItem={renderProfileAccomplishmentItems}
                             data={ProfileAccomplishmentItemsArray}
                             style={{ marginTop: 20 }}
