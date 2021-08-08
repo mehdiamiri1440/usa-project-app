@@ -875,23 +875,23 @@ const ProfileAccomplishes = props => {
         switch (ProfileAccomplishmentItemsArray.length) {
             case 4:
                 return {
-                    text: 'ضعیف',
-                    color: '#313A43'
+                    text: locales('titles.weak'),
+                    color: '#E41C38'
                 };
             case 3:
                 return {
-                    text: 'متوسط',
-                    color: 'orange'
+                    text: locales('titles.intermediate'),
+                    color: '#ffbb00'
                 };
             case 2:
                 return {
-                    text: 'خوب',
-                    color: 'green'
+                    text: locales('titles.good'),
+                    color: '#1DA1F2'
                 }
             case 1:
                 return {
-                    text: 'عالی',
-                    color: 'blue'
+                    text: locales('titles.great'),
+                    color: '#00C569'
                 };
             default:
                 break;
