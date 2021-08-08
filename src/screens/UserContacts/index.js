@@ -96,8 +96,6 @@ const UserContacts = props => {
 
             Contacts.getAll((_, contacts) => {
 
-                contacts = contacts.sort((a, b) => (a.displayName > b.displayName) ? 1 : -1);
-
                 if (!isFromRefresh)
                     randNumbers = [...new Array(contacts.length)].map(item => item = Math.floor(Math.random() * colors.length))
 
