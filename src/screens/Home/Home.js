@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
@@ -12,7 +12,9 @@ import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
+import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import BgLinearGradient from 'react-native-linear-gradient';
+import { Button } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -204,12 +206,10 @@ class Home extends React.Component {
         } = userProfile;
         const {
             is_seller,
-            user_name
         } = user_info;
 
         if (!!is_seller) {
             this.setState({ isPageRefreshedFromPullingDown: true })
-            this.props.fetchProfileStatistics(user_name);
             this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
         }
     };
@@ -342,7 +342,9 @@ class Home extends React.Component {
                     <ProfilePreview
                         {...this.props}
                     />
-
+                    <InviteFriendsBanner
+                        {...this.props}
+                    />
                     {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
                     {/* 
@@ -987,22 +989,128 @@ export const WalletPreview = props => {
     )
 };
 
+const InviteFriendsBanner = props => {
+    return (
+        <BgLinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 0.8, y: 0.1 }}
+            colors={['#FF7689', '#E41C38']}
+            style={{
+                width: deviceWidth,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                borderTopColor: '#ebebeb',
+                borderTopWidth: 10
+            }}
+        >
+            <ShadowView
+                style={{
+                    shadowColor: 'black',
+                    shadowOpacity: 0.13,
+                    shadowRadius: 1,
+                    shadowOffset: { width: 0, height: 2 },
+                }}
+            >
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    style={{
+                        backgroundColor: 'white',
+                        alignSelf: 'center',
+                        borderRadius: 12,
+                        padding: 15,
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <View
+                        style={{
+                            width: '80%',
+                            zIndex: 1
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 17,
+                                color: '#555555',
+                            }}
+                        >
+                            {locales('titles.inviteFriendBannerText')}
+                        </Text>
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#FF7689', '#E41C38']}
+                            style={{
+                                borderRadius: 12,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '70%',
+                                alignSelf: 'flex-end',
+                                marginTop: 10
+                            }}
+                        >
+                            <Button
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: 'transparent',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    {locales('titles.earnWages')}
+                                </Text>
+                                <FontAwesome5
+                                    name='angle-left'
+                                    size={20}
+                                    color='white'
+                                    style={{
+                                        position: 'absolute',
+                                        left: '20%',
+                                    }}
+                                />
+                            </Button>
+                        </BgLinearGradient>
+                    </View>
+                    <View
+                        style={{
+                            width: '20%'
+                        }}
+                    >
+                        <Image
+                            style={{
+                                width: 120
+                            }}
+                            source={require('../../../assets/images/marketing.png')}
+                        />
+                    </View>
+                </Pressable>
+            </ShadowView>
+        </BgLinearGradient>
+    )
+};
+
 const ProfilePreview = props => {
 
     const {
         userProfile = {},
         userProfileLoading,
         navigation = {},
-        profileStatistics,
-        profileStatisticsLoading
     } = props;
 
-    const {
-        product_count,
-        buyAd_count,
-        reputation_score,
-        rating_info = {}
-    } = profileStatistics;
 
     const {
         navigate = _ => { }
@@ -1012,10 +1120,6 @@ const ProfilePreview = props => {
         user_info = {},
         profile = {},
     } = userProfile;
-
-    const {
-        total_count
-    } = rating_info;
 
     const {
         first_name = '',
@@ -1032,10 +1136,6 @@ const ProfilePreview = props => {
     const flatListRef = useRef();
 
     const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
-
-    useEffect(_ => {
-        props.fetchProfileStatistics(user_name);
-    }, [is_seller]);
 
     const onScrollToIndexFailed = (error = {}) => {
         const {
@@ -1171,139 +1271,6 @@ const ProfilePreview = props => {
                     solid
                     color='#666666'
                 />
-            </View>
-
-            <View
-                style={{
-                    marginTop: 20,
-                    flexDirection: 'row-reverse',
-                    justifyContent: 'space-around',
-                    alignItems: 'center'
-                }}
-            >
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    {(profileStatisticsLoading || userProfileLoading) ?
-                        <ContentLoader
-                            speed={2}
-                            width={deviceWidth * 0.13}
-                            height={deviceWidth * 0.08}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                            style={{
-                                alignSelf: 'center',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Rect x="20%" y="30%" width="30" height="10" />
-                        </ContentLoader>
-                        : <Text
-                            style={{
-                                color: '#21AD93',
-                                fontSize: 22,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                            }}
-                        >
-                            {!!is_seller ? product_count : buyAd_count}
-                        </Text>
-                    }
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 14,
-                            color: '#666666'
-                        }}
-                    >
-                        {!!is_seller ? locales('labels.product') : locales('labels.requests')}
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    {profileStatisticsLoading ?
-                        <ContentLoader
-                            speed={2}
-                            width={deviceWidth * 0.13}
-                            height={deviceWidth * 0.08}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                            style={{
-                                alignSelf: 'center',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Rect x="20%" y="30%" width="30" height="10" />
-                        </ContentLoader>
-                        : <Text
-                            style={{
-                                color: '#21AD93',
-                                fontSize: 22,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                            }}
-                        >
-                            {reputation_score}
-                        </Text>
-                    }
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 14,
-                            color: '#666666'
-                        }}
-                    >
-                        {locales('labels.credit')}
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    {profileStatisticsLoading ?
-                        <ContentLoader
-                            speed={2}
-                            width={deviceWidth * 0.13}
-                            height={deviceWidth * 0.08}
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                            style={{
-                                alignSelf: 'center',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Rect x="20%" y="30%" width="30" height="10" />
-                        </ContentLoader>
-                        : <Text
-                            style={{
-                                color: '#21AD93',
-                                fontSize: 22,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                            }}
-                        >
-                            {total_count}
-                        </Text>
-                    }
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 14,
-                            color: '#666666'
-                        }}
-                    >
-                        {locales('labels.submittedComments')}
-                    </Text>
-                </View>
             </View>
 
             <Pressable
@@ -1589,7 +1556,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         updateProductsList: flag => dispatch(productListActions.updateProductsList(flag)),
         fetchAllProductsList: item => dispatch(productListActions.fetchAllProductsList(item, false)),
-        fetchProfileStatistics: user_name => dispatch(profileActions.fetchProfileStatistics(user_name)),
     }
 }
 const mapStateToProps = state => {
@@ -1607,8 +1573,6 @@ const mapStateToProps = state => {
     const {
         userProfile,
         userProfileLoading,
-        profileStatistics,
-        profileStatisticsLoading,
     } = profileReducer;
 
 
@@ -1624,9 +1588,6 @@ const mapStateToProps = state => {
 
         userProfile,
         userProfileLoading,
-
-        profileStatistics,
-        profileStatisticsLoading,
     }
 }
 

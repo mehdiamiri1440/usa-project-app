@@ -1507,9 +1507,6 @@ const mapStateToProps = (state) => {
         phoneNumberViewPermissionError,
         phoneNumberViewPermissionMessage,
         phoneNumberViewPermission,
-
-        profileStatistics,
-        profileStatisticsLoading,
     } = state.profileReducer;
 
     return {
@@ -1526,9 +1523,6 @@ const mapStateToProps = (state) => {
         phoneNumberViewPermissionError,
         phoneNumberViewPermissionMessage,
         phoneNumberViewPermission,
-
-        profileStatistics,
-        profileStatisticsLoading,
     }
 };
 
