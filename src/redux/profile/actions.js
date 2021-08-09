@@ -251,6 +251,72 @@ export const walletElevatorPay = id => {
     return request();
 };
 
+export const buyAdCapacityWalletPay = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .buyAdCapacityWalletPay()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.BUY_AD_CAPACITY_WALLET_PAY_FAILED,
+                        reject: actionTypes.BUY_AD_CAPACITY_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.BUY_AD_CAPACITY_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.BUY_AD_CAPACITY_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const promoteRegistrationWalletPay = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .promoteRegistrationWalletPay()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_FAILED,
+                        reject: actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const productCapacityWalletPay = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .productCapacityWalletPay()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.PRODUCT_CAPACITY_WALLET_PAY_FAILED,
+                        reject: actionTypes.PRODUCT_CAPACITY_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.PRODUCT_CAPACITY_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.PRODUCT_CAPACITY_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
 export const uploadUserContacts = contacts => {
     const request = () => {
         return dispatch => {
