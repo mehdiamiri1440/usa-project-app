@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React,
+{
+    useState
+} from 'react';
 import {
     Text,
     View,
@@ -6,14 +9,18 @@ import {
     Linking,
     ActivityIndicator
 } from 'react-native';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import {
+    Dialog,
+    Portal,
+    Paragraph
+} from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import * as profileActions from '../../redux/profile/actions';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { formatter, deviceWidth, deviceHeight } from '../../utils';
+import { formatter } from '../../utils';
 
 const PaymentTypeModal = props => {
 
@@ -24,8 +31,8 @@ const PaymentTypeModal = props => {
         productId = null,
 
         walletElevatorPayLoading,
-        userProfile = {},
 
+        type = 0,
         body = '',
         title = '',
         successBody = '',
@@ -52,26 +59,72 @@ const PaymentTypeModal = props => {
     };
 
     const doWalletPay = _ => {
-        props.walletElevatorPay(productId).then(_ => {
-            setWalletPaymentError('');
-            setWalletPaySuccessMessage(successBody);
-            setTimeout(() => {
-                props.fetchUserProfile();
-                setWalletPaySuccessMessage('');
-                setFlag(false);
-            }, 3000);
-        })
+
+        let url = '', params;
+
+        switch (type) {
+
+            case 0: {
+                url = 'walletElevatorPay';
+                params = productId;
+                break
+            };
+
+            case 1: {
+                url = 'promoteRegistrationWalletPay';
+                params = null;
+                break
+            };
+
+            case 2: {
+                url = 'productCapacityWalletPay';
+                params = null;
+                break
+            };
+
+            case 3: {
+                url = 'promoteRegistrationWalletPay';
+                params = null;
+                break
+            };
+
+            case 4: {
+                url = 'buyAdCapacityWalletPay';
+                params = null;
+                break
+            };
+
+            default:
+                break;
+        };
+
+        return props[url](params)
+            .then(_ => {
+                setWalletPaymentError('');
+                setWalletPaySuccessMessage(successBody);
+
+                setTimeout(() => {
+                    props.fetchUserProfile();
+                    setWalletPaySuccessMessage('');
+                    setFlag(false);
+                }, 3000);
+
+            })
             .catch(error => {
+
                 const {
                     response = {}
                 } = error;
+
                 const {
                     data = {}
                 } = response;
+
                 const {
                     msg,
                     status
                 } = data;
+
                 if (status == false) {
                     setWalletPaymentError(msg);
                     setWalletPaySuccessMessage('');
@@ -225,26 +278,12 @@ const PaymentTypeModal = props => {
                         }]} />
 
                     </View>
-                    <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                    <Dialog.Actions style={[styles.mainWrapperTextDialogModal, { paddingBottom: 10 }]}>
 
                         <Text style={styles.mainTextDialogModal}>
                             {walletPaySuccessMessage}
                         </Text>
 
-                    </Dialog.Actions>
-                    <Dialog.Actions style={{
-                        justifyContent: 'center',
-                        width: '100%',
-                        padding: 0
-                    }}>
-                        <Button
-                            style={styles.modalCloseButton}
-                            onPress={() => setWalletPaySuccessMessage('')}
-                        >
-
-                            <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
-                            </Text>
-                        </Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal >
@@ -253,64 +292,12 @@ const PaymentTypeModal = props => {
 };
 
 const styles = StyleSheet.create({
-    loginFailedContainer: {
-        backgroundColor: '#F8D7DA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#761C24'
-    },
-    deletationSuccessfullContainer: {
-        backgroundColor: '#00C569',
-        padding: 10,
-        borderRadius: 5
-    },
-    deletationSuccessfullText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: 'white'
-    },
     buttonText: {
         color: 'white',
         fontSize: 18,
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         width: '100%',
         textAlign: 'center'
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.8,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        elevation: 0
-    },
-    fontAwesomeEnvelope: {
-        color: "#fff",
-        margin: '15px'
-    },
-    textWhite: {
-        color: "#fff"
-    },
-    textCenterView: {
-        justifyContent: 'center',
-        flexDirection: "row-reverse",
-    },
-    textBold: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-    },
-    loginButton: {
-        textAlign: 'center',
-        margin: 10,
-        borderRadius: 4,
-        backgroundColor: '#00C569',
-        color: 'white',
-        elevation: 0
     },
     dialogWrapper: {
         borderRadius: 12,
@@ -397,61 +384,6 @@ const styles = StyleSheet.create({
     greenButton: {
         backgroundColor: '#00C569',
     },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 16,
-        padding: 10,
-    },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
-    textInputPadding: {
-        paddingVertical: 5,
-    },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#7E7E7E'
-    },
-    marginTop5: {
-        marginTop: 5
-    },
-    marginTop10: {
-        marginTop: 10
-    },
-    margin5: {
-        margin: 5
-    },
-    margin10: {
-        margin: 10
-    },
-    textSize15: {
-        fontSize: 15
-    },
-    textSize18: {
-        fontSize: 18
-    },
-    textSize20: {
-        fontSize: 20
-    },
 });
 
 const mapStateToProps = ({
@@ -463,8 +395,6 @@ const mapStateToProps = ({
         walletElevatorPayError,
         walletElevatorPayMessage,
         walletElevatorPay,
-
-        userProfile
     } = profileReducer;
 
     return {
@@ -473,15 +403,16 @@ const mapStateToProps = ({
         walletElevatorPayError,
         walletElevatorPayMessage,
         walletElevatorPay,
-
-        userProfile
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),
-        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile())
+        buyAdCapacityWalletPay: _ => dispatch(profileActions.buyAdCapacityWalletPay()),
+        productCapacityWalletPay: _ => dispatch(profileActions.productCapacityWalletPay()),
+        promoteRegistrationWalletPay: _ => dispatch(profileActions.promoteRegistrationWalletPay()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
     }
 };
 
