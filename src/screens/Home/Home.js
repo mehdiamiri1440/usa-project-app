@@ -1003,12 +1003,11 @@ const InviteFriendsBanner = props => {
                 borderTopWidth: 10
             }}
         >
-            <ShadowView
+            <View
                 style={{
-                    shadowColor: 'black',
-                    shadowOpacity: 0.13,
-                    shadowRadius: 1,
-                    shadowOffset: { width: 0, height: 2 },
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    padding: 1,
+                    borderRadius: 12
                 }}
             >
                 <Pressable
@@ -1098,7 +1097,7 @@ const InviteFriendsBanner = props => {
                         />
                     </View>
                 </Pressable>
-            </ShadowView>
+            </View>
         </BgLinearGradient>
     )
 };
