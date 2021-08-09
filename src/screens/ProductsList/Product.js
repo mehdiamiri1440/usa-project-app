@@ -660,6 +660,7 @@ class Product extends PureComponent {
                         successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
                         successTitle={locales('labels.doElevation')}
                         price={25000}
+                        type={0}
                         productId={productId}
                         setFlag={this.setFlag}
                         flag={elevatorFlag}
