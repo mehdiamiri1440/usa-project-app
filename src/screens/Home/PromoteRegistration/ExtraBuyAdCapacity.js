@@ -12,6 +12,7 @@ import { formatter } from '../../../utils';
 import PromoteRegistration from './PromoteRegistration';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
+import PaymentTypeModal from '../../../components/paymentModal/paymentTypeModal';
 class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
         super(props)
@@ -19,6 +20,7 @@ class ExtraBuyAdCapacity extends React.Component {
             buyAdCount: 1,
             buyAdUnitPice: 25000,
             buyAdTotalCount: 25000,
+            elevatorFlag: false
         }
     }
 
@@ -27,19 +29,6 @@ class ExtraBuyAdCapacity extends React.Component {
     componentDidMount() {
         analytics().logEvent('extra_buyAd_capacity_payment');
     }
-
-
-    pay = () => {
-        let userId = '';
-        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
-            userId = this.props.userProfile.user_info.id;
-
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`);
-            }
-        })
-    };
 
     changeCount = type => {
         this.setState({
@@ -66,25 +55,46 @@ class ExtraBuyAdCapacity extends React.Component {
         if (this.wrapperRef && this.wrapperRef.current) {
             this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.5, animate: true })
         }
-    }
+    };
+
+    setFlag = flag => this.setState({ elevatorFlag: flag });
 
     render() {
 
         let {
-            dashboard
+            userProfile = {}
         } = this.props;
 
-        let {
-            active_package_type: activePackageType = 0,
-        } = dashboard;
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id: userId
+        } = user_info;
+
         const {
             buyAdCount,
             buyAdTotalCount,
-            disableInputFlag
+            elevatorFlag
         } = this.state;
         return (
             <>
-
+                {elevatorFlag ?
+                    <PaymentTypeModal
+                        title={locales('titles.moreCapacity')}
+                        body={locales('titles.elevationText')}
+                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
+                        successTitle={locales('titles.moreCapacity')}
+                        price={buyAdCount * 25000}
+                        type={4}
+                        setFlag={this.setFlag}
+                        flag={elevatorFlag}
+                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${buyAdCount}`}
+                        {...this.props}
+                    />
+                    : null
+                }
                 <Header
                     title={locales('titles.extra‌BuyAd')}
                     shouldShowAuthenticationRibbonFromProps
@@ -355,7 +365,8 @@ class ExtraBuyAdCapacity extends React.Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                            onPress={() => this.pay()}>
+                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                        >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                             </Text>
                                         </Button>

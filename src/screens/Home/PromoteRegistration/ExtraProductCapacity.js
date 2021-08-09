@@ -12,13 +12,15 @@ import { formatter } from '../../../utils'
 import PromoteRegistration from './PromoteRegistration';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
+import PaymentTypeModal from '../../../components/paymentModal/paymentTypeModal';
 class ExtraProductCapacity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             productCount: 1,
             productUnitPice: 25000,
-            productTotalCount: 25000
+            productTotalCount: 25000,
+            elevatorFlag: false
         }
     }
 
@@ -28,19 +30,6 @@ class ExtraProductCapacity extends React.Component {
     componentDidMount() {
         analytics().logEvent('extra_product_capacity_payment');
     }
-
-
-    pay = () => {
-        let userId = '';
-        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
-            userId = this.props.userProfile.user_info.id;
-
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${this.state.productCount}`);
-            }
-        })
-    };
 
     changeCount = type => {
         this.setState({
@@ -67,22 +56,46 @@ class ExtraProductCapacity extends React.Component {
         if (this.wrapperRef && this.wrapperRef.current) {
             this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.5, animate: true })
         }
-    }
+    };
+
+    setFlag = flag => this.setState({ elevatorFlag: flag });
+
     render() {
 
         let {
-            dashboard
+            userProfile = {}
         } = this.props;
 
-        let {
-            active_package_type: activePackageType = 0,
-        } = dashboard;
         const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id: userId
+        } = user_info;
+
+        const {
+            productTotalCount,
+            elevatorFlag,
             productCount,
-            productTotalCount
         } = this.state;
         return (
             <>
+                {elevatorFlag ?
+                    <PaymentTypeModal
+                        title={locales('titles.moreCapacity')}
+                        body={locales('titles.elevationText')}
+                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
+                        successTitle={locales('titles.moreCapacity')}
+                        price={productCount * 25000}
+                        type={2}
+                        setFlag={this.setFlag}
+                        flag={elevatorFlag}
+                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${productCount}`}
+                        {...this.props}
+                    />
+                    : null
+                }
 
                 <Header
                     title={locales('titles.extraProduct')}
@@ -347,7 +360,8 @@ class ExtraProductCapacity extends React.Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                            onPress={() => this.pay()}>
+                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                        >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
                                                 {locales('titles.pay')}
                                             </Text>
