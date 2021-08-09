@@ -18,41 +18,47 @@ import { formatter, deviceWidth, deviceHeight } from '../../utils';
 const PaymentTypeModal = props => {
 
     const {
-        url = '',
-        setElevatorFlag = _ => { },
-        elevatorFlag = false,
+        bankUrl = '',
+        setFlag = _ => { },
+        flag = false,
         productId = null,
 
         walletElevatorPayLoading,
-        userProfile
+        userProfile = {},
+
+        body = '',
+        title = '',
+        successBody = '',
+        successTitle = '',
+        price = 0
     } = props;
 
-    const [walletElevatorPaymentError, setWalletElevatorPaymentError] = useState('');
+    const [walletPaymentError, setWalletPaymentError] = useState('');
 
-    const [walletElevatorPaySuccessMessage, setWalletElevatorPaySuccessMessage] = useState('');
+    const [walletPaySuccessMessage, setWalletPaySuccessMessage] = useState('');
 
     const closeModal = _ => {
-        setElevatorFlag(false);
-        setWalletElevatorPaymentError('');
+        setFlag(false);
+        setWalletPaymentError('');
     };
 
-    const elevatorPay = () => {
-        return Linking.canOpenURL(url)
+    const bankPay = () => {
+        return Linking.canOpenURL(bankUrl)
             .then(supported => {
                 if (supported) {
-                    Linking.openURL(url);
+                    Linking.openURL(bankUrl);
                 }
             })
     };
 
-    const doWalletElevatorPay = _ => {
+    const doWalletPay = _ => {
         props.walletElevatorPay(productId).then(_ => {
-            setWalletElevatorPaymentError('');
-            setWalletElevatorPaySuccessMessage(locales('titles.walletElevatorPaymentSuccessMessage'));
+            setWalletPaymentError('');
+            setWalletPaySuccessMessage(successBody);
             setTimeout(() => {
                 props.fetchUserProfile();
-                setWalletElevatorPaySuccessMessage('');
-                setElevatorFlag(false);
+                setWalletPaySuccessMessage('');
+                setFlag(false);
             }, 3000);
         })
             .catch(error => {
@@ -67,8 +73,8 @@ const PaymentTypeModal = props => {
                     status
                 } = data;
                 if (status == false) {
-                    setWalletElevatorPaymentError(msg);
-                    setWalletElevatorPaySuccessMessage('');
+                    setWalletPaymentError(msg);
+                    setWalletPaySuccessMessage('');
                 }
             });
     };
@@ -81,9 +87,9 @@ const PaymentTypeModal = props => {
                     margin: 0,
                 }}>
                 <Dialog
-                    visible={elevatorFlag}
+                    visible={flag}
                     onDismiss={closeModal}
-                    style={[styles.dialogWrapper, { display: !walletElevatorPaySuccessMessage ? 'flex' : 'none' }]}
+                    style={[styles.dialogWrapper, { display: !walletPaySuccessMessage ? 'flex' : 'none' }]}
                 >
                     <Dialog.Actions
                         style={styles.dialogHeader}
@@ -97,7 +103,7 @@ const PaymentTypeModal = props => {
 
 
                         <Paragraph style={styles.headerTextDialogModal}>
-                            {locales('labels.doElevation')}
+                            {title}
                         </Paragraph>
                     </Dialog.Actions>
 
@@ -106,13 +112,13 @@ const PaymentTypeModal = props => {
                         marginTop: 15,
                         fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
                     }}>
-                        {formatter.numberWithCommas(25000)} {locales('titles.toman')}
+                        {formatter.numberWithCommas(price)} {locales('titles.toman')}
                     </Text>
 
                     <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                         <Text style={styles.mainTextDialogModal}>
-                            {locales('titles.elevationText')}
+                            {body}
                         </Text>
 
                     </Dialog.Actions>
@@ -127,7 +133,7 @@ const PaymentTypeModal = props => {
                             style={[styles.modalButton, styles.greenButton]}
                             onPress={_ => {
                                 closeModal();
-                                return setTimeout(() => elevatorPay(), 1000);
+                                return setTimeout(() => bankPay(), 1000);
                             }
                             }
                         >
@@ -140,7 +146,7 @@ const PaymentTypeModal = props => {
                             {
                                 backgroundColor: '#151C2E', width: '50%', maxWidth: 170
                             }]}
-                            onPress={_ => doWalletElevatorPay()}
+                            onPress={_ => doWalletPay()}
                         >
                             <ActivityIndicator
                                 color='white'
@@ -155,7 +161,7 @@ const PaymentTypeModal = props => {
                         </Button>
                     </View>
 
-                    {walletElevatorPaymentError ? <Text
+                    {walletPaymentError ? <Text
                         style={{
                             width: '100%',
                             textAlign: 'center',
@@ -165,7 +171,7 @@ const PaymentTypeModal = props => {
                             color: '#E41C38'
                         }}
                     >
-                        {walletElevatorPaymentError}
+                        {walletPaymentError}
                     </Text>
                         : null}
 
@@ -176,7 +182,7 @@ const PaymentTypeModal = props => {
                     }}>
                         <Button
                             style={styles.modalCloseButton}
-                            onPress={() => setElevatorFlag(false)}
+                            onPress={() => setFlag(false)}
                         >
 
                             <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
@@ -193,19 +199,19 @@ const PaymentTypeModal = props => {
 
                 }}>
                 <Dialog
-                    visible={!!walletElevatorPaySuccessMessage}
+                    visible={!!walletPaySuccessMessage}
                     style={styles.dialogWrapper}
                 >
                     <Dialog.Actions
                         style={styles.dialogHeader}
                     >
                         <Button
-                            onPress={() => setWalletElevatorPaySuccessMessage('')}
+                            onPress={() => setWalletPaySuccessMessage('')}
                             style={styles.closeDialogModal}>
                             <FontAwesome5 name="times" color="#777" solid size={18} />
                         </Button>
                         <Paragraph style={styles.headerTextDialogModal}>
-                            {locales('labels.doElevation')}
+                            {successTitle}
                         </Paragraph>
                     </Dialog.Actions>
                     <View
@@ -222,7 +228,7 @@ const PaymentTypeModal = props => {
                     <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                         <Text style={styles.mainTextDialogModal}>
-                            {walletElevatorPaySuccessMessage}
+                            {walletPaySuccessMessage}
                         </Text>
 
                     </Dialog.Actions>
@@ -233,7 +239,7 @@ const PaymentTypeModal = props => {
                     }}>
                         <Button
                             style={styles.modalCloseButton}
-                            onPress={() => setWalletElevatorPaySuccessMessage('')}
+                            onPress={() => setWalletPaySuccessMessage('')}
                         >
 
                             <Text style={styles.closeButtonText}>{locales('titles.gotIt')}

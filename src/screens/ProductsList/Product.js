@@ -279,7 +279,7 @@ class Product extends PureComponent {
 
     };
 
-    setElevatorFlag = flag => this.setState({ elevatorFlag: flag });
+    setFlag = flag => this.setState({ elevatorFlag: flag });
 
     render() {
         const {
@@ -655,10 +655,15 @@ class Product extends PureComponent {
 
                 {elevatorFlag ?
                     <PaymentTypeModal
+                        title={locales('labels.doElevation')}
+                        body={locales('titles.elevationText')}
+                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
+                        successTitle={locales('labels.doElevation')}
+                        price={25000}
                         productId={productId}
-                        setElevatorFlag={this.setElevatorFlag}
-                        elevatorFlag={elevatorFlag}
-                        url={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`}
+                        setFlag={this.setFlag}
+                        flag={elevatorFlag}
+                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`}
                         {...this.props}
                     />
                     : null
