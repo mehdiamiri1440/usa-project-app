@@ -34,10 +34,15 @@ const PaymentTypeModal = props => {
 
         type = 0,
         body = '',
+        count = 0,
         title = '',
         successBody = '',
         successTitle = '',
-        price = 0
+        price = 0,
+
+        buyAdCapacityWalletPayLoading,
+        productCapacityWalletPayLoading,
+        promoteRegistrationWalletPayLoading,
     } = props;
 
     const [walletPaymentError, setWalletPaymentError] = useState('');
@@ -72,25 +77,25 @@ const PaymentTypeModal = props => {
 
             case 1: {
                 url = 'promoteRegistrationWalletPay';
-                params = null;
+                params = 1;
                 break
             };
 
             case 2: {
                 url = 'productCapacityWalletPay';
-                params = null;
+                params = count;
                 break
             };
 
             case 3: {
                 url = 'promoteRegistrationWalletPay';
-                params = null;
+                params = 3;
                 break
             };
 
             case 4: {
                 url = 'buyAdCapacityWalletPay';
-                params = null;
+                params = count;
                 break
             };
 
@@ -205,7 +210,11 @@ const PaymentTypeModal = props => {
                                 color='white'
                                 style={{ position: 'absolute', left: 0 }}
                                 size={15}
-                                animating={!!walletElevatorPayLoading}
+                                animating={!!walletElevatorPayLoading ||
+                                    !!buyAdCapacityWalletPayLoading ||
+                                    !!productCapacityWalletPayLoading ||
+                                    !!promoteRegistrationWalletPayLoading
+                                }
                             />
 
                             <Text style={styles.buttonText}>
@@ -395,6 +404,10 @@ const mapStateToProps = ({
         walletElevatorPayError,
         walletElevatorPayMessage,
         walletElevatorPay,
+
+        buyAdCapacityWalletPayLoading,
+        productCapacityWalletPayLoading,
+        promoteRegistrationWalletPayLoading,
     } = profileReducer;
 
     return {
@@ -403,15 +416,19 @@ const mapStateToProps = ({
         walletElevatorPayError,
         walletElevatorPayMessage,
         walletElevatorPay,
+
+        buyAdCapacityWalletPayLoading,
+        productCapacityWalletPayLoading,
+        promoteRegistrationWalletPayLoading,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         walletElevatorPay: productId => dispatch(profileActions.walletElevatorPay(productId)),
-        buyAdCapacityWalletPay: _ => dispatch(profileActions.buyAdCapacityWalletPay()),
-        productCapacityWalletPay: _ => dispatch(profileActions.productCapacityWalletPay()),
-        promoteRegistrationWalletPay: _ => dispatch(profileActions.promoteRegistrationWalletPay()),
+        buyAdCapacityWalletPay: count => dispatch(profileActions.buyAdCapacityWalletPay(count)),
+        productCapacityWalletPay: count => dispatch(profileActions.productCapacityWalletPay(count)),
+        promoteRegistrationWalletPay: type => dispatch(profileActions.promoteRegistrationWalletPay(type)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
     }
 };

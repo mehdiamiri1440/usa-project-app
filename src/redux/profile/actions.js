@@ -251,12 +251,12 @@ export const walletElevatorPay = id => {
     return request();
 };
 
-export const buyAdCapacityWalletPay = _ => {
+export const buyAdCapacityWalletPay = count => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.profile
-                .buyAdCapacityWalletPay()
+                .buyAdCapacityWalletPay(count)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -273,12 +273,12 @@ export const buyAdCapacityWalletPay = _ => {
     return request();
 };
 
-export const promoteRegistrationWalletPay = _ => {
+export const promoteRegistrationWalletPay = type => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.profile
-                .promoteRegistrationWalletPay()
+                .promoteRegistrationWalletPay(type)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
@@ -295,12 +295,12 @@ export const promoteRegistrationWalletPay = _ => {
     return request();
 };
 
-export const productCapacityWalletPay = _ => {
+export const productCapacityWalletPay = count => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.profile
-                .productCapacityWalletPay()
+                .productCapacityWalletPay(count)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

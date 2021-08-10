@@ -88,6 +88,7 @@ class ExtraProductCapacity extends React.Component {
                         successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
                         successTitle={locales('titles.moreCapacity')}
                         price={productCount * 25000}
+                        count={productCount}
                         type={2}
                         setFlag={this.setFlag}
                         flag={elevatorFlag}

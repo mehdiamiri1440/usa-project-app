@@ -88,6 +88,7 @@ class ExtraBuyAdCapacity extends React.Component {
                         successTitle={locales('titles.moreCapacity')}
                         price={buyAdCount * 25000}
                         type={4}
+                        count={buyAdCount}
                         setFlag={this.setFlag}
                         flag={elevatorFlag}
                         bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${buyAdCount}`}

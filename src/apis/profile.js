@@ -221,12 +221,15 @@ export const walletElevatorPay = id => {
     });
 };
 
-export const productCapacityWalletPay = _ => {
+export const productCapacityWalletPay = extra_capacity => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `wallet-expend/product-capacity`,
                 method: 'POST',
+                data: {
+                    extra_capacity
+                },
                 withAuth: true,
             })
             .then(result => {
@@ -241,12 +244,15 @@ export const productCapacityWalletPay = _ => {
     });
 };
 
-export const buyAdCapacityWalletPay = _ => {
+export const buyAdCapacityWalletPay = extra_capacity => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: `wallet-expend/buyAd-capacity`,
                 method: 'POST',
+                data: {
+                    extra_capacity
+                },
                 withAuth: true,
             })
             .then(result => {
@@ -261,12 +267,15 @@ export const buyAdCapacityWalletPay = _ => {
     });
 };
 
-export const promoteRegistrationWalletPay = _ => {
+export const promoteRegistrationWalletPay = package_type => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
-                route: `wallet-expend/buyAd-capacity`,
+                route: `wallet-expend/buy-package`,
                 method: 'POST',
+                data: {
+                    package_type
+                },
                 withAuth: true,
             })
             .then(result => {
