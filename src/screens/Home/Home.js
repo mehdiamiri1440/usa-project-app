@@ -1011,6 +1011,7 @@ const InviteFriendsBanner = props => {
                 }}
             >
                 <Pressable
+                    onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
                     android_ripple={{
                         color: '#ededed'
                     }}
@@ -1053,6 +1054,7 @@ const InviteFriendsBanner = props => {
                             }}
                         >
                             <Button
+                                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
                                 style={{
                                     width: '100%',
                                     backgroundColor: 'transparent',

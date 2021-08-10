@@ -9,7 +9,7 @@ import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
 // import PromotionIntro from '../screens/Home/PromotionIntro';
-// import Referral from '../screens/Home/Referral';
+import Referral from '../screens/Home/Referral';
 // import UserFriends from '../screens/Home/UserFriends';
 import Terms from '../screens/Home/Terms/Terms';
 import Home from '../screens/Home/Home';
@@ -120,15 +120,15 @@ export const MyBuskoolStack = _ => {
                 name='EditProfile'
                 component={EditProfile}
             />
-            {/* <Stack.Screen
-          options={({ navigation, route }) => ({
-            headerShown: false,
-            title: null,
-          })}
-          key='Referral'
-          name='Referral'
-          component={Referral}
-        /> */}
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Referral'
+                name='Referral'
+                component={Referral}
+            />
             {/* <Stack.Screen
           options={({ navigation, route }) => ({
             headerShown: false,
