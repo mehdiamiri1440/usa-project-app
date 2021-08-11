@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { useAnimatedStyle, interpolate, Extrapolate } from 'react-native-reanimated';
 import Svg, {
     Path
 } from "react-native-svg";
@@ -63,7 +62,8 @@ const UserContacts = props => {
     } = route;
 
     const {
-        sharingUrlPostFix
+        sharingUrlPostFix,
+        bodyText
     } = params;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
@@ -136,7 +136,8 @@ const UserContacts = props => {
             ToastAndroid.BOTTOM,
             5,
             20);
-        Clipboard.setString(completeUrlToShare);
+        Clipboard.setString(bodyText ? `${bodyText}
+        ${completeUrlToShare}` : completeUrlToShare);
     };
 
     const handleSearch = text => {
@@ -163,10 +164,15 @@ const UserContacts = props => {
         } = route;
 
         let {
-            sharingUrlPostFix = ''
+            sharingUrlPostFix = '',
+            bodyText
         } = params;
 
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
+
+        if (bodyText)
+            sharingUrlPostFix = `${bodyText}
+             ${sharingUrlPostFix}`;
 
         const result = await Share.share({ message: sharingUrlPostFix });
     };
@@ -183,10 +189,15 @@ const UserContacts = props => {
         } = route;
 
         let {
-            sharingUrlPostFix = ''
+            sharingUrlPostFix = '',
+            bodyText
         } = params;
 
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
+
+        if (bodyText)
+            sharingUrlPostFix = `${bodyText}
+             ${sharingUrlPostFix}`;
 
         switch (app) {
             case 'whatsApp': {

@@ -1,319 +1,248 @@
-
-
-import React, { useEffect } from 'react';
-import { Text, View, BackHandler, StyleSheet, Image, ScrollView, ToastAndroid, Linking } from 'react-native';
-import { Button, Item, Input } from 'native-base';
-import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { deviceWidth, deviceHeight } from '../../../utils';
+import React from 'react';
+import { View, Text, Image, ToastAndroid, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { Button } from 'native-base';
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Clipboard from "@react-native-community/clipboard";
+import BgLinearGradient from 'react-native-linear-gradient';
 
-import UserFriends from '../UserFriends/UserLists'
 import Header from '../../../components/header';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
+import { permissions } from '../../../utils';
 
 const Referral = props => {
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', backChangesHandler)
-        return _ => BackHandler.removeEventListener('hardwareBackPress', backChangesHandler)
-    }, [])
+    const {
+        userProfile = {}
+    } = props;
 
-    const backChangesHandler = _ => {
-        props.navigation.goBack()
+    const {
+        user_info = {}
+    } = userProfile;
+
+    const {
+        user_name
+    } = user_info;
+
+    const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}/invite/${user_name}`;
+
+    const bodyText = 'سلام';
+
+    const showToast = _ => {
+        ToastAndroid.showWithGravityAndOffset(
+            locales('titles.copiedToClipboard'),
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            5,
+            20);
+        Clipboard.setString(`${bodyText}
+        ${completeUrlToShare}`);
     };
 
-    const openSms = () => {
-        let url = 'sms:?body=سلام این لینک باسکول هست';
-
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                ToastAndroid.showWithGravityAndOffset(
-                    'پیامک در دسترس نیست',
-                    ToastAndroid.LONG,
-                    ToastAndroid.BOTTOM,
-                    5,
-                    20)
-            }
-        })
-    }
-
-
-    const openWhatsApp = () => {
-        let url = 'whatsapp://send?text=سلام این لینک باسکول هست';
-
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                ToastAndroid.showWithGravityAndOffset(
-                    'نرم افزار واتساپ نصب نیست',
-                    ToastAndroid.LONG,
-                    ToastAndroid.BOTTOM,
-                    5,
-                    20)
-            }
-        })
-    }
-
+    const askForPermissionOfContacts = _ => {
+        const isAllowed = permissions.requestContactsPermission();
+        if (isAllowed)
+            return props.navigation.navigate('MyBuskool', {
+                screen: 'UserContacts', params: {
+                    sharingUrlPostFix: `/invite/${user_name}`,
+                    bodyText
+                }
+            })
+    };
 
     return (
-        <>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: 'white'
+            }}
+        >
             <Header
-                title={locales('titles.referralMainTitle')}
+                title={locales('titles.earnWages')}
                 shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
-            <ScrollView style={{
-                backgroundColor: '#fff',
-                flex: 1,
-            }}>
-                <View style={{
-                    borderBottomWidth: 2,
-                    borderBottomColor: '#efefef',
-                    paddingBottom: 10,
-                    alignItems: 'center',
 
-                }}>
-                    <Text style={{
-                        fontSize: 14,
+            <ScrollView
+                style={{
+                    padding: 15
+                }}
+            >
+
+                <Image
+                    source={require('../../../../assets/images/referral.png')}
+                    style={{
+                        width: '100%',
+                        height: 190,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    resizeMode='contain'
+                />
+                <Text
+                    style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: '#556080',
-                        textAlign: 'center',
-                        paddingVertical: 10
-                    }}>
-                        {/* <Text style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    }}>
-                        {locales('titles.referralMainTitle')}
-
-                    </Text> */}
-                        <Text style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}>
-                            {locales('titles.referralFirstMainTitle')}
-                        </Text>
-                        <Text style={{
-                            color: '#00C569',
-                            marginHorizontal: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                        }}>
-                            {locales('titles.referralSecondMainTitle')}
-                        </Text>
-
-                        <Text style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}>
-                            {locales('titles.referralThirdMainTitle')}
-                        </Text>
-                    </Text>
-
-                    <Image source={require('./../../../../assets/images/gift-card.png')}
-                        style={{
-                            width: deviceWidth * 0.7,
-                            height: deviceHeight * 0.30
-                        }}
-                    />
-                    <Text style={{
-                        color: "#777",
-                        paddingHorizontal: 5,
-                        textAlign: 'center',
-                        paddingTop: 14,
+                        fontSize: 18,
+                        textAlign: 'right',
+                        marginVertical: 10,
+                        color: '#555555'
+                    }}
+                >
+                    {locales('titles.earnWages')}
+                </Text>
+                <Text
+                    style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
-                    }}>
-                        {locales('titles.referralMainPageContents')}
+                        fontSize: 15,
+                        textAlign: 'right',
+                        color: '#555555'
+                    }}
+                >
+                    لورمیبلامثقعهلامثقهعبلثقمبلنثمقعابضثهقعابثقعهابلثاخمثقلاخمثقلاثضهقعلاهثقعلاثقهمایذمشیامقلثیسبذاستدز و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                </Text>
 
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    alignItems: 'center',
-
-                }}>
-                    <Text style={{
-                        fontSize: 20,
-                        paddingTop: 5,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: '#555',
-                    }}>
-                        {locales('titles.referralTitle')}
-                        <Text style={{
-                            fontSize: 22,
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        backgroundColor: '#EEEEEE',
+                        alignItems: 'center',
+                        marginTop: 30,
+                        marginBottom: 10,
+                        justifyContent: 'space-between',
+                        alignSelf: 'center',
+                        borderRadius: 12
+                    }}
+                >
+                    <Text
+                        onPress={showToast}
+                        style={{
+                            textAlign: 'center',
+                            backgroundColor: '#556080',
+                            color: 'white',
+                            fontSize: 16,
+                            borderTopRightRadius: 12,
+                            borderBottomRightRadius: 12,
+                            padding: 10,
+                            width: '25%',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: '#00C569',
-                        }}>
-                            25,000,000
-                                     </Text>
-
-                        {locales('titles.toman')}
-
-                    </Text>
-
-                    {/* <Button
-                        style={[styles.loginButton, { width: '55%', marginTop: 0, marginBottom: 0, elevation: 0, height: 40, alignSelf: 'center' }]}
+                        }}
                     >
-                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
-
-                            {locales('titles.referralButton')}
-
-                        </Text>
-                    </Button> */}
+                        {locales('titles.copyAddress')}
+                    </Text>
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            textAlign: 'left',
+                            backgroundColor: '#EEEEEE',
+                            fontSize: 16,
+                            borderRadius: 12,
+                            padding: 10,
+                            width: '75%',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        }}
+                    >
+                        {completeUrlToShare}
+                    </Text>
                 </View>
 
-                <View style={{
-                    width: '100%',
-                    paddingBottom: 20
-                }}>
-
-                    <View style={{
-                        padding: 10,
-
+                <View
+                    style={{
+                        flex: 1,
+                        borderRadius: 5,
+                        textAlign: 'right',
+                        backgroundColor: 'white',
+                        alignItems: 'flex-end',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                        paddingVertical: 15,
+                        height: 170,
+                        shadowColor: 'black',
+                        shadowOpacity: 0.13,
+                        shadowRadius: 1,
+                        shadowOffset: { width: 0, height: 2 },
                     }}>
-                        {/* <Text style={{
-                            color: '#556080',
-                            marginHorizontal: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    <BgLinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['#1DA1F2', '#3D7CB1']}
+                        style={{
+                            borderRadius: 12,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '100%',
+                            marginTop: 10,
+                            height: 60,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            position: 'absolute',
+                            zIndex: 1
+                        }}
+                    >
+                        <Button
+                            style={{
+                                width: '100%',
+                                backgroundColor: 'transparent',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                            onPress={askForPermissionOfContacts}
+                        >
 
-                        }}>
-                            {locales('titles.referralShareButton')}
-
-                        </Text> */}
-
-                        <View style={{
-                            flexDirection: 'row-reverse',
-                            paddingTop: 5
-                        }}>
-                            <Button
-
-                                onPress={openWhatsApp}
-                                style={[styles.iconWrapper, { backgroundColor: '#00C569' }]}>
-                                <FontAwesome5 name="whatsapp" color="#fff" size={23} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.whatsapp')}
-                                </Text>
-                            </Button>
-                            {/* <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
-
-                                <FontAwesome5 name="instagram" color="#777" size={15} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.instagram')}
-                                </Text>
-                            </Button>
-                            <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
-
-                                <FontAwesome5 name="telegram-plane" color="#777" size={15} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.telegram')}
-
-                                </Text>
-                            </Button> */}
-                            <Button
-                                onPress={openSms}
-                                style={[styles.iconWrapper, { borderWidth: 2, borderColor: '#777', backgroundColor: '#fff', marginLeft: 5 }]}>
-
-                                <FontAwesome5 name="comment-alt" color="#777" size={20} />
-                                <Text style={[styles.iconContents, { color: '#777' }]}>
-                                    {locales('titles.sms')}
-
-                                </Text>
-                            </Button>
-                        </View>
-                    </View>
-
-
-                    <View style={{
-
-                        paddingHorizontal: 10
-                    }}>
-
-
-                        <View>
-                            <Item style={{
-                                borderBottomWidth: 0,
-                                marginTop: 10
-                            }}>
-                                <Input disabled style={{ fontSize: 14, height: 35, color: '#777', padding: 5, margin: 0, backgroundColor: '#eee', borderWidth: 0, borderRadius: 4, textAlign: 'left' }} placeholder="https://buskool.com/profile/del" />
-                                <Button
-                                    onPress={() => {
-                                        ToastAndroid.showWithGravityAndOffset(
-                                            locales('titles.copiedToClipboard'),
-                                            ToastAndroid.LONG,
-                                            ToastAndroid.BOTTOM,
-                                            5,
-                                            20)
-                                        Clipboard.setString('https://buskool.com/profile/del')
-                                    }}
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <FontAwesome5
+                                    name='share-alt'
+                                    color='white'
+                                    size={20}
                                     style={{
-                                        backgroundColor: '#556080',
-                                        paddingHorizontal: 20,
-                                        height: 35,
-                                        elevation: 0
-                                    }}>
-                                    <Text style={{
-                                        color: '#fff',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
+                                    }}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        flexDirection: 'row',
+                                        color: 'white',
+                                        marginRight: 5
                                     }}>
-                                        کپی
-</Text>
-                                </Button>
-                            </Item>
-                        </View>
+                                    {locales('titles.sendInvitation')}
+                                </Text>
+                            </View>
+                        </Button>
+                    </BgLinearGradient>
+                    <View style={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: '#0966AD',
+                        height: 60,
+                        borderRadius: 12,
+                    }}>
                     </View>
                 </View>
-
-                <UserFriends />
             </ScrollView>
+        </View>
 
-        </>
     )
-}
+};
 
+const mapStateToProps = ({
+    profileReducer
+}) => {
 
-const styles = StyleSheet.create({
+    const {
+        userProfile = {}
+    } = profileReducer;
 
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        width: '100%',
-        textAlign: 'center'
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        width: deviceWidth * 0.8,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    loginButton: {
-        textAlign: 'center',
-        borderRadius: 4,
-        backgroundColor: '#00C569',
-        width: '70%',
-        color: 'white',
-    },
-    iconWrapper: {
-        flex: 1,
-        flexDirection: 'row-reverse',
-        borderRadius: 5,
-        height: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        elevation: 0
-    },
-    iconContents: {
-        color: '#fff',
-        fontSize: 16,
-        marginRight: 3,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+    return {
+        userProfile
     }
-});
+};
 
-
-export default Referral
+export default connect(mapStateToProps)(Referral);
