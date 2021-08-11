@@ -1054,7 +1054,7 @@ const InviteFriendsBanner = props => {
                             }}
                         >
                             <Button
-                                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
                                 style={{
                                     width: '100%',
                                     backgroundColor: 'transparent',
