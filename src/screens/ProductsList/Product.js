@@ -20,7 +20,6 @@ import * as productListActions from '../../redux/productsList/actions'
 import * as profileActions from '../../redux/profile/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import { formatter, validator } from '../../utils';
-import PaymentTypeModal from '../../components/paymentModal/paymentTypeModal';
 
 class Product extends PureComponent {
     constructor(props) {
@@ -39,7 +38,6 @@ class Product extends PureComponent {
             minimumPriceError: '',
             amountError: '',
             editionFlag: false,
-            elevatorFlag: false,
             deleteProductFlag: false,
             showDeletationMessage: false,
             deleteMessageText: '',
@@ -279,7 +277,26 @@ class Product extends PureComponent {
 
     };
 
-    setFlag = flag => this.setState({ elevatorFlag: flag });
+    navigateToPaymentType = _ => {
+        const {
+            productItem = {}
+        } = this.props;
+
+        const {
+            main = {},
+        } = productItem;
+
+        const {
+            id: productId
+        } = main;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: 25000,
+            type: 0,
+            productId,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`
+        });
+    };
 
     render() {
         const {
@@ -338,7 +355,6 @@ class Product extends PureComponent {
         } = user_info;
 
         const {
-            elevatorFlag,
             showDeletationMessage,
             deleteMessageText,
             editionMessageText,
@@ -652,23 +668,6 @@ class Product extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal > : null}
-
-                {elevatorFlag ?
-                    <PaymentTypeModal
-                        title={locales('labels.doElevation')}
-                        body={locales('titles.elevationText')}
-                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
-                        successTitle={locales('labels.doElevation')}
-                        price={25000}
-                        type={0}
-                        productId={productId}
-                        setFlag={this.setFlag}
-                        flag={elevatorFlag}
-                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`}
-                        {...this.props}
-                    />
-                    : null
-                }
 
                 < Portal
                     style={{
@@ -1254,7 +1253,7 @@ class Product extends PureComponent {
                                                     height: 40,
                                                     elevation: 0
                                                 }}
-                                                onPress={() => this.setState({ elevatorFlag: true })}
+                                                onPress={this.navigateToPaymentType}
                                             >
 
                                                 <View

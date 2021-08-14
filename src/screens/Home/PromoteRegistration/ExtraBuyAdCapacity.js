@@ -12,7 +12,6 @@ import { formatter } from '../../../utils';
 import PromoteRegistration from './PromoteRegistration';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
-import PaymentTypeModal from '../../../components/paymentModal/paymentTypeModal';
 class ExtraBuyAdCapacity extends React.Component {
     constructor(props) {
         super(props)
@@ -20,7 +19,6 @@ class ExtraBuyAdCapacity extends React.Component {
             buyAdCount: 1,
             buyAdUnitPice: 25000,
             buyAdTotalCount: 25000,
-            elevatorFlag: false
         }
     }
 
@@ -57,11 +55,9 @@ class ExtraBuyAdCapacity extends React.Component {
         }
     };
 
-    setFlag = flag => this.setState({ elevatorFlag: flag });
 
-    render() {
-
-        let {
+    navigateToPaymentType = _ => {
+        const {
             userProfile = {}
         } = this.props;
 
@@ -75,27 +71,23 @@ class ExtraBuyAdCapacity extends React.Component {
 
         const {
             buyAdCount,
+        } = this.state;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: buyAdCount * 25000,
+            type: 4,
+            count: buyAdCount,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${buyAdCount}`
+        });
+    };
+
+    render() {
+        const {
+            buyAdCount,
             buyAdTotalCount,
-            elevatorFlag
         } = this.state;
         return (
             <>
-                {elevatorFlag ?
-                    <PaymentTypeModal
-                        title={locales('titles.moreCapacity')}
-                        body={locales('titles.elevationText')}
-                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
-                        successTitle={locales('titles.moreCapacity')}
-                        price={buyAdCount * 25000}
-                        type={4}
-                        count={buyAdCount}
-                        setFlag={this.setFlag}
-                        flag={elevatorFlag}
-                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${buyAdCount}`}
-                        {...this.props}
-                    />
-                    : null
-                }
                 <Header
                     title={locales('titles.extra‌BuyAd')}
                     shouldShowAuthenticationRibbonFromProps
@@ -366,7 +358,7 @@ class ExtraBuyAdCapacity extends React.Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                            onPress={this.navigateToPaymentType}
                                         >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                             </Text>

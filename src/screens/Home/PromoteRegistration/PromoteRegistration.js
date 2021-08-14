@@ -18,14 +18,12 @@ import * as homeActions from '../../../redux/home/actions';
 import { numberWithCommas } from '../../../utils/formatter';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
-import PaymentTypeModal from '../../../components/paymentModal/paymentTypeModal';
 class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             visibility: false,
             paymentType: 1,
-            elevatorFlag: false
         }
     }
 
@@ -54,8 +52,6 @@ class PromoteRegistration extends React.Component {
             this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.55, animate: true })
         }
     }
-
-    setFlag = flag => this.setState({ elevatorFlag: flag });
 
     choosePrice = _ => {
 
@@ -90,16 +86,11 @@ class PromoteRegistration extends React.Component {
         }
     };
 
-    render() {
 
-        let {
-            dashboard,
-            isUsedAsComponent = false,
-            showBothPackages = true,
-            packagesPrices = {},
-            userId = {},
+    navigateToPaymentType = _ => {
+
+        const {
             userProfile = {},
-            packagesPricesLoading
         } = this.props;
 
         const {
@@ -109,6 +100,26 @@ class PromoteRegistration extends React.Component {
         const {
             id
         } = user_info;
+
+        const {
+            paymentType,
+        } = this.state;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: this.choosePrice() / 10,
+            type: paymentType,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${paymentType}`
+        });
+    };
+
+    render() {
+
+        let {
+            dashboard,
+            isUsedAsComponent = false,
+            showBothPackages = true,
+            packagesPrices = {},
+        } = this.props;
 
         const {
             prices = {}
@@ -133,27 +144,10 @@ class PromoteRegistration extends React.Component {
         const {
             visibility,
             paymentType,
-            elevatorFlag
         } = this.state;
 
         return (
             <>
-                {elevatorFlag ?
-                    <PaymentTypeModal
-                        title={locales('titles.moreCapacity')}
-                        body={locales('titles.elevationText')}
-                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
-                        successTitle={locales('titles.moreCapacity')}
-                        price={this.choosePrice() / 10}
-                        type={paymentType}
-                        setFlag={this.setFlag}
-                        flag={elevatorFlag}
-                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${paymentType}`}
-                        {...this.props}
-                    />
-                    : null
-                }
-
                 <Modal
                     transparent={false}
                     onRequestClose={_ => this.setState({ visibility: false })}
@@ -1197,7 +1191,7 @@ class PromoteRegistration extends React.Component {
                                     >
                                         <TouchableOpacity
                                             // onPress={() => this.pay()}
-                                            onPress={_ => this.setState({ paymentType: 3 }, _ => this.setState({ elevatorFlag: true }))}
+                                            onPress={_ => this.setState({ paymentType: 3 }, _ => this.navigateToPaymentType())}
                                         >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
                                             </Text>
@@ -1688,7 +1682,7 @@ class PromoteRegistration extends React.Component {
                                             margin: 20, backgroundColor: '#556080', alignSelf: 'center'
                                         }]}
                                         // onPress={() => this.pay(1)}
-                                        onPress={_ => this.setState({ paymentType: 1 }, _ => this.setState({ elevatorFlag: true }))}
+                                        onPress={_ => this.setState({ paymentType: 1 }, _ => this.navigateToPaymentType)}
                                     >
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
                                         </Text>

@@ -12,7 +12,6 @@ import { formatter } from '../../../utils'
 import PromoteRegistration from './PromoteRegistration';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
-import PaymentTypeModal from '../../../components/paymentModal/paymentTypeModal';
 class ExtraProductCapacity extends React.Component {
     constructor(props) {
         super(props)
@@ -20,7 +19,6 @@ class ExtraProductCapacity extends React.Component {
             productCount: 1,
             productUnitPice: 25000,
             productTotalCount: 25000,
-            elevatorFlag: false
         }
     }
 
@@ -58,11 +56,9 @@ class ExtraProductCapacity extends React.Component {
         }
     };
 
-    setFlag = flag => this.setState({ elevatorFlag: flag });
+    navigateToPaymentType = _ => {
 
-    render() {
-
-        let {
+        const {
             userProfile = {}
         } = this.props;
 
@@ -75,28 +71,24 @@ class ExtraProductCapacity extends React.Component {
         } = user_info;
 
         const {
+            productCount,
+        } = this.state;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: productCount * 25000,
+            count: productCount,
+            type: 2,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${productCount}`
+        });
+    };
+
+    render() {
+        const {
             productTotalCount,
-            elevatorFlag,
             productCount,
         } = this.state;
         return (
             <>
-                {elevatorFlag ?
-                    <PaymentTypeModal
-                        title={locales('titles.moreCapacity')}
-                        body={locales('titles.elevationText')}
-                        successBody={locales('titles.walletElevatorPaymentSuccessMessage')}
-                        successTitle={locales('titles.moreCapacity')}
-                        price={productCount * 25000}
-                        count={productCount}
-                        type={2}
-                        setFlag={this.setFlag}
-                        flag={elevatorFlag}
-                        bankUrl={`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/product-capacity/${userId}/${productCount}`}
-                        {...this.props}
-                    />
-                    : null
-                }
 
                 <Header
                     title={locales('titles.extraProduct')}
@@ -361,7 +353,7 @@ class ExtraProductCapacity extends React.Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                            onPress={() => this.setState({ elevatorFlag: true })}
+                                            onPress={this.navigateToPaymentType}
                                         >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
                                                 {locales('titles.pay')}
