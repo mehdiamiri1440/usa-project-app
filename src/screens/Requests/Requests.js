@@ -281,7 +281,6 @@ class Requests extends PureComponent {
             index
         } = error;
 
-        console.log('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
         const offset = averageItemLength * index;
 
         this.props.requestsRef?.current?.scrollToOffset({ offset, animated: true });

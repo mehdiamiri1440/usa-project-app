@@ -592,7 +592,6 @@ class ProductsList extends PureComponent {
             index
         } = error;
 
-        console.warn('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
         const offset = averageItemLength * index;
 
         this.props.productsListRef?.current?.scrollToOffset({ offset, animated: true });
