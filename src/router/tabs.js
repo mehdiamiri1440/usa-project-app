@@ -39,6 +39,7 @@ import UpgradeApp from '../screens/UpgradeApp';
 import Intro from '../screens/Intro';
 import SignUp from '../screens/SignUp';
 import UserContacts from '../screens/UserContacts';
+import PaymentType from '../screens/PaymentType';
 
 const Stack = createStackNavigator();
 
@@ -311,6 +312,15 @@ export const MyBuskoolStack = _ => {
                 name={`UserContacts`}
                 component={UserContacts}
             />
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`PaymentType`}
+                component={PaymentType}
+            />
         </Stack.Navigator >
     )
 };
@@ -375,6 +385,15 @@ export const RegisterProductStack = _ => (
             component={Chat}
         />
 
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`PaymentType`}
+            component={PaymentType}
+        />
     </Stack.Navigator>
 );
 
@@ -434,6 +453,15 @@ export const RegisterRequestStack = _ => (
             component={Chat}
         />
 
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`PaymentType`}
+            component={PaymentType}
+        />
     </Stack.Navigator>
 );
 
@@ -503,6 +531,15 @@ export const MessagesStack = _ => (
             component={UpgradeApp}
         />
 
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`PaymentType`}
+            component={PaymentType}
+        />
     </Stack.Navigator>
 );
 
@@ -551,6 +588,16 @@ export const RequestsStack = _ => (
             })}
             name={`UpgradeApp`}
             component={UpgradeApp}
+        />
+
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`PaymentType`}
+            component={PaymentType}
         />
 
     </Stack.Navigator>
@@ -645,6 +692,15 @@ export const HomeStack = _ => {
                 component={UpgradeApp}
             />
 
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`PaymentType`}
+                component={PaymentType}
+            />
+
         </Stack.Navigator>
     )
 };
@@ -728,6 +784,17 @@ export const SpecialProductsStack = _ => {
                 name={`UpgradeApp`}
                 component={UpgradeApp}
             />
+
+
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                name={`PaymentType`}
+                component={PaymentType}
+            />
+
         </Stack.Navigator>
     )
 };
