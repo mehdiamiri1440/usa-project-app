@@ -69,14 +69,12 @@ const PaymentType = props => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(_ => {
-        setIsInventorySufficient(wallet_balance > price);
-
         const focusListener = props.navigation.addListener('focus', handleOnScreenFocused);
-
         return _ => focusListener;
     }, []);
 
     const handleOnScreenFocused = _ => {
+        setIsInventorySufficient(wallet_balance > price);
         props.fetchUserProfile();
     };
 
@@ -611,7 +609,7 @@ const PaymentType = props => {
                             ?
                             <ActivityIndicator
                                 size={20}
-                                color='#6D7179'
+                                color='#00C569'
                             />
                             :
                             <FontAwesome5
