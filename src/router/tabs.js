@@ -8,20 +8,16 @@ import Authentication from '../screens/Home/Authentication';
 import ChangeRole from '../screens/Home/ChangeRole';
 import PromoteRegistration from '../screens/Home/PromoteRegistration/PromoteRegistration';
 import EditProfile from '../screens/Home/EditProfile';
-// import PromotionIntro from '../screens/Home/PromotionIntro';
 import Referral from '../screens/Home/Referral';
 import UserFriends from '../screens/Home/UserFriends';
-import Terms from '../screens/Home/Terms/Terms';
 import Home from '../screens/Home/Home';
 import MyProducts from '../screens/Home/MyProducts';
 import Settings from '../screens/Settings/Settings';
-import ChangePassword from '../screens/ChangePassword/ChangePassword';
 import ProductDetails from '../screens/ProductDetails';
 import Profile from '../screens/Profile';
 import SpecialProducts from '../screens/SpecialProducts';
 import RegisterRequest from '../screens/RegisterRequest';
 import RegisterRequestSuccessfully from '../screens/RegisterRequest/RegisterRequestSuccessfully';
-import Payment from '../screens/Payment';
 import RegisterProduct from '../screens/RegisterProduct';
 import ExtraProductCapacity from '../screens/Home/PromoteRegistration/ExtraProductCapacity';
 import ExtraBuyAdCapacity from '../screens/Home/PromoteRegistration/ExtraBuyAdCapacity';
@@ -139,15 +135,7 @@ export const MyBuskoolStack = _ => {
                 name='UserFriends'
                 component={UserFriends}
             />
-            {/* <Stack.Screen
-          options={({ navigation, route }) => ({
-            headerShown: false,
-            title: null,
-          })}
-          key='PromotionIntro'
-          name='PromotionIntro'
-          component={PromotionIntro}
-        /> */}
+
             <Stack.Screen
                 options={({ navigation, route }) => ({
                     headerShown: false,
@@ -157,24 +145,7 @@ export const MyBuskoolStack = _ => {
                 name='Settings'
                 component={Settings}
             />
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerShown: false,
-                    title: null,
-                })}
-                key='ChangePassword'
-                name='ChangePassword'
-                component={ChangePassword}
-            />
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerShown: false,
-                    title: null,
-                })}
-                key='Terms'
-                name='Terms'
-                component={Terms}
-            />
+
             <Stack.Screen
                 options={({ navigation, route }) => ({
                     headerShown: false,
@@ -192,15 +163,6 @@ export const MyBuskoolStack = _ => {
                 key='Profile'
                 name='Profile'
                 component={Profile}
-            />
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerShown: false,
-                    title: null,
-                })}
-                key='Payment'
-                name='Payment'
-                component={Payment}
             />
             <Stack.Screen
                 options={({ navigation, route }) => ({
@@ -633,17 +595,6 @@ export const HomeStack = _ => {
                 component={ProductDetails}
             />
 
-
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerShown: false,
-                    title: null,
-                })}
-                key='Payment'
-                name='Payment'
-                component={Payment}
-            />
-
             <Stack.Screen
                 options={({ navigation, route }) => ({
                     headerShown: false,
@@ -735,18 +686,6 @@ export const SpecialProductsStack = _ => {
                 name={`ProductDetails`}
                 component={ProductDetails}
             />
-
-
-            <Stack.Screen
-                options={({ navigation, route }) => ({
-                    headerShown: false,
-                    title: null,
-                })}
-                key='Payment'
-                name='Payment'
-                component={Payment}
-            />
-
             <Stack.Screen
                 options={({ navigation, route }) => ({
                     headerShown: false,

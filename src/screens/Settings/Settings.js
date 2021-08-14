@@ -14,7 +14,6 @@ import * as authReducer from '../../redux/auth/actions';
 import Header from '../../components/header';
 
 let settingRoutes = [
-    // { label: 'labels.changePassword', icon: <FontAwesome size={25} name='unlock-alt' color='white' />, name: 'ChangePassword' },
     { label: 'labels.signOut', icon: <SimpleLineIcons size={25} name='logout' color='white' />, name: 'SignOut' },
 ];
 
