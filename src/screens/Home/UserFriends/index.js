@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import LinearGradient from "react-native-linear-gradient";
 import BgLinearGradient from "react-native-linear-gradient";
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -83,8 +84,13 @@ const UserFriends = props => {
                             alignSelf: 'center',
                         }}
                     >
-                        <View
+                        <ShadowView
                             style={{
+                                backgroundColor: 'white',
+                                shadowColor: 'black',
+                                shadowOpacity: 0.06,
+                                shadowRadius: 5,
+                                shadowOffset: { width: 0, height: 5 },
                                 width: '75%',
                                 top: '40%',
                                 marginVertical: 15,
@@ -95,10 +101,7 @@ const UserFriends = props => {
                                 alignItems: 'center',
                                 alignSelf: 'center',
                                 zIndex: 1,
-                                borderBottomWidth: 5,
-                                borderColor: 'rgba(0,0,0,0.06)'
-                            }}
-                        >
+                            }}>
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -131,7 +134,7 @@ const UserFriends = props => {
                                     {` ${locales('titles.toman')}`}
                                 </Text>
                             </Text>
-                        </View>
+                        </ShadowView>
                     </ImageBackground>
 
                     <View
@@ -441,30 +444,46 @@ const UserFriends = props => {
                 ListHeaderComponent={renderListHeaderComponent}
             />
 
-            <View
+            <ShadowView
                 style={{
-                    padding: 10,
                     alignItems: 'center',
                     justifyContent: 'center',
                     width: deviceWidth,
-                    borderTopWidth: 3,
-                    borderTopColor: 'rgba(0,0,0,0.06)',
-                    bottom: -7
+                    backgroundColor: 'white',
+                    shadowColor: 'rgba(0,0,0,0.1)',
+                    shadowOpacity: 0.4,
+                    shadowRadius: 1,
+                    shadowOffset: { width: 0, height: -5 },
+                    paddingTop: 10,
+                    paddingBottom: 15
                 }}
             >
+
                 <BgLinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
-                    colors={['#1DA1F2', '#556080']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    colors={['#1DA1F2', '#3D7DB2']}
                     style={{
                         borderRadius: 12,
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: '95%',
+                        zIndex: 1,
+                        height: 60,
                         alignSelf: 'center',
-                        bottom: -6
                     }}
                 >
+                    {/* <ShadowView
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: deviceWidth,
+                            shadowColor: 'red',
+                            shadowOpacity: 1,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 5 },
+                        }}
+                    > */}
                     <Button
                         onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
                         style={{
@@ -472,7 +491,7 @@ const UserFriends = props => {
                             backgroundColor: 'transparent',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 70
+                            elevation: 0
                         }}
                     >
                         <View
@@ -501,17 +520,19 @@ const UserFriends = props => {
                             </Text>
                         </View>
                     </Button>
+                    {/* </ShadowView> */}
+                    {/* <View style={{
+                        width: "95%",
+                        backgroundColor: '#0966AD',
+                        zIndex: 0,
+                        height: 60,
+                        top: 15,
+                        borderRadius: 12,
+                        position: 'absolute'
+                    }}>
+                    </View> */}
                 </BgLinearGradient>
-                <View style={{
-                    width: "94%",
-                    backgroundColor: '#0966AD',
-                    zIndex: -1,
-                    height: 20,
-                    borderRadius: 12,
-                    top: -10
-                }}>
-                </View>
-            </View>
+            </ShadowView>
 
         </View >
     )
