@@ -990,6 +990,19 @@ export const WalletPreview = props => {
 };
 
 const InviteFriendsBanner = props => {
+
+    const {
+        userProfile = {}
+    } = props;
+
+    const {
+        user_info = {}
+    } = userProfile;
+
+    const {
+        active_pakage_type
+    } = user_info;
+
     return (
         <BgLinearGradient
             start={{ x: 0, y: 1 }}
@@ -1000,7 +1013,8 @@ const InviteFriendsBanner = props => {
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 borderTopColor: '#ebebeb',
-                borderTopWidth: 10
+                borderTopWidth: active_pakage_type > 0 ? 0 : 10,
+                marginTop: active_pakage_type == 0 ? 0 : 20
             }}
         >
             <View
@@ -1172,7 +1186,7 @@ const ProfilePreview = props => {
                 color: '#ededed'
             }}
             style={{
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
             }}
             onPress={() => navigate('MyBuskool', { screen: 'Profile', params: { user_name } })}
         >
@@ -1274,49 +1288,55 @@ const ProfilePreview = props => {
                 />
             </View>
 
-            <Pressable
+            {active_pakage_type == 0 ?
+                <>
+                    <Pressable
 
-                onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
-            >
-                <BgLinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
-                    colors={['#0B0E13', '#38485F']}
-                    style={{
-                        borderTopLeftRadius: 12,
-                        borderTopRightRadius: 12,
-                        padding: 10,
-                        marginTop: 10,
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Animated.FlatList
-                        style={{ maxHeight: 25 }}
-                        ref={flatListRef}
-                        onScrollToIndexFailed={onScrollToIndexFailed}
-                        renderItem={({ item }) => (
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16,
-                                    color: 'white'
-                                }}
-                            >
-                                {item}
-                            </Text>
-                        )}
-                        data={flatListArray}
-                        keyExtractor={item => item}
-                    />
-                    <FontAwesome5
-                        name='angle-left'
-                        color='white'
-                        size={20}
-                    />
-                </BgLinearGradient>
-            </Pressable>
+                        onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+                    >
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#0B0E13', '#38485F']}
+                            style={{
+                                borderTopLeftRadius: 12,
+                                borderTopRightRadius: 12,
+                                padding: 10,
+                                marginTop: 10,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
+
+                            <Animated.FlatList
+                                style={{ maxHeight: 25 }}
+                                ref={flatListRef}
+                                onScrollToIndexFailed={onScrollToIndexFailed}
+                                renderItem={({ item }) => (
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            color: 'white'
+                                        }}
+                                    >
+                                        {item}
+                                    </Text>
+                                )}
+                                data={flatListArray}
+                                keyExtractor={item => item}
+                            />
+                            <FontAwesome5
+                                name='angle-left'
+                                color='white'
+                                size={20}
+                            />
+                        </BgLinearGradient>
+                    </Pressable>
+                </>
+                : null
+            }
         </Pressable>
     )
 };
