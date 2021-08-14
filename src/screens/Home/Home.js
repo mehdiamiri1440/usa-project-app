@@ -67,6 +67,7 @@ class Home extends React.Component {
             is_seller
         } = user_info;
         this.setState({ is_seller: !!is_seller });
+        this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
