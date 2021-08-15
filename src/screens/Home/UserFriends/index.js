@@ -504,8 +504,7 @@ const UserFriends = props => {
                     shadowOpacity: 0.4,
                     shadowRadius: 1,
                     shadowOffset: { width: 0, height: -5 },
-                    paddingTop: 10,
-                    paddingBottom: 15
+                    paddingVertical: 10,
                 }}
             >
 
