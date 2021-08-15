@@ -63,7 +63,7 @@ class EditProfile extends Component {
                 {
                     id: 2,
                     parentRoute: 'MyBuskool',
-                    childRoute: 'Authentication',
+                    childRoute: 'Referral',
                     params: {},
                     title: 'titles.introduceToFirends',
                     text: 'labels.shareBuskoolWithFriendsText',
@@ -917,7 +917,7 @@ const ProfileAccomplishes = props => {
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
 
             case 'titles.introduceToFirends':
-                break;
+                return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
 
             case 'titles.aboutYou':
                 setDescriptionTextModalVisiblity(true);
@@ -1032,9 +1032,9 @@ const ProfileAccomplishes = props => {
             setDescriptionError(locales('errors.invalidDescription'));
         }
 
-        else if (description && description.length < 100) {
+        else if (description && description.length < 200) {
             setDescriptionClicked(true);
-            setDescriptionError(locales('errors.canNotBeLessThanChar', { fieldName: locales('titles.headerDescription'), number: '100' }));
+            setDescriptionError(locales('errors.canNotBeLessThanChar', { fieldName: locales('titles.headerDescription'), number: '200' }));
         }
 
         else {
@@ -1042,7 +1042,7 @@ const ProfileAccomplishes = props => {
             setDescriptionError('');
         }
 
-        if (description && !descriptionError && description.length > 100) {
+        if (description && !descriptionError && description.length > 200) {
             setDescriptionClicked(false);
             handleDescriptionChange(description);
             editProfileFromParent(description).then(_ => {

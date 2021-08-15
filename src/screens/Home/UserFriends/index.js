@@ -276,6 +276,7 @@ const UserFriends = props => {
                         </View>
                     </View>
                     <Pressable
+                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
                         android_ripple={{
                             color: '#ededed'
                         }}

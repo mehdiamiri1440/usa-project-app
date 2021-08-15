@@ -22,12 +22,14 @@ const Referral = props => {
     } = userProfile;
 
     const {
-        user_name
+        user_name,
+        first_name = '',
+        last_name = ''
     } = user_info;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}/invite/${user_name}`;
 
-    const bodyText = 'سلام';
+    const bodyText = locales('labels.helperTextForInvitation', { firstName: first_name, lastName: last_name });
 
     const showToast = _ => {
         ToastAndroid.showWithGravityAndOffset(
@@ -59,7 +61,7 @@ const Referral = props => {
             }}
         >
             <Header
-                title={locales('titles.earnWages')}
+                title={locales('titles.inviteFriends')}
                 shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
@@ -89,7 +91,7 @@ const Referral = props => {
                         color: '#555555'
                     }}
                 >
-                    {locales('titles.earnWages')}
+                    {locales('titles.inviteFriends')}
                 </Text>
                 <Text
                     style={{
@@ -99,7 +101,7 @@ const Referral = props => {
                         color: '#555555'
                     }}
                 >
-                    لورمیبلامثقعهلامثقهعبلثقمبلنثمقعابضثهقعابثقعهابلثاخمثقلاخمثقلاثضهقعلاهثقعلاثقهمایذمشیامقلثیسبذاستدز و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                    {locales('labels.inviteFriendsText')}
                 </Text>
 
                 <View
