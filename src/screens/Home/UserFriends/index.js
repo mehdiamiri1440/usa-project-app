@@ -394,7 +394,7 @@ const UserFriends = props => {
                 first_name = '',
                 last_name = '',
                 credit = '',
-                profile_photo = ''
+                profile_photo = '',
             } = {},
             index
         }
@@ -411,9 +411,9 @@ const UserFriends = props => {
 
                 <Image
                     style={{
-                        borderRadius: deviceWidth * 0.032,
-                        width: deviceWidth * 0.064,
-                        height: deviceWidth * 0.064
+                        borderRadius: deviceWidth * 0.05,
+                        width: deviceWidth * 0.1,
+                        height: deviceWidth * 0.1
                     }}
                     source={!!profile_photo ?
                         { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
@@ -429,7 +429,7 @@ const UserFriends = props => {
                         flexDirection: 'row-reverse',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        width: '94%',
+                        width: '90%',
                         paddingVertical: 20
                     }}
                 >
