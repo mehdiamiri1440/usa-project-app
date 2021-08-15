@@ -8,11 +8,15 @@ import {
     Text,
     FlatList,
     ImageBackground,
-    Pressable
+    Pressable,
+    ActivityIndicator,
+    Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import LinearGradient from "react-native-linear-gradient";
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import BgLinearGradient from "react-native-linear-gradient";
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
@@ -20,58 +24,61 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import Header from '../../../components/header';
 import { formatter, deviceWidth } from '../../../utils';
+import * as profileActions from '../../../redux/profile/actions';
+import * as homeActions from '../../../redux/home/actions';
 
 const UserFriends = props => {
 
     const friendsListRef = useRef();
 
     const {
-        friendsList = [
-            {
-                id: 1,
-                first_name: 'محمدامین',
-                last_name: 'دلداری',
-                credit: 5000
-            },
-            {
-                id: 2,
-                first_name: 'محمدمهدی',
-                last_name: 'امیری',
-                credit: 10000
-            },
-            {
-                id: 3,
-                first_name: 'حسین',
-                last_name: 'انگاشته',
-                credit: 350000
-            },
-            {
-                id: 4,
-                first_name: 'علیرضا',
-                last_name: 'مروج',
-                credit: 1000
-            },
-            {
-                id: 5,
-                first_name: 'شهرام',
-                last_name: 'صفرزاده',
-                credit: 24300
-            },
-        ],
-        userProfile = {}
+        userFriendsDataLoading,
+        userFriendsData = {},
+
+        userProfile = {},
+        userProfileLoading,
+
+        packagesPricesLoading,
+        packagesPrices
     } = props;
+
+    const {
+        invited_users = [],
+        credit = 0
+    } = userFriendsData;
+
+
+    const {
+        prices = {}
+    } = packagesPrices;
+
+    const {
+        "type-3": typeThree = 0,
+        "type-3-discount": typeThreeDiscount = 0,
+    } = prices;
 
     const {
         user_info = {}
     } = userProfile;
 
     const {
-        active_pakage_type
+        active_pakage_type,
+        wallet_balance = 0,
     } = user_info;
 
     useEffect(() => {
-        friendsListRef?.current?.scrollToOffset({ offset: 70 })
+        friendsListRef?.current?.scrollToOffset({ offset: 75 });
+        props.fetchUserFriendsData();
+        props.fetchPackagesPrices();
     }, []);
+
+    let achievedPointsPercentage = Math.round((wallet_balance / (typeThreeDiscount ? typeThreeDiscount : typeThree)) * 100);
+
+    if (achievedPointsPercentage > 100)
+        achievedPointsPercentage = 100;
+
+    else if (achievedPointsPercentage < 0)
+        achievedPointsPercentage = 0;
 
     const renderListHeaderComponent = _ => {
         return (
@@ -121,28 +128,34 @@ const UserFriends = props => {
                             >
                                 {locales('titles.monetizationVolume')}
                             </Text>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 35,
-                                    color: '#1DA1F2',
-                                    textAlign: 'center'
-                                }}
-                            >
-                                {formatter.numberWithCommas(250000)}
+                            {userFriendsDataLoading ?
+                                <ActivityIndicator
+                                    size={25}
+                                    color='#1DA1F2'
+                                /> :
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 17,
+                                        fontSize: 35,
                                         color: '#1DA1F2',
-                                        textAlign: 'center',
-                                        fontWeight: '200'
+                                        textAlign: 'center'
                                     }}
-
                                 >
-                                    {` ${locales('titles.toman')}`}
+                                    {formatter.numberWithCommas(credit)}
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 17,
+                                            color: '#1DA1F2',
+                                            textAlign: 'center',
+                                            fontWeight: '200'
+                                        }}
+
+                                    >
+                                        {` ${locales('titles.toman')}`}
+                                    </Text>
                                 </Text>
-                            </Text>
+                            }
                         </ShadowView>
                     </ImageBackground>
                     {active_pakage_type == 3 ? <>
@@ -159,7 +172,8 @@ const UserFriends = props => {
                                     fontSize: 17,
                                     color: '#404B55',
                                     textAlign: 'right',
-                                    fontWeight: '200'
+                                    fontWeight: '200',
+                                    marginBottom: 45
                                 }}
                             >
                                 {locales('titles.walletInventoryToBuySpecialRegistration')}
@@ -173,7 +187,7 @@ const UserFriends = props => {
 
                                 <View
                                     style={{
-                                        width: '100%',
+                                        width: '93%',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         marginBottom: 10
@@ -183,19 +197,28 @@ const UserFriends = props => {
                                         style={{
                                             backgroundColor: '#F2F2F2',
                                             borderRadius: 4,
-                                            width: '15%',
-                                            padding: 5
+                                            width: '12%',
+                                            padding: 5,
+                                            left: `${achievedPointsPercentage - 3}%`,
+                                            position: 'absolute',
+                                            bottom: 5
                                         }}
                                     >
-                                        <Text
-                                            style={{
-                                                fontFamily: "IRANSansWeb(FaNum)_Bold",
-                                                color: '#404B55',
-                                                fontSize: 13,
-                                                textAlign: 'center',
-                                            }}>
-                                            {50}%
-                                        </Text>
+                                        {packagesPricesLoading || userProfileLoading ?
+                                            <ActivityIndicator
+                                                size={20}
+                                                color='#404B55'
+                                            />
+                                            : <Text
+                                                style={{
+                                                    fontFamily: "IRANSansWeb(FaNum)_Bold",
+                                                    color: '#404B55',
+                                                    fontSize: 13,
+                                                    textAlign: 'center',
+                                                }}>
+                                                {achievedPointsPercentage}%
+                                            </Text>
+                                        }
                                         <View
                                             style={{
                                                 width: 0,
@@ -236,7 +259,7 @@ const UserFriends = props => {
                                         style={{
                                             position: 'absolute',
                                             height: 18,
-                                            width: `${50}%`,
+                                            width: `${achievedPointsPercentage}%`,
                                             left: 0,
                                             borderRadius: 10
                                         }}
@@ -248,7 +271,7 @@ const UserFriends = props => {
                                                 height: 18,
                                                 backgroundColor: '#0E7B66',
                                                 alignSelf: 'flex-end',
-                                                left: 5
+                                                left: achievedPointsPercentage == 0 ? 15 : 5
                                             }}
                                         >
 
@@ -272,15 +295,6 @@ const UserFriends = props => {
                                     }}
                                 >
                                     {locales('titles.specialRegistration')}
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 15,
-                                        color: '#999999',
-                                    }}
-                                >
-                                    {locales('titles.earnWages')}
                                 </Text>
                             </View>
                         </View>
@@ -338,6 +352,22 @@ const UserFriends = props => {
     };
 
     const renderListEmptyComponent = _ => {
+        if (userFriendsDataLoading)
+            return (
+                <ContentLoader
+                    speed={2}
+                    width={deviceWidth}
+                    height={deviceWidth * 0.18}
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
+                >
+                    <Circle cx='90%' cy="55%" r="25" />
+                    <Rect x="60%" y="55%" width="90" height="10" />
+                    <Rect x="10%" y="55%" width="50" height="10" />
+                    <Rect x="1%" y="55%" width="30" height="10" />
+                </ContentLoader>
+            );
         return (
             <View
                 style={{
@@ -363,7 +393,8 @@ const UserFriends = props => {
             item: {
                 first_name = '',
                 last_name = '',
-                credit = ''
+                credit = '',
+                profile_photo = ''
             } = {},
             index
         }
@@ -378,17 +409,23 @@ const UserFriends = props => {
                 }}
             >
 
-                <FontAwesome5
-                    name='user-circle'
-                    solid
-                    color='#BBBBBB'
-                    size={25}
+                <Image
+                    style={{
+                        borderRadius: deviceWidth * 0.032,
+                        width: deviceWidth * 0.064,
+                        height: deviceWidth * 0.064
+                    }}
+                    source={!!profile_photo ?
+                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                        :
+                        require('../../../../assets/icons/user.png')
+                    }
                 />
 
                 <View
                     style={{
                         borderBottomColor: '#F2F2F2',
-                        borderBottomWidth: index == friendsList.length - 1 ? 0 : 1,
+                        borderBottomWidth: index == invited_users.length - 1 ? 0 : 1,
                         flexDirection: 'row-reverse',
                         justifyContent: 'space-between',
                         alignItems: 'center',
@@ -451,7 +488,7 @@ const UserFriends = props => {
             <FlatList
                 ref={friendsListRef}
                 renderItem={renderItem}
-                data={friendsList}
+                data={invited_users}
                 keyExtractor={item => item.id.toString()}
                 ListEmptyComponent={renderListEmptyComponent}
                 ListHeaderComponent={renderListHeaderComponent}
@@ -552,20 +589,39 @@ const UserFriends = props => {
 };
 
 const mapStateToProps = ({
-    profileReducer
+    profileReducer,
+    homeReducer
 }) => {
 
     const {
-        userProfile = {}
+        packagesPricesLoading,
+        packagesPrices,
+    } = homeReducer;
+
+    const {
+        userProfile,
+        userProfileLoading,
+
+        userFriendsDataLoading,
+        userFriendsData,
     } = profileReducer;
 
     return {
-        userProfile
+        userProfile,
+        userProfileLoading,
+
+        userFriendsDataLoading,
+        userFriendsData,
+
+        packagesPricesLoading,
+        packagesPrices,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetchUserFriendsData: _ => dispatch(profileActions.fetchUserFriendsData()),
+        fetchPackagesPrices: () => dispatch(homeActions.fetchPackagesPrices()),
     }
 };
 

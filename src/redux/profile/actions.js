@@ -338,3 +338,25 @@ export const uploadUserContacts = contacts => {
 
     return request();
 };
+
+export const fetchUserFriendsData = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchUserFriendsData()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_USER_FRIENDS_DATA_FAILED,
+                        reject: actionTypes.FETCH_USER_FRIENDS_DATA_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_USER_FRIENDS_DATA_LOADING);
+    const success = res => action(actionTypes.FETCH_USER_FRIENDS_DATA_SUCCESSFULLY, res);
+
+    return request();
+};

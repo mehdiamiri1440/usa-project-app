@@ -85,6 +85,12 @@ const INITIAL_STATE = {
     uploadUserContactsMessage: null,
     uploadUserContacts: {},
 
+    userFriendsDataLoading: false,
+    userFriendsDataFailed: false,
+    userFriendsDataError: false,
+    userFriendsDataMessage: null,
+    userFriendsData: {},
+
     profileInfoLoading: false,
     profileInfoFailed: false,
     profileInfoError: false,
@@ -736,6 +742,53 @@ export default (state = INITIAL_STATE, action) => {
                 uploadUserContactsFailed: false,
                 uploadUserContactsError: true,
                 uploadUserContactsMessage: [...description]
+            };
+        };
+
+
+        case actionTypes.FETCH_USER_FRIENDS_DATA_LOADING: {
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: true,
+                userFriendsDataFailed: false,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_SUCCESSFULLY: {
+            return {
+                ...state,
+                userFriendsData: { ...action.payload },
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: false,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null,
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_FAILED: {
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: true,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: false,
+                userFriendsDataError: true,
+                userFriendsDataMessage: [...description]
             };
         };
 

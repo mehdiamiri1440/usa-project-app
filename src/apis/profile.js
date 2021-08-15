@@ -311,3 +311,23 @@ export const uploadUserContacts = contacts => {
             });
     });
 };
+
+export const fetchUserFriendsData = contacts => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get-user-referral-info`,
+                method: 'POST',
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
