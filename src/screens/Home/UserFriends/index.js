@@ -571,16 +571,17 @@ const UserFriends = props => {
                         </View>
                     </Button>
                     {/* </ShadowView> */}
-                    {/* <View style={{
-                        width: "95%",
+                    <View style={{
+                        width: "98%",
                         backgroundColor: '#0966AD',
                         zIndex: 0,
-                        height: 60,
-                        top: 15,
-                        borderRadius: 12,
+                        height: 5,
+                        top: 55,
+                        borderBottomLeftRadius: 120,
+                        borderBottomRightRadius: 120,
                         position: 'absolute'
                     }}>
-                    </View> */}
+                    </View>
                 </BgLinearGradient>
             </ShadowView>
 
