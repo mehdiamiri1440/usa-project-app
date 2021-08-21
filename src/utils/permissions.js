@@ -83,3 +83,31 @@ export const requestContactsPermission = () => {
         }
     })
 };
+
+export const requestVoicePermission = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+                {
+                    title: "مجوز ضبط صدا",
+                    message:
+                        "باسکول نیازمند مجوز صدا است. اجازه می‌دهید ؟",
+                    buttonNeutral: "بعدا دوباره بپرس",
+                    buttonNegative: "خیر",
+                    buttonPositive: "مجاز است"
+                }
+            ).then(granted => {
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+            });
+        }
+        catch (err) {
+            resolve(false)
+        }
+    })
+};
