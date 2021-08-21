@@ -2,7 +2,7 @@ import React, { Component, useState, useRef, useEffect } from 'react';
 import Voice from '@react-native-community/voice';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
-    FlatList, LayoutAnimation, UIManager, Platform, Modal
+    FlatList, LayoutAnimation, UIManager, Platform, Modal, Animated
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
@@ -64,17 +64,6 @@ class EditProfile extends Component {
                 {
                     id: 2,
                     parentRoute: 'MyBuskool',
-                    childRoute: 'Referral',
-                    params: {},
-                    title: 'titles.introduceToFirends',
-                    text: 'labels.shareBuskoolWithFriendsText',
-                    buttonText: 'titles.introduceToFirends',
-                    icon: <FontAwesome5 size={20} name='share-alt' color='#556080' />,
-                    shouldShow: true
-                },
-                {
-                    id: 3,
-                    parentRoute: 'MyBuskool',
                     childRoute: 'Authentication',
                     params: {},
                     title: 'titles.aboutYou',
@@ -84,7 +73,7 @@ class EditProfile extends Component {
                     shouldShow: true
                 },
                 {
-                    id: 4,
+                    id: 3,
                     parentRoute: 'MyBuskool',
                     childRoute: 'Authentication',
                     params: {},
@@ -92,6 +81,17 @@ class EditProfile extends Component {
                     text: 'labels.selectProfilePicText',
                     buttonText: 'titles.profilePicture',
                     icon: <FontAwesome5 size={25} name='user-circle' color='#556080' solid />,
+                    shouldShow: true
+                },
+                {
+                    id: 4,
+                    parentRoute: 'MyBuskool',
+                    childRoute: 'Referral',
+                    params: {},
+                    title: 'titles.introduceToFirends',
+                    text: 'labels.shareBuskoolWithFriendsText',
+                    buttonText: 'titles.introduceToFirends',
+                    icon: <FontAwesome5 size={20} name='share-alt' color='#556080' />,
                     shouldShow: true
                 },
             ],
@@ -872,6 +872,8 @@ const ProfileAccomplishes = props => {
         ProfileAccomplishmentItemsArrayFromProps = []
     } = props;
 
+    const scale = useRef(new Animated.Value(1)).current;
+
     const ProfileAccomplishmentItemsArray = ProfileAccomplishmentItemsArrayFromProps.filter(item => item.shouldShow);
 
     const [isOpen, setIsOpen] = useState(true);
@@ -885,11 +887,16 @@ const ProfileAccomplishes = props => {
     const [descriptionError, setDescriptionError] = useState('');
 
     useEffect(() => {
-        Voice.onSpeechResults = ({ value = [] }) => {
+        const onScreenFocusedCallBack = props.navigation.addListener('focus', onScreenFocused);
+        return _ => onScreenFocusedCallBack;
+    }, []);
+
+    const onScreenFocused = _ => {
+        return Voice.onSpeechResults = ({ value = [] }) => {
             const lastIndex = value.length - 1;
             setDescription(description => `${description} ${value[lastIndex]}`);
         }
-    }, []);
+    };
 
     const renderProfileAccomplishmentRate = _ => {
         switch (ProfileAccomplishmentItemsArray.length) {
@@ -1027,13 +1034,41 @@ const ProfileAccomplishes = props => {
         setDescriptionError((!field || validator.isValidDescription(field)) ? '' : locales('errors.invalidDescription'));
     };
 
+    const [flag, setflag] = useState(false);
+
     const onStartButtonPress = async _ => {
         const isAllowed = await permissions.requestVoicePermission();
-        if (isAllowed)
+        if (isAllowed) {
             Voice.start('fa-IR');
+            runAnimation();
+        }
+    };
+
+    const runAnimation = _ => {
+        Animated.timing(scale, {
+            toValue: 2,
+            duration: 300,
+            useNativeDriver: true,
+        }).start(event => {
+            if (event.finished)
+                Animated.timing(scale, {
+                    toValue: 1.7,
+                    duration: 300,
+                    useNativeDriver: true
+                }).start(event => {
+                    if (event.finished)
+                        runAnimation()
+                });
+        });
     };
 
     const onEndButtonPressed = _ => {
+        scale.stopAnimation();
+        Animated.timing(scale, {
+            duration: 100,
+            toValue: 1,
+            useNativeDriver: true
+        }).start();
         Voice.stop()
     };
 
@@ -1083,12 +1118,12 @@ const ProfileAccomplishes = props => {
                         title={locales('titles.aboutYou')}
                         onBackButtonPressed={_ => setDescriptionTextModalVisiblity(false)}
                     />
-
-                    <View
+                    <ScrollView
+                        keyboardDismissMode='none'
+                        keyboardShouldPersistTaps='handled'
                         style={{
                             flex: 1,
-                            marginTop: 10,
-                            padding: 10
+                            paddingHorizontal: 10,
                         }}
                     >
                         <Text style={{
@@ -1106,7 +1141,7 @@ const ProfileAccomplishes = props => {
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginBottom: 10
+                                marginBottom: 10,
                             }}
                         >
                             <Text style={{
@@ -1146,114 +1181,132 @@ const ProfileAccomplishes = props => {
                                 {locales('labels.recordToChangeToText')}
                             </Text>
                         </View>
-
-                        <InputGroup
-                            regular
-                            style={{
-                                borderRadius: 4,
-                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
-                                    descriptionClicked ? '#E41C38' : '#6D7179',
-                                paddingLeft: 15,
-                                paddingHorizontal: 10,
-                                borderWidth: 1,
-                                backgroundColor: '#FBFBFB'
-                            }}>
-                            <FontAwesome5 name={
-                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
-                                    ? 'times-circle' : 'edit'}
-                                color={description ? descriptionError ? '#E41C38' : '#00C569'
-                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
-                                size={16}
-                                solid
-                                style={{ position: 'absolute', top: 10, left: 10 }}
-                            />
-                            <Textarea
-                                onChangeText={handleDescriptionTextChange}
-                                error=''
-                                value={description}
-                                autoCapitalize='none'
-                                autoCompleteType='off'
-                                autoCorrect={false}
+                        <View>
+                            <InputGroup
+                                regular
                                 style={{
-                                    paddingTop: 10,
-                                    direction: 'rtl',
-                                    textAlign: 'right',
-                                    width: '100%',
-                                    minHeight: deviceHeight * 0.7,
                                     borderRadius: 4,
-                                    overflow: 'hidden',
-                                    paddingHorizontal: 15,
-                                    paddingVertical: 2,
-                                    color: '#333',
-                                    fontSize: 13,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                }}
-                                placeholderTextColor="#BEBEBE"
-                                placeholder={`${locales('titles.writeHere')}...`}
-                            />
-                        </InputGroup>
-                        <View
-                            style={{
-                                borderTopWidth: 1,
-                                borderTopColor: '#E0E0E0',
-                                padding: 10,
-                                zIndex: 1000,
-                                flexDirection: 'row-reverse',
-                                alignSelf: 'center',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                width: '97%',
-                                top: -70
-                            }}
-                        >
-                            <Pressable
-                                onPressIn={onStartButtonPress}
-                                onPressOut={onEndButtonPressed}
-                            >
-                                <FontAwesome5
-                                    name='microphone'
-                                    color='white'
-                                    size={20}
+                                    borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                        descriptionClicked ? '#E41C38' : '#6D7179',
+                                    paddingLeft: 15,
+                                    paddingHorizontal: 10,
+                                    borderWidth: 3,
+                                    backgroundColor: '#FBFBFB',
+                                }}>
+                                <FontAwesome5 name={
+                                    description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                        ? 'times-circle' : 'edit'}
+                                    color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                        : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                    size={16}
                                     solid
+                                    style={{ position: 'absolute', top: 10, left: 10 }}
+                                />
+                                <Textarea
+                                    onChangeText={handleDescriptionTextChange}
+                                    error=''
+                                    value={description}
+                                    autoCapitalize='none'
+                                    autoCompleteType='off'
+                                    autoCorrect={false}
                                     style={{
-                                        width: 35,
-                                        height: 35,
+                                        paddingTop: 10,
+                                        direction: 'rtl',
+                                        textAlign: 'right',
+                                        width: '100%',
+                                        minHeight: deviceHeight * 0.4,
+                                        borderRadius: 4,
+                                        overflow: 'hidden',
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 2,
+                                        color: '#333',
+                                        fontSize: 13,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    }}
+                                    placeholderTextColor="#BEBEBE"
+                                    placeholder={`${locales('titles.writeHere')}...`}
+                                />
+                            </InputGroup>
+                            <View
+                                style={{
+                                    borderTopWidth: 1,
+                                    borderTopColor: '#E0E0E0',
+                                    padding: 10,
+                                    zIndex: 1000,
+                                    flexDirection: 'row-reverse',
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: '97%',
+                                    bottom: 0,
+                                    position: 'absolute'
+                                }}
+                            >
+                                <Animated.View
+                                    style={{
+                                        transform: [{ scale }],
+                                        width: 38,
+                                        height: 38,
                                         borderRadius: 100,
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        alignSelf: 'center',
-                                        textAlign: 'center',
-                                        textAlignVertical: 'center',
-                                        marginHorizontal: 5,
-                                        backgroundColor: '#1DA1F2'
                                     }}
-                                />
-                            </Pressable>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 14,
-                                    color: description.length >= 200 ? '#00C569' : '#E41C38'
-                                }}
-                            >
-                                {description.length} / 200
-                            </Text>
+                                >
+                                    <Pressable
+                                        onPressIn={onStartButtonPress}
+                                        onPressOut={onEndButtonPressed}
+                                    >
+                                        <FontAwesome5
+                                            name='microphone'
+                                            color='white'
+                                            size={20}
+                                            solid
+                                            style={{
+                                                width: 35,
+                                                height: 35,
+                                                borderRadius: 100,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                marginHorizontal: 5,
+                                                backgroundColor: '#1DA1F2'
+                                            }}
+                                        />
+                                    </Pressable>
+                                </Animated.View>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        color: description.length >= 200 ? '#00C569' : '#E41C38'
+                                    }}
+                                >
+                                    {description.length} / 200
+                                </Text>
+                            </View>
                         </View>
 
-                        <Label style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            height: 20, fontSize: 14, color: '#D81A1A'
-                        }}>
-                            {!!descriptionError && descriptionError}
-                        </Label>
+                        {descriptionError ?
+                            <Label style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                height: 20, fontSize: 14, color: '#D81A1A'
+                            }}>
+                                {!!descriptionError && descriptionError}
+                            </Label>
+                            : null
+                        }
+
                         <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                justifyContent: 'space-between'
+                                justifyContent: 'center',
+                                marginTop: 10
                             }}
                         >
-                            <Button
+                            {/* <Button
                                 onPress={_ => setDescriptionTextModalVisiblity(false)}
                                 style={{
                                     elevation: 0,
@@ -1277,7 +1330,7 @@ const ProfileAccomplishes = props => {
                                 >
                                     {locales('titles.close')}
                                 </Text>
-                            </Button>
+                            </Button> */}
 
                             <Button
                                 onPress={onSubmit}
@@ -1286,11 +1339,10 @@ const ProfileAccomplishes = props => {
                                     backgroundColor: description && !descriptionError ? '#00C569' : '#eee',
                                     padding: 10,
                                     borderRadius: 8,
-                                    width: deviceWidth * 0.45,
+                                    width: deviceWidth * 0.85,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     alignSelf: 'center',
-                                    marginTop: 20
                                 }}
                             >
                                 <Text
@@ -1301,7 +1353,7 @@ const ProfileAccomplishes = props => {
                                         fontSize: 16,
                                     }}
                                 >
-                                    {locales('labels.justSubmit')}
+                                    {locales('labels.save')}
                                 </Text>
                                 {props.editProfileLoading ?
                                     <ActivityIndicator
@@ -1319,7 +1371,7 @@ const ProfileAccomplishes = props => {
                                     : null}
                             </Button>
                         </View>
-                    </View>
+                    </ScrollView>
                 </Modal>
                 :
                 null}

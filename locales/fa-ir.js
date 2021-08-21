@@ -214,6 +214,7 @@ export default {
     'labels.registerProductToSeeSuggestedBuyers': 'برای مشاهده خریداران مرتبط ، ابتدا محصول خود را ثبت کنید.',
     'labels.dashboard': 'داشبورد',
     'labels.dailyBuyersCount': 'تعداد روزانه خریداران در دسترس',
+    'labels.save': 'ذخیره',
     'labels.signOut': 'خروج',
     'labels.recentlyUsersSeenMobile': 'کاربرانی که اخیرا شماره تماس شما را مشاهده کرده‌اند',
     'labels.buyAdCount': 'تعداد محصولات',
