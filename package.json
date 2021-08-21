@@ -19,6 +19,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.10",
     "@react-native-community/toolbar-android": "0.1.0-rc.2",
+    "@react-native-community/voice": "^1.1.9",
     "@react-native-firebase/analytics": "^10.1.0",
     "@react-native-firebase/app": "^10.1.0",
     "@react-native-firebase/crashlytics": "^10.1.0",

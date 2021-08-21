@@ -1,4 +1,5 @@
-import React, { Component, useState, useRef } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
+import Voice from '@react-native-community/voice';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
     FlatList, LayoutAnimation, UIManager, Platform, Modal
@@ -93,8 +94,9 @@ class EditProfile extends Component {
                     icon: <FontAwesome5 size={25} name='user-circle' color='#556080' solid />,
                     shouldShow: true
                 },
-            ]
+            ],
         }
+
     }
 
     componentDidMount() {
@@ -393,7 +395,6 @@ class EditProfile extends Component {
 
         return (
             <>
-
                 {userProfileLoading ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
@@ -541,7 +542,6 @@ class EditProfile extends Component {
                         backgroundColor: '#fff'
                     }}
                 >
-
                     <View style={{
                         paddingBottom: 60
 
@@ -884,6 +884,13 @@ const ProfileAccomplishes = props => {
 
     const [descriptionError, setDescriptionError] = useState('');
 
+    useEffect(() => {
+        Voice.onSpeechResults = ({ value = [] }) => {
+            const lastIndex = value.length - 1;
+            setDescription(description => `${description} ${value[lastIndex]}`);
+        }
+    }, []);
+
     const renderProfileAccomplishmentRate = _ => {
         switch (ProfileAccomplishmentItemsArray.length) {
             case 4:
@@ -1020,6 +1027,16 @@ const ProfileAccomplishes = props => {
         setDescriptionError((!field || validator.isValidDescription(field)) ? '' : locales('errors.invalidDescription'));
     };
 
+    const onStartButtonPress = async _ => {
+        const isAllowed = await permissions.requestVoicePermission();
+        if (isAllowed)
+            Voice.start('fa-IR');
+    };
+
+    const onEndButtonPressed = _ => {
+        Voice.stop()
+    };
+
     const onSubmit = _ => {
 
         if (!description) {
@@ -1077,19 +1094,68 @@ const ProfileAccomplishes = props => {
                         <Text style={{
                             marginTop: 10,
                             marginBottom: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: '#333'
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 18,
+                            color: '#555555'
                         }}>
-                            {locales('labels.writeAboutYourActivity')}
+                            {locales('labels.writeAboutYourSelf')}
                         </Text>
+
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: 10
+                            }}
+                        >
+                            <Text style={{
+                                marginTop: 10,
+                                marginBottom: 5,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                color: '#909090'
+                            }}>
+                                {locales('labels.holdButtonTo')}
+                            </Text>
+                            <FontAwesome5
+                                name='microphone'
+                                color='white'
+                                size={20}
+                                solid
+                                style={{
+                                    width: 35,
+                                    height: 35,
+                                    borderRadius: 100,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    alignSelf: 'center',
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginHorizontal: 5,
+                                    backgroundColor: '#1DA1F2'
+                                }}
+                            />
+                            <Text style={{
+                                marginTop: 10,
+                                marginBottom: 5,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                color: '#909090'
+                            }}>
+                                {locales('labels.recordToChangeToText')}
+                            </Text>
+                        </View>
+
                         <InputGroup
                             regular
                             style={{
                                 borderRadius: 4,
                                 borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
-                                    descriptionClicked ? '#E41C38' : '#666',
+                                    descriptionClicked ? '#E41C38' : '#6D7179',
                                 paddingLeft: 15,
                                 paddingHorizontal: 10,
+                                borderWidth: 1,
                                 backgroundColor: '#FBFBFB'
                             }}>
                             <FontAwesome5 name={
@@ -1108,8 +1174,6 @@ const ProfileAccomplishes = props => {
                                 autoCapitalize='none'
                                 autoCompleteType='off'
                                 autoCorrect={false}
-                                placeholderTextColor='#777777'
-                                placeholder={locales('titles.descriptionWithExample')}
                                 style={{
                                     paddingTop: 10,
                                     direction: 'rtl',
@@ -1125,9 +1189,57 @@ const ProfileAccomplishes = props => {
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 }}
                                 placeholderTextColor="#BEBEBE"
-                                placeholder={locales('titles.headerDescription')}
+                                placeholder={`${locales('titles.writeHere')}...`}
                             />
                         </InputGroup>
+                        <View
+                            style={{
+                                borderTopWidth: 1,
+                                borderTopColor: '#E0E0E0',
+                                padding: 10,
+                                zIndex: 1000,
+                                flexDirection: 'row-reverse',
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '97%',
+                                top: -70
+                            }}
+                        >
+                            <Pressable
+                                onPressIn={onStartButtonPress}
+                                onPressOut={onEndButtonPressed}
+                            >
+                                <FontAwesome5
+                                    name='microphone'
+                                    color='white'
+                                    size={20}
+                                    solid
+                                    style={{
+                                        width: 35,
+                                        height: 35,
+                                        borderRadius: 100,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                        marginHorizontal: 5,
+                                        backgroundColor: '#1DA1F2'
+                                    }}
+                                />
+                            </Pressable>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    color: description.length >= 200 ? '#00C569' : '#E41C38'
+                                }}
+                            >
+                                {description.length} / 200
+                            </Text>
+                        </View>
+
                         <Label style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                             height: 20, fontSize: 14, color: '#D81A1A'
