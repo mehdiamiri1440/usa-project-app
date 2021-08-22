@@ -206,11 +206,11 @@ const UserContacts = props => {
                 if (!phone)
                     url = `whatsapp://send?text=${sharingUrlPostFix}`;
                 else {
-                    if (phone.startsWith('+9'))
-                        phone = phone.split("+9").join("+989");
+                    if (phone.startsWith('+98'))
+                        phone = phone.replace(phone.substring(0, 3), '+98');
 
-                    else if (phone.startsWith('09'))
-                        phone = phone.split("09").join("+989");
+                    else if (phone.startsWith('+9') || phone.startsWith('09'))
+                        phone = phone.replace(phone.substring(0, 2), '+989');
 
                     url = `whatsapp://send?text=${sharingUrlPostFix}&phone=${phone}`;
                     break;
@@ -454,6 +454,9 @@ const UserContacts = props => {
 
         return (
             <View
+                style={{
+                    backgroundColor: '#fafafa'
+                }}
             // style={{
             //     transform: [{ translateY }]
             // }}

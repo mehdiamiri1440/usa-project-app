@@ -1357,8 +1357,10 @@ const ProfilePreview = props => {
                                 alignItems: 'center'
                             }}
                         >
-
-                            <Animated.FlatList
+                            <Image
+                                source={require('../../../assets/images/verticalPromotionTextGif.gif')}
+                            />
+                            {/* <Animated.FlatList
                                 style={{ maxHeight: 25 }}
                                 ref={flatListRef}
                                 onScrollToIndexFailed={onScrollToIndexFailed}
@@ -1375,7 +1377,7 @@ const ProfilePreview = props => {
                                 )}
                                 data={flatListArray}
                                 keyExtractor={item => item}
-                            />
+                            /> */}
                             <FontAwesome5
                                 name='angle-left'
                                 color='white'
