@@ -13,7 +13,6 @@ import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.wenkesj.voice.VoicePackage;
 
 public class MainApplication extends NavigationApplication {
 

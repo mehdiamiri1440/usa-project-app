@@ -76,7 +76,7 @@ const Referral = props => {
                     source={require('../../../../assets/images/referral.png')}
                     style={{
                         width: '100%',
-                        height: 190,
+                        height: 150,
                         marginVertical: 10,
                         alignSelf: 'center'
                     }}
@@ -98,10 +98,30 @@ const Referral = props => {
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                         fontSize: 15,
                         textAlign: 'right',
-                        color: '#555555'
+                        color: '#555555',
                     }}
                 >
-                    {locales('labels.inviteFriendsText')}
+                    {locales('labels.inviteFriendsText')} <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 15,
+                            textAlign: 'right',
+                            color: '#000',
+                            fontWeight: '200'
+                        }}
+                    >
+                        {`${locales('labels.halfOfBuyAmount')} `}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 15,
+                            textAlign: 'right',
+                            color: '#555555'
+                        }}
+                    >
+                        {locales('labels.willBeAddedToWallet')}
+                    </Text>
                 </Text>
 
                 <View

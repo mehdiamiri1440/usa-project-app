@@ -1042,8 +1042,8 @@ const InviteFriendsBanner = props => {
                 >
                     <View
                         style={{
-                            width: '80%',
-                            zIndex: 1
+                            zIndex: 1,
+                            flex: 1
                         }}
                     >
                         <Text
@@ -1103,12 +1103,14 @@ const InviteFriendsBanner = props => {
                     </View>
                     <View
                         style={{
-                            width: '20%'
+                            width: 80,
+                            height: 120,
                         }}
                     >
                         <Image
                             style={{
-                                width: 120
+                                width: 120,
+                                height: '100%'
                             }}
                             source={require('../../../assets/images/marketing.png')}
                         />

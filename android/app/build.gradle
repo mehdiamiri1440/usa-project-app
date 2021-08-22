@@ -265,7 +265,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-vector-icons')
-    compile project(':@react-native-community_voice')
     implementation project(':react-native-device-info')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'

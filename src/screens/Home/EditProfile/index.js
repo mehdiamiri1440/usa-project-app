@@ -406,6 +406,7 @@ class EditProfile extends Component {
             showSubmitEditionModal,
             shouldShowContactInfo,
             showViewPermissionModal,
+            ProfileAccomplishmentItemsArray = []
         } = this.state;
 
         return (
@@ -659,13 +660,17 @@ class EditProfile extends Component {
                                 </Pressable>
                             </View> : null}
 
-                        <ProfileAccomplishes
-                            handleDescriptionChange={this.handleDescriptionChange}
-                            openActionSheet={this.openActionSheet}
-                            ProfileAccomplishmentItemsArrayFromProps={this.state.ProfileAccomplishmentItemsArray}
-                            editProfileFromParent={this.editProfile}
-                            {...this.props}
-                        />
+                        {ProfileAccomplishmentItemsArray &&
+                            ProfileAccomplishmentItemsArray.length &&
+                            ProfileAccomplishmentItemsArray.filter(item => item.shouldShow).length > 0 ?
+                            <ProfileAccomplishes
+                                handleDescriptionChange={this.handleDescriptionChange}
+                                openActionSheet={this.openActionSheet}
+                                ProfileAccomplishmentItemsArrayFromProps={ProfileAccomplishmentItemsArray}
+                                editProfileFromParent={this.editProfile}
+                                {...this.props}
+                            />
+                            : null}
 
                         <View style={{
                             paddingHorizontal: 10
@@ -917,19 +922,24 @@ const ProfileAccomplishes = props => {
         switch (ProfileAccomplishmentItemsArray.length) {
             case 4:
                 return {
-                    text: locales('titles.weak'),
+                    text: locales('titles.superWeak'),
                     color: '#E41C38'
                 };
             case 3:
                 return {
-                    text: locales('titles.intermediate'),
+                    text: locales('titles.weak'),
                     color: '#ffbb00'
                 };
             case 2:
                 return {
-                    text: locales('titles.good'),
+                    text: locales('titles.intermediate'),
                     color: '#1DA1F2'
                 }
+            case 1:
+                return {
+                    text: locales('titles.good'),
+                    color: '#00C569'
+                };
             case 1:
                 return {
                     text: locales('titles.great'),
