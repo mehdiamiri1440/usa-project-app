@@ -38,7 +38,7 @@ const Message = props => {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM,
             5,
-            20);
+            250);
         Clipboard.setString(item.text);
     };
 

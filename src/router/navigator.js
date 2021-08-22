@@ -348,6 +348,9 @@ const routes = props => {
             'RegisterProductSuccessfully',
             'ChangeRole',
             'Chat',
+            'UserFriends',
+            'Referral',
+            'UserContacts'
         ];
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;

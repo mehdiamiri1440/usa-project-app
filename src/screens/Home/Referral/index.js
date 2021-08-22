@@ -37,7 +37,7 @@ const Referral = props => {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM,
             5,
-            20);
+            250);
         Clipboard.setString(`${bodyText}
         ${completeUrlToShare}`);
     };

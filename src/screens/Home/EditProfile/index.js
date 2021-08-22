@@ -137,6 +137,7 @@ class EditProfile extends Component {
                 first_name,
                 last_name,
                 is_verified,
+                is_seller,
                 phone_allowed
             } = user_info;
 
@@ -149,7 +150,9 @@ class EditProfile extends Component {
                     item.shouldShow = !profile_photo;
 
                 if (item.title == 'titles.aboutYou')
-                    item.shouldShow = !description;
+                    item.shouldShow = !description || (description &&
+                        (description == locales('labels.sellerProfileDefaultText') ||
+                            description == locales('labels.buyerProfileDefaultText')));
 
                 if (item.title == 'labels.authentication')
                     item.shouldShow = !is_verified;
@@ -1210,7 +1213,7 @@ const ProfileAccomplishes = props => {
                                 regular
                                 style={{
                                     borderRadius: 4,
-                                    borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
+                                    borderColor: description ? descriptionError ? '#E41C38' : description.length < 200 ? '#6D7179' : '#00C569' :
                                         descriptionClicked ? '#E41C38' : '#6D7179',
                                     paddingLeft: 15,
                                     paddingHorizontal: 10,
@@ -1218,9 +1221,9 @@ const ProfileAccomplishes = props => {
                                     backgroundColor: '#FBFBFB',
                                 }}>
                                 <FontAwesome5 name={
-                                    description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
+                                    description ? descriptionError ? 'times-circle' : description.length < 200 ? 'edit' : 'check-circle' : descriptionClicked
                                         ? 'times-circle' : 'edit'}
-                                    color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                    color={description ? descriptionError ? '#E41C38' : description.length < 200 ? '#6D7179' : '#00C569'
                                         : descriptionClicked ? '#E41C38' : '#BDC4CC'}
                                     size={16}
                                     solid

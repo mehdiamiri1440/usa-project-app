@@ -30,7 +30,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import Contacts from 'react-native-contacts';
 
-import { permissions, deviceWidth } from '../../utils';
+import { permissions, deviceWidth, formatter } from '../../utils';
 import * as profileActions from '../../redux/profile/actions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -114,7 +114,7 @@ const UserContacts = props => {
                         {
                             ...rest,
                             full_name: displayName,
-                            phone: phoneNumbers.length ? phoneNumbers[0].number : "",
+                            phone: phoneNumbers.length ? formatter.toLatinNumbers(phoneNumbers[0].number) : "",
                             has_thumbnail: hasThumbnail
                         }
                     )
@@ -135,7 +135,7 @@ const UserContacts = props => {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM,
             5,
-            20);
+            250);
         Clipboard.setString(bodyText ? `${bodyText}
         ${completeUrlToShare}` : completeUrlToShare);
     };
@@ -199,13 +199,22 @@ const UserContacts = props => {
             sharingUrlPostFix = `${bodyText}
              ${sharingUrlPostFix}`;
 
+        phone = formatter.toLatinNumbers(phone);
+
         switch (app) {
             case 'whatsApp': {
                 if (!phone)
                     url = `whatsapp://send?text=${sharingUrlPostFix}`;
-                else
+                else {
+                    if (phone.startsWith('+9'))
+                        phone = phone.split("+9").join("+989");
+
+                    else if (phone.startsWith('09'))
+                        phone = phone.split("09").join("+989");
+
                     url = `whatsapp://send?text=${sharingUrlPostFix}&phone=${phone}`;
-                break;
+                    break;
+                }
             }
             case 'sms': {
                 if (!phone)

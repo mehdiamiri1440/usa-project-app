@@ -37,6 +37,8 @@ export default {
     'labels.startFromSixMonth': 'شروع از شش ماه',
     'labels.tillEndOfTheDiscount': 'تا پایان تخفیف',
     'labels.and': 'و',
+    'labels.sellerProfileDefaultText': 'من فروشنده محصولات کشاورزی در سامانه ی باسکول هستم. برای ارتباط با من رو دکمه ی ارسال پیام کلیک کنید. خوشحال می شوم اگر پروفایل من را با دوستان خود به اشتراک بگذارید.',
+    'labels.buyerProfileDefaultText': 'من خریدار محصولات کشاورزی در سامانه ی باسکول هستم. برای ارتباط با من رو دکمه ی ارسال پیام کلیک کنید. خوشحال می شوم اگر پروفایل من را با دوستان خود به اشتراک بگذارید.',
     'labels.day': '{fieldName} روز',
     'labels.hours': '{fieldName} ساعت',
     'labels.or': 'یا',

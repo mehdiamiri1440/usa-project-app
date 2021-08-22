@@ -336,7 +336,7 @@ const UserFriends = props => {
                         : null
                     }
                 </View>
-                <Text
+                {invited_users && invited_users.length ? <Text
                     style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         fontSize: 17,
@@ -347,6 +347,8 @@ const UserFriends = props => {
                 >
                     {locales('titles.yourInvitors')}
                 </Text>
+                    : null
+                }
             </>
         )
     };
