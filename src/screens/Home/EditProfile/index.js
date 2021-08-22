@@ -1,5 +1,4 @@
 import React, { Component, useState, useRef, useEffect } from 'react';
-import Voice from '@react-native-community/voice';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
     FlatList, LayoutAnimation, UIManager, Platform, Modal, Animated
@@ -111,7 +110,7 @@ class EditProfile extends Component {
     };
 
 
-    init = _ => {
+    init = async _ => {
         const {
             userProfile = {}
         } = this.props;
@@ -120,6 +119,8 @@ class EditProfile extends Component {
             profile = {},
             user_info = {}
         } = userProfile;
+
+        const userFriendsData = await this.props.fetchUserFriendsData();
 
         if (userProfile && Object.entries(userProfile).length) {
 
@@ -152,6 +153,20 @@ class EditProfile extends Component {
 
                 if (item.title == 'labels.authentication')
                     item.shouldShow = !is_verified;
+
+                if (item.title == 'titles.introduceToFirends') {
+
+                    const {
+                        payload = {}
+                    } = userFriendsData;
+
+                    const {
+                        invited_users = []
+                    } = payload;
+
+                    item.shouldShow = !invited_users.length;
+
+                }
 
             });
 
@@ -872,7 +887,7 @@ const ProfileAccomplishes = props => {
         ProfileAccomplishmentItemsArrayFromProps = []
     } = props;
 
-    const scale = useRef(new Animated.Value(1)).current;
+    // const scale = useRef(new Animated.Value(1)).current;
 
     const ProfileAccomplishmentItemsArray = ProfileAccomplishmentItemsArrayFromProps.filter(item => item.shouldShow);
 
@@ -886,17 +901,17 @@ const ProfileAccomplishes = props => {
 
     const [descriptionError, setDescriptionError] = useState('');
 
-    useEffect(() => {
-        const onScreenFocusedCallBack = props.navigation.addListener('focus', onScreenFocused);
-        return _ => onScreenFocusedCallBack;
-    }, []);
+    // useEffect(() => {
+    //     const onScreenFocusedCallBack = props.navigation.addListener('focus', onScreenFocused);
+    //     return _ => onScreenFocusedCallBack;
+    // }, []);
 
-    const onScreenFocused = _ => {
-        return Voice.onSpeechResults = ({ value = [] }) => {
-            const lastIndex = value.length - 1;
-            setDescription(description => `${description} ${value[lastIndex]}`);
-        }
-    };
+    // const onScreenFocused = _ => {
+    //     return Voice.onSpeechResults = ({ value = [] }) => {
+    //         const lastIndex = value.length - 1;
+    //         setDescription(description => `${description} ${value[lastIndex]}`);
+    //     }
+    // };
 
     const renderProfileAccomplishmentRate = _ => {
         switch (ProfileAccomplishmentItemsArray.length) {
@@ -1034,43 +1049,41 @@ const ProfileAccomplishes = props => {
         setDescriptionError((!field || validator.isValidDescription(field)) ? '' : locales('errors.invalidDescription'));
     };
 
-    const [flag, setflag] = useState(false);
+    // const onStartButtonPress = async _ => {
+    //     const isAllowed = await permissions.requestVoicePermission();
+    //     if (isAllowed) {
+    //         Voice.start('fa-IR');
+    //         runAnimation();
+    //     }
+    // };
 
-    const onStartButtonPress = async _ => {
-        const isAllowed = await permissions.requestVoicePermission();
-        if (isAllowed) {
-            Voice.start('fa-IR');
-            runAnimation();
-        }
-    };
+    // const runAnimation = _ => {
+    //     Animated.timing(scale, {
+    //         toValue: 2,
+    //         duration: 300,
+    //         useNativeDriver: true,
+    //     }).start(event => {
+    //         if (event.finished)
+    //             Animated.timing(scale, {
+    //                 toValue: 1.7,
+    //                 duration: 300,
+    //                 useNativeDriver: true
+    //             }).start(event => {
+    //                 if (event.finished)
+    //                     runAnimation()
+    //             });
+    //     });
+    // };
 
-    const runAnimation = _ => {
-        Animated.timing(scale, {
-            toValue: 2,
-            duration: 300,
-            useNativeDriver: true,
-        }).start(event => {
-            if (event.finished)
-                Animated.timing(scale, {
-                    toValue: 1.7,
-                    duration: 300,
-                    useNativeDriver: true
-                }).start(event => {
-                    if (event.finished)
-                        runAnimation()
-                });
-        });
-    };
-
-    const onEndButtonPressed = _ => {
-        scale.stopAnimation();
-        Animated.timing(scale, {
-            duration: 100,
-            toValue: 1,
-            useNativeDriver: true
-        }).start();
-        Voice.stop()
-    };
+    // const onEndButtonPressed = _ => {
+    //     scale.stopAnimation();
+    //     Animated.timing(scale, {
+    //         duration: 100,
+    //         toValue: 1,
+    //         useNativeDriver: true
+    //     }).start();
+    //     Voice.stop()
+    // };
 
     const onSubmit = _ => {
 
@@ -1136,7 +1149,7 @@ const ProfileAccomplishes = props => {
                             {locales('labels.writeAboutYourSelf')}
                         </Text>
 
-                        <View
+                        {/* <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
@@ -1181,6 +1194,7 @@ const ProfileAccomplishes = props => {
                                 {locales('labels.recordToChangeToText')}
                             </Text>
                         </View>
+                      */}
                         <View>
                             <InputGroup
                                 regular
@@ -1242,7 +1256,7 @@ const ProfileAccomplishes = props => {
                                     position: 'absolute'
                                 }}
                             >
-                                <Animated.View
+                                {/* <Animated.View
                                     style={{
                                         transform: [{ scale }],
                                         width: 38,
@@ -1275,7 +1289,7 @@ const ProfileAccomplishes = props => {
                                             }}
                                         />
                                     </Pressable>
-                                </Animated.View>
+                                </Animated.View> */}
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1694,7 +1708,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserProfile: () => dispatch(profileActions.fetchUserProfile()),
         editProfile: item => dispatch(profileActions.editProfile(item)),
-        setPhoneNumberViewPermission: permission => dispatch(profileActions.setPhoneNumberViewPermission(permission))
+        setPhoneNumberViewPermission: permission => dispatch(profileActions.setPhoneNumberViewPermission(permission)),
+        fetchUserFriendsData: _ => dispatch(profileActions.fetchUserFriendsData()),
     }
 };
 
