@@ -29,7 +29,7 @@ const Referral = props => {
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}/invite/${user_name}`;
 
-    const bodyText = locales('labels.helperTextForInvitation', { firstName: first_name, lastName: last_name });
+    const bodyText = locales('labels.helperTextForInvitation');
 
     const showToast = _ => {
         ToastAndroid.showWithGravityAndOffset(
