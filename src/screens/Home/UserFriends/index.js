@@ -539,6 +539,7 @@ const UserFriends = props => {
                         onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
                         style={{
                             width: '100%',
+                            height: '100%',
                             backgroundColor: 'transparent',
                             alignItems: 'center',
                             justifyContent: 'center',
