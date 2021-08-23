@@ -396,7 +396,8 @@ const UserContacts = props => {
                 >
                     <FontAwesome5
                         size={65}
-                        name='phone-square-alt'
+                        name='user-circle'
+                        solid
                         color='#BEBEBE'
                     />
                     <Text
@@ -453,13 +454,11 @@ const UserContacts = props => {
     const renderListHeaderComponent = _ => {
 
         return (
-            <View
-                style={{
-                    backgroundColor: '#fafafa'
-                }}
-            // style={{
-            //     transform: [{ translateY }]
-            // }}
+            <LinearGradient
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                colors={['#151c2e', '#1010ee']}
+            // colors={['#27426b', '#474d6f']}
             >
                 <View
                     style={{
@@ -469,7 +468,7 @@ const UserContacts = props => {
                     <Text
                         style={{
                             textAlign: 'right',
-                            color: '#666',
+                            color: '#fff',
                             fontSize: 16,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         }}
@@ -480,7 +479,7 @@ const UserContacts = props => {
                     <View
                         style={{
                             flexDirection: 'row-reverse',
-                            backgroundColor: '#EEEEEE',
+                            backgroundColor: 'white',
                             alignItems: 'center',
                             marginVertical: 10,
                             justifyContent: 'space-between',
@@ -507,12 +506,13 @@ const UserContacts = props => {
                             numberOfLines={1}
                             style={{
                                 textAlign: 'left',
-                                backgroundColor: '#EEEEEE',
-                                fontSize: 16,
+                                backgroundColor: 'white',
+                                fontSize: 14,
                                 borderRadius: 12,
                                 padding: 10,
                                 width: '75%',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#555',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                             }}
                         >
                             {completeUrlToShare}
@@ -524,19 +524,21 @@ const UserContacts = props => {
                             flexDirection: 'row-reverse',
                             alignSelf: 'center',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            marginTop: 10,
                         }}
                     >
                         <Pressable
                             onPress={_ => shareToExternalApp(undefined, 'whatsApp')}
                             style={{
                                 flexDirection: 'row-reverse',
+                                borderColor: '#fff',
+                                borderWidth: 1,
                                 alignItems: 'center',
                                 justifyContent: 'space-around',
+                                backgroundColor: 'white',
                                 borderRadius: 12,
                                 width: '30%',
-                                borderWidth: 1,
-                                borderColor: '#e0e0e0',
                                 padding: 10,
                             }}
                         >
@@ -560,13 +562,14 @@ const UserContacts = props => {
                             onPress={_ => shareToExternalApp(undefined, 'sms')}
                             style={{
                                 flexDirection: 'row-reverse',
+                                borderColor: '#fff',
+                                borderWidth: 1,
                                 alignItems: 'center',
                                 justifyContent: 'space-around',
+                                backgroundColor: 'white',
                                 borderRadius: 12,
                                 width: '30%',
-                                borderWidth: 1,
                                 marginHorizontal: 20,
-                                borderColor: '#e0e0e0',
                                 padding: 10,
                             }}
                         >
@@ -590,12 +593,13 @@ const UserContacts = props => {
                             onPress={onSharePressed}
                             style={{
                                 flexDirection: 'row-reverse',
+                                borderColor: '#fff',
+                                borderWidth: 1,
                                 alignItems: 'center',
                                 justifyContent: 'space-around',
                                 borderRadius: 12,
+                                backgroundColor: 'white',
                                 width: '30%',
-                                borderWidth: 1,
-                                borderColor: '#e0e0e0',
                                 padding: 10,
                             }}
                         >
@@ -621,8 +625,9 @@ const UserContacts = props => {
                 <Text
                     style={{
                         paddingTop: 10,
+                        marginBottom: 5,
                         paddingHorizontal: 15,
-                        color: 'black',
+                        color: '#fff',
                         textAlignVertical: 'center',
                         textAlign: 'right',
                         width: '100%',
@@ -634,13 +639,13 @@ const UserContacts = props => {
                 {
                     renderSearchBar()
                 }
-            </View>
+            </LinearGradient>
         )
     };
 
     const renderSearchBar = _ => {
         return (
-            <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
+            <InputGroup style={{ backgroundColor: '#f2f2f2' }}>
                 <Input
                     value={searchText}
                     onChangeText={handleSearch}

@@ -6,7 +6,7 @@ import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState, Animated
+    RefreshControl, AppState, Animated, TouchableOpacity
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -1125,28 +1125,77 @@ const InviteFriendsBanner = props => {
                 android_ripple={{
                     color: '#ededed'
                 }}
-                style={{
-                    backgroundColor: '#D9F1FF',
-                    borderWidth: 1,
-                    borderColor: '#1DA1F2',
-                    borderRadius: 12,
-                    alignSelf: 'center',
-                    padding: 15,
-                    width: '100%',
-                    marginTop: 20,
-                    flexDirection: 'row-reverse',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}
             >
-                <View>
+                <BgLinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.1 }}
+                    colors={['#1DA0F0', '#188CD3']}
+                    // style={{
+                    //     alignSelf: 'center',
+                    //     padding: 15,
+                    //     width: '100%',
+                    //     flexDirection: 'row-reverse',
+                    //     alignItems: 'center',
+                    //     justifyContent: 'space-between'
+                    // }}
+                    style={{
+                        width: '100%',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        height: 60
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: '#157EBE',
+                            height: '100%',
+                            borderTopLeftRadius: 25,
+                            borderBottomLeftRadius: 25,
+                            width: '17%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            alignSelf: 'center'
+                        }}
+                    >
+                        <FontAwesome5
+                            size={35}
+                            solid
+                            name='dollar-sign'
+                            color='white'
+                            style={{
+                                right: -5
+                            }}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexDirection: 'row-reverse',
+                            paddingHorizontal: 10,
+                            width: '83%'
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: 'white',
+                                fontSize: 19,
+                            }}
+                        >
+                            {locales('titles.revenues')}
+                        </Text>
 
-                </View>
-                <FontAwesome5
-                    name='angle-left'
-                    color='#1DA1F2'
-                    size={20}
-                />
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
+                            color='white'
+                            style={{
+                            }}
+                        />
+                    </View>
+                </BgLinearGradient>
             </Pressable>
         </>
     )
@@ -1339,18 +1388,17 @@ const ProfilePreview = props => {
 
             {active_pakage_type == 0 ?
                 <>
-                    <Pressable
-
+                    <TouchableOpacity
                         onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
                     >
                         <BgLinearGradient
                             start={{ x: 0, y: 1 }}
                             end={{ x: 0.8, y: 0.2 }}
-                            colors={['#0B0E13', '#38485F']}
+                            colors={['#474d6f', '#313442']}
                             style={{
                                 borderTopLeftRadius: 12,
                                 borderTopRightRadius: 12,
-                                padding: 10,
+                                padding: 5,
                                 marginTop: 10,
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-between',
@@ -1358,6 +1406,10 @@ const ProfilePreview = props => {
                             }}
                         >
                             <Image
+                                style={{
+                                    width: 340,
+                                    height: 35
+                                }}
                                 source={require('../../../assets/images/verticalPromotionTextGif.gif')}
                             />
                             {/* <Animated.FlatList
@@ -1380,11 +1432,14 @@ const ProfilePreview = props => {
                             /> */}
                             <FontAwesome5
                                 name='angle-left'
-                                color='white'
+                                color='#c9a15f'
+                                style={{
+                                    paddingLeft: 5
+                                }}
                                 size={20}
                             />
                         </BgLinearGradient>
-                    </Pressable>
+                    </TouchableOpacity>
                 </>
                 : null
             }
