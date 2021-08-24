@@ -118,11 +118,15 @@ const UserContacts = props => {
                         }
                     )
                 );
-                props.uploadUserContacts(contatcsArrayToSendForServer).then(_ => {
+                if (contatcsArrayToSendForServer.length)
+                    props.uploadUserContacts(contatcsArrayToSendForServer).then(_ => {
 
+                        setUploadContactsLoading(false);
+
+                    })
+                else
                     setUploadContactsLoading(false);
 
-                })
             });
 
         }
