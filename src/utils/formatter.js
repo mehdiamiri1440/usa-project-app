@@ -59,6 +59,10 @@ export const convertedNumbersToTonUnit = (number) => {
   } else return "";
 }
 
+export const convertUnitsToPrice = (number) => {
+  return `${numberWithCommas(number)} تومان`;
+};
+
 export const convertUnitsToText = (number) => {
   let data = number / 1000;
   let text = "";
