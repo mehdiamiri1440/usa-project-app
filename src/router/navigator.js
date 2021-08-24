@@ -356,6 +356,7 @@ const routes = props => {
     };
 
     const closeSuggestedBuyerModal = _ => {
+        AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
         setShowSuggestedBuyerModal(false);
     };
 
