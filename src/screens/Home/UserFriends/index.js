@@ -87,8 +87,8 @@ const UserFriends = props => {
                     style={{
                         flex: 1,
                         borderBottomColor: '#EBEBEB',
-                        borderBottomWidth: active_pakage_type != 3 ? 0 : 5,
-                        paddingBottom: 40
+                        borderBottomWidth: active_pakage_type == 3 ? 0 : 5,
+                        paddingBottom: active_pakage_type == 3 ? 60 : 40
                     }}
                 >
                     <ImageBackground
@@ -129,10 +129,30 @@ const UserFriends = props => {
                                 {locales('titles.monetizationVolume')}
                             </Text>
                             {userFriendsDataLoading ?
-                                <ActivityIndicator
-                                    size={25}
-                                    color='#1DA1F2'
-                                /> :
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <ContentLoader
+                                        speed={2}
+                                        width={'100%'}
+                                        height={deviceWidth * 0.14}
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                        style={{
+                                            alignSelf: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Rect x="40%" y="55%" width="100" height="10" />
+                                        <Rect x="25%" y="55%" width="30" height="10" />
+                                    </ContentLoader>
+                                </View>
+                                :
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -158,7 +178,7 @@ const UserFriends = props => {
                             }
                         </ShadowView>
                     </ImageBackground>
-                    {active_pakage_type == 3 ? <>
+                    {active_pakage_type != 3 ? <>
                         <View
                             style={{
                                 marginTop: '14%',
@@ -356,8 +376,9 @@ const UserFriends = props => {
     const renderListEmptyComponent = _ => {
         if (userFriendsDataLoading)
             return (
-                <ContentLoader
+                [1, 2, 3, 4].map(item => <ContentLoader
                     speed={2}
+                    key={item}
                     width={deviceWidth}
                     height={deviceWidth * 0.18}
                     backgroundColor="#f3f3f3"
@@ -369,6 +390,7 @@ const UserFriends = props => {
                     <Rect x="10%" y="55%" width="50" height="10" />
                     <Rect x="1%" y="55%" width="30" height="10" />
                 </ContentLoader>
+                )
             );
         return (
             <View
@@ -396,13 +418,18 @@ const UserFriends = props => {
                 first_name = '',
                 last_name = '',
                 credit = '',
+                user_name = '',
                 profile_photo = '',
             } = {},
             index
         }
     ) => {
         return (
-            <View
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Profile', params: { user_name } })}
                 style={{
                     flexDirection: 'row-reverse',
                     justifyContent: 'space-between',
@@ -470,7 +497,7 @@ const UserFriends = props => {
                         </Text>
                     </Text>
                 </View>
-            </View>
+            </Pressable>
         )
     };
 

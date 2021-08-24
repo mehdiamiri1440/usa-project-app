@@ -104,9 +104,9 @@ const Referral = props => {
                     {locales('labels.inviteFriendsText')} <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 15,
+                            fontSize: 17,
                             textAlign: 'right',
-                            color: '#000',
+                            color: '#00C569',
                             fontWeight: '200'
                         }}
                     >

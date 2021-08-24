@@ -91,7 +91,6 @@ const UserContacts = props => {
         setUploadContactsLoading(true);
 
         const isAllowedToAccessContacts = await permissions.requestContactsPermission();
-
         if (isAllowedToAccessContacts) {
 
             Contacts.getAll((_, contacts) => {
@@ -123,7 +122,7 @@ const UserContacts = props => {
 
                     setUploadContactsLoading(false);
 
-                });
+                })
             });
 
         }

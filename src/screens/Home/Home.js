@@ -343,9 +343,12 @@ class Home extends React.Component {
                     <ProfilePreview
                         {...this.props}
                     />
-                    <InviteFriendsBanner
-                        {...this.props}
-                    />
+                    {is_seller ?
+                        <InviteFriendsBanner
+                            {...this.props}
+                        />
+                        : null}
+
                     {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
                     {/* 
@@ -1129,7 +1132,7 @@ const InviteFriendsBanner = props => {
                 <BgLinearGradient
                     start={{ x: 0, y: 1 }}
                     end={{ x: 0.8, y: 0.1 }}
-                    colors={['#1DA0F0', '#188CD3']}
+                    colors={['#1DA0F0', '#105A88']}
                     // style={{
                     //     alignSelf: 'center',
                     //     padding: 15,
@@ -1148,7 +1151,7 @@ const InviteFriendsBanner = props => {
                 >
                     <View
                         style={{
-                            backgroundColor: '#157EBE',
+                            backgroundColor: '#084971',
                             height: '100%',
                             borderTopLeftRadius: 25,
                             borderBottomLeftRadius: 25,
@@ -1386,7 +1389,7 @@ const ProfilePreview = props => {
                 />
             </View>
 
-            {active_pakage_type == 0 ?
+            {is_seller && active_pakage_type == 0 ?
                 <>
                     <TouchableOpacity
                         onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
