@@ -9,8 +9,6 @@ import BgLinearGradient from 'react-native-linear-gradient';
 import Header from '../../../components/header';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { permissions } from '../../../utils';
-
 const Referral = props => {
 
     const {
@@ -43,14 +41,12 @@ const Referral = props => {
     };
 
     const askForPermissionOfContacts = _ => {
-        const isAllowed = permissions.requestContactsPermission();
-        if (isAllowed)
-            return props.navigation.navigate('MyBuskool', {
-                screen: 'UserContacts', params: {
-                    sharingUrlPostFix: `/invite/${user_name}`,
-                    bodyText
-                }
-            })
+        return props.navigation.navigate('MyBuskool', {
+            screen: 'UserContacts', params: {
+                sharingUrlPostFix: `/invite/${user_name}`,
+                bodyText
+            }
+        })
     };
 
     return (

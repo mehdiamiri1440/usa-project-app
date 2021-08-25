@@ -130,6 +130,8 @@ const UserContacts = props => {
             });
 
         }
+        else
+            props.navigation.goBack();
     };
 
     const showToast = _ => {
