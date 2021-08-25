@@ -291,7 +291,6 @@ export const promoteRegistrationWalletPay = package_type => {
 };
 
 export const uploadUserContacts = contacts => {
-    contacts = contacts.slice(383, 406)
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
