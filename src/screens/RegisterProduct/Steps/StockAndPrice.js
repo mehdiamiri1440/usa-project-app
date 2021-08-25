@@ -552,6 +552,7 @@ class StockAndPrice extends Component {
                         <ToolTipComponent
                             isFocused={isMinimumOrderFocused}
                             text={minimumOrderText}
+                            width={deviceWidth * 0.4}
                         />
                     </InputGroup>
                     <Label style={{
@@ -827,7 +828,7 @@ const ToolTipComponent = ({
                 <Text
                     numberOfLines={1}
                     style={{
-                        fontFamily: "IRANSansWeb(FaNum)_Medium",
+                        fontFamily: "IRANSansWeb(FaNum)_Bold",
                         color: '#fff',
                         width: '100%',
                         fontSize: 13,
