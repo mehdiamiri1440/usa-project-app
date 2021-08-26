@@ -218,8 +218,8 @@ const UserContacts = props => {
                         phone = phone.replace(phone.substring(0, 2), '+989');
 
                     url = `whatsapp://send?text=${sharingUrlPostFix}&phone=${phone}`;
-                    break;
                 }
+                break;
             }
             case 'sms': {
                 if (!phone)

@@ -10,7 +10,8 @@ import {
     ImageBackground,
     Pressable,
     ActivityIndicator,
-    Image
+    Image,
+    TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -318,40 +319,72 @@ const UserFriends = props => {
                                 </Text>
                             </View>
                         </View>
-                        <Pressable
-                            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
-                            android_ripple={{
-                                color: '#ededed'
-                            }}
-                            style={{
-                                flexDirection: 'row-reverse',
-                                alignSelf: 'center',
-                                width: '80%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderWidth: 1,
-                                borderRadius: 12,
-                                borderColor: '#1DA1F2',
-                                padding: 10,
-                                marginTop: 20,
-                            }}
-                        >
-                            <FontAwesome5
-                                name='wallet'
-                                color='#1DA1F2'
-                                size={18}
-                            />
-                            <Text
+                        {achievedPointsPercentage >= 100 ?
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 20,
-                                    color: '#1DA1F2',
-                                    marginRight: 10
+                                    alignSelf: 'center',
+                                    width: '80%',
+                                    borderRadius: 12,
+                                    padding: 10,
+                                    marginTop: 20,
+                                }}
+                                colors={['#21AD93', '#00C569']}
+                            >
+                                <TouchableOpacity
+                                    onPress={_ => props.navigation.navigate("MyBuskool", { screen: "PromoteRegistration" })}
+                                >
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            width: '100%',
+                                            textAlign: 'center',
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        {locales('labels.promoteToSpecialMemberShip')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                            :
+                            <Pressable
+                                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignSelf: 'center',
+                                    width: '80%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderWidth: 1,
+                                    borderRadius: 12,
+                                    borderColor: '#1DA1F2',
+                                    padding: 10,
+                                    marginTop: 20,
                                 }}
                             >
-                                {locales('titles.chargeWalletManually')}
-                            </Text>
-                        </Pressable>
+                                <FontAwesome5
+                                    name='wallet'
+                                    color='#1DA1F2'
+                                    size={18}
+                                />
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        color: '#1DA1F2',
+                                        marginRight: 10
+                                    }}
+                                >
+                                    {locales('titles.chargeWalletManually')}
+                                </Text>
+                            </Pressable>
+                        }
                     </>
                         : null
                     }

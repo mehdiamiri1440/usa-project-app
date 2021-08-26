@@ -165,6 +165,7 @@ export default {
     'labels.thanksForCommenting': 'از نظردهی شما سپاسگزاریم',
     'labels.completeCase': 'این مورد را تکمیل کنید',
     'labels.incorrectFormat': 'فرمت نادرست است',
+    'labels.promoteToSpecialMemberShip': 'ارتقا به عضویت ویژه',
     'labels.relatedProducts': 'محصولات مرتبط',
     'labels.specialProducts': 'ویژه‌ها',
     'labels.registerRequest': 'ثبت درخواست',
