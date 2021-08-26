@@ -505,7 +505,7 @@ export default {
     'titles.registerProductDoneSuccessfully': 'ثبت محصول با موفقیت انجام شد',
     'titles.registerProductSuccessfullyMessage': 'در صورت استفاده از طرح عضویت رایگان محصول شما پس از تایید کارشناسان در لیست محصولات قرار می گیرد ',
     'titles.edit': 'ویرایش',
-    'titles.doNotMissThisBuyer': 'این خریدار را از دست ندهید',
+    'titles.doNotMissThisBuyer': 'این خریدار را از دست ندهید...',
     'titles.type': 'نوع',
     'titles.productType': 'نوع محصول',
     'titles.lostConectivity': 'اتصال شما به اینترنت دچار ایراد شده است. لطفا مجددا تلاش بفرمایید.',

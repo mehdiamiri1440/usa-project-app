@@ -450,6 +450,10 @@ const routes = props => {
     const closePromoteRegistrationModal = _ => {
         setShowPromoteRegistrationModal(false);
     };
+    let randomIndex = 0;
+
+    if (goldenBuyAdsList && goldenBuyAdsList.length && goldenBuyAdsList.length >= 2)
+        randomIndex = Math.floor(Math.random() * (goldenBuyAdsList.length - 2));
 
     return (
         <>
@@ -825,7 +829,7 @@ const routes = props => {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         }}
                                     >
-                                        {`${goldenBuyAdsList[0]?.first_name} ${goldenBuyAdsList[0]?.last_name}`}
+                                        {`${goldenBuyAdsList[randomIndex]?.first_name} ${goldenBuyAdsList[randomIndex]?.last_name}`}
                                     </Text>
                                 </View>
                             </View>
@@ -869,9 +873,9 @@ const routes = props => {
                                         }}
                                     >
                                         {/* {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `} */}
-                                        {`${goldenBuyAdsList[0]?.subcategory_name} `}
+                                        {`${goldenBuyAdsList[randomIndex]?.subcategory_name} `}
                                     </Text>
-                                    {goldenBuyAdsList[0]?.name ? <>
+                                    {goldenBuyAdsList[randomIndex]?.name ? <>
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777',
@@ -886,7 +890,7 @@ const routes = props => {
                                                 fontSize: 20
                                             }}
                                         >
-                                            {`${goldenBuyAdsList[0]?.name} `}
+                                            {`${goldenBuyAdsList[randomIndex]?.name} `}
                                         </Text>
                                     </>
                                         : null}
@@ -916,10 +920,10 @@ const routes = props => {
                                         onPress={openPromoteRegistrationModal}
                                         style={{
                                             borderColor: '#c7a84f',
-                                            width: '47%',
+                                            width: '54%',
                                             zIndex: 1000,
                                             position: 'relative',
-                                            marginHorizontal: 10,
+                                            marginHorizontal: 5,
                                             alignSelf: 'center',
 
                                         }}
@@ -1001,7 +1005,6 @@ const routes = props => {
                 :
                 null
             }
-
             {showPromoteRegistrationModal ?
                 <Modal
                     onRequestClose={closePromoteRegistrationModal}
@@ -1018,7 +1021,7 @@ const routes = props => {
                             alignSelf: 'center',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: '60%',
+                            height: deviceHeight > 790 ? deviceHeight * 0.59 : deviceHeight * 0.7,
                             paddingTop: 17
                         }}
                     >

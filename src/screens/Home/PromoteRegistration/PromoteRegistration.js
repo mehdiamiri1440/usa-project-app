@@ -1682,7 +1682,7 @@ class PromoteRegistration extends React.Component {
                                             margin: 20, backgroundColor: '#556080', alignSelf: 'center'
                                         }]}
                                         // onPress={() => this.pay(1)}
-                                        onPress={_ => this.setState({ paymentType: 1 }, _ => this.navigateToPaymentType)}
+                                        onPress={_ => this.setState({ paymentType: 1 }, _ => this.navigateToPaymentType())}
                                     >
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
                                         </Text>

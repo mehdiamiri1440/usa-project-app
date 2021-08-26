@@ -443,7 +443,7 @@ const RenderMessageWithProductIdDesign = props => {
 
                         flexDirection: 'row-reverse',
 
-                        paddingVertical: 5,
+                        paddingVertical: 10,
                         borderRadius: 8,
                         overflow: "hidden",
                         backgroundColor,

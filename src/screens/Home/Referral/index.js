@@ -8,6 +8,7 @@ import BgLinearGradient from 'react-native-linear-gradient';
 
 import Header from '../../../components/header';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { deviceWidth } from '../../../utils/deviceDimenssions';
 
 const Referral = props => {
 
@@ -126,6 +127,7 @@ const Referral = props => {
                         backgroundColor: '#EEEEEE',
                         alignItems: 'center',
                         marginTop: 30,
+                        width: deviceWidth * 0.92,
                         marginBottom: 10,
                         justifyContent: 'space-between',
                         alignSelf: 'center',
@@ -142,7 +144,7 @@ const Referral = props => {
                             borderTopRightRadius: 12,
                             borderBottomRightRadius: 12,
                             padding: 10,
-                            width: '25%',
+                            width: deviceWidth * 0.3,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                         }}
                     >
@@ -156,7 +158,7 @@ const Referral = props => {
                             fontSize: 16,
                             borderRadius: 12,
                             padding: 10,
-                            width: '75%',
+                            width: deviceWidth * 0.62,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}
                     >

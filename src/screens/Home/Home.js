@@ -6,13 +6,12 @@ import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState, Animated, TouchableOpacity
+    RefreshControl, AppState, TouchableOpacity
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
-import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import BgLinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
 
@@ -89,7 +88,7 @@ class Home extends React.Component {
     }
 
     initMyBuskool = _ => {
-        this.props.fetchUserProfile();
+        this.props.fetchUserProfile().then(res => this.setState({ is_seller: res?.payload?.user_info?.is_seller }));
     };
 
     handleAppStateChange = (nextAppState) => {
@@ -252,7 +251,7 @@ class Home extends React.Component {
 
         const {
             showchangeRoleModal,
-            is_seller,
+            is_seller: isSellerFromState,
             isPageRefreshedFromPullingDown
         } = this.state;
 
@@ -260,7 +259,8 @@ class Home extends React.Component {
             user_info = {}
         } = userProfile;
         const {
-            wallet_balance = 0
+            wallet_balance = 0,
+            is_seller
         } = user_info;
 
         return (
@@ -306,7 +306,7 @@ class Home extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!is_seller ? locales('labels.buyer') : locales('labels.seller') })}
+                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
@@ -704,7 +704,7 @@ class Home extends React.Component {
                         textAlign: 'center',
                         color: '#313A43'
                     }}>
-                        {locales('labels.switchRoll', { fieldName: !!is_seller ? locales('labels.seller') : locales('labels.buyer') })}
+                        {locales('labels.switchRoll', { fieldName: !!isSellerFromState ? locales('labels.seller') : locales('labels.buyer') })}
                     </Text>
 
 
@@ -1330,8 +1330,8 @@ const ProfilePreview = props => {
                             style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
                         >
                             <Circle cx='77%' cy="50%" r="35" />
-                            <Rect x="1%" y="30%" width="90" height="10" />
-                            <Rect x="1%" y="60%" width="90" height="10" />
+                            <Rect x="-10%" y="30%" width="90" height="10" />
+                            <Rect x="-10%" y="60%" width="90" height="10" />
                         </ContentLoader>
                         :
                         <>
@@ -1410,7 +1410,7 @@ const ProfilePreview = props => {
                         >
                             <Image
                                 style={{
-                                    width: 340,
+                                    width: '80%',
                                     height: 35
                                 }}
                                 source={require('../../../assets/images/verticalPromotionTextGif.gif')}
