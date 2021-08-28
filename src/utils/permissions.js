@@ -60,15 +60,7 @@ export const requestContactsPermission = () => {
     return new Promise((resolve, reject) => {
         try {
             PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: "مجوز دسترسی به مخاطبین",
-                    message:
-                        "باسکول نیازمند دسترسی به لیست مخاطبین شما است. اجازه می‌دهید ؟",
-                    buttonNeutral: "بعدا دوباره بپرس",
-                    buttonNegative: "خیر",
-                    buttonPositive: "مجاز است"
-                }
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS
             ).then(granted => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     resolve(true)
