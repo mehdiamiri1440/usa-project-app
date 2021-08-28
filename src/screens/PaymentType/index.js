@@ -519,6 +519,86 @@ const PaymentType = props => {
             </View>
 
             <Pressable
+                onPress={bankPay}
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                style={{
+                    borderRadius: 12,
+                    borderColor: '#21AD93',
+                    borderWidth: 1,
+                    marginTop: 35,
+                    width: '95%',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    alignSelf: 'center',
+                    flexDirection: 'row-reverse',
+                    height: 94,
+                    backgroundColor: 'white',
+                }}
+            >
+
+                <View
+                    style={{
+                        backgroundColor: '#4DC0BB',
+                        height: '100%',
+                        borderTopLeftRadius: 120,
+                        borderBottomLeftRadius: 120,
+                        borderTopRightRadius: 25,
+                        borderBottomRightRadius: 25,
+                        width: '17%',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <FontAwesome5
+                        size={35}
+                        solid
+                        name='credit-card'
+                        color='white'
+                    />
+                </View>
+
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        marginRight: 5
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#424750',
+                            fontSize: 19,
+                        }}
+                    >
+                        {locales('titles.internetPayment')}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#6D7179',
+                            fontSize: 14,
+                        }}
+                    >
+                        {locales('titles.onlineWithAllCreditCards')}
+                    </Text>
+                </View>
+
+
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    color='#21AD93'
+                    style={{
+                        position: 'absolute',
+                        right: 8
+                    }}
+                />
+
+            </Pressable>
+
+            <Pressable
                 onPress={onPayByWalletClicked}
                 android_ripple={{
                     color: '#ededed'
@@ -623,88 +703,6 @@ const PaymentType = props => {
                 </View>
 
             </Pressable>
-
-
-            <Pressable
-                onPress={bankPay}
-                android_ripple={{
-                    color: '#ededed'
-                }}
-                style={{
-                    borderRadius: 12,
-                    borderColor: '#21AD93',
-                    borderWidth: 1,
-                    marginTop: 35,
-                    width: '95%',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    alignSelf: 'center',
-                    flexDirection: 'row-reverse',
-                    height: 94,
-                    backgroundColor: 'white',
-                }}
-            >
-
-                <View
-                    style={{
-                        backgroundColor: '#4DC0BB',
-                        height: '100%',
-                        borderTopLeftRadius: 120,
-                        borderBottomLeftRadius: 120,
-                        borderTopRightRadius: 25,
-                        borderBottomRightRadius: 25,
-                        width: '17%',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <FontAwesome5
-                        size={35}
-                        solid
-                        name='credit-card'
-                        color='white'
-                    />
-                </View>
-
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        marginRight: 5
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            color: '#424750',
-                            fontSize: 19,
-                        }}
-                    >
-                        {locales('titles.internetPayment')}
-                    </Text>
-                    <Text
-                        style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            color: '#6D7179',
-                            fontSize: 14,
-                        }}
-                    >
-                        {locales('titles.onlineWithAllCreditCards')}
-                    </Text>
-                </View>
-
-
-                <FontAwesome5
-                    name='angle-left'
-                    size={20}
-                    color='#21AD93'
-                    style={{
-                        position: 'absolute',
-                        right: 8
-                    }}
-                />
-
-            </Pressable>
-
         </View>
     )
 };
