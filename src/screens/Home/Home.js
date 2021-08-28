@@ -1171,33 +1171,23 @@ const InviteFriendsBanner = props => {
                             }}
                         />
                     </View>
-                    <View
+                    <Text
                         style={{
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexDirection: 'row-reverse',
-                            paddingHorizontal: 10,
-                            width: '83%'
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: 'white',
+                            fontSize: 19,
                         }}
                     >
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: 'white',
-                                fontSize: 19,
-                            }}
-                        >
-                            {locales('titles.revenues')}
-                        </Text>
-
-                        <FontAwesome5
-                            name='angle-left'
-                            size={20}
-                            color='white'
-                            style={{
-                            }}
-                        />
-                    </View>
+                        {locales('titles.revenues')}
+                    </Text>
+                    <FontAwesome5
+                        name='angle-left'
+                        size={20}
+                        color='white'
+                        style={{
+                            marginLeft: 10
+                        }}
+                    />
                 </BgLinearGradient>
             </Pressable>
         </>
