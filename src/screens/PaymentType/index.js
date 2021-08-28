@@ -561,7 +561,7 @@ const PaymentType = props => {
                 <View
                     style={{
                         justifyContent: 'center',
-                        marginHorizontal: 20
+                        marginRight: 5,
                     }}
                 >
                     <Text
@@ -589,6 +589,8 @@ const PaymentType = props => {
                         flexDirection: 'row-reverse',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        position: 'absolute',
+                        right: 8
                     }}
                 >
                     <Text
@@ -667,7 +669,7 @@ const PaymentType = props => {
                 <View
                     style={{
                         justifyContent: 'center',
-                        marginHorizontal: 20
+                        marginRight: 5
                     }}
                 >
                     <Text
@@ -696,7 +698,8 @@ const PaymentType = props => {
                     size={20}
                     color='#21AD93'
                     style={{
-                        left: '100%'
+                        position: 'absolute',
+                        right: 8
                     }}
                 />
 

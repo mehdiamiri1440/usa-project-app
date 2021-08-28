@@ -424,7 +424,7 @@ const RenderMessageWithProductIdDesign = props => {
                     borderColor: '#f2f2f2',
                     borderBottomLeftRadius: 12,
                     borderBottomRightRadius: 12,
-                    padding: 10,
+                    paddingVertical: 10,
                     backgroundColor: 'white'
                 }}
                 onPress={() => navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
@@ -435,14 +435,14 @@ const RenderMessageWithProductIdDesign = props => {
                     // end={{ x: 0.8, y: 0.2 }}
                     // colors={[colorFirst, colorSecond]}
                     style={{
-                        width: '100%',
+                        width: '95%',
 
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
 
                         flexDirection: 'row-reverse',
-
+                        alignSelf: 'center',
                         paddingVertical: 10,
                         borderRadius: 8,
                         overflow: "hidden",
