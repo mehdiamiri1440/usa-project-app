@@ -269,6 +269,8 @@ export default {
     'labels.selectedProductCategory': 'انتخاب دسته‌بندی محصول',
     'labels.searchContacts': 'جستجوی مخاطب',
     'labels.suggestedBuyers': 'خریداران پیشنهادی',
+    'labels.notSufficient': 'ناکافی',
+    'labels.sufficient': 'کافی',
     'labels.request': 'درخواست',
     'labels.fromType': 'از نوع',
     'labels.from': 'از',
