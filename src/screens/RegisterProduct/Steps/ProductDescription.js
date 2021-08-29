@@ -55,12 +55,8 @@ class ProductDecription extends Component {
         this.setState(() => ({
             description: field,
             descriptionClicked: !!field,
-            descriptionError: field && field.length < 100 ? locales('errors.canNotBeLessThanChar', {
-                fieldName: locales('titles.headerDescription'),
-                number: '100'
-            }) :
-                (!field || validator.isValidDescription(field)) ?
-                    '' : locales('errors.invalidDescription')
+            descriptionError: (!field || validator.isValidDescription(field)) ?
+                '' : locales('errors.invalidDescription')
         }));
     };
 
@@ -111,8 +107,8 @@ class ProductDecription extends Component {
                             regular
                             style={{
                                 borderRadius: 4,
-                                borderColor: description ? descriptionError ? '#E41C38' : description.length < 100 ? '#666' : '#00C569' :
-                                    descriptionClicked ? '#E41C38' : '#666',
+                                borderColor: description ? descriptionError ? '#E41C38' : description.length < 100 ? '#6D7179' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#6D7179',
                                 paddingLeft: 15,
                                 paddingHorizontal: 10,
                                 backgroundColor: '#FBFBFB'
@@ -154,7 +150,7 @@ class ProductDecription extends Component {
                                 rowSpan={5}
                             />
                         </InputGroup>
-                        {description ?
+                        {description && description.length ?
                             <View
                                 style={{
                                     borderTopWidth: 1,

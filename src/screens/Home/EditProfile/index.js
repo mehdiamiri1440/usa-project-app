@@ -1254,22 +1254,23 @@ const ProfileAccomplishes = props => {
                                     placeholder={`${locales('titles.writeHere')}...`}
                                 />
                             </InputGroup>
-                            <View
-                                style={{
-                                    borderTopWidth: 1,
-                                    borderTopColor: '#E0E0E0',
-                                    padding: 10,
-                                    zIndex: 1000,
-                                    flexDirection: 'row-reverse',
-                                    alignSelf: 'center',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    width: '97%',
-                                    bottom: 0,
-                                    position: 'absolute'
-                                }}
-                            >
-                                {/* <Animated.View
+                            {description && description.length ?
+                                <View
+                                    style={{
+                                        borderTopWidth: 1,
+                                        borderTopColor: '#E0E0E0',
+                                        padding: 10,
+                                        zIndex: 1000,
+                                        flexDirection: 'row-reverse',
+                                        alignSelf: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        width: '97%',
+                                        bottom: 0,
+                                        position: 'absolute'
+                                    }}
+                                >
+                                    {/* <Animated.View
                                     style={{
                                         transform: [{ scale }],
                                         width: 38,
@@ -1303,16 +1304,17 @@ const ProfileAccomplishes = props => {
                                         />
                                     </Pressable>
                                 </Animated.View> */}
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        fontSize: 14,
-                                        color: description.length >= 200 ? '#00C569' : '#E41C38'
-                                    }}
-                                >
-                                    {description.length} / 200
-                                </Text>
-                            </View>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 14,
+                                            color: description.length >= 200 ? '#00C569' : '#E41C38'
+                                        }}
+                                    >
+                                        {description.length < 200 ? locales('labels.notSufficient') : locales('labels.sufficient')}
+                                    </Text>
+                                </View>
+                                : null}
                         </View>
 
                         {descriptionError ?
@@ -1363,7 +1365,7 @@ const ProfileAccomplishes = props => {
                                 onPress={onSubmit}
                                 style={{
                                     elevation: 0,
-                                    backgroundColor: description && !descriptionError ? '#00C569' : '#eee',
+                                    backgroundColor: description && !descriptionError && description.length >= 200 ? '#00C569' : '#eee',
                                     padding: 10,
                                     borderRadius: 8,
                                     width: deviceWidth * 0.85,
