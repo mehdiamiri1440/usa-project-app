@@ -379,7 +379,8 @@ const routes = props => {
             'Chat',
             'UserFriends',
             'Referral',
-            'UserContacts'
+            'UserContacts',
+            'PaymentType'
         ];
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;

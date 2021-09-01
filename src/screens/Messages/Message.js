@@ -300,27 +300,31 @@ const RenderMessageWithProductIdDesign = props => {
                         android_ripple={{
                             color: '#ededed'
                         }}
+                        style={{
+                            borderTopWidth: 1,
+                            borderColor: '#f2f2f2',
+                            borderBottomLeftRadius: 12,
+                            borderBottomRightRadius: 12,
+                            paddingVertical: 10,
+                            backgroundColor: 'white'
+                        }}
                         activeOpacity={1}
                         onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
                     >
                         <View
                             style={{
-                                width: '100%',
-                                backgroundColor: '#556080',
+                                width: '95%',
 
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 textAlign: 'center',
 
                                 flexDirection: 'row-reverse',
-
-                                paddingVertical: 5,
-                                borderBottomLeftRadius: 8,
-                                borderBottomRightRadius: 8,
+                                alignSelf: 'center',
+                                paddingVertical: 10,
+                                borderRadius: 8,
                                 overflow: "hidden",
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-
+                                backgroundColor: '#556080',
                             }}
                         >
                             {productDetailsLoading && item.id == selectedMessageId

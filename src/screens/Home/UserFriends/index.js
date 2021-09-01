@@ -445,6 +445,11 @@ const UserFriends = props => {
         )
     };
 
+    const onRefresh = _ => {
+        props.fetchUserFriendsData();
+        props.fetchPackagesPrices();
+    };
+
     const renderItem = (
         {
             item: {
@@ -551,6 +556,8 @@ const UserFriends = props => {
                 ref={friendsListRef}
                 renderItem={renderItem}
                 data={invited_users}
+                onRefresh={onRefresh}
+                refreshing={false}
                 keyExtractor={item => item.id.toString()}
                 ListEmptyComponent={renderListEmptyComponent}
                 ListHeaderComponent={renderListHeaderComponent}

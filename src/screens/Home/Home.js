@@ -343,11 +343,11 @@ class Home extends React.Component {
                     <ProfilePreview
                         {...this.props}
                     />
-                    {is_seller ?
-                        <InviteFriendsBanner
-                            {...this.props}
-                        />
-                        : null}
+
+                    <InviteFriendsBanner
+                        {...this.props}
+                        is_seller={this.state.is_seller}
+                    />
 
                     {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
@@ -997,7 +997,8 @@ const InviteFriendsBanner = props => {
 
     const {
         userProfile = {},
-        userProfileLoading
+        userProfileLoading,
+        is_seller
     } = props;
 
     const {
@@ -1005,193 +1006,272 @@ const InviteFriendsBanner = props => {
     } = userProfile;
 
     const {
-        active_pakage_type
+        active_pakage_type,
     } = user_info;
-
-    return (
-        <>
-            <BgLinearGradient
-                start={{ x: 0, y: 1 }}
-                end={{ x: 0.8, y: 0.1 }}
-                colors={['#FF7689', '#E41C38']}
-                style={{
-                    width: deviceWidth,
-                    paddingHorizontal: 10,
-                    paddingVertical: 15,
-                    borderTopColor: '#ebebeb',
-                    borderTopWidth: (active_pakage_type > 0) || userProfileLoading ? 0 : 10,
-                    marginTop: active_pakage_type == 0 ? 0 : 20
-                }}
-            >
+    if (userProfileLoading && is_seller)
+        return (
+            <>
                 <View
                     style={{
-                        backgroundColor: 'rgba(0,0,0,0.1)',
-                        padding: 1,
-                        borderRadius: 12
-                    }}
-                >
-                    <Pressable
-                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
-                        android_ripple={{
-                            color: '#ededed'
-                        }}
-                        style={{
-                            backgroundColor: 'white',
-                            alignSelf: 'center',
-                            borderRadius: 12,
-                            padding: 15,
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <View
-                            style={{
-                                zIndex: 1,
-                                flex: 1
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 17,
-                                    color: '#555555',
-                                }}
-                            >
-                                {locales('titles.inviteFriendBannerText')}
-                            </Text>
-                            <BgLinearGradient
-                                start={{ x: 0, y: 1 }}
-                                end={{ x: 0.8, y: 0.2 }}
-                                colors={['#FF7689', '#E41C38']}
-                                style={{
-                                    borderRadius: 12,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '70%',
-                                    alignSelf: 'flex-end',
-                                    marginTop: 10
-                                }}
-                            >
-                                <Button
-                                    onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
-                                    style={{
-                                        width: '100%',
-                                        backgroundColor: 'transparent',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            textAlign: 'center',
-                                            textAlignVertical: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16,
-                                        }}
-                                    >
-                                        {locales('titles.earnWages')}
-                                    </Text>
-                                    <FontAwesome5
-                                        name='angle-left'
-                                        size={20}
-                                        color='white'
-                                        style={{
-                                            position: 'absolute',
-                                            left: '20%',
-                                        }}
-                                    />
-                                </Button>
-                            </BgLinearGradient>
-                        </View>
-                        <View
-                            style={{
-                                width: 80,
-                                height: 120,
-                            }}
-                        >
-                            <Image
-                                style={{
-                                    width: 120,
-                                    height: '100%'
-                                }}
-                                source={require('../../../assets/images/marketing.png')}
-                            />
-                        </View>
-                    </Pressable>
-                </View>
-            </BgLinearGradient>
-            <Pressable
-                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
-                android_ripple={{
-                    color: '#ededed'
-                }}
-            >
-                <BgLinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.1 }}
-                    colors={['#1DA0F0', '#105A88']}
-                    // style={{
-                    //     alignSelf: 'center',
-                    //     padding: 15,
-                    //     width: '100%',
-                    //     flexDirection: 'row-reverse',
-                    //     alignItems: 'center',
-                    //     justifyContent: 'space-between'
-                    // }}
-                    style={{
                         width: '100%',
-                        flexDirection: 'row-reverse',
+                        marginTop: 10,
+                        backgroundColor: '#f3f3f3',
+                        height: '11%',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        height: 60
+                        justifyContent: 'center',
+                        padding: 20
                     }}
                 >
                     <View
                         style={{
-                            backgroundColor: '#084971',
+                            backgroundColor: 'white',
+                            width: '100%',
                             height: '100%',
-                            borderTopLeftRadius: 25,
-                            borderBottomLeftRadius: 25,
-                            width: '17%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            alignSelf: 'center'
+                            alignSelf: 'center',
+                            borderRadius: 12,
                         }}
                     >
-                        <FontAwesome5
-                            size={35}
-                            solid
-                            name='dollar-sign'
-                            color='white'
+                        <ContentLoader
+                            speed={2}
+                            width='100%'
+                            height='100%'
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
                             style={{
-                                right: -5
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Circle cx="60" cy="65" r="45" />
+                            <Rect x="108" y="20" width="258" height="21" />
+                            <Rect x="300" y="55" width="63" height="15" />
+                            <Rect x="228" y="80" width="137" rx={6} ry={6} height="38" />
+                        </ContentLoader>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        backgroundColor: "#e0e0e0",
+                        width: '100%',
+                        height: 70,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 10
+                    }}
+                >
+                    <ContentLoader
+                        speed={2}
+                        width='100%'
+                        height='100%'
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                        style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Circle cx="95%" cy='50%' r="25" />
+                        <Rect x="30%" y='40%' width="133" height="15" />
+                        <FontAwesome5
+                            name='angle-left'
+                            color='#fff'
+                            size={20}
+                            style={{
+                                top: '80%'
                             }}
                         />
-                    </View>
-                    <Text
+                    </ContentLoader>
+                </View>
+            </>
+        );
+    else if (is_seller && !userProfileLoading)
+        return (
+            <>
+                <BgLinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.1 }}
+                    colors={['#FF7689', '#E41C38']}
+                    style={{
+                        width: deviceWidth,
+                        paddingHorizontal: 10,
+                        paddingVertical: 15,
+                        borderTopColor: '#ebebeb',
+                        borderTopWidth: (active_pakage_type > 0) || userProfileLoading ? 0 : 10,
+                        marginTop: active_pakage_type == 0 ? 0 : 20
+                    }}
+                >
+                    <View
                         style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            color: 'white',
-                            fontSize: 19,
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            padding: 1,
+                            borderRadius: 12
                         }}
                     >
-                        {locales('titles.revenues')}
-                    </Text>
-                    <FontAwesome5
-                        name='angle-left'
-                        size={20}
-                        color='white'
-                        style={{
-                            marginLeft: 10
-                        }}
-                    />
+                        <Pressable
+                            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                alignSelf: 'center',
+                                borderRadius: 12,
+                                padding: 15,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    zIndex: 1,
+                                    flex: 1
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 17,
+                                        color: '#555555',
+                                    }}
+                                >
+                                    {locales('titles.inviteFriendBannerText')}
+                                </Text>
+                                <BgLinearGradient
+                                    start={{ x: 0, y: 1 }}
+                                    end={{ x: 0.8, y: 0.2 }}
+                                    colors={['#FF7689', '#E41C38']}
+                                    style={{
+                                        borderRadius: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '70%',
+                                        alignSelf: 'flex-end',
+                                        marginTop: 10
+                                    }}
+                                >
+                                    <Button
+                                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                                        style={{
+                                            width: '100%',
+                                            backgroundColor: 'transparent',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 16,
+                                            }}
+                                        >
+                                            {locales('titles.earnWages')}
+                                        </Text>
+                                        <FontAwesome5
+                                            name='angle-left'
+                                            size={20}
+                                            color='white'
+                                            style={{
+                                                position: 'absolute',
+                                                left: '20%',
+                                            }}
+                                        />
+                                    </Button>
+                                </BgLinearGradient>
+                            </View>
+                            <View
+                                style={{
+                                    width: 80,
+                                    height: 120,
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 120,
+                                        height: '100%'
+                                    }}
+                                    source={require('../../../assets/images/marketing.png')}
+                                />
+                            </View>
+                        </Pressable>
+                    </View>
                 </BgLinearGradient>
-            </Pressable>
-        </>
-    )
+                <Pressable
+                    onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                >
+                    <BgLinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.1 }}
+                        colors={['#1DA0F0', '#105A88']}
+                        // style={{
+                        //     alignSelf: 'center',
+                        //     padding: 15,
+                        //     width: '100%',
+                        //     flexDirection: 'row-reverse',
+                        //     alignItems: 'center',
+                        //     justifyContent: 'space-between'
+                        // }}
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            height: 60
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: '#084971',
+                                height: '100%',
+                                borderTopLeftRadius: 25,
+                                borderBottomLeftRadius: 25,
+                                width: '17%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <FontAwesome5
+                                size={35}
+                                solid
+                                name='dollar-sign'
+                                color='white'
+                                style={{
+                                    right: -5
+                                }}
+                            />
+                        </View>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: 'white',
+                                fontSize: 19,
+                            }}
+                        >
+                            {locales('titles.revenues')}
+                        </Text>
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
+                            color='white'
+                            style={{
+                                marginLeft: 10
+                            }}
+                        />
+                    </BgLinearGradient>
+                </Pressable>
+            </>
+        );
+    return null;
 };
 
 const ProfilePreview = props => {
