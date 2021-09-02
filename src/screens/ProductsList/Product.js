@@ -38,12 +38,9 @@ class Product extends PureComponent {
             minimumPriceError: '',
             amountError: '',
             editionFlag: false,
-            elevatorFlag: false,
             deleteProductFlag: false,
             showDeletationMessage: false,
             deleteMessageText: '',
-            walletElevatorPaymentError: '',
-            walletElevatorPaySuccessMessage: '',
             isProductImageBroken: false,
             deletedProductId: null,
         }
@@ -265,42 +262,6 @@ class Product extends PureComponent {
         });
     };
 
-    elevatorPay = () => {
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productItem.main.id}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productItem.main.id}`);
-            }
-        })
-    };
-
-    doWalletElevatorPay = id => {
-        this.props.walletElevatorPay(id).then(result => {
-            this.setState({
-                walletElevatorPayError: '', elevatorFlag: false,
-                walletElevatorPaySuccessMessage: locales('titles.walletElevatorPaymentSuccessMessage')
-            }, _ => {
-                setTimeout(() => {
-                    this.props.fetchUserProfile();
-                    this.setState({ walletElevatorPaySuccessMessage: '' })
-                }, 3000);
-            })
-        })
-            .catch(error => {
-                const {
-                    response = {}
-                } = error;
-                const {
-                    data = {}
-                } = response;
-                const {
-                    msg,
-                    status
-                } = data;
-                if (status == false)
-                    this.setState({ walletElevatorPaymentError: msg, walletElevatorPaySuccessMessage: '' })
-            });
-    };
-
     renderProductImage = (photos = []) => {
         const {
             isProductImageBroken,
@@ -316,12 +277,32 @@ class Product extends PureComponent {
 
     };
 
+    navigateToPaymentType = _ => {
+        const {
+            productItem = {}
+        } = this.props;
+
+        const {
+            main = {},
+        } = productItem;
+
+        const {
+            id: productId
+        } = main;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: 25000,
+            type: 0,
+            productId,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`
+        });
+    };
+
     render() {
         const {
             loggedInUserId,
             deleteProductStatus,
             deleteProductLoading,
-            walletElevatorPayLoading,
             width = deviceWidth * 0.97,
             shouldShowMyButtons = false
         } = this.props;
@@ -374,7 +355,6 @@ class Product extends PureComponent {
         } = user_info;
 
         const {
-            elevatorFlag,
             showDeletationMessage,
             deleteMessageText,
             editionMessageText,
@@ -395,8 +375,6 @@ class Product extends PureComponent {
 
             showValidatedUserModal,
 
-            walletElevatorPaymentError,
-            walletElevatorPaySuccessMessage,
             deletedProductId
         } = this.state;
 
@@ -683,179 +661,13 @@ class Product extends PureComponent {
                                 onPress={() => this.setState({ editionFlag: false })}
                             >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                <Text style={styles.closeButtonText}>
+                                    {locales('titles.close')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal > : null}
-
-
-
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={!!walletElevatorPaySuccessMessage}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.doElevation')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {walletElevatorPaySuccessMessage}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}>
-
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
-
-
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.doElevation')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-                        <Text style={{
-                            width: '100%', textAlign: 'center',
-                            marginTop: 15,
-                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
-                        }}>
-                            {formatter.numberWithCommas(25000)} {locales('titles.toman')}
-                        </Text>
-
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.elevationText')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-around',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170, elevation: 0 }]}
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' }, () => {
-                                    return this.elevatorPay()
-                                })}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.portalPay')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170, elevation: 0 }]}
-                                onPress={_ => this.doWalletElevatorPay(productId)}
-                            >
-                                <ActivityIndicator
-                                    color='white'
-                                    style={{ position: 'absolute', left: 0 }}
-                                    size={15}
-                                    animating={!!walletElevatorPayLoading}
-                                />
-
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.walletPay')}
-                                </Text>
-                            </Button>
-                        </View>
-
-                        {walletElevatorPaymentError ? <Text
-                            style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                marginVertical: 15,
-                                fontSize: 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: '#E41C38'
-                            }}
-                        >
-                            {walletElevatorPaymentError}
-                        </Text>
-                            : null}
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
 
                 < Portal
                     style={{
@@ -957,8 +769,6 @@ class Product extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal >
-
-
 
                 {deletedProductId != productId ?
                     <View transparent style={styles.cardWrapper, {
@@ -1443,7 +1253,7 @@ class Product extends PureComponent {
                                                     height: 40,
                                                     elevation: 0
                                                 }}
-                                                onPress={() => this.setState({ elevatorFlag: true })}
+                                                onPress={this.navigateToPaymentType}
                                             >
 
                                                 <View
@@ -1728,7 +1538,6 @@ const mapStateToProps = (state) => {
     } = state;
 
     const {
-        walletElevatorPayLoading,
         walletElevatorPayFailed,
         walletElevatorPayError,
         walletElevatorPayMessage,
@@ -1746,7 +1555,6 @@ const mapStateToProps = (state) => {
         editProductMessage: state.productsListReducer.editProductMessage,
         editProductLoading: state.productsListReducer.editProductLoading,
 
-        walletElevatorPayLoading,
         walletElevatorPayFailed,
         walletElevatorPayError,
         walletElevatorPayMessage,

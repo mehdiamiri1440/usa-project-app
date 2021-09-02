@@ -1,23 +1,22 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
-import { useRoute, useNavigationState } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState
+    RefreshControl, AppState, TouchableOpacity
 } from 'react-native';
-import { useScrollToTop, useIsFocused } from '@react-navigation/native';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native";
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
+import { Button } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-
 
 import * as productListActions from '../../redux/productsList/actions';
 import * as authActions from '../../redux/auth/actions';
@@ -36,7 +35,7 @@ class Home extends React.Component {
             showchangeRoleModal: false,
             loaded: false,
             is_seller: false,
-            isPageRefreshedFromPullingDown: false,
+            isPageRefreshedFromPullingDown: false
         }
     }
 
@@ -206,9 +205,8 @@ class Home extends React.Component {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
         } = user_info;
-
 
         if (!!is_seller) {
             this.setState({ isPageRefreshedFromPullingDown: true })
@@ -246,15 +244,24 @@ class Home extends React.Component {
 
         const {
             userProfileLoading,
+            userProfile = {},
             changeRoleLoading,
             productsListLoading
         } = this.props;
 
         const {
             showchangeRoleModal,
-            is_seller,
+            is_seller: isSellerFromState,
             isPageRefreshedFromPullingDown
         } = this.state;
+
+        const {
+            user_info = {}
+        } = userProfile;
+        const {
+            wallet_balance = 0,
+            is_seller
+        } = user_info;
 
         return (
             <View
@@ -299,7 +306,7 @@ class Home extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!is_seller ? locales('labels.buyer') : locales('labels.seller') })}
+                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
@@ -333,8 +340,16 @@ class Home extends React.Component {
                     }
                     ref={this.props.homeRef}
                     style={{ backgroundColor: 'white', flex: 1, paddingTop: 20 }}>
+                    <ProfilePreview
+                        {...this.props}
+                    />
 
-                    {!!is_seller ? <WalletPreview {...this.props} /> : null}
+                    <InviteFriendsBanner
+                        {...this.props}
+                        is_seller={this.state.is_seller}
+                    />
+
+                    {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
                     {/* 
                     <Pressable
@@ -482,9 +497,18 @@ class Home extends React.Component {
                                         </Text>
                                     </View>
                                     <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={'#21AD93'} size={25} name='angle-left' />
-                                        </Text>
+                                        <FontAwesome5
+                                            style={{
+                                                textAlign: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                left: -15
+                                            }}
+                                            color={'#21AD93'}
+                                            size={25}
+                                            name='angle-left'
+                                        />
                                         <Text style={{
                                             fontSize: 14,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -531,7 +555,7 @@ class Home extends React.Component {
                                                 colors={['#c7a84f', '#f4eb97', '#c7a84f']}
                                                 style={{
                                                     borderRadius: 5,
-                                                    backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
+                                                    backgroundColor: '#c7a84f',
                                                     padding: 5,
                                                     width: deviceWidth * 0.1,
                                                     height: deviceWidth * 0.1,
@@ -541,14 +565,14 @@ class Home extends React.Component {
                                                 {route.icon}
 
                                             </BgLinearGradient> :
-                                            <View style={{
-                                                backgroundColor: route.name === 'SuggestedBuyers' ||
-                                                    route.name === 'SpecialProducts' ? '#c7a84f' : '#fff',
-                                                justifyContent: 'center',
-                                                width: deviceWidth * 0.1,
-                                                height: deviceWidth * 0.1,
-                                                alignItems: 'center',
-                                            }}>
+                                            <View
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    width: deviceWidth * 0.1,
+                                                    height: deviceWidth * 0.1,
+                                                    alignItems: 'center',
+                                                }}
+                                            >
                                                 {route.icon}
                                             </View>
                                         }
@@ -561,10 +585,78 @@ class Home extends React.Component {
                                             {locales(route.label)}
                                         </Text>
                                     </View>
+
                                     <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'} size={25} name='angle-left' />
-                                        </Text>
+                                        <FontAwesome5
+                                            color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'}
+                                            size={25}
+                                            style={{
+                                                textAlign: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                left: -15
+                                            }}
+                                            name='angle-left'
+                                        />
+                                        {
+                                            route.name == 'Wallet' && !!is_seller ?
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row-reverse',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: '#666666',
+                                                            fontSize: 15,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                        }}
+                                                    >
+                                                        {locales('labels.credit')} :
+                                                    </Text>
+                                                    {!userProfileLoading ?
+                                                        <>
+                                                            <Text
+                                                                style={{
+                                                                    color: '#1DA1F2',
+                                                                    fontSize: 15,
+                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                    marginHorizontal: 5
+                                                                }}
+                                                            >
+                                                                {numberWithCommas(wallet_balance)}
+                                                            </Text>
+                                                            <Text
+                                                                style={{
+                                                                    color: '#1DA1F2',
+                                                                    fontSize: 15,
+                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                }}
+                                                            >
+                                                                {locales('titles.toman')}
+                                                            </Text>
+                                                        </>
+                                                        : <ContentLoader
+                                                            speed={2}
+                                                            width={deviceWidth * 0.13}
+                                                            height={deviceWidth * 0.08}
+                                                            backgroundColor="#f3f3f3"
+                                                            foregroundColor="#ecebeb"
+                                                            style={{
+                                                                alignSelf: 'center',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            <Rect x="20%" y="30%" width="30" height="10" />
+                                                        </ContentLoader>
+                                                    }
+                                                </View>
+                                                : null
+                                        }
                                         {route.name == 'Authentication' ?
 
                                             <View
@@ -612,7 +704,7 @@ class Home extends React.Component {
                         textAlign: 'center',
                         color: '#313A43'
                     }}>
-                        {locales('labels.switchRoll', { fieldName: !!is_seller ? locales('labels.seller') : locales('labels.buyer') })}
+                        {locales('labels.switchRoll', { fieldName: !!isSellerFromState ? locales('labels.seller') : locales('labels.buyer') })}
                     </Text>
 
 
@@ -901,6 +993,533 @@ export const WalletPreview = props => {
     )
 };
 
+const InviteFriendsBanner = props => {
+
+    const {
+        userProfile = {},
+        userProfileLoading,
+        is_seller
+    } = props;
+
+    const {
+        user_info = {}
+    } = userProfile;
+
+    const {
+        active_pakage_type,
+    } = user_info;
+    if (userProfileLoading && is_seller)
+        return (
+            <>
+                <View
+                    style={{
+                        width: '100%',
+                        marginTop: 10,
+                        backgroundColor: '#f3f3f3',
+                        height: '11%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 20
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            width: '100%',
+                            height: '100%',
+                            alignSelf: 'center',
+                            borderRadius: 12,
+                        }}
+                    >
+                        <ContentLoader
+                            speed={2}
+                            width='100%'
+                            height='100%'
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Circle cx="60" cy="65" r="45" />
+                            <Rect x="108" y="20" width="258" height="21" />
+                            <Rect x="300" y="55" width="63" height="15" />
+                            <Rect x="228" y="80" width="137" rx={6} ry={6} height="38" />
+                        </ContentLoader>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        backgroundColor: "#e0e0e0",
+                        width: '100%',
+                        height: 70,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 10
+                    }}
+                >
+                    <ContentLoader
+                        speed={2}
+                        width='100%'
+                        height='100%'
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                        style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Circle cx="95%" cy='50%' r="25" />
+                        <Rect x="30%" y='40%' width="133" height="15" />
+                        <FontAwesome5
+                            name='angle-left'
+                            color='#fff'
+                            size={20}
+                            style={{
+                                top: '80%'
+                            }}
+                        />
+                    </ContentLoader>
+                </View>
+            </>
+        );
+    else if (is_seller && !userProfileLoading)
+        return (
+            <>
+                <BgLinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.1 }}
+                    colors={['#FF7689', '#E41C38']}
+                    style={{
+                        width: deviceWidth,
+                        paddingHorizontal: 10,
+                        paddingVertical: 15,
+                        borderTopColor: '#ebebeb',
+                        borderTopWidth: (active_pakage_type > 0) || userProfileLoading ? 0 : 10,
+                        marginTop: active_pakage_type == 0 ? 0 : 20
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            padding: 1,
+                            borderRadius: 12
+                        }}
+                    >
+                        <Pressable
+                            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                alignSelf: 'center',
+                                borderRadius: 12,
+                                padding: 15,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    zIndex: 1,
+                                    flex: 1
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 17,
+                                        color: '#555555',
+                                    }}
+                                >
+                                    {locales('titles.inviteFriendBannerText')}
+                                </Text>
+                                <BgLinearGradient
+                                    start={{ x: 0, y: 1 }}
+                                    end={{ x: 0.8, y: 0.2 }}
+                                    colors={['#FF7689', '#E41C38']}
+                                    style={{
+                                        borderRadius: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '70%',
+                                        alignSelf: 'flex-end',
+                                        marginTop: 10
+                                    }}
+                                >
+                                    <Button
+                                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                                        style={{
+                                            width: '100%',
+                                            backgroundColor: 'transparent',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 16,
+                                            }}
+                                        >
+                                            {locales('titles.earnWages')}
+                                        </Text>
+                                        <FontAwesome5
+                                            name='angle-left'
+                                            size={20}
+                                            color='white'
+                                            style={{
+                                                position: 'absolute',
+                                                left: '20%',
+                                            }}
+                                        />
+                                    </Button>
+                                </BgLinearGradient>
+                            </View>
+                            <View
+                                style={{
+                                    width: 80,
+                                    height: 120,
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 120,
+                                        height: '100%'
+                                    }}
+                                    source={require('../../../assets/images/marketing.png')}
+                                />
+                            </View>
+                        </Pressable>
+                    </View>
+                </BgLinearGradient>
+                <Pressable
+                    onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                >
+                    <BgLinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.1 }}
+                        colors={['#1DA0F0', '#105A88']}
+                        // style={{
+                        //     alignSelf: 'center',
+                        //     padding: 15,
+                        //     width: '100%',
+                        //     flexDirection: 'row-reverse',
+                        //     alignItems: 'center',
+                        //     justifyContent: 'space-between'
+                        // }}
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            height: 60
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: '#084971',
+                                height: '100%',
+                                borderTopLeftRadius: 25,
+                                borderBottomLeftRadius: 25,
+                                width: '17%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <FontAwesome5
+                                size={35}
+                                solid
+                                name='dollar-sign'
+                                color='white'
+                                style={{
+                                    right: -5
+                                }}
+                            />
+                        </View>
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: 'white',
+                                fontSize: 19,
+                            }}
+                        >
+                            {locales('titles.revenues')}
+                        </Text>
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
+                            color='white'
+                            style={{
+                                marginLeft: 10
+                            }}
+                        />
+                    </BgLinearGradient>
+                </Pressable>
+            </>
+        );
+    return null;
+};
+
+const ProfilePreview = props => {
+
+    const {
+        userProfile = {},
+        userProfileLoading,
+        navigation = {},
+    } = props;
+
+
+    const {
+        navigate = _ => { }
+    } = navigation;
+
+    const {
+        user_info = {},
+        profile = {},
+    } = userProfile;
+
+    const {
+        first_name = '',
+        last_name = '',
+        is_seller,
+        user_name,
+        active_pakage_type
+    } = user_info;
+
+    const {
+        profile_photo
+    } = profile;
+
+    const flatListRef = useRef();
+
+    const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
+
+    const onScrollToIndexFailed = (error = {}) => {
+        const {
+            averageItemLength,
+            index
+        } = error;
+
+        const offset = averageItemLength * index;
+
+        flatListRef?.current?.scrollToOffset({ offset, animated: true });
+        setTimeout(() => flatListRef?.current?.scrollToIndex({ index, animated: true }), 300);
+    };
+
+    const renderActivePackageTypeText = _ => {
+        if (!!is_seller)
+            switch (active_pakage_type) {
+                case 0:
+                    return {
+                        text: locales('labels.normalMembership'),
+                        color: '#777'
+                    }
+                case 1:
+                    return {
+                        text: locales('labels.basicMembership'),
+                        color: '#777'
+                    }
+                case 3:
+                    return {
+                        text: locales('labels.specialMembership'),
+                        color: '#00C569'
+                    }
+                default:
+                    return {
+                        text: locales('labels.basicMembership'),
+                        color: '#777'
+                    }
+            }
+        else
+            return {
+                text: locales('labels.buyer'),
+                color: '#777'
+            };
+    };
+
+    return (
+        <Pressable
+            android_ripple={{
+                color: '#ededed'
+            }}
+            style={{
+                paddingHorizontal: 10,
+            }}
+            onPress={() => navigate('MyBuskool', { screen: 'EditProfile' })}
+        >
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+                    {/* {active_pakage_type > 0 ?
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#A6CEFF', '#2ED8A7']}
+                            style={{
+                                width: 78,
+                                height: 78,
+                                borderRadius: 39,
+                                right: 4,
+                            }}
+                        >
+                        </BgLinearGradient>
+                        : null
+                    } */}
+                    {userProfileLoading ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.42}
+                            height={deviceWidth * 0.172}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
+                        >
+                            <Circle cx='77%' cy="50%" r="35" />
+                            <Rect x="-10%" y="30%" width="90" height="10" />
+                            <Rect x="-10%" y="60%" width="90" height="10" />
+                        </ContentLoader>
+                        :
+                        <>
+                            <Image
+                                source={profile_photo && profile_photo.length ?
+                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                    :
+                                    require('../../../assets/icons/user.png')
+                                }
+                                style={{
+                                    width: 70,
+                                    height: 70,
+                                    borderRadius: 35,
+                                    // position: active_pakage_type > 0 ? 'absolute' : 'relative'
+                                }}
+                            />
+                            <View
+                                style={{
+                                    marginHorizontal: 15,
+                                    width: '66%',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 2
+                                }}
+                            >
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 20,
+                                        color: '#333333',
+                                    }}
+                                >
+                                    {`${first_name} ${last_name}`}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 14,
+                                        marginTop: 2,
+                                        color: renderActivePackageTypeText().color,
+                                    }}
+                                >
+                                    {renderActivePackageTypeText().text}
+                                </Text>
+                            </View>
+                        </>
+                    }
+                </View>
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    solid
+                    color='#666666'
+                />
+            </View>
+
+            {is_seller && active_pakage_type == 0 ?
+                <>
+                    <TouchableOpacity
+                        onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+                    >
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#474d6f', '#313442']}
+                            style={{
+                                borderTopLeftRadius: 12,
+                                borderTopRightRadius: 12,
+                                padding: 5,
+                                marginTop: 10,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: '80%',
+                                    height: 35
+                                }}
+                                source={require('../../../assets/images/verticalPromotionTextGif.gif')}
+                            />
+                            {/* <Animated.FlatList
+                                style={{ maxHeight: 25 }}
+                                ref={flatListRef}
+                                onScrollToIndexFailed={onScrollToIndexFailed}
+                                renderItem={({ item }) => (
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            color: 'white'
+                                        }}
+                                    >
+                                        {item}
+                                    </Text>
+                                )}
+                                data={flatListArray}
+                                keyExtractor={item => item}
+                            /> */}
+                            <FontAwesome5
+                                name='angle-left'
+                                color='#c9a15f'
+                                style={{
+                                    paddingLeft: 5
+                                }}
+                                size={20}
+                            />
+                        </BgLinearGradient>
+                    </TouchableOpacity>
+                </>
+                : null
+            }
+        </Pressable>
+    )
+};
+
 const styles = StyleSheet.create({
     image: {
         resizeMode: "cover",
@@ -1153,7 +1772,7 @@ const mapStateToProps = state => {
 
     const {
         userProfile,
-        userProfileLoading
+        userProfileLoading,
     } = profileReducer;
 
 
@@ -1168,7 +1787,7 @@ const mapStateToProps = state => {
         productsListLoading,
 
         userProfile,
-        userProfileLoading
+        userProfileLoading,
     }
 }
 

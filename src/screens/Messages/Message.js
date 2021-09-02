@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useRef, useEffect } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
+import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Clipboard from "@react-native-community/clipboard";
 
@@ -38,7 +38,7 @@ const Message = props => {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM,
             5,
-            20);
+            250);
         Clipboard.setString(item.text);
     };
 
@@ -248,6 +248,9 @@ const RenderPhoneFormatMessage = props => {
 };
 
 const RenderMessageWithProductIdDesign = props => {
+
+    const animatedColor = useRef(new Animated.Value(0)).current;
+
     const {
         item = {},
         navigation = {},
@@ -267,6 +270,27 @@ const RenderMessageWithProductIdDesign = props => {
         p_id
     } = item;
 
+    useEffect(_ => {
+        const colorInterval = setInterval(handleAnimationChanges, 1000);
+        return _ => clearInterval(colorInterval);
+    }, []);
+
+    const handleAnimationChanges = _ => {
+        Animated.timing(animatedColor, {
+            duration: 1000,
+            toValue: 1,
+        }).start(_ => {
+            Animated.timing(animatedColor, {
+                duration: 1000,
+                toValue: 0,
+            }).start()
+        });
+    };
+
+    const backgroundColor = animatedColor.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: ['#fea858', '#ed765e', '#fea858']
+    });
 
     if (!!p_id) {
         if (item.sender_id == loggedInUserId) {
@@ -276,27 +300,31 @@ const RenderMessageWithProductIdDesign = props => {
                         android_ripple={{
                             color: '#ededed'
                         }}
+                        style={{
+                            borderTopWidth: 1,
+                            borderColor: '#f2f2f2',
+                            borderBottomLeftRadius: 12,
+                            borderBottomRightRadius: 12,
+                            paddingVertical: 10,
+                            backgroundColor: 'white'
+                        }}
                         activeOpacity={1}
                         onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
                     >
                         <View
                             style={{
-                                width: '100%',
-                                backgroundColor: '#556080',
+                                width: '95%',
 
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 textAlign: 'center',
 
                                 flexDirection: 'row-reverse',
-
-                                paddingVertical: 5,
-                                borderBottomLeftRadius: 8,
-                                borderBottomRightRadius: 8,
+                                alignSelf: 'center',
+                                paddingVertical: 10,
+                                borderRadius: 8,
                                 overflow: "hidden",
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-
+                                backgroundColor: '#556080',
                             }}
                         >
                             {productDetailsLoading && item.id == selectedMessageId
@@ -395,25 +423,34 @@ const RenderMessageWithProductIdDesign = props => {
                     color: '#ededed'
                 }}
                 activeOpacity={1}
+                style={{
+                    borderTopWidth: 1,
+                    borderColor: '#f2f2f2',
+                    borderBottomLeftRadius: 12,
+                    borderBottomRightRadius: 12,
+                    paddingVertical: 10,
+                    backgroundColor: 'white'
+                }}
                 onPress={() => navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
             >
-                <View
+
+                <Animated.View
+                    // start={{ x: 0, y: 1 }}
+                    // end={{ x: 0.8, y: 0.2 }}
+                    // colors={[colorFirst, colorSecond]}
                     style={{
-                        width: '100%',
-                        backgroundColor: '#5D9FD8',
+                        width: '95%',
 
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
 
                         flexDirection: 'row-reverse',
-
-                        paddingVertical: 5,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
+                        alignSelf: 'center',
+                        paddingVertical: 10,
+                        borderRadius: 8,
                         overflow: "hidden",
-                        borderTopRightRadius: 0,
-                        borderTopLeftRadius: 0,
+                        backgroundColor,
 
                     }}
                 >
@@ -441,7 +478,7 @@ const RenderMessageWithProductIdDesign = props => {
                         color='white'
                         size={14}
                     />
-                </View>
+                </Animated.View>
             </Pressable >
         );
     }

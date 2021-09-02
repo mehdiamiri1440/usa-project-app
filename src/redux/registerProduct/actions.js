@@ -50,12 +50,12 @@ export const fetchAllSubCategories = id => {
     return request();
 };
 
-export const addNewProduct = productObject => {
+export const addNewProduct = (productObject, onUploadProgress) => {
     const request = () => {
         return dispatch => {
             dispatch(loading());
             return API.registerProduct
-                .addNewProduct(productObject)
+                .addNewProduct(productObject, onUploadProgress)
                 .then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {

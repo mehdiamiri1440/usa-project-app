@@ -48,7 +48,7 @@ export const fetchAllSubCategories = id => {
     });
 };
 
-export const addNewProduct = productObject => {
+export const addNewProduct = (productObject, onUploadProgress) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
@@ -56,6 +56,7 @@ export const addNewProduct = productObject => {
                 method: 'POST',
                 data: productObject,
                 withAuth: true,
+                onUploadProgress
             })
             .then(result => {
                 resolve(result);

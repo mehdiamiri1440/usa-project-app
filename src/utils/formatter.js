@@ -1,3 +1,6 @@
+import React from 'react';
+import { Dimensions } from 'react-native';
+
 export const toStandard = text => {
   if (!text) return text;
 
@@ -59,6 +62,10 @@ export const convertedNumbersToTonUnit = (number) => {
   } else return "";
 }
 
+export const convertUnitsToPrice = (number) => {
+  return `${numberWithCommas(number)} تومان`;
+};
+
 export const convertUnitsToText = (number) => {
   let data = number / 1000;
   let text = "";
@@ -109,3 +116,16 @@ export const toLatinNumbers = (num = null) => {
       return c.charCodeAt(0) - 0x06f0;
     });
 };
+
+const { width, height } = Dimensions.get('window');
+
+//Guideline sizes are based on standard ~5" screen mobile device
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = (size) => (width / guidelineBaseWidth) * size;
+const verticalScale = (size) => (height / guidelineBaseHeight) * size;
+const moderateScale = (size, factor = 0.5) =>
+  size + (scale(size) - size) * factor;
+
+export { scale, verticalScale, moderateScale };

@@ -250,3 +250,113 @@ export const walletElevatorPay = id => {
 
     return request();
 };
+
+export const buyAdCapacityWalletPay = count => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .buyAdCapacityWalletPay(count)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.BUY_AD_CAPACITY_WALLET_PAY_FAILED,
+                        reject: actionTypes.BUY_AD_CAPACITY_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.BUY_AD_CAPACITY_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.BUY_AD_CAPACITY_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const promoteRegistrationWalletPay = type => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .promoteRegistrationWalletPay(type)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_FAILED,
+                        reject: actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const productCapacityWalletPay = count => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .productCapacityWalletPay(count)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.PRODUCT_CAPACITY_WALLET_PAY_FAILED,
+                        reject: actionTypes.PRODUCT_CAPACITY_WALLET_PAY_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.PRODUCT_CAPACITY_WALLET_PAY_LOADING);
+    const success = res => action(actionTypes.PRODUCT_CAPACITY_WALLET_PAY_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const uploadUserContacts = contacts => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .uploadUserContacts(contacts)
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.UPLOAD_USER_CONTACTS_FAILED,
+                        reject: actionTypes.UPLOAD_USER_CONTACTS_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.UPLOAD_USER_CONTACTS_LOADING);
+    const success = res => action(actionTypes.UPLOAD_USER_CONTACTS_SUCCESSFULLY, res);
+
+    return request();
+};
+
+export const fetchUserFriendsData = _ => {
+    const request = () => {
+        return dispatch => {
+            dispatch(loading());
+            return API.profile
+                .fetchUserFriendsData()
+                .then(res => dispatch(success(res)))
+                .catch(err => {
+                    dispatch(generateErrorAction(err, {
+                        failure: actionTypes.FETCH_USER_FRIENDS_DATA_FAILED,
+                        reject: actionTypes.FETCH_USER_FRIENDS_DATA_REJECT
+                    }));
+                    throw err;
+                });
+        };
+    };
+    const loading = () => action(actionTypes.FETCH_USER_FRIENDS_DATA_LOADING);
+    const success = res => action(actionTypes.FETCH_USER_FRIENDS_DATA_SUCCESSFULLY, res);
+
+    return request();
+};

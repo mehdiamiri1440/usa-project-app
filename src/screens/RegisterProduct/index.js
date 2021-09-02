@@ -17,6 +17,7 @@ import RegisterProductSuccessfully from './RegisterProductSuccessfully';
 import ProductDescription from './Steps/ProductDescription';
 import PaymentModal from '../../components/paymentModal';
 import { deviceWidth, deviceHeight } from '../../utils';
+import LinearGradient from 'react-native-linear-gradient';
 
 let stepsArray = [1, 2, 3, 4, 5, 6];
 class RegisterProduct extends React.Component {
@@ -68,7 +69,8 @@ class RegisterProduct extends React.Component {
             selectedButton: null,
             showDialog: false,
             loaded: false,
-            parentList: []
+            parentList: [],
+            uploadPercentage: 0
         }
     }
 
@@ -257,7 +259,10 @@ class RegisterProduct extends React.Component {
                 formData.append("image_" + i, file);
             }
             formData.append("images_count", this.state.productFiles.length);
-            return this.props.addNewProduct(formData).then(_ => {
+
+            return this.props.addNewProduct(formData, (event) => {
+                this.setState({ uploadPercentage: Math.round((100 * event.loaded) / event.total) });
+            }).then(result => {
                 analytics().logEvent('register_product_successfully');
                 setTimeout(() => this.setState({
                     paymentModalVisibility: true
@@ -382,23 +387,112 @@ class RegisterProduct extends React.Component {
     };
 
     render() {
-        let { stepNumber, successfullAlert, paymentModalVisibility, subCategoryId, subCategoryName } = this.state;
+        let {
+            stepNumber,
+            successfullAlert,
+            paymentModalVisibility,
+            subCategoryId,
+            subCategoryName,
+            uploadPercentage
+        } = this.state;
+
         const {
             userProfile = {},
             addNewProductMessage = [],
             addNewProductError,
-            buyAds = []
+            buyAds = [],
+            addNewProductLoading
         } = this.props;
+
         const {
             user_info = {}
         } = userProfile;
         const {
             active_pakage_type
-        } = user_info
+        } = user_info;
+
+        if (addNewProductLoading)
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        height: deviceHeight,
+                        width: deviceWidth,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 20,
+                        backgroundColor: 'white'
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: '#fafafa',
+                            elevation: 0,
+                            width: '100%',
+                            borderRadius: 12,
+                            marginTop: 20
+                        }}>
+                        <Text style={{
+                            backgroundColor: '#F6F8FE',
+                            width: '100%',
+                            textAlign: 'center',
+                            fontFamily: "IRANSansWeb(FaNum)_Medium",
+                            color: '#313A43',
+                            paddingVertical: 7
+
+
+                        }}>
+                            {locales('labels.uploading')}
+                        </Text>
+                        <View
+                            style={{
+                                marginTop: 7,
+                                marginBottom: 15,
+                                paddingHorizontal: 15
+                            }}>
+                            <Text
+                                style={{
+                                    fontFamily: "IRANSansWeb(FaNum)_Medium",
+                                    color: '#21AD93',
+                                    textAlign: 'center'
+                                }}>
+                                {uploadPercentage}%
+                            </Text>
+                            <View style={{
+                                width: '100%',
+                                height: 7
+                            }}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#DDDDDD',
+                                        borderRadius: 15,
+                                        height: 7,
+                                        width: '100%',
+                                        position: 'absolute'
+
+                                    }}
+                                ></View>
+                                <LinearGradient
+                                    start={{ x: 0, y: 1 }}
+                                    end={{ x: 0.8, y: 0.2 }}
+                                    colors={['#00C569', '#21AD93']}
+                                    style={{
+                                        position: 'absolute',
+                                        height: 7,
+                                        width: `${uploadPercentage}%`,
+                                        right: 0,
+                                        borderRadius: 10
+                                    }}
+                                >
+
+                                </LinearGradient>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            )
         return (
             <>
-
-                {/* <Loading /> */}
                 {stepNumber == 8 && !buyAds.length && active_pakage_type == 0 ? <PaymentModal
                     {...this.props}
                     routeTo={{ parentScreen: 'RegisterProductSuccessfully' }}
@@ -406,30 +500,6 @@ class RegisterProduct extends React.Component {
                     onRequestToClose={() => this.setState({ paymentModalVisibility: false })}
                     visible={paymentModalVisibility}
                 /> : null}
-
-                {(!!this.props.addNewProductLoading) ?
-                    <View style={{
-                        backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
-                        position: 'absolute',
-
-                        elevation: 5,
-                        borderColor: 'black',
-                        backgroundColor: 'white',
-                    }}>
-                        <ActivityIndicator size="large"
-                            style={{
-                                position: 'absolute', left: '44%', top: '40%',
-
-                                elevation: 5,
-                                borderColor: 'black',
-                                backgroundColor: 'white', width: 50, height: 50, borderRadius: 25
-                            }}
-                            color="#00C569"
-
-                        />
-                    </View> : null}
-
-
 
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
 
@@ -442,19 +512,6 @@ class RegisterProduct extends React.Component {
                         elevation: 5,
                         justifyContent: 'center'
                     }}>
-                        {/* <Pressable
-android_ripple={{
-color:'#ededed'
-}}
-                            style={{ width: 40, justifyContent: 'center', position: 'absolute', right: 0 }}
-                            onPress={() => {
-                                stepNumber > 1 ? this.setState({ stepNumber: this.state.stepNumber - 1 }) :
-                                    this.props.navigation.goBack();
-                            }}
-
-                        >
-                            <AntDesign name='arrowright' size={25} />
-                        </Pressable> */}
 
                         <View style={{
                             width: '100%',
@@ -558,8 +615,6 @@ color:'#ededed'
                             }
                             {this.renderSteps()}
                         </View>
-
-
 
                     </ScrollView>
 
@@ -734,14 +789,13 @@ const mapStateToProps = (state) => {
 
         isUserAllowedToSendMessageLoading,
         isUserAllowedToSendMessage,
-        isUserAllowedToSendMessagePermission
-
+        isUserAllowedToSendMessagePermission,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addNewProduct: productObject => dispatch(productActions.addNewProduct(productObject)),
+        addNewProduct: (productObject, onUploadProgress) => dispatch(productActions.addNewProduct(productObject, onUploadProgress)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         setSubCategoryIdFromRegisterProduct: (id, name) => dispatch(productActions.setSubCategoryIdFromRegisterProduct(id, name)),

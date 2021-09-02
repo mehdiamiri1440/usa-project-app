@@ -720,12 +720,6 @@ class ChatScreen extends Component {
         return (
             <View
             >
-                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
-                    !isSenderVerified && showUnAuthorizedUserPopUp) ?
-                    <ChatWithUnAuthorizedUserPopUp
-                        hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
-                    />
-                    : null}
 
                 {
                     userChatHistory.length
@@ -749,6 +743,13 @@ class ChatScreen extends Component {
                         )
                         : null
                 }
+
+                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
+                    !isSenderVerified && showUnAuthorizedUserPopUp) ?
+                    <ChatWithUnAuthorizedUserPopUp
+                        hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                    />
+                    : null}
             </View>
         )
     };

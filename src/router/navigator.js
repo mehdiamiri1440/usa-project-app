@@ -43,6 +43,7 @@ import {
 import { deviceWidth, deviceHeight } from '../utils';
 import * as productActions from '../redux/registerProduct/actions';
 import * as messageActions from '../redux/messages/actions';
+import * as requestActions from '../redux/buyAdRequest/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 
@@ -58,6 +59,7 @@ const routes = props => {
         userProfile = {},
         newMessage,
         loggedInUserId,
+        goldenBuyAdsList = []
     } = props;
 
     const {
@@ -78,9 +80,13 @@ const routes = props => {
 
     const [showPromotionModal, setShowPromotionModal] = useState(false);
 
+    const [showSuggestedBuyerModal, setShowSuggestedBuyerModal] = useState(false);
+
     const [isForceUpdate, setIsForceUpdate] = useState(false);
 
     const [contactInfoGuidModal, setShowContactInfoGuidModal] = useState(false);
+
+    const [showPromoteRegistrationModal, setShowPromoteRegistrationModal] = useState(false);
 
     const [souldShowSellerButton, setShouldShowSellerButton] = useState(false);
 
@@ -290,7 +296,7 @@ const routes = props => {
                 if (isNewUser == true) {
                     AsyncStorage.setItem('@IsNewSignedUpUser', JSON.stringify(false)).then(_ => {
                         promotionModalTimeout = setTimeout(() => {
-                            setShowPromotionModal(true);
+                            finalChecksToShowPromotionModal();
                         }, 3600000);
                     })
                 }
@@ -303,7 +309,7 @@ const routes = props => {
                             if (moment().diff(result, 'days') >= 1) {
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
                                 if (!updateModalFlag) {
-                                    setShowPromotionModal(true);
+                                    finalChecksToShowPromotionModal();
                                 }
                             }
                             else {
@@ -313,7 +319,7 @@ const routes = props => {
                         }
                         else {
                             if (!updateModalFlag) {
-                                setShowPromotionModal(true);
+                                finalChecksToShowPromotionModal();
                                 AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()))
                             }
                         }
@@ -326,9 +332,32 @@ const routes = props => {
         };
     };
 
+    const finalChecksToShowPromotionModal = _ => {
+        props.fetchRelatedRequests().then((res = {}) => {
+
+            const {
+                payload = {}
+            } = res;
+
+            const {
+                golden_buyAds = []
+            } = payload;
+
+            if (golden_buyAds && golden_buyAds.length)
+                setShowSuggestedBuyerModal(true);
+            else
+                setShowPromotionModal(true);
+        })
+    };
+
     const closePromotionModal = _ => {
         setShowPromotionModal(false);
         AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+    };
+
+    const closeSuggestedBuyerModal = _ => {
+        AsyncStorage.setItem('@promotionModalLastSeen', JSON.stringify(moment()));
+        setShowSuggestedBuyerModal(false);
     };
 
     const closeRatingModal = _ => {
@@ -348,6 +377,10 @@ const routes = props => {
             'RegisterProductSuccessfully',
             'ChangeRole',
             'Chat',
+            'UserFriends',
+            'Referral',
+            'UserContacts',
+            'PaymentType'
         ];
 
         const currentRouteName = navigationRef?.current?.getCurrentRoute()?.name;
@@ -410,6 +443,18 @@ const routes = props => {
                 return StartUp;
         }
     }
+
+    const openPromoteRegistrationModal = _ => {
+        setShowPromoteRegistrationModal(true);
+    };
+
+    const closePromoteRegistrationModal = _ => {
+        setShowPromoteRegistrationModal(false);
+    };
+    let randomIndex = 0;
+
+    if (goldenBuyAdsList && goldenBuyAdsList.length && goldenBuyAdsList.length >= 2)
+        randomIndex = Math.floor(Math.random() * (goldenBuyAdsList.length - 2));
 
     return (
         <>
@@ -663,6 +708,453 @@ const routes = props => {
                 :
                 null
             }
+
+            {showSuggestedBuyerModal ?
+                <Modal
+                    onRequestClose={closeSuggestedBuyerModal}
+                    visible={showSuggestedBuyerModal}
+                    transparent={true}
+                    onDismiss={closeSuggestedBuyerModal}
+                >
+                    <Dialog
+                        onDismiss={closeSuggestedBuyerModal}
+                        visible={showSuggestedBuyerModal}
+                        style={{
+                            ...styles.dialogWrapper,
+                            width: deviceWidth * 0.95,
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: '#E7F9FF',
+                                width: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                            }}
+                        >
+                            <FontAwesome5
+                                onPress={closeSuggestedBuyerModal}
+                                solid
+                                size={20}
+                                color='#808C9B'
+                                name='times'
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15
+                                }}
+                            />
+
+                            <View
+                                style={{
+                                    width: '90%',
+                                    marginVertical: 35,
+                                    alignSelf: 'center'
+                                }}
+                            >
+                            </View>
+                            <Text
+                                style={{
+                                    width: '90%',
+                                    marginVertical: 20,
+                                    alignSelf: 'center',
+                                    textAlign: 'center',
+                                    color: '#374761',
+                                    fontSize: 25,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    top: -40
+                                }}
+                            >
+                                {locales('titles.doNotMissThisBuyer')}
+                            </Text>
+                            <View
+                                style={{
+                                    width: deviceWidth * 2,
+                                    height: deviceWidth * 2,
+                                    borderTopLeftRadius: deviceWidth * 1.5,
+                                    borderTopRightRadius: deviceWidth * 1.5,
+                                    zIndex: -10,
+                                    backgroundColor: 'white',
+                                    top: 100,
+                                    position: 'absolute'
+                                }}
+                            >
+
+                            </View>
+                        </View>
+
+                        <View
+                            style={{
+                                borderColor: '#c7a84f',
+                                borderRadius: 12,
+                                marginTop: 10,
+                                borderWidth: 2,
+                                borderRightWidth: 15,
+                                backgroundColor: 'white',
+                                width: deviceWidth * 0.9,
+                                marginBottom: 20
+                            }}>
+                            <View style={{
+                                paddingHorizontal: 15,
+                                alignSelf: 'center',
+                                width: '96%',
+                                backgroundColor: 'white',
+                                flexDirection: 'row-reverse'
+                            }}
+                            >
+                                <View
+                                    style={{
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        marginTop: 15,
+                                        flexDirection: 'row-reverse'
+                                    }}
+                                >
+                                    <FontAwesome5
+                                        solid
+                                        name='user-circle'
+                                        color='#adadad'
+                                        size={16}
+                                    />
+                                    <Text
+                                        style={{
+                                            marginHorizontal: 5,
+                                            color: '#adadad',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        }}
+                                    >
+                                        {`${goldenBuyAdsList[randomIndex]?.first_name} ${goldenBuyAdsList[randomIndex]?.last_name}`}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    padding: 10,
+                                    overflow: 'hidden',
+                                }}
+                            >
+
+                                <Image source={require('../../assets/images/blur-items.jpg')}
+                                    style={{
+                                        height: '100%',
+                                        position: 'absolute',
+                                        top: -45,
+                                        right: 10,
+                                        width: '100%',
+                                        zIndex: -1
+                                    }}
+                                />
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        marginVertical: 43,
+                                        top: -10,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777',
+                                            fontSize: 20
+                                        }}
+                                    >
+                                        {`${locales('labels.buyer')} `}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#556083',
+                                            fontSize: 20
+                                        }}
+                                    >
+                                        {/* {this.renderRequirementAmount(item.requirement_amount)} {`${item.subcategory_name} `} */}
+                                        {`${goldenBuyAdsList[randomIndex]?.subcategory_name} `}
+                                    </Text>
+                                    {goldenBuyAdsList[randomIndex]?.name ? <>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777',
+                                                fontSize: 20
+                                            }}
+                                        >
+                                            {`${locales('labels.fromType')} `}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#556083',
+                                                fontSize: 20
+                                            }}
+                                        >
+                                            {`${goldenBuyAdsList[randomIndex]?.name} `}
+                                        </Text>
+                                    </>
+                                        : null}
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#777777',
+                                            fontSize: 20
+                                        }}
+                                    >
+                                        {locales('labels.is')}
+                                    </Text>
+                                </Text>
+
+                                <View style={{
+                                    marginVertical: 15,
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    paddingHorizontal: 5,
+                                    alignSelf: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                >
+
+                                    <Button
+                                        small
+                                        onPress={openPromoteRegistrationModal}
+                                        style={{
+                                            borderColor: '#c7a84f',
+                                            width: '54%',
+                                            zIndex: 1000,
+                                            position: 'relative',
+                                            marginHorizontal: 5,
+                                            alignSelf: 'center',
+
+                                        }}
+                                    >
+                                        <LinearGradient
+                                            start={{ x: 0, y: 0.51, z: 1 }}
+                                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                                            colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                            style={{
+                                                width: '100%',
+                                                paddingHorizontal: 10,
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center',
+                                                textAlign: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: 8,
+                                                paddingLeft: 20,
+                                                padding: 8,
+                                                elevation: 0
+                                            }}
+                                        >
+                                            <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color='#333'
+                                                size={20} />
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    marginHorizontal: 3,
+                                                    fontSize: 18,
+                                                    color: '#333',
+                                                    paddingHorizontal: 3
+                                                }}
+                                            >
+                                                {locales('labels.contactInfo')}
+                                            </Text>
+                                        </LinearGradient>
+
+                                    </Button>
+
+                                    <Button
+                                        onPress={openPromoteRegistrationModal}
+                                        style={[styles.loginButton,
+                                        {
+                                            alignSelf: 'center',
+                                            backgroundColor: 'white',
+                                            width: '47%',
+                                            borderWidth: 1,
+                                            borderColor: '#556080',
+                                            paddingHorizontal: 10,
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            height: 45,
+                                            borderRadius: 6,
+                                        }]}
+                                    >
+                                        <MaterialCommunityIcons
+                                            name='message'
+                                            color='#556080'
+                                            size={20}
+                                        />
+                                        <Text style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 18,
+                                            color: '#556080',
+                                            paddingHorizontal: 3
+                                        }}>
+                                            {locales('labels.messageToBuyer')}
+                                        </Text>
+                                    </Button>
+                                </View>
+                            </View>
+                        </View>
+                    </Dialog>
+                </Modal>
+                :
+                null
+            }
+            {showPromoteRegistrationModal ?
+                <Modal
+                    onRequestClose={closePromoteRegistrationModal}
+                    visible={showPromoteRegistrationModal}
+                    transparent={true}
+                    onDismiss={closePromoteRegistrationModal}
+                >
+                    <Dialog
+                        onDismiss={closePromoteRegistrationModal}
+                        visible={showPromoteRegistrationModal}
+                        style={{
+                            ...styles.dialogWrapper,
+                            width: deviceWidth * 0.95,
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: deviceHeight > 790 ? deviceHeight * 0.59 : deviceHeight * 0.7,
+                            paddingTop: 17
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: '#E7F9FF',
+                                width: '100%',
+                                alignItems: 'center',
+                                height: '10%',
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                            }}
+                        >
+                            <FontAwesome5
+                                onPress={closePromoteRegistrationModal}
+                                solid
+                                size={20}
+                                color='#808C9B'
+                                name='times'
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15
+                                }}
+                            />
+
+                            <Paragraph style={styles.headerTextDialogModal}>
+                                {locales('labels.goldenRequests')}
+                            </Paragraph>
+                        </View>
+                        <View
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: '60%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+
+                                    <AntDesign name="exclamation"
+                                        color="#f8bb86"
+                                        size={70}
+                                        style={[styles.dialogIcon, {
+                                            borderColor: '#facea8',
+                                        }]} />
+
+                                </View>
+                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                    <Text style={styles.mainTextDialogModal}>
+                                        {locales('labels.accessToGoldensDeined')}
+                                    </Text>
+
+                                </Dialog.Actions>
+                                <Paragraph
+                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                    {locales('labels.icreaseToSeeGoldens')}
+                                </Paragraph>
+                            </View>
+                            <View
+                                style={{
+                                    alignSelf: 'flex-end',
+                                    alignItems: 'center',
+                                    bottom: 0,
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+
+                                <View style={{
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    alignItems: 'center',
+                                    marginBottom: 20
+                                }}>
+                                    <Button
+                                        style={[styles.modalButton,
+                                        styles.greenButton, {
+                                            borderRadius: 8,
+                                            elevation: 0,
+                                            maxWidth: deviceWidth * 0.6
+                                        }]}
+                                        onPress={() => {
+                                            closePromoteRegistrationModal();
+                                            closeSuggestedBuyerModal();
+                                            navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                        }}
+                                    >
+
+                                        <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                        </Text>
+                                    </Button>
+                                </View>
+                                <Dialog.Actions style={{
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    padding: 0,
+                                    marginTop: 24
+                                }}>
+                                    <Button
+                                        style={styles.modalCloseButton}
+                                        onPress={_ => {
+                                            closePromoteRegistrationModal();
+                                            closeSuggestedBuyerModal();
+                                        }
+                                        }
+                                    >
+
+                                        <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                        </Text>
+                                    </Button>
+                                </Dialog.Actions>
+                            </View>
+                        </View>
+                    </Dialog>
+                </Modal>
+                : null}
 
             {contactInfoGuidModal ?
                 <Modal
@@ -1210,8 +1702,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({
     profileReducer,
-    messagesReducer
+    messagesReducer,
+    buyAdRequestReducer
 }) => {
+
+    const {
+        goldenBuyAdsList,
+    } = buyAdRequestReducer;
 
     const {
         userProfile,
@@ -1226,7 +1723,9 @@ const mapStateToProps = ({
         newMessage,
 
         userProfile,
-        userProfileLoading
+        userProfileLoading,
+
+        goldenBuyAdsList
     }
 };
 const mapDispatchToProps = (dispatch) => {
@@ -1234,6 +1733,7 @@ const mapDispatchToProps = (dispatch) => {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
         doForceRefresh: forceRefresh => dispatch(messageActions.doForceRefresh(forceRefresh)),
+        fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests())
     }
 };
 

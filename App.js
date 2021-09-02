@@ -33,7 +33,7 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
-global.shouldShowRibbon = true;
+global.shouldShowRibbon = false;
 global.meInfo = {
   is_seller: 0,
   loggedInUserId: ''

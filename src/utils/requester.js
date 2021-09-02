@@ -99,7 +99,7 @@ const checkInternetConnectivity = _ => NetInfo.fetch().then(({
 }
 );
 
-export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null }) => {
+export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null, onUploadProgress = _ => { } }) => {
     checkInternetConnectivity();
     const headers = await getRequestHeaders(withAuth);
     // console.log('route', route, 'headers', headers)
@@ -113,6 +113,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                 params,
                 // withCredentials: withAuth,
                 timeout: 20000,
+                onUploadProgress,
             })
             .then(result => {
                 // console.log('route', route, 'result happened', result)
@@ -136,7 +137,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                         // console.log('new token saved', tokenSaved)
                         if (tokenSaved === true) {
                             // console.log('going to do new api call with new token')
-                            resolve(fetchAPI({ route, method, data, withAuth }));
+                            resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress }));
                             // .then(result => resolve(result.data ? result.data : result))
                             // .catch(err => reject(err))
                         }
@@ -161,7 +162,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                         return redirectToLogin();
                     apiCallsCount = apiCallsCount + 1;
                     // console.log('333', 'route', route, err, err?.status, err.response)
-                    resolve(fetchAPI({ route, method, data, withAuth }));
+                    resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress }));
                     reject(err);
                 }
 

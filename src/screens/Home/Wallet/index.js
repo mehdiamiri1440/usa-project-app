@@ -20,7 +20,7 @@ const Wallet = props => {
 
     const inputRef = useRef();
 
-    const [inventory, setInventory] = useState(50000);
+    const [inventory, setInventory] = useState(100000);
     const [inventoryError, setInventoryError] = useState('');
 
     const {
@@ -67,7 +67,7 @@ const Wallet = props => {
     }
     const changeCount = type => {
         const tempInventory = changeValueToNumber(inventory)
-        setInventory(type == 'asc' ? tempInventory + 5000 : tempInventory <= 10000 ? 10000 : tempInventory - 5000);
+        setInventory(type == 'asc' ? tempInventory + 10000 : tempInventory <= 10000 ? 10000 : tempInventory - 1000);
 
     };
 

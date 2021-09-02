@@ -100,7 +100,7 @@ class ContactUs extends React.Component {
                                             ToastAndroid.LONG,
                                             ToastAndroid.BOTTOM,
                                             5,
-                                            20)
+                                            250)
                                         Clipboard.setString('09178928266')
                                     }}
                                     style={{
@@ -112,7 +112,7 @@ class ContactUs extends React.Component {
                                     }}
                                 >
                                     09178928266
-                            </Text>
+                                </Text>
 
                             </View>
                             <View style={{
@@ -130,7 +130,7 @@ class ContactUs extends React.Component {
                                             ToastAndroid.LONG,
                                             ToastAndroid.BOTTOM,
                                             5,
-                                            20)
+                                            250)
                                         Clipboard.setString('‌09118413054')
                                     }}
                                     style={{
@@ -141,7 +141,7 @@ class ContactUs extends React.Component {
                                     }}
                                 >
                                     ‌09118413054
-                            </Text>
+                                </Text>
 
                             </View>
                         </View>
@@ -154,7 +154,7 @@ class ContactUs extends React.Component {
 
                         }}>
                             شبکه های اجتماعی
-                    </Text>
+                        </Text>
                         <View style={{
                             justifyContent: 'space-around',
                             flexDirection: 'row',

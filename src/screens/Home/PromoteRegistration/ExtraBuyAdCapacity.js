@@ -28,19 +28,6 @@ class ExtraBuyAdCapacity extends React.Component {
         analytics().logEvent('extra_buyAd_capacity_payment');
     }
 
-
-    pay = () => {
-        let userId = '';
-        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
-            userId = this.props.userProfile.user_info.id;
-
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${this.state.buyAdCount}`);
-            }
-        })
-    };
-
     changeCount = type => {
         this.setState({
             buyAdCount: type == 'asc' ? JSON.parse(this.state.buyAdCount) + 1 :
@@ -66,25 +53,41 @@ class ExtraBuyAdCapacity extends React.Component {
         if (this.wrapperRef && this.wrapperRef.current) {
             this.wrapperRef.current.scrollTo({ x: 0, y: deviceHeight * 0.5, animate: true })
         }
-    }
+    };
 
-    render() {
 
-        let {
-            dashboard
+    navigateToPaymentType = _ => {
+        const {
+            userProfile = {}
         } = this.props;
 
-        let {
-            active_package_type: activePackageType = 0,
-        } = dashboard;
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id: userId
+        } = user_info;
+
+        const {
+            buyAdCount,
+        } = this.state;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: buyAdCount * 25000,
+            type: 4,
+            count: buyAdCount,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/buyAd-reply-capacity/${userId}/${buyAdCount}`
+        });
+    };
+
+    render() {
         const {
             buyAdCount,
             buyAdTotalCount,
-            disableInputFlag
         } = this.state;
         return (
             <>
-
                 <Header
                     title={locales('titles.extra‌BuyAd')}
                     shouldShowAuthenticationRibbonFromProps
@@ -355,7 +358,8 @@ class ExtraBuyAdCapacity extends React.Component {
                                     }}>
                                         <Button
                                             style={[styles.loginButton, { margin: 0, alignSelf: 'center' }]}
-                                            onPress={() => this.pay()}>
+                                            onPress={this.navigateToPaymentType}
+                                        >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.pay')}
                                             </Text>
                                         </Button>

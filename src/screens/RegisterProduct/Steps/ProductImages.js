@@ -12,8 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import { permissions } from '../../../utils';
+import { deviceWidth, deviceHeight, permissions } from '../../../utils';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
@@ -52,12 +51,22 @@ class ProductImages extends Component {
         return true;
     };
 
-    chooseProductImage = (index) => ActionSheet.show(
-        {
-            options: [locales('labels.camera'), locales('labels.gallery')],
-        },
-        buttonIndex => this.onActionSheetClicked(buttonIndex, index)
-    )
+    chooseProductImage = (index) => {
+
+        const {
+            images = []
+        } = this.state;
+
+        if (images && images.length >= 4)
+            return;
+
+        return ActionSheet.show(
+            {
+                options: [locales('labels.camera'), locales('labels.gallery')],
+            },
+            buttonIndex => this.onActionSheetClicked(buttonIndex, index)
+        )
+    };
 
     onActionSheetClicked = async (buttonIndex, index) => {
         const options = {
@@ -186,7 +195,9 @@ class ProductImages extends Component {
 
     render() {
 
-        let { images } = this.state;
+        let {
+            images = []
+        } = this.state;
         return (
             <>
                 <ScrollView
@@ -305,47 +316,50 @@ class ProductImages extends Component {
                             null
                         }
 
-                        <Pressable
-                            android_ripple={{
-                                color: '#ededed'
-                            }}
-                            onPress={() => this.chooseProductImage()}
-                            style={{
-                                margin: 7,
-                                height: deviceWidth / 2.4,
-                                minWidth: deviceWidth / 2.4,
-                                maxWidth: deviceWidth / 2.4,
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                borderStyle: 'dashed',
-                                borderColor: '#707070',
-                                backgroundColor: '#fff',
-                                zIndex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}>
-
-                            <View>
-                                <View style={{
-                                    backgroundColor: "white", width: 20, height: 20,
-                                    borderWidth: 1, borderColor: 'white',
-                                    position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
-                                    justifyContent: 'center'
-                                }}>
-                                    <FontAwesome color='#00C569' name="plus-square" size={18} />
-                                </View>
-                                <FontAwesome5
-                                    color='#323A42'
-                                    name='camera' size={35} />
-                            </View>
-
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    color: '#323A42'
+                        {images.length < 4 ?
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
                                 }}
-                            >{locales('labels.addImage')}</Text>
-                        </Pressable>
+                                onPress={() => this.chooseProductImage()}
+                                style={{
+                                    margin: 7,
+                                    height: deviceWidth / 2.4,
+                                    minWidth: deviceWidth / 2.4,
+                                    maxWidth: deviceWidth / 2.4,
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    borderStyle: 'dashed',
+                                    borderColor: '#707070',
+                                    backgroundColor: '#fff',
+                                    zIndex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+
+                                <View>
+                                    <View style={{
+                                        backgroundColor: "white", width: 20, height: 20,
+                                        borderWidth: 1, borderColor: 'white',
+                                        position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
+                                        justifyContent: 'center'
+                                    }}>
+                                        <FontAwesome color='#00C569' name="plus-square" size={18} />
+                                    </View>
+                                    <FontAwesome5
+                                        color='#323A42'
+                                        name='camera' size={35} />
+                                </View>
+
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        color: '#323A42'
+                                    }}
+                                >{locales('labels.addImage')}</Text>
+                            </Pressable>
+                            : null
+                        }
                     </View>
 
                     <View style={{

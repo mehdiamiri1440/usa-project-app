@@ -25,6 +25,7 @@ import Certificates from './certificates';
 import Rating from './Rating';
 import Comments from './Comments';
 import Header from '../../components/header';
+import ContactsListModal from '../../components/contactsListModal';
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -58,6 +59,7 @@ class Profile extends PureComponent {
             companyNameFromByUserName: '',
             descriptionFromByUserName: '',
             productsListByUserName: [],
+            showContactListModal: false,
         }
     }
 
@@ -200,27 +202,25 @@ class Profile extends PureComponent {
         this.props.fetchAllProductsList(item, !!loggedInUserId)
     };
 
-    shareProfileLink = async () => {
+    shareProfileLink = () => {
+        this.setState({ showContactListModal: false });
         analytics().logEvent('profile_share', {
             contact_id: this.state.userIdFromByUserName
         });
-        // try {
-        //     const result = await Share.share({
-        //         message:
-        //             `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
-        //     });
-        //     if (result.action === Share.sharedAction) {
-        //         if (result.activityType) {
-        //             // shared with activity type of result.activityType
-        //         } else {
-        //             // shared
-        //         }
-        //     } else if (result.action === Share.dismissedAction) {
-        //         // dismissed
-        //     }
-        // } catch (error) {
-        // }
-        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${this.props.route && this.props.route.params && this.props.route.params.user_name || ''}`;
+
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name = ''
+        } = params;
+
+        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
 
         Linking.canOpenURL(url).then((supported) => {
             if (!!supported) {
@@ -280,13 +280,26 @@ class Profile extends PureComponent {
         })
     };
 
+    onRequestCloseContactListModal = _ => {
+        this.setState({ showContactListModal: false });
+    };
+
     render() {
         const {
             profileInfo,
             profileInfoLoading,
             userProfile = {},
-            loggedInUserId
+            loggedInUserId,
+            route = {}
         } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name
+        } = params;
 
         const {
             user_info = {}
@@ -330,12 +343,22 @@ class Profile extends PureComponent {
             descriptionFromByUserName,
 
             productsListByUserName,
-
+            showContactListModal
         } = this.state;
 
 
         return (
             <>
+                {showContactListModal ?
+                    <ContactsListModal
+                        visible={showContactListModal}
+                        onRequestClose={this.onRequestCloseContactListModal}
+                        onReject={this.shareProfileLink}
+                        sharingUrlPostFix={`/shared-profile/${user_name}`}
+                        {...this.props}
+                    />
+                    : null
+                }
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -703,7 +726,7 @@ class Profile extends PureComponent {
                                     android_ripple={{
                                         color: '#ededed'
                                     }}
-                                    onPress={() => this.shareProfileLink()}
+                                    onPress={_ => this.setState({ showContactListModal: true })}
                                     style={{
                                         borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
 
