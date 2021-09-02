@@ -35,7 +35,8 @@ class Home extends React.Component {
         this.state = {
             showchangeRoleModal: false,
             loaded: false,
-            is_seller: false
+            is_seller: false,
+            isPageRefreshedFromPullingDown: false,
         }
     }
 
@@ -66,7 +67,7 @@ class Home extends React.Component {
             is_seller
         } = user_info;
         this.setState({ is_seller: !!is_seller });
-
+        this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
@@ -79,7 +80,7 @@ class Home extends React.Component {
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
             )
         ) {
-            this.props.fetchUserProfile()
+            this.initMyBuskool();
         }
     }
 
@@ -87,6 +88,9 @@ class Home extends React.Component {
         AppState.removeEventListener('change', this.handleAppStateChange)
     }
 
+    initMyBuskool = _ => {
+        this.props.fetchUserProfile().then(res => this.setState({ is_seller: res?.payload?.user_info?.is_seller }));
+    };
 
     handleAppStateChange = (nextAppState) => {
         const {
@@ -104,7 +108,7 @@ class Home extends React.Component {
             routes[routes.length - 1].name != 'Authentication' &&
             isFocused
         ) {
-            this.props.fetchUserProfile();
+            this.initMyBuskool();
         }
     };
 
@@ -205,8 +209,11 @@ class Home extends React.Component {
             is_seller
         } = user_info;
 
-        if (!!is_seller)
-            this.props.fetchUserProfile();
+
+        if (!!is_seller) {
+            this.setState({ isPageRefreshedFromPullingDown: true })
+            this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
+        }
     };
 
 
@@ -245,7 +252,8 @@ class Home extends React.Component {
 
         const {
             showchangeRoleModal,
-            is_seller
+            is_seller,
+            isPageRefreshedFromPullingDown
         } = this.state;
 
         return (
@@ -319,7 +327,7 @@ class Home extends React.Component {
                 <ScrollView
                     refreshControl={
                         <RefreshControl
-                            refreshing={userProfileLoading}
+                            refreshing={isPageRefreshedFromPullingDown}
                             onRefresh={this.onRefresh}
                         />
                     }
