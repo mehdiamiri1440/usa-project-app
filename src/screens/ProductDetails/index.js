@@ -431,27 +431,60 @@ class ProductDetails extends PureComponent {
             );
     };
 
-    shareProductLink = async (url) => {
+    // shareProductLink = async (url) => {
+    //     this.setState({ showContactListModal: false });
+    //     if (this.props.route.params.productId)
+    //         analytics().logEvent('product_share', {
+    //             product_id: this.props.route.params.productId
+    //         });
+    //     try {
+    //         const result = await Share.share({
+    //             message: url,
+    //         });
+    //         if (result.action === Share.sharedAction) {
+    //             if (result.activityType) {
+    //                 // shared with activity type of result.activityType
+    //             } else {
+    //                 // shared
+    //             }
+    //         } else if (result.action === Share.dismissedAction) {
+    //             // dismissed
+    //         }
+    //     } catch (error) {
+    //     }
+    // };
+
+    shareProductLink = (url) => {
+        console.warn('url', url)
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
         this.setState({ showContactListModal: false });
-        if (this.props.route.params.productId)
-            analytics().logEvent('product_share', {
-                product_id: this.props.route.params.productId
-            });
-        try {
-            const result = await Share.share({
-                message: url,
-            });
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                } else {
-                    // shared
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
+        analytics().logEvent('product_share', {
+            product_id: productId
+        });
+
+        url = `whatsapp://send?text=${url}`;
+
+        Linking.canOpenURL(url).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(url)
+            } else {
+                Linking.openURL(url)
             }
-        } catch (error) {
-        }
+        })
+            .catch(() => {
+                Linking.openURL(url)
+            })
     };
 
     openCallPad = phoneNumber => {
