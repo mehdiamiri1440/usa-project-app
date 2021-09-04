@@ -166,7 +166,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
         multiDexEnabled true
-        versionCode 21
+        versionCode 23
         versionName "7.1.0.0006.0"
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
