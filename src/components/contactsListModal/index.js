@@ -20,7 +20,8 @@ const ContactsListModal = props => {
         onRequestClose = _ => { },
         onReject = _ => { },
         navigation = {},
-        sharingUrlPostFix = ''
+        sharingUrlPostFix = '',
+        image = ''
     } = props;
 
     const {
@@ -40,7 +41,8 @@ const ContactsListModal = props => {
         onRequestClose();
         navigate('MyBuskool', {
             screen: 'UserContacts', params: {
-                sharingUrlPostFix
+                sharingUrlPostFix,
+                image
             }
         });
     };

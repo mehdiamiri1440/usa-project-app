@@ -32,6 +32,7 @@ import StarRating from '../../components/StarRating';
 import Header from '../../components/header';
 import RegisterationModal from '../../components/RegisterationModal';
 import ContactsListModal from '../../components/contactsListModal';
+import { shareToSocial } from '../../components/shareToSocial';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -454,8 +455,7 @@ class ProductDetails extends PureComponent {
     //     }
     // };
 
-    shareProductLink = (url) => {
-        console.warn('url', url)
+    shareProductLink = (url, image, description) => {
         const {
             route = {}
         } = this.props;
@@ -473,18 +473,12 @@ class ProductDetails extends PureComponent {
             product_id: productId
         });
 
-        url = `whatsapp://send?text=${url}`;
+        url = url.replace(/ /g, '');
 
-        Linking.canOpenURL(url).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(url)
-            } else {
-                Linking.openURL(url)
-            }
-        })
-            .catch(() => {
-                Linking.openURL(url)
-            })
+        url = `${description}
+        ${url}`;
+
+        return shareToSocial('whatsApp', image, url);
     };
 
     openCallPad = phoneNumber => {
@@ -757,8 +751,9 @@ class ProductDetails extends PureComponent {
                     <ContactsListModal
                         visible={showContactListModal}
                         onRequestClose={this.onRequestCloseContactListModal}
-                        onReject={_ => this.shareProductLink(url)}
+                        onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], descriptionWithoutHtml)}
                         sharingUrlPostFix={this.getProductUrl()}
+                        image={photosWithCompletePath[0]}
                         {...this.props}
                     />
                     : null

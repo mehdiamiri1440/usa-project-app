@@ -26,6 +26,8 @@ import Rating from './Rating';
 import Comments from './Comments';
 import Header from '../../components/header';
 import ContactsListModal from '../../components/contactsListModal';
+import { shareToSocial } from '../../components/shareToSocial';
+
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -209,6 +211,11 @@ class Profile extends PureComponent {
         });
 
         const {
+            profilePhotoFromByUserName = '',
+            descriptionFromByUserName = ''
+        } = this.state;
+
+        const {
             route = {}
         } = this.props;
 
@@ -220,18 +227,19 @@ class Profile extends PureComponent {
             user_name = ''
         } = params;
 
-        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+        let url = `${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
 
-        Linking.canOpenURL(url).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(url)
-            } else {
-                Linking.openURL(url)
-            }
-        })
-            .catch(() => {
-                Linking.openURL(url)
-            })
+        url = url.replace(/ /g, '');
+
+        url = `${descriptionFromByUserName}
+        ${url}`;
+
+        const image = profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
+            `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` :
+            'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9';
+
+        return shareToSocial('whatsApp', image, url);
+
     };
 
     setSelectedImage = (selectedImageModal, selectedImageIndex) => {
@@ -354,6 +362,10 @@ class Profile extends PureComponent {
                         visible={showContactListModal}
                         onRequestClose={this.onRequestCloseContactListModal}
                         onReject={this.shareProfileLink}
+                        image={profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
+                            `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}`
+                            : 'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9'
+                        }
                         sharingUrlPostFix={`/shared-profile/${user_name}`}
                         {...this.props}
                     />
@@ -418,7 +430,7 @@ class Profile extends PureComponent {
                                     height: '100%',
                                     resizeMode: 'contain'
                                 }}
-                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
+                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE} / storage / ${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
                         </ImageZoom>
                     </View>
                 </Modal>
@@ -617,7 +629,7 @@ class Profile extends PureComponent {
                                         }}
                                         source={
                                             profilePhotoFromByUserName ?
-                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
+                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE} / storage / ${profilePhotoFromByUserName}` }
                                                 : require('../../../assets/icons/user.png')}
                                     />
 

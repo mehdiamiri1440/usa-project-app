@@ -5,7 +5,7 @@ import { Navigation } from "react-native-navigation";
 import App from './App';
 
 // YellowBox.ignoreWarnings(['Remote debugger']);
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 export async function firebaseBackgroundMessage(message) {
     let notif = message['data'];
     return Promise.resolve();

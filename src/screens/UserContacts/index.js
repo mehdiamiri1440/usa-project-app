@@ -1,6 +1,7 @@
 import React, {
     useEffect,
-    useState
+    useState,
+    useRef
 } from 'react';
 import {
     View,
@@ -13,7 +14,9 @@ import {
     Pressable,
     Share,
     Animated,
-    StyleSheet
+    StyleSheet,
+    Modal,
+    ImageBackground
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -24,15 +27,19 @@ import {
     Icon,
     InputGroup,
     Input,
+    Button
 } from 'native-base';
 import Clipboard from "@react-native-community/clipboard";
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import Contacts from 'react-native-contacts';
+import ViewShot from "react-native-view-shot";
 
-import { permissions, deviceWidth, formatter } from '../../utils';
-import * as profileActions from '../../redux/profile/actions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import { shareToSocial } from '../../components/shareToSocial';
+import { permissions, deviceWidth, formatter, deviceHeight } from '../../utils';
+import * as profileActions from '../../redux/profile/actions';
 
 import Header from '../../components/header';
 
@@ -53,6 +60,8 @@ let colors = [
 
 const UserContacts = props => {
 
+    const viewShotRef = useRef();
+
     const {
         route = {}
     } = props;
@@ -69,6 +78,8 @@ const UserContacts = props => {
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
 
     const [uploadContactsLoading, setUploadContactsLoading] = useState(false);
+
+    const [showImagePreview, setShowImagePreview] = useState(false);
 
     const [userContacts, setUserContacts] = useState([]);
 
@@ -186,8 +197,17 @@ const UserContacts = props => {
         let url = '';
 
         const {
-            route = {}
+            route = {},
+            userProfile = {}
         } = props;
+
+        const {
+            profile = {}
+        } = userProfile;
+
+        const {
+            profile_photo
+        } = profile;
 
         const {
             params = {}
@@ -195,16 +215,20 @@ const UserContacts = props => {
 
         let {
             sharingUrlPostFix = '',
-            bodyText
+            bodyText,
+            image = ''
         } = params;
 
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
+
+        sharingUrlPostFix = sharingUrlPostFix.replace(/ /g, '');
 
         if (bodyText)
             sharingUrlPostFix = `${bodyText}
              ${sharingUrlPostFix}`;
 
-        phone = formatter.toLatinNumbers(phone);
+        if (phone && phone.length)
+            phone = formatter.toLatinNumbers(phone);
 
         switch (app) {
             case 'whatsApp': {
@@ -217,9 +241,11 @@ const UserContacts = props => {
                     else if (phone.startsWith('+9') || phone.startsWith('09'))
                         phone = phone.replace(phone.substring(0, 2), '+989');
 
-                    url = `whatsapp://send?text=${sharingUrlPostFix}&phone=${phone}`;
                 }
-                break;
+                if (!image)
+                    image = `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}`;
+
+                return shareToSocial('whatsApp', image, sharingUrlPostFix, phone);
             }
             case 'sms': {
                 if (!phone)
@@ -243,6 +269,14 @@ const UserContacts = props => {
             })
     };
 
+    const shareToInstagramStory = _ => {
+        setShowImagePreview(true);
+    };
+
+    const captureImage = _ => {
+        viewShotRef?.current?.capture().then(uri => shareToSocial('instagramStory', uri));
+    };
+
     const renderItem = ({
         item: {
             phoneNumbers = [],
@@ -259,128 +293,214 @@ const UserContacts = props => {
             return null;
 
         return (
-            <Pressable
-                android_ripple={{
-                    color: '#ededed',
-                }}
-                onPress={onSharePressed}
-                style={{
-                    flexDirection: 'row-reverse',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingHorizontal: 15,
-                }}
-            >
-                <View
+            <>
+                {showImagePreview ?
+                    <Modal
+                        visible={showImagePreview}
+                        onRequestClose={_ => setShowImagePreview(false)}
+                        transparent={false}
+                        animationType='fade'
+                    >
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                width: deviceWidth,
+                                height: deviceHeight,
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <ViewShot
+                                ref={viewShotRef}
+                                options={{
+                                    format: "png",
+                                    quality: 1,
+                                    result: 'data-uri'
+                                }}
+                            >
+                                <ImageBackground
+                                    source={require('../../../assets/images/charts.png')}
+                                    style={{
+                                        resizeMode: "cover",
+                                        width: deviceWidth * 0.91,
+                                        justifyContent: 'space-between',
+                                        height: deviceHeight * 0.25,
+                                        padding: 20,
+                                        backgroundColor: 'white',
+                                        alignSelf: 'center',
+                                    }}
+                                >
+                                    <Text>
+                                        salam be hame
+                                    </Text>
+                                </ImageBackground>
+                            </ViewShot>
+                            <Button
+                                onPress={captureImage}
+                                style={{
+                                    backgroundColor: "#00C569",
+                                    borderRadius: 12,
+                                    padding: 10,
+                                    width: '90%',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    justifyContent: 'center',
+                                    marginVertical: 20
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        textAlign: 'center',
+                                        color: 'white',
+                                    }}
+                                >
+                                    {locales('labels.share')}
+                                </Text>
+                            </Button>
+                        </View>
+                    </Modal>
+                    : null
+                }
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed',
+                    }}
+                    onPress={onSharePressed}
                     style={{
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
-                        flex: 1
+                        justifyContent: 'space-between',
+                        paddingHorizontal: 15,
                     }}
                 >
-                    {hasThumbnail ?
-                        <Image
-                            style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 100,
-                            }}
-                            source={{ uri: thumbnailPath }}
-                        />
-                        :
-                        <LinearGradient
-                            start={{ x: 0, y: 1 }}
-                            end={{ x: 0.8, y: 0.2 }}
-                            style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 100,
-                            }}
-                            colors={[colors[randNumbers[index] ?? 0][0], colors[randNumbers[index] ?? 0][1]]}
-                        >
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    textAlignVertical: 'center',
-                                    textAlign: 'center',
-                                    width: '100%',
-                                    height: '100%',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    textTransform: 'uppercase'
-                                }}
-                            >
-                                {`${givenName.length ? '' + givenName[0] : ""}${familyName.length ? '' + familyName[0] : ''}`}
-                            </Text>
-                        </LinearGradient>
-                    }
                     <View
                         style={{
-                            borderBottomColor: '#f0f0f1',
-                            marginLeft: 15,
-                            borderBottomWidth: 1,
-                            paddingVertical: 20,
                             flexDirection: 'row-reverse',
-                            flex: 1,
                             alignItems: 'center',
-                            justifyContent: 'space-between'
+                            flex: 1
                         }}
                     >
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                textAlign: 'right',
-                                color: '#666',
-                                fontSize: 15,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            }}
-                        >
-                            {displayName}
-                        </Text>
+                        {hasThumbnail ?
+                            <Image
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: 100,
+                                }}
+                                source={{ uri: thumbnailPath }}
+                            />
+                            :
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: 100,
+                                }}
+                                colors={[colors[randNumbers[index] ?? 0][0], colors[randNumbers[index] ?? 0][1]]}
+                            >
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        textAlignVertical: 'center',
+                                        textAlign: 'center',
+                                        width: '100%',
+                                        height: '100%',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        textTransform: 'uppercase'
+                                    }}
+                                >
+                                    {`${givenName.length ? '' + givenName[0] : ""}${familyName.length ? '' + familyName[0] : ''}`}
+                                </Text>
+                            </LinearGradient>
+                        }
                         <View
                             style={{
+                                borderBottomColor: '#f0f0f1',
+                                marginLeft: 15,
+                                borderBottomWidth: 1,
+                                paddingVertical: 20,
                                 flexDirection: 'row-reverse',
+                                flex: 1,
                                 alignItems: 'center',
                                 justifyContent: 'space-between'
                             }}
                         >
-                            <Svg
-                                onPress={_ => shareToExternalApp(phoneNumbers[0].number, 'whatsApp')}
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="30"
-                                height="30"
-                                fill="#2ecc71"
-                                viewBox="0 0 30 30"
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    textAlign: 'right',
+                                    color: '#666',
+                                    fontSize: 15,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                }}
                             >
-                                <Path d="M15 3C8.373 3 3 8.373 3 15c0 2.251.632 4.35 1.71 6.15L3.108 27l5.975-1.568A11.935 11.935 0 0015 27c6.627 0 12-5.373 12-12S21.627 3 15 3zm-4.107 6.402c.195 0 .395 0 .568.008.214.005.447.02.67.514.265.586.842 2.056.916 2.205.074.149.126.324.023.52-.098.2-.149.32-.293.497-.149.172-.312.386-.447.516-.149.15-.303.312-.13.61.171.296.769 1.27 1.652 2.056 1.135 1.014 2.092 1.326 2.39 1.475.298.149.47.126.643-.074.177-.195.743-.865.943-1.163.195-.298.394-.246.664-.148.274.098 1.735.818 2.033.967.298.149.494.223.569.344.077.125.077.72-.17 1.414-.247.693-1.46 1.363-2.004 1.41-.55.05-1.061.246-3.568-.74-3.024-1.191-4.932-4.289-5.08-4.489-.15-.195-1.211-1.61-1.211-3.07 0-1.465.768-2.183 1.037-2.48.274-.299.595-.372.795-.372z"></Path>
-                            </Svg>
-                            <Svg
-                                onPress={_ => shareToExternalApp(phoneNumbers[0].number, 'sms')}
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="svg-icon"
-                                style={{ width: 28, height: 28, verticalAlign: "middle", marginHorizontal: 15 }}
-                                fill="currentColor"
-                                overflow="hidden"
-                                viewBox="0 0 1024 1024"
+                                {displayName}
+                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }}
                             >
-                                <Path
-                                    fill="#1abc9c"
-                                    d="M789.333 832H234.667l-128 128V234.667c0-70.4 57.6-128 128-128h554.666c70.4 0 128 57.6 128 128V704c0 70.4-57.6 128-128 128z"
-                                ></Path>
-                                <Path
-                                    fill="#FFF"
-                                    d="M448 469.333a64 64 0 10128 0 64 64 0 10-128 0zM661.333 469.333a64 64 0 10128 0 64 64 0 10-128 0zM234.66699999999997 469.333a64 64 0 10128 0 64 64 0 10-128 0z"
-                                ></Path>
-                            </Svg>
-                            <FontAwesome5
-                                onPress={onSharePressed}
-                                name='ellipsis-h'
-                                size={17}
-                                color='#555'
-                            />
+                                <Svg
+                                    onPress={_ => shareToExternalApp(phoneNumbers[0].number, 'whatsApp')}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="30"
+                                    height="30"
+                                    fill="#2ecc71"
+                                    viewBox="0 0 30 30"
+                                >
+                                    <Path d="M15 3C8.373 3 3 8.373 3 15c0 2.251.632 4.35 1.71 6.15L3.108 27l5.975-1.568A11.935 11.935 0 0015 27c6.627 0 12-5.373 12-12S21.627 3 15 3zm-4.107 6.402c.195 0 .395 0 .568.008.214.005.447.02.67.514.265.586.842 2.056.916 2.205.074.149.126.324.023.52-.098.2-.149.32-.293.497-.149.172-.312.386-.447.516-.149.15-.303.312-.13.61.171.296.769 1.27 1.652 2.056 1.135 1.014 2.092 1.326 2.39 1.475.298.149.47.126.643-.074.177-.195.743-.865.943-1.163.195-.298.394-.246.664-.148.274.098 1.735.818 2.033.967.298.149.494.223.569.344.077.125.077.72-.17 1.414-.247.693-1.46 1.363-2.004 1.41-.55.05-1.061.246-3.568-.74-3.024-1.191-4.932-4.289-5.08-4.489-.15-.195-1.211-1.61-1.211-3.07 0-1.465.768-2.183 1.037-2.48.274-.299.595-.372.795-.372z"></Path>
+                                </Svg>
+                                <Svg
+                                    onPress={_ => shareToExternalApp(phoneNumbers[0].number, 'sms')}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="svg-icon"
+                                    style={{ width: 28, height: 28, verticalAlign: "middle", marginHorizontal: 15 }}
+                                    fill="currentColor"
+                                    overflow="hidden"
+                                    viewBox="0 0 1024 1024"
+                                >
+                                    <Path
+                                        fill="#1abc9c"
+                                        d="M789.333 832H234.667l-128 128V234.667c0-70.4 57.6-128 128-128h554.666c70.4 0 128 57.6 128 128V704c0 70.4-57.6 128-128 128z"
+                                    ></Path>
+                                    <Path
+                                        fill="#FFF"
+                                        d="M448 469.333a64 64 0 10128 0 64 64 0 10-128 0zM661.333 469.333a64 64 0 10128 0 64 64 0 10-128 0zM234.66699999999997 469.333a64 64 0 10128 0 64 64 0 10-128 0z"
+                                    ></Path>
+                                </Svg>
+
+                                {!bodyText ?
+                                    <Pressable
+                                        onPress={shareToInstagramStory}
+                                    >
+                                        <Image
+                                            style={{
+                                                width: 25,
+                                                height: 25
+                                            }}
+                                            source={require('../../../assets/icons/instagram.png')}
+                                        />
+                                    </Pressable>
+                                    :
+                                    <FontAwesome5
+                                        onPress={onSharePressed}
+                                        name='ellipsis-h'
+                                        size={17}
+                                        color='#555'
+                                    />
+                                }
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Pressable>
+                </Pressable>
+            </>
         )
     };
 
@@ -718,10 +838,23 @@ const UserContacts = props => {
     )
 };
 
+const mapStateToProps = ({
+    profileReducer
+}) => {
+
+    const {
+        userProfile
+    } = profileReducer;
+
+    return {
+        userProfile
+    }
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         uploadUserContacts: contacts => dispatch(profileActions.uploadUserContacts(contacts))
     }
 };
 
-export default connect(undefined, mapDispatchToProps)(UserContacts);
+export default connect(mapStateToProps, mapDispatchToProps)(UserContacts);
