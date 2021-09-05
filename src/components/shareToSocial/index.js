@@ -38,10 +38,9 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
             }
         }
 
-        console.log('share', shareOptions)
         Share.shareSingle(shareOptions)
-            .then((res) => { console.warn(res) })
-            .catch((err) => { err && console.warn(err); });
+            .then((res) => { })
+            .catch((err) => { });
     };
 
 };
