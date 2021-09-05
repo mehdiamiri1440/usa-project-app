@@ -74,6 +74,7 @@ const UserContacts = props => {
         sharingUrlPostFix,
         bodyText,
         title,
+        image,
         isFromInvitation
     } = params;
 
@@ -88,6 +89,8 @@ const UserContacts = props => {
     const [copyOfuserContacts, setCopyOfuserContacts] = useState([]);
 
     const [searchText, setSearchText] = useState('');
+
+    const [selectedContact, setSelectedContact] = useState(null);
 
     // const [scrollYPos, setScrollYPos] = useState(10);
 
@@ -273,7 +276,8 @@ const UserContacts = props => {
             })
     };
 
-    const shareToInstagramStory = _ => {
+    const shareToInstagramStory = index => {
+        setSelectedContact(index);
         setShowImagePreview(true);
     };
 
@@ -298,7 +302,7 @@ const UserContacts = props => {
 
         return (
             <>
-                {showImagePreview ?
+                {showImagePreview && selectedContact == index ?
                     <Modal
                         visible={showImagePreview}
                         onRequestClose={_ => setShowImagePreview(false)}
@@ -323,20 +327,164 @@ const UserContacts = props => {
                                 }}
                             >
                                 <ImageBackground
-                                    source={require('../../../assets/images/charts.png')}
+                                    source={image && image.length ? { uri: image } : require('../../../assets/icons/buskool-logo.png')}
                                     style={{
                                         resizeMode: "cover",
-                                        width: deviceWidth * 0.91,
-                                        justifyContent: 'space-between',
-                                        height: deviceHeight * 0.25,
+                                        width: deviceWidth,
+                                        height: deviceHeight * 0.8,
                                         padding: 20,
-                                        backgroundColor: 'white',
+                                        // backgroundColor: 'red',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         alignSelf: 'center',
                                     }}
+                                    blurRadius={1}
                                 >
-                                    <Text>
-                                        salam be hame
-                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            borderRadius: 12,
+                                            width: '90%',
+                                            alignSelf: 'center',
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: '#f2f2f2',
+                                                paddingBottom: 10
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 23,
+                                                    padding: 20,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    textAlign: 'right',
+                                                    color: '#333',
+                                                }}
+                                            >
+                                                فروش خرما مضافتی
+                                            </Text>
+                                            <View
+                                                style={{
+                                                    paddingVertical: 10,
+                                                    paddingHorizontal: 20,
+                                                }}
+                                            >
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row-reverse',
+                                                        alignItems: 'center',
+                                                        borderRadius: 12,
+                                                        padding: 10,
+                                                        backgroundColor: '#f2f2f2'
+                                                    }}
+                                                >
+                                                    <FontAwesome5
+                                                        name='box-open'
+                                                        color='#777777'
+                                                        solid
+                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                        size={15}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 18,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'right',
+                                                            color: 'black',
+                                                        }}
+                                                    >
+                                                        موجودی :
+                                                    </Text>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row-reverse',
+                                                        alignItems: 'center',
+                                                        borderRadius: 12,
+                                                        padding: 10,
+                                                    }}
+                                                >
+                                                    <FontAwesome5
+                                                        name='clipboard-check'
+                                                        color='#777777'
+                                                        solid
+                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                        size={18}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 18,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'right',
+                                                            color: 'black',
+                                                        }}
+                                                    >
+                                                        حداقل فروش : 1 تن
+                                                    </Text>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row-reverse',
+                                                        alignItems: 'center',
+                                                        borderRadius: 12,
+                                                        padding: 10,
+                                                        backgroundColor: '#f2f2f2'
+                                                    }}
+                                                >
+                                                    <FontAwesome5
+                                                        name='map-marker-alt'
+                                                        color='#777777'
+                                                        solid
+                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                        size={18}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 18,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'right',
+                                                            color: 'black',
+                                                        }}
+                                                    >
+                                                        مبدا : فارس ، شیراز
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-end',
+                                                margin: 10,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 18,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    textAlign: 'center',
+                                                    color: 'black',
+                                                    marginHorizontal: 5
+                                                }}
+                                            >
+                                                www.buskool.com
+                                            </Text>
+                                            <Image
+                                                source={require('../../../assets/icons/buskool-logo.png')}
+                                                style={{
+                                                    width: 40,
+                                                    height: 40,
+                                                    borderRadius: 12,
+                                                    backgroundColor: '#E84153',
+                                                    marginRight: 10
+                                                }}
+                                            />
+                                        </View>
+                                    </View>
                                 </ImageBackground>
                             </ViewShot>
                             <Button
@@ -371,7 +519,7 @@ const UserContacts = props => {
                     android_ripple={{
                         color: '#ededed',
                     }}
-                    onPress={onSharePressed}
+                    onPress={_ => shareToExternalApp(phoneNumbers && phoneNumbers.length && phoneNumbers[0].number ? phoneNumbers[0].number : undefined, 'whatsApp')}
                     style={{
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
@@ -489,7 +637,7 @@ const UserContacts = props => {
                                     />
                                     :
                                     <Pressable
-                                        onPress={shareToInstagramStory}
+                                        onPress={_ => shareToInstagramStory(index)}
                                     >
                                         <Image
                                             style={{
