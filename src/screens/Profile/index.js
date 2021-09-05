@@ -231,8 +231,7 @@ class Profile extends PureComponent {
 
         url = url.replace(/ /g, '');
 
-        url = `${descriptionFromByUserName}
-        ${url}`;
+        url = `${descriptionFromByUserName}\n${url}`;
 
         const image = profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
             `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` :
@@ -367,6 +366,7 @@ class Profile extends PureComponent {
                             : 'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9'
                         }
                         sharingUrlPostFix={`/shared-profile/${user_name}`}
+                        bodyText={descriptionFromByUserName}
                         {...this.props}
                     />
                     : null

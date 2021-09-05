@@ -4,7 +4,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import { permissions } from '../../utils';
 
 
-export const shareToSocial = async (type = 'whatsApp', image = '', url = '', phone = '') => {
+export const shareToSocial = async (type = 'whatsApp', image = '', url = '', phone = '', title = '') => {
 
     if (phone && phone.length && phone.startsWith('0') || phone.startsWith('+')) {
         phone = phone.substr(1).replace(/ /g, '');
@@ -20,6 +20,10 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
         if (type == 'whatsApp') {
             const res = await RNFetchBlob.fetch("GET", image);
             let base64Str = res.base64();
+
+            if (title && title.length)
+                url = `*${title}*\n${url}`;
+
             shareOptions = {
                 title: url,
                 url: `data:image/png;base64,` + base64Str,

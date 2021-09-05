@@ -37,15 +37,15 @@ const Referral = props => {
             ToastAndroid.BOTTOM,
             5,
             250);
-        Clipboard.setString(`${bodyText}
-        ${completeUrlToShare}`);
+        Clipboard.setString(`${bodyText}\n${completeUrlToShare}`);
     };
 
     const askForPermissionOfContacts = _ => {
         return props.navigation.navigate('MyBuskool', {
             screen: 'UserContacts', params: {
                 sharingUrlPostFix: `/invite/${user_name}`,
-                bodyText
+                bodyText,
+                isFromInvitation: true
             }
         })
     };

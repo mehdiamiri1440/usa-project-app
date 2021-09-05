@@ -72,7 +72,9 @@ const UserContacts = props => {
 
     const {
         sharingUrlPostFix,
-        bodyText
+        bodyText,
+        title,
+        isFromInvitation
     } = params;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
@@ -152,8 +154,7 @@ const UserContacts = props => {
             ToastAndroid.BOTTOM,
             5,
             250);
-        Clipboard.setString(bodyText ? `${bodyText}
-        ${completeUrlToShare}` : completeUrlToShare);
+        Clipboard.setString(bodyText ? title ? `*${title}*\n${bodyText}\n${completeUrlToShare}` : `${bodyText}\n${completeUrlToShare}` : completeUrlToShare);
     };
 
     const handleSearch = text => {
@@ -181,14 +182,17 @@ const UserContacts = props => {
 
         let {
             sharingUrlPostFix = '',
-            bodyText
+            bodyText,
+            title
         } = params;
 
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
 
         if (bodyText)
-            sharingUrlPostFix = `${bodyText}
-             ${sharingUrlPostFix}`;
+            sharingUrlPostFix = `${bodyText}\n${sharingUrlPostFix}`;
+
+        if (title && title.length)
+            sharingUrlPostFix = `${title}\n${sharingUrlPostFix}`;
 
         const result = await Share.share({ message: sharingUrlPostFix });
     };
@@ -216,7 +220,8 @@ const UserContacts = props => {
         let {
             sharingUrlPostFix = '',
             bodyText,
-            image = ''
+            image = '',
+            title
         } = params;
 
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
@@ -224,8 +229,7 @@ const UserContacts = props => {
         sharingUrlPostFix = sharingUrlPostFix.replace(/ /g, '');
 
         if (bodyText)
-            sharingUrlPostFix = `${bodyText}
-             ${sharingUrlPostFix}`;
+            sharingUrlPostFix = `${bodyText}\n${sharingUrlPostFix}`;
 
         if (phone && phone.length)
             phone = formatter.toLatinNumbers(phone);
@@ -245,7 +249,7 @@ const UserContacts = props => {
                 if (!image)
                     image = `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}`;
 
-                return shareToSocial('whatsApp', image, sharingUrlPostFix, phone);
+                return shareToSocial('whatsApp', image, sharingUrlPostFix, phone, title);
             }
             case 'sms': {
                 if (!phone)
@@ -476,7 +480,14 @@ const UserContacts = props => {
                                     ></Path>
                                 </Svg>
 
-                                {!bodyText ?
+                                {isFromInvitation == true ?
+                                    <FontAwesome5
+                                        onPress={onSharePressed}
+                                        name='ellipsis-h'
+                                        size={17}
+                                        color='#555'
+                                    />
+                                    :
                                     <Pressable
                                         onPress={shareToInstagramStory}
                                     >
@@ -488,13 +499,7 @@ const UserContacts = props => {
                                             source={require('../../../assets/icons/instagram.png')}
                                         />
                                     </Pressable>
-                                    :
-                                    <FontAwesome5
-                                        onPress={onSharePressed}
-                                        name='ellipsis-h'
-                                        size={17}
-                                        color='#555'
-                                    />
+
                                 }
                             </View>
                         </View>

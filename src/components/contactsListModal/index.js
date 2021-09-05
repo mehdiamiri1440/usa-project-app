@@ -21,7 +21,9 @@ const ContactsListModal = props => {
         onReject = _ => { },
         navigation = {},
         sharingUrlPostFix = '',
-        image = ''
+        image = '',
+        bodyText = '',
+        title
     } = props;
 
     const {
@@ -42,7 +44,10 @@ const ContactsListModal = props => {
         navigate('MyBuskool', {
             screen: 'UserContacts', params: {
                 sharingUrlPostFix,
-                image
+                image,
+                title,
+                bodyText,
+                isFromInvitation: false
             }
         });
     };

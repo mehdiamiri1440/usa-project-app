@@ -465,8 +465,13 @@ class ProductDetails extends PureComponent {
         } = route;
 
         const {
-            productId
+            productId,
         } = params;
+
+        const {
+            sub_category_name,
+            product_name
+        } = this.state;
 
         this.setState({ showContactListModal: false });
         analytics().logEvent('product_share', {
@@ -475,10 +480,11 @@ class ProductDetails extends PureComponent {
 
         url = url.replace(/ /g, '');
 
-        url = `${description}
-        ${url}`;
+        url = `${description}\n${url}`;
 
-        return shareToSocial('whatsApp', image, url);
+        const title = (`${sub_category_name} ${sub_category_name ? ' | ' : ''} ${product_name}`) || '---';
+
+        return shareToSocial('whatsApp', image, url, undefined, title);
     };
 
     openCallPad = phoneNumber => {
@@ -753,6 +759,8 @@ class ProductDetails extends PureComponent {
                         onRequestClose={this.onRequestCloseContactListModal}
                         onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], descriptionWithoutHtml)}
                         sharingUrlPostFix={this.getProductUrl()}
+                        bodyText={description}
+                        title={(`${sub_category_name} ${sub_category_name ? ' | ' : ''} ${product_name}`) || '---'}
                         image={photosWithCompletePath[0]}
                         {...this.props}
                     />
