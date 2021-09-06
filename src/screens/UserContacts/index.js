@@ -770,7 +770,7 @@ const UserContacts = props => {
                                 style={{
                                     resizeMode: "cover",
                                     width: deviceWidth,
-                                    height: deviceHeight * 0.89,
+                                    height: deviceHeight,
                                     padding: 20,
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -978,14 +978,14 @@ const UserContacts = props => {
                                         <Text
                                             style={{
                                                 fontSize: 15,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontFamily: 'IRANSansWeb',
                                                 textAlign: 'left',
                                                 marginLeft: 10,
                                                 width: '85%',
                                                 color: '#777',
                                             }}
                                         >
-                                            {`www.buskool.com/profile/${user_name}`}
+                                            {`www.buskool.com/profile/${(user_name)}`}
                                         </Text>
                                         <Image
                                             source={require('../../../assets/icons/buskool-logo.png')}
@@ -1004,6 +1004,8 @@ const UserContacts = props => {
                             onPress={captureImage}
                             style={{
                                 backgroundColor: "#00C569",
+                                position: 'absolute',
+                                bottom: 20,
                                 borderRadius: 12,
                                 padding: 10,
                                 marginVertical: 10,
