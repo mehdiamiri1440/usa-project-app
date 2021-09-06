@@ -715,6 +715,7 @@ class ProductDetails extends PureComponent {
             description,
 
             product_name,
+            min_sale_price,
             province_name,
             sub_category_name,
 
@@ -760,6 +761,16 @@ class ProductDetails extends PureComponent {
                         onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], descriptionWithoutHtml)}
                         sharingUrlPostFix={this.getProductUrl()}
                         bodyText={description}
+                        productInfo={{
+                            category_name,
+                            city_name,
+                            min_sale_amount,
+                            min_sale_price,
+                            product_name,
+                            province_name,
+                            stock,
+                            sub_category_name,
+                        }}
                         title={(`${sub_category_name} ${sub_category_name ? ' | ' : ''} ${product_name}`) || '---'}
                         image={photosWithCompletePath[0]}
                         {...this.props}

@@ -23,7 +23,8 @@ const ContactsListModal = props => {
         sharingUrlPostFix = '',
         image = '',
         bodyText = '',
-        title
+        title,
+        productInfo = {}
     } = props;
 
     const {
@@ -47,7 +48,8 @@ const ContactsListModal = props => {
                 image,
                 title,
                 bodyText,
-                isFromInvitation: false
+                isFromInvitation: false,
+                productInfo
             }
         });
     };
