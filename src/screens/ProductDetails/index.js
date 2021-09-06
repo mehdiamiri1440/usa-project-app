@@ -748,7 +748,8 @@ class ProductDetails extends PureComponent {
         let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
         let descriptionWithoutHtml = '';
         if (description != undefined && typeof (description) == 'string' && !!description && description.length) {
-            descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), '\n')
+            descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), '\n');
+            descriptionWithoutHtml = description.replace(new RegExp('</hr>', 'g'), '\n');
         }
 
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
