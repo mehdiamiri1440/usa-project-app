@@ -36,12 +36,10 @@ import ViewShot from "react-native-view-shot";
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
+import Header from '../../components/header';
 import { shareToSocial } from '../../components/shareToSocial';
 import { permissions, deviceWidth, formatter, deviceHeight } from '../../utils';
 import * as profileActions from '../../redux/profile/actions';
-
-import Header from '../../components/header';
-import { convertedNumbersToTonUnit, convertUnitsToText, numberWithCommas } from '../../utils/formatter';
 
 let colors = [
     ["#DE7080", "#EA7891"],
@@ -80,14 +78,12 @@ const UserContacts = props => {
     } = params;
 
     const {
-        category_name,
         city_name,
         min_sale_amount,
-        min_sale_price,
         product_name,
-        province_name,
         stock,
         sub_category_name,
+        user_name
     } = productInfo;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
@@ -101,8 +97,6 @@ const UserContacts = props => {
     const [copyOfuserContacts, setCopyOfuserContacts] = useState([]);
 
     const [searchText, setSearchText] = useState('');
-
-    const [selectedContact, setSelectedContact] = useState(null);
 
     // const [scrollYPos, setScrollYPos] = useState(10);
 
@@ -759,11 +753,8 @@ const UserContacts = props => {
                 >
                     <View
                         style={{
-                            backgroundColor: 'white',
-                            width: deviceWidth,
-                            height: deviceHeight,
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                         }}
                     >
                         <ViewShot
@@ -779,9 +770,8 @@ const UserContacts = props => {
                                 style={{
                                     resizeMode: "cover",
                                     width: deviceWidth,
-                                    height: deviceHeight * 0.8,
+                                    height: deviceHeight * 0.89,
                                     padding: 20,
-                                    // backgroundColor: 'red',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     alignSelf: 'center',
@@ -791,9 +781,9 @@ const UserContacts = props => {
                                 <ShadowView
                                     style={{
                                         shadowColor: 'black',
-                                        shadowOpacity: 0.13,
-                                        shadowRadius: 1,
-                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.16,
+                                        shadowRadius: 7,
+                                        shadowOffset: { width: 1, height: 5 },
                                         padding: 15,
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -809,7 +799,7 @@ const UserContacts = props => {
                                             borderBottomWidth: 1,
                                             borderBottomColor: '#f2f2f2',
                                             paddingBottom: 10,
-                                            width: '100%'
+                                            width: deviceWidth * 0.81
                                         }}
                                     >
                                         <Text
@@ -821,7 +811,7 @@ const UserContacts = props => {
                                                 color: '#333',
                                             }}
                                         >
-                                            {`${locales('labels.sale')} ${product_name}`}
+                                            {`${locales('labels.sale')} ${sub_category_name ? `${sub_category_name} | ${product_name}` : product_name}`}
                                         </Text>
                                         <View
                                             style={{
@@ -875,7 +865,7 @@ const UserContacts = props => {
                                                         width: '64%'
                                                     }}
                                                 >
-                                                    {convertedNumbersToTonUnit(stock)}
+                                                    {formatter.convertedNumbersToTonUnit(stock)}
                                                 </Text>
                                             </View>
                                             <View
@@ -922,7 +912,7 @@ const UserContacts = props => {
                                                         width: '52%',
                                                     }}
                                                 >
-                                                    {convertedNumbersToTonUnit(min_sale_amount)}
+                                                    {formatter.convertedNumbersToTonUnit(min_sale_amount)}
                                                 </Text>
                                             </View>
                                             <View
@@ -971,7 +961,7 @@ const UserContacts = props => {
                                                         width: '75%',
                                                     }}
                                                 >
-                                                    {province_name ? `${province_name} ،${city_name ? city_name : ''}` : `${city_name ? city_name : '---'}`}
+                                                    {city_name || '---'}
                                                 </Text>
                                             </View>
                                         </View>
@@ -982,19 +972,20 @@ const UserContacts = props => {
                                             alignItems: 'center',
                                             justifyContent: 'flex-end',
                                             marginTop: 10,
-                                            width: '90%'
+                                            width: '97%'
                                         }}
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 18,
+                                                fontSize: 15,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                textAlign: 'center',
-                                                color: 'black',
-                                                marginHorizontal: 5
+                                                textAlign: 'left',
+                                                marginLeft: 10,
+                                                width: '85%',
+                                                color: '#777',
                                             }}
                                         >
-                                            www.buskool.com
+                                            {`www.buskool.com/profile/${user_name}`}
                                         </Text>
                                         <Image
                                             source={require('../../../assets/icons/buskool-logo.png')}
@@ -1003,7 +994,6 @@ const UserContacts = props => {
                                                 height: 40,
                                                 borderRadius: 12,
                                                 backgroundColor: '#E84153',
-                                                marginHorizontal: 10,
                                             }}
                                         />
                                     </View>
@@ -1016,11 +1006,11 @@ const UserContacts = props => {
                                 backgroundColor: "#00C569",
                                 borderRadius: 12,
                                 padding: 10,
+                                marginVertical: 10,
                                 width: '90%',
                                 alignItems: 'center',
                                 alignSelf: 'center',
                                 justifyContent: 'center',
-                                marginVertical: 20
                             }}
                         >
                             <Text

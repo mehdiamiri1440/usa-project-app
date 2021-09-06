@@ -762,14 +762,12 @@ class ProductDetails extends PureComponent {
                         sharingUrlPostFix={this.getProductUrl()}
                         bodyText={description}
                         productInfo={{
-                            category_name,
                             city_name,
                             min_sale_amount,
-                            min_sale_price,
                             product_name,
-                            province_name,
                             stock,
                             sub_category_name,
+                            user_name
                         }}
                         title={(`${sub_category_name} ${sub_category_name ? ' | ' : ''} ${product_name}`) || '---'}
                         image={photosWithCompletePath[0]}
