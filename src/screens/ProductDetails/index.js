@@ -480,7 +480,7 @@ class ProductDetails extends PureComponent {
 
         url = url.replace(/ /g, '');
 
-        url = `${description}\n${url}`;
+        url = `${description}\n\n${url}`;
 
         const title = (`${sub_category_name} ${sub_category_name ? ' | ' : ''} ${product_name}`) || '---';
 
@@ -748,19 +748,31 @@ class ProductDetails extends PureComponent {
         let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
         let descriptionWithoutHtml = '';
         if (description != undefined && typeof (description) == 'string' && !!description && description.length) {
-            descriptionWithoutHtml = description.replace(new RegExp("<hr/>", "g"), " ")
+            descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), "\n")
         }
 
+        let splittedDescription = description.split('<hr/>').slice(2).filter(item => item);
+
+        splittedDescription = splittedDescription.map(item => {
+            const splittedDescriptionItem = item.split(":");
+            splittedDescriptionItem[0] = `*${splittedDescriptionItem[0].trim()}*`;
+            return splittedDescriptionItem[0] + " : " + splittedDescriptionItem[1];
+        })
+        splittedDescription = splittedDescription.filter(item => item && item.length).join('\n\n');
+
+        splittedDescription = `${description.split('<hr/>').slice(0, 1)}\n\n${splittedDescription}`;
+
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
+
         return (
             <>
                 {showContactListModal ?
                     <ContactsListModal
                         visible={showContactListModal}
                         onRequestClose={this.onRequestCloseContactListModal}
-                        onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], descriptionWithoutHtml)}
+                        onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], splittedDescription)}
                         sharingUrlPostFix={this.getProductUrl()}
-                        bodyText={descriptionWithoutHtml}
+                        bodyText={splittedDescription}
                         productInfo={{
                             city_name,
                             min_sale_amount,

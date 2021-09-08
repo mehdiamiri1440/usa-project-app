@@ -37,7 +37,7 @@ const Referral = props => {
             ToastAndroid.BOTTOM,
             5,
             250);
-        Clipboard.setString(`${bodyText}\n${completeUrlToShare}`);
+        Clipboard.setString(`${bodyText}\n\n${completeUrlToShare}`);
     };
 
     const askForPermissionOfContacts = _ => {

@@ -22,7 +22,7 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
             let base64Str = res.base64();
 
             if (title && title.length)
-                url = `*${title}*\n${url}`;
+                url = `*${title}*\n\n${url}`;
 
             shareOptions = {
                 title: url,

@@ -231,7 +231,7 @@ class Profile extends PureComponent {
 
         url = url.replace(/ /g, '');
 
-        url = `${descriptionFromByUserName}\n${url}`;
+        url = `${descriptionFromByUserName}\n\n${url}`;
 
         const image = profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
             `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` :
