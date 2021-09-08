@@ -163,7 +163,7 @@ const UserContacts = props => {
             ToastAndroid.BOTTOM,
             5,
             250);
-        Clipboard.setString(bodyText ? title ? `*${title}*\n${bodyText}\n${completeUrlToShare}` : `${bodyText}\n${completeUrlToShare}` : completeUrlToShare);
+        Clipboard.setString(bodyText ? title ? `*${title}*\n\n${bodyText}\n\n${completeUrlToShare}` : `${bodyText}\n\n${completeUrlToShare}` : completeUrlToShare);
     };
 
     const handleSearch = text => {
@@ -198,10 +198,10 @@ const UserContacts = props => {
         sharingUrlPostFix = `${REACT_APP_API_ENDPOINT_RELEASE}${sharingUrlPostFix}`;
 
         if (bodyText)
-            sharingUrlPostFix = `${bodyText}\n${sharingUrlPostFix}`;
+            sharingUrlPostFix = `${bodyText}\n\n${sharingUrlPostFix}`;
 
         if (title && title.length)
-            sharingUrlPostFix = `${title}\n${sharingUrlPostFix}`;
+            sharingUrlPostFix = `${title}\n\n${sharingUrlPostFix}`;
 
         const result = await Share.share({ message: sharingUrlPostFix });
     };
@@ -238,7 +238,7 @@ const UserContacts = props => {
         sharingUrlPostFix = sharingUrlPostFix.replace(/ /g, '');
 
         if (bodyText)
-            sharingUrlPostFix = `${bodyText}\n${sharingUrlPostFix}`;
+            sharingUrlPostFix = `${bodyText}\n\n${sharingUrlPostFix}`;
 
         if (phone && phone.length)
             phone = formatter.toLatinNumbers(phone);
