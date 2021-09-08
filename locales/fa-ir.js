@@ -381,6 +381,7 @@ export default {
     'titles.elevateProduct': 'اعمال نردبان',
     'titles.elevationText': 'با استفاده از نردبان، محصول شما تا زمان دریافت محصول تازه تر در همان دسته بندی، به عنوان اولین محصول نمایش داده می‌شود.',
     'titles.doYouWishToDeleteProduct': 'آیا از حذف این محصول اطمینان دارید',
+    'titles.saleInBuskoolSite': 'فروش در سایت باسکول',
     'titles.deleteIt': 'بله ، حذف کن',
     'titles.cancel': 'انصراف',
     'titles.walletElevatorPaymentSuccessMessage': 'اعمال نردبان با موفقیت انجام شد.',

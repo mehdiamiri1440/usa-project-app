@@ -765,239 +765,293 @@ const UserContacts = props => {
                                 result: 'data-uri'
                             }}
                         >
+
                             <ImageBackground
                                 source={image && image.length ? { uri: image } : require('../../../assets/icons/buskool-logo.png')}
                                 style={{
                                     resizeMode: "cover",
                                     width: deviceWidth,
                                     height: deviceHeight,
-                                    padding: 20,
                                     alignItems: 'center',
-                                    justifyContent: 'center',
                                     alignSelf: 'center',
                                 }}
                                 blurRadius={1}
                             >
-                                <ShadowView
+                                <View
                                     style={{
-                                        shadowColor: 'black',
-                                        shadowOpacity: 0.16,
-                                        shadowRadius: 7,
-                                        shadowOffset: { width: 1, height: 5 },
-                                        padding: 15,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        alignSelf: 'center',
-                                        zIndex: 1,
-                                        backgroundColor: 'white',
-                                        borderRadius: 12,
-                                        width: '90%',
-                                        alignSelf: 'center',
-                                    }}>
-                                    <View
+                                        // backgroundColor: 'rgba(0,0,0,0.4)',
+                                        padding: 20,
+                                        paddingTop: 40,
+                                        width: deviceWidth,
+                                        height: deviceHeight
+                                    }}
+                                >
+                                    <ShadowView
                                         style={{
-                                            borderBottomWidth: 1,
-                                            borderBottomColor: '#f2f2f2',
-                                            paddingBottom: 10,
-                                            width: deviceWidth * 0.81
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 23,
-                                                padding: 20,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                textAlign: 'right',
-                                                color: '#333',
-                                            }}
-                                        >
-                                            {`${locales('labels.sale')} ${sub_category_name ? `${sub_category_name} | ${product_name}` : product_name}`}
-                                        </Text>
+                                            shadowColor: 'black',
+                                            shadowOpacity: 0.16,
+                                            shadowRadius: 7,
+                                            shadowOffset: { width: 1, height: 5 },
+                                            padding: 15,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            alignSelf: 'center',
+                                            zIndex: 1,
+                                            backgroundColor: 'rgba(0,0,0,0.7)',
+                                            borderRadius: 12,
+                                            width: '90%',
+                                            alignSelf: 'center',
+                                            marginTop: 30
+                                        }}>
                                         <View
                                             style={{
-                                                paddingVertical: 10,
-                                                paddingHorizontal: 20,
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: '#f2f2f2',
+                                                paddingBottom: 10,
+                                                width: deviceWidth * 0.81
                                             }}
                                         >
                                             <View
                                                 style={{
                                                     flexDirection: 'row-reverse',
                                                     alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    borderRadius: 12,
-                                                    padding: 10,
-                                                    backgroundColor: '#f2f2f2'
+                                                    padding: 20
                                                 }}
                                             >
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row-reverse',
-                                                        alignItems: 'center',
-                                                        borderRadius: 12,
-                                                        backgroundColor: '#f2f2f2'
-                                                    }}
-                                                >
-                                                    <FontAwesome5
-                                                        name='box-open'
-                                                        color='#999'
-                                                        solid
-                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
-                                                        size={15}
-                                                    />
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 18,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                            textAlign: 'right',
-                                                            color: '#777',
-                                                        }}
-                                                    >
-                                                        {locales('titles.stockQuantity')}
-                                                    </Text>
-                                                </View>
+                                                <FontAwesome5
+                                                    name='check'
+                                                    color='#00C569'
+                                                    solid
+                                                    size={20}
+                                                />
                                                 <Text
-                                                    numberOfLines={1}
+                                                    numberOfLines={2}
                                                     style={{
-                                                        fontSize: 18,
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        textAlign: 'left',
-                                                        color: '#333',
-                                                        width: '64%'
+                                                        fontSize: 23,
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                        textAlign: 'right',
+                                                        color: '#fff',
+                                                        marginRight: 5
                                                     }}
                                                 >
-                                                    {formatter.convertedNumbersToTonUnit(stock)}
+                                                    {`${locales('labels.sale')} ${sub_category_name ? `${sub_category_name} | ${product_name}` : product_name}`}
                                                 </Text>
                                             </View>
                                             <View
                                                 style={{
-                                                    flexDirection: 'row-reverse',
-                                                    justifyContent: 'space-between',
-                                                    alignItems: 'center',
-                                                    borderRadius: 12,
-                                                    padding: 10,
+                                                    paddingVertical: 10,
+                                                    paddingHorizontal: 20,
                                                 }}
                                             >
                                                 <View
                                                     style={{
                                                         flexDirection: 'row-reverse',
                                                         alignItems: 'center',
+                                                        justifyContent: 'space-between',
                                                         borderRadius: 12,
+                                                        padding: 10,
                                                     }}
                                                 >
-                                                    <FontAwesome5
-                                                        name='clipboard-check'
-                                                        color='#999'
-                                                        solid
-                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
-                                                        size={18}
-                                                    />
-                                                    <Text
+                                                    <View
                                                         style={{
-                                                            fontSize: 18,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                            textAlign: 'right',
-                                                            color: '#777',
+                                                            flexDirection: 'row-reverse',
+                                                            alignItems: 'center',
+                                                            borderRadius: 12,
                                                         }}
                                                     >
-                                                        {locales('titles.minSale')}
+                                                        <FontAwesome5
+                                                            name='box-open'
+                                                            color='#999'
+                                                            solid
+                                                            style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                            size={15}
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 18,
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                textAlign: 'right',
+                                                                color: '#fff',
+                                                            }}
+                                                        >
+                                                            {locales('titles.stockQuantity')}
+                                                        </Text>
+                                                    </View>
+                                                    <Text
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            fontSize: 20,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'left',
+                                                            color: '#fff',
+                                                            width: '64%'
+                                                        }}
+                                                    >
+                                                        {formatter.convertedNumbersToTonUnit(stock)}
                                                     </Text>
                                                 </View>
-                                                <Text
-                                                    numberOfLines={1}
+                                                <View
                                                     style={{
-                                                        fontSize: 18,
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        textAlign: 'left',
-                                                        color: '#333',
-                                                        width: '52%',
+                                                        flexDirection: 'row-reverse',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        backgroundColor: 'rgba(100,100,100,0.4)',
+                                                        borderRadius: 12,
+                                                        padding: 10,
                                                     }}
                                                 >
-                                                    {formatter.convertedNumbersToTonUnit(min_sale_amount)}
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row-reverse',
-                                                    alignItems: 'center',
-                                                    borderRadius: 12,
-                                                    padding: 10,
-                                                    justifyContent: 'space-between',
-                                                    backgroundColor: '#f2f2f2'
-                                                }}
-                                            >
+                                                    <View
+                                                        style={{
+                                                            flexDirection: 'row-reverse',
+                                                            alignItems: 'center',
+                                                            backgroundColor: 'transparent',
+                                                            borderRadius: 12,
+                                                        }}
+                                                    >
+                                                        <FontAwesome5
+                                                            name='clipboard-check'
+                                                            color='#999'
+                                                            solid
+                                                            style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                            size={18}
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 18,
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                textAlign: 'right',
+                                                                color: '#fff',
+                                                            }}
+                                                        >
+                                                            {locales('titles.minSale')}
+                                                        </Text>
+                                                    </View>
+                                                    <Text
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            fontSize: 20,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'left',
+                                                            color: '#fff',
+                                                            width: '52%',
+                                                        }}
+                                                    >
+                                                        {formatter.convertedNumbersToTonUnit(min_sale_amount)}
+                                                    </Text>
+                                                </View>
                                                 <View
                                                     style={{
                                                         flexDirection: 'row-reverse',
                                                         alignItems: 'center',
                                                         borderRadius: 12,
-                                                        backgroundColor: '#f2f2f2'
+                                                        padding: 10,
+                                                        justifyContent: 'space-between',
                                                     }}
                                                 >
-                                                    <FontAwesome5
-                                                        name='map-marker-alt'
-                                                        color='#999'
-                                                        solid
-                                                        style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
-                                                        size={18}
-                                                    />
-                                                    <Text
+                                                    <View
                                                         style={{
-                                                            fontSize: 18,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                            textAlign: 'right',
-                                                            color: '#777',
+                                                            flexDirection: 'row-reverse',
+                                                            alignItems: 'center',
+                                                            borderRadius: 12,
                                                         }}
                                                     >
-                                                        {locales('labels.startLocation')}
+                                                        <FontAwesome5
+                                                            name='map-marker-alt'
+                                                            color='#999'
+                                                            solid
+                                                            style={{ textAlign: 'center', width: 23, marginLeft: 5 }}
+                                                            size={18}
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 18,
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                                textAlign: 'right',
+                                                                color: '#fff',
+                                                            }}
+                                                        >
+                                                            {locales('labels.startLocation')}
+                                                        </Text>
+                                                    </View>
+                                                    <Text
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            fontSize: 20,
+                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                            textAlign: 'left',
+                                                            color: '#fff',
+                                                            width: '75%',
+                                                        }}
+                                                    >
+                                                        {city_name || '---'}
                                                     </Text>
                                                 </View>
-                                                <Text
-                                                    numberOfLines={1}
-                                                    style={{
-                                                        fontSize: 18,
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                        textAlign: 'left',
-                                                        color: '#333',
-                                                        width: '75%',
-                                                    }}
-                                                >
-                                                    {city_name || '---'}
-                                                </Text>
                                             </View>
                                         </View>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row-reverse',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-end',
-                                            marginTop: 10,
-                                            width: '97%'
-                                        }}
-                                    >
-                                        <Text
+                                        <View
                                             style={{
-                                                fontSize: 15,
-                                                fontFamily: 'IRANSansWeb',
-                                                textAlign: 'left',
-                                                marginLeft: 10,
-                                                width: '85%',
-                                                color: '#777',
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-end',
+                                                marginTop: 10,
+                                                width: '97%'
                                             }}
                                         >
-                                            {`www.buskool.com/profile/${(user_name)}`}
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 15,
+                                                    fontFamily: 'IRANSansWeb',
+                                                    textAlign: 'left',
+                                                    marginLeft: 10,
+                                                    width: '85%',
+                                                    color: '#fff',
+                                                }}
+                                            >
+                                                {`www.buskool.com/profile/${(user_name)}`}
+                                            </Text>
+                                            <Image
+                                                source={require('../../../assets/icons/buskool-logo.png')}
+                                                style={{
+                                                    width: 40,
+                                                    height: 40,
+                                                    borderRadius: 12,
+                                                    backgroundColor: '#E84153',
+                                                }}
+                                            />
+                                        </View>
+                                    </ShadowView>
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
                                         <Image
                                             source={require('../../../assets/icons/buskool-logo.png')}
                                             style={{
-                                                width: 40,
-                                                height: 40,
+                                                width: 90,
+                                                height: 90,
+                                                marginVertical: 30,
                                                 borderRadius: 12,
                                                 backgroundColor: '#E84153',
                                             }}
                                         />
+                                        <Text
+                                            style={{
+                                                fontSize: 36,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                textAlign: 'center',
+                                                color: '#fafafa',
+                                                backgroundColor: '#rgba(0,0,0,0.6)',
+                                                borderRadius: 12,
+                                                padding: 5,
+
+                                            }}
+                                        >
+                                            {locales('titles.saleInBuskoolSite')}
+                                        </Text>
                                     </View>
-                                </ShadowView>
+                                </View>
                             </ImageBackground>
                         </ViewShot>
                         <Button
