@@ -292,6 +292,16 @@ const RenderMessageWithProductIdDesign = props => {
         outputRange: ['#fea858', '#ed765e', '#fea858']
     });
 
+    const backgroundColorForDelsa = animatedColor.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: ['#4DC0BB', '#24ae95', '#21AD93']
+    });
+
+    const backgroundColorEditPrice = animatedColor.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: ['#556080', '#495577', '#556593']
+    });
+
     if (!!p_id) {
         if (item.sender_id == loggedInUserId) {
             if (active_pakage_type != 0)
@@ -300,18 +310,21 @@ const RenderMessageWithProductIdDesign = props => {
                         android_ripple={{
                             color: '#ededed'
                         }}
+                        activeOpacity={1}
                         style={{
                             borderTopWidth: 1,
-                            borderColor: '#f2f2f2',
+                            borderColor: '#d5f0c0',
+                            backgroundColor: '#DCF8C6',
                             borderBottomLeftRadius: 12,
                             borderBottomRightRadius: 12,
                             paddingVertical: 10,
-                            backgroundColor: 'white'
                         }}
-                        activeOpacity={1}
                         onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
                     >
-                        <View
+                        <Animated.View
+                            // start={{ x: 0, y: 1 }}
+                            // end={{ x: 0.8, y: 0.2 }}
+                            // colors={[colorFirst, colorSecond]}
                             style={{
                                 width: '95%',
 
@@ -324,7 +337,8 @@ const RenderMessageWithProductIdDesign = props => {
                                 paddingVertical: 10,
                                 borderRadius: 8,
                                 overflow: "hidden",
-                                backgroundColor: '#556080',
+                                backgroundColor: backgroundColorEditPrice,
+
                             }}
                         >
                             {productDetailsLoading && item.id == selectedMessageId
@@ -355,7 +369,7 @@ const RenderMessageWithProductIdDesign = props => {
                                 color='white'
                                 size={14}
                             />
-                        </View>
+                        </Animated.View>
                     </Pressable >
                 );
             return (
@@ -364,9 +378,38 @@ const RenderMessageWithProductIdDesign = props => {
                         color: '#ededed'
                     }}
                     activeOpacity={1}
+                    style={{
+                        borderTopWidth: 1,
+                        borderColor: '#d5f0c0',
+                        backgroundColor: '#DCF8C6',
+                        borderBottomLeftRadius: 12,
+                        borderBottomRightRadius: 12,
+                        paddingVertical: 10,
+
+                    }}
                     onPress={() => handlePromotionModalVisiblity(true)}
                 >
-                    <LinearGradient
+                    <Animated.View
+                        // start={{ x: 0, y: 1 }}
+                        // end={{ x: 0.8, y: 0.2 }}
+                        // colors={[colorFirst, colorSecond]}
+                        style={{
+                            width: '95%',
+
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+
+                            flexDirection: 'row-reverse',
+                            alignSelf: 'center',
+                            paddingVertical: 10,
+                            borderRadius: 8,
+                            overflow: "hidden",
+                            backgroundColor: backgroundColorForDelsa,
+
+                        }}
+                    >
+                        {/* <LinearGradient
                         start={{ x: 0, y: 1 }}
                         end={{ x: 0.8, y: 0.2 }}
                         style={{
@@ -387,7 +430,7 @@ const RenderMessageWithProductIdDesign = props => {
                             borderTopLeftRadius: 0,
                         }}
                         colors={['#4DC0BB', '#21AD93']}
-                    >
+                    > */}
 
                         <Text style={{
                             marginRight: 10
@@ -413,7 +456,7 @@ const RenderMessageWithProductIdDesign = props => {
                             color='white'
                             size={14}
                         />
-                    </LinearGradient>
+                    </Animated.View>
                 </Pressable >
             );
         }
