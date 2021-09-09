@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, Pressable, Linking, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Card, Input, Label, Item, Toast, Button } from 'native-base';
+import { Input, Label, Item, Toast, Button } from 'native-base';
 import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -12,7 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
-import ContentLoader, { Rect } from "react-content-loader/native"
+import FastImage from 'react-native-fast-image';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -270,8 +270,13 @@ class Product extends PureComponent {
         if (isProductImageBroken)
             return require('../../../assets/icons/image-load-faild.jpg');
 
-        if (photos.length)
-            return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
+        if (photos.length) {
+            return {
+                cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
+                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}`
+            }
+        }
 
         return require('../../../assets/icons/placeholder-logo.png');
 
@@ -871,7 +876,7 @@ class Product extends PureComponent {
                                             borderTopRightRadius: 12,
                                         }}
                                     >
-                                        <Image
+                                        <FastImage
                                             resizeMode='contain'
                                             style={{
                                                 borderTopLeftRadius: 12,
@@ -882,8 +887,7 @@ class Product extends PureComponent {
                                             }}
                                             source={require('../../../assets/icons/placeholder-logo.png')}
                                         />
-                                        <Image
-                                            resizeMode='cover'
+                                        <FastImage
                                             style={{
                                                 borderRadius: 12,
                                                 width: '100%',
@@ -896,6 +900,7 @@ class Product extends PureComponent {
                                             }}
                                             onError={_ => this.setState({ isProductImageBroken: true })}
                                             source={this.renderProductImage(photos)}
+                                            resizeMode={FastImage.resizeMode.cover}
                                         />
                                     </View>
                                     <LinearGradient
