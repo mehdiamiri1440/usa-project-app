@@ -770,6 +770,7 @@ class ProductDetails extends PureComponent {
                     <ContactsListModal
                         visible={showContactListModal}
                         onRequestClose={this.onRequestCloseContactListModal}
+                        shouldShowInstagramButton={true}
                         onReject={_ => this.shareProductLink(url, photosWithCompletePath[0], splittedDescription)}
                         sharingUrlPostFix={this.getProductUrl()}
                         bodyText={splittedDescription}

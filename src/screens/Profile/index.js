@@ -360,6 +360,7 @@ class Profile extends PureComponent {
                     <ContactsListModal
                         visible={showContactListModal}
                         onRequestClose={this.onRequestCloseContactListModal}
+                        shouldShowInstagramButton={false}
                         onReject={this.shareProfileLink}
                         image={profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
                             `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}`

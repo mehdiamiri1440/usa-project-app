@@ -74,7 +74,7 @@ const UserContacts = props => {
         title,
         image,
         productInfo = {},
-        isFromInvitation
+        shouldShowInstagramButton
     } = params;
 
     const {
@@ -419,7 +419,7 @@ const UserContacts = props => {
                                 ></Path>
                             </Svg>
 
-                            {isFromInvitation == true ?
+                            {shouldShowInstagramButton == false ?
                                 <FontAwesome5
                                     onPress={onSharePressed}
                                     name='ellipsis-h'

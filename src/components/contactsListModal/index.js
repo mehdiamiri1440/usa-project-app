@@ -24,7 +24,8 @@ const ContactsListModal = props => {
         image = '',
         bodyText = '',
         title,
-        productInfo = {}
+        productInfo = {},
+        shouldShowInstagramButton
     } = props;
 
     const {
@@ -48,7 +49,7 @@ const ContactsListModal = props => {
                 image,
                 title,
                 bodyText,
-                isFromInvitation: false,
+                shouldShowInstagramButton,
                 productInfo
             }
         });
