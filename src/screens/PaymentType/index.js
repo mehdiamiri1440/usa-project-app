@@ -377,7 +377,7 @@ const PaymentType = props => {
                                 resizeMode: "cover",
                                 width: deviceWidth * 0.98,
                                 justifyContent: 'space-between',
-                                height: deviceHeight * 0.2,
+                                height: deviceHeight * 0.24,
                                 padding: 20,
                                 alignSelf: 'center',
                             }}
