@@ -1020,6 +1020,8 @@ const InviteFriendsBanner = props => {
                         width: '100%',
                         marginTop: 10,
                         backgroundColor: '#f3f3f3',
+                        // to whom read below line it is just a nasty code right now and should be cleaned after ui framework made,after 
+                        // that all of conditions on deviceHeight should be replaced with just a special number which adopts to all of the screen size
                         height: active_pakage_type > 0 ? (deviceHeight > 710 ? 182 : 191) : (deviceHeight > 710 ? 227 : 236),
                         alignItems: 'center',
                         justifyContent: 'center',
