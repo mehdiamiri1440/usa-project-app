@@ -17,13 +17,11 @@ const Referral = props => {
     } = props;
 
     const {
-        user_info = {}
+        user_info = {},
     } = userProfile;
 
     const {
         user_name,
-        first_name = '',
-        last_name = ''
     } = user_info;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}/invite/${user_name}`;
@@ -45,7 +43,8 @@ const Referral = props => {
             screen: 'UserContacts', params: {
                 sharingUrlPostFix: `/invite/${user_name}`,
                 bodyText,
-                shouldShowInstagramButton: false
+                shouldShowInstagramButton: false,
+                image: null
             }
         })
     };

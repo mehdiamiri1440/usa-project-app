@@ -255,8 +255,11 @@ const UserContacts = props => {
                         phone = phone.replace(phone.substring(0, 2), '+989');
 
                 }
-                if (!image)
-                    image = `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}`;
+                if (!image) {
+                    image = profile_photo && profile_photo.length ?
+                        `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}`
+                        : 'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9';
+                }
 
                 return shareToSocial('whatsApp', image, sharingUrlPostFix, phone, title);
             }
