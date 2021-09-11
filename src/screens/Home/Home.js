@@ -35,7 +35,8 @@ class Home extends React.Component {
             showchangeRoleModal: false,
             loaded: false,
             is_seller: false,
-            isPageRefreshedFromPullingDown: false
+            isPageRefreshedFromPullingDown: false,
+            active_pakage_type: 0
         }
     }
 
@@ -63,9 +64,13 @@ class Home extends React.Component {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
+            active_pakage_type
         } = user_info;
-        this.setState({ is_seller: !!is_seller });
+        this.setState({
+            is_seller: !!is_seller,
+            active_pakage_type
+        });
         this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
@@ -88,7 +93,10 @@ class Home extends React.Component {
     }
 
     initMyBuskool = _ => {
-        this.props.fetchUserProfile().then(res => this.setState({ is_seller: res?.payload?.user_info?.is_seller }));
+        this.props.fetchUserProfile().then(res => this.setState({
+            is_seller: res?.payload?.user_info?.is_seller,
+            active_pakage_type: res?.payload?.user_info?.active_pakage_type,
+        }));
     };
 
     handleAppStateChange = (nextAppState) => {
@@ -206,12 +214,14 @@ class Home extends React.Component {
         } = userProfile;
         const {
             is_seller,
+            active_pakage_type
         } = user_info;
 
         if (!!is_seller) {
             this.setState({ isPageRefreshedFromPullingDown: true })
             this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
         }
+        this.setState({ active_pakage_type })
     };
 
 
@@ -346,6 +356,7 @@ class Home extends React.Component {
 
                     <InviteFriendsBanner
                         {...this.props}
+                        active_pakage_type={this.state.active_pakage_type}
                         is_seller={this.state.is_seller}
                     />
 
@@ -996,18 +1007,11 @@ export const WalletPreview = props => {
 const InviteFriendsBanner = props => {
 
     const {
-        userProfile = {},
         userProfileLoading,
-        is_seller
+        is_seller,
+        active_pakage_type = 3
     } = props;
 
-    const {
-        user_info = {}
-    } = userProfile;
-
-    const {
-        active_pakage_type,
-    } = user_info;
     if (userProfileLoading && is_seller)
         return (
             <>
@@ -1016,7 +1020,7 @@ const InviteFriendsBanner = props => {
                         width: '100%',
                         marginTop: 10,
                         backgroundColor: '#f3f3f3',
-                        height: '11%',
+                        height: active_pakage_type > 0 ? '11.7%' : '14.5%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 20
