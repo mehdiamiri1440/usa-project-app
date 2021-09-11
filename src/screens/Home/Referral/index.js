@@ -43,6 +43,7 @@ const Referral = props => {
             screen: 'UserContacts', params: {
                 sharingUrlPostFix: `/invite/${user_name}`,
                 bodyText,
+                title: null,
                 shouldShowInstagramButton: false,
                 image: null
             }
