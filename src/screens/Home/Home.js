@@ -1020,7 +1020,7 @@ const InviteFriendsBanner = props => {
                         width: '100%',
                         marginTop: 10,
                         backgroundColor: '#f3f3f3',
-                        height: active_pakage_type > 0 ? '11.7%' : '14.5%',
+                        height: active_pakage_type > 0 ? (deviceHeight > 710 ? 182 : 191) : (deviceHeight > 710 ? 227 : 236),
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 20
