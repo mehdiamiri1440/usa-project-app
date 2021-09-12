@@ -455,7 +455,7 @@ class ProductDetails extends PureComponent {
     //     }
     // };
 
-    shareProductLink = (url, image, description) => {
+    shareProductLink = (url, image, description = '') => {
         const {
             route = {}
         } = this.props;
@@ -751,16 +751,19 @@ class ProductDetails extends PureComponent {
             descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), "\n")
         }
 
-        let splittedDescription = description.split('<hr/>').slice(2).filter(item => item);
+        let splittedDescription = '';
+        if (description && description.length) {
+            splittedDescription = description.split('<hr/>').slice(2).filter(item => item);
 
-        splittedDescription = splittedDescription.map(item => {
-            const splittedDescriptionItem = item.split(":");
-            splittedDescriptionItem[0] = `*${splittedDescriptionItem[0].trim()}*`;
-            return splittedDescriptionItem[0] + " : " + splittedDescriptionItem[1];
-        })
-        splittedDescription = splittedDescription.filter(item => item && item.length).join('\n\n');
+            splittedDescription = splittedDescription.map(item => {
+                const splittedDescriptionItem = item.split(":");
+                splittedDescriptionItem[0] = `*${splittedDescriptionItem[0].trim()}*`;
+                return splittedDescriptionItem[0] + " : " + splittedDescriptionItem[1];
+            })
+            splittedDescription = splittedDescription.filter(item => item && item.length).join('\n\n');
 
-        splittedDescription = `${description.split('<hr/>').slice(0, 1)}\n\n${splittedDescription}`;
+            splittedDescription = `${description.split('<hr/>').slice(0, 1)}\n\n${splittedDescription}`;
+        }
 
         var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
 
