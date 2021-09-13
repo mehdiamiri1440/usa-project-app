@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { persistStore, persistReducer } from 'redux-persist';
 import monitorReducersEnhancer from './enhanders/monitorReducer';
@@ -15,7 +15,7 @@ const persistConfig = {
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)
   whitelist: [
-    'authReducer','profileReducer'
+    'authReducer', 'profileReducer'
   ],
   // Blacklist (Don't Save Specific Reducers)
   blacklist: ['locationsReducer'],

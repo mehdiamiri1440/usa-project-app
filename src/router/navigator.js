@@ -22,7 +22,7 @@ import Axios from 'axios';
 import moment from 'moment';
 
 import SplashScreen from 'react-native-splash-screen'
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';

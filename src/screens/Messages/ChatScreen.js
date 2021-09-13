@@ -18,7 +18,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';

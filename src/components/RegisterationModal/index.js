@@ -30,7 +30,7 @@ import {
 } from 'react-native-confirmation-code-field';
 import analytics from '@react-native-firebase/analytics';
 import Svg, { Path, G, Ellipse } from "react-native-svg";
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 

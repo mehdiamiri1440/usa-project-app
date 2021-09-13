@@ -16,6 +16,7 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.burnweb.rnsendintent.RNSendIntentPackage;
 import cl.json.RNSharePackage;
 import cl.json.ShareApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 public class MainApplication extends NavigationApplication {
 

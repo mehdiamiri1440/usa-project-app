@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import RnRestart from 'react-native-restart';

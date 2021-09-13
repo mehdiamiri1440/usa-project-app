@@ -18,7 +18,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';

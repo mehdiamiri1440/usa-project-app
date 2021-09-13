@@ -5,7 +5,7 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import EnterActivisionCode from './Steps/EnterActivisionCode';

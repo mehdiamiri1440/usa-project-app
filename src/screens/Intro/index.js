@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, View, StyleSheet, } from 'react-native';
 import { Button, } from 'native-base';
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';

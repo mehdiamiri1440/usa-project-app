@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, View, StyleSheet, BackHandler, ActivityIndicator, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';

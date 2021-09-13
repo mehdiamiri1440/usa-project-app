@@ -11,7 +11,7 @@ import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { deviceWidth, deviceHeight, enumHelper } from '../../utils';
 import * as homeActions from '../../redux/home/actions';

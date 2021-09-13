@@ -1,5 +1,5 @@
 import { Linking } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStateFromPath } from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 
