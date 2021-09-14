@@ -167,7 +167,7 @@ class EditProfile extends Component {
                         invited_users = []
                     } = payload;
 
-                    item.shouldShow = !invited_users.length;
+                    item.shouldShow = is_seller && !invited_users.length;
 
                 }
 
