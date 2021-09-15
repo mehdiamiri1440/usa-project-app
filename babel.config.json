@@ -10,6 +10,14 @@
     }
   },
   "plugins": [
-    "module:react-native-dotenv"
+    "module:react-native-dotenv",
+    [
+      "@babel/plugin-transform-modules-commonjs",
+      {
+        "allowTopLevelThis": true,
+        "loose": true,
+        "lazy": true
+      }
+    ],
   ]
 }

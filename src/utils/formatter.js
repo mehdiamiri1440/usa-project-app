@@ -98,7 +98,7 @@ export const makeRandomString = (length) => {
   return result;
 }
 
-validateRegx = (input, regx) => {
+const validateRegx = (input, regx) => {
   return regx.test(input);
 }
 
