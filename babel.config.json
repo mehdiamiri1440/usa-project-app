@@ -1,6 +1,8 @@
 {
   "presets": [
-    "module:metro-react-native-babel-preset"
+    "module:metro-react-native-babel-preset",
+    "@babel/preset-env",
+    "@babel/preset-react"
   ],
   "env": {
     "production": {
@@ -11,6 +13,7 @@
   },
   "plugins": [
     "module:react-native-dotenv",
+    "@babel/plugin-proposal-class-properties",
     [
       "@babel/plugin-transform-modules-commonjs",
       {
@@ -18,6 +21,6 @@
         "loose": true,
         "lazy": true
       }
-    ],
+    ]
   ]
 }
