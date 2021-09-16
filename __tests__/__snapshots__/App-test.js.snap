@@ -1,0 +1,252 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "white",
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignContent": "center",
+          "alignItems": "center",
+          "backgroundColor": "white",
+          "elevation": 5,
+          "flexDirection": "row",
+          "height": 45,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "fontFamily": "IRANSansWeb(FaNum)_Bold",
+              "fontSize": 18,
+            }
+          }
+        />
+      </View>
+    </View>
+    <RCTScrollView
+      keyboardShouldPersistTaps="handled"
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "flex": 1,
+              "marginVertical": 5,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "height": 1026.1538461538462,
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignContent": "center",
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "flexDirection": "row-reverse",
+                  "justifyContent": "center",
+                  "paddingHorizontal": 40,
+                  "width": 750,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#374761",
+                    "fontFamily": "IRANSansWeb(FaNum)_Bold",
+                    "fontSize": 18,
+                    "textAlign": "center",
+                    "textAlignVertical": "center",
+                  }
+                }
+              />
+              <Text
+                style={
+                  Object {
+                    "color": "#000546",
+                    "fontFamily": "IRANSansWeb(FaNum)_Bold",
+                    "fontSize": 18,
+                    "paddingHorizontal": 5,
+                    "textAlign": "center",
+                    "textAlignVertical": "center",
+                  }
+                }
+              />
+              <Text
+                style={
+                  Object {
+                    "color": "#374761",
+                    "fontFamily": "IRANSansWeb(FaNum)_Bold",
+                    "fontSize": 18,
+                    "textAlign": "center",
+                    "textAlignVertical": "center",
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "marginTop": 30,
+                  "width": 750,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#000546",
+                    "flexWrap": "wrap",
+                    "fontFamily": "IRANSansWeb(FaNum)_Bold",
+                    "fontSize": 17,
+                    "textAlign": "center",
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateY": 0,
+                    },
+                  ],
+                }
+              }
+              useNativeDriver={true}
+            />
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <BVLinearGradient
+                colors={
+                  Array [
+                    4280397203,
+                    4278240617,
+                  ]
+                }
+                endPoint={
+                  Object {
+                    "x": 0.8,
+                    "y": 0.2,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  Object {
+                    "x": 0,
+                    "y": 1,
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "alignSelf": "center",
+                      "backgroundColor": "#00C569",
+                      "borderRadius": 5,
+                      "color": "white",
+                      "flexDirection": "row-reverse",
+                      "justifyContent": "center",
+                      "margin": 10,
+                      "textAlign": "center",
+                      "width": 525,
+                    },
+                    Object {
+                      "height": 55,
+                      "width": 240,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    Array [
+                      Object {
+                        "color": "white",
+                        "fontFamily": "IRANSansWeb(FaNum)_Bold",
+                        "fontSize": 20,
+                        "textAlign": "center",
+                      },
+                      Object {
+                        "fontSize": 18,
+                      },
+                    ]
+                  }
+                />
+                <ActivityIndicator
+                  animating={false}
+                  color="white"
+                  hidesWhenStopped={true}
+                  size="small"
+                  style={
+                    Object {
+                      "borderRadius": 15,
+                      "fontSize": 20,
+                      "height": 30,
+                      "marginLeft": -30,
+                      "width": 30,
+                    }
+                  }
+                />
+              </BVLinearGradient>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

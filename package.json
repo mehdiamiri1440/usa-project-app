@@ -101,19 +101,5 @@
     "jsc-android": "^245459.0.0",
     "metro-react-native-babel-preset": "^0.64.0",
     "react-test-renderer": "^17.0.2"
-  },
-  "jest": {
-    "preset": "react-native",
-    "verbose": true,
-    "setupFiles": [
-      "./jest/setup.js",
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
-    ],
-    "transformIgnorePatterns": [
-      "./node_modules/(?!native-base)/"
-    ],
-    "moduleNameMapper": {
-      "\\.svg": "./__mocks__/svgMock.js"
-    }
   }
 }
