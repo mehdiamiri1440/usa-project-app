@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   locale: 'fa-ir',
   title: 'فارسی',
   strings: {

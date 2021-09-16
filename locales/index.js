@@ -1,5 +1,4 @@
-import faIR from './fa-ir';
-
+const faIR = require('./fa-ir')
 const languages = {
   [faIR.locale]: faIR
 };
@@ -7,7 +6,7 @@ const languages = {
 let activeLanguage = null;
 
 const localize = (key, params = {}) => {
-  let result = activeLanguage.strings[key];
+  let result = activeLanguage?.strings[key];
 
   for (const param in params) {
     let val = params[param];
@@ -24,7 +23,8 @@ const setActiveLanguage = locale => {
   activeLanguage = languages[locale];
 };
 
-export default {
+module.exports = {
   localize,
   setActiveLanguage
 };
+
