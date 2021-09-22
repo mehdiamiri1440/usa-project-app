@@ -1,26 +1,8 @@
 {
   "presets": [
     "module:metro-react-native-babel-preset",
-    "@babel/preset-env",
-    "@babel/preset-react"
   ],
-  "env": {
-    "production": {
-      "plugins": [
-        "react-native-paper/babel"
-      ]
-    }
-  },
   "plugins": [
-    "module:react-native-dotenv",
-    "@babel/plugin-proposal-class-properties",
-    [
-      "@babel/plugin-transform-modules-commonjs",
-      {
-        "allowTopLevelThis": true,
-        "loose": true,
-        "lazy": true
-      }
-    ]
+    "module:react-native-dotenv"
   ]
 }
