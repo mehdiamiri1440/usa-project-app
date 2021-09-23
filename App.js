@@ -9,7 +9,6 @@ import { Root } from 'native-base';
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
 import Router from './src/router'
-import SplashScreen from 'react-native-splash-screen';
 
 const store = configureStore();
 
