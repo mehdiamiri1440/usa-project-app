@@ -516,10 +516,10 @@ const BuyAdList = props => {
                                 animating={selectedButton == item.id &&
                                     !!isUserAllowedToSendMessageLoading}
                                 style={{
-                                    position: 'relative',
-                                    width: 10, height: 10, borderRadius: 5,
-                                    marginLeft: -10,
-                                    marginRight: 5
+                                    position: 'absolute',
+                                    width: 10,
+                                    height: 10,
+                                    right: '6%'
                                 }}
                             />
                         </LinearGradient>

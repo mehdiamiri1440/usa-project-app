@@ -855,7 +855,7 @@ class RequestsTab extends Component {
                                 style={[styles.loginButton,
                                 {
                                     alignSelf: 'center', backgroundColor: 'transparent',
-                                    borderWidth: 0, justifyContent: 'center', alignItems: 'center',
+                                    justifyContent: 'center', alignItems: 'center',
                                     width: item.has_phone ? '47%' : '60%',
                                     top: 5
                                 }]}
@@ -864,10 +864,9 @@ class RequestsTab extends Component {
                                 <LinearGradient
                                     start={{ x: 0, y: 0.51, z: 1 }}
                                     end={{ x: 0.8, y: 0.2, z: 1 }}
-                                    colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                    colors={['#ffffff', '#ffffff', '#ffffff']}
                                     style={{
                                         width: '100%',
-                                        borderWidth: 0,
                                         paddingHorizontal: 10,
                                         flexDirection: 'row-reverse',
                                         alignItems: 'center',
@@ -875,20 +874,22 @@ class RequestsTab extends Component {
                                         justifyContent: 'center',
                                         height: 45,
                                         borderRadius: 6,
+                                        borderColor: '#556080',
+                                        borderWidth: 1
                                     }}
                                 >
-                                    <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#333'} size={20} />
+                                    <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#556080'} size={20} />
                                     <Text style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         fontSize: 18,
-                                        color: '#333',
+                                        color: '#556080',
                                         paddingHorizontal: 3
                                     }}>
                                         {locales('labels.messageToBuyer')}
 
 
                                     </Text>
-                                    <ActivityIndicator size={20} color={'#333'}
+                                    <ActivityIndicator size={20} color={'#556080'}
                                         animating={selectedButton == item.id &&
                                             !!isUserAllowedToSendMessageLoading}
                                         style={{

@@ -381,6 +381,7 @@ const UserContacts = props => {
                                 textAlign: 'right',
                                 color: '#666',
                                 fontSize: 15,
+                                width: '63%',
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             }}
                         >
