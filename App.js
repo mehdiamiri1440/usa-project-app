@@ -42,10 +42,6 @@ global.meInfo = {
 global.refreshProductList = false;
 class App extends React.Component {
 
-  componentDidMount() {
-    console.warn('er')
-    SplashScreen.hide()
-  }
   render() {
     return (
       <>
