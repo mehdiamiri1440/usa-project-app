@@ -10,7 +10,7 @@ import {
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
-    ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
+    ActivityIndicator, ImageBackground, StyleSheet,
     LayoutAnimation, UIManager, Platform, Modal, Pressable
 } from 'react-native';
 import { Dialog, Paragraph } from 'react-native-paper';
@@ -92,7 +92,6 @@ class ChatScreen extends Component {
 
         this.handleIncomingMessage();
 
-        BackHandler.addEventListener('hardwareBackPress', this.handleGoBack)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -102,10 +101,6 @@ class ChatScreen extends Component {
             this.setState({ isFirstLoad: false, userChatHistory: [...this.props.userChatHistory], loaded: true });
         }
 
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
     }
 
     checkForShowingRatingCard = _ => {
@@ -196,12 +191,6 @@ class ChatScreen extends Component {
                     this.pushNewMessageToChatList(remoteMessage);
             }
         });
-    };
-
-    handleGoBack = fromHeader => {
-        this.props.doForceRefresh(true);
-        if (fromHeader == true)
-            this.props.navigation.goBack();
     };
 
     handleGuid = _ => {
@@ -1270,7 +1259,8 @@ class ChatScreen extends Component {
                                 flexDirection: 'row-reverse',
                                 width: '21%'
                             }}
-                            onPress={() => this.handleGoBack(true)}>
+                            onPress={() => this.props.navigation.goBack()}
+                        >
                             <View
                                 style={{
                                     justifyContent: 'center',
@@ -1762,7 +1752,6 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchUserChatHistory: (id, from, to) => dispatch(messagesActions.fetchUserChatHistory(id, from, to)),
         sendMessage: (msgObject, buyAdId, productId) => dispatch(messagesActions.sendMessage(msgObject, buyAdId, productId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
-        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),
         checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),

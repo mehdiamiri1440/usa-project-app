@@ -71,7 +71,8 @@ class ContactsList extends Component {
             });
             // .catch(_ => this.setState({ showModal: true }));
         }
-        AppState.addEventListener('change', this.handleAppStateChange)
+        AppState.addEventListener('change', this.handleAppStateChange);
+        this.screenFocusEvent = this.props.navigation.addListener('focus', this.handleScreenFocused);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -86,24 +87,24 @@ class ContactsList extends Component {
             this.handleSearch(this.props.searchText)
         }
         this.props.setRefresh(false)
-
-        if (this.props.forceRefresh) {
-            this.props.doForceRefresh(false);
-            this.props.fetchAllContactsList().then(result => {
-                this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
-                if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
-                    this.props.newMessageReceived(false);
-                }
-            });
-        }
     }
 
 
     componentWillUnmount() {
         this.isComponentMounted = false;
         AppState.removeEventListener('change', this.handleAppStateChange)
+        this.screenFocusEvent;
         return unsubscribe;
     }
+
+    handleScreenFocused = _ => {
+        this.props.fetchAllContactsList().then(result => {
+            this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
+            if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
+                this.props.newMessageReceived(false);
+            }
+        });
+    };
 
     handleSearch = text => {
         let contactsList = [...this.state.contactsList];
@@ -514,8 +515,6 @@ const mapStateToProps = (state) => {
         contactsListLoading: state.messagesReducer.contactsListLoading,
         contactsListData: state.messagesReducer.contactsListData,
 
-        forceRefresh: state.messagesReducer.forceRefresh,
-
         userProfile: state.profileReducer.userProfile,
 
     }
@@ -525,7 +524,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
         newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
-        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
     }
 };
 
