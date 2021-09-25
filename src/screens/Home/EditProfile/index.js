@@ -137,7 +137,6 @@ class EditProfile extends Component {
                 first_name,
                 last_name,
                 is_verified,
-                is_seller,
                 phone_allowed
             } = user_info;
 
@@ -167,7 +166,7 @@ class EditProfile extends Component {
                         invited_users = []
                     } = payload;
 
-                    item.shouldShow = is_seller && !invited_users.length;
+                    item.shouldShow = !invited_users.length;
 
                 }
 
@@ -958,8 +957,34 @@ const ProfileAccomplishes = props => {
             case 'labels.authentication':
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
 
-            case 'titles.introduceToFirends':
-                return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
+            case 'titles.introduceToFirends': {
+                const {
+                    userProfile = {}
+                } = props;
+
+                const {
+                    user_info = {}
+                } = userProfile;
+
+                const {
+                    user_name,
+                    is_seller
+                } = user_info;
+                const bodyText = locales('labels.helperTextForInvitation');
+
+                if (is_seller)
+                    return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
+                return props.navigation.navigate('MyBuskool', {
+                    screen: 'UserContacts',
+                    params: {
+                        sharingUrlPostFix: `/invite/${user_name}`,
+                        bodyText,
+                        title: null,
+                        shouldShowInstagramButton: false,
+                        image: null
+                    }
+                });
+            }
 
             case 'titles.aboutYou':
                 setDescriptionTextModalVisiblity(true);
