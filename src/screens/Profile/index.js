@@ -431,7 +431,7 @@ class Profile extends PureComponent {
                                     height: '100%',
                                     resizeMode: 'contain'
                                 }}
-                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE} / storage / ${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
+                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${certificatesFromByUserName[selectedEvidenceIndex]}` }} />
                         </ImageZoom>
                     </View>
                 </Modal>
@@ -630,7 +630,7 @@ class Profile extends PureComponent {
                                         }}
                                         source={
                                             profilePhotoFromByUserName ?
-                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE} / storage / ${profilePhotoFromByUserName}` }
+                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` }
                                                 : require('../../../assets/icons/user.png')}
                                     />
 
