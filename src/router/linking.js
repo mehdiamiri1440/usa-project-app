@@ -108,7 +108,7 @@ const linking = {
 
         messaging().getInitialNotification()
             .then(async remoteMessage => {
-                return routeToScreensFromNotifications(remoteMessage);
+                return await routeToScreensFromNotifications(remoteMessage);
             });
 
         // Get deep link from data
@@ -162,9 +162,9 @@ const linking = {
         Linking.addEventListener('url', onReceiveURL);
 
         const unsubscribeNotification = messaging().onNotificationOpenedApp(
-            (remoteMessage = {}) => {
+            async (remoteMessage = {}) => {
                 // Any custom logic to check whether the URL needs to be handled
-                routeToScreensFromNotifications(remoteMessage)
+                !!routeToScreensFromNotifications ? await routeToScreensFromNotifications(remoteMessage) : null
                 // Call the listener to let React Navigation handle the URL
                 listener(remoteMessage);
             },
