@@ -49,7 +49,6 @@ const INITIAL_STATE = {
 
     newMessage: false,
 
-    forceRefresh: false,
 };
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -427,13 +426,6 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 newMessage: action.payload
-            }
-        }
-
-        case actionTypes.DO_FORCE_REFRESH: {
-            return {
-                ...state,
-                forceRefresh: action.payload
             }
         }
 

@@ -1511,7 +1511,6 @@ const routes = props => {
                                     tabPress: e => {
                                         e.preventDefault();
                                         currentRoute = e.target;
-                                        props.doForceRefresh(true);
                                         if (is_seller)
                                             return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
                                         return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
@@ -1732,7 +1731,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
-        doForceRefresh: forceRefresh => dispatch(messageActions.doForceRefresh(forceRefresh)),
         fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests())
     }
 };
