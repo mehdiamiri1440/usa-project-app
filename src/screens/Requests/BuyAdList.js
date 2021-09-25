@@ -496,11 +496,20 @@ const BuyAdList = props => {
                             }}
                         >
 
-                            <MaterialCommunityIcons
-                                name='message'
-                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                                size={20}
-                            />
+                            {selectedButton == item.id &&
+                                !!isUserAllowedToSendMessageLoading ?
+                                <ActivityIndicator
+                                    size={20}
+                                    style={{ width: 20, height: 20 }}
+                                    color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                />
+                                :
+                                <MaterialCommunityIcons
+                                    name='message'
+                                    color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
+                                    size={20}
+                                />
+                            }
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 18,
@@ -511,17 +520,6 @@ const BuyAdList = props => {
 
 
                             </Text>
-                            <ActivityIndicator size={20}
-                                color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                                animating={selectedButton == item.id &&
-                                    !!isUserAllowedToSendMessageLoading}
-                                style={{
-                                    position: 'absolute',
-                                    width: 10,
-                                    height: 10,
-                                    right: '6%'
-                                }}
-                            />
                         </LinearGradient>
 
                     </Button>
