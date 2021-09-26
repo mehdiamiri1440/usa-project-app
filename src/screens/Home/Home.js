@@ -741,7 +741,6 @@ class Home extends React.Component {
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                             }}>
-                            {console.log('chnge', changeRoleLoading, 'proloist', productsListLoading, 'isseler', !!is_seller)}
                             {(changeRoleLoading || productsListLoading) && !!is_seller ?
                                 <ActivityIndicator
                                     color='#556080'
