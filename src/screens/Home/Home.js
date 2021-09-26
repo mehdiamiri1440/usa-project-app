@@ -1053,7 +1053,7 @@ const InviteFriendsBanner = props => {
                 <View
                     style={{
                         width: '100%',
-                        height: active_pakage_type > 0 ? (deviceHeight > 710 ? '50%' : 191) : (deviceHeight > 710 ? '50%' : '65%'),
+                        height: deviceHeight > 710 ? '50%' : '62%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 10,
