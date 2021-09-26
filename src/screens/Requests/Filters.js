@@ -29,7 +29,9 @@ class Filters extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchAllCategories();
+        if (this.props.categoriesList && this.props.categoriesList.length)
+            return this.setState({ loaded: true, categoriesList: this.props.categoriesList })
+        return this.props.fetchAllCategories();
     }
 
     componentDidUpdate(prevProps, prevState) {
