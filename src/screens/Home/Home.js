@@ -741,6 +741,7 @@ class Home extends React.Component {
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                             }}>
+                            {console.log('chnge', changeRoleLoading, 'proloist', productsListLoading, 'isseler', !!is_seller)}
                             {(changeRoleLoading || productsListLoading) && !!is_seller ?
                                 <ActivityIndicator
                                     color='#556080'
@@ -1014,56 +1015,50 @@ const InviteFriendsBanner = props => {
 
     if (userProfileLoading && is_seller)
         return (
-            <>
-                <View
-                    style={{
-                        width: '100%',
-                        marginTop: 10,
-                        backgroundColor: '#f3f3f3',
-                        // to whom read below line it is just a nasty code right now and should be cleaned after ui framework made,after 
-                        // that all of conditions on deviceHeight should be replaced with just a special number which adopts to all of the screen size
-                        height: active_pakage_type > 0 ? (deviceHeight > 710 ? 182 : 191) : (deviceHeight > 710 ? 227 : 236),
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 20
-                    }}
-                >
-                    <View
+            <View
+                style={{
+                    marginTop: 10,
+                    maxHeight: '55%'
+                }}
+            >
+                {active_pakage_type < 3 ?
+                    <ContentLoader
+                        speed={2}
+                        width='95%'
+                        height={44}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
                         style={{
-                            backgroundColor: 'white',
-                            width: '100%',
-                            height: '100%',
                             alignSelf: 'center',
-                            borderRadius: 12,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 1000
                         }}
                     >
-                        <ContentLoader
-                            speed={2}
-                            width='100%'
-                            height='100%'
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
+                        <Rect width="100%" height='100%' rx={12} ry={12} />
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
                             style={{
                                 alignSelf: 'center',
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                                top: 13,
+                                left: 10
                             }}
-                        >
-                            <Circle cx="60" cy="65" r="45" />
-                            <Rect x="108" y="20" width="258" height="21" />
-                            <Rect x="300" y="55" width="63" height="15" />
-                            <Rect x="228" y="80" width="137" rx={6} ry={6} height="38" />
-                        </ContentLoader>
-                    </View>
-                </View>
+                            color='#bebebe'
+                        />
+                    </ContentLoader>
+                    : null
+                }
+
                 <View
                     style={{
-                        backgroundColor: "#e0e0e0",
                         width: '100%',
-                        height: 70,
+                        height: active_pakage_type > 0 ? (deviceHeight > 710 ? '50%' : 191) : (deviceHeight > 710 ? '50%' : '65%'),
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: 10
+                        padding: 10,
+                        borderTopColor: "#ecebeb",
+                        borderTopWidth: 10
                     }}
                 >
                     <ContentLoader
@@ -1076,21 +1071,49 @@ const InviteFriendsBanner = props => {
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
+                            zIndex: 10000000
                         }}
                     >
-                        <Circle cx="95%" cy='50%' r="25" />
-                        <Rect x="30%" y='40%' width="133" height="15" />
+                        <Circle cx="20%" cy='50%' r="44" />
+                        <Rect x="60%" y='20%' width="133" height="15" />
+                        <Rect x="86%" y='35%' width="30" height="15" />
+                        <Rect x="48%" y='55%' width="180" height="45" rx={12} ry={12} />
+                    </ContentLoader>
+
+                </View>
+                <View
+                    style={{
+                        width: '100%',
+                        height: '20%'
+                    }}
+                >
+                    <ContentLoader
+                        speed={2}
+                        width='100%'
+                        height='100%'
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                        style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 10000000
+                        }}
+                    >
+                        <Rect width="100%" height="100%" />
                         <FontAwesome5
                             name='angle-left'
-                            color='#fff'
                             size={20}
                             style={{
-                                top: '80%'
+                                alignSelf: 'center',
+                                top: 20,
+                                left: 10
                             }}
+                            color='#bebebe'
                         />
                     </ContentLoader>
                 </View>
-            </>
+            </View>
         );
     else if (is_seller && !userProfileLoading)
         return (
