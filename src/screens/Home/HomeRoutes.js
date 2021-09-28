@@ -11,6 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 export const homeRoutes = [
     { label: 'labels.yourWallet', icon: <FontAwesome5 size={25} name='wallet' color='#556080' />, name: 'Wallet' },
     { label: 'labels.dashboard', icon: <FontAwesome5 size={25} name='chart-line' color='#556080' />, name: 'Dashboard' },
+    { label: 'titles.revenues', icon: <FontAwesome5 size={25} name='money-bill' color='#556080' />, name: 'UserFriends' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user' solid color='#556080' />, name: 'EditProfile' },
     { label: 'labels.suggestedBuyers', icon: <FontAwesome5 size={25} name='list-ul' color='#556080' />, name: 'SuggestedBuyers' },
     { label: 'labels.myRequests', icon: <Fontisto size={25} name='list-1' color='#556080' />, name: 'MyRequests' },
@@ -38,7 +39,8 @@ export const sellerSpecialRoutes = [
     'SuggestedBuyers',
     'ContactInfoGuid',
     'MyProducts',
-    'Wallet'
+    'Wallet',
+    'UserFriends'
 ]
 
 export const buyerSpecialRoutes = [

@@ -1230,7 +1230,7 @@ const InviteFriendsBanner = props => {
                         </Pressable>
                     </View>
                 </BgLinearGradient>
-                <Pressable
+                {/* <Pressable
                     onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
                     android_ripple={{
                         color: '#ededed'
@@ -1297,6 +1297,7 @@ const InviteFriendsBanner = props => {
                         />
                     </BgLinearGradient>
                 </Pressable>
+        */}
             </>
         );
     return null;
