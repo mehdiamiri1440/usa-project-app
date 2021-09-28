@@ -13,6 +13,7 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import ChooseImage from '../../../components/cameraActionSheet';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
@@ -51,129 +52,48 @@ class ProductImages extends Component {
         return true;
     };
 
-    chooseProductImage = (index) => {
+    chooseProductImage = async (index) => {
+        try {
+            const {
+                images = []
+            } = this.state;
 
-        const {
-            images = []
-        } = this.state;
+            if (images && images.length >= 4)
+                return;
 
-        if (images && images.length >= 4)
-            return;
+            const image = await ChooseImage();
+            if (!image)
+                return;
 
-        return ActionSheet.show(
-            {
-                options: [locales('labels.camera'), locales('labels.gallery')],
-            },
-            buttonIndex => this.onActionSheetClicked(buttonIndex, index)
-        )
-    };
-
-    onActionSheetClicked = async (buttonIndex, index) => {
-        const options = {
-            width: 300,
-            height: 400,
-            maxWidth: 1024,
-            maxHeight: 1024,
-            quality: 1,
-            title: 'تصویر را انتخاب کنید',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        const prevImagePickerLibraryOptions = {
-            width: 300,
-            height: 400,
-            cropping: true,
-            mediaType: 'photo',
-        };
-
-        switch (buttonIndex) {
-            case 0: {
-                this.setState({ errorFlag: false });
-
-                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
-
-                if (!isAllowedToOpenCamera)
-                    return;
-
-                launchCamera(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
-                        return this.setState({ imageSizeError: true })
-                    }
-                    const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
+            const source = { uri: image.uri };
+            this.setState(state => {
+                state.avatarSource = source;
+                state.imageSizeError = false;
+                let resultObj = {
+                    uri: image.uri,
+                    type: image.type,
+                    size: image.fileSize,
+                    name: image.fileName
+                }
 
 
-                        if (index >= 0) {
-                            state.images[index] = resultObj
-                        }
-                        else {
-                            if (typeof state.images != 'object')
-                                state.images = [];
-                            state.images.push(resultObj)
-                        }
-                        return '';
-                    }
-                    )
-                });
-                break;
+                if (index >= 0) {
+                    state.images[index] = resultObj
+                }
+                else {
+                    if (typeof state.images != 'object')
+                        state.images = [];
+                    state.images.push(resultObj)
+                }
+                return '';
             }
-            case 1: {
-                this.setState({ errorFlag: false });
-                launchImageLibrary(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
-                        return this.setState({ imageSizeError: true })
-                    }
-                    const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
-
-
-                        if (index >= 0)
-                            state.images[index] = resultObj
-                        else {
-                            if (typeof state.images != 'object')
-                                state.images = [];
-                            state.images.push(resultObj)
-                        }
-                        return '';
-                    }
-                    )
-                });
-                break;
-            }
-            default:
-                break;
+            )
         }
-
+        catch (error) {
+            if (error.error.id == 1)
+                this.setState({ imageSizeError: true });
+        }
     };
-
-
-
 
     onSubmit = () => {
         if (!this.state.images.length) {

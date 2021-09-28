@@ -171,6 +171,8 @@ module.exports = {
     'labels.specialProducts': 'ویژه‌ها',
     'labels.registerRequest': 'ثبت درخواست',
     'labels.somethingWentWrong': 'متاسفانه به مشکلی برخورده‌ایم',
+    'labels.hasCanceled': 'لغو شد.',
+    'labels.noPermission': 'مجوز داده نشده',
     'labels.problemHappened': 'مشکلی رخ داده است.',
     'labels.pleaseRetry': 'لطفا دوباره تلاش بفرمایید.',
     'labels.uploading': 'در حال بارگذاری ...',

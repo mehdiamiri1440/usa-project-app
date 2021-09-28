@@ -19,6 +19,7 @@ import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import * as profileActions from '../../../redux/profile/actions';
 import { permissions, deviceHeight, deviceWidth, validator } from '../../../utils';
 import Header from '../../../components/header';
+import ChooseImage from '../../../components/cameraActionSheet';
 
 let myTimeout;
 
@@ -241,12 +242,36 @@ class EditProfile extends Component {
         })
     };
 
-    openActionSheet = fromAccomplishment => ActionSheet.show(
-        {
-            options: [locales('labels.camera'), locales('labels.gallery')],
-        },
-        buttonIndex => this.onActionSheetClicked(buttonIndex, fromAccomplishment)
-    );
+    openActionSheet = async fromAccomplishment => {
+        try {
+            const image = await ChooseImage();
+            const source = { uri: image.uri };
+            this.setState(state => {
+                state.imageSizeError = false;
+                state.avatarSource = source;
+                let resultObj = {
+                    uri: image.uri,
+                    type: image.type,
+                    size: image.fileSize,
+                    name: image.fileName
+                }
+
+                state.profile_photo = resultObj;
+
+                return '';
+            },
+                _ => {
+                    if (fromAccomplishment)
+                        this.editProfile();
+                }
+            )
+
+        }
+        catch (error) {
+            if (error.error.id == 1)
+                this.setState({ imageSizeError: true });
+        }
+    }
 
     handleDescriptionChange = description => this.setState({ description });
 
@@ -288,25 +313,7 @@ class EditProfile extends Component {
                     if (image.fileSize > 5242880 || image.fileSize < 20480) {
                         return this.setState({ imageSizeError: true })
                     }
-                    const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
 
-                        state.profile_photo = resultObj;
-
-                        return '';
-                    },
-                        _ => {
-                            if (fromAccomplishment)
-                                this.editProfile();
-                        }
-                    )
                 });
                 break;
             }
@@ -322,24 +329,7 @@ class EditProfile extends Component {
                         return this.setState({ imageSizeError: true })
                     }
                     const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
 
-                        state.profile_photo = resultObj;
-
-                        return '';
-                    },
-                        _ => {
-                            if (fromAccomplishment)
-                                this.editProfile();
-                        }
-                    )
                 });
                 break;
             }
