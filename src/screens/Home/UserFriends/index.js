@@ -87,9 +87,10 @@ const UserFriends = props => {
                 <View
                     style={{
                         flex: 1,
-                        borderBottomColor: '#EBEBEB',
-                        borderBottomWidth: active_pakage_type == 3 ? 0 : 5,
-                        paddingBottom: active_pakage_type == 3 ? 60 : 40
+                        // borderBottomColor: '#EBEBEB',
+                        // borderBottomWidth: active_pakage_type == 3 ? 0 : 5,
+                        // paddingBottom: active_pakage_type == 3 ? 60 : 40
+                        paddingBottom: 40
                     }}
                 >
                     <ImageBackground
@@ -111,7 +112,6 @@ const UserFriends = props => {
                                 width: '75%',
                                 top: '40%',
                                 marginVertical: 15,
-                                backgroundColor: 'white',
                                 borderRadius: 12,
                                 padding: 15,
                                 justifyContent: 'center',
@@ -179,7 +179,7 @@ const UserFriends = props => {
                             }
                         </ShadowView>
                     </ImageBackground>
-                    {active_pakage_type != 3 ? <>
+                    {/* {active_pakage_type != 3 ? <>
                         <View
                             style={{
                                 marginTop: '14%',
@@ -387,7 +387,7 @@ const UserFriends = props => {
                         }
                     </>
                         : null
-                    }
+                    } */}
                 </View>
                 {invited_users && invited_users.length ? <Text
                     style={{
@@ -434,7 +434,7 @@ const UserFriends = props => {
                 <Text
                     style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        fontSize: 17,
+                        fontSize: 15,
                         color: '#777777',
                         textAlign: 'center'
                     }}
