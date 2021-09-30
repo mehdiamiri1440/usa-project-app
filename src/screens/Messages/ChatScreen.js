@@ -68,7 +68,8 @@ class ChatScreen extends Component {
             productMinSalePriceError: null,
             productMinSalePriceClicked: false,
             shouldShowEditionSuccessfullText: false,
-            shouldShowDelsaAdvertisement: false
+            shouldShowDelsaAdvertisement: false,
+            shouldShowPhoneNumberBanner: true
         };
     }
 
@@ -86,6 +87,8 @@ class ChatScreen extends Component {
 
         this.handleGuid();
 
+        this.handlePhoneNumberBannerVisiblity();
+
         this.props.fetchUserChatHistory(contact.contact_id, from, to).then(_ => {
             this.checkForShowingRatingCard();
         });
@@ -102,6 +105,19 @@ class ChatScreen extends Component {
         }
 
     }
+
+    handlePhoneNumberBannerVisiblity = _ => {
+        AsyncStorage.getItem('@validPassedTimeForPhoneNumberBanner').then(result => {
+            result = JSON.parse(result);
+            if (result) {
+                if (moment().diff(result, 'hours') >= 1)
+                    return this.setState({ shouldShowPhoneNumberBanner: true });
+                return this.setState({ shouldShowPhoneNumberBanner: false });
+            }
+            return this.setState({ shouldShowPhoneNumberBanner: true });
+        });
+
+    };
 
     checkForShowingRatingCard = _ => {
 
@@ -766,13 +782,29 @@ class ChatScreen extends Component {
         return null;
     };
 
+    setPhoneNumberBannerVisibility = _ => {
+        AsyncStorage.setItem('@validPassedTimeForPhoneNumberBanner', JSON.stringify(moment()));
+        this.setState({ shouldShowPhoneNumberBanner: false });
+    }
+
     render() {
 
         let {
             userChatHistoryLoading,
             route = {},
-            editProductLoading
+            editProductLoading,
+            userProfile = {}
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            wallet_balance,
+            active_pakage_type,
+            is_seller
+        } = user_info;
 
         const {
             params = {}
@@ -806,7 +838,8 @@ class ChatScreen extends Component {
             productMinSalePriceError,
             productMinSalePrice,
             productMinSalePriceClicked,
-            shouldShowEditionSuccessfullText
+            shouldShowEditionSuccessfullText,
+            shouldShowPhoneNumberBanner
         } = this.state;
 
         const detectToShowCommentAndGuid = showGuid && !buyAdId;
@@ -1390,7 +1423,14 @@ class ChatScreen extends Component {
                             />
                         </ShadowView>
                         : null}
-
+                    {wallet_balance == 0 && is_seller && active_pakage_type == 0 && shouldShowPhoneNumberBanner ?
+                        <PayForPhoneNumberBanner
+                            {...this.props}
+                            setPhoneNumberBannerVisibility={this.setPhoneNumberBannerVisibility}
+                        />
+                        :
+                        null
+                    }
                     <FlatList
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='none'
@@ -1485,6 +1525,86 @@ class ChatScreen extends Component {
         )
     }
 }
+
+const PayForPhoneNumberBanner = props => {
+
+    const {
+        setPhoneNumberBannerVisibility = _ => { }
+    } = props;
+
+    return (
+        <View
+            style={{
+                width: '100%',
+                height: 58,
+                backgroundColor: '#F03738',
+                borderRadius: 50,
+                flexDirection: 'row-reverse',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                alignSelf: 'center',
+                marginTop: 3,
+                marginBottom: 19,
+                marginHorizontal: 60,
+                padding: 10
+            }}
+        >
+            <FontAwesome5
+                name='times'
+                onPress={setPhoneNumberBannerVisibility}
+                color='white'
+                size={20}
+                style={{
+                    marginHorizontal: 5
+                }}
+            />
+            <Text
+                numberOfLines={2}
+                style={{
+                    fontSize: 12,
+                    width: '60%',
+                    textAlign: "right",
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    color: 'white'
+                }}
+            >
+                {locales('labels.reasonNotToShowPhoneNumber')}
+            </Text>
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+                style={{
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.75)',
+                    height: 42,
+                    width: 99,
+                    marginRight: -5,
+                    borderRadius: 50
+
+                }}
+            >
+                <FontAwesome5
+                    size={15}
+                    name='plus'
+                    color='#264653'
+                />
+                <Text
+                    style={{
+                        fontSize: 12,
+                        textAlign: "center",
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: '#264653',
+                        width: 51,
+                    }}
+                >
+                    {locales('titles.increaseInventory')}
+                </Text>
+            </TouchableOpacity>
+        </View>
+    )
+};
 
 const DelsaAdvertisementComponent = props => {
 

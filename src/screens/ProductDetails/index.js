@@ -2167,8 +2167,8 @@ class ProductDetails extends PureComponent {
                                     style={[styles.loginButton, {
                                         zIndex: 1,
                                         width: (!is_seller && has_phone) ? '45%' : '95%',
-                                        backgroundColor: (!is_seller && has_phone) ? 'white' : 'orange',
-                                        borderColor: (!is_seller && has_phone) ? '#556080' : 'orange',
+                                        backgroundColor: (!is_seller && has_phone) ? 'white' : '#FF5722',
+                                        borderColor: (!is_seller && has_phone) ? '#556080' : '#FF5722',
                                         borderWidth: (!is_seller && has_phone) ? 1 : 0,
                                     }]}
                                 >

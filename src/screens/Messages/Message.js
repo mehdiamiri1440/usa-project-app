@@ -304,74 +304,7 @@ const RenderMessageWithProductIdDesign = props => {
 
     if (!!p_id) {
         if (item.sender_id == loggedInUserId) {
-            if (active_pakage_type != 0)
-                return (
-                    <Pressable
-                        android_ripple={{
-                            color: '#ededed'
-                        }}
-                        activeOpacity={1}
-                        style={{
-                            borderTopWidth: 1,
-                            borderColor: '#d5f0c0',
-                            backgroundColor: '#DCF8C6',
-                            borderBottomLeftRadius: 12,
-                            borderBottomRightRadius: 12,
-                            paddingVertical: 10,
-                        }}
-                        onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
-                    >
-                        <Animated.View
-                            // start={{ x: 0, y: 1 }}
-                            // end={{ x: 0.8, y: 0.2 }}
-                            // colors={[colorFirst, colorSecond]}
-                            style={{
-                                width: '95%',
-
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-
-                                flexDirection: 'row-reverse',
-                                alignSelf: 'center',
-                                paddingVertical: 10,
-                                borderRadius: 8,
-                                overflow: "hidden",
-                                backgroundColor: backgroundColorEditPrice,
-
-                            }}
-                        >
-                            {productDetailsLoading && item.id == selectedMessageId
-                                ?
-                                <ActivityIndicator
-                                    animating={productDetailsLoading}
-                                    size={20}
-                                    color='white'
-                                />
-                                :
-                                <FontAwesome5
-                                    name='edit'
-                                    color='white'
-                                    size={14}
-                                />
-                            }
-                            <Text style={{
-                                color: 'white',
-                                fontSize: 16,
-                                marginRight: 5,
-                                marginLeft: 10,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            }}>
-                                {locales('labels.editPrice')}
-                            </Text>
-                            <FontAwesome5
-                                name='angle-left'
-                                color='white'
-                                size={14}
-                            />
-                        </Animated.View>
-                    </Pressable >
-                );
+            // if (active_pakage_type != 0)
             return (
                 <Pressable
                     android_ripple={{
@@ -385,9 +318,8 @@ const RenderMessageWithProductIdDesign = props => {
                         borderBottomLeftRadius: 12,
                         borderBottomRightRadius: 12,
                         paddingVertical: 10,
-
                     }}
-                    onPress={() => handlePromotionModalVisiblity(true)}
+                    onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
                 >
                     <Animated.View
                         // start={{ x: 0, y: 1 }}
@@ -405,42 +337,24 @@ const RenderMessageWithProductIdDesign = props => {
                             paddingVertical: 10,
                             borderRadius: 8,
                             overflow: "hidden",
-                            backgroundColor: backgroundColorForDelsa,
+                            backgroundColor: backgroundColorEditPrice,
 
                         }}
                     >
-                        {/* <LinearGradient
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 0.8, y: 0.2 }}
-                        style={{
-                            width: '100%',
-                            backgroundColor: '#21AD93',
-
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            textAlign: 'center',
-
-                            flexDirection: 'row-reverse',
-
-                            paddingVertical: 5,
-                            borderBottomLeftRadius: 8,
-                            borderBottomRightRadius: 8,
-                            overflow: "hidden",
-                            borderTopRightRadius: 0,
-                            borderTopLeftRadius: 0,
-                        }}
-                        colors={['#4DC0BB', '#21AD93']}
-                    > */}
-
-                        <Text style={{
-                            marginRight: 10
-                        }}>
+                        {productDetailsLoading && item.id == selectedMessageId
+                            ?
+                            <ActivityIndicator
+                                animating={productDetailsLoading}
+                                size={20}
+                                color='white'
+                            />
+                            :
                             <FontAwesome5
-                                name='chess-queen'
+                                name='edit'
                                 color='white'
                                 size={14}
                             />
-                        </Text>
+                        }
                         <Text style={{
                             color: 'white',
                             fontSize: 16,
@@ -448,8 +362,7 @@ const RenderMessageWithProductIdDesign = props => {
                             marginLeft: 10,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}>
-                            {locales('titles.inquireSecretary')}
-
+                            {locales('labels.editPrice')}
                         </Text>
                         <FontAwesome5
                             name='angle-left'
@@ -459,6 +372,93 @@ const RenderMessageWithProductIdDesign = props => {
                     </Animated.View>
                 </Pressable >
             );
+            // return (
+            //     <Pressable
+            //         android_ripple={{
+            //             color: '#ededed'
+            //         }}
+            //         activeOpacity={1}
+            //         style={{
+            //             borderTopWidth: 1,
+            //             borderColor: '#d5f0c0',
+            //             backgroundColor: '#DCF8C6',
+            //             borderBottomLeftRadius: 12,
+            //             borderBottomRightRadius: 12,
+            //             paddingVertical: 10,
+
+            //         }}
+            //         onPress={() => handlePromotionModalVisiblity(true)}
+            //     >
+            //         <Animated.View
+            //             // start={{ x: 0, y: 1 }}
+            //             // end={{ x: 0.8, y: 0.2 }}
+            //             // colors={[colorFirst, colorSecond]}
+            //             style={{
+            //                 width: '95%',
+
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //                 textAlign: 'center',
+
+            //                 flexDirection: 'row-reverse',
+            //                 alignSelf: 'center',
+            //                 paddingVertical: 10,
+            //                 borderRadius: 8,
+            //                 overflow: "hidden",
+            //                 backgroundColor: backgroundColorForDelsa,
+
+            //             }}
+            //         >
+            //             {/* <LinearGradient
+            //             start={{ x: 0, y: 1 }}
+            //             end={{ x: 0.8, y: 0.2 }}
+            //             style={{
+            //                 width: '100%',
+            //                 backgroundColor: '#21AD93',
+
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //                 textAlign: 'center',
+
+            //                 flexDirection: 'row-reverse',
+
+            //                 paddingVertical: 5,
+            //                 borderBottomLeftRadius: 8,
+            //                 borderBottomRightRadius: 8,
+            //                 overflow: "hidden",
+            //                 borderTopRightRadius: 0,
+            //                 borderTopLeftRadius: 0,
+            //             }}
+            //             colors={['#4DC0BB', '#21AD93']}
+            //         > */}
+
+            //             <Text style={{
+            //                 marginRight: 10
+            //             }}>
+            //                 <FontAwesome5
+            //                     name='chess-queen'
+            //                     color='white'
+            //                     size={14}
+            //                 />
+            //             </Text>
+            //             <Text style={{
+            //                 color: 'white',
+            //                 fontSize: 16,
+            //                 marginRight: 5,
+            //                 marginLeft: 10,
+            //                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
+            //             }}>
+            //                 {locales('titles.inquireSecretary')}
+
+            //             </Text>
+            //             <FontAwesome5
+            //                 name='angle-left'
+            //                 color='white'
+            //                 size={14}
+            //             />
+            //         </Animated.View>
+            //     </Pressable >
+            // );
         }
         return (
             <Pressable
