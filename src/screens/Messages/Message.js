@@ -278,10 +278,12 @@ const RenderMessageWithProductIdDesign = props => {
     const handleAnimationChanges = _ => {
         Animated.timing(animatedColor, {
             duration: 1000,
+            useNativeDriver: false,
             toValue: 1,
         }).start(_ => {
             Animated.timing(animatedColor, {
                 duration: 1000,
+                useNativeDriver: false,
                 toValue: 0,
             }).start()
         });
