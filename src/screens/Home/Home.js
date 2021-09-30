@@ -76,6 +76,7 @@ class Home extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        console.log('this.props.changeRoleLoading', this.props.changeRoleLoading, 'this.props.userProfileLoading', this.props.userProfileLoading, 'this.props.productsListLoading', this.props.productsListLoading)
         if (
             (this.props.route && this.props.route.params &&
                 this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
@@ -163,7 +164,7 @@ class Home extends React.Component {
     changeRole = _ => {
 
         this.props.changeRole().then(res => {
-
+            console.log(res)
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
             const {
@@ -1052,12 +1053,12 @@ const InviteFriendsBanner = props => {
                 <View
                     style={{
                         width: '100%',
-                        height: deviceHeight > 710 ? '50%' : '62%',
+                        height: deviceHeight > 710 ? '52.5%' : '62%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 10,
-                        borderTopColor: "#ecebeb",
-                        borderTopWidth: 10
+                        borderColor: "#ecebeb",
+                        borderWidth: 10
                     }}
                 >
                     <ContentLoader
@@ -1080,7 +1081,7 @@ const InviteFriendsBanner = props => {
                     </ContentLoader>
 
                 </View>
-                <View
+                {/* <View
                     style={{
                         width: '100%',
                         height: '20%'
@@ -1111,7 +1112,7 @@ const InviteFriendsBanner = props => {
                             color='#bebebe'
                         />
                     </ContentLoader>
-                </View>
+                </View> */}
             </View>
         );
     else if (is_seller && !userProfileLoading)
