@@ -785,6 +785,7 @@ class ChatScreen extends Component {
     setPhoneNumberBannerVisibility = _ => {
         AsyncStorage.setItem('@validPassedTimeForPhoneNumberBanner', JSON.stringify(moment()));
         this.setState({ shouldShowPhoneNumberBanner: false });
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
 
     render() {
