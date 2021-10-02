@@ -89,7 +89,7 @@ const Message = props => {
                             selectionColor='gray'
                             suppressHighlighting
                             selectable
-                            onPress={showToast}
+                            // onPress={showToast}
                             style={{
                                 zIndex: 999999,
                                 textAlign: 'right',
