@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, ToastAndroid, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -8,6 +8,8 @@ import BgLinearGradient from 'react-native-linear-gradient';
 
 import Header from '../../../components/header';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import ContactsListModal from '../../../components/contactsListModal';
 import { deviceWidth } from '../../../utils/deviceDimenssions';
 
 const Referral = props => {
@@ -25,6 +27,8 @@ const Referral = props => {
     } = user_info;
 
     const completeUrlToShare = `${REACT_APP_API_ENDPOINT_RELEASE}/invite/${user_name}`;
+
+    const [showContactListModal, setShowContactListModal] = useState(false);
 
     const bodyText = locales('labels.helperTextForInvitation');
 
@@ -50,6 +54,48 @@ const Referral = props => {
         })
     };
 
+    const onRequestCloseContactListModal = _ => {
+        setShowContactListModal(false);
+    };
+
+
+    shareProfileLink = () => {
+        this.setState({ showContactListModal: false });
+        analytics().logEvent('profile_share', {
+            contact_id: this.state.userIdFromByUserName
+        });
+
+        const {
+            profilePhotoFromByUserName = '',
+            descriptionFromByUserName = ''
+        } = this.state;
+
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name = ''
+        } = params;
+
+        let url = `${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+
+        url = url.replace(/ /g, '');
+
+        url = `${descriptionFromByUserName}\n\n${url}`;
+
+        const image = profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
+            `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` :
+            'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9';
+
+        return shareToSocial('whatsApp', image, url);
+
+    };
+
     return (
         <View
             style={{
@@ -62,6 +108,19 @@ const Referral = props => {
                 shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
+
+            {showContactListModal ?
+                <ContactsListModal
+                    visible={showContactListModal}
+                    onRequestClose={onRequestCloseContactListModal}
+                    shouldShowInstagramButton={false}
+                    image={null}
+                    sharingUrlPostFix={`/invite/${user_name}`}
+                    bodyText={bodyText}
+                    {...props}
+                />
+                : null
+            }
 
             <ScrollView
                 style={{
@@ -207,7 +266,8 @@ const Referral = props => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
-                            onPress={askForPermissionOfContacts}
+                            // onPress={askForPermissionOfContacts}
+                            onPress={_ => setShowContactListModal(true)}
                         >
 
                             <View

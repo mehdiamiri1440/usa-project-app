@@ -17,7 +17,7 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
     if (result) {
         let shareOptions = {};
 
-        if (type == 'whatsApp') {
+        if (type == 'whatsApp' || type == 'telegram') {
             const res = await RNFetchBlob.fetch("GET", image);
             let base64Str = res.base64();
 
@@ -27,7 +27,7 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
             shareOptions = {
                 title: url,
                 url: `data:image/png;base64,` + base64Str,
-                social: Share.Social.WHATSAPP,
+                social: Share.Social[type.toUpperCase()],
                 message: url,
             };
             if (phone && phone.length)
