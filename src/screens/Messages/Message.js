@@ -25,7 +25,8 @@ const Message = props => {
         handlePromotionModalVisiblity = _ => { },
         handleEditPriceModalVisiblity = _ => { },
         productDetailsLoading,
-        selectedMessageId
+        selectedMessageId,
+        setInventoryModalVisibility = _ => { }
     } = props;
 
     const { contact_id: id } = contact;
@@ -58,70 +59,103 @@ const Message = props => {
             >
                 <View
                     style={{
-                        backgroundColor: 'rgba(204,204,204,0.4)',
-                        paddingBottom: 1.5,
-                        paddingTop: 1,
-                        paddingLeft: 1.5,
-                        paddingRight: 1,
-                        borderRadius: 9,
-                        borderTopWidth: 0.3,
-                        borderBottomWidth: 0.7,
-                        borderLeftWidth: 0.3,
-                        borderRightWidth: 0.3,
-                        borderTopColor: 'rgba(204,204,204,0.1)',
-                        borderBottomColor: 'rgba(204,204,204,0.7)',
-                        borderRightColor: 'rgba(204,204,204,0.1)',
-                        borderLeftColor: 'rgba(204,204,204,0.1)',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
                     }}
                 >
+
                     <View
                         style={{
-                            paddingHorizontal: 10,
-                            maxWidth: deviceWidth * 0.75,
+                            backgroundColor: 'rgba(204,204,204,0.4)',
+                            paddingBottom: 1.5,
+                            paddingTop: 1,
+                            paddingLeft: 1.5,
+                            paddingRight: 1,
                             borderRadius: 9,
-                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
-                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
-                            paddingVertical: 3,
-                            backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                            borderTopWidth: 0.3,
+                            borderBottomWidth: 0.7,
+                            borderLeftWidth: 0.3,
+                            borderRightWidth: 0.3,
+                            borderTopColor: 'rgba(204,204,204,0.1)',
+                            borderBottomColor: 'rgba(204,204,204,0.7)',
+                            borderRightColor: 'rgba(204,204,204,0.1)',
+                            borderLeftColor: 'rgba(204,204,204,0.1)',
                         }}
                     >
-                        <Text
-                            selectionColor='gray'
-                            suppressHighlighting
-                            selectable
-                            // onPress={showToast}
+                        <View
                             style={{
-                                zIndex: 999999,
-                                textAlign: 'right',
-                                fontSize: showPhoneFormat ? 18 : 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                color: showPhoneFormat ? '#5188B8' : '#333333'
+                                paddingHorizontal: 10,
+                                maxWidth: deviceWidth * 0.75,
+                                borderRadius: 9,
+                                borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                                borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                                paddingVertical: 3,
+                                backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                            }}
+                        >
+                            {item.p_id || item.phone_locked ?
+                                <Text
+                                    style={{
+                                        textAlign: 'right',
+                                        fontSize: 14,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        color: 'rgba(0,0,0,0.5)'
+                                    }}
+                                >
+                                    {locales('titles.botSentItAutomatically')}
+                                </Text>
+                                : null
+                            }
+                            <Text
+                                selectionColor='gray'
+                                suppressHighlighting
+                                selectable
+                                // onPress={showToast}
+                                style={{
+                                    zIndex: 999999,
+                                    textAlign: 'right',
+                                    fontSize: showPhoneFormat ? 18 : 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    color: showPhoneFormat ? '#5188B8' : '#333333'
 
-                            }}>
-                            {item.text}
-                        </Text>
-                        <RenderDate
+                                }}>
+                                {item.text}
+                            </Text>
+                            <RenderDate
+                                item={item}
+                                {...props}
+                                id={id}
+                                showPhoneFormat={showPhoneFormat}
+                            />
+                        </View>
+                        <RenderPhoneFormatMessage
+                            showPhoneFormat={showPhoneFormat}
+                            item={item}
+                            handlePromotionModalVisiblity={handlePromotionModalVisiblity}
+                            handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
+                            active_pakage_type={active_pakage_type}
+                            selectedMessageId={selectedMessageId}
+                            productDetailsLoading={productDetailsLoading}
+                            id={id}
+                            {...props}
+                        />
+                        <RenderMessageWithProductIdDesign
                             item={item}
                             {...props}
-                            id={id}
-                            showPhoneFormat={showPhoneFormat}
                         />
                     </View>
-                    <RenderPhoneFormatMessage
-                        showPhoneFormat={showPhoneFormat}
-                        item={item}
-                        handlePromotionModalVisiblity={handlePromotionModalVisiblity}
-                        handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
-                        active_pakage_type={active_pakage_type}
-                        selectedMessageId={selectedMessageId}
-                        productDetailsLoading={productDetailsLoading}
-                        id={id}
-                        {...props}
-                    />
-                    <RenderMessageWithProductIdDesign
-                        item={item}
-                        {...props}
-                    />
+                    {loggedInUserId == item.sender_id && item.phone_locked ?
+                        <FontAwesome5
+                            onPress={_ => setInventoryModalVisibility(true)}
+                            name='exclamation-circle'
+                            color='#F03738'
+                            size={25}
+                            style={{
+                                marginHorizontal: 3
+                            }}
+                        />
+                        :
+                        null}
                 </View>
             </View>
         </>

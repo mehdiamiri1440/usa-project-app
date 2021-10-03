@@ -69,7 +69,8 @@ class ChatScreen extends Component {
             productMinSalePriceClicked: false,
             shouldShowEditionSuccessfullText: false,
             shouldShowDelsaAdvertisement: false,
-            shouldShowPhoneNumberBanner: true
+            shouldShowPhoneNumberBanner: true,
+            inventoryModalFlag: false,
         };
     }
 
@@ -657,6 +658,10 @@ class ChatScreen extends Component {
 
     keyExtractor = (_, index) => index.toString();
 
+    setInventoryModalVisibility = inventoryModalFlag => {
+        this.setState({ inventoryModalFlag })
+    };
+
     renderItem = ({ item, index, separators }) => {
         const {
             route = {},
@@ -692,6 +697,7 @@ class ChatScreen extends Component {
             index={index}
             separators={separators}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
+            setInventoryModalVisibility={this.setInventoryModalVisibility}
             {...this.props}
         />;
     };
@@ -840,13 +846,113 @@ class ChatScreen extends Component {
             productMinSalePrice,
             productMinSalePriceClicked,
             shouldShowEditionSuccessfullText,
-            shouldShowPhoneNumberBanner
+            shouldShowPhoneNumberBanner,
+            inventoryModalFlag
         } = this.state;
 
         const detectToShowCommentAndGuid = showGuid && !buyAdId;
 
         return (
             <View style={styles.container}>
+                {inventoryModalFlag ?
+                    <Modal
+                        visible={inventoryModalFlag}
+                        onRequestClose={_ => this.setInventoryModalVisibility(false)}
+                        transparent={false}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 20
+                            }}
+                        >
+                            <Image
+                                source={require('../../../assets/images/lock.gif')}
+                                style={{
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    width: '70%',
+                                    color: '#000000',
+                                    marginVertical: 40
+                                }}
+                            >
+                                {locales('titles.youAreNotAbleSendPhonesAutomatic')} <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        textAlign: 'center',
+                                        color: '#F03738',
+                                        fontWeight: '200'
+                                    }}
+                                >
+                                    {locales('titles.disable')}
+                                </Text> <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        textAlign: 'center',
+                                        color: '#000000',
+                                        fontWeight: '200'
+                                    }}
+                                >
+                                    {locales('titles.is')}
+                                </Text>
+                            </Text>
+                            <View
+                                style={{
+                                    width: '100%'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        marginBottom: 10,
+                                        fontSize: 16,
+                                        textAlign: 'center',
+                                        color: '#000000'
+                                    }}
+                                >
+                                    {locales('titles.sendPhonePrice')}
+                                </Text>
+                                <Button
+                                    onPress={_ => {
+                                        this.setState({ inventoryModalFlag: false });
+                                        this.props.navigation.navigate('MyBuskool', { screen: 'Wallet' });
+                                    }}
+                                    style={{
+                                        backgroundColor: '#264653',
+                                        borderRadius: 8,
+                                        padding: 30,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        width: '85%'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 14,
+                                            textAlign: 'center',
+                                            color: 'white',
+                                            textAlignVertical: 'center'
+                                        }}
+                                    >
+                                        {locales('titles.chargeWallet')}
+                                    </Text>
+                                </Button>
+                            </View>
+                        </View>
+                    </Modal>
+                    : null}
                 <ImageBackground
                     source={require('../../../assets/images/whatsapp-wallpaper.png')}
                     style={styles.image}
@@ -1573,7 +1679,7 @@ const PayForPhoneNumberBanner = props => {
             </Text>
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
                 style={{
                     flexDirection: 'row-reverse',
                     alignItems: 'center',
