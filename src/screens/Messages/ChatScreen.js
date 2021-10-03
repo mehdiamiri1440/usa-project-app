@@ -872,6 +872,8 @@ class ChatScreen extends Component {
                             <Image
                                 source={require('../../../assets/images/lock.gif')}
                                 style={{
+                                    width: '100%',
+                                    height: '45%'
                                 }}
                             />
                             <Text
