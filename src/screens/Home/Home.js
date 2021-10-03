@@ -1018,7 +1018,7 @@ const InviteFriendsBanner = props => {
             <View
                 style={{
                     marginTop: 10,
-                    maxHeight: '55%'
+                    height: '14.7%'
                 }}
             >
                 {active_pakage_type < 3 ?
@@ -1032,7 +1032,7 @@ const InviteFriendsBanner = props => {
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            zIndex: 1000
+                            zIndex: 1000,
                         }}
                     >
                         <Rect width="100%" height='100%' rx={12} ry={12} />
@@ -1053,7 +1053,7 @@ const InviteFriendsBanner = props => {
                 <View
                     style={{
                         width: '100%',
-                        height: deviceHeight > 710 ? '52.5%' : '62%',
+                        height: '82%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 10,
