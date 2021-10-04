@@ -1,6 +1,5 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
@@ -269,9 +268,7 @@ dependencies {
     compile project(':RNSendIntentModule')
     implementation project(':react-native-device-info')
     implementation project(':@react-native-async-storage')
-    implementation platform('com.google.firebase:firebase-bom:28.4.1')
-    implementation 'com.google.firebase:firebase-perf'
-    implementation("com.google.firebase:firebase-iid")
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
     implementation project(':react-native-share')

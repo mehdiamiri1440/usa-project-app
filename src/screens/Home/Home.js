@@ -1017,8 +1017,8 @@ const InviteFriendsBanner = props => {
         return (
             <View
                 style={{
-                    marginTop: active_pakage_type > 0 ? 20 : 10,
-                    height: active_pakage_type > 0 ? '11.5%' : '14.7%'
+                    marginTop: active_pakage_type > 0 ? 20 : deviceHeight > 710 ? 10 : 17,
+                    height: active_pakage_type > 0 ? deviceHeight > 710 ? '11.7%' : '12.7%' : deviceHeight > 710 ? '14.7%' : '15.5%'
                 }}
             >
                 {active_pakage_type < 3 ?
