@@ -1017,15 +1017,15 @@ const InviteFriendsBanner = props => {
         return (
             <View
                 style={{
-                    marginTop: 10,
-                    height: '14.7%'
+                    marginTop: active_pakage_type > 0 ? 20 : 10,
+                    height: active_pakage_type > 0 ? '11.5%' : '14.7%'
                 }}
             >
                 {active_pakage_type < 3 ?
                     <ContentLoader
                         speed={2}
                         width='95%'
-                        height={44}
+                        height={40}
                         backgroundColor="#f3f3f3"
                         foregroundColor="#ecebeb"
                         style={{
@@ -1053,7 +1053,7 @@ const InviteFriendsBanner = props => {
                 <View
                     style={{
                         width: '100%',
-                        height: '82%',
+                        height: active_pakage_type > 0 ? '99%' : '83.2%',
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 10,
