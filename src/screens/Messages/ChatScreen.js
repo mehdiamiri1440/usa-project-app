@@ -1642,7 +1642,9 @@ const PayForPhoneNumberBanner = props => {
     } = props;
 
     return (
-        <View
+        <TouchableOpacity
+            activeOpacity={1}
+            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
             style={{
                 width: '100%',
                 height: 58,
@@ -1660,7 +1662,11 @@ const PayForPhoneNumberBanner = props => {
         >
             <FontAwesome5
                 name='times'
-                onPress={setPhoneNumberBannerVisibility}
+                onPress={event => {
+                    event.stopPropagation();
+                    ; setPhoneNumberBannerVisibility();
+                }
+                }
                 color='white'
                 size={20}
                 style={{
@@ -1711,7 +1717,7 @@ const PayForPhoneNumberBanner = props => {
                     {locales('titles.increaseInventory')}
                 </Text>
             </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
     )
 };
 

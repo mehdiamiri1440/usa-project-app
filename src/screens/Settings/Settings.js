@@ -38,6 +38,7 @@ class Settings extends React.Component {
                 '@sender_ids',
                 '@registerProductParams',
                 '@productsList',
+                '@validPassedTimeForPhoneNumberBanner',
             ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {
