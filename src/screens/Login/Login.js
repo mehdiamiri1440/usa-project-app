@@ -20,13 +20,14 @@ class Login extends React.Component {
             mobileNumberError: '',
             password: '',
             mobileNumberStatus: '',
+            firstLoad: false,
         }
     }
     mobileNumberRef = React.createRef();
     passwordRef = React.createRef();
 
     componentDidMount() {
-
+        this.setState({ firstLoad: true });
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -63,13 +64,13 @@ class Login extends React.Component {
 
     onLogin = () => {
 
+        this.setState({ firstLoad: false });
         let { mobileNumber, password } = this.state;
         let mobileNumberError = '', isMobileNumberValid;
 
         analytics().logEvent('send_verification_code', {
             mobile_number: mobileNumber
         })
-
         if (!mobileNumber) {
             mobileNumberError = locales('errors.fieldNeeded', { fieldName: locales('titles.phoneNumber') });
             isMobileNumberValid = false;
@@ -100,7 +101,7 @@ class Login extends React.Component {
 
     render() {
         let { message, loading, error } = this.props;
-        let { mobileNumber, password, mobileNumberError } = this.state;
+        let { mobileNumber, password, mobileNumberError, firstLoad } = this.state;
 
         return (
             <>
@@ -159,6 +160,22 @@ class Login extends React.Component {
                                 }}>{mobileNumberError}</Label>}
                             </View>
                             <View style={[styles.labelInputPadding]}>
+                                {
+                                    error && !firstLoad ?
+                                        <Text
+                                            style={{
+                                                paddingTop: '3%',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                color: '#FF5729',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
+                                            {locales('errors.retryLatter')}
+                                        </Text>
+
+                                        : null
+                                }
                                 <Button
                                     style={[!mobileNumber || !validator.isMobileNumber(mobileNumber)
                                         ? styles.disableLoginButton : styles.loginButton,
@@ -172,7 +189,7 @@ class Login extends React.Component {
                                         {locales('titles.login')}
                                     </Text>
                                     <ActivityIndicator size="small"
-                                        animating={!!loading}
+                                        animating={!!loading && !firstLoad}
                                         color="white"
                                         style={{
                                             position: 'absolute', left: '35%', top: '28%',
