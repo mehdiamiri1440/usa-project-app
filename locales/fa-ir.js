@@ -22,6 +22,7 @@ module.exports = {
     'errors.canNotBeZero': '{fieldName} باید بزرگتر از صفر باشد',
     'errors.canNotBeLessThan': '{fieldName} نمی‌تواند کمتر از {number} باشد',
     'errors.canNotBeLessThanChar': '{fieldName} نمی‌تواند کمتر از {number} کارکتر باشد',
+    'errors.retryLatter': 'مشکلی پیش آمده است . لطفا چند دقیقه دیگر مجددا تلاش کنید.',
 
     "labels.man": "آقا",
     'labels.putAMessage': 'پیامی بگذارید',
