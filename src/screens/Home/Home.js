@@ -76,7 +76,6 @@ class Home extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('this.props.changeRoleLoading', this.props.changeRoleLoading, 'this.props.userProfileLoading', this.props.userProfileLoading, 'this.props.productsListLoading', this.props.productsListLoading)
         if (
             (this.props.route && this.props.route.params &&
                 this.props.route.params.needToRefreshKey && (!prevProps.route || !prevProps.route.params))
@@ -164,7 +163,6 @@ class Home extends React.Component {
     changeRole = _ => {
 
         this.props.changeRole().then(res => {
-            console.log(res)
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
             const {
@@ -188,9 +186,9 @@ class Home extends React.Component {
                 global.refreshProductList = true;
                 this.props.updateProductsList(true);
 
-                this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
-                    this.props.fetchUserProfile().then(_ => {
-                        this.closeModal();
+                this.setState({ showchangeRoleModal: true }, _ => {
+                    this.props.fetchUserProfile().then(({ payload: { user_info: { is_seller } } }) => {
+                        this.setState({ is_seller: !!is_seller }, _ => this.closeModal())
                     })
                 })
             })
@@ -207,22 +205,12 @@ class Home extends React.Component {
 
     onRefresh = _ => {
 
-        const {
-            userProfile = {},
-        } = this.props;
-        const {
-            user_info = {}
-        } = userProfile;
-        const {
+        this.setState({ isPageRefreshedFromPullingDown: true })
+        this.props.fetchUserProfile().then(({ payload: { user_info: { is_seller, active_pakage_type } } }) => this.setState({
+            active_pakage_type,
             is_seller,
-            active_pakage_type
-        } = user_info;
-
-        if (!!is_seller) {
-            this.setState({ isPageRefreshedFromPullingDown: true })
-            this.props.fetchUserProfile().then(_ => this.setState({ isPageRefreshedFromPullingDown: false }));
-        }
-        this.setState({ active_pakage_type })
+            isPageRefreshedFromPullingDown: false
+        }));
     };
 
 
@@ -317,7 +305,7 @@ class Home extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
+                                {locales('titles.rollChangedSuccessfully', { fieldName: !!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
                             </Text>
 
                         </Dialog.Actions>
