@@ -93,7 +93,7 @@ const Message = props => {
                                 backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
                             }}
                         >
-                            {item.p_id || item.phone_locked ?
+                            {item.p_id || item.phone_locked || item.isSentFromDelsa == true ?
                                 <Text
                                     style={{
                                         textAlign: 'right',
@@ -128,17 +128,21 @@ const Message = props => {
                                 showPhoneFormat={showPhoneFormat}
                             />
                         </View>
-                        <RenderPhoneFormatMessage
-                            showPhoneFormat={showPhoneFormat}
-                            item={item}
-                            handlePromotionModalVisiblity={handlePromotionModalVisiblity}
-                            handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
-                            active_pakage_type={active_pakage_type}
-                            selectedMessageId={selectedMessageId}
-                            productDetailsLoading={productDetailsLoading}
-                            id={id}
-                            {...props}
-                        />
+                        {item.isSentFromDelsa == true
+                            ? null
+                            :
+                            <RenderPhoneFormatMessage
+                                showPhoneFormat={showPhoneFormat}
+                                item={item}
+                                handlePromotionModalVisiblity={handlePromotionModalVisiblity}
+                                handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
+                                active_pakage_type={active_pakage_type}
+                                selectedMessageId={selectedMessageId}
+                                productDetailsLoading={productDetailsLoading}
+                                id={id}
+                                {...props}
+                            />
+                        }
                         <RenderMessageWithProductIdDesign
                             item={item}
                             {...props}

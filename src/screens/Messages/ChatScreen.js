@@ -271,9 +271,10 @@ class ChatScreen extends Component {
         const { route = {} } = this.props;
         const { params = {} } = route;
         const { contact = {} } = params;
-        const text = remoteMessage.notification.body;
+        let text = remoteMessage.notification.body;
         let userChatHistory = [...this.state.userChatHistory];
-        const message = {
+
+        let message = {
             sender_id: contact.contact_id,
             receiver_id: this.props.loggedInUserId,
             text,
@@ -282,6 +283,10 @@ class ChatScreen extends Component {
         };
 
 
+        if (text.includes(":p=")) {
+            message.text = text.slice(0, text.indexOf(":p="));
+            message.isSentFromDelsa = true;
+        }
         userChatHistory.unshift(message);
 
         userChatHistory.forEach(item => {
@@ -1692,7 +1697,7 @@ const PayForPhoneNumberBanner = props => {
                     flexDirection: 'row-reverse',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: 'rgba(255,255,255,0.75)',
+                    backgroundColor: 'white',
                     height: 42,
                     width: 99,
                     marginRight: -5,
