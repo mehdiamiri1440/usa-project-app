@@ -5,6 +5,7 @@ import { Button } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Clipboard from "@react-native-community/clipboard";
 import BgLinearGradient from 'react-native-linear-gradient';
+import analytics from '@react-native-firebase/analytics';
 
 import Header from '../../../components/header';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -267,7 +268,10 @@ const Referral = props => {
                                 justifyContent: 'center',
                             }}
                             // onPress={askForPermissionOfContacts}
-                            onPress={_ => setShowContactListModal(true)}
+                            onPress={_ => {
+                                analytics().logEvent('click_on_send_invitation_button');
+                                setShowContactListModal(true);
+                            }}
                         >
 
                             <View

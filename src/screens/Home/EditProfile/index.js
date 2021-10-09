@@ -985,7 +985,7 @@ const ProfileAccomplishes = props => {
                 } = user_info;
                 const bodyText = locales('labels.helperTextForInvitation');
 
-                analytics().logEvent('click_on_share_profile_button');
+                analytics().logEvent(is_seller ? 'click_on_seller_invite_button' : 'click_on_buyer_invite_button');
 
                 if (is_seller)
                     return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
