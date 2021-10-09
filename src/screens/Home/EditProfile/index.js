@@ -966,9 +966,10 @@ const ProfileAccomplishes = props => {
 
     const onProfileAccomplishmentItemButtonPressed = ({ title }) => {
         switch (title) {
-            case 'labels.authentication':
+            case 'labels.authentication': {
+                analytics().logEvent('click_on_authentication_from_edit_profile');
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
-
+            }
             case 'titles.introduceToFirends': {
                 const {
                     userProfile = {}
@@ -983,6 +984,8 @@ const ProfileAccomplishes = props => {
                     is_seller
                 } = user_info;
                 const bodyText = locales('labels.helperTextForInvitation');
+
+                analytics().logEvent('click_on_share_profile_button');
 
                 if (is_seller)
                     return props.navigation.navigate('MyBuskool', { screen: 'Referral' });

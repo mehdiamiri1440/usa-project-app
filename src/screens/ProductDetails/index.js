@@ -2136,7 +2136,10 @@ class ProductDetails extends PureComponent {
                             }} >
                                 {(has_phone && !is_seller) ?
                                     <Button
-                                        onPress={() => this.fetchContactInfo(productIdFromProductDetails, userId)}
+                                        onPress={() => {
+                                            analytics().logEvent('click_on_call_info_button_product_details');
+                                            this.fetchContactInfo(productIdFromProductDetails, userId);
+                                        }}
                                         style={[styles.loginButton, {
                                             alignItems: 'center',
                                             width: '45%',

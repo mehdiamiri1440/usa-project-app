@@ -20,6 +20,7 @@ import { REACT_APP_API_ENDPOINT_RELEASE, APP_UPDATE_TYPE } from '@env';
 import DeviceInfo from 'react-native-device-info';
 import Axios from 'axios';
 import moment from 'moment';
+import analytics from '@react-native-firebase/analytics';
 
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -445,6 +446,7 @@ const routes = props => {
     }
 
     const openPromoteRegistrationModal = _ => {
+        analytics().logEvent('click_on_suggestion_buyad_modal');
         setShowPromoteRegistrationModal(true);
     };
 

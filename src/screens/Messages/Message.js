@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect } from 'react';
 import Jmoment from 'moment-jalaali';
 import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator, Animated } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import analytics from '@react-native-firebase/analytics';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -214,7 +214,7 @@ const RenderPhoneFormatMessage = props => {
 
 
     const openCallPad = phoneNumber => {
-
+        analytics().logEvent('click_on_call_info_button_messanger');
         if (!validator.isMobileNumber(phoneNumber))
             return;
 
@@ -359,7 +359,10 @@ const RenderMessageWithProductIdDesign = props => {
                         borderBottomRightRadius: 12,
                         paddingVertical: 10,
                     }}
-                    onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
+                    onPress={() => {
+                        analytics().logEvent('click_on_price_update_button');
+                        handleEditPriceModalVisiblity(p_id, item.id);
+                    }}
                 >
                     <Animated.View
                         // start={{ x: 0, y: 1 }}
@@ -514,7 +517,10 @@ const RenderMessageWithProductIdDesign = props => {
                     paddingVertical: 10,
                     backgroundColor: 'white'
                 }}
-                onPress={() => navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
+                onPress={() => {
+                    analytics().logEvent('click_on_see_product');
+                    navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } });
+                }}
             >
 
                 <Animated.View

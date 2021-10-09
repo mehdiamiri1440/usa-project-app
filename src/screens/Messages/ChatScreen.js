@@ -20,6 +20,7 @@ import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import analytics from '@react-native-firebase/analytics';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -1692,7 +1693,10 @@ const PayForPhoneNumberBanner = props => {
             </Text>
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={_ => props.navigation.navigate('Wallet')}
+                onPress={_ => {
+                    analytics().logEvent('click_on_change_wallet_button');
+                    props.navigation.navigate('Wallet');
+                }}
                 style={{
                     flexDirection: 'row-reverse',
                     alignItems: 'center',

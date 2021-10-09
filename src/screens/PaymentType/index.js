@@ -19,6 +19,7 @@ import {
 } from 'react-native-paper';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
+import analytics from '@react-native-firebase/analytics';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -79,6 +80,9 @@ const PaymentType = props => {
     };
 
     const onPayByWalletClicked = _ => {
+
+        analytics().logEvent('pay_from_wallet');
+
         if (!isInventorySufficient)
             setShowIncreaseInventoryModal(true);
 
