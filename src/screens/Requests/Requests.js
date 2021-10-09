@@ -770,7 +770,7 @@ class Requests extends PureComponent {
                         <Button
                             onPress={() => {
                                 this.updateFlag.current.close();
-                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                this.props.navigation.navigate('PromoteRegistration')
                             }}
                             style={{
                                 borderRadius: 5, backgroundColor: '#00C569',
@@ -835,7 +835,7 @@ class Requests extends PureComponent {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 
@@ -922,7 +922,7 @@ class Requests extends PureComponent {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
+                                    this.props.navigation.navigate('ExtraBuyAdCapacity');
                                 }}
                             >
 
@@ -1008,7 +1008,7 @@ class Requests extends PureComponent {
                                 style={[styles.modalButton, styles.greenButton, { borderRadius: 8, elevation: 0 }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 

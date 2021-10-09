@@ -308,17 +308,6 @@ export const RegisterProductStack = _ => (
             component={RegisterProduct}
         />
 
-
-        <Stack.Screen
-            options={({ navigation, route }) => ({
-                headerShown: false,
-                title: null,
-            })}
-            name={`PromoteRegistration`}
-            component={PromoteRegistration}
-        />
-
-
         <Stack.Screen
             options={({ navigation, route }) => ({
                 headerShown: false,
@@ -355,6 +344,24 @@ export const RegisterProductStack = _ => (
             })}
             name={`PaymentType`}
             component={PaymentType}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='ExtraProductCapacity'
+            name='ExtraProductCapacity'
+            component={ExtraProductCapacity}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='PromoteRegistration'
+            name='PromoteRegistration'
+            component={PromoteRegistration}
         />
     </Stack.Navigator>
 );
@@ -502,6 +509,43 @@ export const MessagesStack = _ => (
             name={`PaymentType`}
             component={PaymentType}
         />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            name={`Wallet`}
+            component={Wallet}
+        />
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='PromoteRegistration'
+            name='PromoteRegistration'
+            component={PromoteRegistration}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='ExtraBuyAdCapacity'
+            name='ExtraBuyAdCapacity'
+            component={ExtraBuyAdCapacity}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='ExtraProductCapacity'
+            name='ExtraProductCapacity'
+            component={ExtraProductCapacity}
+        />
     </Stack.Navigator>
 );
 
@@ -562,6 +606,34 @@ export const RequestsStack = _ => (
             component={PaymentType}
         />
 
+
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='PromoteRegistration'
+            name='PromoteRegistration'
+            component={PromoteRegistration}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='ExtraBuyAdCapacity'
+            name='ExtraBuyAdCapacity'
+            component={ExtraBuyAdCapacity}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='ExtraProductCapacity'
+            name='ExtraProductCapacity'
+            component={ExtraProductCapacity}
+        />
     </Stack.Navigator>
 );
 

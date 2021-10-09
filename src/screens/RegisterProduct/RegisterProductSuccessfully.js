@@ -955,7 +955,7 @@ class RegisterProductSuccessfully extends Component {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.setState({ showMobileNumberWarnModal: false });
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 
@@ -1044,7 +1044,7 @@ class RegisterProductSuccessfully extends Component {
                                 style={[styles.modalButton, styles.greenButton, { elevation: 0 }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 

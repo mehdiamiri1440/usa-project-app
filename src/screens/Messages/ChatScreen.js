@@ -932,7 +932,7 @@ class ChatScreen extends Component {
                                 <Button
                                     onPress={_ => {
                                         this.setState({ inventoryModalFlag: false });
-                                        this.props.navigation.navigate('MyBuskool', { screen: 'Wallet' });
+                                        this.props.navigation.navigate('Wallet');
                                     }}
                                     style={{
                                         backgroundColor: '#264653',
@@ -1083,7 +1083,7 @@ class ChatScreen extends Component {
                                             }}
                                             onPress={() => {
                                                 this.handlePromotionModalVisiblity(false)
-                                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                                this.props.navigation.navigate('PromoteRegistration')
                                             }}
                                         >
                                             <Text style={[styles.buttonText, {
@@ -1649,7 +1649,7 @@ const PayForPhoneNumberBanner = props => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
+            onPress={_ => props.navigation.navigate('Wallet')}
             style={{
                 width: '100%',
                 height: 58,
@@ -1692,7 +1692,7 @@ const PayForPhoneNumberBanner = props => {
             </Text>
             <TouchableOpacity
                 activeOpacity={1}
-                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
+                onPress={_ => props.navigation.navigate('Wallet')}
                 style={{
                     flexDirection: 'row-reverse',
                     alignItems: 'center',
