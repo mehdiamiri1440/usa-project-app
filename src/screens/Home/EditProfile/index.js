@@ -20,6 +20,7 @@ import * as profileActions from '../../../redux/profile/actions';
 import { permissions, deviceHeight, deviceWidth, validator } from '../../../utils';
 import Header from '../../../components/header';
 import ChooseImage from '../../../components/cameraActionSheet';
+import ContactsListModal from '../../../components/contactsListModal';
 
 let myTimeout;
 
@@ -95,6 +96,7 @@ class EditProfile extends Component {
                     shouldShow: true
                 },
             ],
+            showContactListModal: false
         }
 
     }
@@ -367,6 +369,10 @@ class EditProfile extends Component {
             })
     };
 
+    onRequestCloseContactListModal = showContactListModal => {
+        this.setState({ showContactListModal });
+    };
+
     render() {
         const {
             editProfileLoading,
@@ -398,11 +404,25 @@ class EditProfile extends Component {
             showSubmitEditionModal,
             shouldShowContactInfo,
             showViewPermissionModal,
-            ProfileAccomplishmentItemsArray = []
+            ProfileAccomplishmentItemsArray = [],
+            showContactListModal
         } = this.state;
 
         return (
             <>
+                {showContactListModal ?
+                    <ContactsListModal
+                        visible={showContactListModal}
+                        onRequestClose={_ => this.onRequestCloseContactListModal(false)}
+                        shouldShowInstagramButton={false}
+                        image={null}
+                        sharingUrlPostFix={`/invite/${user_name}`}
+                        bodyText={locales('labels.helperTextForInvitation')}
+                        {...this.props}
+                    />
+                    : null
+                }
+
                 {userProfileLoading ?
                     <View style={{
                         backgroundColor: 'white', flex: 1, width: deviceWidth, height: deviceHeight,
@@ -658,6 +678,7 @@ class EditProfile extends Component {
                             <ProfileAccomplishes
                                 handleDescriptionChange={this.handleDescriptionChange}
                                 openActionSheet={this.openActionSheet}
+                                onRequestCloseContactListModal={this.onRequestCloseContactListModal}
                                 ProfileAccomplishmentItemsArrayFromProps={ProfileAccomplishmentItemsArray}
                                 editProfileFromParent={this.editProfile}
                                 {...this.props}
@@ -881,7 +902,8 @@ const ProfileAccomplishes = props => {
     const {
         handleDescriptionChange = _ => { },
         editProfileFromParent = _ => { },
-        ProfileAccomplishmentItemsArrayFromProps = []
+        ProfileAccomplishmentItemsArrayFromProps = [],
+        onRequestCloseContactListModal = _ => { }
     } = props;
 
     // const scale = useRef(new Animated.Value(1)).current;
@@ -964,16 +986,17 @@ const ProfileAccomplishes = props => {
 
                 if (is_seller)
                     return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
-                return props.navigation.navigate('MyBuskool', {
-                    screen: 'UserContacts',
-                    params: {
-                        sharingUrlPostFix: `/invite/${user_name}`,
-                        bodyText,
-                        title: null,
-                        shouldShowInstagramButton: false,
-                        image: null
-                    }
-                });
+                return onRequestCloseContactListModal(true);
+                // return props.navigation.navigate('MyBuskool', {
+                //     screen: 'UserContacts',
+                //     params: {
+                //         sharingUrlPostFix: `/invite/${user_name}`,
+                //         bodyText,
+                //         title: null,
+                //         shouldShowInstagramButton: false,
+                //         image: null
+                //     }
+                // });
             }
 
             case 'titles.aboutYou':
