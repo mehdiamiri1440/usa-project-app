@@ -967,7 +967,7 @@ const ProfileAccomplishes = props => {
     const onProfileAccomplishmentItemButtonPressed = ({ title }) => {
         switch (title) {
             case 'labels.authentication': {
-                analytics().logEvent('click_on_authentication_from_edit_profile');
+                analytics().logEvent('click_on_authentication_edit_profile');
                 return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
             }
             case 'titles.introduceToFirends': {

@@ -1418,7 +1418,10 @@ class ProductDetails extends PureComponent {
                                             android_ripple={{
                                                 color: '#ededed'
                                             }}
-                                            onPress={_ => this.setState({ showContactListModal: true })}
+                                            onPress={_ => {
+                                                analytics().logEvent('click_on_share_button_product');
+                                                this.setState({ showContactListModal: true });
+                                            }}
                                             style={{
                                                 borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
                                                 flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
@@ -2140,7 +2143,7 @@ class ProductDetails extends PureComponent {
                                 {(has_phone && !is_seller) ?
                                     <Button
                                         onPress={() => {
-                                            analytics().logEvent('click_on_call_info_button_product_details');
+                                            analytics().logEvent('click_on_call_info_button_product');
                                             this.fetchContactInfo(productIdFromProductDetails, userId);
                                         }}
                                         style={[styles.loginButton, {
