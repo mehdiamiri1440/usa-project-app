@@ -1480,7 +1480,10 @@ const ProfilePreview = props => {
             {is_seller && active_pakage_type == 0 ?
                 <>
                     <TouchableOpacity
-                        onPress={_ => navigate('MyBuskool', { screen: 'PromoteRegistration' })}
+                        onPress={_ => {
+                            analytics().logEvent('click_on_promotion_ad_in_my_buskool');
+                            navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                        }}
                     >
                         <BgLinearGradient
                             start={{ x: 0, y: 1 }}

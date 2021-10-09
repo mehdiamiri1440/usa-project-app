@@ -1649,7 +1649,10 @@ class ProductDetails extends PureComponent {
                                     android_ripple={{
                                         color: '#ededed'
                                     }}
-                                    onPress={() => this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 })}
+                                    onPress={() => {
+                                        analytics().logEvent('click_on_profile_from_product_details');
+                                        this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 });
+                                    }}
                                     style={{
                                         width: deviceWidth * 0.95,
                                         alignSelf: 'center',
