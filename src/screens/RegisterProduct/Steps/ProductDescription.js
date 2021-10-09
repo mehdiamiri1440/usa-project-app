@@ -67,14 +67,6 @@ class ProductDecription extends Component {
 
         if (description && !validator.isValidDescription(description))
             this.setState({ descriptionError: locales('errors.invalidDescription') });
-
-        else if (description && description.length < 100)
-            this.setState({
-                descriptionError: locales('errors.canNotBeLessThanChar', {
-                    fieldName: locales('titles.headerDescription'),
-                    number: '100'
-                })
-            });
         else
             this.props.setProductDescription(this.state.description)
     };
@@ -216,8 +208,8 @@ class ProductDecription extends Component {
                         justifyContent: 'space-between'
                     }}>
                         <Button
-                            onPress={() => (!descriptionError || (description && description.length > 100)) && this.onSubmit()}
-                            style={(descriptionError || (description && description.length < 100)) ? styles.disableLoginButton : styles.loginButton}
+                            onPress={() => !descriptionError && this.onSubmit()}
+                            style={descriptionError ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
