@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
+import { CommonActions } from '@react-navigation/native';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
@@ -143,7 +144,7 @@ class Home extends React.Component {
                 return logOut();
 
             case 'Profile':
-                return navigate('MyBuskool', { screen: 'Profile', params: { user_name } });
+                return navigate('Profile', { user_name });
 
             case 'Messages':
                 return navigate("Messages", { screen: 'MessagesIndex', params: { tabIndex: 0 } });
@@ -155,7 +156,7 @@ class Home extends React.Component {
                 return navigate('SpecialProducts');
 
             default:
-                return navigate('MyBuskool', { screen: name })
+                return navigate(name)
         }
 
     };
@@ -163,6 +164,7 @@ class Home extends React.Component {
     changeRole = _ => {
 
         this.props.changeRole().then(res => {
+            // console.log('role changed', res)
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
             const {
@@ -183,12 +185,14 @@ class Home extends React.Component {
                 to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(_ => {
+                // console.log('product list fetched', this.props.productsListLoading)
                 global.refreshProductList = true;
                 this.props.updateProductsList(true);
 
                 this.setState({ showchangeRoleModal: true }, _ => {
                     this.props.fetchUserProfile().then(({ payload: { user_info: { is_seller } } }) => {
-                        this.setState({ is_seller: !!is_seller }, _ => this.closeModal())
+                        // console.log('user profile changed', payload)
+                        this.setState({ is_seller: is_seller == 0 ? false : true }, _ => this.closeModal())
                     })
                 })
             })
@@ -199,7 +203,15 @@ class Home extends React.Component {
 
     closeModal = () => {
         this.setState({ showchangeRoleModal: false }, _ => {
-            return this.props.navigation.navigate(!this.state.is_seller ? 'Home' : 'RequestsStack')
+            return this.props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: !this.state.is_seller ? 'Home' : 'RequestsStack' },
+                        { name: 'Messages' },
+                    ],
+                })
+            );
         });
     }
 
@@ -1127,7 +1139,7 @@ const InviteFriendsBanner = props => {
                         }}
                     >
                         <Pressable
-                            onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                            onPress={_ => props.navigation.navigate('Referral')}
                             android_ripple={{
                                 color: '#ededed'
                             }}
@@ -1170,7 +1182,7 @@ const InviteFriendsBanner = props => {
                                     }}
                                 >
                                     <Button
-                                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                                        onPress={_ => props.navigation.navigate('Referral')}
                                         style={{
                                             width: '100%',
                                             backgroundColor: 'transparent',
@@ -1377,7 +1389,7 @@ const ProfilePreview = props => {
             style={{
                 paddingHorizontal: 10,
             }}
-            onPress={() => navigate('MyBuskool', { screen: 'EditProfile' })}
+            onPress={() => navigate('EditProfile')}
         >
 
             <View
@@ -1482,7 +1494,7 @@ const ProfilePreview = props => {
                     <TouchableOpacity
                         onPress={_ => {
                             analytics().logEvent('click_on_promotion_ad_in_my_buskool');
-                            navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                            navigate('PromoteRegistration');
                         }}
                     >
                         <BgLinearGradient
