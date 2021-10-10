@@ -224,7 +224,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                     style={[styles.loginButton, { width: '80%', marginBottom: 10, alignSelf: 'center' }]}
                     onPress={_ => {
                         onRequestClose();
-                        navigation.navigate('MyBuskool', { screen: 'Authentication' })
+                        navigation.navigate('Authentication')
                     }}
                 >
                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>  {locales('labels.authenticationButton')}

@@ -372,6 +372,42 @@ export const RegisterProductStack = _ => (
             name='Wallet'
             component={Wallet}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Profile'
+            name='Profile'
+            component={Profile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='EditProfile'
+            name='EditProfile'
+            component={EditProfile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Authentication'
+            name='Authentication'
+            component={Authentication}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Referral'
+            name='Referral'
+            component={Referral}
+        />
     </Stack.Navigator>
 );
 
@@ -448,6 +484,42 @@ export const RegisterRequestStack = _ => (
             key='Wallet'
             name='Wallet'
             component={Wallet}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Profile'
+            name='Profile'
+            component={Profile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='EditProfile'
+            name='EditProfile'
+            component={EditProfile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Authentication'
+            name='Authentication'
+            component={Authentication}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Referral'
+            name='Referral'
+            component={Referral}
         />
     </Stack.Navigator>
 );
@@ -564,6 +636,33 @@ export const MessagesStack = _ => (
             name='ExtraProductCapacity'
             component={ExtraProductCapacity}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='EditProfile'
+            name='EditProfile'
+            component={EditProfile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Authentication'
+            name='Authentication'
+            component={Authentication}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Referral'
+            name='Referral'
+            component={Referral}
+        />
     </Stack.Navigator>
 );
 
@@ -660,6 +759,42 @@ export const RequestsStack = _ => (
             key='Wallet'
             name='Wallet'
             component={Wallet}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Profile'
+            name='Profile'
+            component={Profile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='EditProfile'
+            name='EditProfile'
+            component={EditProfile}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Authentication'
+            name='Authentication'
+            component={Authentication}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Referral'
+            name='Referral'
+            component={Referral}
         />
     </Stack.Navigator>
 );
@@ -759,6 +894,33 @@ export const HomeStack = _ => {
                 name='Wallet'
                 component={Wallet}
             />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='EditProfile'
+                name='EditProfile'
+                component={EditProfile}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Authentication'
+                name='Authentication'
+                component={Authentication}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Referral'
+                name='Referral'
+                component={Referral}
+            />
         </Stack.Navigator>
     )
 };
@@ -848,6 +1010,33 @@ export const SpecialProductsStack = _ => {
                 key='Wallet'
                 name='Wallet'
                 component={Wallet}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='EditProfile'
+                name='EditProfile'
+                component={EditProfile}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Authentication'
+                name='Authentication'
+                component={Authentication}
+            />
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Referral'
+                name='Referral'
+                component={Referral}
             />
         </Stack.Navigator>
     )

@@ -703,7 +703,7 @@ class Profile extends PureComponent {
                                         </Button>
                                         : <Button
                                             small
-                                            onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
+                                            onPress={() => this.props.navigation.navigate('EditProfile')}
                                             style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                         >
                                             <View style={[styles.textCenterView, styles.buttonText]}>

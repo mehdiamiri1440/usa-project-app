@@ -1511,11 +1511,11 @@ const routes = props => {
                                 key='Messages'
                                 listeners={{
                                     tabPress: e => {
-                                        e.preventDefault();
+                                        // e.preventDefault();
                                         currentRoute = e.target;
-                                        if (is_seller)
-                                            return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
-                                        return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
+                                        // if (is_seller)
+                                        //     return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex', params: { tabIndex: 0 } });
+                                        // return navigationRef.current.navigate('Messages', { screen: 'MessagesIndex' });
                                     },
                                 }}
                                 options={{
@@ -1531,7 +1531,7 @@ const routes = props => {
                                 listeners={{
                                     tabPress: e => {
                                         currentRoute = e.target;
-                                        navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
+                                        // navigationRef.current.navigate('MyBuskool', { screen: 'HomeIndex' })
                                     },
                                 }}
                                 key={'MyBuskool'}

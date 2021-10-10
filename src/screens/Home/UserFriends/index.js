@@ -467,7 +467,7 @@ const UserFriends = props => {
                 android_ripple={{
                     color: '#ededed'
                 }}
-                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Profile', params: { user_name } })}
+                onPress={_ => props.navigation.navigate('Profile', { user_name })}
                 style={{
                     flexDirection: 'row-reverse',
                     justifyContent: 'space-between',
@@ -603,7 +603,7 @@ const UserFriends = props => {
                         }}
                     > */}
                     <Button
-                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Referral' })}
+                        onPress={_ => props.navigation.navigate('Referral')}
                         style={{
                             width: '100%',
                             height: '100%',

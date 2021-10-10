@@ -659,7 +659,7 @@ class EditProfile extends Component {
 
                                     }]}
 
-                                    onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'Authentication' })}>
+                                    onPress={() => this.props.navigation.navigate('Authentication')}>
                                     <Text style={{
                                         color: 'white',
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -968,7 +968,7 @@ const ProfileAccomplishes = props => {
         switch (title) {
             case 'labels.authentication': {
                 analytics().logEvent('click_on_authentication_edit_profile');
-                return props.navigation.navigate('MyBuskool', { screen: 'Authentication' });
+                return props.navigation.navigate('Authentication');
             }
             case 'titles.introduceToFirends': {
                 const {
@@ -988,7 +988,7 @@ const ProfileAccomplishes = props => {
                 analytics().logEvent(is_seller ? 'click_on_seller_invite_button' : 'click_on_buyer_invite_button');
 
                 if (is_seller)
-                    return props.navigation.navigate('MyBuskool', { screen: 'Referral' });
+                    return props.navigation.navigate('Referral');
                 return onRequestCloseContactListModal(true);
                 // return props.navigation.navigate('MyBuskool', {
                 //     screen: 'UserContacts',

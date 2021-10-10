@@ -150,7 +150,7 @@ const PaymentType = props => {
 
     const navigateToMyWallet = _ => {
         closeIncreaseInventoryModal();
-        return props.navigation.navigate('MyBuskool', { screen: 'Wallet' })
+        return props.navigation.navigate('Wallet')
     };
 
     return (
@@ -373,7 +373,7 @@ const PaymentType = props => {
                         style={{
                             marginTop: 10,
                         }}
-                        onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
+                        onPress={_ => props.navigation.navigate('Wallet')}
                     >
                         <ImageBackground
                             source={require('../../../assets/images/wallet-bg.jpg')}
