@@ -363,6 +363,15 @@ export const RegisterProductStack = _ => (
             name='PromoteRegistration'
             component={PromoteRegistration}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Wallet'
+            name='Wallet'
+            component={Wallet}
+        />
     </Stack.Navigator>
 );
 
@@ -430,6 +439,15 @@ export const RegisterRequestStack = _ => (
             })}
             name={`PaymentType`}
             component={PaymentType}
+        />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Wallet'
+            name='Wallet'
+            component={Wallet}
         />
     </Stack.Navigator>
 );
@@ -634,6 +652,15 @@ export const RequestsStack = _ => (
             name='ExtraProductCapacity'
             component={ExtraProductCapacity}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='Wallet'
+            name='Wallet'
+            component={Wallet}
+        />
     </Stack.Navigator>
 );
 
@@ -723,7 +750,15 @@ export const HomeStack = _ => {
                 name={`PaymentType`}
                 component={PaymentType}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Wallet'
+                name='Wallet'
+                component={Wallet}
+            />
         </Stack.Navigator>
     )
 };
@@ -805,7 +840,15 @@ export const SpecialProductsStack = _ => {
                 name={`PaymentType`}
                 component={PaymentType}
             />
-
+            <Stack.Screen
+                options={({ navigation, route }) => ({
+                    headerShown: false,
+                    title: null,
+                })}
+                key='Wallet'
+                name='Wallet'
+                component={Wallet}
+            />
         </Stack.Navigator>
     )
 };

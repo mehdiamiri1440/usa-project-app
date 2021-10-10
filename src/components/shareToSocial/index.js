@@ -1,5 +1,6 @@
 import Share from 'react-native-share';
 import RNFetchBlob from "rn-fetch-blob";
+import { ToastAndroid } from 'react-native';
 
 import { permissions } from '../../utils';
 
@@ -29,6 +30,7 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
                 url: `data:image/png;base64,` + base64Str,
                 social: Share.Social[type.toUpperCase()],
                 message: url,
+                applicationName: type == 'telegram' ? "org.telegram.messenger" : "com.whatsapp"
             };
             if (phone && phone.length)
                 shareOptions.whatsAppNumber = phone;
@@ -39,12 +41,28 @@ export const shareToSocial = async (type = 'whatsApp', image = '', url = '', pho
             shareOptions = {
                 backgroundImage: `${image[0] + ';base64,'}` + image[1],
                 social: Share.Social.INSTAGRAM_STORIES,
+                applicationName: 'com.instagram.android'
             }
         }
+        Share.isPackageInstalled(shareOptions.applicationName)
+            .then((response) => {
+                if (response && response.isInstalled == true)
+                    return Share.shareSingle(shareOptions)
+                        .then((res) => { })
+                        .catch((err) => { });
 
-        Share.shareSingle(shareOptions)
-            .then((res) => { })
-            .catch((err) => { });
+                return ToastAndroid.showWithGravityAndOffset(
+                    locales('titles.appNotFound'),
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    50
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+                // { error }
+            });
     };
 
 };

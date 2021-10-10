@@ -435,6 +435,7 @@ module.exports = {
     'titles.chargeWallet': 'شارژ کیف پول',
     'titles.youAreNotAbleSendPhonesAutomatic': 'قابلیت ارسال خودکار شماره تماس به خریداران برای شما',
     'titles.disable': 'غیر فعال',
+    'titles.appNotFound': 'برنامه موردنظر پیدا نشد.',
     'titles.minPriceNeeded': 'حداقل قیمت',
     'titles.unlimited': 'نامحدود',
     'titles.maxPriceNeeded': 'حداکتر قیمت',
