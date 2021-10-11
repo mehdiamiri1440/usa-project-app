@@ -167,7 +167,7 @@ const RegisterationModal = props => {
                 sex: 'man',
                 province: provinceName,
                 city,
-                activity_type: '1',
+                activity_type: intent,
                 category_id: categoryId,
                 verification_code: formatter.toLatinNumbers(verificationCode)
             };
@@ -1214,6 +1214,17 @@ const GetIntentType = props => {
                             marginTop: 5
                         }}
                     >
+                        {locales('labels.buyer')} {locales('labels.is')}
+                    </Text>
+                    {/* <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
                         {locales('titles.withPrice')}
                     </Text>
                     <Text
@@ -1225,7 +1236,8 @@ const GetIntentType = props => {
                         }}
                     >
                         {locales('titles.iWantToBuy')}
-                    </Text>
+                    </Text> */}
+
                 </Pressable>
 
                 <Pressable
@@ -1279,6 +1291,17 @@ const GetIntentType = props => {
                             marginTop: 5
                         }}
                     >
+                        {locales('labels.seller')} {locales('labels.is')}
+                    </Text>
+                    {/* <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
                         {locales('titles.onlyWant')}
                     </Text>
                     <Text
@@ -1290,7 +1313,7 @@ const GetIntentType = props => {
                         }}
                     >
                         {locales('titles.getThePrice')}
-                    </Text>
+                    </Text> */}
                 </Pressable>
 
             </View>
