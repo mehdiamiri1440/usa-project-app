@@ -1661,7 +1661,6 @@ const PayForPhoneNumberBanner = props => {
                 alignItems: 'center',
                 alignSelf: 'center',
                 marginTop: 3,
-                marginBottom: 19,
                 marginHorizontal: 60,
                 padding: 10
             }}
@@ -1695,7 +1694,7 @@ const PayForPhoneNumberBanner = props => {
                 activeOpacity={1}
                 onPress={_ => {
                     analytics().logEvent('click_on_change_wallet_button');
-                    props.navigation.navigate('Wallet');
+                    props.navigation.navigate('PromoteRegistration');
                 }}
                 style={{
                     flexDirection: 'row-reverse',
@@ -1723,7 +1722,7 @@ const PayForPhoneNumberBanner = props => {
                         width: 51,
                     }}
                 >
-                    {locales('titles.increaseInventory')}
+                    {locales('titles.promoteRegistration')}
                 </Text>
             </TouchableOpacity>
         </TouchableOpacity>

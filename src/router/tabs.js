@@ -521,6 +521,15 @@ export const RegisterRequestStack = _ => (
             name='Referral'
             component={Referral}
         />
+        <Stack.Screen
+            options={({ navigation, route }) => ({
+                headerShown: false,
+                title: null,
+            })}
+            key='PromoteRegistration'
+            name='PromoteRegistration'
+            component={PromoteRegistration}
+        />
     </Stack.Navigator>
 );
 
