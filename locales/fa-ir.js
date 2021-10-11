@@ -59,6 +59,7 @@ module.exports = {
     'labels.searchForTargetCity': 'شهر مورد نظر خود را جستجو کنید',
     'labels.targetCity': 'شهر مورد نظر',
     'labels.pleaseSelectTargetCity': 'لطفا شهر را انتخاب کنید',
+    'labels.IMyself': 'خودم',
     'labels.selectTargetCity': 'شهر خود را انتخاب کنید',
     'labels.searchForProvince': 'جستجوی استان',
     'labels.searchForCity': 'جستجوی شهر',
