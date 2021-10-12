@@ -309,38 +309,38 @@ const RenderMessageWithProductIdDesign = props => {
     } = item;
 
     useEffect(_ => {
-        const colorInterval = setInterval(handleAnimationChanges, 1000);
-        return _ => clearInterval(colorInterval);
+        // const colorInterval = setInterval(handleAnimationChanges, 1000);
+        // return _ => clearInterval(colorInterval);
     }, []);
 
-    const handleAnimationChanges = _ => {
-        Animated.timing(animatedColor, {
-            duration: 1000,
-            useNativeDriver: false,
-            toValue: 1,
-        }).start(_ => {
-            Animated.timing(animatedColor, {
-                duration: 1000,
-                useNativeDriver: false,
-                toValue: 0,
-            }).start()
-        });
-    };
+    // const handleAnimationChanges = _ => {
+    //     Animated.timing(animatedColor, {
+    //         duration: 1000,
+    //         useNativeDriver: false,
+    //         toValue: 1,
+    //     }).start(_ => {
+    //         Animated.timing(animatedColor, {
+    //             duration: 1000,
+    //             useNativeDriver: false,
+    //             toValue: 0,
+    //         }).start()
+    //     });
+    // };
 
-    const backgroundColor = animatedColor.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: ['#fea858', '#ed765e', '#fea858']
-    });
+    // const backgroundColor = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#fea858', '#ed765e', '#fea858']
+    // });
 
-    const backgroundColorForDelsa = animatedColor.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: ['#4DC0BB', '#24ae95', '#21AD93']
-    });
+    // const backgroundColorForDelsa = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#4DC0BB', '#24ae95', '#21AD93']
+    // });
 
-    const backgroundColorEditPrice = animatedColor.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: ['#556080', '#495577', '#556593']
-    });
+    // const backgroundColorEditPrice = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#556080', '#495577', '#556593']
+    // });
 
     if (!!p_id) {
         if (item.sender_id == loggedInUserId) {
@@ -380,7 +380,7 @@ const RenderMessageWithProductIdDesign = props => {
                             paddingVertical: 10,
                             borderRadius: 8,
                             overflow: "hidden",
-                            backgroundColor: backgroundColorEditPrice,
+                            backgroundColor: "#556080",
 
                         }}
                     >
@@ -539,7 +539,7 @@ const RenderMessageWithProductIdDesign = props => {
                         paddingVertical: 10,
                         borderRadius: 8,
                         overflow: "hidden",
-                        backgroundColor,
+                        backgroundColor: "#fea858",
 
                     }}
                 >
