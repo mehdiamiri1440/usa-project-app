@@ -1650,7 +1650,7 @@ const PayForPhoneNumberBanner = props => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            onPress={_ => props.navigation.navigate('Wallet')}
+            onPress={_ => props.navigation.navigate('PromoteRegistration')}
             style={{
                 width: '100%',
                 height: 58,

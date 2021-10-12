@@ -257,7 +257,10 @@ class ContactsList extends Component {
                             keyboardShouldPersistTaps='handled'
                             keyboardDismissMode='on-drag'
                             showsVerticalScrollIndicator={false}
-                            style={{ width: '100%', height: deviceHeight * 1 }}
+                            windowSize={13}
+                            initialNumToRender={2}
+                            maxToRenderPerBatch={5}
+                            style={{ width: '100%', height: deviceHeight }}
                             contentContainerStyle={{ paddingBottom: 235 }}
                             ListHeaderComponent={_ => <ChannelInContactsList
                                 unread_contents={unread_contents}

@@ -313,7 +313,7 @@ module.exports = {
     "labels.locationsFilter": 'فیلتر مکان',
     "labels.one": 'یک',
     'labels.deleteThisRequest': 'حذف این درخواست',
-    'labels.reasonNotToShowPhoneNumber': 'شماره تماس شما به علت استفاده از عضویت رایگان باسکول به خریداران نمایش داده نمی‌شود.',
+    'labels.reasonNotToShowPhoneNumber': 'شماره تماس شما به علت استفاده از عضویت رایگان به خریداران نمایش داده نمی‌شود.',
     'labels.authenticatedSuccessfully': 'اطلاعات شما با موفقیت برای کارشناسان باسکول ارسال شد',
     'labels.willBeAuthenticatedAfterApprovment': 'پس از تایید کارشناسان حساب شما احراز هویت خواهد شد .',
     'labels.yourWallet': 'کیف پول شما',
