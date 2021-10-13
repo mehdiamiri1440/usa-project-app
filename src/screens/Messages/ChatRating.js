@@ -117,6 +117,7 @@ const ChatRating = props => {
                 <RBSheet
                     ref={refRBSheet}
                     closeOnDragDown
+                    animationType='fade'
                     closeOnPressMask
                     // onClose={_ => closeContactInfoSlider()}
                     height={350}

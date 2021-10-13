@@ -39,7 +39,7 @@ const CreditCardPayment = props => {
                 closeOnDragDown
                 closeOnPressMask
                 height={300}
-                animationType='slide'
+                animationType='fade'
                 customStyles={{
                     draggableIcon: {
                         backgroundColor: "#000"

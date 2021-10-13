@@ -813,7 +813,7 @@ class ProductDetails extends PureComponent {
                             closeOnPressMask
                             onClose={_ => this.closeContactInfoSlider()}
                             height={350}
-                            animationType='slide'
+                            animationType='fade'
                             customStyles={{
                                 draggableIcon: {
                                     backgroundColor: "#000"
