@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 
 
 export const homeRoutes = [
-    { label: 'titles.revenues', icon: <FontAwesome5 size={25} name='money-bill' color='#556080' />, name: 'UserFriends' },
+    { label: 'titles.revenues', icon: <FontAwesome5 size={25} name='dollar-sign' color='#556080' />, name: 'UserFriends' },
     { label: 'labels.yourWallet', icon: <FontAwesome5 size={25} name='wallet' color='#556080' />, name: 'Wallet' },
     { label: 'labels.dashboard', icon: <FontAwesome5 size={25} name='chart-line' color='#556080' />, name: 'Dashboard' },
     { label: 'titles.editProfile', icon: <FontAwesome5 size={25} name='user' solid color='#556080' />, name: 'EditProfile' },
