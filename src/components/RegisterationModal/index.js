@@ -13,7 +13,7 @@ import {
     Keyboard,
     StyleSheet,
     FlatList,
-    Pressable
+    Pressable,
 } from 'react-native';
 import {
     Button,
@@ -167,7 +167,7 @@ const RegisterationModal = props => {
                 sex: 'man',
                 province: provinceName,
                 city,
-                activity_type: '1',
+                activity_type: intent,
                 category_id: categoryId,
                 verification_code: formatter.toLatinNumbers(verificationCode)
             };
@@ -1177,7 +1177,59 @@ const GetIntentType = props => {
                         zIndex: 1000
                     }}
                 >
-                    <Svg
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 100,
+                            width: 50,
+                            height: 50,
+                            padding: 10,
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width='35'
+                            height='35'
+                            style={{
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'white',
+                                borderRadius: 100,
+                                padding: 10
+                            }}
+                            viewBox="0 0 16.55 20.411"
+                        >
+                            <Path
+                                d="M15.781 12.574l-3.81-1.1a1.017 1.017 0 01-.2-.082.333.333 0 00-.16-.105 1.036 1.036 0 01-.388-.8V9.419a3.676 3.676 0 001.233-2.747V3.784a3.684 3.684 0 10-7.368 0v2.888a3.675 3.675 0 001.198 2.713v1.094a1.037 1.037 0 01-.745.991l-3.812 1.1A2.407 2.407 0 000 14.875v4.567a.337.337 0 10.674 0v-4.567a1.73 1.73 0 011.243-1.654l1.415-.409a.331.331 0 00.026.032l1.812 1.812a1.38 1.38 0 001.781.149l.636-.453a1.213 1.213 0 00.45.722l-1.424 6.869a.526.526 0 00.127.451l1.425 1.894.031.036a.819.819 0 001.157 0l.017-.017 1.442-1.915a.528.528 0 00.123-.455l-1.42-6.864a1.213 1.213 0 00.449-.721l.636.453a1.38 1.38 0 001.781-.149l1.834-1.834 1.38.4a1.73 1.73 0 011.243 1.654v4.567a.337.337 0 00.674 0v-4.568a2.407 2.407 0 00-1.731-2.301zM10.012 1.05l-.03-.024.037.017zM5.766 6.674V4.89q.186.018.373.018a3.936 3.936 0 002.779-1.147l1.011-1.01a1.531 1.531 0 01.795.466 2.382 2.382 0 001.062.616v2.84a3.01 3.01 0 11-6.021 0zm3.01 3.684a3.661 3.661 0 001.778-.458v.582a1.706 1.706 0 00.411 1.106l-1.9 1.351a1.17 1.17 0 00-.58 0l-1.924-1.371a1.705 1.705 0 00.4-1.089v-.606a3.66 3.66 0 001.816.484zm-2.219 3.9a.708.708 0 01-.914-.077L4.064 12.6l1.664-.482A1.685 1.685 0 006.013 12l1.847 1.319-.022.025zm3.7 7.75l-1.4 1.855a.144.144 0 01-.179 0l-1.4-1.855 1.383-6.681c.034 0 .067.005.1.005a.67.67 0 00.1-.005zm1.643-7.83a.708.708 0 01-.913.076l-1.28-.911-.022-.025 1.83-1.3a1.685 1.685 0 00.264.1l1.7.491z"
+                                fill='#323b54'
+                                data-name="Path 7"
+                                transform="translate(0 -.1)"
+                            ></Path>
+                            <Path
+                                d="M199.657 230.69a.337.337 0 00-.337.337v3.862a.337.337 0 10.674 0v-3.862a.337.337 0 00-.337-.337z"
+                                fill='#323b54'
+                                data-name="Path 8"
+                                transform="translate(-185.887 -215.15)"
+                            ></Path>
+                            <Path
+                                d="M51.407 230.69a.337.337 0 00-.337.337v3.862a.337.337 0 10.674 0v-3.862a.337.337 0 00-.337-.337z"
+                                fill='#323b54'
+                                data-name="Path 9"
+                                transform="translate(-47.628 -215.15)"
+                            ></Path>
+                            <Path
+                                d="M101.82 98.128a2.188 2.188 0 002.022-1.39.337.337 0 10-.628-.244 1.5 1.5 0 01-2.793 0 .337.337 0 10-.628.244 2.188 2.188 0 002.028 1.39z"
+                                fill='#323b54'
+                                data-name="Path 10"
+                                transform="translate(-93.045 -89.797)"
+                            ></Path>
+                        </Svg>
+                    </View>
+                    {/* <Svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="52"
                         height="53"
@@ -1204,8 +1256,19 @@ const GetIntentType = props => {
                                 <Ellipse cx="26" cy="26.5" rx="25" ry="25.5"></Ellipse>
                             </G>
                         </G>
-                    </Svg>
+                    </Svg> */}
                     <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
+                        {locales('labels.buyer')} {locales('labels.is')}
+                    </Text>
+                    {/* <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 15,
@@ -1225,7 +1288,8 @@ const GetIntentType = props => {
                         }}
                     >
                         {locales('titles.iWantToBuy')}
-                    </Text>
+                    </Text> */}
+
                 </Pressable>
 
                 <Pressable
@@ -1242,7 +1306,56 @@ const GetIntentType = props => {
                         paddingHorizontal: 10
                     }}
                 >
-                    <Svg
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 100,
+                            width: 50,
+                            height: 50,
+                            padding: 10,
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width='35'
+                            height='35'
+                            style={{
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'white',
+                                borderRadius: 100,
+                                padding: 10
+                            }}
+                            viewBox="0 0 17.511 24.462"
+                        >
+                            <G data-name="Layer 1">
+                                <Path
+                                    d="M14.915 13.164l-3.6-1.043a.98.98 0 01-.7-.936V10.3a.318.318 0 00-.018-.1 3.474 3.474 0 001.183-2.611V6.03h2.57v-.892h-2.576V3.582a3.482 3.482 0 10-6.964 0v1.556H2.185v.892h2.626v1.556a3.474 3.474 0 001.155 2.588.318.318 0 00-.026.127v.885a.98.98 0 01-.7.936l-3.606 1.042A2.275 2.275 0 000 15.339v4.316a.318.318 0 00.637 0v-4.316a1.635 1.635 0 011.175-1.564l1.282-.369v6.627a.478.478 0 10.955 0v-6.7a.475.475 0 00-.041-.191l1.223-.354v1.465a1.517 1.517 0 001.539 1.491h2.994a1.517 1.517 0 001.536-1.492v-1.471l1.248.361a.477.477 0 00-.015.118v6.773a.478.478 0 10.955 0v-6.618l1.246.361a1.635 1.635 0 011.175 1.563v4.316a.318.318 0 10.637 0v-4.316a2.275 2.275 0 00-1.631-2.175zM5.448 3.582a2.845 2.845 0 115.69 0v1.556h-5.69zm0 4V6.03h5.69v1.556a2.845 2.845 0 11-5.69 0zM9.764 15.1H6.771a.88.88 0 01-.9-.854v-1.729a1.62 1.62 0 00.708-1.333v-.573a3.471 3.471 0 003.4.02v.55a1.62 1.62 0 00.694 1.324v1.742a.88.88 0 01-.9.858z"
+                                    fill='#323b54'
+                                    data-name="Path 11"
+                                    transform="translate(0 -.1)"
+                                ></Path>
+                                <Path
+                                    d="M101.307 118.036a2.068 2.068 0 001.911-1.314.318.318 0 10-.594-.231 1.414 1.414 0 01-2.64 0 .318.318 0 10-.594.231 2.068 2.068 0 001.917 1.314z"
+                                    fill='#323b54'
+                                    data-name="Path 12"
+                                    transform="translate(-93.039 -108.888)"
+                                ></Path>
+                            </G>
+                        </Svg>
+                    </View>
+                    {/* <Image
+                        source={require('../../../assets/icons/seller.png')}
+                        style={{
+                            marginHorizontal: 5,
+                            alignSelf: "center",
+                        }}
+                    /> */}
+                    {/* <Svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="52"
                         height="53"
@@ -1269,8 +1382,19 @@ const GetIntentType = props => {
                                 <Ellipse cx="26" cy="26.5" rx="25" ry="25.5"></Ellipse>
                             </G>
                         </G>
-                    </Svg>
+                    </Svg> */}
                     <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: 'white',
+                            textAlign: 'center',
+                            marginTop: 5
+                        }}
+                    >
+                        {locales('labels.IMyself')} {locales('labels.seller')} {locales('labels.is')}
+                    </Text>
+                    {/* <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 15,
@@ -1290,7 +1414,7 @@ const GetIntentType = props => {
                         }}
                     >
                         {locales('titles.getThePrice')}
-                    </Text>
+                    </Text> */}
                 </Pressable>
 
             </View>
