@@ -1186,6 +1186,7 @@ const InviteFriendsBanner = props => {
                                         style={{
                                             width: '100%',
                                             backgroundColor: 'transparent',
+                                            elevation: 0,
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                         }}

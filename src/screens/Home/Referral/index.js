@@ -262,6 +262,7 @@ const Referral = props => {
                         <Button
                             style={{
                                 width: '100%',
+                                elevation: 0,
                                 height: '100%',
                                 backgroundColor: 'transparent',
                                 alignItems: 'center',
