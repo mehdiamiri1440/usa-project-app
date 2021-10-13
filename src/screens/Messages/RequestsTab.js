@@ -463,11 +463,18 @@ class RequestsTab extends Component {
                                             elevation: 0
                                         }}
                                     >
-                                        <FontAwesome5
-                                            solid
-                                            name='phone-square-alt'
-                                            color={!item.isContactInfoShown ? '#333' : 'white'}
-                                            size={20} />
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={15}
+                                                color='#333'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                            />
+                                            : <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color={!item.isContactInfoShown ? '#333' : 'white'}
+                                                size={20} />
+                                        }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -479,17 +486,6 @@ class RequestsTab extends Component {
                                         >
                                             {locales('labels.contactInfo')}
                                         </Text>
-                                        {buyerMobileNumberLoading && selectedButton == item.id ?
-                                            <ActivityIndicator
-                                                size={15}
-                                                color='#333'
-                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                                style={{
-                                                    position: 'absolute', right: 10,
-                                                    width: 5, height: 5, borderRadius: 5,
-                                                }}
-                                            />
-                                            : null}
                                     </LinearGradient>
 
                                 </Button>
@@ -819,11 +815,17 @@ class RequestsTab extends Component {
                                             elevation: 0
                                         }}
                                     >
-                                        <FontAwesome5
-                                            solid
-                                            name='phone-square-alt'
-                                            color={!item.isContactInfoShown ? '#333' : 'white'}
-                                            size={20} />
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={15}
+                                                color='#333'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                            />
+                                            : <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color={!item.isContactInfoShown ? '#333' : 'white'}
+                                                size={20} />}
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -835,17 +837,7 @@ class RequestsTab extends Component {
                                         >
                                             {locales('labels.contactInfo')}
                                         </Text>
-                                        {buyerMobileNumberLoading && selectedButton == item.id ?
-                                            <ActivityIndicator
-                                                size={15}
-                                                color='#333'
-                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                                style={{
-                                                    position: 'absolute', right: 10,
-                                                    width: 5, height: 5, borderRadius: 5,
-                                                }}
-                                            />
-                                            : null}
+
                                     </LinearGradient>
 
                                 </Button>
@@ -1148,11 +1140,17 @@ class RequestsTab extends Component {
                                         elevation: 0
                                     }}
                                 >
-                                    <FontAwesome5
-                                        solid
-                                        name='phone-square-alt'
-                                        color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                        size={20} />
+                                    {buyerMobileNumberLoading && selectedButton == item.id ?
+                                        <ActivityIndicator
+                                            size={15}
+                                            color={(!item.is_golden ? 'white' : '#333')}
+                                            animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                        />
+                                        : <FontAwesome5
+                                            solid
+                                            name='phone-square-alt'
+                                            color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                            size={20} />}
                                     <Text
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -1164,17 +1162,7 @@ class RequestsTab extends Component {
                                     >
                                         {locales('labels.contactInfo')}
                                     </Text>
-                                    {buyerMobileNumberLoading && selectedButton == item.id ?
-                                        <ActivityIndicator
-                                            size={15}
-                                            color={(!item.is_golden ? 'white' : '#333')}
-                                            animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                            style={{
-                                                position: 'absolute', right: 10,
-                                                width: 5, height: 5, borderRadius: 5,
-                                            }}
-                                        />
-                                        : null}
+
                                 </LinearGradient>
 
                             </Button>
