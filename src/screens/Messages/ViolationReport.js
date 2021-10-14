@@ -272,8 +272,12 @@ const ViolationReport = props => {
                                     <ActivityIndicator
                                         size={14}
                                         color='white'
-                                        style={{ marginHorizontal: 3 }}
-                                        animating={!!sendReportLoading} />
+                                        style={{
+                                            position: 'absolute',
+                                            left: '10%'
+                                        }}
+                                        animating={!!sendReportLoading}
+                                    />
                                     : null}
                                 <Text style={styles.buttonText}>{locales('titles.submitReport')}</Text>
                             </Button>

@@ -66,9 +66,6 @@ class Login extends React.Component {
         let { mobileNumber, password } = this.state;
         let mobileNumberError = '', isMobileNumberValid;
 
-        if (this.state.isMobileNumberSentToServer == true)
-            return;
-
         analytics().logEvent('send_verification_code', {
             mobile_number: mobileNumber
         })
@@ -85,10 +82,14 @@ class Login extends React.Component {
             isMobileNumberValid = true;
         }
         if (isMobileNumberValid) {
-            this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
-                this.setState({ isMobileNumberSentToServer: true });
-                this.props.setMobileNumber(mobileNumber);
-            })
+            if (this.state.isMobileNumberSentToServer == true)
+                return;
+            this.setState({ isMobileNumberSentToServer: true }, _ => {
+                this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
+                    this.setState({ isMobileNumberSentToServer: false });
+                    this.props.setMobileNumber(mobileNumber);
+                });
+            });
         }
         else {
             this.setState({ mobileNumberError })

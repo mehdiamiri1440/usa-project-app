@@ -1654,7 +1654,7 @@ class ProductDetails extends PureComponent {
                                     }}
                                     onPress={() => {
                                         analytics().logEvent('click_on_profile_from_product_details');
-                                        this.props.navigation.navigate({ name: 'Profile', params: { user_name }, key: null, index: 0 });
+                                        this.props.navigation.navigate('Profile', { user_name });
                                     }}
                                     style={{
                                         width: deviceWidth * 0.95,
