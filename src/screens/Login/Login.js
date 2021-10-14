@@ -2,14 +2,11 @@ import React from 'react'
 import { Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import LinearGradient from 'react-native-linear-gradient';
-import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
+import { Button, Input, Item, Label } from 'native-base';
 import { connect } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceHeight, deviceWidth } from '../../utils/index'
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { validator, formatter } from '../../utils'
+
+import { deviceHeight, deviceWidth, validator } from '../../utils';
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions';
 class Login extends React.Component {
@@ -21,6 +18,7 @@ class Login extends React.Component {
             password: '',
             mobileNumberStatus: '',
             firstLoad: false,
+            isMobileNumberSentToServer: false
         }
     }
     mobileNumberRef = React.createRef();
@@ -68,6 +66,9 @@ class Login extends React.Component {
         let { mobileNumber, password } = this.state;
         let mobileNumberError = '', isMobileNumberValid;
 
+        if (this.state.isMobileNumberSentToServer == true)
+            return;
+
         analytics().logEvent('send_verification_code', {
             mobile_number: mobileNumber
         })
@@ -85,6 +86,7 @@ class Login extends React.Component {
         }
         if (isMobileNumberValid) {
             this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
+                this.setState({ isMobileNumberSentToServer: true });
                 this.props.setMobileNumber(mobileNumber);
             })
         }
