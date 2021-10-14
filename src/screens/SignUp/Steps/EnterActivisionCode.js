@@ -162,7 +162,9 @@ const EnterActivisionCode = (props) => {
                 }
             }).catch(err => {
                 if (err && err.data)
-                    setValueError(err.data.errors.phone[0])
+                    return setValueError(err?.data?.errors?.phone[0]);
+                return setValueError(locales('labels.somethingWentWrong'))
+
             })
         }
 
