@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, AppState } from 'react-native';
 import { connect } from 'react-redux';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop, useIsFocused } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
@@ -33,6 +33,7 @@ class ContactsList extends Component {
             to: 15,
             contactsListUpdated: false,
             loaded: false,
+            appState: AppState.currentState
         }
     }
 
@@ -118,13 +119,12 @@ class ContactsList extends Component {
     }
 
     handleAppStateChange = (nextAppState) => {
-        if (
-            AppState.current != nextAppState
-        ) {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused) {
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                 this.setState({ loaded: false })
             })
         }
+        this.setState({ appState: nextAppState });
     };
 
     setSearchText = searchText => this.setState({ searchText });
@@ -537,8 +537,8 @@ const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
-
-    return <ContactsList {...props} contactsListRef={ref} />;
+    const isFocused = useIsFocused();
+    return <ContactsList {...props} contactsListRef={ref} isFocused={isFocused} />;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)

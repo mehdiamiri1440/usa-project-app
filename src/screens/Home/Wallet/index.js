@@ -102,7 +102,8 @@ const Wallet = props => {
             return setInventoryError(locales('errors.canNotBeLessThan', { fieldName: locales('titles.stockQuantity'), number: '10,000' }));
         return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`).then(supported => {
             if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`)
+                    .then(_ => global.isAppStateChangedCauseOfPayment = true);
             }
         })
     };

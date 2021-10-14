@@ -141,7 +141,7 @@ const PaymentType = props => {
         return Linking.canOpenURL(bankUrl)
             .then(supported => {
                 if (supported) {
-                    Linking.openURL(bankUrl);
+                    Linking.openURL(bankUrl).then(_ => global.isAppStateChangedCauseOfPayment = true);
                 }
             })
     };

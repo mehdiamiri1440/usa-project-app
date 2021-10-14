@@ -37,7 +37,8 @@ class Home extends React.Component {
             loaded: false,
             is_seller: false,
             isPageRefreshedFromPullingDown: false,
-            active_pakage_type: 0
+            active_pakage_type: 0,
+            appState: AppState.currentState
         }
     }
 
@@ -111,13 +112,15 @@ class Home extends React.Component {
         } = state;
 
         if (
-            AppState.current != nextAppState && routes.length
+            this.state.appState.match(/inactive|background/) && nextAppState === 'active'
+            && routes.length
             && routes[routes.length - 1].name != 'EditProfile' &&
             routes[routes.length - 1].name != 'Authentication' &&
             isFocused
         ) {
             this.initMyBuskool();
         }
+        this.setState({ appState: nextAppState });
     };
 
     handleRouteChange = (name) => {

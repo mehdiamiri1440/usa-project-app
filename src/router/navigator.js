@@ -43,7 +43,7 @@ import {
 
 import { deviceWidth, deviceHeight } from '../utils';
 import * as productActions from '../redux/registerProduct/actions';
-import * as messageActions from '../redux/messages/actions';
+import * as profileActions from '../redux/profile/actions';
 import * as requestActions from '../redux/buyAdRequest/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
@@ -99,7 +99,6 @@ const routes = props => {
 
     const [ratingModalSuccessPage, setRatingModalSuccessPage] = useState(false);
 
-
     useEffect(() => {
 
         handleInitialRoute();
@@ -140,12 +139,11 @@ const routes = props => {
     const Tab = createMaterialBottomTabNavigator();
 
     const handleAppStateChange = (nextAppState) => {
-        if (
-            AppState.current != nextAppState
-        ) {
-            // checkForShowingContactInfoGuid();
-            checkForShowingPromotionModal();
+        // checkForShowingContactInfoGuid();
+        if (global.isAppStateChangedCauseOfPayment && nextAppState == 'active') {
+            props.fetchUserProfile().then(res => global.isAppStateChangedCauseOfPayment = false);
         }
+        checkForShowingPromotionModal();
     };
 
     const handleInitialRoute = _ => {
@@ -1733,7 +1731,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         resetRegisterProduct: resetTab => dispatch(productActions.resetRegisterProduct(resetTab)),
         resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
-        fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests())
+        fetchRelatedRequests: _ => dispatch(requestActions.fetchRelatedRequests()),
+        fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile())
     }
 };
 

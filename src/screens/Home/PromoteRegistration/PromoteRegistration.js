@@ -42,7 +42,7 @@ class PromoteRegistration extends React.Component {
 
         return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`).then(supported => {
             if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
             }
         })
     };

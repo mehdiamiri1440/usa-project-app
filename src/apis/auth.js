@@ -114,9 +114,8 @@ export const checkActivisionCode = (code, mobileNumber) => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && !err.response)
-                    // return reject(err.response);
-                    return reject(err);
+                // return reject(err.response);
+                return reject(err);
 
             });
     });

@@ -39,6 +39,7 @@ global.meInfo = {
   loggedInUserId: ''
 };
 global.refreshProductList = false;
+global.isAppStateChangedCauseOfPayment = false;
 class App extends React.Component {
 
   render() {

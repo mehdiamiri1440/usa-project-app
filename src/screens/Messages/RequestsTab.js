@@ -4,6 +4,7 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
+import { useIsFocused } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
@@ -32,6 +33,7 @@ class RequestsTab extends Component {
             showGoldenModal: false,
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
+            appState: AppState.currentState
         }
     }
 
@@ -110,12 +112,14 @@ class RequestsTab extends Component {
 
     handleAppStateChange = (nextAppState) => {
         if (
-            AppState.current != nextAppState
+            this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused
         ) {
+            console.log('app is in forground from requests')
             this.props.fetchRelatedRequests().then(result => {
                 this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
             });
         }
+        this.setState({ appState: nextAppState });
     };
 
     renderListEmptyComponent = _ => {
@@ -2001,4 +2005,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchBuyerMobileNumber: contactInfoObject => dispatch(requestActions.fetchBuyerMobileNumber(contactInfoObject)),
     }
 };
-export default connect(mapStateToProps, mapDispatchToProps)(RequestsTab)
+const Wrapper = (props) => {
+    const isFocused = useIsFocused();
+    return <RequestsTab {...props} isFocused={isFocused} />;
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)
