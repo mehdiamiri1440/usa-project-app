@@ -905,173 +905,178 @@ class RegisterProductSuccessfully extends Component {
 
 
 
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                {showMobileNumberWarnModal ?
+                    < Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
 
-                    }}>
-                    <Dialog
-                        visible={showMobileNumberWarnModal}
-                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        }}>
+                        <Dialog
+                            visible={showMobileNumberWarnModal}
+                            onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.contactInfo')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {accessToContactInfoErrorMessage}
                             </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <View style={{
                                 width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <Button
+                                    style={[styles.modalButton, styles.greenButton]}
+                                    onPress={() => {
+                                        this.setState({ showMobileNumberWarnModal: false });
+                                        this.props.navigation.navigate('PromoteRegistration');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {accessToContactInfoErrorMessage}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.setState({ showMobileNumberWarnModal: false });
-                                    this.props.navigation.navigate('PromoteRegistration');
-                                }}
-                            >
-
-                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                                styles.buttonText]}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                    styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                    </Text>
+                                </Button>
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
-
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={showGoldenModal}
-                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => { this.setState({ showGoldenModal: false }) }}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.goldenRequests')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
                                 width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                >
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null
+                }
+
+
+                {showGoldenModal ?
+                    <Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
+
+                        }}>
+                        <Dialog
+                            visible={showGoldenModal}
+                            onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                            style={styles.dialogWrapper}
+                        >
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.goldenRequests')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('labels.accessToGoldensDeined')}
+                                </Text>
+
+                            </Dialog.Actions>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {locales('labels.icreaseToSeeGoldens')}
+                            </Paragraph>
+                            <View style={{
+                                width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <Button
+                                    style={[styles.modalButton, styles.greenButton, { elevation: 0 }]}
+                                    onPress={() => {
+                                        this.setState({ showGoldenModal: false })
+                                        this.props.navigation.navigate('PromoteRegistration');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('labels.accessToGoldensDeined')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('labels.icreaseToSeeGoldens')}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton, { elevation: 0 }]}
-                                onPress={() => {
-                                    this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('PromoteRegistration');
-                                }}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                    </Text>
+                                </Button>
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ showGoldenModal: false })}
-                            >
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={() => this.setState({ showGoldenModal: false })}
+                                >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null
+                }
 
                 <ScrollView
                     style={{
