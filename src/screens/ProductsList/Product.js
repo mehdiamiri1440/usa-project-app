@@ -790,7 +790,7 @@ class Product extends PureComponent {
                                     analytics().logEvent('show_product_in_seperate_page', {
                                         product_id: productId
                                     });
-                                    this.props.navigation.navigate('ProductDetails', { productId })
+                                    this.props.navigation.push('ProductDetails', { productId })
                                 }}
                                 style={{
                                     width: '100%',
@@ -952,7 +952,7 @@ class Product extends PureComponent {
                                     }}>
                                     <Pressable
                                         onPress={() => {
-                                            this.props.navigation.navigate('Profile', { user_name })
+                                            this.props.navigation.push('Profile', { user_name })
                                         }}
                                         android_ripple={{
                                             color: '#ededed'
