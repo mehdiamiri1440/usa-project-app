@@ -288,6 +288,12 @@ class ChatScreen extends Component {
             message.text = text.slice(0, text.indexOf(":p="));
             message.isSentFromDelsa = true;
         }
+
+        if (text.includes(":wlt")) {
+            message.text = text.slice(0, text.indexOf(":wlt"));
+            message.isSentFromDelsa = true;
+        }
+
         userChatHistory.unshift(message);
 
         userChatHistory.forEach(item => {
