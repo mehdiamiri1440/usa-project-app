@@ -64,8 +64,13 @@ const routes = props => {
     } = props;
 
     const {
-        user_info = {}
+        user_info = {},
+        profile = {},
     } = userProfile;
+
+    let {
+        profile_photo = ''
+    } = profile;
 
     let {
         is_seller,
@@ -1542,9 +1547,8 @@ const routes = props => {
                                                 borderRadius: deviceWidth * 0.032,
                                                 width: deviceWidth * 0.064, height: deviceWidth * 0.064
                                             }}
-                                            source={!!userProfile && !!userProfile.profile && userProfile.profile.profile_photo &&
-                                                userProfile.profile.profile_photo.length ?
-                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${userProfile.profile.profile_photo}` }
+                                            source={profile_photo.length ?
+                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
                                                 : require('../../assets/icons/user.png')
                                             }
                                         />
