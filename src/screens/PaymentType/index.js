@@ -239,6 +239,7 @@ const PaymentType = props => {
                                         borderRadius: 12,
                                         flexDirection: 'row-reverse',
                                         backgroundColor: 'transparent',
+                                        elevation: 0
                                     }}
                                 >
 
