@@ -189,13 +189,25 @@ class ChatScreen extends Component {
                     userChatHistory[0] && userChatHistory[0].created_at &&
                     moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10;
 
-                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage;
+                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage && this.isMessagesSentFromDelsa();
 
                 shouldShowDelsaAdvertisement = loggedInUserStatusToShowDelsaAd && !shouldShowRatingCard && passedTimeFromLastMessage;
 
                 this.setState({ shouldShowRatingCard, shouldShowDelsaAdvertisement });
             });
         });
+    };
+
+    isMessagesSentFromDelsa = _ => {
+        const {
+            userChatHistory = []
+        } = this.state;
+
+        if (userChatHistory && userChatHistory.length &&
+            userChatHistory.filter(item => item.sender_id != this.props.loggedInUserId).some(item => !item.text.includes(':wlt=') && !item.text.includes(':p='))
+        )
+            return true;
+        return false;
     };
 
     handleIncomingMessage = _ => {
@@ -289,8 +301,8 @@ class ChatScreen extends Component {
             message.isSentFromDelsa = true;
         }
 
-        if (text.includes(":wlt")) {
-            message.text = text.slice(0, text.indexOf(":wlt"));
+        if (text.includes(":wlt=")) {
+            message.text = text.slice(0, text.indexOf(":wlt="));
             message.isSentFromDelsa = true;
         }
 
