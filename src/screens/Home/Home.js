@@ -7,7 +7,8 @@ import { CommonActions } from '@react-navigation/native';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState, TouchableOpacity
+    RefreshControl, AppState, TouchableOpacity,
+    FlatList
 } from 'react-native';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -44,8 +45,8 @@ class Home extends React.Component {
 
     homeRef = React.createRef();
 
-
     componentDidMount() {
+
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -253,11 +254,272 @@ class Home extends React.Component {
         return shouldHide;
     };
 
+    renderItem = ({ item: route, index }) => {
+        const {
+            userProfile = {},
+            userProfileLoading,
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            wallet_balance = 0,
+            is_seller
+        } = user_info;
+
+        if (this.shouldHideRoutes(route))
+            return null;
+        return (
+            route.name === 'PromoteRegistration' ?
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    onPress={() => this.handleRouteChange(route.name)}
+                    style={{
+                        alignContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        borderColor: '#00C569',
+                        borderBottomWidth: 1,
+                        paddingVertical: 20,
+                        elevation: 0,
+                        paddingHorizontal: 20,
+                        marginHorizontal: 20,
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+
+                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#00C569', '#21AD93']}
+                            style={{
+                                borderRadius: 5,
+                                padding: 5,
+                                width: deviceWidth * 0.1,
+                                height: deviceWidth * 0.1,
+                                alignItems: 'center'
+                            }}
+                        >
+                            {route.icon}
+
+                        </BgLinearGradient>
+                        <Text style={{
+                            paddingHorizontal: 10, fontSize: 16,
+                            textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444'
+                        }}
+                        >
+                            {locales(route.label)}
+                        </Text>
+                    </View>
+                    <View style={{ width: '20%', flexDirection: 'row' }}>
+                        <FontAwesome5
+                            style={{
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                left: -15
+                            }}
+                            color={'#21AD93'}
+                            size={25}
+                            name='angle-left'
+                        />
+                        <Text style={{
+                            fontSize: 14,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            backgroundColor: '#E41C38',
+                            color: 'white',
+                            borderRadius: 20,
+                            marginLeft: 10,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            marginTop: 4,
+                            width: 50,
+                            height: 30
+                        }}>
+                            {locales('labels.special')}
+                        </Text>
+                    </View>
+                </Pressable>
+                :
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    onPress={() => this.handleRouteChange(route.name)}
+                    style={{
+                        alignContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                            '#c7a84f' : '#E9ECEF',
+                        borderBottomWidth: index < homeRoutes.length - 1 ? 1 : 0,
+                        paddingVertical: 20,
+                        elevation: 0,
+                        paddingHorizontal: 20,
+                        marginHorizontal: 20,
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+
+                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
+                        {route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                            <BgLinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 2.5, y: 0.2 }}
+                                colors={['#c7a84f', '#f4eb97', '#c7a84f']}
+                                style={{
+                                    borderRadius: 5,
+                                    backgroundColor: '#c7a84f',
+                                    padding: 5,
+                                    width: deviceWidth * 0.1,
+                                    height: deviceWidth * 0.1,
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {route.icon}
+
+                            </BgLinearGradient> :
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    width: deviceWidth * 0.1,
+                                    height: deviceWidth * 0.1,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {route.icon}
+                            </View>
+                        }
+                        <Text style={{
+                            paddingHorizontal: 10, fontSize: 16,
+                            textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#444'
+                        }}>
+                            {locales(route.label)}
+                        </Text>
+                    </View>
+
+                    <View style={{ width: '20%', flexDirection: 'row' }}>
+                        <FontAwesome5
+                            color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'}
+                            size={25}
+                            style={{
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                left: -15
+                            }}
+                            name='angle-left'
+                        />
+                        {
+                            route.name == 'Wallet' && !!is_seller ?
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: '#666666',
+                                            fontSize: 15,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}
+                                    >
+                                        {locales('labels.credit')} :
+                                    </Text>
+                                    {!userProfileLoading ?
+                                        <>
+                                            <Text
+                                                style={{
+                                                    color: '#1DA1F2',
+                                                    fontSize: 15,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    marginHorizontal: 5
+                                                }}
+                                            >
+                                                {numberWithCommas(wallet_balance)}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: '#1DA1F2',
+                                                    fontSize: 15,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                }}
+                                            >
+                                                {locales('titles.toman')}
+                                            </Text>
+                                        </>
+                                        : <ContentLoader
+                                            speed={2}
+                                            width={deviceWidth * 0.13}
+                                            height={deviceWidth * 0.08}
+                                            backgroundColor="#f3f3f3"
+                                            foregroundColor="#ecebeb"
+                                            style={{
+                                                alignSelf: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Rect x="20%" y="30%" width="30" height="10" />
+                                        </ContentLoader>
+                                    }
+                                </View>
+                                : null
+                        }
+                        {route.name == 'Authentication' ?
+
+                            <View
+                                style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
+                                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
+                                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+
+                            </View>
+
+                            : route.name == 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+
+                                <Svg
+                                    style={{
+                                        marginTop: '12%',
+                                        marginLeft: 15
+                                    }}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="23" height="22.014" viewBox="0 0 23 22.014"
+                                >
+                                    <Defs>
+                                        <LinearGradient id="grad" x2="0.864" y2="1">
+                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
+                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
+                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
+
+                                        </LinearGradient>
+                                    </Defs>
+                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
+                                </Svg>
+
+                                :
+                                null
+                        }
+                    </View>
+                </Pressable>
+
+        )
+    };
 
     render() {
 
         const {
-            userProfileLoading,
             userProfile = {},
             changeRoleLoading,
             productsListLoading
@@ -272,8 +534,8 @@ class Home extends React.Component {
         const {
             user_info = {}
         } = userProfile;
+
         const {
-            wallet_balance = 0,
             is_seller
         } = user_info;
 
@@ -282,49 +544,50 @@ class Home extends React.Component {
                 style={{ flex: 1 }}
             >
 
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                {showchangeRoleModal ?
+                    <Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
 
-                    }}>
-                    <Dialog
-                        visible={showchangeRoleModal}
-                        style={styles.dialogWrapper}
-                        dismissable
-                        onDismiss={_ => this.closeModal()}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        }}>
+                        <Dialog
+                            visible={showchangeRoleModal}
+                            style={styles.dialogWrapper}
+                            dismissable
+                            onDismiss={_ => this.closeModal()}
                         >
-                            {/* <Button
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                {/* <Button
                                 onPress={() => this.closeModal()}
                                 style={styles.closeDialogModal}>
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button> */}
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('titles.changeRole')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('titles.changeRole')}
+                                </Paragraph>
+                            </Dialog.Actions>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
 
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
+                                <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#edf8e6',
+                                }]} />
 
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
-                            </Text>
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.rollChangedSuccessfully', { fieldName: !!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
+                                </Text>
 
-                        </Dialog.Actions>
-                        {/* <Dialog.Actions style={{
+                            </Dialog.Actions>
+                            {/* <Dialog.Actions style={{
                             justifyContent: 'center',
                             width: '100%',
                             padding: 0
@@ -337,8 +600,9 @@ class Home extends React.Component {
                                 </Text>
                             </Button>
                         </Dialog.Actions> */}
-                    </Dialog>
-                </Portal >
+                        </Dialog>
+                    </Portal >
+                    : null}
 
                 <Header
                     title={locales('labels.myBuskool')}
@@ -462,255 +726,11 @@ class Home extends React.Component {
                     </Pressable>
  */}
 
-                    {homeRoutes.map((route, index) => {
-                        if (this.shouldHideRoutes(route))
-                            return null;
-                        return (
-                            route.name === 'PromoteRegistration' ?
-                                <Pressable
-                                    android_ripple={{
-                                        color: '#ededed'
-                                    }}
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        borderRadius: 5,
-                                        borderColor: '#00C569',
-                                        borderBottomWidth: 1,
-                                        paddingVertical: 20,
-                                        elevation: 0,
-                                        paddingHorizontal: 20,
-                                        marginHorizontal: 20,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-
-                                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                        <BgLinearGradient
-                                            start={{ x: 0, y: 1 }}
-                                            end={{ x: 0.8, y: 0.2 }}
-                                            colors={['#00C569', '#21AD93']}
-                                            style={{
-                                                borderRadius: 5,
-                                                padding: 5,
-                                                width: deviceWidth * 0.1,
-                                                height: deviceWidth * 0.1,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-                                            {route.icon}
-
-                                        </BgLinearGradient>
-                                        <Text style={{
-                                            paddingHorizontal: 10, fontSize: 16,
-                                            textAlignVertical: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444'
-                                        }}
-                                        >
-                                            {locales(route.label)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <FontAwesome5
-                                            style={{
-                                                textAlign: 'center',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                alignSelf: 'center',
-                                                left: -15
-                                            }}
-                                            color={'#21AD93'}
-                                            size={25}
-                                            name='angle-left'
-                                        />
-                                        <Text style={{
-                                            fontSize: 14,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            backgroundColor: '#E41C38',
-                                            color: 'white',
-                                            borderRadius: 20,
-                                            marginLeft: 10,
-                                            textAlign: 'center',
-                                            textAlignVertical: 'center',
-                                            marginTop: 4,
-                                            width: 50,
-                                            height: 30
-                                        }}>
-                                            {locales('labels.special')}
-                                        </Text>
-                                    </View>
-                                </Pressable>
-                                :
-                                <Pressable
-                                    android_ripple={{
-                                        color: '#ededed'
-                                    }}
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        borderRadius: 5,
-                                        borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-                                            '#c7a84f' : '#E9ECEF',
-                                        borderBottomWidth: index < homeRoutes.length - 1 ? 1 : 0,
-                                        paddingVertical: 20,
-                                        elevation: 0,
-                                        paddingHorizontal: 20,
-                                        marginHorizontal: 20,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-
-                                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                        {route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-                                            <BgLinearGradient
-                                                start={{ x: 0, y: 1 }}
-                                                end={{ x: 2.5, y: 0.2 }}
-                                                colors={['#c7a84f', '#f4eb97', '#c7a84f']}
-                                                style={{
-                                                    borderRadius: 5,
-                                                    backgroundColor: '#c7a84f',
-                                                    padding: 5,
-                                                    width: deviceWidth * 0.1,
-                                                    height: deviceWidth * 0.1,
-                                                    alignItems: 'center'
-                                                }}
-                                            >
-                                                {route.icon}
-
-                                            </BgLinearGradient> :
-                                            <View
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    width: deviceWidth * 0.1,
-                                                    height: deviceWidth * 0.1,
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                {route.icon}
-                                            </View>
-                                        }
-                                        <Text style={{
-                                            paddingHorizontal: 10, fontSize: 16,
-                                            textAlignVertical: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            color: '#444'
-                                        }}>
-                                            {locales(route.label)}
-                                        </Text>
-                                    </View>
-
-                                    <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <FontAwesome5
-                                            color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'}
-                                            size={25}
-                                            style={{
-                                                textAlign: 'center',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                alignSelf: 'center',
-                                                left: -15
-                                            }}
-                                            name='angle-left'
-                                        />
-                                        {
-                                            route.name == 'Wallet' && !!is_seller ?
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row-reverse',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center'
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#666666',
-                                                            fontSize: 15,
-                                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                                        }}
-                                                    >
-                                                        {locales('labels.credit')} :
-                                                    </Text>
-                                                    {!userProfileLoading ?
-                                                        <>
-                                                            <Text
-                                                                style={{
-                                                                    color: '#1DA1F2',
-                                                                    fontSize: 15,
-                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                                    marginHorizontal: 5
-                                                                }}
-                                                            >
-                                                                {numberWithCommas(wallet_balance)}
-                                                            </Text>
-                                                            <Text
-                                                                style={{
-                                                                    color: '#1DA1F2',
-                                                                    fontSize: 15,
-                                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                                }}
-                                                            >
-                                                                {locales('titles.toman')}
-                                                            </Text>
-                                                        </>
-                                                        : <ContentLoader
-                                                            speed={2}
-                                                            width={deviceWidth * 0.13}
-                                                            height={deviceWidth * 0.08}
-                                                            backgroundColor="#f3f3f3"
-                                                            foregroundColor="#ecebeb"
-                                                            style={{
-                                                                alignSelf: 'center',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                            }}
-                                                        >
-                                                            <Rect x="20%" y="30%" width="30" height="10" />
-                                                        </ContentLoader>
-                                                    }
-                                                </View>
-                                                : null
-                                        }
-                                        {route.name == 'Authentication' ?
-
-                                            <View
-                                                style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
-                                                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                                                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
-
-                                            </View>
-
-                                            : route.name == 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-
-                                                <Svg
-                                                    style={{
-                                                        marginTop: '12%',
-                                                        marginLeft: 15
-                                                    }}
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="23" height="22.014" viewBox="0 0 23 22.014"
-                                                >
-                                                    <Defs>
-                                                        <LinearGradient id="grad" x2="0.864" y2="1">
-                                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
-                                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
-                                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
-
-                                                        </LinearGradient>
-                                                    </Defs>
-                                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
-                                                </Svg>
-
-                                                :
-                                                null
-                                        }
-                                    </View>
-                                </Pressable>
-
-                        )
-                    })}
-
+                    <FlatList
+                        renderItem={this.renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        data={homeRoutes}
+                    />
 
                     <Text style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1827,8 +1847,6 @@ const mapStateToProps = state => {
         userProfileLoading,
     }
 }
-
-
 
 const Wrapper = (props) => {
     const ref = React.useRef(null);
