@@ -364,22 +364,19 @@ class RegisterProduct extends React.Component {
                 return <ProductMoreDetails setDetailsArray={this.setDetailsArray} changeStep={this.changeStep}  {...this.props} />
             }
             case 8: {
-                return (
-                    <>
-                        <RegisterProductSuccessfully
-                            subCategoryId={subCategoryId}
-                            product={product}
-                            buyAds={buyAds}
-                            setSelectedButton={this.setSelectedButton}
-                            changeStep={this.changeStep}
-                            subCategoryName={subCategoryName}
-                            openChat={this.openChat}
-                            selectedButton={selectedButton}
-                            isUserAllowedToSendMessageLoading={this.props.isUserAllowedToSendMessageLoading}
-                            {...this.props}
-                        />
-                    </>
-                )
+                return <RegisterProductSuccessfully
+                    subCategoryId={subCategoryId}
+                    product={product}
+                    buyAds={buyAds}
+                    setSelectedButton={this.setSelectedButton}
+                    changeStep={this.changeStep}
+                    subCategoryName={subCategoryName}
+                    openChat={this.openChat}
+                    selectedButton={selectedButton}
+                    isUserAllowedToSendMessageLoading={this.props.isUserAllowedToSendMessageLoading}
+                    {...this.props}
+                />
+
             }
             default:
                 break;
