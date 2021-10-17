@@ -560,11 +560,7 @@ class Home extends React.Component {
                             <Dialog.Actions
                                 style={styles.dialogHeader}
                             >
-                                {/* <Button
-                                onPress={() => this.closeModal()}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button> */}
+
                                 <Paragraph style={styles.headerTextDialogModal}>
                                     {locales('titles.changeRole')}
                                 </Paragraph>
@@ -587,19 +583,7 @@ class Home extends React.Component {
                                 </Text>
 
                             </Dialog.Actions>
-                            {/* <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={[styles.modalCloseButton,]}
-                                onPress={() => this.closeModal()}>
 
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions> */}
                         </Dialog>
                     </Portal >
                     : null}
@@ -629,102 +613,6 @@ class Home extends React.Component {
                     />
 
                     {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
-
-                    {/* 
-                    <Pressable
-                        onPress={() => this.props.navigation.navigate('Referral')}
-                        style={{
-                            alignContent: 'center',
-                            backgroundColor: 'white',
-                            paddingTop: 10,
-                            paddingBottom: 30,
-                            elevation: 2,
-                            paddingHorizontal: 10,
-                            marginBottom: 10,
-                            marginHorizontal: 0,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between'
-                        }}
-                    >
-                        <View style={{
-                            width: deviceWidth - 150,
-                            paddingTop: 13
-                        }}>
-                            <Text style={{
-                                color: '#556080',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 16
-                            }}>
-                                {locales('titles.referralMainTitle')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainContents')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainSecondContents')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainThirdContents')}
-                            </Text>
-                        </View>
-                        <View
-                            style={{ width: 125, }}
-
-                        >
-                            <Image
-                                source={require('./../../../assets/images/gift-box.gif')}
-                                style={{
-                                    width: 130,
-                                    height: 65,
-                                    marginBottom: 5
-                                }}
-                            />
-                            <Button
-                                onPress={() => this.props.navigation.navigate('Referral')}
-
-                                style={{
-                                    backgroundColor: '#e41c38',
-                                    borderRadius: 3,
-                                    padding: 0,
-                                    margin: 0,
-                                    justifyContent: 'space-between',
-                                    paddingHorizontal: 20,
-                                    alignItems: 'center',
-                                    flexDirection: 'row-reverse',
-                                    height: 30
-                                }}>
-
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        color: '#fff',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                                    }}
-                                >
-                                    {locales('titles.referralButton')}
-                                </Text>
-                                <Ionicons color="#fff" size={20} name='ios-arrow-back' />
-
-                            </Button>
-                        </View>
-                    </Pressable>
- */}
 
                     <FlatList
                         renderItem={this.renderItem}
@@ -1104,38 +992,6 @@ const InviteFriendsBanner = props => {
                     </ContentLoader>
 
                 </View>
-                {/* <View
-                    style={{
-                        width: '100%',
-                        height: '20%'
-                    }}
-                >
-                    <ContentLoader
-                        speed={2}
-                        width='100%'
-                        height='100%'
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                        style={{
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            zIndex: 10000000
-                        }}
-                    >
-                        <Rect width="100%" height="100%" />
-                        <FontAwesome5
-                            name='angle-left'
-                            size={20}
-                            style={{
-                                alignSelf: 'center',
-                                top: 20,
-                                left: 10
-                            }}
-                            color='#bebebe'
-                        />
-                    </ContentLoader>
-                </View> */}
             </View>
         );
     else if (is_seller && !userProfileLoading)
@@ -1255,74 +1111,7 @@ const InviteFriendsBanner = props => {
                         </Pressable>
                     </View>
                 </BgLinearGradient>
-                {/* <Pressable
-                    onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'UserFriends' })}
-                    android_ripple={{
-                        color: '#ededed'
-                    }}
-                >
-                    <BgLinearGradient
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 0.8, y: 0.1 }}
-                        colors={['#1DA0F0', '#105A88']}
-                        // style={{
-                        //     alignSelf: 'center',
-                        //     padding: 15,
-                        //     width: '100%',
-                        //     flexDirection: 'row-reverse',
-                        //     alignItems: 'center',
-                        //     justifyContent: 'space-between'
-                        // }}
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            height: 60
-                        }}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: '#084971',
-                                height: '100%',
-                                borderTopLeftRadius: 25,
-                                borderBottomLeftRadius: 25,
-                                width: '17%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                alignSelf: 'center'
-                            }}
-                        >
-                            <FontAwesome5
-                                size={35}
-                                solid
-                                name='dollar-sign'
-                                color='white'
-                                style={{
-                                    right: -5
-                                }}
-                            />
-                        </View>
-                        <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: 'white',
-                                fontSize: 19,
-                            }}
-                        >
-                            {locales('titles.revenues')}
-                        </Text>
-                        <FontAwesome5
-                            name='angle-left'
-                            size={20}
-                            color='white'
-                            style={{
-                                marginLeft: 10
-                            }}
-                        />
-                    </BgLinearGradient>
-                </Pressable>
-        */}
+
             </>
         );
     return null;
@@ -1359,20 +1148,6 @@ const ProfilePreview = props => {
     } = profile;
 
     const flatListRef = useRef();
-
-    const [flatListArray, setFlatListArray] = useState(['1 برابر فروش بیشتر', '2 برابر فروش بیشتر', '3 برابر فروش بیشتر', '4 برابر فروش بیشتر', '5 برابر فروش بیشتر']);
-
-    const onScrollToIndexFailed = (error = {}) => {
-        const {
-            averageItemLength,
-            index
-        } = error;
-
-        const offset = averageItemLength * index;
-
-        flatListRef?.current?.scrollToOffset({ offset, animated: true });
-        setTimeout(() => flatListRef?.current?.scrollToIndex({ index, animated: true }), 300);
-    };
 
     const renderActivePackageTypeText = _ => {
         if (!!is_seller)
@@ -1429,21 +1204,7 @@ const ProfilePreview = props => {
                         alignItems: 'center',
                     }}
                 >
-                    {/* {active_pakage_type > 0 ?
-                        <BgLinearGradient
-                            start={{ x: 0, y: 1 }}
-                            end={{ x: 0.8, y: 0.2 }}
-                            colors={['#A6CEFF', '#2ED8A7']}
-                            style={{
-                                width: 78,
-                                height: 78,
-                                borderRadius: 39,
-                                right: 4,
-                            }}
-                        >
-                        </BgLinearGradient>
-                        : null
-                    } */}
+
                     {userProfileLoading ?
                         <ContentLoader
                             speed={2}
@@ -1542,24 +1303,7 @@ const ProfilePreview = props => {
                                 }}
                                 source={require('../../../assets/images/verticalPromotionTextGif.gif')}
                             />
-                            {/* <Animated.FlatList
-                                style={{ maxHeight: 25 }}
-                                ref={flatListRef}
-                                onScrollToIndexFailed={onScrollToIndexFailed}
-                                renderItem={({ item }) => (
-                                    <Text
-                                        style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            fontSize: 16,
-                                            color: 'white'
-                                        }}
-                                    >
-                                        {item}
-                                    </Text>
-                                )}
-                                data={flatListArray}
-                                keyExtractor={item => item}
-                            /> */}
+
                             <FontAwesome5
                                 name='angle-left'
                                 color='#c9a15f'
