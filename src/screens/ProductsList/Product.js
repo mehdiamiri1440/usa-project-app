@@ -511,18 +511,31 @@ class Product extends PureComponent {
                             <>
                                 <Dialog.ScrollArea>
                                     <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
                                             {locales('titles.amount')}
                                         </Label>
-                                        <Item regular style={{
-                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5, padding: 3
+                                            }}>
                                             <Input
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 keyboardType='number-pad'
                                                 autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none'
+                                                }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}
                                                 placeholder={locales('titles.amountWithExample')}
@@ -530,24 +543,45 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!amountError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>{amountError}</Label> : null}
+                                        {!!amountError ? <Label
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 14,
+                                                color: '#D81A1A'
+                                            }}>
+                                            {amountError}
+                                        </Label>
+                                            : null
+                                        }
                                     </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                    <View
+                                        style={styles.textInputPadding}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
                                             {locales('titles.minimumOrder')}
                                         </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
+                                            }}>
                                             <Input
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                                    , textDecorationLine: 'none'
+                                                }}
                                                 onChangeText={this.onMinimumOrderSubmit}
                                                 value={minimumOrder}
                                                 placeholder={locales('titles.minimumOrderWithExample')}
@@ -555,24 +589,44 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!minimumOrderError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>{minimumOrderError}</Label> : null}
+                                        {!!minimumOrderError ? <Label
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 14,
+                                                color: '#D81A1A'
+                                            }}>
+                                            {minimumOrderError}
+                                        </Label>
+                                            : null}
                                     </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                    <View
+                                        style={styles.textInputPadding}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
                                             {locales('titles.minimumPrice')}
                                         </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
+                                            }}>
                                             <Input
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 keyboardType='number-pad'
                                                 autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    textDecorationLine: 'none'
+                                                }}
                                                 onChangeText={this.onMinimumPriceSubmit}
                                                 value={minimumPrice}
                                                 placeholder={locales('titles.minimumPriceWithExample')}
@@ -580,27 +634,43 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!minimumPriceError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>
-                                            {minimumPriceError}</Label> : null}
+                                        {!!minimumPriceError ? <Label
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 14, color: '#D81A1A'
+                                            }}>
+                                            {minimumPriceError}
+                                        </Label>
+                                            : null}
                                     </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                    <View
+                                        style={styles.textInputPadding}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
                                             {locales('titles.maximumPrice')}
                                         </Label>
-                                        <Item regular
+                                        <Item
+                                            regular
                                             style={{
                                                 borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
-                                                borderRadius: 5, padding: 3
+                                                borderRadius: 5,
+                                                padding: 3
                                             }}>
                                             <Input
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    textDecorationLine: 'none'
+                                                }}
                                                 onChangeText={this.onMaximumPriceSubmit}
                                                 value={maximumPrice}
                                                 placeholder={locales('titles.maximumPriceWithExample')}
@@ -608,12 +678,15 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!maximumPriceError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>
+                                        {!!maximumPriceError ? <Label
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 14,
+                                                color: '#D81A1A'
+                                            }}>
                                             {maximumPriceError}
-                                        </Label> : null}
+                                        </Label>
+                                            : null}
                                     </View>
                                 </Dialog.ScrollArea>
                                 <Dialog.Actions style={{
@@ -622,9 +695,20 @@ class Product extends PureComponent {
                                     alignItems: 'center'
                                 }}>
                                     <Button
-                                        style={[styles.loginButton, { width: '50%', elevation: 0 }]}
-                                        onPress={() => this.onSubmit()}>
-                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
+                                        style={[
+                                            styles.loginButton,
+                                            {
+                                                width: '50%',
+                                                elevation: 0
+                                            }]}
+                                        onPress={() => this.onSubmit()}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.buttonText,
+                                                {
+                                                    alignSelf: 'center'
+                                                }]}>
                                             {locales('titles.submitChanges')}
                                         </Text>
                                     </Button>
@@ -638,16 +722,31 @@ class Product extends PureComponent {
                                         alignItems: 'center'
                                     }}>
 
-                                    {editProductStatus ? <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
-                                        borderColor: '#f27474',
-                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                        borderColor: '#edf8e6',
-                                    }]} />}
+                                    {editProductStatus ? <AntDesign
+                                        name="close"
+                                        color="#f27474"
+                                        size={70}
+                                        style={[
+                                            styles.dialogIcon, {
+                                                borderColor: '#f27474',
+                                            }]} /> : <Feather
+                                        name="check"
+                                        color="#a5dc86"
+                                        size={70}
+                                        style={[
+                                            styles.dialogIcon, {
+                                                borderColor: '#edf8e6',
+                                            }]} />
+                                    }
 
                                 </View>
-                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                                <Dialog.Actions
+                                    style={styles.mainWrapperTextDialogModal}
+                                >
 
-                                    <Text style={styles.mainTextDialogModal}>
+                                    <Text
+                                        style={styles.mainTextDialogModal}
+                                    >
                                         {editionMessageText}
                                     </Text>
 
@@ -666,13 +765,16 @@ class Product extends PureComponent {
                                 onPress={() => this.setState({ editionFlag: false })}
                             >
 
-                                <Text style={styles.closeButtonText}>
+                                <Text
+                                    style={styles.closeButtonText}
+                                >
                                     {locales('titles.close')}
                                 </Text>
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal > : null}
+                </Portal >
+                    : null}
 
                 < Portal
                     style={{
