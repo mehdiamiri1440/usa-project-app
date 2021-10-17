@@ -319,9 +319,10 @@ class ProductMoreDetails extends Component {
 
                         </View>
                         {detailsArray.map((detail, index) => (
-                            <>
+                            <React.Fragment
+                                key={detail.keyId}
+                            >
                                 {(this.state.deletedRows.indexOf(index) < 0 || !this.state.deletedRows.length) && <View
-                                    key={detail.keyId}
                                     style={{
                                         flexDirection: 'row-reverse',
                                         paddingBottom: 0,
@@ -396,7 +397,7 @@ class ProductMoreDetails extends Component {
                                             flex: 1,
                                             marginVertical: 10,
                                         }}>
-                                            <Item error={detail.error} regular style={{
+                                            <Item error={!!detail.error} regular style={{
                                                 height: 45,
                                                 backgroundColor: '#fff',
                                                 overflow: "hidden",
@@ -441,7 +442,7 @@ class ProductMoreDetails extends Component {
                                     fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     color: '#D81A1A', width: deviceWidth * 0.9
                                 }}>{!!detail.error && detail.error.length && detail.error}</Label>
-                            </>
+                            </React.Fragment>
                         )
                         )}
 
