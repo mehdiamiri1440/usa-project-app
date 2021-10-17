@@ -639,7 +639,7 @@ class Home extends React.Component {
                             android_ripple={{
                                 color: '#ededed'
                             }}
-                            onPress={() => !!is_seller && !changeRoleLoading && this.changeRole()}
+                            onPress={() => !!is_seller && this.changeRole()}
                             style={{
                                 backgroundColor: !!!is_seller ? '#4DC0BB' : '#fff',
                                 borderWidth: 1,
@@ -713,7 +713,7 @@ class Home extends React.Component {
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                             }}
-                            onPress={() => !!!is_seller && !changeRoleLoading && this.changeRole()}
+                            onPress={() => !!!is_seller && this.changeRole()}
                         >
                             {(changeRoleLoading || productsListLoading) && !!!is_seller ?
                                 <ActivityIndicator
