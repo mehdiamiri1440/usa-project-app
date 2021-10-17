@@ -1089,12 +1089,13 @@ class ProductDetails extends PureComponent {
                 </Portal >
 
 
-                {editionFlag ? <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
+                {editionFlag ? <Modal
+                    onDismiss={() => this.setState({ editionFlag: false })}
+                    onRequestClose={() => this.setState({ editionFlag: false })}
+                    visible={editionFlag}
+                    transparent={true}
+                    animationType='fade'
+                >
                     <Dialog
                         dismissable
                         visible={editionFlag}
@@ -1424,7 +1425,7 @@ class ProductDetails extends PureComponent {
                                 </Dialog.Actions>
                             </>}
                     </Dialog>
-                </Portal >
+                </Modal >
                     : null}
 
                 <Modal
