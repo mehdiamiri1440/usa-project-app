@@ -1586,96 +1586,9 @@ const styles = StyleSheet.create({
         padding: 10,
         alignSelf: 'center',
     },
-    backButtonText: {
-        color: '#7E7E7E',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
-        width: '60%',
-        textAlign: 'center'
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
-    },
-    loginFailedContainer: {
-        backgroundColor: '#D4EDDA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#155724'
-    },
-    container: {
-        flex: 1,
-    },
-    scrollContainer: {
-        flex: 1,
-        paddingHorizontal: 15,
-    },
-    scrollContentContainer: {
-        paddingTop: 40,
-        paddingBottom: 10,
-    },
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 13,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-        paddingVertical: 8,
-        height: 50,
-        color: 'black',
-        width: deviceWidth * 0.9,
-    },
     iconContainer: {
         left: 10,
         top: 13,
-    },
-    buttonText: {
-        color: 'white',
-        width: '100%',
-        textAlign: 'center'
-    },
-    labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        margin: 10,
-        borderRadius: 5,
-        backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.4,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    loginButton: {
-        textAlign: 'center',
-        margin: 10,
-        backgroundColor: '#00C569',
-        borderRadius: 5,
-        width: deviceWidth * 0.4,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
     },
     dialogWrapper: {
         borderRadius: 12,
@@ -1691,15 +1604,7 @@ const styles = StyleSheet.create({
         margin: 0,
         position: 'relative',
     },
-    closeDialogModal: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        padding: 15,
-        height: '100%',
-        backgroundColor: 'transparent',
-        elevation: 0
-    },
+
     headerTextDialogModal: {
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         textAlign: 'center',
@@ -1720,33 +1625,6 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         width: '100%'
     },
-    modalButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        maxWidth: 145,
-        color: 'white',
-        alignItems: 'center',
-        borderRadius: 5,
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-    },
-    modalCloseButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-        elevation: 0,
-        borderRadius: 0,
-        backgroundColor: '#ddd'
-    },
-    closeButtonText: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        color: '#555',
-    },
     dialogIcon: {
 
         height: 80,
@@ -1758,21 +1636,6 @@ const styles = StyleSheet.create({
         marginTop: 20
 
     },
-    greenButton: {
-        backgroundColor: '#00C569',
-    },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        marginTop: 10,
-        textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 16,
-        padding: 10,
-    },
     enterText: {
         marginTop: 10,
         fontWeight: 'bold',
@@ -1781,29 +1644,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 10,
     },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
     textInputPadding: {
         padding: 20,
     },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#7E7E7E'
-    }
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => {
