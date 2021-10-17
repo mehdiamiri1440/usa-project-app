@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Pressable,
+    ActivityIndicator,
+    ScrollView
+}
+    from 'react-native';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Input, Label, Item, Toast, Button } from 'native-base';
@@ -92,11 +100,46 @@ class Product extends PureComponent {
         }
     }
 
+
     onAmountSubmit = field => {
         this.setState(() => ({
+            amountError: '',
             amount: field,
-            amountError: ''
+            amountClicked: true
         }));
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    amountError: "لطفا  فقط عدد وارد کنید",
+                    amountClicked: true
+                }));
+            }
+            if (field >= 1000000000) {
+                this.setState(() => ({
+                    amountError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (!this.amountError) {
+                this.setState(() => ({
+                    amountText: formatter.convertUnitsToText(field),
+                    amountClicked: true
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                amount: '',
+                amountText: '',
+                amountClicked: false
+            }));
+        }
+
     };
 
     onMinimumPriceSubmit = field => {
@@ -123,18 +166,49 @@ class Product extends PureComponent {
             }));
     };
 
-    onMinimumOrderSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                minimumOrder: field,
-                minimumOrderError: ''
-            }));
-        else
-            this.setState(() => ({
-                minimumOrder: ''
-            }));
-    };
 
+    onMinimumOrderSubmit = field => {
+
+        this.setState(() => ({
+            minimumOrderError: '',
+            minimumOrder: field,
+            minimumOrderClicked: true
+        }));
+
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    minimumOrderError: "لطفا  فقط عدد وارد کنید",
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field >= 1000000000) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minOrder') }),
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.canNotBeZero', { fieldName: locales('titles.minOrder') }),
+                    minimumOrderClicked: true
+                }));
+            }
+            if (!this.minimumOrderError) {
+                this.setState(() => ({
+                    minimumOrderText: formatter.convertUnitsToText(field),
+                    minimumOrderClicked: true
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                minimumOrder: '',
+                minimumOrderText: '',
+                minimumOrderClicked: false
+            }));
+        }
+
+    };
 
     onSubmit = () => {
         const {
@@ -148,13 +222,18 @@ class Product extends PureComponent {
             user_name
         } = user_info;
 
-
         let { minimumOrder, maximumPrice, minimumPrice, amount } = this.state;
 
         let minimumOrderError = '', maximumPriceError = '', minimumPriceError = '', amountError = '';
 
         if (!amount) {
-            amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
+            amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.qunatityAmount') })
+        }
+        else if (amount && amount >= 1000000000) {
+            amountError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') })
+        }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') })
         }
         else {
             amountError = '';
@@ -162,7 +241,13 @@ class Product extends PureComponent {
 
 
         if (!minimumOrder) {
-            minimumOrderError = locales('errors.fieldNeeded', { fieldName: locales('titles.minimumOrderNeeded') })
+            minimumOrderError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minOrder') })
+        }
+        else if (minimumOrder && minimumOrder >= 1000000000) {
+            minimumOrderError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minOrder') })
+        }
+        else if (minimumOrder && minimumOrder <= 0) {
+            minimumOrderError = locales('errors.canNotBeZero', { fieldName: locales('titles.minOrder') })
         }
         else {
             minimumOrderError = '';
@@ -170,20 +255,32 @@ class Product extends PureComponent {
 
 
         if (!maximumPrice) {
-            maximumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.maxPriceNeeded') })
+            maximumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.maxPriceNeeded') })
+        }
+        else if (maximumPrice && maximumPrice <= 0) {
+            maximumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.maxPriceNeeded') })
         }
         else {
             maximumPriceError = '';
         }
 
 
+
         if (!minimumPrice) {
-            minimumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.minPriceNeeded') })
+            minimumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minPriceNeeded') })
+        }
+        else if (minimumPrice && minimumPrice <= 0) {
+            minimumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minPriceNeeded') })
         }
         else {
             minimumPriceError = '';
         }
-        this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
+
+        this.setState({
+            minimumOrderClicked: true, maxPriceClicked: true,
+            minPriceClicked: true, amountClicked: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError
+        })
+
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             let productObject = {
                 product_id: this.props.productItem.main.id,
@@ -222,9 +319,7 @@ class Product extends PureComponent {
                 });
             });
         }
-    }
-
-
+    };
 
     deleteProduct = id => {
         this.props.deleteProduct(id).then(_ => {
@@ -482,35 +577,64 @@ class Product extends PureComponent {
 
  */}
 
-                {editionFlag ? < Portal
+                {editionFlag ? <Portal
                     style={{
                         padding: 0,
                         margin: 0
 
                     }}>
                     <Dialog
+                        dismissable
                         visible={editionFlag}
                         onDismiss={() => this.setState({ editionFlag: false })}
                         style={styles.dialogWrapper}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'flex-end',
+                                justifyContent: 'center',
+                                paddingVertical: 10,
+                                paddingHorizontal: 20,
+                                borderBottomColor: '#bebebe',
+                                borderBottomWidth: 1
+                            }}
                         >
-                            <Button
+                            <FontAwesome5
                                 onPress={() => this.setState({ editionFlag: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
-                            </Paragraph>
-                        </Dialog.Actions>
-
+                                name="times"
+                                color="red"
+                                solid
+                                size={18}
+                            />
+                            <Text
+                                style={{
+                                    textAlign: 'right',
+                                    fontSize: 24,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: '#333',
+                                    marginTop: 5
+                                }}
+                            >
+                                {
+                                    locales('labels.edition',
+                                        {
+                                            fieldName:
+                                                `${category_name || '---'} ${category_name ? '|' : ''} ${sub_category_name || '---'}`
+                                        })}
+                            </Text>
+                        </View>
 
                         {!showEditionMessage ?
-                            <>
-                                <Dialog.ScrollArea>
-                                    <View style={styles.textInputPadding}>
+
+                            <Dialog.ScrollArea>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                    keyboardDismissMode='none'
+                                    keyboardShouldPersistTaps='handled'
+                                >
+                                    <View style={[styles.textInputPadding]}
+                                    >
                                         <Label
                                             style={{
                                                 color: 'black',
@@ -527,15 +651,20 @@ class Product extends PureComponent {
                                                 borderRadius: 5, padding: 3
                                             }}>
                                             <Input
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 keyboardType='number-pad'
                                                 autoCompleteType='off'
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none'
-                                                }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}
                                                 placeholder={locales('titles.amountWithExample')}
@@ -543,19 +672,20 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!amountError ? <Label
-                                            style={{
+                                        <Label style={{
+                                            height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                        }}>
+
+                                            {!!amountError && <Text style={{
+                                                fontSize: 14, color: '#D81A1A',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                fontSize: 14,
-                                                color: '#D81A1A'
-                                            }}>
-                                            {amountError}
+                                            }}> {amountError}</Text>}
                                         </Label>
-                                            : null
-                                        }
                                     </View>
                                     <View
-                                        style={styles.textInputPadding}
+                                        style={[styles.textInputPadding]}
                                     >
                                         <Label
                                             style={{
@@ -564,7 +694,7 @@ class Product extends PureComponent {
                                                 padding: 5
                                             }}
                                         >
-                                            {locales('titles.minimumOrder')}
+                                            {`${locales('titles.minOrder')} (${locales('labels.kiloGram')})`}
                                         </Label>
                                         <Item
                                             regular
@@ -578,29 +708,36 @@ class Product extends PureComponent {
                                                 autoCorrect={false}
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                                    , textDecorationLine: 'none'
-                                                }}
                                                 onChangeText={this.onMinimumOrderSubmit}
                                                 value={minimumOrder}
                                                 placeholder={locales('titles.minimumOrderWithExample')}
                                                 ref={this.minimumOrderRef}
-
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                             />
                                         </Item>
-                                        {!!minimumOrderError ? <Label
-                                            style={{
+                                        <Label style={{
+                                            height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
+                                        }}>
+
+                                            {!!minimumOrderError && <Text style={{
+                                                fontSize: 14, color: '#D81A1A',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                fontSize: 14,
-                                                color: '#D81A1A'
-                                            }}>
-                                            {minimumOrderError}
+                                            }}> {minimumOrderError}</Text>}
                                         </Label>
-                                            : null}
                                     </View>
                                     <View
-                                        style={styles.textInputPadding}
+                                        style={[styles.textInputPadding]}
                                     >
                                         <Label
                                             style={{
@@ -623,28 +760,31 @@ class Product extends PureComponent {
                                                 autoCorrect={false}
                                                 keyboardType='number-pad'
                                                 autoCompleteType='off'
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    textDecorationLine: 'none'
-                                                }}
                                                 onChangeText={this.onMinimumPriceSubmit}
                                                 value={minimumPrice}
                                                 placeholder={locales('titles.minimumPriceWithExample')}
                                                 ref={this.minimumPriceRef}
-
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    flexDirection: 'row',
+                                                    borderRadius: 4,
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                             />
                                         </Item>
-                                        {!!minimumPriceError ? <Label
-                                            style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                fontSize: 14, color: '#D81A1A'
-                                            }}>
-                                            {minimumPriceError}
+                                        <Label style={{
+                                            fontSize: 14, color: '#D81A1A', height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}>
+                                            {!!minimumPriceError ? minimumPriceError : null}
                                         </Label>
-                                            : null}
                                     </View>
                                     <View
-                                        style={styles.textInputPadding}
+                                        style={[styles.textInputPadding]}
                                     >
                                         <Label
                                             style={{
@@ -667,40 +807,57 @@ class Product extends PureComponent {
                                                 autoCorrect={false}
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                    textDecorationLine: 'none'
-                                                }}
                                                 onChangeText={this.onMaximumPriceSubmit}
                                                 value={maximumPrice}
                                                 placeholder={locales('titles.maximumPriceWithExample')}
                                                 ref={this.maximumPriceRef}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
 
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                             />
                                         </Item>
-                                        {!!maximumPriceError ? <Label
-                                            style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                fontSize: 14,
-                                                color: '#D81A1A'
-                                            }}>
-                                            {maximumPriceError}
+                                        <Label style={{
+                                            fontSize: 14, color: '#D81A1A', height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}>
+                                            {!!maximumPriceError ? maximumPriceError : null}
                                         </Label>
-                                            : null}
                                     </View>
-                                </Dialog.ScrollArea>
-                                <Dialog.Actions style={{
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
                                     <Button
                                         style={[
-                                            styles.loginButton,
+                                            !minimumOrder.length ||
+                                                !amount.length ||
+                                                !maximumPrice ||
+                                                !minimumPrice ||
+                                                minimumOrderError ||
+                                                amountError ||
+                                                maximumPriceError ||
+                                                minimumPriceError
+                                                ? {
+                                                    textAlign: 'center',
+                                                    borderRadius: 5,
+                                                    backgroundColor: '#B5B5B5',
+                                                    color: 'white',
+                                                }
+                                                : styles.loginButton,
                                             {
+                                                marginVertical: 0,
                                                 width: '50%',
-                                                elevation: 0
-                                            }]}
+                                                elevation: 0,
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                top: -10,
+                                                justifyContent: 'center'
+                                            }
+                                        ]}
                                         onPress={() => this.onSubmit()}
                                     >
                                         <Text
@@ -712,8 +869,9 @@ class Product extends PureComponent {
                                             {locales('titles.submitChanges')}
                                         </Text>
                                     </Button>
-                                </Dialog.Actions>
-                            </> :
+                                </ScrollView>
+                            </Dialog.ScrollArea>
+                            :
                             <>
 
                                 <View
@@ -752,26 +910,6 @@ class Product extends PureComponent {
 
                                 </Dialog.Actions>
                             </>}
-
-
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ editionFlag: false })}
-                            >
-
-                                <Text
-                                    style={styles.closeButtonText}
-                                >
-                                    {locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
                     </Dialog>
                 </Portal >
                     : null}

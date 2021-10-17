@@ -122,7 +122,6 @@ class StockAndPrice extends Component {
             }));
         }
 
-
     };
 
     onMinimumPriceSubmit = field => {
@@ -458,12 +457,6 @@ class StockAndPrice extends Component {
                             fontSize: 14, color: '#D81A1A',
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}> {amountError}</Text>}
-                        {/* {!amountError && amount.length ? <Text style={{
-                            fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        }}>
-                            {amountText}</Text> : null} */}
-
                     </Label>
 
 
@@ -565,12 +558,6 @@ class StockAndPrice extends Component {
                             fontSize: 14, color: '#D81A1A',
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}> {minimumOrderError}</Text>}
-                        {/* {!minimumOrderError && minimumOrder.length ? <Text style={{
-                            fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        }}>
-                            {minimumOrderText}</Text> : null} */}
-
                     </Label>
                     {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}
