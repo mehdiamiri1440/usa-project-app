@@ -170,7 +170,11 @@ class Requests extends PureComponent {
 
     hideDialog = () => this.setState({ showDialog: false });
 
-    setSelectedButton = id => this.setState({ selectedButton: id });
+    setSelectedButton = id => {
+        const foundIndex = this.state.buyAdRequestsList.findIndex(item => item.id == id);
+        this.props.requestsRef?.current?.scrollToIndex({ index: foundIndex, animated: true });
+        this.setState({ selectedButton: id });
+    };
 
     setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
