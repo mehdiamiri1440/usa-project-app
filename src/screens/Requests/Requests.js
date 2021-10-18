@@ -722,7 +722,7 @@ class Requests extends PureComponent {
 
                 {sortModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 

@@ -597,6 +597,7 @@ const Channel = props => {
                 : null}
             <Modal
                 visible={!!selectedItem}
+                animationType="fade"
                 onRequestClose={_ => setSelectedItem(null)}
                 transparent={false}
             >

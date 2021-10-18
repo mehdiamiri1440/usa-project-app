@@ -163,6 +163,7 @@ const PaymentType = props => {
 
             {showIncreaseInventoryModal ?
                 <Modal
+                    animationType="fade"
                     onDismiss={closeIncreaseInventoryModal}
                     onRequestClose={closeIncreaseInventoryModal}
                     visible={showIncreaseInventoryModal}
@@ -291,6 +292,7 @@ const PaymentType = props => {
                     onRequestClose={() => setShowSuccessModal(false)}
                     visible={showSuccessModal}
                     transparent={true}
+                    animationType="fade"
                     onDismiss={() => setShowSuccessModal(false)}
 
                 >

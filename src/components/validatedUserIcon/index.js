@@ -91,7 +91,7 @@ const ValidatedUserIcon = props => {
 export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation }) => {
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={false}
             visible={showModal}
             onRequestClose={() => onRequestClose()}

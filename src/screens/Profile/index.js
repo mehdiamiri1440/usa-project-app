@@ -373,7 +373,7 @@ class Profile extends PureComponent {
                     : null
                 }
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={selectedImageModal}
                     onRequestClose={() => this.setState({ selectedImageModal: false })}
@@ -405,7 +405,7 @@ class Profile extends PureComponent {
 
 
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={selectedEvidenceModal}
                     onRequestClose={() => this.setState({ selectedEvidenceModal: false })}

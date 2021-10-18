@@ -765,7 +765,7 @@ class ProductsList extends PureComponent {
 
         return (
             <Modal
-                animationType="slide"
+                animationType="fade"
                 visible={modals.findIndex(item => item.category_name == category_name) > -1}
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
@@ -1700,7 +1700,7 @@ class ProductsList extends PureComponent {
 
                 {locationsFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={locationsFlag}
                         onRequestClose={() => this.setState({ locationsFlag: false })}>
 
@@ -1846,7 +1846,7 @@ class ProductsList extends PureComponent {
 
                 {sortModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
@@ -1866,7 +1866,7 @@ class ProductsList extends PureComponent {
 
                 {!!totalCategoriesModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={!!totalCategoriesModalFlag}
                         onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 

@@ -150,6 +150,7 @@ class PromoteRegistration extends React.Component {
             <>
                 <Modal
                     transparent={false}
+                    animationType="fade"
                     onRequestClose={_ => this.setState({ visibility: false })}
                     visible={visibility}
                 >

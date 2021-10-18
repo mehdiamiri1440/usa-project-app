@@ -308,6 +308,7 @@ const RegisterationModal = props => {
             visible={visible}
             onRequestClose={handleCloseModal}
             transparent={false}
+            animationType="fade"
         >
             <Header
                 {...props}

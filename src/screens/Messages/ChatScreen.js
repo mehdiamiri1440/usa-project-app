@@ -880,6 +880,7 @@ class ChatScreen extends Component {
             <View style={styles.container}>
                 {inventoryModalFlag ?
                     <Modal
+                        animationType="fade"
                         visible={inventoryModalFlag}
                         onRequestClose={_ => this.setInventoryModalVisibility(false)}
                         transparent={false}
@@ -988,6 +989,7 @@ class ChatScreen extends Component {
                         <Modal
                             onRequestClose={_ => this.handlePromotionModalVisiblity(false)}
                             visible={shouldShowPromotionModal}
+                            animationType="fade"
                             transparent={true}
                         >
                             <Dialog
@@ -1124,6 +1126,7 @@ class ChatScreen extends Component {
                             onRequestClose={_ => this.setState({ shouldShowEditPriceModal: false })}
                             visible={shouldShowEditPriceModal}
                             transparent={true}
+                            animationType="fade"
                         >
                             <Dialog
                                 onDismiss={_ => this.setState({ shouldShowEditPriceModal: false })}

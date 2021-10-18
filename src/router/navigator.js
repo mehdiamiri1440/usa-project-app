@@ -465,6 +465,7 @@ const routes = props => {
         <>
             {showRatingModal ?
                 <Modal
+                    animationType="fade"
                     onDismiss={closeRatingModal}
                     onRequestClose={closeRatingModal}
                     visible={showRatingModal}
@@ -590,6 +591,7 @@ const routes = props => {
                     onRequestClose={closePromotionModal}
                     visible={showPromotionModal}
                     transparent={true}
+                    animationType="fade"
                     onDismiss={closePromotionModal}
                 >
                     <Dialog
@@ -719,6 +721,7 @@ const routes = props => {
                     onRequestClose={closeSuggestedBuyerModal}
                     visible={showSuggestedBuyerModal}
                     transparent={true}
+                    animationType="fade"
                     onDismiss={closeSuggestedBuyerModal}
                 >
                     <Dialog
@@ -1015,6 +1018,7 @@ const routes = props => {
                 <Modal
                     onRequestClose={closePromoteRegistrationModal}
                     visible={showPromoteRegistrationModal}
+                    animationType="fade"
                     transparent={true}
                     onDismiss={closePromoteRegistrationModal}
                 >
@@ -1166,6 +1170,7 @@ const routes = props => {
                     onRequestClose={() => setShowContactInfoGuidModal(false)}
                     visible={contactInfoGuidModal}
                     transparent={true}
+                    animationType="fade"
                     onDismiss={() => setShowContactInfoGuidModal(false)}
 
                 >
@@ -1248,6 +1253,7 @@ const routes = props => {
                 <Modal
                     onRequestClose={_ => isForceUpdate ? null : setUpdateModalFlag(false)}
                     visible={updateModalFlag}
+                    animationType="fade"
                     transparent={true}
                 >
                     <Dialog
