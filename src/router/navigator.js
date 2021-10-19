@@ -1553,7 +1553,7 @@ const routes = props => {
                                                 borderRadius: deviceWidth * 0.032,
                                                 width: deviceWidth * 0.064, height: deviceWidth * 0.064
                                             }}
-                                            source={profile_photo.length ?
+                                            source={profile_photo && profile_photo.length ?
                                                 { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
                                                 : require('../../assets/icons/user.png')
                                             }
