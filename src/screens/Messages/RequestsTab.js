@@ -37,6 +37,9 @@ class RequestsTab extends Component {
         }
     }
 
+    goldensRef = React.createRef();
+    buyadsRef = React.createRef();
+
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
@@ -209,7 +212,7 @@ class RequestsTab extends Component {
     };
 
 
-    fetchContactInfo = (item) => {
+    fetchContactInfo = (item, index, isFromGolden) => {
 
         const { id, is_golden, buyer_id } = item;
 
@@ -246,6 +249,9 @@ class RequestsTab extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
+                    if (isFromGolden)
+                        return this.goldensRef?.current?.scrollToIndex({ index, animated: true });
+                    return this.buyadsRef?.current?.scrollToIndex({ index, animated: true });
                 }
             })
                 .catch(err => {
@@ -267,7 +273,7 @@ class RequestsTab extends Component {
     };
 
 
-    renderGoldenListItem = ({ item }) => {
+    renderGoldenListItem = ({ item, index }) => {
         const {
             selectedButton,
         } = this.state;
@@ -439,7 +445,7 @@ class RequestsTab extends Component {
                             {item.has_phone ?
                                 <Button
                                     small
-                                    onPress={() => this.fetchContactInfo(item)}
+                                    onPress={() => this.fetchContactInfo(item, index, true)}
                                     style={{
                                         borderColor: '#c7a84f',
                                         width: '47%',
@@ -791,7 +797,7 @@ class RequestsTab extends Component {
                             {item.has_phone ?
                                 <Button
                                     small
-                                    onPress={() => this.fetchContactInfo(item)}
+                                    onPress={() => this.fetchContactInfo(item, index, true)}
                                     style={{
                                         borderColor: '#c7a84f',
                                         width: '47%',
@@ -922,7 +928,7 @@ class RequestsTab extends Component {
             .catch(_ => { })
     };
 
-    renderItem = ({ item }) => {
+    renderItem = ({ item, index }) => {
         const {
             selectedButton,
         } = this.state;
@@ -1113,7 +1119,7 @@ class RequestsTab extends Component {
                         {item.has_phone ?
                             <Button
                                 small
-                                onPress={() => this.fetchContactInfo(item)}
+                                onPress={() => this.fetchContactInfo(item, index, false)}
                                 style={{
                                     borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
                                     width: '47%',
@@ -1442,8 +1448,8 @@ class RequestsTab extends Component {
                     renderItem={this.renderGoldenListItem}
                     refreshing={false}
                     onRefresh={this.refreshList}
+                    ref={this.goldensRef}
                 />
-
             )
         return null;
     }
@@ -1456,6 +1462,18 @@ class RequestsTab extends Component {
             showMobileNumberWarnModal,
             accessToContactInfoErrorMessage,
         } = this.state;
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
 
         return (
             <View
@@ -1512,7 +1530,7 @@ class RequestsTab extends Component {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
+                                {active_pakage_type == 0 ? <Button
                                     style={[styles.modalButton, styles.greenButton]}
                                     onPress={() => {
                                         this.setState({ showMobileNumberWarnModal: false });
@@ -1524,6 +1542,7 @@ class RequestsTab extends Component {
                                     styles.buttonText]}>{locales('titles.promoteRegistration')}
                                     </Text>
                                 </Button>
+                                    : null}
                             </View>
 
 
@@ -1733,6 +1752,7 @@ class RequestsTab extends Component {
                     keyExtractor={this.keyExtractor}
                     initialNumToRender={2}
                     renderItem={this.renderItem}
+                    ref={this.buyadsRef}
                     refreshing={false}
                     onRefresh={this.refreshList}
                 />

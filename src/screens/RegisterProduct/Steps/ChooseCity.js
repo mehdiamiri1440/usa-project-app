@@ -269,7 +269,7 @@ class ChooseCity extends React.Component {
 
 
         return (
-            <View style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}>
+            <View style={[{ backgroundColor: 'white', flex: 1 }, styles.labelInputPadding]}>
 
 
                 <Text style={styles.userText}>

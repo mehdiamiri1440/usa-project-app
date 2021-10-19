@@ -41,6 +41,7 @@ class RegisterProductSuccessfully extends Component {
         }
     }
 
+    flatListRef = React.createRef();
     isComponentMounted = false;
 
     componentDidMount() {
@@ -76,7 +77,7 @@ class RegisterProductSuccessfully extends Component {
         return true;
     };
 
-    fetchContactInfo = (item) => {
+    fetchContactInfo = (item, index) => {
         const { id, is_golden, myuser_id } = item;
         this.props.setSelectedButton(id);
         const {
@@ -110,6 +111,8 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
+                    console.log('ref', index)
+                    return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
                 }
             })
                 .catch(err => {
@@ -406,7 +409,7 @@ class RegisterProductSuccessfully extends Component {
                             onPress={event => {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                this.fetchContactInfo(item);
+                                this.fetchContactInfo(item, index);
                             }}
                             style={{
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
@@ -875,8 +878,17 @@ class RegisterProductSuccessfully extends Component {
             route = {},
             buyAds = [],
             buyAdsAfterPaymentList = [],
-            buyAdsAfterPaymentLoading
+            buyAdsAfterPaymentLoading,
+            userProfile = {}
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
 
         const {
             params = {}
@@ -952,18 +964,21 @@ class RegisterProductSuccessfully extends Component {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
-                                    style={[styles.modalButton, styles.greenButton]}
-                                    onPress={() => {
-                                        this.setState({ showMobileNumberWarnModal: false });
-                                        this.props.navigation.navigate('PromoteRegistration');
-                                    }}
-                                >
+                                {active_pakage_type == 0 ?
+                                    <Button
+                                        style={[styles.modalButton, styles.greenButton]}
+                                        onPress={() => {
+                                            this.setState({ showMobileNumberWarnModal: false });
+                                            this.props.navigation.navigate('PromoteRegistration');
+                                        }}
+                                    >
 
-                                    <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                                    styles.buttonText]}>{locales('titles.promoteRegistration')}
-                                    </Text>
-                                </Button>
+                                        <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                        styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                        </Text>
+                                    </Button>
+                                    : null
+                                }
                             </View>
 
 
@@ -1078,9 +1093,9 @@ class RegisterProductSuccessfully extends Component {
                     : null
                 }
 
-                <ScrollView
+                <View
                     style={{
-                        marginTop: -4,
+                        flex: 1,
                         backgroundColor: 'white'
                     }}
                 >
@@ -1144,7 +1159,7 @@ class RegisterProductSuccessfully extends Component {
                             ListHeaderComponent={this.renderListHeaderComponent}
                             ListFooterComponent={this.renderListFooterComponent}
                             keyExtractor={this.keyExtractor}
-                            renderItem={this.renderItem}
+                            ref={this.flatListRef}
                         />
                         :
                         <View>
@@ -1171,7 +1186,7 @@ class RegisterProductSuccessfully extends Component {
                             </Button>
                         </View>
                     }
-                </ScrollView>
+                </View>
             </>
         )
     }

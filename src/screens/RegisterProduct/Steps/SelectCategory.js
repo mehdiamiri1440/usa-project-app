@@ -659,7 +659,7 @@ class SelectCategory extends Component {
 
         return (
             <View
-                style={{ backgroundColor: 'white' }}
+                style={{ backgroundColor: 'white', flex: 1 }}
             >
 
 

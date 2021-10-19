@@ -88,8 +88,7 @@ class RegisterProduct extends React.Component {
             //         this.changeStep(0);
             //     }
             // }
-            if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading)
-                this.mainContainer.current.scrollTo({ y: 0 });
+
 
 
             if (this.props.resetTab) {
@@ -102,10 +101,6 @@ class RegisterProduct extends React.Component {
     componentDidUpdate(prevProps, prevState) {
 
         const { stepNumber } = this.state;
-
-        if (this.mainContainer && this.mainContainer.current && !this.props.addNewProductLoading && stepNumber <= 7) {
-            this.mainContainer.current.scrollTo({ y: 0 });
-        }
 
         if (this.props.resetTab) {
             this.props.resetRegisterProduct(false);
@@ -522,7 +517,10 @@ class RegisterProduct extends React.Component {
                         </View>
                     </View>
 
-                    <ScrollView
+                    <View
+                        style={{
+                            flex: 1
+                        }}
                         ref={this.mainContainer}
                         keyboardShouldPersistTaps='handled'
                     >
@@ -613,7 +611,7 @@ class RegisterProduct extends React.Component {
                             {this.renderSteps()}
                         </View>
 
-                    </ScrollView>
+                    </View>
 
                 </View >
             </>

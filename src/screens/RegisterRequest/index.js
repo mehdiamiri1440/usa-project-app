@@ -795,7 +795,12 @@ class RegisterRequest extends Component {
                 CategoriesIcons.find(item => item.name == selectedSvgName)?.svg : null : null
 
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
 
                 <View style={{
                     backgroundColor: 'white',
@@ -843,304 +848,305 @@ class RegisterRequest extends Component {
                         </View>
                     ))
                     : null}
+
                 <View
-                    style={{ backgroundColor: 'white', flex: 1 }}>
-                    <ScrollView>
+                    style={{
+                        flex: 1
+                    }}
+                >
 
-                        <View style={{
-                            alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection: 'row-reverse',
-                            textAlign: 'center',
-                            elevation: 0, backgroundColor: '#e6f4f8', borderRadius: 6, padding: 20
-                        }} transparent>
-                            <FontAwesome5
-                                color='#333333'
-                                name='exclamation-circle'
-                                size={15}
-                            />
-                            <Text style={{ marginHorizontal: 10, color: '#E51C38', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                {locales('titles.doYouWishToBuy')} <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#333333',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                    }}
-                                >
-                                    {locales('titles.registerRequestNow')}
-                                </Text>
-                            </Text>
-                        </View>
-
-
-                        <View style={{ padding: 0 }}>
-                            {!category || !subCategory ? <>
-                                <Text style={{
-                                    borderBottomColor: '#CCC',
-                                    borderBottomWidth: 1,
-                                    padding: 15,
-                                    width: '100%',
-                                    fontSize: 18,
-                                    color: '#555555',
+                    <View style={{
+                        alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection: 'row-reverse',
+                        textAlign: 'center',
+                        elevation: 0, backgroundColor: '#e6f4f8', borderRadius: 6, padding: 20
+                    }} transparent>
+                        <FontAwesome5
+                            color='#333333'
+                            name='exclamation-circle'
+                            size={15}
+                        />
+                        <Text style={{ marginHorizontal: 10, color: '#E51C38', fontSize: 15, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
+                            {locales('titles.doYouWishToBuy')} <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#333333',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                }}>
-                                    {locales('titles.registerBuyAdRequest')}
-                                </Text>
-                                <View
-                                    style={{
-                                        padding: 2,
-                                        marginVertical: 20,
-                                        paddingHorizontal: 10,
-                                        flexDirection: 'row-reverse'
-                                    }}
+                                }}
+                            >
+                                {locales('titles.registerRequestNow')}
+                            </Text>
+                        </Text>
+                    </View>
+
+
+                    <View style={{ padding: 0, flex: 1 }}>
+                        {!category || !subCategory ? <>
+                            <Text style={{
+                                borderBottomColor: '#CCC',
+                                borderBottomWidth: 1,
+                                padding: 15,
+                                width: '100%',
+                                fontSize: 18,
+                                color: '#555555',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            }}>
+                                {locales('titles.registerBuyAdRequest')}
+                            </Text>
+                            {!subCategory ? <View
+                                style={{
+                                    padding: 2,
+                                    marginVertical: 20,
+                                    paddingHorizontal: 10,
+                                    flexDirection: 'row-reverse'
+                                }}
+                            >
+                                <Text>{categoryIcon}</Text>
+                                <Text style={{
+                                    fontSize: 20,
+                                    color: '#333',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                }}>  {locales('labels.chooseProductCategory')}</Text>
+
+                            </View> : null}
+                        </> : null}
+
+                        {categoriesLoading ?
+                            <ActivityIndicator size={50} color="#00C569" style={{ marginTop: deviceHeight * 0.13 }}
+                                animating={categoriesLoading} /> :
+                            !subCategory
+                                ?
+                                <FlatList
+                                    data={filteringLists}
+                                    ListEmptyComponent={this.renderListEmptyComponent}
+                                    keyExtractor={(item) => item.id.toString()}
+                                    ListFooterComponent={this.subCategoriesListFooterComponent}
+                                    refreshing={categoriesLoading}
+                                    renderItem={this.renderItem}
+                                />
+
+                                : <ScrollView style={{
+                                    paddingHorizontal: 15,
+                                }}
                                 >
-                                    <Text>{categoryIcon}</Text>
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: '#333',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                    }}>  {locales('labels.chooseProductCategory')}</Text>
-
-                                </View>
-                            </> : null}
-
-                            {categoriesLoading ?
-                                <ActivityIndicator size={50} color="#00C569" style={{ marginTop: deviceHeight * 0.13 }}
-                                    animating={categoriesLoading} /> :
-                                !subCategory
-                                    ?
-                                    <FlatList
-                                        data={filteringLists}
-                                        ListEmptyComponent={this.renderListEmptyComponent}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        ListFooterComponent={this.subCategoriesListFooterComponent}
-                                        refreshing={categoriesLoading}
-                                        renderItem={this.renderItem}
-                                    />
-
-                                    : <View style={{
-                                        paddingHorizontal: 15
-                                    }}
+                                    <Text
+                                        style={{
+                                            color: '#333',
+                                            marginTop: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 18
+                                        }}
                                     >
+                                        {`${locales('titles.type')} `}
                                         <Text
                                             style={{
-                                                color: '#333',
-                                                marginTop: 20,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                fontSize: 18
+                                                color: '#21AD93', paddingHorizontal: 50,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
                                             }}
                                         >
-                                            {`${locales('titles.type')} `}
-                                            <Text
-                                                style={{
-                                                    color: '#21AD93', paddingHorizontal: 50,
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
-                                                }}
-                                            >
-                                                {
-                                                    parentList && parentList.length ?
-                                                        parentList[parentList.length - 1].find(item => item.id == subCategory)?.category_name
-                                                        : null
-                                                }
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    marginHorizontal: 10, color: '#333',
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
-                                                }}
-                                            >
-                                                {` ${locales('titles.enterYouNeed')}.`}
-                                            </Text>
+                                            {
+                                                parentList && parentList.length ?
+                                                    parentList[parentList.length - 1].find(item => item.id == subCategory)?.category_name
+                                                    : null
+                                            }
                                         </Text>
+                                        <Text
+                                            style={{
+                                                marginHorizontal: 10, color: '#333',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium', fontSize: 18
+                                            }}
+                                        >
+                                            {` ${locales('titles.enterYouNeed')}.`}
+                                        </Text>
+                                    </Text>
 
-                                        <Text
-                                            style={{
-                                                marginVertical: 10,
-                                                color: '#777777',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                fontSize: 16
-                                            }}
-                                        >
-                                            {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
-                                        </Text>
-                                        <InputGroup
-                                            regular
-                                            style={{
-                                                borderRadius: 4,
-                                                borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
-                                                    productTypeClicked ? '#E41C38' : '#666',
-                                                paddingHorizontal: 10,
-                                                backgroundColor: '#FBFBFB'
-                                            }}>
-                                            <FontAwesome5 name={
-                                                productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
-                                                    ? 'times-circle' : 'edit'}
-                                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
-                                                    : productTypeClicked ? '#E41C38' : '#BDC4CC'}
-                                                size={16}
-                                                solid
-                                                style={{
-                                                    marginLeft: 10
-                                                }}
-                                            />
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                style={{
-                                                    textDecorationLine: 'none',
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 14,
-                                                    height: 45,
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                onChangeText={this.onProductTypeSubmit}
-                                                value={productType}
-                                                placeholderTextColor="#BEBEBE"
-                                                placeholder={locales('titles.enterYouNeedProduct')}
-                                                ref={this.productTypeRef}
-                                            />
-                                        </InputGroup>
-                                        <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            height: 20, fontSize: 14, color: '#D81A1A'
+                                    <Text
+                                        style={{
+                                            marginVertical: 10,
+                                            color: '#777777',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16
+                                        }}
+                                    >
+                                        {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
+                                    </Text>
+                                    <InputGroup
+                                        regular
+                                        style={{
+                                            borderRadius: 4,
+                                            borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
+                                                productTypeClicked ? '#E41C38' : '#666',
+                                            paddingHorizontal: 10,
+                                            backgroundColor: '#FBFBFB'
                                         }}>
-                                            {!!productTypeError && productTypeError}
-                                        </Label>
+                                        <FontAwesome5 name={
+                                            productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
+                                                ? 'times-circle' : 'edit'}
+                                            color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                                : productTypeClicked ? '#E41C38' : '#BDC4CC'}
+                                            size={16}
+                                            solid
+                                            style={{
+                                                marginLeft: 10
+                                            }}
+                                        />
+                                        <Input
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            autoCompleteType='off'
+                                            style={{
+                                                textDecorationLine: 'none',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 14,
+                                                height: 45,
+                                                direction: 'rtl',
+                                                textAlign: 'right'
+                                            }}
+                                            onChangeText={this.onProductTypeSubmit}
+                                            value={productType}
+                                            placeholderTextColor="#BEBEBE"
+                                            placeholder={locales('titles.enterYouNeedProduct')}
+                                            ref={this.productTypeRef}
+                                        />
+                                    </InputGroup>
+                                    <Label style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        height: 20, fontSize: 14, color: '#D81A1A'
+                                    }}>
+                                        {!!productTypeError && productTypeError}
+                                    </Label>
 
-                                        <Text
+                                    <Text
+                                        style={{
+                                            marginTop: 10,
+                                            color: '#333',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 18
+                                        }}
+                                    >
+                                        {locales('titles.amountNeeded')} <Text
                                             style={{
                                                 marginTop: 10,
                                                 color: '#333',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                fontSize: 18
-                                            }}
-                                        >
-                                            {locales('titles.amountNeeded')} <Text
-                                                style={{
-                                                    marginTop: 10,
-                                                    color: '#333',
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 16
-                                                }}
-                                            >({locales('labels.kiloGram')}) </Text><Text
-                                                style={{
-                                                    color: '#D44546',
-                                                    fontSize: 16,
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                                }}
-                                            >*</Text>
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                marginBottom: 10,
-                                                color: '#777777',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 fontSize: 16
                                             }}
-                                        >
-                                            {locales('titles.amountExample')}
-                                        </Text>
-                                        <InputGroup
-                                            regular
+                                        >({locales('labels.kiloGram')}) </Text><Text
                                             style={{
+                                                color: '#D44546',
+                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }}
+                                        >*</Text>
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            marginBottom: 10,
+                                            color: '#777777',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16
+                                        }}
+                                    >
+                                        {locales('titles.amountExample')}
+                                    </Text>
+                                    <InputGroup
+                                        regular
+                                        style={{
 
-                                                borderRadius: 4,
-                                                borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
-                                                    amountClicked ? '#E41C38' : '#666',
-                                                paddingHorizontal: 10,
-                                                backgroundColor: '#FBFBFB'
-                                            }}>
-                                            <FontAwesome5 name={
+                                            borderRadius: 4,
+                                            borderColor: amount ? amountError ? '#E41C38' : '#00C569' :
+                                                amountClicked ? '#E41C38' : '#666',
+                                            paddingHorizontal: 10,
+                                            backgroundColor: '#FBFBFB'
+                                        }}>
+                                        <FontAwesome5 name={
 
-                                                amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
-                                                    ? 'times-circle' : 'edit'}
-                                                color={amount ? amountError ? '#E41C38' : '#00C569'
-                                                    : amountClicked ? '#E41C38' : '#BDC4CC'}
-                                                size={16}
-                                                solid
-                                                style={{
-                                                    marginLeft: 10
-                                                }}
-                                            />
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                style={{
-                                                    width: '100%',
-                                                    fontFamily: 'IRANSansWeb(FaNum)',
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none',
-                                                    fontSize: 14,
-                                                    height: 45,
-                                                    direction: 'rtl',
-                                                    textAlign: 'right',
-                                                }}
-                                                onChangeText={this.onAmountSubmit}
-                                                value={amount}
-                                                placeholderTextColor="#BEBEBE"
-                                                placeholder={locales('titles.enterRequirment')}
-                                                ref={this.amountRef}
+                                            amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
+                                                ? 'times-circle' : 'edit'}
+                                            color={amount ? amountError ? '#E41C38' : '#00C569'
+                                                : amountClicked ? '#E41C38' : '#BDC4CC'}
+                                            size={16}
+                                            solid
+                                            style={{
+                                                marginLeft: 10
+                                            }}
+                                        />
+                                        <Input
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            keyboardType='number-pad'
+                                            autoCompleteType='off'
+                                            style={{
+                                                width: '100%',
+                                                fontFamily: 'IRANSansWeb(FaNum)',
+                                                flexDirection: 'row',
+                                                textDecorationLine: 'none',
+                                                fontSize: 14,
+                                                height: 45,
+                                                direction: 'rtl',
+                                                textAlign: 'right',
+                                            }}
+                                            onChangeText={this.onAmountSubmit}
+                                            value={amount}
+                                            placeholderTextColor="#BEBEBE"
+                                            placeholder={locales('titles.enterRequirment')}
+                                            ref={this.amountRef}
 
-                                            />
-                                        </InputGroup>
-                                        <Label style={{
-                                            height: 25,
+                                        />
+                                    </InputGroup>
+                                    <Label style={{
+                                        height: 25,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        textAlign: !amountError && amount.length ? 'left' : 'right'
+                                    }}>
+
+                                        {!!amountError && <Text style={{
+                                            fontSize: 14, color: '#D81A1A',
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                        }}> {amountError}</Text>}
+                                        {!amountError && amount.length ? <Text style={{
+                                            fontSize: 14, color: '#1DA1F2',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         }}>
+                                            {amountText}</Text> : null}
 
-                                            {!!amountError && <Text style={{
-                                                fontSize: 14, color: '#D81A1A',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            }}> {amountError}</Text>}
-                                            {!amountError && amount.length ? <Text style={{
-                                                fontSize: 14, color: '#1DA1F2',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            }}>
-                                                {amountText}</Text> : null}
+                                    </Label>
 
-                                        </Label>
-
-                                        <View style={{
-                                            marginTop: 20,
-                                            marginBottom: 20,
-                                            // marginHorizontal: 10,
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between'
-                                        }}>
-                                            <Button
-                                                onPress={() => this.onSubmit()}
-                                                style={!this.state.subCategory || !amount ||
-                                                    (productType ? !validator.isPersianNameWithDigits(productType) : null)
-                                                    ? styles.disableLoginButton : styles.loginButton}
-                                                rounded
-                                            >
-                                                {!this.props.registerBuyAdRequestLoading
-                                                    ? <FontAwesome5 name='check' size={15} color='white' /> :
-                                                    <ActivityIndicator size="small" color="white"
-                                                    />
-                                                }
-                                                <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
-                                            </Button>
-                                            <Button
-                                                onPress={this.handleGoToPrevStep}
-                                                style={[styles.backButtonContainer, { width: '37%' }]}
-                                                rounded
-                                            >
-                                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                                                <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                                            </Button>
-                                        </View>
-
+                                    <View style={{
+                                        marginTop: 20,
+                                        marginBottom: 20,
+                                        // marginHorizontal: 10,
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <Button
+                                            onPress={() => this.onSubmit()}
+                                            style={!this.state.subCategory || !amount ||
+                                                (productType ? !validator.isPersianNameWithDigits(productType) : null)
+                                                ? styles.disableLoginButton : styles.loginButton}
+                                            rounded
+                                        >
+                                            {!this.props.registerBuyAdRequestLoading
+                                                ? <FontAwesome5 name='check' size={15} color='white' /> :
+                                                <ActivityIndicator size="small" color="white"
+                                                />
+                                            }
+                                            <Text style={styles.buttonText}>{locales('labels.registerRequest')}</Text>
+                                        </Button>
+                                        <Button
+                                            onPress={this.handleGoToPrevStep}
+                                            style={[styles.backButtonContainer, { width: '37%' }]}
+                                            rounded
+                                        >
+                                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                                            <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                                        </Button>
                                     </View>
-                            }
-                        </View>
-                    </ScrollView>
-                </View>
 
-            </>
+                                </ScrollView>
+                        }
+                    </View>
+                </View>
+            </View>
         )
     }
 }

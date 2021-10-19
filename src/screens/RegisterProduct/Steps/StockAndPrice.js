@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, BackHandler, ScrollView } from 'react-native';
 import { Button, Input, Label, InputGroup } from 'native-base';
 import { connect } from 'react-redux';
 
@@ -355,7 +355,9 @@ class StockAndPrice extends Component {
         } = this.state;
 
         return (
-            <View
+            <ScrollView
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
                 style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}
             >
 
@@ -789,7 +791,7 @@ class StockAndPrice extends Component {
                     </Button>
                 </View>
 
-            </View>
+            </ScrollView>
         );
     }
 }

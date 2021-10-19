@@ -716,6 +716,19 @@ class Requests extends PureComponent {
             searchText,
             sortModalFlag
         } = this.state;
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
+
         return (
             <View
                 style={{
@@ -835,7 +848,7 @@ class Requests extends PureComponent {
                             textAlign: 'center',
                             alignItems: 'center'
                         }}>
-                            <Button
+                            {active_pakage_type == 0 ? <Button
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
@@ -846,7 +859,7 @@ class Requests extends PureComponent {
                                 <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
                                 styles.buttonText]}>{locales('titles.promoteRegistration')}
                                 </Text>
-                            </Button>
+                            </Button> : null}
                         </View> : null}
 
 
