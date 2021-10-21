@@ -18,7 +18,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -661,7 +661,7 @@ class SpecialProducts extends PureComponent {
 
         return (
             <Modal
-                animationType="slide"
+                animationType="fade"
                 visible={modals.findIndex(item => item.category_name == category_name) > -1}
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
@@ -1546,7 +1546,7 @@ class SpecialProducts extends PureComponent {
 
                 {locationsFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={locationsFlag}
                         onRequestClose={() => this.setState({ locationsFlag: false })}>
 
@@ -1693,7 +1693,7 @@ class SpecialProducts extends PureComponent {
 
                 {sortModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
@@ -1713,7 +1713,7 @@ class SpecialProducts extends PureComponent {
 
                 {!!totalCategoriesModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={!!totalCategoriesModalFlag}
                         onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 

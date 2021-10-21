@@ -10,7 +10,7 @@ import {
 import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
-    ActivityIndicator, ImageBackground, StyleSheet, BackHandler,
+    ActivityIndicator, ImageBackground, StyleSheet,
     LayoutAnimation, UIManager, Platform, Modal, Pressable
 } from 'react-native';
 import { Dialog, Paragraph } from 'react-native-paper';
@@ -18,8 +18,9 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import Axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import analytics from '@react-native-firebase/analytics';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -68,7 +69,9 @@ class ChatScreen extends Component {
             productMinSalePriceError: null,
             productMinSalePriceClicked: false,
             shouldShowEditionSuccessfullText: false,
-            shouldShowDelsaAdvertisement: false
+            shouldShowDelsaAdvertisement: false,
+            shouldShowPhoneNumberBanner: true,
+            inventoryModalFlag: false,
         };
     }
 
@@ -86,13 +89,14 @@ class ChatScreen extends Component {
 
         this.handleGuid();
 
+        this.handlePhoneNumberBannerVisiblity();
+
         this.props.fetchUserChatHistory(contact.contact_id, from, to).then(_ => {
             this.checkForShowingRatingCard();
         });
 
         this.handleIncomingMessage();
 
-        BackHandler.addEventListener('hardwareBackPress', this.handleGoBack)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -104,9 +108,18 @@ class ChatScreen extends Component {
 
     }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleGoBack);
-    }
+    handlePhoneNumberBannerVisiblity = _ => {
+        AsyncStorage.getItem('@validPassedTimeForPhoneNumberBanner').then(result => {
+            result = JSON.parse(result);
+            if (result) {
+                if (moment().diff(result, 'hours') >= 1)
+                    return this.setState({ shouldShowPhoneNumberBanner: true });
+                return this.setState({ shouldShowPhoneNumberBanner: false });
+            }
+            return this.setState({ shouldShowPhoneNumberBanner: true });
+        });
+
+    };
 
     checkForShowingRatingCard = _ => {
 
@@ -176,13 +189,25 @@ class ChatScreen extends Component {
                     userChatHistory[0] && userChatHistory[0].created_at &&
                     moment().diff(moment(userChatHistory[0].created_at), 'minutes') >= 10;
 
-                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage;
+                const shouldShowRatingCard = is_allowed && chatWithProductToShowComment && closeButtonPassedTime && passedTimeFromLastMessage && this.isMessagesSentFromDelsa();
 
                 shouldShowDelsaAdvertisement = loggedInUserStatusToShowDelsaAd && !shouldShowRatingCard && passedTimeFromLastMessage;
 
                 this.setState({ shouldShowRatingCard, shouldShowDelsaAdvertisement });
             });
         });
+    };
+
+    isMessagesSentFromDelsa = _ => {
+        const {
+            userChatHistory = []
+        } = this.state;
+
+        if (userChatHistory && userChatHistory.length &&
+            userChatHistory.filter(item => item.sender_id != this.props.loggedInUserId).some(item => !item.text.includes(':wlt=') && !item.text.includes(':p='))
+        )
+            return true;
+        return false;
     };
 
     handleIncomingMessage = _ => {
@@ -196,12 +221,6 @@ class ChatScreen extends Component {
                     this.pushNewMessageToChatList(remoteMessage);
             }
         });
-    };
-
-    handleGoBack = fromHeader => {
-        this.props.doForceRefresh(true);
-        if (fromHeader == true)
-            this.props.navigation.goBack();
     };
 
     handleGuid = _ => {
@@ -265,9 +284,10 @@ class ChatScreen extends Component {
         const { route = {} } = this.props;
         const { params = {} } = route;
         const { contact = {} } = params;
-        const text = remoteMessage.notification.body;
+        let text = remoteMessage.notification.body;
         let userChatHistory = [...this.state.userChatHistory];
-        const message = {
+
+        let message = {
             sender_id: contact.contact_id,
             receiver_id: this.props.loggedInUserId,
             text,
@@ -275,6 +295,16 @@ class ChatScreen extends Component {
             is_read: 1
         };
 
+
+        if (text.includes(":p=")) {
+            message.text = text.slice(0, text.indexOf(":p="));
+            message.isSentFromDelsa = true;
+        }
+
+        if (text.includes(":wlt=")) {
+            message.text = text.slice(0, text.indexOf(":wlt="));
+            message.isSentFromDelsa = true;
+        }
 
         userChatHistory.unshift(message);
 
@@ -652,6 +682,10 @@ class ChatScreen extends Component {
 
     keyExtractor = (_, index) => index.toString();
 
+    setInventoryModalVisibility = inventoryModalFlag => {
+        this.setState({ inventoryModalFlag })
+    };
+
     renderItem = ({ item, index, separators }) => {
         const {
             route = {},
@@ -687,6 +721,7 @@ class ChatScreen extends Component {
             index={index}
             separators={separators}
             prevMessage={this.state.userChatHistory[index > 0 ? index - 1 : 0]}
+            setInventoryModalVisibility={this.setInventoryModalVisibility}
             {...this.props}
         />;
     };
@@ -720,12 +755,6 @@ class ChatScreen extends Component {
         return (
             <View
             >
-                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
-                    !isSenderVerified && showUnAuthorizedUserPopUp) ?
-                    <ChatWithUnAuthorizedUserPopUp
-                        hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
-                    />
-                    : null}
 
                 {
                     userChatHistory.length
@@ -749,6 +778,13 @@ class ChatScreen extends Component {
                         )
                         : null
                 }
+
+                {(userChatHistory.length && userChatHistory.every(item => item.sender_id != this.props.loggedInUserId) &&
+                    !isSenderVerified && showUnAuthorizedUserPopUp) ?
+                    <ChatWithUnAuthorizedUserPopUp
+                        hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                    />
+                    : null}
             </View>
         )
     };
@@ -776,13 +812,30 @@ class ChatScreen extends Component {
         return null;
     };
 
+    setPhoneNumberBannerVisibility = _ => {
+        AsyncStorage.setItem('@validPassedTimeForPhoneNumberBanner', JSON.stringify(moment()));
+        this.setState({ shouldShowPhoneNumberBanner: false });
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+
     render() {
 
         let {
             userChatHistoryLoading,
             route = {},
-            editProductLoading
+            editProductLoading,
+            userProfile = {}
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            wallet_balance,
+            active_pakage_type,
+            is_seller
+        } = user_info;
 
         const {
             params = {}
@@ -816,13 +869,117 @@ class ChatScreen extends Component {
             productMinSalePriceError,
             productMinSalePrice,
             productMinSalePriceClicked,
-            shouldShowEditionSuccessfullText
+            shouldShowEditionSuccessfullText,
+            shouldShowPhoneNumberBanner,
+            inventoryModalFlag
         } = this.state;
 
         const detectToShowCommentAndGuid = showGuid && !buyAdId;
 
         return (
             <View style={styles.container}>
+                {inventoryModalFlag ?
+                    <Modal
+                        animationType="fade"
+                        visible={inventoryModalFlag}
+                        onRequestClose={_ => this.setInventoryModalVisibility(false)}
+                        transparent={false}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 20
+                            }}
+                        >
+                            <Image
+                                source={require('../../../assets/images/lock.gif')}
+                                style={{
+                                    width: '100%',
+                                    height: '45%'
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    width: '70%',
+                                    color: '#000000',
+                                    marginVertical: 40
+                                }}
+                            >
+                                {locales('titles.youAreNotAbleSendPhonesAutomatic')} <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        textAlign: 'center',
+                                        color: '#F03738',
+                                        fontWeight: '200'
+                                    }}
+                                >
+                                    {locales('titles.disable')}
+                                </Text> <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        textAlign: 'center',
+                                        color: '#000000',
+                                        fontWeight: '200'
+                                    }}
+                                >
+                                    {locales('titles.is')}
+                                </Text>
+                            </Text>
+                            <View
+                                style={{
+                                    width: '100%'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        marginBottom: 10,
+                                        fontSize: 16,
+                                        textAlign: 'center',
+                                        color: '#000000'
+                                    }}
+                                >
+                                    {locales('titles.sendPhonePrice')}
+                                </Text>
+                                <Button
+                                    onPress={_ => {
+                                        this.setState({ inventoryModalFlag: false });
+                                        this.props.navigation.navigate('Wallet');
+                                    }}
+                                    style={{
+                                        backgroundColor: '#264653',
+                                        borderRadius: 8,
+                                        padding: 30,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        width: '85%'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 14,
+                                            textAlign: 'center',
+                                            color: 'white',
+                                            textAlignVertical: 'center'
+                                        }}
+                                    >
+                                        {locales('titles.chargeWallet')}
+                                    </Text>
+                                </Button>
+                            </View>
+                        </View>
+                    </Modal>
+                    : null}
                 <ImageBackground
                     source={require('../../../assets/images/whatsapp-wallpaper.png')}
                     style={styles.image}
@@ -832,6 +989,7 @@ class ChatScreen extends Component {
                         <Modal
                             onRequestClose={_ => this.handlePromotionModalVisiblity(false)}
                             visible={shouldShowPromotionModal}
+                            animationType="fade"
                             transparent={true}
                         >
                             <Dialog
@@ -946,7 +1104,7 @@ class ChatScreen extends Component {
                                             }}
                                             onPress={() => {
                                                 this.handlePromotionModalVisiblity(false)
-                                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                                this.props.navigation.navigate('PromoteRegistration')
                                             }}
                                         >
                                             <Text style={[styles.buttonText, {
@@ -968,6 +1126,7 @@ class ChatScreen extends Component {
                             onRequestClose={_ => this.setState({ shouldShowEditPriceModal: false })}
                             visible={shouldShowEditPriceModal}
                             transparent={true}
+                            animationType="fade"
                         >
                             <Dialog
                                 onDismiss={_ => this.setState({ shouldShowEditPriceModal: false })}
@@ -1269,7 +1428,8 @@ class ChatScreen extends Component {
                                 flexDirection: 'row-reverse',
                                 width: '21%'
                             }}
-                            onPress={() => this.handleGoBack(true)}>
+                            onPress={() => this.props.navigation.goBack()}
+                        >
                             <View
                                 style={{
                                     justifyContent: 'center',
@@ -1399,7 +1559,14 @@ class ChatScreen extends Component {
                             />
                         </ShadowView>
                         : null}
-
+                    {wallet_balance == 0 && is_seller && active_pakage_type == 0 && shouldShowPhoneNumberBanner ?
+                        <PayForPhoneNumberBanner
+                            {...this.props}
+                            setPhoneNumberBannerVisibility={this.setPhoneNumberBannerVisibility}
+                        />
+                        :
+                        null
+                    }
                     <FlatList
                         keyboardShouldPersistTaps='handled'
                         keyboardDismissMode='none'
@@ -1494,6 +1661,94 @@ class ChatScreen extends Component {
         )
     }
 }
+
+const PayForPhoneNumberBanner = props => {
+
+    const {
+        setPhoneNumberBannerVisibility = _ => { }
+    } = props;
+
+    return (
+        <TouchableOpacity
+            activeOpacity={1}
+            onPress={_ => props.navigation.navigate('PromoteRegistration')}
+            style={{
+                width: '100%',
+                height: 58,
+                backgroundColor: '#F03738',
+                borderRadius: 50,
+                flexDirection: 'row-reverse',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                alignSelf: 'center',
+                marginTop: 3,
+                marginHorizontal: 60,
+                padding: 10
+            }}
+        >
+            <FontAwesome5
+                name='times'
+                onPress={event => {
+                    event.stopPropagation();
+                    ; setPhoneNumberBannerVisibility();
+                }
+                }
+                color='white'
+                size={20}
+                style={{
+                    marginHorizontal: 5
+                }}
+            />
+            <Text
+                numberOfLines={2}
+                style={{
+                    fontSize: 12,
+                    width: '60%',
+                    textAlign: "right",
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    color: 'white'
+                }}
+            >
+                {locales('labels.reasonNotToShowPhoneNumber')}
+            </Text>
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={_ => {
+                    analytics().logEvent('click_on_change_wallet_button');
+                    props.navigation.navigate('PromoteRegistration');
+                }}
+                style={{
+                    flexDirection: 'row-reverse',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'white',
+                    height: 42,
+                    width: 99,
+                    marginRight: -5,
+                    borderRadius: 50
+
+                }}
+            >
+                <FontAwesome5
+                    size={15}
+                    name='plus'
+                    color='#264653'
+                />
+                <Text
+                    style={{
+                        fontSize: 12,
+                        textAlign: "center",
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: '#264653',
+                        width: 51,
+                    }}
+                >
+                    {locales('titles.promoteRegistration')}
+                </Text>
+            </TouchableOpacity>
+        </TouchableOpacity>
+    )
+};
 
 const DelsaAdvertisementComponent = props => {
 
@@ -1761,7 +2016,6 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchUserChatHistory: (id, from, to) => dispatch(messagesActions.fetchUserChatHistory(id, from, to)),
         sendMessage: (msgObject, buyAdId, productId) => dispatch(messagesActions.sendMessage(msgObject, buyAdId, productId)),
         fetchAllContactsList: () => dispatch(messagesActions.fetchAllContactsList()),
-        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
         fetchUserProfilePhoto: id => dispatch(messagesActions.fetchUserProfilePhoto(id)),
         checkUserAutorityToPostComment: (userId) => dispatch(CommentsAndRatingsActions.checkUserAuthorityToPostComment(userId)),
         fetchProductDetails: id => dispatch(productListActions.fetchProductDetails(id)),

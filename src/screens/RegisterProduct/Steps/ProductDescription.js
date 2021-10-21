@@ -61,7 +61,14 @@ class ProductDecription extends Component {
     };
 
     onSubmit = () => {
-        this.props.setProductDescription(this.state.description)
+        const {
+            description
+        } = this.state;
+
+        if (description && !validator.isValidDescription(description))
+            this.setState({ descriptionError: locales('errors.invalidDescription') });
+        else
+            this.props.setProductDescription(this.state.description)
     };
 
 
@@ -92,16 +99,17 @@ class ProductDecription extends Component {
                             regular
                             style={{
                                 borderRadius: 4,
-                                borderColor: description ? descriptionError ? '#E41C38' : '#00C569' :
-                                    descriptionClicked ? '#E41C38' : '#666',
+                                borderColor: description ? descriptionError ? '#E41C38' : description.length < 100 ? '#6D7179' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#6D7179',
                                 paddingLeft: 15,
                                 paddingHorizontal: 10,
                                 backgroundColor: '#FBFBFB'
                             }}>
                             <FontAwesome5 name={
-                                description ? descriptionError ? 'times-circle' : 'check-circle' : descriptionClicked
-                                    ? 'times-circle' : 'edit'}
-                                color={description ? descriptionError ? '#E41C38' : '#00C569'
+                                description ? descriptionError ? 'times-circle' : description.length < 100 ? 'edit' : 'check-circle' :
+                                    descriptionClicked
+                                        ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : description.length < 100 ? "#BDC4CC" : '#00C569'
                                     : descriptionClicked ? '#E41C38' : '#BDC4CC'}
                                 size={16}
                                 solid
@@ -118,22 +126,60 @@ class ProductDecription extends Component {
                                 placeholder={locales('titles.descriptionWithExample')}
                                 ref={this.descriptionRef}
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     paddingTop: 10,
                                     direction: 'rtl',
                                     textAlign: 'right',
-                                    width: '100%'
+                                    width: '100%',
+                                    minHeight: deviceHeight * 0.4,
+                                    borderRadius: 4,
+                                    overflow: 'hidden',
+                                    paddingHorizontal: 15,
+                                    paddingVertical: 2,
+                                    color: '#333',
+                                    fontSize: 13,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 }}
                                 rowSpan={5}
                             />
                         </InputGroup>
-                        <Label style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            height: 20, fontSize: 14, color: '#D81A1A'
-                        }}>
-                            {!!descriptionError && descriptionError}
-                        </Label>
+                        {description && description.length ?
+                            <View
+                                style={{
+                                    borderTopWidth: 1,
+                                    borderTopColor: '#E0E0E0',
+                                    padding: 10,
+                                    zIndex: 1000,
+                                    flexDirection: 'row-reverse',
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: '97%',
+                                    bottom: 20,
+                                    position: 'absolute'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        color: description.length >= 100 ? '#00C569' : '#E41C38'
+                                    }}
+                                >
+                                    {description.length < 100 ? locales('labels.notSufficient') : locales('labels.sufficient')}
+                                </Text>
+                            </View>
+                            : null
+                        }
                     </View>
+                    {description.length > 100 ? <Label
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            height: 20, fontSize: 14, color: '#D81A1A',
+                            marginRight: 20
+                        }}>
+                        {!!descriptionError && descriptionError}
+                    </Label>
+                        : null}
 
                     {/* 
                     <Text

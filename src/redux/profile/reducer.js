@@ -61,6 +61,36 @@ const INITIAL_STATE = {
     walletElevatorPayMessage: null,
     walletElevatorPay: {},
 
+    productCapacityWalletPayLoading: false,
+    productCapacityWalletPayFailed: false,
+    productCapacityWalletPayError: false,
+    productCapacityWalletPayMessage: null,
+    productCapacityWalletPayObject: {},
+
+    buyAdCapacityWalletPayObject: {},
+    buyAdCapacityWalletPayLoading: false,
+    buyAdCapacityWalletPayFailed: false,
+    buyAdCapacityWalletPayError: false,
+    buyAdCapacityWalletPayMessage: null,
+
+    promoteRegistrationWalletPayObject: {},
+    promoteRegistrationWalletPayLoading: false,
+    promoteRegistrationWalletPayFailed: false,
+    promoteRegistrationWalletPayError: false,
+    promoteRegistrationWalletPayMessage: null,
+
+    uploadUserContactsLoading: false,
+    uploadUserContactsFailed: false,
+    uploadUserContactsError: false,
+    uploadUserContactsMessage: null,
+    uploadUserContacts: {},
+
+    userFriendsDataLoading: false,
+    userFriendsDataFailed: false,
+    userFriendsDataError: false,
+    userFriendsDataMessage: null,
+    userFriendsData: {},
+
     profileInfoLoading: false,
     profileInfoFailed: false,
     profileInfoError: false,
@@ -482,10 +512,6 @@ export default (state = INITIAL_STATE, action) => {
             };
         };
 
-
-
-
-
         case actionTypes.WALLET_ELEVATOR_PAY_LOADING: {
             return {
                 ...state,
@@ -529,6 +555,240 @@ export default (state = INITIAL_STATE, action) => {
                 walletElevatorPayFailed: false,
                 walletElevatorPayError: true,
                 walletElevatorPayMessage: [...description]
+            };
+        };
+
+
+
+        case actionTypes.PRODUCT_CAPACITY_WALLET_PAY_LOADING: {
+            return {
+                ...state,
+                productCapacityWalletPayObject: {},
+                productCapacityWalletPayLoading: true,
+                productCapacityWalletPayFailed: false,
+                productCapacityWalletPayError: false,
+                productCapacityWalletPayMessage: null
+            };
+        };
+        case actionTypes.PRODUCT_CAPACITY_WALLET_PAY_SUCCESSFULLY: {
+            return {
+                ...state,
+                productCapacityWalletPayObject: { ...action.payload },
+                productCapacityWalletPayLoading: false,
+                productCapacityWalletPayFailed: false,
+                productCapacityWalletPayError: false,
+                productCapacityWalletPayMessage: null,
+            };
+        };
+        case actionTypes.PRODUCT_CAPACITY_WALLET_PAY_FAILED: {
+            return {
+                ...state,
+                productCapacityWalletPayObject: {},
+                productCapacityWalletPayLoading: false,
+                productCapacityWalletPayFailed: true,
+                productCapacityWalletPayError: false,
+                productCapacityWalletPayMessage: null
+            };
+        };
+        case actionTypes.PRODUCT_CAPACITY_WALLET_PAY_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                productCapacityWalletPayObject: {},
+                productCapacityWalletPayLoading: false,
+                productCapacityWalletPayFailed: false,
+                productCapacityWalletPayError: true,
+                productCapacityWalletPayMessage: [...description]
+            };
+        };
+
+
+        case actionTypes.BUY_AD_CAPACITY_WALLET_PAY_LOADING: {
+            return {
+                ...state,
+                buyAdCapacityWalletPayObject: {},
+                buyAdCapacityWalletPayLoading: true,
+                buyAdCapacityWalletPayFailed: false,
+                buyAdCapacityWalletPayError: false,
+                buyAdCapacityWalletPayMessage: null
+            };
+        };
+        case actionTypes.BUY_AD_CAPACITY_WALLET_PAY_SUCCESSFULLY: {
+            return {
+                ...state,
+                buyAdCapacityWalletPayObject: { ...action.payload },
+                buyAdCapacityWalletPayLoading: false,
+                buyAdCapacityWalletPayFailed: false,
+                buyAdCapacityWalletPayError: false,
+                buyAdCapacityWalletPayMessage: null,
+            };
+        };
+        case actionTypes.BUY_AD_CAPACITY_WALLET_PAY_FAILED: {
+            return {
+                ...state,
+                buyAdCapacityWalletPayObject: {},
+                buyAdCapacityWalletPayLoading: false,
+                buyAdCapacityWalletPayFailed: true,
+                buyAdCapacityWalletPayError: false,
+                buyAdCapacityWalletPayMessage: null
+            };
+        };
+        case actionTypes.BUY_AD_CAPACITY_WALLET_PAY_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                buyAdCapacityWalletPayObject: {},
+                buyAdCapacityWalletPayLoading: false,
+                buyAdCapacityWalletPayFailed: false,
+                buyAdCapacityWalletPayError: true,
+                buyAdCapacityWalletPayMessage: [...description]
+            };
+        };
+
+        case actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_LOADING: {
+            return {
+                ...state,
+                promoteRegistrationWalletPayObject: {},
+                promoteRegistrationWalletPayLoading: true,
+                promoteRegistrationWalletPayFailed: false,
+                promoteRegistrationWalletPayError: false,
+                promoteRegistrationWalletPayMessage: null
+            };
+        };
+        case actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_SUCCESSFULLY: {
+            return {
+                ...state,
+                promoteRegistrationWalletPayObject: { ...action.payload },
+                promoteRegistrationWalletPayLoading: false,
+                promoteRegistrationWalletPayFailed: false,
+                promoteRegistrationWalletPayError: false,
+                promoteRegistrationWalletPayMessage: null,
+            };
+        };
+        case actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_FAILED: {
+            return {
+                ...state,
+                promoteRegistrationWalletPayObject: {},
+                promoteRegistrationWalletPayLoading: false,
+                promoteRegistrationWalletPayFailed: true,
+                promoteRegistrationWalletPayError: false,
+                promoteRegistrationWalletPayMessage: null
+            };
+        };
+        case actionTypes.PROMOTE_REGISTRATION_WALLET_PAY_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                promoteRegistrationWalletPayObject: {},
+                promoteRegistrationWalletPayLoading: false,
+                promoteRegistrationWalletPayFailed: false,
+                promoteRegistrationWalletPayError: true,
+                promoteRegistrationWalletPayMessage: [...description]
+            };
+        };
+
+        case actionTypes.UPLOAD_USER_CONTACTS_LOADING: {
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: true,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_SUCCESSFULLY: {
+            return {
+                ...state,
+                uploadUserContacts: { ...action.payload },
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null,
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_FAILED: {
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: true,
+                uploadUserContactsError: false,
+                uploadUserContactsMessage: null
+            };
+        };
+        case actionTypes.UPLOAD_USER_CONTACTS_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                uploadUserContacts: {},
+                uploadUserContactsLoading: false,
+                uploadUserContactsFailed: false,
+                uploadUserContactsError: true,
+                uploadUserContactsMessage: [...description]
+            };
+        };
+
+
+        case actionTypes.FETCH_USER_FRIENDS_DATA_LOADING: {
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: true,
+                userFriendsDataFailed: false,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_SUCCESSFULLY: {
+            return {
+                ...state,
+                userFriendsData: { ...action.payload },
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: false,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null,
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_FAILED: {
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: true,
+                userFriendsDataError: false,
+                userFriendsDataMessage: null
+            };
+        };
+        case actionTypes.FETCH_USER_FRIENDS_DATA_REJECT: {
+
+            const { response = {} } = action.payload;
+            const { data = {} } = response;
+            const { errors = {} } = data;
+            const { description = [] } = errors;
+            return {
+                ...state,
+                userFriendsData: {},
+                userFriendsDataLoading: false,
+                userFriendsDataFailed: false,
+                userFriendsDataError: true,
+                userFriendsDataMessage: [...description]
             };
         };
 

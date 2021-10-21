@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requester } from '../utils';
 import RnRestart from 'react-native-restart';
 import DeviceInfo from 'react-native-device-info';
@@ -90,10 +90,7 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && !err.response)
-                    // return reject(err.response);
-                    return reject(err);
-
+                return reject(err);
             });
     });
 };
@@ -117,9 +114,8 @@ export const checkActivisionCode = (code, mobileNumber) => {
                 resolve(result);
             })
             .catch(err => {
-                if (err && !err.response)
-                    // return reject(err.response);
-                    return reject(err);
+                // return reject(err.response);
+                return reject(err);
 
             });
     });

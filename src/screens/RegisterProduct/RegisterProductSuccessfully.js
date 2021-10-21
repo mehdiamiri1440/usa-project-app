@@ -41,6 +41,7 @@ class RegisterProductSuccessfully extends Component {
         }
     }
 
+    flatListRef = React.createRef();
     isComponentMounted = false;
 
     componentDidMount() {
@@ -76,7 +77,7 @@ class RegisterProductSuccessfully extends Component {
         return true;
     };
 
-    fetchContactInfo = (item) => {
+    fetchContactInfo = (item, index) => {
         const { id, is_golden, myuser_id } = item;
         this.props.setSelectedButton(id);
         const {
@@ -110,6 +111,8 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
+                    console.log('ref', index)
+                    return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
                 }
             })
                 .catch(err => {
@@ -231,28 +234,34 @@ class RegisterProductSuccessfully extends Component {
                                 >
                                     {` ${item.subcategory_name} `}
                                 </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontWeight: '200',
-                                        fontSize: 18,
-                                        marginHorizontal: 2,
-                                        color: '#777777'
-                                    }}
-                                >
-                                    {locales('labels.fromType')}
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontWeight: '200',
-                                        color: '#556083',
-                                        fontSize: 18,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        marginHorizontal: 2
-                                    }}
-                                >
-                                    {` ${item.name} `}
-                                </Text>
+                                {item.name ?
+                                    <>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontWeight: '200',
+                                                fontSize: 18,
+                                                marginHorizontal: 2,
+                                                color: '#777777'
+                                            }}
+                                        >
+                                            {locales('labels.fromType')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontWeight: '200',
+                                                color: '#556083',
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                marginHorizontal: 2
+                                            }}
+                                        >
+                                            {` ${item.name} `}
+                                        </Text>
+                                    </>
+                                    :
+                                    null
+                                }
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -337,28 +346,34 @@ class RegisterProductSuccessfully extends Component {
                                     }}
                                 > {formatter.convertedNumbersToTonUnit(item.requirement_amount)}</Text> {`${item.subcategory_name} `}
                             </Text>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontWeight: '200',
-                                    fontSize: 18,
-                                    marginHorizontal: 2,
-                                    color: '#777777'
-                                }}
-                            >
-                                {locales('labels.fromType')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#556083',
-                                    fontWeight: '200',
-                                    fontSize: 18,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    marginHorizontal: 2
-                                }}
-                            >
-                                {` ${item.name} `}
-                            </Text>
+                            {item.name ?
+                                <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontWeight: '200',
+                                            fontSize: 18,
+                                            marginHorizontal: 2,
+                                            color: '#777777'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: '#556083',
+                                            fontWeight: '200',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginHorizontal: 2
+                                        }}
+                                    >
+                                        {` ${item.name} `}
+                                    </Text>
+                                </>
+                                :
+                                null
+                            }
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -394,7 +409,7 @@ class RegisterProductSuccessfully extends Component {
                             onPress={event => {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                this.fetchContactInfo(item);
+                                this.fetchContactInfo(item, index);
                             }}
                             style={{
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
@@ -863,8 +878,17 @@ class RegisterProductSuccessfully extends Component {
             route = {},
             buyAds = [],
             buyAdsAfterPaymentList = [],
-            buyAdsAfterPaymentLoading
+            buyAdsAfterPaymentLoading,
+            userProfile = {}
         } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
 
         const {
             params = {}
@@ -893,177 +917,185 @@ class RegisterProductSuccessfully extends Component {
 
 
 
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                {showMobileNumberWarnModal ?
+                    < Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
 
-                    }}>
-                    <Dialog
-                        visible={showMobileNumberWarnModal}
-                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        }}>
+                        <Dialog
+                            visible={showMobileNumberWarnModal}
+                            onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.contactInfo')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {accessToContactInfoErrorMessage}
                             </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <View style={{
                                 width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                {active_pakage_type == 0 ?
+                                    <Button
+                                        style={[styles.modalButton, styles.greenButton]}
+                                        onPress={() => {
+                                            this.setState({ showMobileNumberWarnModal: false });
+                                            this.props.navigation.navigate('PromoteRegistration');
+                                        }}
+                                    >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {accessToContactInfoErrorMessage}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.setState({ showMobileNumberWarnModal: false });
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                }}
-                            >
-
-                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                                styles.buttonText]}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                        <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                        styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                        </Text>
+                                    </Button>
+                                    : null
+                                }
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
-
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={showGoldenModal}
-                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => { this.setState({ showGoldenModal: false }) }}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.goldenRequests')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
                                 width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                >
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null
+                }
+
+
+                {showGoldenModal ?
+                    <Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
+
+                        }}>
+                        <Dialog
+                            visible={showGoldenModal}
+                            onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                            style={styles.dialogWrapper}
+                        >
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.goldenRequests')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('labels.accessToGoldensDeined')}
+                                </Text>
+
+                            </Dialog.Actions>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {locales('labels.icreaseToSeeGoldens')}
+                            </Paragraph>
+                            <View style={{
+                                width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <Button
+                                    style={[styles.modalButton, styles.greenButton, { elevation: 0 }]}
+                                    onPress={() => {
+                                        this.setState({ showGoldenModal: false })
+                                        this.props.navigation.navigate('PromoteRegistration');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('labels.accessToGoldensDeined')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('labels.icreaseToSeeGoldens')}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton, { elevation: 0 }]}
-                                onPress={() => {
-                                    this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                }}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                    </Text>
+                                </Button>
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ showGoldenModal: false })}
-                            >
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={() => this.setState({ showGoldenModal: false })}
+                                >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null
+                }
 
-                <ScrollView
+                <View
                     style={{
-                        marginTop: -4,
+                        flex: 1,
                         backgroundColor: 'white'
                     }}
                 >
@@ -1127,7 +1159,7 @@ class RegisterProductSuccessfully extends Component {
                             ListHeaderComponent={this.renderListHeaderComponent}
                             ListFooterComponent={this.renderListFooterComponent}
                             keyExtractor={this.keyExtractor}
-                            renderItem={this.renderItem}
+                            ref={this.flatListRef}
                         />
                         :
                         <View>
@@ -1154,7 +1186,7 @@ class RegisterProductSuccessfully extends Component {
                             </Button>
                         </View>
                     }
-                </ScrollView>
+                </View>
             </>
         )
     }

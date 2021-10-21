@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, BackHandler, ScrollView } from 'react-native';
 import { Button, Input, Label, InputGroup } from 'native-base';
 import { connect } from 'react-redux';
 
@@ -31,6 +31,9 @@ class StockAndPrice extends Component {
             minimumOrderClicked: false,
             minPriceClicked: false,
             maxPriceClicked: false,
+            isAmountFocused: false,
+            minimumPriceText: '',
+            maximumPriceText: '',
         }
     }
 
@@ -119,7 +122,6 @@ class StockAndPrice extends Component {
             }));
         }
 
-
     };
 
     onMinimumPriceSubmit = field => {
@@ -133,7 +135,8 @@ class StockAndPrice extends Component {
                 this.setState(() => ({
                     minimumPrice: field,
                     minimumPriceError: '',
-                    minPriceClicked: true
+                    minPriceClicked: true,
+                    minimumPriceText: formatter.convertUnitsToPrice(field)
                 }));
             if (field <= 0) {
                 this.setState(() => ({
@@ -154,7 +157,8 @@ class StockAndPrice extends Component {
         this.setState(() => ({
             maxPriceError: '',
             maxPrice: field,
-            maxPriceClicked: true
+            maxPriceClicked: true,
+            maximumPriceText: formatter.convertUnitsToPrice(field)
         }));
         if (field) {
             if (validator.isNumber(field))
@@ -340,11 +344,20 @@ class StockAndPrice extends Component {
             amount,
             amountText,
             minimumPrice,
-            maximumPrice
+            maximumPrice,
+
+            isAmountFocused,
+            isMinimumOrderFocused,
+            isMinimumPriceFocused,
+            isMaximumPriceFocused,
+            maximumPriceText,
+            minimumPriceText
         } = this.state;
 
         return (
-            <View
+            <ScrollView
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
                 style={[{ backgroundColor: 'white' }, styles.labelInputPadding]}
             >
 
@@ -407,6 +420,8 @@ class StockAndPrice extends Component {
                             }}
                         />
                         <Input
+                            onFocus={_ => this.setState({ isAmountFocused: true })}
+                            onBlur={_ => this.setState({ isAmountFocused: false })}
                             onSubmitEditing={this.handleAutoFocus}
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -429,6 +444,10 @@ class StockAndPrice extends Component {
                             ref={this.amountRef}
 
                         />
+                        <ToolTipComponent
+                            isFocused={isAmountFocused}
+                            text={amountText}
+                        />
                     </InputGroup>
                     <Label style={{
                         height: 25,
@@ -440,12 +459,6 @@ class StockAndPrice extends Component {
                             fontSize: 14, color: '#D81A1A',
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}> {amountError}</Text>}
-                        {!amountError && amount.length ? <Text style={{
-                            fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        }}>
-                            {amountText}</Text> : null}
-
                     </Label>
 
 
@@ -507,6 +520,8 @@ class StockAndPrice extends Component {
                             }}
                         />
                         <Input
+                            onFocus={_ => this.setState({ isMinimumOrderFocused: true })}
+                            onBlur={_ => this.setState({ isMinimumOrderFocused: false })}
                             autoCapitalize='none'
                             autoCorrect={false}
                             onSubmitEditing={this.handleAutoFocus}
@@ -529,9 +544,12 @@ class StockAndPrice extends Component {
                             ref={this.minimumOrderRef}
 
                         />
+                        <ToolTipComponent
+                            isFocused={isMinimumOrderFocused}
+                            text={minimumOrderText}
+                            width={deviceWidth * 0.4}
+                        />
                     </InputGroup>
-
-
                     <Label style={{
                         height: 25,
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -542,12 +560,6 @@ class StockAndPrice extends Component {
                             fontSize: 14, color: '#D81A1A',
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}> {minimumOrderError}</Text>}
-                        {!minimumOrderError && minimumOrder.length ? <Text style={{
-                            fontSize: 14, color: '#1DA1F2',
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        }}>
-                            {minimumOrderText}</Text> : null}
-
                     </Label>
                     {/* <OutlinedTextField
                         baseColor={minimumOrder.length ? '#00C569' : '#a8a8a8'}
@@ -611,6 +623,8 @@ class StockAndPrice extends Component {
                         />
                         <Input
                             autoCapitalize='none'
+                            onFocus={_ => this.setState({ isMinimumPriceFocused: true })}
+                            onBlur={_ => this.setState({ isMinimumPriceFocused: false })}
                             onSubmitEditing={this.handleAutoFocus}
                             autoCorrect={false}
                             keyboardType='number-pad'
@@ -631,6 +645,11 @@ class StockAndPrice extends Component {
                             placeholder={locales('titles.enterMinPrice')}
                             ref={this.minimumPriceRef}
 
+                        />
+                        <ToolTipComponent
+                            isFocused={isMinimumPriceFocused}
+                            text={minimumPriceText}
+                            width={deviceWidth * 0.4}
                         />
                     </InputGroup>
                     <Label style={{
@@ -701,6 +720,8 @@ class StockAndPrice extends Component {
                             }}
                         />
                         <Input
+                            onFocus={_ => this.setState({ isMaximumPriceFocused: true })}
+                            onBlur={_ => this.setState({ isMaximumPriceFocused: false })}
                             onSubmitEditing={this.handleAutoFocus}
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -723,6 +744,11 @@ class StockAndPrice extends Component {
                             placeholder={locales('titles.enterMaxPrice')}
                             ref={this.maximumPriceRef}
 
+                        />
+                        <ToolTipComponent
+                            isFocused={isMaximumPriceFocused}
+                            text={maximumPriceText}
+                            width={deviceWidth * 0.4}
                         />
                     </InputGroup>
                     <Label style={{
@@ -765,10 +791,61 @@ class StockAndPrice extends Component {
                     </Button>
                 </View>
 
-            </View>
+            </ScrollView>
         );
     }
 }
+
+const ToolTipComponent = ({
+    text = '',
+    isFocused = false,
+    width
+}) => {
+    if (text && text.length && isFocused)
+        return (
+            <View
+                style={{
+                    backgroundColor: '#578ffe',
+                    borderRadius: 8,
+                    paddingHorizontal: 5,
+                    paddingVertical: 10,
+                    width: width ?? deviceWidth * 0.5,
+                    position: 'absolute',
+                    top: -50
+                }}
+            >
+                <Text
+                    numberOfLines={1}
+                    style={{
+                        fontFamily: "IRANSansWeb(FaNum)_Bold",
+                        color: '#fff',
+                        width: '100%',
+                        fontSize: 13,
+                        letterSpacing: 1,
+                        textAlign: 'center',
+                    }}>
+                    {text}
+                </Text>
+                <View
+                    style={{
+                        width: 0,
+                        height: 0,
+                        borderLeftWidth: 7,
+                        borderLeftColor: 'transparent',
+                        borderRightColor: 'transparent',
+                        borderRightWidth: 7,
+                        borderTopWidth: 7,
+                        borderTopColor: '#578ffe',
+                        left: '50%',
+                        bottom: -6,
+                        position: 'absolute'
+                    }}
+                >
+                </View>
+            </View>
+        )
+    return null;
+};
 
 const styles = StyleSheet.create({
     textInputPadding: {

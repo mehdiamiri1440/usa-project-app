@@ -4,6 +4,7 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
+import { useIsFocused } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
@@ -32,8 +33,12 @@ class RequestsTab extends Component {
             showGoldenModal: false,
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
+            appState: AppState.currentState
         }
     }
+
+    goldensRef = React.createRef();
+    buyadsRef = React.createRef();
 
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
@@ -110,12 +115,14 @@ class RequestsTab extends Component {
 
     handleAppStateChange = (nextAppState) => {
         if (
-            AppState.current != nextAppState
+            this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused
         ) {
+            console.log('app is in forground from requests')
             this.props.fetchRelatedRequests().then(result => {
                 this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
             });
         }
+        this.setState({ appState: nextAppState });
     };
 
     renderListEmptyComponent = _ => {
@@ -205,7 +212,7 @@ class RequestsTab extends Component {
     };
 
 
-    fetchContactInfo = (item) => {
+    fetchContactInfo = (item, index, isFromGolden) => {
 
         const { id, is_golden, buyer_id } = item;
 
@@ -242,6 +249,9 @@ class RequestsTab extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
+                    if (isFromGolden)
+                        return this.goldensRef?.current?.scrollToIndex({ index, animated: true });
+                    return this.buyadsRef?.current?.scrollToIndex({ index, animated: true });
                 }
             })
                 .catch(err => {
@@ -263,7 +273,7 @@ class RequestsTab extends Component {
     };
 
 
-    renderGoldenListItem = ({ item }) => {
+    renderGoldenListItem = ({ item, index }) => {
         const {
             selectedButton,
         } = this.state;
@@ -435,7 +445,7 @@ class RequestsTab extends Component {
                             {item.has_phone ?
                                 <Button
                                     small
-                                    onPress={() => this.fetchContactInfo(item)}
+                                    onPress={() => this.fetchContactInfo(item, index, true)}
                                     style={{
                                         borderColor: '#c7a84f',
                                         width: '47%',
@@ -463,11 +473,18 @@ class RequestsTab extends Component {
                                             elevation: 0
                                         }}
                                     >
-                                        <FontAwesome5
-                                            solid
-                                            name='phone-square-alt'
-                                            color={!item.isContactInfoShown ? '#333' : 'white'}
-                                            size={20} />
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={15}
+                                                color='#333'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                            />
+                                            : <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color={!item.isContactInfoShown ? '#333' : 'white'}
+                                                size={20} />
+                                        }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -479,17 +496,6 @@ class RequestsTab extends Component {
                                         >
                                             {locales('labels.contactInfo')}
                                         </Text>
-                                        {buyerMobileNumberLoading && selectedButton == item.id ?
-                                            <ActivityIndicator
-                                                size={15}
-                                                color='#333'
-                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                                style={{
-                                                    position: 'absolute', right: 10,
-                                                    width: 5, height: 5, borderRadius: 5,
-                                                }}
-                                            />
-                                            : null}
                                     </LinearGradient>
 
                                 </Button>
@@ -791,7 +797,7 @@ class RequestsTab extends Component {
                             {item.has_phone ?
                                 <Button
                                     small
-                                    onPress={() => this.fetchContactInfo(item)}
+                                    onPress={() => this.fetchContactInfo(item, index, true)}
                                     style={{
                                         borderColor: '#c7a84f',
                                         width: '47%',
@@ -819,11 +825,17 @@ class RequestsTab extends Component {
                                             elevation: 0
                                         }}
                                     >
-                                        <FontAwesome5
-                                            solid
-                                            name='phone-square-alt'
-                                            color={!item.isContactInfoShown ? '#333' : 'white'}
-                                            size={20} />
+                                        {buyerMobileNumberLoading && selectedButton == item.id ?
+                                            <ActivityIndicator
+                                                size={15}
+                                                color='#333'
+                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                            />
+                                            : <FontAwesome5
+                                                solid
+                                                name='phone-square-alt'
+                                                color={!item.isContactInfoShown ? '#333' : 'white'}
+                                                size={20} />}
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -835,17 +847,7 @@ class RequestsTab extends Component {
                                         >
                                             {locales('labels.contactInfo')}
                                         </Text>
-                                        {buyerMobileNumberLoading && selectedButton == item.id ?
-                                            <ActivityIndicator
-                                                size={15}
-                                                color='#333'
-                                                animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                                style={{
-                                                    position: 'absolute', right: 10,
-                                                    width: 5, height: 5, borderRadius: 5,
-                                                }}
-                                            />
-                                            : null}
+
                                     </LinearGradient>
 
                                 </Button>
@@ -855,7 +857,7 @@ class RequestsTab extends Component {
                                 style={[styles.loginButton,
                                 {
                                     alignSelf: 'center', backgroundColor: 'transparent',
-                                    borderWidth: 0, justifyContent: 'center', alignItems: 'center',
+                                    justifyContent: 'center', alignItems: 'center',
                                     width: item.has_phone ? '47%' : '60%',
                                     top: 5
                                 }]}
@@ -864,10 +866,9 @@ class RequestsTab extends Component {
                                 <LinearGradient
                                     start={{ x: 0, y: 0.51, z: 1 }}
                                     end={{ x: 0.8, y: 0.2, z: 1 }}
-                                    colors={['#c7a84f', '#f9f29f', '#c7a84f']}
+                                    colors={['#ffffff', '#ffffff', '#ffffff']}
                                     style={{
                                         width: '100%',
-                                        borderWidth: 0,
                                         paddingHorizontal: 10,
                                         flexDirection: 'row-reverse',
                                         alignItems: 'center',
@@ -875,20 +876,22 @@ class RequestsTab extends Component {
                                         justifyContent: 'center',
                                         height: 45,
                                         borderRadius: 6,
+                                        borderColor: '#556080',
+                                        borderWidth: 1
                                     }}
                                 >
-                                    <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#333'} size={20} />
+                                    <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#556080'} size={20} />
                                     <Text style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         fontSize: 18,
-                                        color: '#333',
+                                        color: '#556080',
                                         paddingHorizontal: 3
                                     }}>
                                         {locales('labels.messageToBuyer')}
 
 
                                     </Text>
-                                    <ActivityIndicator size={20} color={'#333'}
+                                    <ActivityIndicator size={20} color={'#556080'}
                                         animating={selectedButton == item.id &&
                                             !!isUserAllowedToSendMessageLoading}
                                         style={{
@@ -925,7 +928,7 @@ class RequestsTab extends Component {
             .catch(_ => { })
     };
 
-    renderItem = ({ item }) => {
+    renderItem = ({ item, index }) => {
         const {
             selectedButton,
         } = this.state;
@@ -1116,7 +1119,7 @@ class RequestsTab extends Component {
                         {item.has_phone ?
                             <Button
                                 small
-                                onPress={() => this.fetchContactInfo(item)}
+                                onPress={() => this.fetchContactInfo(item, index, false)}
                                 style={{
                                     borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
                                     width: '47%',
@@ -1147,11 +1150,17 @@ class RequestsTab extends Component {
                                         elevation: 0
                                     }}
                                 >
-                                    <FontAwesome5
-                                        solid
-                                        name='phone-square-alt'
-                                        color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                        size={20} />
+                                    {buyerMobileNumberLoading && selectedButton == item.id ?
+                                        <ActivityIndicator
+                                            size={15}
+                                            color={(!item.is_golden ? 'white' : '#333')}
+                                            animating={selectedButton == item.id && !!buyerMobileNumberLoading}
+                                        />
+                                        : <FontAwesome5
+                                            solid
+                                            name='phone-square-alt'
+                                            color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
+                                            size={20} />}
                                     <Text
                                         style={{
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -1163,17 +1172,7 @@ class RequestsTab extends Component {
                                     >
                                         {locales('labels.contactInfo')}
                                     </Text>
-                                    {buyerMobileNumberLoading && selectedButton == item.id ?
-                                        <ActivityIndicator
-                                            size={15}
-                                            color={(!item.is_golden ? 'white' : '#333')}
-                                            animating={selectedButton == item.id && !!buyerMobileNumberLoading}
-                                            style={{
-                                                position: 'absolute', right: 10,
-                                                width: 5, height: 5, borderRadius: 5,
-                                            }}
-                                        />
-                                        : null}
+
                                 </LinearGradient>
 
                             </Button>
@@ -1449,8 +1448,8 @@ class RequestsTab extends Component {
                     renderItem={this.renderGoldenListItem}
                     refreshing={false}
                     onRefresh={this.refreshList}
+                    ref={this.goldensRef}
                 />
-
             )
         return null;
     }
@@ -1464,6 +1463,18 @@ class RequestsTab extends Component {
             accessToContactInfoErrorMessage,
         } = this.state;
 
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
+
         return (
             <View
                 style={{
@@ -1472,262 +1483,264 @@ class RequestsTab extends Component {
                 }}
             >
 
+                {showMobileNumberWarnModal ?
+                    < Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
 
-
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={showMobileNumberWarnModal}
-                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        }}>
+                        <Dialog
+                            visible={showMobileNumberWarnModal}
+                            onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.contactInfo')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {accessToContactInfoErrorMessage}
                             </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <View style={{
                                 width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                {active_pakage_type == 0 ? <Button
+                                    style={[styles.modalButton, styles.greenButton]}
+                                    onPress={() => {
+                                        this.setState({ showMobileNumberWarnModal: false });
+                                        this.props.navigation.navigate('PromoteRegistration');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {accessToContactInfoErrorMessage}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.setState({ showMobileNumberWarnModal: false });
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                }}
-                            >
-
-                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                                styles.buttonText]}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
+                                    styles.buttonText]}>{locales('titles.promoteRegistration')}
+                                    </Text>
+                                </Button>
+                                    : null}
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
-
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={showGoldenModal}
-                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => { this.setState({ showGoldenModal: false }) }}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.goldenRequests')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
                                 width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={_ => this.setState({ showMobileNumberWarnModal: false })}
+                                >
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null}
+
+                {showGoldenModal ?
+                    < Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
+
+                        }}>
+                        <Dialog
+                            visible={showGoldenModal}
+                            onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                            style={styles.dialogWrapper}
+                        >
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={() => { this.setState({ showGoldenModal: false }) }}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.goldenRequests')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('labels.accessToGoldensDeined')}
+                                </Text>
+
+                            </Dialog.Actions>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {locales('labels.icreaseToSeeGoldens')}
+                            </Paragraph>
+                            <View style={{
+                                width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <Button
+                                    style={[styles.modalButton, styles.greenButton]}
+                                    onPress={() => {
+                                        this.setState({ showGoldenModal: false })
+                                        this.props.navigation.navigate('PromoteRegistration');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('labels.accessToGoldensDeined')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('labels.icreaseToSeeGoldens')}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                }}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                    </Text>
+                                </Button>
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ showGoldenModal: false })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={showDialog}
-                        onDismiss={this.hideDialog}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={this.hideDialog}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.buyRequests')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-
-
-                        <View
-                            style={{
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
                                 width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={() => this.setState({ showGoldenModal: false })}
+                                >
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null}
+
+                {showDialog ?
+                    < Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
+
+                        }}>
+                        <Dialog
+                            visible={showDialog}
+                            onDismiss={this.hideDialog}
+                            style={styles.dialogWrapper}
+                        >
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <Button
+                                    onPress={this.hideDialog}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </Button>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.buyRequests')}
+                                </Paragraph>
+                            </Dialog.Actions>
+
+
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.maximumBuyAdResponse')}
+                                </Text>
+
+                            </Dialog.Actions>
+                            <Paragraph
+                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', paddingHorizontal: 15, textAlign: 'center' }}>
+                                {locales('titles.icreaseYouRegisterRequstCapacity')}
+                            </Paragraph>
+                            <View style={{
+                                width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <Button
+                                    style={[styles.modalButton, styles.greenButton]}
+                                    onPress={() => {
+                                        this.hideDialog();
+                                        this.props.navigation.navigate('ExtraBuyAdCapacity');
+                                    }}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.maximumBuyAdResponse')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#E41C38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('titles.icreaseYouRegisterRequstCapacity')}
-                        </Paragraph>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.hideDialog();
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
-                                }}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
-                                </Text>
-                            </Button>
-                        </View>
+                                    <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
+                                    </Text>
+                                </Button>
+                            </View>
 
 
 
 
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={this.hideDialog}
-                            >
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <Button
+                                    style={styles.modalCloseButton}
+                                    onPress={this.hideDialog}
+                                >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal >
+                    : null}
 
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
@@ -1739,6 +1752,7 @@ class RequestsTab extends Component {
                     keyExtractor={this.keyExtractor}
                     initialNumToRender={2}
                     renderItem={this.renderItem}
+                    ref={this.buyadsRef}
                     refreshing={false}
                     onRefresh={this.refreshList}
                 />
@@ -1975,7 +1989,6 @@ const styles = StyleSheet.create({
     }
 });
 
-
 const mapStateToProps = (state) => {
     const {
         relatedBuyAdRequestsLoading,
@@ -2012,4 +2025,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchBuyerMobileNumber: contactInfoObject => dispatch(requestActions.fetchBuyerMobileNumber(contactInfoObject)),
     }
 };
-export default connect(mapStateToProps, mapDispatchToProps)(RequestsTab)
+const Wrapper = (props) => {
+    const isFocused = useIsFocused();
+    return <RequestsTab {...props} isFocused={isFocused} />;
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)

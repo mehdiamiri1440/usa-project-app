@@ -18,7 +18,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -102,7 +102,20 @@ class ProductsList extends PureComponent {
                 productsListArray: [...this.props.productsListArray],
                 to_record_number: 16,
                 from_record_number: 0,
-                searchText: ''
+                searchText: '',
+                selectedButton: null,
+                city: '',
+                province: '',
+                sortModalFlag: false,
+                locationsFlag: false,
+                subCategoriesModalFlag: false,
+                sort_by: ENUMS.SORT_LIST.values.BM,
+                searchLoader: false,
+                searchFlag: false,
+                subCategoriesList: [],
+                cities: [],
+                totalCategoriesModalFlag: false,
+                isFilterApplied: false,
             })
             this.props.updateProductsList(false);
             this.scrollToTop({});
@@ -579,7 +592,6 @@ class ProductsList extends PureComponent {
             index
         } = error;
 
-        console.warn('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
         const offset = averageItemLength * index;
 
         this.props.productsListRef?.current?.scrollToOffset({ offset, animated: true });
@@ -753,7 +765,7 @@ class ProductsList extends PureComponent {
 
         return (
             <Modal
-                animationType="slide"
+                animationType="fade"
                 visible={modals.findIndex(item => item.category_name == category_name) > -1}
                 onRequestClose={_ => this.omitItemFromModals(category_name)}
             >
@@ -1688,7 +1700,7 @@ class ProductsList extends PureComponent {
 
                 {locationsFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={locationsFlag}
                         onRequestClose={() => this.setState({ locationsFlag: false })}>
 
@@ -1834,7 +1846,7 @@ class ProductsList extends PureComponent {
 
                 {sortModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
@@ -1854,7 +1866,7 @@ class ProductsList extends PureComponent {
 
                 {!!totalCategoriesModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={!!totalCategoriesModalFlag}
                         onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
 

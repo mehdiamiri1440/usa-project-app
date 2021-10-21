@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { View, FlatList, Pressable, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image'
-import { Card } from 'native-base';
+import analytics from '@react-native-firebase/analytics';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 
 import { deviceWidth } from '../../utils/deviceDimenssions';
@@ -42,6 +42,7 @@ const RelatedProductsList = props => {
                 }}
                 activeOpacity={1}
                 onPress={() => {
+                    analytics().logEvent('click_on_related_product');
                     props.navigation.navigate('ProductDetails', { productId: item.id })
                 }}>
                 <FastImage

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import RnRestart from 'react-native-restart';
@@ -14,7 +14,6 @@ import * as authReducer from '../../redux/auth/actions';
 import Header from '../../components/header';
 
 let settingRoutes = [
-    // { label: 'labels.changePassword', icon: <FontAwesome size={25} name='unlock-alt' color='white' />, name: 'ChangePassword' },
     { label: 'labels.signOut', icon: <SimpleLineIcons size={25} name='logout' color='white' />, name: 'SignOut' },
 ];
 
@@ -39,6 +38,7 @@ class Settings extends React.Component {
                 '@sender_ids',
                 '@registerProductParams',
                 '@productsList',
+                '@validPassedTimeForPhoneNumberBanner',
             ]).then(_ => {
                 messaging()
                     .unsubscribeFromTopic(`FCM${this.props.loggedInUserId}`).then(_ => {

@@ -11,7 +11,7 @@ import Jmoment from 'moment-jalaali';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { deviceWidth, deviceHeight, enumHelper } from '../../utils';
 import * as homeActions from '../../redux/home/actions';
@@ -170,7 +170,11 @@ class Requests extends PureComponent {
 
     hideDialog = () => this.setState({ showDialog: false });
 
-    setSelectedButton = id => this.setState({ selectedButton: id });
+    setSelectedButton = id => {
+        const foundIndex = this.state.buyAdRequestsList.findIndex(item => item.id == id);
+        this.props.requestsRef?.current?.scrollToIndex({ index: foundIndex, animated: true });
+        this.setState({ selectedButton: id });
+    };
 
     setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
 
@@ -281,7 +285,6 @@ class Requests extends PureComponent {
             index
         } = error;
 
-        console.log('scroll to index failed', error, 'avarage', averageItemLength, 'index', index);
         const offset = averageItemLength * index;
 
         this.props.requestsRef?.current?.scrollToOffset({ offset, animated: true });
@@ -325,7 +328,11 @@ class Requests extends PureComponent {
         else
             tempList = [...buyAdRequestsList];
 
-        this.setState({ selectedFilterName: '', searchText: text }, _ => {
+        this.setState({
+            selectedFilterName: '',
+            selectedFilterId: '',
+            searchText: text
+        }, _ => {
             this.setState({
                 buyAdRequestsList: [...tempList]
             }, _ => this.scrollToTop());
@@ -335,7 +342,8 @@ class Requests extends PureComponent {
     handleSortItemClick = value => {
         const {
             buyAdRequestsList = [],
-            selectedFilterId
+            selectedFilterId,
+            searchText
         } = this.state;
 
         let tempList = [...buyAdRequestsList];
@@ -349,8 +357,12 @@ class Requests extends PureComponent {
             tempList = [...this.props.buyAdRequestsList];
         }
 
-        if (selectedFilterId)
+        if (selectedFilterId) {
             tempList = tempList.filter(item => item.category_id == selectedFilterId);
+        }
+
+        if (searchText)
+            tempList = [...tempList.filter(item => item.subcategory_name.includes(searchText) || (!!item.name && item.name.includes(searchText)))];
 
         this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
     };
@@ -634,7 +646,7 @@ class Requests extends PureComponent {
                         alignItems: 'center',
                         alignSelf: 'flex-end',
                         justifyContent: 'center',
-                        maxWidth: 100,
+                        maxWidth: '30%',
                         backgroundColor: '#FFFFFF',
                         minHeight: 30
                     }}>
@@ -704,12 +716,30 @@ class Requests extends PureComponent {
             searchText,
             sortModalFlag
         } = this.state;
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            active_pakage_type
+        } = user_info;
+
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
 
                 {sortModalFlag ?
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         visible={sortModalFlag}
                         onRequestClose={() => this.setState({ sortModalFlag: false })}>
 
@@ -732,7 +762,7 @@ class Requests extends PureComponent {
                     closeOnDragDown
                     closeOnPressMask
                     height={300}
-                    animationType='slide'
+                    animationType='fade'
                     customStyles={{
                         draggableIcon: {
                             backgroundColor: "#000"
@@ -757,7 +787,7 @@ class Requests extends PureComponent {
                         <Button
                             onPress={() => {
                                 this.updateFlag.current.close();
-                                this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                this.props.navigation.navigate('PromoteRegistration')
                             }}
                             style={{
                                 borderRadius: 5, backgroundColor: '#00C569',
@@ -818,18 +848,18 @@ class Requests extends PureComponent {
                             textAlign: 'center',
                             alignItems: 'center'
                         }}>
-                            <Button
+                            {active_pakage_type == 0 ? <Button
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 
                                 <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
                                 styles.buttonText]}>{locales('titles.promoteRegistration')}
                                 </Text>
-                            </Button>
+                            </Button> : null}
                         </View> : null}
 
 
@@ -909,7 +939,7 @@ class Requests extends PureComponent {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraBuyAdCapacity' });
+                                    this.props.navigation.navigate('ExtraBuyAdCapacity');
                                 }}
                             >
 
@@ -995,7 +1025,7 @@ class Requests extends PureComponent {
                                 style={[styles.modalButton, styles.greenButton, { borderRadius: 8, elevation: 0 }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
+                                    this.props.navigation.navigate('PromoteRegistration');
                                 }}
                             >
 
@@ -1065,7 +1095,8 @@ class Requests extends PureComponent {
                                     }}
                                     onPress={() => this.setState({
                                         buyAdRequestsList: this.props.buyAdRequestsList,
-                                        selectedFilterName: ''
+                                        selectedFilterName: '',
+                                        selectedFilterId: null
                                     }, _ => this.scrollToTop())}
                                     style={{
                                         borderRadius: 12,
@@ -1105,82 +1136,72 @@ class Requests extends PureComponent {
 
                 <View>
                 </View>
-                <SafeAreaView
-                    style={{ height: '100%', paddingBottom: 60, backgroundColor: 'white' }}
-                >
-                    {showFilters ?
-                        <Filters
-                            selectedFilter={this.selectedFilter}
-                            closeFilters={this.closeFilters}
-                            showFilters={showFilters}
-                        />
-                        : null}
 
-                    <FlatList
-                        ref={this.props.requestsRef}
-                        refreshing={false}
-                        onRefresh={this.onRefresh}
-                        keyboardDismissMode='on-drag'
-                        keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={this.renderListEmptyComponent}
-                        data={buyAdRequestsList}
-                        extraData={this.state}
-                        onScrollToIndexFailed={this.onScrollToIndexFailed}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={this.renderItem}
-                        windowSize={10}
-                        initialNumToRender={3}
-                        maxToRenderPerBatch={3}
-                        style={{
-                            marginBottom: selectedFilterName ? 140 : 136
-                        }}
+                {showFilters ?
+                    <Filters
+                        selectedFilter={this.selectedFilter}
+                        closeFilters={this.closeFilters}
+                        showFilters={showFilters}
                     />
+                    : null}
 
-                    <View style={{
-                        position: 'absolute',
-                        zIndex: 1,
-                        bottom: selectedFilterName ? 140 : 136,
-                        width: '100%',
-                        righ: 0,
-                        left: 0,
-                        backgroundColor: '#fff',
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
-                        padding: 7,
-                        elevation: 5
-                    }}>
-                        <Button
+                <FlatList
+                    ref={this.props.requestsRef}
+                    refreshing={false}
+                    onRefresh={this.onRefresh}
+                    keyboardDismissMode='on-drag'
+                    keyboardShouldPersistTaps='handled'
+                    ListEmptyComponent={this.renderListEmptyComponent}
+                    data={buyAdRequestsList}
+                    extraData={this.state}
+                    onScrollToIndexFailed={this.onScrollToIndexFailed}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={this.renderItem}
+                    windowSize={10}
+                    initialNumToRender={3}
+                    maxToRenderPerBatch={3}
+                />
+
+                <View style={{
+                    zIndex: 1,
+                    width: '100%',
+                    righ: 0,
+                    left: 0,
+                    backgroundColor: '#fff',
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    padding: 7,
+                    elevation: 5
+                }}>
+                    <Button
+                        style={{
+                            flex: 3,
+                            justifyContent: 'center',
+                            backgroundColor: '#556080',
+                            borderRadius: 8
+                        }}
+                        onPress={() => this.setState({ showFilters: true })}>
+                        <Text style={{
+                            textAlign: 'center',
+                            color: '#fff',
+                            flexDirection: 'row',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        }}>
+                            {locales('titles.categories')}
+                        </Text>
+                        <FontAwesome5
+                            name="filter"
+                            solid
+                            color="#fff"
                             style={{
-                                flex: 3,
-                                justifyContent: 'center',
-                                backgroundColor: '#556080',
-                                borderRadius: 4
+                                marginHorizontal: 5
                             }}
-                            onPress={() => this.setState({ showFilters: true })}>
-                            <Text style={{
-                                textAlign: 'center',
-                                color: '#fff',
-                                flexDirection: 'row',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                            }}>
-                                {locales('titles.categories')}
-                            </Text>
-                            <FontAwesome5
-                                name="filter"
-                                solid
-                                color="#fff"
-                                style={{
-                                    marginHorizontal: 5
-                                }}
-                            />
+                        />
 
-                        </Button>
+                    </Button>
 
-                    </View>
-
-
-                </SafeAreaView>
-            </>
+                </View>
+            </View>
         )
     }
 };
@@ -1308,6 +1329,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignSelf: 'center',
         justifyContent: 'center',
+        elevation: 0
     },
     modalCloseButton: {
         textAlign: 'center',

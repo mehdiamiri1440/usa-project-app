@@ -13,7 +13,7 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import { Button, Label } from 'native-base';
 import { connect } from 'react-redux';
@@ -162,7 +162,9 @@ const EnterActivisionCode = (props) => {
                 }
             }).catch(err => {
                 if (err && err.data)
-                    setValueError(err.data.errors.phone[0])
+                    return setValueError(err?.data?.errors?.phone[0]);
+                return setValueError(locales('labels.somethingWentWrong'))
+
             })
         }
 

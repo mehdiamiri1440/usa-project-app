@@ -1,8 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Image, Text, View, StyleSheet, Pressable, Linking, ActivityIndicator } from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Pressable,
+    ActivityIndicator,
+    ScrollView,
+    Modal
+}
+    from 'react-native';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Card, Input, Label, Item, Toast, Button } from 'native-base';
+import { Input, Label, Item, Toast, Button } from 'native-base';
 import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -12,7 +21,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
-import ContentLoader, { Rect } from "react-content-loader/native"
+import FastImage from 'react-native-fast-image';
 
 import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
@@ -38,12 +47,9 @@ class Product extends PureComponent {
             minimumPriceError: '',
             amountError: '',
             editionFlag: false,
-            elevatorFlag: false,
             deleteProductFlag: false,
             showDeletationMessage: false,
             deleteMessageText: '',
-            walletElevatorPaymentError: '',
-            walletElevatorPaySuccessMessage: '',
             isProductImageBroken: false,
             deletedProductId: null,
         }
@@ -95,11 +101,46 @@ class Product extends PureComponent {
         }
     }
 
+
     onAmountSubmit = field => {
         this.setState(() => ({
+            amountError: '',
             amount: field,
-            amountError: ''
+            amountClicked: true
         }));
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    amountError: "لطفا  فقط عدد وارد کنید",
+                    amountClicked: true
+                }));
+            }
+            if (field >= 1000000000) {
+                this.setState(() => ({
+                    amountError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    amountError: locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') }),
+                    amountClicked: true
+                }));
+            }
+            if (!this.amountError) {
+                this.setState(() => ({
+                    amountText: formatter.convertUnitsToText(field),
+                    amountClicked: true
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                amount: '',
+                amountText: '',
+                amountClicked: false
+            }));
+        }
+
     };
 
     onMinimumPriceSubmit = field => {
@@ -126,18 +167,49 @@ class Product extends PureComponent {
             }));
     };
 
-    onMinimumOrderSubmit = field => {
-        if (validator.isNumber(field))
-            this.setState(() => ({
-                minimumOrder: field,
-                minimumOrderError: ''
-            }));
-        else
-            this.setState(() => ({
-                minimumOrder: ''
-            }));
-    };
 
+    onMinimumOrderSubmit = field => {
+
+        this.setState(() => ({
+            minimumOrderError: '',
+            minimumOrder: field,
+            minimumOrderClicked: true
+        }));
+
+        if (field) {
+            if (!validator.isNumber(field)) {
+                this.setState(() => ({
+                    minimumOrderError: "لطفا  فقط عدد وارد کنید",
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field >= 1000000000) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minOrder') }),
+                    minimumOrderClicked: true
+                }));
+            }
+            if (field <= 0) {
+                this.setState(() => ({
+                    minimumOrderError: locales('errors.canNotBeZero', { fieldName: locales('titles.minOrder') }),
+                    minimumOrderClicked: true
+                }));
+            }
+            if (!this.minimumOrderError) {
+                this.setState(() => ({
+                    minimumOrderText: formatter.convertUnitsToText(field),
+                    minimumOrderClicked: true
+                }));
+            }
+        } else {
+            this.setState(() => ({
+                minimumOrder: '',
+                minimumOrderText: '',
+                minimumOrderClicked: false
+            }));
+        }
+
+    };
 
     onSubmit = () => {
         const {
@@ -151,13 +223,18 @@ class Product extends PureComponent {
             user_name
         } = user_info;
 
-
         let { minimumOrder, maximumPrice, minimumPrice, amount } = this.state;
 
         let minimumOrderError = '', maximumPriceError = '', minimumPriceError = '', amountError = '';
 
         if (!amount) {
-            amountError = locales('errors.fieldNeeded', { fieldName: locales('titles.amountNeeded') })
+            amountError = locales('errors.pleaseEnterField', { fieldName: locales('titles.qunatityAmount') })
+        }
+        else if (amount && amount >= 1000000000) {
+            amountError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.qunatityAmount') })
+        }
+        else if (amount && amount <= 0) {
+            amountError = locales('errors.canNotBeZero', { fieldName: locales('titles.qunatityAmount') })
         }
         else {
             amountError = '';
@@ -165,7 +242,13 @@ class Product extends PureComponent {
 
 
         if (!minimumOrder) {
-            minimumOrderError = locales('errors.fieldNeeded', { fieldName: locales('titles.minimumOrderNeeded') })
+            minimumOrderError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minOrder') })
+        }
+        else if (minimumOrder && minimumOrder >= 1000000000) {
+            minimumOrderError = locales('errors.filedShouldBeLessThanMillion', { fieldName: locales('titles.minOrder') })
+        }
+        else if (minimumOrder && minimumOrder <= 0) {
+            minimumOrderError = locales('errors.canNotBeZero', { fieldName: locales('titles.minOrder') })
         }
         else {
             minimumOrderError = '';
@@ -173,20 +256,32 @@ class Product extends PureComponent {
 
 
         if (!maximumPrice) {
-            maximumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.maxPriceNeeded') })
+            maximumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.maxPriceNeeded') })
+        }
+        else if (maximumPrice && maximumPrice <= 0) {
+            maximumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.maxPriceNeeded') })
         }
         else {
             maximumPriceError = '';
         }
 
 
+
         if (!minimumPrice) {
-            minimumPriceError = locales('errors.fieldNeeded', { fieldName: locales('titles.minPriceNeeded') })
+            minimumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minPriceNeeded') })
+        }
+        else if (minimumPrice && minimumPrice <= 0) {
+            minimumPriceError = locales('errors.filedShouldBeGreaterThanZero', { fieldName: locales('titles.minPriceNeeded') })
         }
         else {
             minimumPriceError = '';
         }
-        this.setState({ minimumOrderError, maximumPriceError, minimumPriceError, amountError })
+
+        this.setState({
+            minimumOrderClicked: true, maxPriceClicked: true,
+            minPriceClicked: true, amountClicked: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError
+        })
+
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             let productObject = {
                 product_id: this.props.productItem.main.id,
@@ -225,9 +320,7 @@ class Product extends PureComponent {
                 });
             });
         }
-    }
-
-
+    };
 
     deleteProduct = id => {
         this.props.deleteProduct(id).then(_ => {
@@ -265,42 +358,6 @@ class Product extends PureComponent {
         });
     };
 
-    elevatorPay = () => {
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productItem.main.id}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${this.props.productItem.main.id}`);
-            }
-        })
-    };
-
-    doWalletElevatorPay = id => {
-        this.props.walletElevatorPay(id).then(result => {
-            this.setState({
-                walletElevatorPayError: '', elevatorFlag: false,
-                walletElevatorPaySuccessMessage: locales('titles.walletElevatorPaymentSuccessMessage')
-            }, _ => {
-                setTimeout(() => {
-                    this.props.fetchUserProfile();
-                    this.setState({ walletElevatorPaySuccessMessage: '' })
-                }, 3000);
-            })
-        })
-            .catch(error => {
-                const {
-                    response = {}
-                } = error;
-                const {
-                    data = {}
-                } = response;
-                const {
-                    msg,
-                    status
-                } = data;
-                if (status == false)
-                    this.setState({ walletElevatorPaymentError: msg, walletElevatorPaySuccessMessage: '' })
-            });
-    };
-
     renderProductImage = (photos = []) => {
         const {
             isProductImageBroken,
@@ -309,11 +366,37 @@ class Product extends PureComponent {
         if (isProductImageBroken)
             return require('../../../assets/icons/image-load-faild.jpg');
 
-        if (photos.length)
-            return { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}` };
+        if (photos.length) {
+            return {
+                cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
+                uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photos[0].file_path}`
+            }
+        }
 
         return require('../../../assets/icons/placeholder-logo.png');
 
+    };
+
+    navigateToPaymentType = _ => {
+        const {
+            productItem = {}
+        } = this.props;
+
+        const {
+            main = {},
+        } = productItem;
+
+        const {
+            id: productId
+        } = main;
+
+        this.props.navigation.navigate('PaymentType', {
+            price: 25000,
+            type: 0,
+            productId,
+            bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productId}`
+        });
     };
 
     render() {
@@ -321,7 +404,6 @@ class Product extends PureComponent {
             loggedInUserId,
             deleteProductStatus,
             deleteProductLoading,
-            walletElevatorPayLoading,
             width = deviceWidth * 0.97,
             shouldShowMyButtons = false
         } = this.props;
@@ -374,7 +456,6 @@ class Product extends PureComponent {
         } = user_info;
 
         const {
-            elevatorFlag,
             showDeletationMessage,
             deleteMessageText,
             editionMessageText,
@@ -395,8 +476,6 @@ class Product extends PureComponent {
 
             showValidatedUserModal,
 
-            walletElevatorPaymentError,
-            walletElevatorPaySuccessMessage,
             deletedProductId
         } = this.state;
 
@@ -499,47 +578,95 @@ class Product extends PureComponent {
 
  */}
 
-                {editionFlag ? < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
+                {editionFlag ? <Modal
+                    onDismiss={() => this.setState({ editionFlag: false })}
+                    onRequestClose={() => this.setState({ editionFlag: false })}
+                    visible={editionFlag}
+                    transparent={true}
+                    animationType='fade'
+                >
                     <Dialog
+                        dismissable
                         visible={editionFlag}
                         onDismiss={() => this.setState({ editionFlag: false })}
                         style={styles.dialogWrapper}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'flex-end',
+                                justifyContent: 'center',
+                                paddingVertical: 10,
+                                paddingHorizontal: 20,
+                                borderBottomColor: '#bebebe',
+                                borderBottomWidth: 1
+                            }}
                         >
-                            <Button
+                            <FontAwesome5
                                 onPress={() => this.setState({ editionFlag: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.edition', { fieldName: `${category_name || '---'}  ${category_name ? ' | ' : ''} ${sub_category_name || '---'}` })}
-                            </Paragraph>
-                        </Dialog.Actions>
-
+                                name="times"
+                                color="red"
+                                solid
+                                size={18}
+                            />
+                            <Text
+                                style={{
+                                    textAlign: 'right',
+                                    fontSize: 24,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: '#333',
+                                    marginTop: 5
+                                }}
+                            >
+                                {
+                                    locales('labels.edition',
+                                        {
+                                            fieldName:
+                                                `${category_name || '---'} ${category_name ? '|' : ''} ${sub_category_name || '---'}`
+                                        })}
+                            </Text>
+                        </View>
 
                         {!showEditionMessage ?
-                            <>
-                                <Dialog.ScrollArea>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+
+                            <Dialog.ScrollArea>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                    keyboardDismissMode='none'
+                                    keyboardShouldPersistTaps='handled'
+                                >
+                                    <View style={[styles.textInputPadding]}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
                                             {locales('titles.amount')}
                                         </Label>
-                                        <Item regular style={{
-                                            borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5, padding: 3
+                                            }}>
                                             <Input
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 keyboardType='number-pad'
                                                 autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', flexDirection: 'row', textDecorationLine: 'none' }}
                                                 onChangeText={this.onAmountSubmit}
                                                 value={amount}
                                                 placeholder={locales('titles.amountWithExample')}
@@ -547,106 +674,206 @@ class Product extends PureComponent {
 
                                             />
                                         </Item>
-                                        {!!amountError ? <Label style={{
+                                        <Label style={{
+                                            height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>{amountError}</Label> : null}
-                                    </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.minimumOrder')}
-                                        </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
+                                            textAlign: !amountError && amount.length ? 'left' : 'right'
                                         }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                onChangeText={this.onMinimumOrderSubmit}
-                                                value={minimumOrder}
-                                                placeholder={locales('titles.minimumOrderWithExample')}
-                                                ref={this.minimumOrderRef}
 
-                                            />
-                                        </Item>
-                                        {!!minimumOrderError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>{minimumOrderError}</Label> : null}
-                                    </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.minimumPrice')}
+                                            {!!amountError && <Text style={{
+                                                fontSize: 14, color: '#D81A1A',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}> {amountError}</Text>}
                                         </Label>
-                                        <Item regular style={{
-                                            borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8', borderRadius: 5, padding: 3
-                                        }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
-                                                onChangeText={this.onMinimumPriceSubmit}
-                                                value={minimumPrice}
-                                                placeholder={locales('titles.minimumPriceWithExample')}
-                                                ref={this.minimumPriceRef}
-
-                                            />
-                                        </Item>
-                                        {!!minimumPriceError ? <Label style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
-                                        }}>
-                                            {minimumPriceError}</Label> : null}
                                     </View>
-                                    <View style={styles.textInputPadding}>
-                                        <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                                            {locales('titles.maximumPrice')}
-                                        </Label>
-                                        <Item regular
+                                    <View
+                                        style={[styles.textInputPadding]}
+                                    >
+                                        <Label
                                             style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
-                                                borderRadius: 5, padding: 3
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
+                                            {`${locales('titles.minOrder')} (${locales('labels.kiloGram')})`}
+                                        </Label>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
                                             }}>
                                             <Input
                                                 autoCapitalize='none'
                                                 autoCorrect={false}
                                                 autoCompleteType='off'
                                                 keyboardType='number-pad'
-                                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', textDecorationLine: 'none' }}
+                                                onChangeText={this.onMinimumOrderSubmit}
+                                                value={minimumOrder}
+                                                placeholder={locales('titles.minimumOrderWithExample')}
+                                                ref={this.minimumOrderRef}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
+                                            />
+                                        </Item>
+                                        <Label style={{
+                                            height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
+                                        }}>
+
+                                            {!!minimumOrderError && <Text style={{
+                                                fontSize: 14, color: '#D81A1A',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}> {minimumOrderError}</Text>}
+                                        </Label>
+                                    </View>
+                                    <View
+                                        style={[styles.textInputPadding]}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
+                                            {locales('titles.minimumPrice')}
+                                        </Label>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
+                                            }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                keyboardType='number-pad'
+                                                autoCompleteType='off'
+                                                onChangeText={this.onMinimumPriceSubmit}
+                                                value={minimumPrice}
+                                                placeholder={locales('titles.minimumPriceWithExample')}
+                                                ref={this.minimumPriceRef}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    flexDirection: 'row',
+                                                    borderRadius: 4,
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
+                                            />
+                                        </Item>
+                                        <Label style={{
+                                            fontSize: 14, color: '#D81A1A', height: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}>
+                                            {!!minimumPriceError ? minimumPriceError : null}
+                                        </Label>
+                                    </View>
+                                    <View
+                                        style={[styles.textInputPadding]}
+                                    >
+                                        <Label
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                padding: 5
+                                            }}
+                                        >
+                                            {locales('titles.maximumPrice')}
+                                        </Label>
+                                        <Item
+                                            regular
+                                            style={{
+                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderRadius: 5,
+                                                padding: 3
+                                            }}>
+                                            <Input
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
+                                                keyboardType='number-pad'
                                                 onChangeText={this.onMaximumPriceSubmit}
                                                 value={maximumPrice}
                                                 placeholder={locales('titles.maximumPriceWithExample')}
                                                 ref={this.maximumPriceRef}
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    borderRadius: 4,
+                                                    flexDirection: 'row',
+                                                    textDecorationLine: 'none',
+                                                    direction: 'rtl',
+                                                    textAlign: 'right'
 
+                                                }}
+                                                placeholderTextColor="#BEBEBE"
                                             />
                                         </Item>
-                                        {!!maximumPriceError ? <Label style={{
+                                        <Label style={{
+                                            fontSize: 14, color: '#D81A1A', height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            fontSize: 14, color: '#D81A1A'
                                         }}>
-                                            {maximumPriceError}
-                                        </Label> : null}
+                                            {!!maximumPriceError ? maximumPriceError : null}
+                                        </Label>
                                     </View>
-                                </Dialog.ScrollArea>
-                                <Dialog.Actions style={{
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
                                     <Button
-                                        style={[styles.loginButton, { width: '50%', elevation: 0 }]}
-                                        onPress={() => this.onSubmit()}>
-                                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
+                                        style={[
+                                            !minimumOrder.length ||
+                                                !amount.length ||
+                                                !maximumPrice ||
+                                                !minimumPrice ||
+                                                minimumOrderError ||
+                                                amountError ||
+                                                maximumPriceError ||
+                                                minimumPriceError
+                                                ? {
+                                                    textAlign: 'center',
+                                                    borderRadius: 5,
+                                                    backgroundColor: '#B5B5B5',
+                                                    color: 'white',
+                                                }
+                                                : styles.loginButton,
+                                            {
+                                                marginVertical: 0,
+                                                width: '50%',
+                                                elevation: 0,
+                                                alignItems: 'center',
+                                                alignSelf: 'center',
+                                                top: -10,
+                                                justifyContent: 'center'
+                                            }
+                                        ]}
+                                        onPress={() => this.onSubmit()}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.buttonText,
+                                                {
+                                                    alignSelf: 'center'
+                                                }]}>
                                             {locales('titles.submitChanges')}
                                         </Text>
                                     </Button>
-                                </Dialog.Actions>
-                            </> :
+                                </ScrollView>
+                            </Dialog.ScrollArea>
+                            :
                             <>
 
                                 <View
@@ -655,207 +882,39 @@ class Product extends PureComponent {
                                         alignItems: 'center'
                                     }}>
 
-                                    {editProductStatus ? <AntDesign name="close" color="#f27474" size={70} style={[styles.dialogIcon, {
-                                        borderColor: '#f27474',
-                                    }]} /> : <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                        borderColor: '#edf8e6',
-                                    }]} />}
+                                    {editProductStatus ? <AntDesign
+                                        name="close"
+                                        color="#f27474"
+                                        size={70}
+                                        style={[
+                                            styles.dialogIcon, {
+                                                borderColor: '#f27474',
+                                            }]} /> : <Feather
+                                        name="check"
+                                        color="#a5dc86"
+                                        size={70}
+                                        style={[
+                                            styles.dialogIcon, {
+                                                borderColor: '#edf8e6',
+                                            }]} />
+                                    }
 
                                 </View>
-                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                                <Dialog.Actions
+                                    style={styles.mainWrapperTextDialogModal}
+                                >
 
-                                    <Text style={styles.mainTextDialogModal}>
+                                    <Text
+                                        style={styles.mainTextDialogModal}
+                                    >
                                         {editionMessageText}
                                     </Text>
 
                                 </Dialog.Actions>
                             </>}
-
-
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ editionFlag: false })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
                     </Dialog>
-                </Portal > : null}
-
-
-
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={!!walletElevatorPaySuccessMessage}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.doElevation')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {walletElevatorPaySuccessMessage}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ walletElevatorPaySuccessMessage: '' })}>
-
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
-
-
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        visible={elevatorFlag}
-                        onDismiss={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                        style={styles.dialogWrapper}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            <Button
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.doElevation')}
-                            </Paragraph>
-                        </Dialog.Actions>
-
-                        <Text style={{
-                            width: '100%', textAlign: 'center',
-                            marginTop: 15,
-                            fontSize: 24, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#00C569'
-                        }}>
-                            {formatter.numberWithCommas(25000)} {locales('titles.toman')}
-                        </Text>
-
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.elevationText')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-around',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '50%', maxWidth: 170, elevation: 0 }]}
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' }, () => {
-                                    return this.elevatorPay()
-                                })}
-                            >
-
-                                <Text style={styles.buttonText}>{locales('titles.portalPay')}
-                                </Text>
-                            </Button>
-                            <Button
-                                style={[styles.modalButton, { backgroundColor: '#151C2E', width: '50%', maxWidth: 170, elevation: 0 }]}
-                                onPress={_ => this.doWalletElevatorPay(productId)}
-                            >
-                                <ActivityIndicator
-                                    color='white'
-                                    style={{ position: 'absolute', left: 0 }}
-                                    size={15}
-                                    animating={!!walletElevatorPayLoading}
-                                />
-
-                                <Text style={styles.buttonText}>
-                                    {locales('titles.walletPay')}
-                                </Text>
-                            </Button>
-                        </View>
-
-                        {walletElevatorPaymentError ? <Text
-                            style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                marginVertical: 15,
-                                fontSize: 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: '#E41C38'
-                            }}
-                        >
-                            {walletElevatorPaymentError}
-                        </Text>
-                            : null}
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ elevatorFlag: false, walletElevatorPaymentError: '' })}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
-
-
+                </Modal >
+                    : null}
 
                 < Portal
                     style={{
@@ -958,8 +1017,6 @@ class Product extends PureComponent {
                     </Dialog>
                 </Portal >
 
-
-
                 {deletedProductId != productId ?
                     <View transparent style={styles.cardWrapper, {
                         width: '100%',
@@ -975,7 +1032,7 @@ class Product extends PureComponent {
                                     analytics().logEvent('show_product_in_seperate_page', {
                                         product_id: productId
                                     });
-                                    this.props.navigation.navigate('ProductDetails', { productId })
+                                    this.props.navigation.push('ProductDetails', { productId })
                                 }}
                                 style={{
                                     width: '100%',
@@ -1061,7 +1118,7 @@ class Product extends PureComponent {
                                             borderTopRightRadius: 12,
                                         }}
                                     >
-                                        <Image
+                                        <FastImage
                                             resizeMode='contain'
                                             style={{
                                                 borderTopLeftRadius: 12,
@@ -1072,8 +1129,7 @@ class Product extends PureComponent {
                                             }}
                                             source={require('../../../assets/icons/placeholder-logo.png')}
                                         />
-                                        <Image
-                                            resizeMode='cover'
+                                        <FastImage
                                             style={{
                                                 borderRadius: 12,
                                                 width: '100%',
@@ -1086,6 +1142,7 @@ class Product extends PureComponent {
                                             }}
                                             onError={_ => this.setState({ isProductImageBroken: true })}
                                             source={this.renderProductImage(photos)}
+                                            resizeMode={FastImage.resizeMode.cover}
                                         />
                                     </View>
                                     <LinearGradient
@@ -1137,7 +1194,7 @@ class Product extends PureComponent {
                                     }}>
                                     <Pressable
                                         onPress={() => {
-                                            this.props.navigation.navigate('Profile', { user_name })
+                                            this.props.navigation.push('Profile', { user_name })
                                         }}
                                         android_ripple={{
                                             color: '#ededed'
@@ -1443,7 +1500,7 @@ class Product extends PureComponent {
                                                     height: 40,
                                                     elevation: 0
                                                 }}
-                                                onPress={() => this.setState({ elevatorFlag: true })}
+                                                onPress={this.navigateToPaymentType}
                                             >
 
                                                 <View
@@ -1728,7 +1785,6 @@ const mapStateToProps = (state) => {
     } = state;
 
     const {
-        walletElevatorPayLoading,
         walletElevatorPayFailed,
         walletElevatorPayError,
         walletElevatorPayMessage,
@@ -1746,7 +1802,6 @@ const mapStateToProps = (state) => {
         editProductMessage: state.productsListReducer.editProductMessage,
         editProductLoading: state.productsListReducer.editProductLoading,
 
-        walletElevatorPayLoading,
         walletElevatorPayFailed,
         walletElevatorPayError,
         walletElevatorPayMessage,

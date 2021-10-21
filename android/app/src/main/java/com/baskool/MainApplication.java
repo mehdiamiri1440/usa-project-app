@@ -13,6 +13,10 @@ import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.burnweb.rnsendintent.RNSendIntentPackage;
+import cl.json.RNSharePackage;
+import cl.json.ShareApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 public class MainApplication extends NavigationApplication {
 

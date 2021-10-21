@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { View, Text, Image, Linking } from 'react-native';
+import { View, Text, Image, Linking, ScrollView } from 'react-native';
 import { Button } from 'native-base';
 import RNRestart from 'react-native-restart';
 
@@ -37,8 +37,7 @@ class ErrorBoundary extends Component {
     render() {
         if (this.state.hasError)
             return (
-                <View
-                >
+                <ScrollView>
                     <Image
                         source={require('./assets/images/error.png')}
                         style={{
@@ -163,7 +162,7 @@ class ErrorBoundary extends Component {
                             09118413054
                         </Text>
                     </View>
-                </View>
+                </ScrollView>
             )
         return this.props.children;
     }

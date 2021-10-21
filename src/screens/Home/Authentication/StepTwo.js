@@ -8,6 +8,7 @@ import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import ChooseImage from '../../../components/cameraActionSheet';
 
 const StepTwo = props => {
 
@@ -29,76 +30,27 @@ const StepTwo = props => {
         return true;
     };
 
-    const chooseImage = _ => ActionSheet.show(
-        {
-            options: [locales('labels.camera'), locales('labels.gallery')],
-        },
-        buttonIndex => onActionSheetClicked(buttonIndex)
-    );
-
-    const onActionSheetClicked = async (buttonIndex) => {
-        const options = {
-            width: 300,
-            height: 400,
-            maxWidth: 1024,
-            maxHeight: 1024,
-            quality: 1,
-            title: 'تصویر را انتخاب کنید',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-
-
-        switch (buttonIndex) {
-            case 0: {
-
-                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
-
-                if (!isAllowedToOpenCamera)
-                    return;
-
-                launchCamera(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    let resultObj = {
-                        uri: image.uri,
-                        type: image.type,
-                        size: image.fileSize,
-                        name: image.fileName
-                    }
-                    setIdCardWithOwnerError('');
-                    setIdCardWithOwner(resultObj);
-                });
-                break;
+    const chooseImage = async _ => {
+        try {
+            const image = await ChooseImage();
+            if (!image)
+                return;
+            let resultObj = {
+                uri: image.uri,
+                type: image.type,
+                size: image.fileSize,
+                name: image.fileName
             }
+            setIdCardWithOwnerError('');
+            setIdCardWithOwner(resultObj);
 
-            case 1: {
-                launchImageLibrary(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    let resultObj = {
-                        uri: image.uri,
-                        type: image.type,
-                        size: image.fileSize,
-                        name: image.fileName
-                    }
-                    setIdCardWithOwnerError('');
-                    setIdCardWithOwner(resultObj);
-                });
-                break;
-            }
-            default:
-                break;
         }
-
+        catch (error) {
+            if (error.error.id == 1)
+                setIdCardWithOwnerError(error.error.text);
+            else
+                setIdCardWithOwnerError(locales('errors.fieldNeeded', { fieldName: locales('labels.idCardWithOwner') }));
+        }
     };
 
     const onSubmit = _ => {

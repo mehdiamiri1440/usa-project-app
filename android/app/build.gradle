@@ -165,9 +165,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         vectorDrawables.useSupportLibrary = true
         targetSdkVersion 29
-        versionCode 19
         multiDexEnabled true
-        versionName "6.0.0.0003.0"
+        versionCode 25
+        versionName "8.0.0.0007.0"
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     //     ndk {
@@ -265,10 +265,13 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-vector-icons')
+    compile project(':RNSendIntentModule')
     implementation project(':react-native-device-info')
+    implementation project(':@react-native-async-storage')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+    implementation project(':react-native-share')
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.7'
     implementation project(':react-native-linear-gradient')

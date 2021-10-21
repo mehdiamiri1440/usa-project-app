@@ -37,7 +37,7 @@ const PaymentModal = props => {
 
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={false}
             visible={visible}
             onRequestClose={() => closeAndNavigate()}

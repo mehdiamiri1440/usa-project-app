@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, AppState } from 'react-native';
 import { connect } from 'react-redux';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop, useIsFocused } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import analytics from '@react-native-firebase/analytics';
 import { Navigation } from 'react-native-navigation';
@@ -33,6 +33,7 @@ class ContactsList extends Component {
             to: 15,
             contactsListUpdated: false,
             loaded: false,
+            appState: AppState.currentState
         }
     }
 
@@ -71,7 +72,8 @@ class ContactsList extends Component {
             });
             // .catch(_ => this.setState({ showModal: true }));
         }
-        AppState.addEventListener('change', this.handleAppStateChange)
+        AppState.addEventListener('change', this.handleAppStateChange);
+        this.screenFocusEvent = this.props.navigation.addListener('focus', this.handleScreenFocused);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -86,24 +88,24 @@ class ContactsList extends Component {
             this.handleSearch(this.props.searchText)
         }
         this.props.setRefresh(false)
-
-        if (this.props.forceRefresh) {
-            this.props.doForceRefresh(false);
-            this.props.fetchAllContactsList().then(result => {
-                this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
-                if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
-                    this.props.newMessageReceived(false);
-                }
-            });
-        }
     }
 
 
     componentWillUnmount() {
         this.isComponentMounted = false;
         AppState.removeEventListener('change', this.handleAppStateChange)
+        this.screenFocusEvent;
         return unsubscribe;
     }
+
+    handleScreenFocused = _ => {
+        this.props.fetchAllContactsList().then(result => {
+            this.setState({ contactsList: [...result.payload.contact_list], contactsListData: { ...result.payload } });
+            if (this.props.contactsList.every(item => item.unread_msgs_count == 0)) {
+                this.props.newMessageReceived(false);
+            }
+        });
+    };
 
     handleSearch = text => {
         let contactsList = [...this.state.contactsList];
@@ -117,13 +119,12 @@ class ContactsList extends Component {
     }
 
     handleAppStateChange = (nextAppState) => {
-        if (
-            AppState.current != nextAppState
-        ) {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused) {
             this.props.fetchAllContactsList(this.state.from, this.state.to).then(_ => {
                 this.setState({ loaded: false })
             })
         }
+        this.setState({ appState: nextAppState });
     };
 
     setSearchText = searchText => this.setState({ searchText });
@@ -256,7 +257,10 @@ class ContactsList extends Component {
                             keyboardShouldPersistTaps='handled'
                             keyboardDismissMode='on-drag'
                             showsVerticalScrollIndicator={false}
-                            style={{ width: '100%', height: deviceHeight * 1 }}
+                            windowSize={13}
+                            initialNumToRender={2}
+                            maxToRenderPerBatch={5}
+                            style={{ width: '100%', height: deviceHeight }}
                             contentContainerStyle={{ paddingBottom: 235 }}
                             ListHeaderComponent={_ => <ChannelInContactsList
                                 unread_contents={unread_contents}
@@ -514,8 +518,6 @@ const mapStateToProps = (state) => {
         contactsListLoading: state.messagesReducer.contactsListLoading,
         contactsListData: state.messagesReducer.contactsListData,
 
-        forceRefresh: state.messagesReducer.forceRefresh,
-
         userProfile: state.profileReducer.userProfile,
 
     }
@@ -525,7 +527,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAllContactsList: (from, to) => dispatch(messagesActions.fetchAllContactsList(from, to)),
         newMessageReceived: (message) => dispatch(messagesActions.newMessageReceived(message)),
-        doForceRefresh: (forceRefresh) => dispatch(messagesActions.doForceRefresh(forceRefresh)),
     }
 };
 
@@ -536,8 +537,8 @@ const Wrapper = (props) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
-
-    return <ContactsList {...props} contactsListRef={ref} />;
+    const isFocused = useIsFocused();
+    return <ContactsList {...props} contactsListRef={ref} isFocused={isFocused} />;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper)

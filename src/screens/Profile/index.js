@@ -25,6 +25,9 @@ import Certificates from './certificates';
 import Rating from './Rating';
 import Comments from './Comments';
 import Header from '../../components/header';
+import ContactsListModal from '../../components/contactsListModal';
+import { shareToSocial } from '../../components/shareToSocial';
+
 class Profile extends PureComponent {
     constructor(props) {
         super(props)
@@ -58,6 +61,7 @@ class Profile extends PureComponent {
             companyNameFromByUserName: '',
             descriptionFromByUserName: '',
             productsListByUserName: [],
+            showContactListModal: false,
         }
     }
 
@@ -200,38 +204,41 @@ class Profile extends PureComponent {
         this.props.fetchAllProductsList(item, !!loggedInUserId)
     };
 
-    shareProfileLink = async () => {
+    shareProfileLink = () => {
+        this.setState({ showContactListModal: false });
         analytics().logEvent('profile_share', {
             contact_id: this.state.userIdFromByUserName
         });
-        // try {
-        //     const result = await Share.share({
-        //         message:
-        //             `${REACT_APP_API_ENDPOINT_RELEASE}/profile/${this.props.route.params.user_name}`,
-        //     });
-        //     if (result.action === Share.sharedAction) {
-        //         if (result.activityType) {
-        //             // shared with activity type of result.activityType
-        //         } else {
-        //             // shared
-        //         }
-        //     } else if (result.action === Share.dismissedAction) {
-        //         // dismissed
-        //     }
-        // } catch (error) {
-        // }
-        const url = `whatsapp://send?text=${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${this.props.route && this.props.route.params && this.props.route.params.user_name || ''}`;
 
-        Linking.canOpenURL(url).then((supported) => {
-            if (!!supported) {
-                Linking.openURL(url)
-            } else {
-                Linking.openURL(url)
-            }
-        })
-            .catch(() => {
-                Linking.openURL(url)
-            })
+        const {
+            profilePhotoFromByUserName = '',
+            descriptionFromByUserName = ''
+        } = this.state;
+
+        const {
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name = ''
+        } = params;
+
+        let url = `${REACT_APP_API_ENDPOINT_RELEASE}/shared-profile/${user_name}`;
+
+        url = url.replace(/ /g, '');
+
+        url = `${descriptionFromByUserName}\n\n${url}`;
+
+        const image = profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
+            `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}` :
+            'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9';
+
+        return shareToSocial('whatsApp', image, url);
+
     };
 
     setSelectedImage = (selectedImageModal, selectedImageIndex) => {
@@ -280,13 +287,26 @@ class Profile extends PureComponent {
         })
     };
 
+    onRequestCloseContactListModal = _ => {
+        this.setState({ showContactListModal: false });
+    };
+
     render() {
         const {
             profileInfo,
             profileInfoLoading,
             userProfile = {},
-            loggedInUserId
+            loggedInUserId,
+            route = {}
         } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            user_name
+        } = params;
 
         const {
             user_info = {}
@@ -330,14 +350,30 @@ class Profile extends PureComponent {
             descriptionFromByUserName,
 
             productsListByUserName,
-
+            showContactListModal
         } = this.state;
 
 
         return (
             <>
+                {showContactListModal ?
+                    <ContactsListModal
+                        visible={showContactListModal}
+                        onRequestClose={this.onRequestCloseContactListModal}
+                        shouldShowInstagramButton={false}
+                        onReject={this.shareProfileLink}
+                        image={profilePhotoFromByUserName && profilePhotoFromByUserName.length ?
+                            `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profilePhotoFromByUserName}`
+                            : 'https://www.buskool.com/images/512-buskool-logo.jpg?eac56955a30a44cc7dad1d6971926bf9'
+                        }
+                        sharingUrlPostFix={`/shared-profile/${user_name}`}
+                        bodyText={descriptionFromByUserName}
+                        {...this.props}
+                    />
+                    : null
+                }
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={selectedImageModal}
                     onRequestClose={() => this.setState({ selectedImageModal: false })}
@@ -369,7 +405,7 @@ class Profile extends PureComponent {
 
 
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={selectedEvidenceModal}
                     onRequestClose={() => this.setState({ selectedEvidenceModal: false })}
@@ -667,7 +703,7 @@ class Profile extends PureComponent {
                                         </Button>
                                         : <Button
                                             small
-                                            onPress={() => this.props.navigation.navigate('MyBuskool', { screen: 'EditProfile' })}
+                                            onPress={() => this.props.navigation.navigate('EditProfile')}
                                             style={[styles.loginButton, { flex: 1, height: 40, elevation: 0 }]}
                                         >
                                             <View style={[styles.textCenterView, styles.buttonText]}>
@@ -703,7 +739,7 @@ class Profile extends PureComponent {
                                     android_ripple={{
                                         color: '#ededed'
                                     }}
-                                    onPress={() => this.shareProfileLink()}
+                                    onPress={_ => this.setState({ showContactListModal: true })}
                                     style={{
                                         borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
 

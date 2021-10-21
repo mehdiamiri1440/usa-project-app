@@ -40,7 +40,7 @@ const ValidatedUserIcon = props => {
                 closeOnDragDown
                 closeOnPressMask
                 height={300}
-                animationType='slide'
+                animationType='fade'
                 customStyles={{
                     draggableIcon: {
                         backgroundColor: "#000"
@@ -91,7 +91,7 @@ const ValidatedUserIcon = props => {
 export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation }) => {
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={false}
             visible={showModal}
             onRequestClose={() => onRequestClose()}
@@ -224,7 +224,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                     style={[styles.loginButton, { width: '80%', marginBottom: 10, alignSelf: 'center' }]}
                     onPress={_ => {
                         onRequestClose();
-                        navigation.navigate('MyBuskool', { screen: 'Authentication' })
+                        navigation.navigate('Authentication')
                     }}
                 >
                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>  {locales('labels.authenticationButton')}

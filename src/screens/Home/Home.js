@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
-import { useRoute, useNavigationState } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
+import { CommonActions } from '@react-navigation/native';
 import {
     Text, Pressable, View, ImageBackground,
     StyleSheet, Image, ActivityIndicator, ScrollView,
-    RefreshControl, AppState
+    RefreshControl, AppState, TouchableOpacity,
+    FlatList
 } from 'react-native';
-import { useScrollToTop, useIsFocused } from '@react-navigation/native';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native";
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
+import { Button } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-
 
 import * as productListActions from '../../redux/productsList/actions';
 import * as authActions from '../../redux/auth/actions';
@@ -35,14 +36,17 @@ class Home extends React.Component {
         this.state = {
             showchangeRoleModal: false,
             loaded: false,
-            is_seller: false
+            is_seller: false,
+            isPageRefreshedFromPullingDown: false,
+            active_pakage_type: 0,
+            appState: AppState.currentState
         }
     }
 
     homeRef = React.createRef();
 
-
     componentDidMount() {
+
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -63,10 +67,14 @@ class Home extends React.Component {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
+            active_pakage_type
         } = user_info;
-        this.setState({ is_seller: !!is_seller });
-
+        this.setState({
+            is_seller: !!is_seller,
+            active_pakage_type
+        });
+        this.initMyBuskool();
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
@@ -79,7 +87,7 @@ class Home extends React.Component {
                 this.props.route.params.needToRefreshKey != prevProps.route.params.needToRefreshKey
             )
         ) {
-            this.props.fetchUserProfile()
+            this.initMyBuskool();
         }
     }
 
@@ -87,6 +95,12 @@ class Home extends React.Component {
         AppState.removeEventListener('change', this.handleAppStateChange)
     }
 
+    initMyBuskool = _ => {
+        this.props.fetchUserProfile().then(res => this.setState({
+            is_seller: res?.payload?.user_info?.is_seller,
+            active_pakage_type: res?.payload?.user_info?.active_pakage_type,
+        }));
+    };
 
     handleAppStateChange = (nextAppState) => {
         const {
@@ -99,13 +113,15 @@ class Home extends React.Component {
         } = state;
 
         if (
-            AppState.current != nextAppState && routes.length
+            this.state.appState.match(/inactive|background/) && nextAppState === 'active'
+            && routes.length
             && routes[routes.length - 1].name != 'EditProfile' &&
             routes[routes.length - 1].name != 'Authentication' &&
             isFocused
         ) {
-            this.props.fetchUserProfile();
+            this.initMyBuskool();
         }
+        this.setState({ appState: nextAppState });
     };
 
     handleRouteChange = (name) => {
@@ -132,7 +148,7 @@ class Home extends React.Component {
                 return logOut();
 
             case 'Profile':
-                return navigate('MyBuskool', { screen: 'Profile', params: { user_name } });
+                return navigate('Profile', { user_name });
 
             case 'Messages':
                 return navigate("Messages", { screen: 'MessagesIndex', params: { tabIndex: 0 } });
@@ -144,7 +160,7 @@ class Home extends React.Component {
                 return navigate('SpecialProducts');
 
             default:
-                return navigate('MyBuskool', { screen: name })
+                return navigate(name)
         }
 
     };
@@ -152,7 +168,7 @@ class Home extends React.Component {
     changeRole = _ => {
 
         this.props.changeRole().then(res => {
-
+            // console.log('role changed', res)
             const { payload = {} } = res;
             const { is_seller: roleAfterChangePanel } = payload;
             const {
@@ -173,12 +189,14 @@ class Home extends React.Component {
                 to_record_number: 16,
             };
             this.props.fetchAllProductsList(item).then(_ => {
+                // console.log('product list fetched', this.props.productsListLoading)
                 global.refreshProductList = true;
                 this.props.updateProductsList(true);
 
-                this.setState({ showchangeRoleModal: true, is_seller: !!roleAfterChangePanel }, _ => {
-                    this.props.fetchUserProfile().then(_ => {
-                        this.closeModal();
+                this.setState({ showchangeRoleModal: true }, _ => {
+                    this.props.fetchUserProfile().then(({ payload: { user_info: { is_seller } } }) => {
+                        // console.log('user profile changed', payload)
+                        this.setState({ is_seller: is_seller == 0 ? false : true }, _ => this.closeModal())
                     })
                 })
             })
@@ -189,24 +207,26 @@ class Home extends React.Component {
 
     closeModal = () => {
         this.setState({ showchangeRoleModal: false }, _ => {
-            return this.props.navigation.navigate(!this.state.is_seller ? 'Home' : 'RequestsStack')
+            return this.props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: !this.state.is_seller ? 'Home' : 'RequestsStack' },
+                        { name: 'Messages' },
+                    ],
+                })
+            );
         });
     }
 
     onRefresh = _ => {
 
-        const {
-            userProfile = {},
-        } = this.props;
-        const {
-            user_info = {}
-        } = userProfile;
-        const {
-            is_seller
-        } = user_info;
-
-        if (!!is_seller)
-            this.props.fetchUserProfile();
+        this.setState({ isPageRefreshedFromPullingDown: true })
+        this.props.fetchUserProfile().then(({ payload: { user_info: { is_seller, active_pakage_type } } }) => this.setState({
+            active_pakage_type,
+            is_seller,
+            isPageRefreshedFromPullingDown: false
+        }));
     };
 
 
@@ -234,82 +254,339 @@ class Home extends React.Component {
         return shouldHide;
     };
 
+    renderItem = ({ item: route, index }) => {
+        const {
+            userProfile = {},
+            userProfileLoading,
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            wallet_balance = 0,
+            is_seller
+        } = user_info;
+
+        if (this.shouldHideRoutes(route))
+            return null;
+        return (
+            route.name === 'PromoteRegistration' ?
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    onPress={() => this.handleRouteChange(route.name)}
+                    style={{
+                        alignContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        borderColor: '#00C569',
+                        borderBottomWidth: 1,
+                        paddingVertical: 20,
+                        elevation: 0,
+                        paddingHorizontal: 20,
+                        marginHorizontal: 20,
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+
+                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#00C569', '#21AD93']}
+                            style={{
+                                borderRadius: 5,
+                                padding: 5,
+                                width: deviceWidth * 0.1,
+                                height: deviceWidth * 0.1,
+                                alignItems: 'center'
+                            }}
+                        >
+                            {route.icon}
+
+                        </BgLinearGradient>
+                        <Text style={{
+                            paddingHorizontal: 10, fontSize: 16,
+                            textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444'
+                        }}
+                        >
+                            {locales(route.label)}
+                        </Text>
+                    </View>
+                    <View style={{ width: '20%', flexDirection: 'row' }}>
+                        <FontAwesome5
+                            style={{
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                left: -15
+                            }}
+                            color={'#21AD93'}
+                            size={25}
+                            name='angle-left'
+                        />
+                        <Text style={{
+                            fontSize: 14,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            backgroundColor: '#E41C38',
+                            color: 'white',
+                            borderRadius: 20,
+                            marginLeft: 10,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            marginTop: 4,
+                            width: 50,
+                            height: 30
+                        }}>
+                            {locales('labels.special')}
+                        </Text>
+                    </View>
+                </Pressable>
+                :
+                <Pressable
+                    android_ripple={{
+                        color: '#ededed'
+                    }}
+                    onPress={() => this.handleRouteChange(route.name)}
+                    style={{
+                        alignContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 5,
+                        borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                            '#c7a84f' : '#E9ECEF',
+                        borderBottomWidth: index < homeRoutes.length - 1 ? 1 : 0,
+                        paddingVertical: 20,
+                        elevation: 0,
+                        paddingHorizontal: 20,
+                        marginHorizontal: 20,
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+
+                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
+                        {route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+                            <BgLinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 2.5, y: 0.2 }}
+                                colors={['#c7a84f', '#f4eb97', '#c7a84f']}
+                                style={{
+                                    borderRadius: 5,
+                                    backgroundColor: '#c7a84f',
+                                    padding: 5,
+                                    width: deviceWidth * 0.1,
+                                    height: deviceWidth * 0.1,
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {route.icon}
+
+                            </BgLinearGradient> :
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    width: deviceWidth * 0.1,
+                                    height: deviceWidth * 0.1,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {route.icon}
+                            </View>
+                        }
+                        <Text style={{
+                            paddingHorizontal: 10, fontSize: 16,
+                            textAlignVertical: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#444'
+                        }}>
+                            {locales(route.label)}
+                        </Text>
+                    </View>
+
+                    <View style={{ width: '20%', flexDirection: 'row' }}>
+                        <FontAwesome5
+                            color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'}
+                            size={25}
+                            style={{
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                left: -15
+                            }}
+                            name='angle-left'
+                        />
+                        {
+                            route.name == 'Wallet' && !!is_seller ?
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: '#666666',
+                                            fontSize: 15,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}
+                                    >
+                                        {locales('labels.credit')} :
+                                    </Text>
+                                    {!userProfileLoading ?
+                                        <>
+                                            <Text
+                                                style={{
+                                                    color: '#1DA1F2',
+                                                    fontSize: 15,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    marginHorizontal: 5
+                                                }}
+                                            >
+                                                {numberWithCommas(wallet_balance)}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: '#1DA1F2',
+                                                    fontSize: 15,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                }}
+                                            >
+                                                {locales('titles.toman')}
+                                            </Text>
+                                        </>
+                                        : <ContentLoader
+                                            speed={2}
+                                            width={deviceWidth * 0.13}
+                                            height={deviceWidth * 0.08}
+                                            backgroundColor="#f3f3f3"
+                                            foregroundColor="#ecebeb"
+                                            style={{
+                                                alignSelf: 'center',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Rect x="20%" y="30%" width="30" height="10" />
+                                        </ContentLoader>
+                                    }
+                                </View>
+                                : null
+                        }
+                        {route.name == 'Authentication' ?
+
+                            <View
+                                style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
+                                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
+                                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
+
+                            </View>
+
+                            : route.name == 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
+
+                                <Svg
+                                    style={{
+                                        marginTop: '12%',
+                                        marginLeft: 15
+                                    }}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="23" height="22.014" viewBox="0 0 23 22.014"
+                                >
+                                    <Defs>
+                                        <LinearGradient id="grad" x2="0.864" y2="1">
+                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
+                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
+                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
+
+                                        </LinearGradient>
+                                    </Defs>
+                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
+                                </Svg>
+
+                                :
+                                null
+                        }
+                    </View>
+                </Pressable>
+
+        )
+    };
 
     render() {
 
         const {
-            userProfileLoading,
+            userProfile = {},
             changeRoleLoading,
             productsListLoading
         } = this.props;
 
         const {
             showchangeRoleModal,
-            is_seller
+            is_seller: isSellerFromState,
+            isPageRefreshedFromPullingDown
         } = this.state;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
 
         return (
             <View
                 style={{ flex: 1 }}
             >
 
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                {showchangeRoleModal ?
+                    <Portal
+                        style={{
+                            padding: 0,
+                            margin: 0
 
-                    }}>
-                    <Dialog
-                        visible={showchangeRoleModal}
-                        style={styles.dialogWrapper}
-                        dismissable
-                        onDismiss={_ => this.closeModal()}
-                    >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            {/* <Button
-                                onPress={() => this.closeModal()}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button> */}
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('titles.changeRole')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
-
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.rollChangedSuccessfully', { fieldName: !!!is_seller ? locales('labels.buyer') : locales('labels.seller') })}
-                            </Text>
-
-                        </Dialog.Actions>
-                        {/* <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
                         }}>
-                            <Button
-                                style={[styles.modalCloseButton,]}
-                                onPress={() => this.closeModal()}>
+                        <Dialog
+                            visible={showchangeRoleModal}
+                            style={styles.dialogWrapper}
+                            dismissable
+                            onDismiss={_ => this.closeModal()}
+                        >
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
 
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('titles.changeRole')}
+                                </Paragraph>
+                            </Dialog.Actions>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#edf8e6',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.rollChangedSuccessfully', { fieldName: !!isSellerFromState ? locales('labels.buyer') : locales('labels.seller') })}
                                 </Text>
-                            </Button>
-                        </Dialog.Actions> */}
-                    </Dialog>
-                </Portal >
+
+                            </Dialog.Actions>
+
+                        </Dialog>
+                    </Portal >
+                    : null}
 
                 <Header
                     title={locales('labels.myBuskool')}
@@ -319,283 +596,29 @@ class Home extends React.Component {
                 <ScrollView
                     refreshControl={
                         <RefreshControl
-                            refreshing={userProfileLoading}
+                            refreshing={isPageRefreshedFromPullingDown}
                             onRefresh={this.onRefresh}
                         />
                     }
                     ref={this.props.homeRef}
                     style={{ backgroundColor: 'white', flex: 1, paddingTop: 20 }}>
+                    <ProfilePreview
+                        {...this.props}
+                    />
 
-                    {!!is_seller ? <WalletPreview {...this.props} /> : null}
+                    <InviteFriendsBanner
+                        {...this.props}
+                        active_pakage_type={this.state.active_pakage_type}
+                        is_seller={this.state.is_seller}
+                    />
 
-                    {/* 
-                    <Pressable
-                        onPress={() => this.props.navigation.navigate('Referral')}
-                        style={{
-                            alignContent: 'center',
-                            backgroundColor: 'white',
-                            paddingTop: 10,
-                            paddingBottom: 30,
-                            elevation: 2,
-                            paddingHorizontal: 10,
-                            marginBottom: 10,
-                            marginHorizontal: 0,
-                            flexDirection: 'row-reverse',
-                            justifyContent: 'space-between'
-                        }}
-                    >
-                        <View style={{
-                            width: deviceWidth - 150,
-                            paddingTop: 13
-                        }}>
-                            <Text style={{
-                                color: '#556080',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 16
-                            }}>
-                                {locales('titles.referralMainTitle')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainContents')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainSecondContents')}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 13
-                                }}>
-                                {locales('titles.referralMainThirdContents')}
-                            </Text>
-                        </View>
-                        <View
-                            style={{ width: 125, }}
+                    {/* {!!is_seller ? <WalletPreview {...this.props} /> : null} */}
 
-                        >
-                            <Image
-                                source={require('./../../../assets/images/gift-box.gif')}
-                                style={{
-                                    width: 130,
-                                    height: 65,
-                                    marginBottom: 5
-                                }}
-                            />
-                            <Button
-                                onPress={() => this.props.navigation.navigate('Referral')}
-
-                                style={{
-                                    backgroundColor: '#e41c38',
-                                    borderRadius: 3,
-                                    padding: 0,
-                                    margin: 0,
-                                    justifyContent: 'space-between',
-                                    paddingHorizontal: 20,
-                                    alignItems: 'center',
-                                    flexDirection: 'row-reverse',
-                                    height: 30
-                                }}>
-
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        color: '#fff',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                                    }}
-                                >
-                                    {locales('titles.referralButton')}
-                                </Text>
-                                <Ionicons color="#fff" size={20} name='ios-arrow-back' />
-
-                            </Button>
-                        </View>
-                    </Pressable>
- */}
-
-                    {homeRoutes.map((route, index) => {
-                        if (this.shouldHideRoutes(route))
-                            return null;
-                        return (
-                            route.name === 'PromoteRegistration' ?
-                                <Pressable
-                                    android_ripple={{
-                                        color: '#ededed'
-                                    }}
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        borderRadius: 5,
-                                        borderColor: '#00C569',
-                                        borderBottomWidth: 1,
-                                        paddingVertical: 20,
-                                        elevation: 0,
-                                        paddingHorizontal: 20,
-                                        marginHorizontal: 20,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-
-                                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                        <BgLinearGradient
-                                            start={{ x: 0, y: 1 }}
-                                            end={{ x: 0.8, y: 0.2 }}
-                                            colors={['#00C569', '#21AD93']}
-                                            style={{
-                                                borderRadius: 5,
-                                                padding: 5,
-                                                width: deviceWidth * 0.1,
-                                                height: deviceWidth * 0.1,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-                                            {route.icon}
-
-                                        </BgLinearGradient>
-                                        <Text style={{
-                                            paddingHorizontal: 10, fontSize: 16,
-                                            textAlignVertical: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#444'
-                                        }}
-                                        >
-                                            {locales(route.label)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={'#21AD93'} size={25} name='angle-left' />
-                                        </Text>
-                                        <Text style={{
-                                            fontSize: 14,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            backgroundColor: '#E41C38',
-                                            color: 'white',
-                                            borderRadius: 20,
-                                            marginLeft: 10,
-                                            textAlign: 'center',
-                                            textAlignVertical: 'center',
-                                            marginTop: 4,
-                                            width: 50,
-                                            height: 30
-                                        }}>
-                                            {locales('labels.special')}
-                                        </Text>
-                                    </View>
-                                </Pressable>
-                                :
-                                <Pressable
-                                    android_ripple={{
-                                        color: '#ededed'
-                                    }}
-                                    onPress={() => this.handleRouteChange(route.name)}
-                                    style={{
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        borderRadius: 5,
-                                        borderColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-                                            '#c7a84f' : '#E9ECEF',
-                                        borderBottomWidth: index < homeRoutes.length - 1 ? 1 : 0,
-                                        paddingVertical: 20,
-                                        elevation: 0,
-                                        paddingHorizontal: 20,
-                                        marginHorizontal: 20,
-                                        flexDirection: 'row-reverse',
-                                    }}
-                                    key={index}>
-
-                                    <View style={{ width: '80%', flexDirection: 'row-reverse' }}>
-                                        {route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-                                            <BgLinearGradient
-                                                start={{ x: 0, y: 1 }}
-                                                end={{ x: 2.5, y: 0.2 }}
-                                                colors={['#c7a84f', '#f4eb97', '#c7a84f']}
-                                                style={{
-                                                    borderRadius: 5,
-                                                    backgroundColor: route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#777',
-                                                    padding: 5,
-                                                    width: deviceWidth * 0.1,
-                                                    height: deviceWidth * 0.1,
-                                                    alignItems: 'center'
-                                                }}
-                                            >
-                                                {route.icon}
-
-                                            </BgLinearGradient> :
-                                            <View style={{
-                                                backgroundColor: route.name === 'SuggestedBuyers' ||
-                                                    route.name === 'SpecialProducts' ? '#c7a84f' : '#fff',
-                                                justifyContent: 'center',
-                                                width: deviceWidth * 0.1,
-                                                height: deviceWidth * 0.1,
-                                                alignItems: 'center',
-                                            }}>
-                                                {route.icon}
-                                            </View>
-                                        }
-                                        <Text style={{
-                                            paddingHorizontal: 10, fontSize: 16,
-                                            textAlignVertical: 'center',
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                            color: '#444'
-                                        }}>
-                                            {locales(route.label)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '20%', flexDirection: 'row' }}>
-                                        <Text style={{ textAlignVertical: 'center' }}>
-                                            <FontAwesome5 color={route.name === 'SuggestedBuyers' || route.name === 'SpecialProducts' ? '#c7a84f' : '#666666'} size={25} name='angle-left' />
-                                        </Text>
-                                        {route.name == 'Authentication' ?
-
-                                            <View
-                                                style={{ paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }}>
-                                                <FontAwesome5 name='certificate' color='#1DA1F2' size={25} />
-                                                <FontAwesome5 color='white' name='check' size={15} style={{ position: 'absolute' }} />
-
-                                            </View>
-
-                                            : route.name == 'SuggestedBuyers' || route.name === 'SpecialProducts' ?
-
-                                                <Svg
-                                                    style={{
-                                                        marginTop: '12%',
-                                                        marginLeft: 15
-                                                    }}
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="23" height="22.014" viewBox="0 0 23 22.014"
-                                                >
-                                                    <Defs>
-                                                        <LinearGradient id="grad" x2="0.864" y2="1">
-                                                            <Stop offset="0" stopColor="#c7a84f" stopOpacity="1" />
-                                                            <Stop offset="0.571" stopColor="#f4eb97" stopOpacity="1" />
-                                                            <Stop offset="1" stopColor="#c7a84f" stopOpacity="1" />
-
-                                                        </LinearGradient>
-                                                    </Defs>
-                                                    <Path d="M30.766.753,27.958,6.445l-6.281.916a1.376,1.376,0,0,0-.761,2.347l4.544,4.428-1.075,6.255a1.375,1.375,0,0,0,1.995,1.449L32,18.887l5.619,2.953a1.376,1.376,0,0,0,1.995-1.449l-1.075-6.255,4.544-4.428a1.376,1.376,0,0,0-.761-2.347l-6.281-.916L33.233.753A1.377,1.377,0,0,0,30.766.753Z" transform="translate(-20.5 0.013)" fill="url(#grad)" />
-                                                </Svg>
-
-                                                :
-                                                null
-                                        }
-                                    </View>
-                                </Pressable>
-
-                        )
-                    })}
-
+                    <FlatList
+                        renderItem={this.renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        data={homeRoutes}
+                    />
 
                     <Text style={{
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -604,7 +627,7 @@ class Home extends React.Component {
                         textAlign: 'center',
                         color: '#313A43'
                     }}>
-                        {locales('labels.switchRoll', { fieldName: !!is_seller ? locales('labels.seller') : locales('labels.buyer') })}
+                        {locales('labels.switchRoll', { fieldName: !!isSellerFromState ? locales('labels.seller') : locales('labels.buyer') })}
                     </Text>
 
 
@@ -616,7 +639,7 @@ class Home extends React.Component {
                             android_ripple={{
                                 color: '#ededed'
                             }}
-                            onPress={() => !!is_seller && !changeRoleLoading && this.changeRole()}
+                            onPress={() => !!is_seller && this.changeRole()}
                             style={{
                                 backgroundColor: !!!is_seller ? '#4DC0BB' : '#fff',
                                 borderWidth: 1,
@@ -690,7 +713,7 @@ class Home extends React.Component {
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'space-around',
                             }}
-                            onPress={() => !!!is_seller && !changeRoleLoading && this.changeRole()}
+                            onPress={() => !!!is_seller && this.changeRole()}
                         >
                             {(changeRoleLoading || productsListLoading) && !!!is_seller ?
                                 <ActivityIndicator
@@ -893,6 +916,411 @@ export const WalletPreview = props => {
     )
 };
 
+const InviteFriendsBanner = props => {
+
+    const {
+        userProfileLoading,
+        is_seller,
+        active_pakage_type = 3
+    } = props;
+
+    if (userProfileLoading && is_seller)
+        return (
+            <View
+                style={{
+                    marginTop: active_pakage_type > 0 ? 20 : deviceHeight > 710 ? 10 : 17,
+                    height: active_pakage_type > 0 ? deviceHeight > 710 ? '11.7%' : '12.7%' : deviceHeight > 710 ? '14.7%' : '15.5%'
+                }}
+            >
+                {active_pakage_type < 3 ?
+                    <ContentLoader
+                        speed={2}
+                        width='95%'
+                        height={40}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                        style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 1000,
+                        }}
+                    >
+                        <Rect width="100%" height='100%' rx={12} ry={12} />
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
+                            style={{
+                                alignSelf: 'center',
+                                top: 13,
+                                left: 10
+                            }}
+                            color='#bebebe'
+                        />
+                    </ContentLoader>
+                    : null
+                }
+
+                <View
+                    style={{
+                        width: '100%',
+                        height: active_pakage_type > 0 ? '99%' : '83.2%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 10,
+                        borderColor: "#ecebeb",
+                        borderWidth: 10
+                    }}
+                >
+                    <ContentLoader
+                        speed={2}
+                        width='100%'
+                        height='100%'
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                        style={{
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 10000000
+                        }}
+                    >
+                        <Circle cx="20%" cy='50%' r="44" />
+                        <Rect x="60%" y='20%' width="133" height="15" />
+                        <Rect x="86%" y='35%' width="30" height="15" />
+                        <Rect x="48%" y='55%' width="180" height="45" rx={12} ry={12} />
+                    </ContentLoader>
+
+                </View>
+            </View>
+        );
+    else if (is_seller && !userProfileLoading)
+        return (
+            <>
+                <BgLinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.1 }}
+                    colors={['#FF7689', '#E41C38']}
+                    style={{
+                        width: deviceWidth,
+                        paddingHorizontal: 10,
+                        paddingVertical: 15,
+                        borderTopColor: '#ebebeb',
+                        borderTopWidth: (active_pakage_type > 0) || userProfileLoading ? 0 : 10,
+                        marginTop: active_pakage_type == 0 ? 0 : 20
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            padding: 1,
+                            borderRadius: 12
+                        }}
+                    >
+                        <Pressable
+                            onPress={_ => props.navigation.navigate('Referral')}
+                            android_ripple={{
+                                color: '#ededed'
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                alignSelf: 'center',
+                                borderRadius: 12,
+                                padding: 15,
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    zIndex: 1,
+                                    flex: 1
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 17,
+                                        color: '#555555',
+                                    }}
+                                >
+                                    {locales('titles.inviteFriendBannerText')}
+                                </Text>
+                                <BgLinearGradient
+                                    start={{ x: 0, y: 1 }}
+                                    end={{ x: 0.8, y: 0.2 }}
+                                    colors={['#FF7689', '#E41C38']}
+                                    style={{
+                                        borderRadius: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '70%',
+                                        alignSelf: 'flex-end',
+                                        marginTop: 10
+                                    }}
+                                >
+                                    <Button
+                                        onPress={_ => props.navigation.navigate('Referral')}
+                                        style={{
+                                            width: '100%',
+                                            backgroundColor: 'transparent',
+                                            elevation: 0,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                fontSize: 16,
+                                            }}
+                                        >
+                                            {locales('titles.earnWages')}
+                                        </Text>
+                                        <FontAwesome5
+                                            name='angle-left'
+                                            size={20}
+                                            color='white'
+                                            style={{
+                                                position: 'absolute',
+                                                left: '20%',
+                                            }}
+                                        />
+                                    </Button>
+                                </BgLinearGradient>
+                            </View>
+                            <View
+                                style={{
+                                    width: 80,
+                                    height: 120,
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 120,
+                                        height: '100%'
+                                    }}
+                                    source={require('../../../assets/images/marketing.png')}
+                                />
+                            </View>
+                        </Pressable>
+                    </View>
+                </BgLinearGradient>
+
+            </>
+        );
+    return null;
+};
+
+const ProfilePreview = props => {
+
+    const {
+        userProfile = {},
+        userProfileLoading,
+        navigation = {},
+    } = props;
+
+
+    const {
+        navigate = _ => { }
+    } = navigation;
+
+    const {
+        user_info = {},
+        profile = {},
+    } = userProfile;
+
+    const {
+        first_name = '',
+        last_name = '',
+        is_seller,
+        user_name,
+        active_pakage_type
+    } = user_info;
+
+    const {
+        profile_photo
+    } = profile;
+
+    const flatListRef = useRef();
+
+    const renderActivePackageTypeText = _ => {
+        if (!!is_seller)
+            switch (active_pakage_type) {
+                case 0:
+                    return {
+                        text: locales('labels.normalMembership'),
+                        color: '#777'
+                    }
+                case 1:
+                    return {
+                        text: locales('labels.basicMembership'),
+                        color: '#777'
+                    }
+                case 3:
+                    return {
+                        text: locales('labels.specialMembership'),
+                        color: '#00C569'
+                    }
+                default:
+                    return {
+                        text: locales('labels.basicMembership'),
+                        color: '#777'
+                    }
+            }
+        else
+            return {
+                text: locales('labels.buyer'),
+                color: '#777'
+            };
+    };
+
+    return (
+        <Pressable
+            android_ripple={{
+                color: '#ededed'
+            }}
+            style={{
+                paddingHorizontal: 10,
+            }}
+            onPress={() => navigate('EditProfile')}
+        >
+
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                    }}
+                >
+
+                    {userProfileLoading ?
+                        <ContentLoader
+                            speed={2}
+                            width={deviceWidth * 0.42}
+                            height={deviceWidth * 0.172}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
+                        >
+                            <Circle cx='77%' cy="50%" r="35" />
+                            <Rect x="-10%" y="30%" width="90" height="10" />
+                            <Rect x="-10%" y="60%" width="90" height="10" />
+                        </ContentLoader>
+                        :
+                        <>
+                            <Image
+                                source={profile_photo && profile_photo.length ?
+                                    { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                                    :
+                                    require('../../../assets/icons/user.png')
+                                }
+                                style={{
+                                    width: 70,
+                                    height: 70,
+                                    borderRadius: 35,
+                                    // position: active_pakage_type > 0 ? 'absolute' : 'relative'
+                                }}
+                            />
+                            <View
+                                style={{
+                                    marginHorizontal: 15,
+                                    width: '66%',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 2
+                                }}
+                            >
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 20,
+                                        color: '#333333',
+                                    }}
+                                >
+                                    {`${first_name} ${last_name}`}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 14,
+                                        marginTop: 2,
+                                        color: renderActivePackageTypeText().color,
+                                    }}
+                                >
+                                    {renderActivePackageTypeText().text}
+                                </Text>
+                            </View>
+                        </>
+                    }
+                </View>
+                <FontAwesome5
+                    name='angle-left'
+                    size={20}
+                    solid
+                    color='#666666'
+                />
+            </View>
+
+            {is_seller && active_pakage_type == 0 ?
+                <>
+                    <TouchableOpacity
+                        onPress={_ => {
+                            analytics().logEvent('click_on_promotion_ad_in_my_buskool');
+                            navigate('PromoteRegistration');
+                        }}
+                    >
+                        <BgLinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            colors={['#474d6f', '#313442']}
+                            style={{
+                                borderTopLeftRadius: 12,
+                                borderTopRightRadius: 12,
+                                padding: 5,
+                                marginTop: 10,
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: '80%',
+                                    height: 35
+                                }}
+                                source={require('../../../assets/images/verticalPromotionTextGif.gif')}
+                            />
+
+                            <FontAwesome5
+                                name='angle-left'
+                                color='#c9a15f'
+                                style={{
+                                    paddingLeft: 5
+                                }}
+                                size={20}
+                            />
+                        </BgLinearGradient>
+                    </TouchableOpacity>
+                </>
+                : null
+            }
+        </Pressable>
+    )
+};
+
 const styles = StyleSheet.create({
     image: {
         resizeMode: "cover",
@@ -902,96 +1330,9 @@ const styles = StyleSheet.create({
         padding: 10,
         alignSelf: 'center',
     },
-    backButtonText: {
-        color: '#7E7E7E',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
-        width: '60%',
-        textAlign: 'center'
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
-    },
-    loginFailedContainer: {
-        backgroundColor: '#D4EDDA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#155724'
-    },
-    container: {
-        flex: 1,
-    },
-    scrollContainer: {
-        flex: 1,
-        paddingHorizontal: 15,
-    },
-    scrollContentContainer: {
-        paddingTop: 40,
-        paddingBottom: 10,
-    },
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 13,
-        paddingHorizontal: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-        paddingVertical: 8,
-        height: 50,
-        color: 'black',
-        width: deviceWidth * 0.9,
-    },
     iconContainer: {
         left: 10,
         top: 13,
-    },
-    buttonText: {
-        color: 'white',
-        width: '100%',
-        textAlign: 'center'
-    },
-    labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        margin: 10,
-        borderRadius: 5,
-        backgroundColor: '#B5B5B5',
-        width: deviceWidth * 0.4,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    loginButton: {
-        textAlign: 'center',
-        margin: 10,
-        backgroundColor: '#00C569',
-        borderRadius: 5,
-        width: deviceWidth * 0.4,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
     },
     dialogWrapper: {
         borderRadius: 12,
@@ -1007,15 +1348,7 @@ const styles = StyleSheet.create({
         margin: 0,
         position: 'relative',
     },
-    closeDialogModal: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        padding: 15,
-        height: '100%',
-        backgroundColor: 'transparent',
-        elevation: 0
-    },
+
     headerTextDialogModal: {
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
         textAlign: 'center',
@@ -1036,33 +1369,6 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         width: '100%'
     },
-    modalButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        maxWidth: 145,
-        color: 'white',
-        alignItems: 'center',
-        borderRadius: 5,
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-    },
-    modalCloseButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
-        elevation: 0,
-        borderRadius: 0,
-        backgroundColor: '#ddd'
-    },
-    closeButtonText: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        color: '#555',
-    },
     dialogIcon: {
 
         height: 80,
@@ -1074,21 +1380,6 @@ const styles = StyleSheet.create({
         marginTop: 20
 
     },
-    greenButton: {
-        backgroundColor: '#00C569',
-    },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        marginTop: 10,
-        textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 16,
-        padding: 10,
-    },
     enterText: {
         marginTop: 10,
         fontWeight: 'bold',
@@ -1097,29 +1388,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 10,
     },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
     textInputPadding: {
         padding: 20,
     },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#7E7E7E'
-    }
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -1145,7 +1416,7 @@ const mapStateToProps = state => {
 
     const {
         userProfile,
-        userProfileLoading
+        userProfileLoading,
     } = profileReducer;
 
 
@@ -1160,11 +1431,9 @@ const mapStateToProps = state => {
         productsListLoading,
 
         userProfile,
-        userProfileLoading
+        userProfileLoading,
     }
 }
-
-
 
 const Wrapper = (props) => {
     const ref = React.useRef(null);

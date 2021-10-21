@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 import { Text, View, Pressable, FlatList, StyleSheet, ScrollView, Image, ActivityIndicator, Linking } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -20,6 +20,8 @@ import ValidatedUserIcon from '../../components/validatedUserIcon';
 import Header from '../../components/header';
 
 const RegisterRequestSuccessfully = props => {
+
+    const flatListRef = useRef();
 
     const {
         products = [],
@@ -159,7 +161,7 @@ const RegisterRequestSuccessfully = props => {
             .catch(_ => { })
     };
 
-    const fetchContactInfo = item => {
+    const fetchContactInfo = (item, index) => {
         const { id, myuser_id } = item;
 
         setSelectedButton(id);
@@ -181,6 +183,7 @@ const RegisterRequestSuccessfully = props => {
                 item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
+                return flatListRef?.current?.scrollToIndex({ index, animated: true });
             }
         })
             .catch(err => {
@@ -218,7 +221,7 @@ const RegisterRequestSuccessfully = props => {
         })
     };
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item, index }) => {
         const {
             product_name,
             stock,
@@ -250,25 +253,6 @@ const RegisterRequestSuccessfully = props => {
                         alignSelf: 'center'
                     }}
                 >
-                    {/* <Pressable
-android_ripple={{
-color:'#ededed'
-}}
-                    style={{
-                        borderRadius: 6,
-                        elevation: 5,
-                        margin: 10,
-                        backgroundColor: '#fff',
-                        overflow: 'hidden',
-                    }}
-                    activeOpacity={1}
-                    onPress={() => {
-                        props.navigation.navigate('Home')
-                        setTimeout(() => {
-                            return props.navigation.navigate('ProductDetails', { productId: item.id })
-                        }, 100);
-                    }}
-                > */}
                     <Pressable
                         android_ripple={{
                             color: '#ededed'
@@ -456,7 +440,7 @@ color:'#ededed'
                             >
                                 <Button
                                     small
-                                    onPress={() => fetchContactInfo(item)}
+                                    onPress={() => fetchContactInfo(item, index)}
                                     style={{
                                         borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
                                         width: '47%',
@@ -578,94 +562,7 @@ color:'#ededed'
                                             }}
                                         />
                                     </LinearGradient>
-
                                 </Button>
-
-                                {/* <Button
-                                    onPress={event => {
-                                        event.stopPropagation();
-                                        event.preventDefault();
-                                        setLoading(true);
-                                        setSelectedContact({
-                                            first_name,
-                                            last_name,
-                                            is_verified,
-                                            contact_id: myuser_id
-                                        });
-                                        setTimeout(() => {
-                                            setLoading(false);
-                                            props.navigation.navigate('Chat', { contact: selectedContact })
-                                        }, 1000);
-                                    }}
-                                    style={{
-                                        textAlign: 'center',
-                                        zIndex: 10005,
-                                        borderRadius: 5,
-                                        elevation: 0,
-                                        padding: 25,
-                                        marginBottom: 10,
-                                        backgroundColor: '#00C569',
-                                        width: '80%',
-                                        color: 'white',
-                                        alignItems: 'center',
-                                        alignSelf: 'center',
-                                        justifyContent: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                    }}
-                                    rounded
-                                >
-                                    <View
-                                        style={{
-                                            flexDirection: 'row', justifyContent: 'center',
-                                            alignItems: 'center', width: '100%'
-                                        }}>
-                                        <ActivityIndicator
-                                            size="small"
-                                            animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                            color="white"
-                                        />
-                                        <Text
-                                            onPress={event => {
-                                                event.stopPropagation();
-                                                event.preventDefault();
-                                                setLoading(true);
-                                                setSelectedContact({
-                                                    first_name,
-                                                    last_name,
-                                                    is_verified,
-                                                    contact_id: myuser_id
-                                                });
-                                                setTimeout(() => {
-                                                    setLoading(false);
-                                                    props.navigation.navigate('Chat', { contact: selectedContact })
-                                                }, 1000);
-                                            }}
-                                            style={{
-                                                color: 'white',
-                                                textAlign: 'center',
-                                                fontSize: 20,
-                                                marginHorizontal: 3,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                            }}>{locales('labels.sendMessageToSeller')}</Text>
-                                        <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
-                                            onPress={event => {
-                                                event.stopPropagation();
-                                                event.preventDefault();
-                                                setLoading(true);
-                                                setSelectedContact({
-                                                    first_name,
-                                                    last_name,
-                                                    is_verified,
-                                                    contact_id: myuser_id
-                                                });
-                                                setTimeout(() => {
-                                                    setLoading(false);
-                                                    props.navigation.navigate('Chat', { contact: selectedContact })
-                                                }, 1000);
-                                            }} />
-                                    </View>
-                                </Button>
-                           */}
                             </View>
                             :
                             <Button
@@ -806,36 +703,6 @@ color:'#ededed'
                                 </View>
                             </>
                             : null}
-
-                        {/* <FastImage
-                        resizeMethod='resize'
-                        style={{ width: deviceWidth * 0.5, height: deviceWidth * 0.3 }}
-                        source={{
-                            uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.photo}`,
-                            headers: { Authorization: 'eTag' },
-                            priority: FastImage.priority.low,
-                        }}
-                        resizeMode={FastImage.resizeMode.cover}
-                    />
-                    <Text
-                        numberOfLines={1}
-                        style={[{
-                            width: '100%',
-                            paddingTop: 5,
-                            alignSelf: 'center',
-                            textAlign: 'center',
-                            paddingHorizontal: 10
-                        }, styles.textBold]}>
-                        {item.product_name}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        style={[{
-                            padding: 10, paddingTop: 0, alignSelf: 'center',
-                            textAlign: 'center', width: '100%', color: '#00C569'
-                        }, styles.textBold]}>
-                        {locales('titles.stockQuantity')} {formatter.numberWithCommas(item.stock)} {locales('labels.kiloGram')}</Text> */}
-                        {/* </Pressable> */}
                     </Pressable>
                 </Card>
             </>
@@ -845,12 +712,10 @@ color:'#ededed'
     return (
 
         <>
-
             < Portal
                 style={{
                     padding: 0,
                     margin: 0
-
                 }}>
                 <Dialog
                     visible={showMobileNumberWarnModal}
@@ -869,9 +734,6 @@ color:'#ededed'
                             {locales('labels.contactInfo')}
                         </Paragraph>
                     </Dialog.Actions>
-
-
-
                     <View
                         style={{
                             width: '100%',
@@ -887,28 +749,6 @@ color:'#ededed'
                         style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                         {accessToContactInfoErrorMessage}
                     </Paragraph>
-                    {/* <View style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <Button
-                            style={[styles.modalButton, styles.greenButton]}
-                            onPress={() => {
-                                setShowMobileNumberWarnModal(false);
-                                props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                            }}
-                        >
-
-                            <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                            styles.buttonText]}>{locales('titles.promoteRegistration')}
-                            </Text>
-                        </Button>
-                    </View> */}
-
-
-
-
                     <Dialog.Actions style={{
                         justifyContent: 'center',
                         width: '100%',
@@ -932,161 +772,137 @@ color:'#ededed'
                 {...props}
             />
 
-            <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
+            <View
+                style={{
+                    backgroundColor: '#edf8e6',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 20,
+                }}
+            >
                 <View
                     style={{
-                        backgroundColor: '#edf8e6',
+                        backgroundColor: 'white',
+                        borderRadius: deviceWidth * 0.1,
+                        height: deviceWidth * 0.2,
+                        width: deviceWidth * 0.2,
+                        borderWidth: 1,
+                        borderColor: 'white',
                         justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: 20,
+                        alignItems: 'center'
                     }}
                 >
-                    <View
-                        style={{
-                            backgroundColor: 'white',
-                            borderRadius: deviceWidth * 0.1,
-                            height: deviceWidth * 0.2,
-                            width: deviceWidth * 0.2,
-                            borderWidth: 1,
-                            borderColor: 'white',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <FontAwesome
-                            name='check'
-                            size={50}
-                            color='#21ad93'
-                        />
-                    </View>
-                    <Text
-                        style={{
-                            marginVertical: 10,
-                            textAlign: 'center',
-                            color: '#21ad93',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 20
-                        }}
-                    >
-                        {locales('titles.requestSubmittedSuccessfully')}
-
-                    </Text>
-
-                    {products && products.length ? <Text
-                        style={{
-                            textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 14,
-                            color: '#21AD93'
-                        }}>
-                        {locales('titles.registerRequestDescription')}
-                        {` ${locales('titles.buskool')}`}،
-                        {` ${locales('titles.willBeSentToBuyers')}`}
-
-                    </Text> : null}
-
+                    <FontAwesome
+                        name='check'
+                        size={50}
+                        color='#21ad93'
+                    />
                 </View>
+                <Text
+                    style={{
+                        marginVertical: 10,
+                        textAlign: 'center',
+                        color: '#21ad93',
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 20
+                    }}
+                >
+                    {locales('titles.requestSubmittedSuccessfully')}
+
+                </Text>
+
+                {products && products.length ? <Text
+                    style={{
+                        textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        color: '#21AD93'
+                    }}>
+                    {locales('titles.registerRequestDescription')}
+                    {` ${locales('titles.buskool')}`}،
+                    {` ${locales('titles.willBeSentToBuyers')}`}
+
+                </Text> : null}
+
+            </View>
 
 
-                {!products || !products.length ? <Text
+            {!products || !products.length ? <Text
+                style={{
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 15,
+                    color: '#777777',
+                    marginTop: 40
+                }}>
+                {locales('titles.registerRequestDescription')}
+                <Text
+                    style={{
+                        paddingHorizontal: 10,
+                        textAlign: 'center',
+                        fontWeight: '200',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 15,
+                        color: '#21ad93'
+                    }}>
+                    {` ${locales('titles.buskool')}`}،
+                </Text>
+                <Text
                     style={{
                         paddingHorizontal: 10,
                         textAlign: 'center',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontWeight: '200',
                         fontSize: 15,
-                        color: '#777777',
-                        marginTop: 40
+                        color: '#777777'
                     }}>
-                    {locales('titles.registerRequestDescription')}
-                    <Text
-                        style={{
-                            paddingHorizontal: 10,
-                            textAlign: 'center',
-                            fontWeight: '200',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 15,
-                            color: '#21ad93'
-                        }}>
-                        {` ${locales('titles.buskool')}`}،
-                    </Text>
-                    <Text
-                        style={{
-                            paddingHorizontal: 10,
-                            textAlign: 'center',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontWeight: '200',
-                            fontSize: 15,
-                            color: '#777777'
-                        }}>
-                        {` ${locales('titles.willBeSentToBuyers')}`}
-                    </Text>
-                </Text> : null}
+                    {` ${locales('titles.willBeSentToBuyers')}`}
+                </Text>
+            </Text> : null}
 
-                {!products || !products.length ? <Button
-                    onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
-                    style={{
-                        textAlign: 'center',
-                        borderRadius: 5,
-                        marginVertical: 40,
-                        backgroundColor: '#00C569',
-                        width: '70%',
-                        color: 'white',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        elevation: 0,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                    }}
-                    rounded
-                >
-                    <Text style={{
-                        color: 'white',
-                        width: '100%',
-                        textAlign: 'center',
-                        fontSize: 16,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                    }}>{locales('labels.productsList')}</Text>
-                </Button> : null}
+            {!products || !products.length ? <Button
+                onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
+                style={{
+                    textAlign: 'center',
+                    borderRadius: 5,
+                    marginVertical: 40,
+                    backgroundColor: '#00C569',
+                    width: '70%',
+                    color: 'white',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    elevation: 0,
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                }}
+                rounded
+            >
+                <Text style={{
+                    color: 'white',
+                    width: '100%',
+                    textAlign: 'center',
+                    fontSize: 16,
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                }}>{locales('labels.productsList')}</Text>
+            </Button> : null}
 
 
-                {products && products.length ?
-                    <View
-                        style={{ marginTop: -20 }}
-                    >
-                        {/* <View style={{ flexDirection: 'row-reverse', width: deviceWidth }}>
-                            <Text style={{ fontSize: 20, color: '#00C569', paddingHorizontal: 10 }}>{locales('labels.suggestedProducts')}</Text>
-                            <View
-                                style={{
-                                    height: 2,
-                                    flex: 1,
-                                    alignSelf: 'center',
-                                    backgroundColor: "#BEBEBE",
-                                }}>
-                                <View
-                                    style={{
-                                        height: 4,
-                                        bottom: 2,
-                                        width: 40,
-                                        alignSelf: 'flex-end',
-                                        backgroundColor: "#00C469",
-                                    }}></View>
-                            </View>
-                        </View> */}
-                        <FlatList
-                            ListHeaderComponent={renderListHeaderComponent}
-                            ListFooterComponent={renderListFooterComponent}
-                            maxToRenderPerBatch={3}
-                            getItemLayout={getItemLayout}
-                            windowSize={10}
-                            initialNumToRender={2}
-                            keyExtractor={keyExtractor}
-                            data={products}
-                            renderItem={renderItem}
-                            ItemSeparatorComponent={renderItemSeparatorComponent}
-                        />
-                    </View>
-                    : null}
-            </ScrollView>
+            {products && products.length ?
+                <FlatList
+                    ListHeaderComponent={renderListHeaderComponent}
+                    ListFooterComponent={renderListFooterComponent}
+                    maxToRenderPerBatch={3}
+                    getItemLayout={getItemLayout}
+                    windowSize={10}
+                    initialNumToRender={2}
+                    keyExtractor={keyExtractor}
+                    data={products}
+                    ref={flatListRef}
+                    renderItem={renderItem}
+                    ItemSeparatorComponent={renderItemSeparatorComponent}
+                />
+                : null}
         </>
     )
 }

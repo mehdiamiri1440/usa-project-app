@@ -194,9 +194,3 @@ export const sendReportReason = reportObj => {
 export const newMessageReceived = (message) => {
     return dispatch => dispatch(action(actionTypes.NEW_MESSAGE_RECEIVED, message));
 };
-
-
-export const doForceRefresh = (forceRefresh) => {
-    return dispatch => dispatch(action(actionTypes.DO_FORCE_REFRESH, forceRefresh));
-};
-

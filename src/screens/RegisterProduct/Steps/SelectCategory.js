@@ -413,6 +413,9 @@ class SelectCategory extends Component {
 
             this.props.fetchAllCategories().then(_ => {
                 const { category, subCategory, productType, categoriesList, parentList } = this.props;
+                const {
+                    subCategoryName
+                } = this.state;
 
                 if (this.productTypeRef && this.productTypeRef.current)
                     this.productTypeRef.current.value = productType;
@@ -564,14 +567,19 @@ class SelectCategory extends Component {
         ...rest
     }) => {
 
+
         subCategoriesList = Object.values(subCategoriesList);
         this.setState({
             parentList: [...this.state.parentList, this.state.filteringLists],
             filteringLists: !!subCategoriesList.length ? [...subCategoriesList] : [],
             subCategory: subCategoriesList.length ? '' : id,
             subCategoryName: subCategoriesList.length ? '' : category_name,
+        }, _ => {
+            const {
+                parentList = []
+            } = this.state;
+            this.setState({ selectedSvgName: parentList[parentList.length - 2].find(item => item.id == parent_id)?.category_name })
         });
-
     };
 
     handleGoToPrevStep = _ => {
@@ -621,7 +629,7 @@ class SelectCategory extends Component {
                         {item.category_name}
                     </Text>
                 </View>
-                <FontAwesome5 name='angle-left' size={25} color='gray' />
+                <FontAwesome5 name='angle-left' size={25} color='#bebebe' />
             </Pressable>
 
         )
@@ -651,7 +659,7 @@ class SelectCategory extends Component {
 
         return (
             <View
-                style={{ backgroundColor: 'white' }}
+                style={{ backgroundColor: 'white', flex: 1 }}
             >
 
 

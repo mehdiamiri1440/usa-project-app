@@ -160,7 +160,7 @@ const Header = (props = {}) => {
             {shouldShowAuthenticationRibbonCondition ?
                 <TouchableOpacity
                     activeOpacity={1}
-                    onPress={_ => navigate('MyBuskool', { screen: 'Authentication' })}
+                    onPress={_ => navigate('Authentication')}
                     style={{
                         width: deviceWidth,
                         height: 45,

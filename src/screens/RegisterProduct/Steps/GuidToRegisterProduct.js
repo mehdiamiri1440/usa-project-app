@@ -192,7 +192,7 @@ class GuidToRegisterProduct extends React.Component {
                                 style={[styles.modalButton, styles.greenButton]}
                                 onPress={() => {
                                     this.hideDialog();
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'ExtraProductCapacity' });
+                                    this.props.navigation.navigate('ExtraProductCapacity');
                                 }}
                             >
 

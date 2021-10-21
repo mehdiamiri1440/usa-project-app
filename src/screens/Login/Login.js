@@ -2,14 +2,11 @@ import React from 'react'
 import { Text, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import LinearGradient from 'react-native-linear-gradient';
-import { Button, Input, Item, Label, Form, Container, Content, Header } from 'native-base';
+import { Button, Input, Item, Label } from 'native-base';
 import { connect } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler';
-import { deviceHeight, deviceWidth } from '../../utils/index'
-import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import { validator, formatter } from '../../utils'
+
+import { deviceHeight, deviceWidth, validator } from '../../utils';
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions';
 class Login extends React.Component {
@@ -20,13 +17,15 @@ class Login extends React.Component {
             mobileNumberError: '',
             password: '',
             mobileNumberStatus: '',
+            firstLoad: false,
+            isMobileNumberSentToServer: false
         }
     }
     mobileNumberRef = React.createRef();
     passwordRef = React.createRef();
 
     componentDidMount() {
-
+        this.setState({ firstLoad: true });
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
             if (componentType === 'Component') {
                 analytics().logScreenView({
@@ -63,13 +62,13 @@ class Login extends React.Component {
 
     onLogin = () => {
 
+        this.setState({ firstLoad: false });
         let { mobileNumber, password } = this.state;
         let mobileNumberError = '', isMobileNumberValid;
 
         analytics().logEvent('send_verification_code', {
             mobile_number: mobileNumber
         })
-
         if (!mobileNumber) {
             mobileNumberError = locales('errors.fieldNeeded', { fieldName: locales('titles.phoneNumber') });
             isMobileNumberValid = false;
@@ -83,9 +82,14 @@ class Login extends React.Component {
             isMobileNumberValid = true;
         }
         if (isMobileNumberValid) {
-            this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
-                this.props.setMobileNumber(mobileNumber);
-            })
+            if (this.state.isMobileNumberSentToServer == true)
+                return;
+            this.setState({ isMobileNumberSentToServer: true }, _ => {
+                this.props.checkAlreadySingedUpMobileNumber(mobileNumber).then(_ => {
+                    this.setState({ isMobileNumberSentToServer: false });
+                    this.props.setMobileNumber(mobileNumber);
+                });
+            });
         }
         else {
             this.setState({ mobileNumberError })
@@ -100,7 +104,7 @@ class Login extends React.Component {
 
     render() {
         let { message, loading, error } = this.props;
-        let { mobileNumber, password, mobileNumberError } = this.state;
+        let { mobileNumber, password, mobileNumberError, firstLoad } = this.state;
 
         return (
             <>
@@ -159,6 +163,22 @@ class Login extends React.Component {
                                 }}>{mobileNumberError}</Label>}
                             </View>
                             <View style={[styles.labelInputPadding]}>
+                                {
+                                    error && !firstLoad ?
+                                        <Text
+                                            style={{
+                                                paddingTop: '3%',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                color: '#FF5729',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
+                                            {locales('errors.retryLatter')}
+                                        </Text>
+
+                                        : null
+                                }
                                 <Button
                                     style={[!mobileNumber || !validator.isMobileNumber(mobileNumber)
                                         ? styles.disableLoginButton : styles.loginButton,
@@ -172,7 +192,7 @@ class Login extends React.Component {
                                         {locales('titles.login')}
                                     </Text>
                                     <ActivityIndicator size="small"
-                                        animating={!!loading}
+                                        animating={!!loading && !firstLoad}
                                         color="white"
                                         style={{
                                             position: 'absolute', left: '35%', top: '28%',

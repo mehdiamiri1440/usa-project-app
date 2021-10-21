@@ -12,8 +12,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
-import { permissions } from '../../../utils';
+import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import ChooseImage from '../../../components/cameraActionSheet';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
@@ -52,119 +52,48 @@ class ProductImages extends Component {
         return true;
     };
 
-    chooseProductImage = (index) => ActionSheet.show(
-        {
-            options: [locales('labels.camera'), locales('labels.gallery')],
-        },
-        buttonIndex => this.onActionSheetClicked(buttonIndex, index)
-    )
+    chooseProductImage = async (index) => {
+        try {
+            const {
+                images = []
+            } = this.state;
 
-    onActionSheetClicked = async (buttonIndex, index) => {
-        const options = {
-            width: 300,
-            height: 400,
-            maxWidth: 1024,
-            maxHeight: 1024,
-            quality: 1,
-            title: 'تصویر را انتخاب کنید',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        const prevImagePickerLibraryOptions = {
-            width: 300,
-            height: 400,
-            cropping: true,
-            mediaType: 'photo',
-        };
+            if (images && images.length >= 4)
+                return;
 
-        switch (buttonIndex) {
-            case 0: {
-                this.setState({ errorFlag: false });
+            const image = await ChooseImage();
+            if (!image)
+                return;
 
-                const isAllowedToOpenCamera = await permissions.requestCameraPermission();
-
-                if (!isAllowedToOpenCamera)
-                    return;
-
-                launchCamera(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
-                        return this.setState({ imageSizeError: true })
-                    }
-                    const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
+            const source = { uri: image.uri };
+            this.setState(state => {
+                state.avatarSource = source;
+                state.imageSizeError = false;
+                let resultObj = {
+                    uri: image.uri,
+                    type: image.type,
+                    size: image.fileSize,
+                    name: image.fileName
+                }
 
 
-                        if (index >= 0) {
-                            state.images[index] = resultObj
-                        }
-                        else {
-                            if (typeof state.images != 'object')
-                                state.images = [];
-                            state.images.push(resultObj)
-                        }
-                        return '';
-                    }
-                    )
-                });
-                break;
+                if (index >= 0) {
+                    state.images[index] = resultObj
+                }
+                else {
+                    if (typeof state.images != 'object')
+                        state.images = [];
+                    state.images.push(resultObj)
+                }
+                return '';
             }
-            case 1: {
-                this.setState({ errorFlag: false });
-                launchImageLibrary(options, image => {
-                    if (image.didCancel)
-                        return;
-                    else if (image.error)
-                        return;
-
-                    if (image.fileSize > 5242880 || image.fileSize < 20480) {
-                        return this.setState({ imageSizeError: true })
-                    }
-                    const source = { uri: image.uri };
-                    this.setState(state => {
-                        state.avatarSource = source;
-                        let resultObj = {
-                            uri: image.uri,
-                            type: image.type,
-                            size: image.fileSize,
-                            name: image.fileName
-                        }
-
-
-                        if (index >= 0)
-                            state.images[index] = resultObj
-                        else {
-                            if (typeof state.images != 'object')
-                                state.images = [];
-                            state.images.push(resultObj)
-                        }
-                        return '';
-                    }
-                    )
-                });
-                break;
-            }
-            default:
-                break;
+            )
         }
-
+        catch (error) {
+            if (error.error.id == 1)
+                this.setState({ imageSizeError: true });
+        }
     };
-
-
-
 
     onSubmit = () => {
         if (!this.state.images.length) {
@@ -186,7 +115,9 @@ class ProductImages extends Component {
 
     render() {
 
-        let { images } = this.state;
+        let {
+            images = []
+        } = this.state;
         return (
             <>
                 <ScrollView
@@ -305,47 +236,50 @@ class ProductImages extends Component {
                             null
                         }
 
-                        <Pressable
-                            android_ripple={{
-                                color: '#ededed'
-                            }}
-                            onPress={() => this.chooseProductImage()}
-                            style={{
-                                margin: 7,
-                                height: deviceWidth / 2.4,
-                                minWidth: deviceWidth / 2.4,
-                                maxWidth: deviceWidth / 2.4,
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                borderStyle: 'dashed',
-                                borderColor: '#707070',
-                                backgroundColor: '#fff',
-                                zIndex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}>
-
-                            <View>
-                                <View style={{
-                                    backgroundColor: "white", width: 20, height: 20,
-                                    borderWidth: 1, borderColor: 'white',
-                                    position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
-                                    justifyContent: 'center'
-                                }}>
-                                    <FontAwesome color='#00C569' name="plus-square" size={18} />
-                                </View>
-                                <FontAwesome5
-                                    color='#323A42'
-                                    name='camera' size={35} />
-                            </View>
-
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    color: '#323A42'
+                        {images.length < 4 ?
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
                                 }}
-                            >{locales('labels.addImage')}</Text>
-                        </Pressable>
+                                onPress={() => this.chooseProductImage()}
+                                style={{
+                                    margin: 7,
+                                    height: deviceWidth / 2.4,
+                                    minWidth: deviceWidth / 2.4,
+                                    maxWidth: deviceWidth / 2.4,
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    borderStyle: 'dashed',
+                                    borderColor: '#707070',
+                                    backgroundColor: '#fff',
+                                    zIndex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+
+                                <View>
+                                    <View style={{
+                                        backgroundColor: "white", width: 20, height: 20,
+                                        borderWidth: 1, borderColor: 'white',
+                                        position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
+                                        justifyContent: 'center'
+                                    }}>
+                                        <FontAwesome color='#00C569' name="plus-square" size={18} />
+                                    </View>
+                                    <FontAwesome5
+                                        color='#323A42'
+                                        name='camera' size={35} />
+                                </View>
+
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        color: '#323A42'
+                                    }}
+                                >{locales('labels.addImage')}</Text>
+                            </Pressable>
+                            : null
+                        }
                     </View>
 
                     <View style={{

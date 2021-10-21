@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
 import configureStore, { persistor } from './src/redux/configureStore';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Root } from 'native-base';
 
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { Root } from 'native-base';
 import Router from './src/router'
 
 const store = configureStore();
@@ -33,12 +33,13 @@ const customTextProps = {
 setCustomText(customTextProps);
 locales.setActiveLanguage('fa-ir');
 global.locales = locales.localize;
-global.shouldShowRibbon = true;
+global.shouldShowRibbon = false;
 global.meInfo = {
   is_seller: 0,
   loggedInUserId: ''
 };
 global.refreshProductList = false;
+global.isAppStateChangedCauseOfPayment = false;
 class App extends React.Component {
 
   render() {

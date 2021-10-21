@@ -220,3 +220,113 @@ export const walletElevatorPay = id => {
             });
     });
 };
+
+export const productCapacityWalletPay = extra_capacity => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `wallet-expend/product-capacity`,
+                method: 'POST',
+                data: {
+                    extra_capacity
+                },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const buyAdCapacityWalletPay = extra_capacity => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `wallet-expend/buyAd-capacity`,
+                method: 'POST',
+                data: {
+                    extra_capacity
+                },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const promoteRegistrationWalletPay = package_type => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `wallet-expend/buy-package`,
+                method: 'POST',
+                data: {
+                    package_type
+                },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const uploadUserContacts = contacts => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get-user-phone-contacts`,
+                method: 'POST',
+                data: { contacts },
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};
+
+export const fetchUserFriendsData = contacts => {
+    return new Promise((resolve, reject) => {
+        requester
+            .fetchAPI({
+                route: `get-user-referral-info`,
+                method: 'POST',
+                withAuth: true,
+            })
+            .then(result => {
+                resolve(result)
+            })
+            .catch(err => {
+                //     return reject(err.response);
+                return reject(err);
+
+
+            });
+    });
+};

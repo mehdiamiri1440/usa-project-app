@@ -20,7 +20,7 @@ const Wallet = props => {
 
     const inputRef = useRef();
 
-    const [inventory, setInventory] = useState(50000);
+    const [inventory, setInventory] = useState(100000);
     const [inventoryError, setInventoryError] = useState('');
 
     const {
@@ -67,7 +67,7 @@ const Wallet = props => {
     }
     const changeCount = type => {
         const tempInventory = changeValueToNumber(inventory)
-        setInventory(type == 'asc' ? tempInventory + 5000 : tempInventory <= 10000 ? 10000 : tempInventory - 5000);
+        setInventory(type == 'asc' ? tempInventory + 10000 : tempInventory <= 10000 ? 10000 : tempInventory - 1000);
 
     };
 
@@ -98,9 +98,12 @@ const Wallet = props => {
     };
 
     const onSubmit = _ => {
+        if (inventory < 10000)
+            return setInventoryError(locales('errors.canNotBeLessThan', { fieldName: locales('titles.stockQuantity'), number: '10,000' }));
         return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`).then(supported => {
             if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`);
+                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-wallet-payment/charge/${loggedInUserId}/${inventory}`)
+                    .then(_ => global.isAppStateChangedCauseOfPayment = true);
             }
         })
     };

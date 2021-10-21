@@ -1,307 +1,698 @@
+import React, {
+    useRef,
+    useEffect
+}
+    from 'react';
+import {
+    View,
+    Text,
+    FlatList,
+    ImageBackground,
+    Pressable,
+    ActivityIndicator,
+    Image,
+    TouchableOpacity
+} from 'react-native';
+import { connect } from 'react-redux';
+import { Button } from 'native-base';
+import LinearGradient from "react-native-linear-gradient";
+import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native";
+import BgLinearGradient from "react-native-linear-gradient";
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, ToastAndroid, Linking } from 'react-native';
-import { Button, Item, Input } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { deviceWidth } from '../../../utils';
-import Clipboard from "@react-native-community/clipboard";
 
-import UsersList from './UserLists';
 import Header from '../../../components/header';
+import { formatter, deviceWidth } from '../../../utils';
+import * as profileActions from '../../../redux/profile/actions';
+import * as homeActions from '../../../redux/home/actions';
 
 const UserFriends = props => {
 
-    const openSms = () => {
-        let url = 'sms:?body=سلام این لینک باسکول هست';
+    const friendsListRef = useRef();
 
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                ToastAndroid.showWithGravityAndOffset(
-                    'پیامک در دسترس نیست',
-                    ToastAndroid.LONG,
-                    ToastAndroid.BOTTOM,
-                    5,
-                    20)
-            }
-        })
-    }
-    const openWhatsApp = () => {
-        let url = 'whatsapp://send?text=سلام این لینک باسکول هست';
+    const {
+        userFriendsDataLoading,
+        userFriendsData = {},
 
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                ToastAndroid.showWithGravityAndOffset(
-                    'نرم افزار واتساپ نصب نیست',
-                    ToastAndroid.LONG,
-                    ToastAndroid.BOTTOM,
-                    5,
-                    20)
-            }
-        })
-    }
+        userProfile = {},
+        userProfileLoading,
+
+        packagesPricesLoading,
+        packagesPrices
+    } = props;
+
+    const {
+        invited_users = [],
+        credit = 0
+    } = userFriendsData;
+
+
+    const {
+        prices = {}
+    } = packagesPrices;
+
+    const {
+        "type-3": typeThree = 0,
+        "type-3-discount": typeThreeDiscount = 0,
+    } = prices;
+
+    const {
+        user_info = {}
+    } = userProfile;
+
+    const {
+        active_pakage_type,
+        wallet_balance = 0,
+    } = user_info;
+
+    useEffect(() => {
+        friendsListRef?.current?.scrollToOffset({ offset: 75 });
+        props.fetchUserFriendsData();
+        props.fetchPackagesPrices();
+    }, []);
+
+    let achievedPointsPercentage = Math.round((wallet_balance / (typeThreeDiscount ? typeThreeDiscount : typeThree)) * 100);
+
+    if (achievedPointsPercentage > 100)
+        achievedPointsPercentage = 100;
+
+    else if (achievedPointsPercentage < 0)
+        achievedPointsPercentage = 0;
+
+    const renderListHeaderComponent = _ => {
+        return (
+            <>
+                <View
+                    style={{
+                        flex: 1,
+                        // borderBottomColor: '#EBEBEB',
+                        // borderBottomWidth: active_pakage_type == 3 ? 0 : 5,
+                        // paddingBottom: active_pakage_type == 3 ? 60 : 40
+                        paddingBottom: 40
+                    }}
+                >
+                    <ImageBackground
+                        source={require('../../../../assets/images/Group2.jpg')}
+                        style={{
+                            width: deviceWidth,
+                            resizeMode: "cover",
+                            justifyContent: 'space-between',
+                            alignSelf: 'center',
+                        }}
+                    >
+                        <ShadowView
+                            style={{
+                                backgroundColor: 'white',
+                                shadowColor: 'black',
+                                shadowOpacity: 0.06,
+                                shadowRadius: 5,
+                                shadowOffset: { width: 0, height: 5 },
+                                width: '75%',
+                                top: '40%',
+                                marginVertical: 15,
+                                borderRadius: 12,
+                                padding: 15,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                zIndex: 1,
+                            }}>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 20,
+                                    color: '#556080',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                {locales('titles.monetizationVolume')}
+                            </Text>
+                            {userFriendsDataLoading ?
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <ContentLoader
+                                        speed={2}
+                                        width={'100%'}
+                                        height={deviceWidth * 0.14}
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                        style={{
+                                            alignSelf: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Rect x="40%" y="55%" width="100" height="10" />
+                                        <Rect x="25%" y="55%" width="30" height="10" />
+                                    </ContentLoader>
+                                </View>
+                                :
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 35,
+                                        color: '#1DA1F2',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    {formatter.numberWithCommas(credit)}
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 17,
+                                            color: '#1DA1F2',
+                                            textAlign: 'center',
+                                            fontWeight: '200'
+                                        }}
+
+                                    >
+                                        {` ${locales('titles.toman')}`}
+                                    </Text>
+                                </Text>
+                            }
+                        </ShadowView>
+                    </ImageBackground>
+                    {/* {active_pakage_type != 3 ? <>
+                        <View
+                            style={{
+                                marginTop: '14%',
+                                padding: 20
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 17,
+                                    color: '#404B55',
+                                    textAlign: 'right',
+                                    fontWeight: '200',
+                                    marginBottom: 45
+                                }}
+                            >
+                                {locales('titles.walletInventoryToBuySpecialRegistration')}
+                            </Text>
+
+                            <View
+                                style={{
+                                    marginTop: 15,
+                                    marginBottom: 15,
+                                }}>
+
+                                <View
+                                    style={{
+                                        width: '93%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            backgroundColor: '#F2F2F2',
+                                            borderRadius: 4,
+                                            width: '12%',
+                                            padding: 5,
+                                            left: `${achievedPointsPercentage - 3}%`,
+                                            position: 'absolute',
+                                            bottom: 5
+                                        }}
+                                    >
+                                        {packagesPricesLoading || userProfileLoading ?
+                                            <ActivityIndicator
+                                                size={20}
+                                                color='#404B55'
+                                            />
+                                            : <Text
+                                                style={{
+                                                    fontFamily: "IRANSansWeb(FaNum)_Bold",
+                                                    color: '#404B55',
+                                                    fontSize: 13,
+                                                    textAlign: 'center',
+                                                }}>
+                                                {achievedPointsPercentage}%
+                                            </Text>
+                                        }
+                                        <View
+                                            style={{
+                                                width: 0,
+                                                height: 0,
+                                                borderLeftWidth: 5,
+                                                borderLeftColor: 'transparent',
+                                                borderRightColor: 'transparent',
+                                                borderRightWidth: 5,
+                                                borderTopWidth: 5,
+                                                borderTopColor: '#F2F2F2',
+                                                left: '50%',
+                                                bottom: -5,
+                                                position: 'absolute'
+                                            }}
+                                        >
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View style={{
+                                    width: '100%',
+                                    height: 7
+                                }}>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#DDDDDD',
+                                            borderRadius: 15,
+                                            height: 18,
+                                            width: '100%',
+                                            position: 'absolute'
+
+                                        }}
+                                    ></View>
+                                    <LinearGradient
+                                        start={{ x: 0, y: 1 }}
+                                        end={{ x: 0.8, y: 0.2 }}
+                                        colors={['#00C569', '#21AD93']}
+                                        style={{
+                                            position: 'absolute',
+                                            height: 18,
+                                            width: `${achievedPointsPercentage}%`,
+                                            left: 0,
+                                            borderRadius: 10
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                borderRadius: 100,
+                                                width: 18,
+                                                height: 18,
+                                                backgroundColor: '#0E7B66',
+                                                alignSelf: 'flex-end',
+                                                left: achievedPointsPercentage == 0 ? 15 : 5
+                                            }}
+                                        >
+
+                                        </View>
+                                    </LinearGradient>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 15,
+                                        color: '#00C569',
+                                    }}
+                                >
+                                    {locales('titles.specialRegistration')}
+                                </Text>
+                            </View>
+                        </View>
+                        {achievedPointsPercentage >= 100 ?
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                style={{
+                                    alignSelf: 'center',
+                                    width: '80%',
+                                    borderRadius: 12,
+                                    padding: 10,
+                                    marginTop: 20,
+                                }}
+                                colors={['#21AD93', '#00C569']}
+                            >
+                                <TouchableOpacity
+                                    onPress={_ => props.navigation.navigate("MyBuskool", { screen: "PromoteRegistration" })}
+                                >
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            width: '100%',
+                                            textAlign: 'center',
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        {locales('labels.promoteToSpecialMemberShip')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                            :
+                            <Pressable
+                                onPress={_ => props.navigation.navigate('MyBuskool', { screen: 'Wallet' })}
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignSelf: 'center',
+                                    width: '80%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderWidth: 1,
+                                    borderRadius: 12,
+                                    borderColor: '#1DA1F2',
+                                    padding: 10,
+                                    marginTop: 20,
+                                }}
+                            >
+                                <FontAwesome5
+                                    name='wallet'
+                                    color='#1DA1F2'
+                                    size={18}
+                                />
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        color: '#1DA1F2',
+                                        marginRight: 10
+                                    }}
+                                >
+                                    {locales('titles.chargeWalletManually')}
+                                </Text>
+                            </Pressable>
+                        }
+                    </>
+                        : null
+                    } */}
+                </View>
+                {invited_users && invited_users.length ? <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 17,
+                        color: '#404B55',
+                        marginRight: 10,
+                        marginTop: active_pakage_type == 3 ? 10 : 25
+                    }}
+                >
+                    {locales('titles.yourInvitors')}
+                </Text>
+                    : null
+                }
+            </>
+        )
+    };
+
+    const renderListEmptyComponent = _ => {
+        if (userFriendsDataLoading)
+            return (
+                [1, 2, 3, 4].map(item => <ContentLoader
+                    speed={2}
+                    key={item}
+                    width={deviceWidth}
+                    height={deviceWidth * 0.18}
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    style={{ alignSelf: 'flex-start', justifyContent: 'center', alignItems: 'flex-start' }}
+                >
+                    <Circle cx='90%' cy="55%" r="25" />
+                    <Rect x="60%" y="55%" width="90" height="10" />
+                    <Rect x="10%" y="55%" width="50" height="10" />
+                    <Rect x="1%" y="55%" width="30" height="10" />
+                </ContentLoader>
+                )
+            );
+        return (
+            <View
+                style={{
+                    padding: 30,
+                }}
+            >
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        fontSize: 15,
+                        color: '#777777',
+                        textAlign: 'center'
+                    }}
+                >
+                    {locales('titles.noInvitationAcceptedYet')}
+                </Text>
+            </View>
+        )
+    };
+
+    const onRefresh = _ => {
+        props.fetchUserFriendsData();
+        props.fetchPackagesPrices();
+    };
+
+    const renderItem = (
+        {
+            item: {
+                first_name = '',
+                last_name = '',
+                credit = '',
+                user_name = '',
+                profile_photo = '',
+            } = {},
+            index
+        }
+    ) => {
+        return (
+            <Pressable
+                android_ripple={{
+                    color: '#ededed'
+                }}
+                onPress={_ => props.navigation.navigate('Profile', { user_name })}
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingHorizontal: 10
+                }}
+            >
+
+                <Image
+                    style={{
+                        borderRadius: deviceWidth * 0.05,
+                        width: deviceWidth * 0.1,
+                        height: deviceWidth * 0.1
+                    }}
+                    source={!!profile_photo ?
+                        { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
+                        :
+                        require('../../../../assets/icons/user.png')
+                    }
+                />
+
+                <View
+                    style={{
+                        borderBottomColor: '#F2F2F2',
+                        borderBottomWidth: index == invited_users.length - 1 ? 0 : 1,
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '90%',
+                        paddingVertical: 20
+                    }}
+                >
+
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 15,
+                            marginHorizontal: 10,
+                            color: '#404B55',
+                            textAlign: 'right',
+                            width: '60%'
+                        }}
+                    >
+                        {`${first_name} ${last_name}`}
+                    </Text>
+                    <Text
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 20,
+                            color: '#21AD93',
+                            textAlign: 'center'
+                        }}
+                    >
+                        {formatter.numberWithCommas(credit)} <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                fontSize: 15,
+                                color: '#404B55',
+                                textAlign: 'center',
+                                fontWeight: '200'
+                            }}
+                        >
+                            {locales('titles.toman')}
+                        </Text>
+                    </Text>
+                </View>
+            </Pressable>
+        )
+    };
 
     return (
-        <>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: 'white'
+            }}
+        >
             <Header
-                title={locales('titles.referralListTitle')}
+                title={locales('titles.monetization')}
                 shouldShowAuthenticationRibbonFromProps
                 {...props}
             />
 
-            <ScrollView style={{
-                flex: 1,
-                backgroundColor: '#fff'
-            }}>
+            <FlatList
+                ref={friendsListRef}
+                renderItem={renderItem}
+                data={invited_users}
+                onRefresh={onRefresh}
+                refreshing={false}
+                keyExtractor={item => item.id.toString()}
+                ListEmptyComponent={renderListEmptyComponent}
+                ListHeaderComponent={renderListHeaderComponent}
+            />
 
-
-                <View style={{
-                    borderBottomWidth: 2,
-                    borderBottomColor: '#efefef',
-                    paddingBottom: 10,
+            <ShadowView
+                style={{
                     alignItems: 'center',
+                    justifyContent: 'center',
+                    width: deviceWidth,
+                    backgroundColor: 'white',
+                    shadowColor: 'rgba(0,0,0,0.1)',
+                    shadowOpacity: 0.4,
+                    shadowRadius: 1,
+                    shadowOffset: { width: 0, height: -5 },
+                    paddingVertical: 10,
+                }}
+            >
 
-                }}>
-                    <Text style={{
-                        fontSize: 14,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: '#556080',
-                        textAlign: 'center',
-                        paddingTop: 10
-                    }}>
-                        {/* <Text style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    }}>
-                        {locales('titles.referralMainTitle')}
-
-                    </Text> */}
-                        <Text style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}>
-                            {locales('titles.referralFirstMainTitle')}
-                        </Text>
-                        <Text style={{
-                            color: '#00C569',
-                            marginHorizontal: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                        }}>
-                            {locales('titles.referralSecondMainTitle')}
-                        </Text>
-
-                        <Text style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        }}>
-                            {locales('titles.referralThirdMainTitle')}
-                        </Text>
-                    </Text>
-                    <Text style={{
-                        color: "#777",
-                        paddingHorizontal: 5,
-                        textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        paddingTop: 14
-                    }}>
-                        {locales('titles.referralMainPageContents')}
-
-                    </Text>
-
-                </View>
-
-                <View style={{
-                    alignItems: 'center',
-
-                }}>
-                    <Text style={{
-                        fontSize: 20,
-                        paddingTop: 5,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: '#555',
-                    }}>
-                        {locales('titles.referralTitle')}
-                        <Text style={{
-                            fontSize: 22,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: '#00C569',
-                        }}>
-                            25,000
-                                     </Text>
-
-                        {locales('titles.toman')}
-
-                    </Text>
-
-                    {/* <Button
-                        style={[styles.loginButton, { width: '55%', marginTop: 0, marginBottom: 0, elevation: 0, height: 40, alignSelf: 'center' }]}
+                <BgLinearGradient
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    colors={['#1DA1F2', '#3D7DB2']}
+                    style={{
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '95%',
+                        zIndex: 1,
+                        height: 60,
+                        alignSelf: 'center',
+                    }}
+                >
+                    {/* <ShadowView
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: deviceWidth,
+                            shadowColor: 'red',
+                            shadowOpacity: 1,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 5 },
+                        }}
+                    > */}
+                    <Button
+                        onPress={_ => props.navigation.navigate('Referral')}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'transparent',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            elevation: 0
+                        }}
                     >
-                        <Text style={[styles.buttonText, { alignSelf: 'center' }]}>
-
-                            {locales('titles.referralButton')}
-
-                        </Text>
-                    </Button> */}
-                </View>
-
-                <View style={{
-                    width: '100%',
-                    paddingBottom: 20
-                }}>
-
-                    <View style={{
-                        padding: 10,
-
-                    }}>
-
-
-                        {/* <Text style={{
-                            color: '#556080',
-                            marginHorizontal: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                        }}>
-                            {locales('titles.referralShareButton')}
-
-                        </Text> */}
-
-                        <View style={{
-                            flexDirection: 'row-reverse',
-                            paddingTop: 5
-                        }}>
-                            <Button
-
-                                onPress={openWhatsApp}
-                                style={[styles.iconWrapper, { backgroundColor: '#00C569' }]}>
-                                <FontAwesome5 name="whatsapp" color="#fff" size={23} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.whatsapp')}
-                                </Text>
-                            </Button>
-                            {/* <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
-
-                                <FontAwesome5 name="instagram" color="#777" size={15} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.instagram')}
-                                </Text>
-                            </Button>
-                            <Button style={[styles.iconWrapper, { marginLeft: 3 }]}>
-
-                                <FontAwesome5 name="telegram-plane" color="#777" size={15} />
-                                <Text style={styles.iconContents}>
-                                    {locales('titles.telegram')}
-
-                                </Text>
-                            </Button> */}
-                            <Button
-                                onPress={openSms}
-
-                                style={[styles.iconWrapper, { borderWidth: 2, borderColor: '#777', backgroundColor: '#fff', marginLeft: 5 }]}>
-
-                                <FontAwesome5 name="comment-alt" color="#777" size={20} />
-                                <Text style={[styles.iconContents, { color: '#777' }]}>
-                                    {locales('titles.sms')}
-
-                                </Text>
-                            </Button>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <FontAwesome5
+                                name='share-alt'
+                                size={20}
+                                color='white'
+                            />
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 20,
+                                    marginRight: 5
+                                }}
+                            >
+                                {locales('titles.sendNewInviation')}
+                            </Text>
                         </View>
-                    </View>
-
-
+                    </Button>
+                    {/* </ShadowView> */}
                     <View style={{
-
-                        paddingHorizontal: 10
+                        width: "98%",
+                        backgroundColor: '#0966AD',
+                        zIndex: 0,
+                        height: 5,
+                        top: 55,
+                        borderBottomLeftRadius: 120,
+                        borderBottomRightRadius: 120,
+                        position: 'absolute'
                     }}>
-
-
-                        <View>
-                            <Item style={{
-                                borderBottomWidth: 0,
-                                marginTop: 10
-                            }}>
-                                <Input disabled style={{ fontSize: 14, height: 35, color: '#777', padding: 5, margin: 0, backgroundColor: '#eee', borderWidth: 0, borderRadius: 4, textAlign: 'left' }} placeholder="https://buskool.com/profile/del" />
-                                <Button
-                                    onPress={() => {
-                                        ToastAndroid.showWithGravityAndOffset(
-                                            locales('titles.copiedToClipboard'),
-                                            ToastAndroid.LONG,
-                                            ToastAndroid.BOTTOM,
-                                            5,
-                                            20)
-                                        Clipboard.setString('https://buskool.com/profile/del')
-                                    }}
-                                    style={{
-                                        backgroundColor: '#556080',
-                                        paddingHorizontal: 20,
-                                        height: 35,
-                                        elevation: 0
-                                    }}>
-                                    <Text style={{
-                                        color: '#fff',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-
-                                    }}>
-                                        کپی
-</Text>
-                                </Button>
-                            </Item>
-                        </View>
                     </View>
-                </View>
+                </BgLinearGradient>
+            </ShadowView>
 
-
-
-                <UsersList />
-            </ScrollView>
-        </>
+        </View >
     )
+};
 
-}
+const mapStateToProps = ({
+    profileReducer,
+    homeReducer
+}) => {
 
+    const {
+        packagesPricesLoading,
+        packagesPrices,
+    } = homeReducer;
 
+    const {
+        userProfile,
+        userProfileLoading,
 
+        userFriendsDataLoading,
+        userFriendsData,
+    } = profileReducer;
 
-const styles = StyleSheet.create({
+    return {
+        userProfile,
+        userProfileLoading,
 
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        width: '100%',
-        textAlign: 'center'
-    },
-    disableLoginButton: {
-        textAlign: 'center',
-        width: deviceWidth * 0.8,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    loginButton: {
-        textAlign: 'center',
-        borderRadius: 4,
-        backgroundColor: '#00C569',
-        width: '70%',
-        color: 'white',
-    },
-    iconWrapper: {
-        flex: 1,
-        flexDirection: 'row-reverse',
-        borderRadius: 5,
-        height: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
+        userFriendsDataLoading,
+        userFriendsData,
 
-        elevation: 0
-    },
-    iconContents: {
-        color: '#fff',
-        fontSize: 16,
-        marginRight: 3,
-        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        packagesPricesLoading,
+        packagesPrices,
     }
-});
+};
 
-export default UserFriends
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchUserFriendsData: _ => dispatch(profileActions.fetchUserFriendsData()),
+        fetchPackagesPrices: () => dispatch(homeActions.fetchPackagesPrices()),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserFriends);

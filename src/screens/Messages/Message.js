@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useRef, useEffect } from 'react';
 import Jmoment from 'moment-jalaali';
-import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { ToastAndroid, View, Text, Pressable, Linking, ActivityIndicator, Animated } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 import Clipboard from "@react-native-community/clipboard";
 
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -25,7 +25,8 @@ const Message = props => {
         handlePromotionModalVisiblity = _ => { },
         handleEditPriceModalVisiblity = _ => { },
         productDetailsLoading,
-        selectedMessageId
+        selectedMessageId,
+        setInventoryModalVisibility = _ => { }
     } = props;
 
     const { contact_id: id } = contact;
@@ -38,7 +39,7 @@ const Message = props => {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM,
             5,
-            20);
+            250);
         Clipboard.setString(item.text);
     };
 
@@ -58,70 +59,107 @@ const Message = props => {
             >
                 <View
                     style={{
-                        backgroundColor: 'rgba(204,204,204,0.4)',
-                        paddingBottom: 1.5,
-                        paddingTop: 1,
-                        paddingLeft: 1.5,
-                        paddingRight: 1,
-                        borderRadius: 9,
-                        borderTopWidth: 0.3,
-                        borderBottomWidth: 0.7,
-                        borderLeftWidth: 0.3,
-                        borderRightWidth: 0.3,
-                        borderTopColor: 'rgba(204,204,204,0.1)',
-                        borderBottomColor: 'rgba(204,204,204,0.7)',
-                        borderRightColor: 'rgba(204,204,204,0.1)',
-                        borderLeftColor: 'rgba(204,204,204,0.1)',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
                     }}
                 >
+
                     <View
                         style={{
-                            paddingHorizontal: 10,
-                            maxWidth: deviceWidth * 0.75,
+                            backgroundColor: 'rgba(204,204,204,0.4)',
+                            paddingBottom: 1.5,
+                            paddingTop: 1,
+                            paddingLeft: 1.5,
+                            paddingRight: 1,
                             borderRadius: 9,
-                            borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
-                            borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
-                            paddingVertical: 3,
-                            backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                            borderTopWidth: 0.3,
+                            borderBottomWidth: 0.7,
+                            borderLeftWidth: 0.3,
+                            borderRightWidth: 0.3,
+                            borderTopColor: 'rgba(204,204,204,0.1)',
+                            borderBottomColor: 'rgba(204,204,204,0.7)',
+                            borderRightColor: 'rgba(204,204,204,0.1)',
+                            borderLeftColor: 'rgba(204,204,204,0.1)',
                         }}
                     >
-                        <Text
-                            selectionColor='gray'
-                            suppressHighlighting
-                            selectable
-                            onPress={showToast}
+                        <View
                             style={{
-                                zIndex: 999999,
-                                textAlign: 'right',
-                                fontSize: showPhoneFormat ? 18 : 16,
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                color: showPhoneFormat ? '#5188B8' : '#333333'
+                                paddingHorizontal: 10,
+                                maxWidth: deviceWidth * 0.75,
+                                borderRadius: 9,
+                                borderBottomRightRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                                borderBottomLeftRadius: !!item.p_id || showPhoneFormat ? 0 : 9,
+                                paddingVertical: 3,
+                                backgroundColor: id == item.receiver_id ? '#DCF8C6' : '#F7F7F7',
+                            }}
+                        >
+                            {item.p_id || item.phone_locked || item.isSentFromDelsa == true ?
+                                <Text
+                                    style={{
+                                        textAlign: 'right',
+                                        fontSize: 14,
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        color: 'rgba(0,0,0,0.5)'
+                                    }}
+                                >
+                                    {locales('titles.botSentItAutomatically')}
+                                </Text>
+                                : null
+                            }
+                            <Text
+                                selectionColor='gray'
+                                suppressHighlighting
+                                selectable
+                                // onPress={showToast}
+                                style={{
+                                    zIndex: 999999,
+                                    textAlign: 'right',
+                                    fontSize: showPhoneFormat ? 18 : 16,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    color: showPhoneFormat ? '#5188B8' : '#333333'
 
-                            }}>
-                            {item.text}
-                        </Text>
-                        <RenderDate
+                                }}>
+                                {item.text}
+                            </Text>
+                            <RenderDate
+                                item={item}
+                                {...props}
+                                id={id}
+                                showPhoneFormat={showPhoneFormat}
+                            />
+                        </View>
+                        {item.isSentFromDelsa == true
+                            ? null
+                            :
+                            <RenderPhoneFormatMessage
+                                showPhoneFormat={showPhoneFormat}
+                                item={item}
+                                handlePromotionModalVisiblity={handlePromotionModalVisiblity}
+                                handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
+                                active_pakage_type={active_pakage_type}
+                                selectedMessageId={selectedMessageId}
+                                productDetailsLoading={productDetailsLoading}
+                                id={id}
+                                {...props}
+                            />
+                        }
+                        <RenderMessageWithProductIdDesign
                             item={item}
                             {...props}
-                            id={id}
-                            showPhoneFormat={showPhoneFormat}
                         />
                     </View>
-                    <RenderPhoneFormatMessage
-                        showPhoneFormat={showPhoneFormat}
-                        item={item}
-                        handlePromotionModalVisiblity={handlePromotionModalVisiblity}
-                        handleEditPriceModalVisiblity={handleEditPriceModalVisiblity}
-                        active_pakage_type={active_pakage_type}
-                        selectedMessageId={selectedMessageId}
-                        productDetailsLoading={productDetailsLoading}
-                        id={id}
-                        {...props}
-                    />
-                    <RenderMessageWithProductIdDesign
-                        item={item}
-                        {...props}
-                    />
+                    {loggedInUserId == item.sender_id && item.phone_locked ?
+                        <FontAwesome5
+                            onPress={_ => setInventoryModalVisibility(true)}
+                            name='exclamation-circle'
+                            color='#F03738'
+                            size={25}
+                            style={{
+                                marginHorizontal: 3
+                            }}
+                        />
+                        :
+                        null}
                 </View>
             </View>
         </>
@@ -176,7 +214,7 @@ const RenderPhoneFormatMessage = props => {
 
 
     const openCallPad = phoneNumber => {
-
+        analytics().logEvent('click_on_call_info_button_messanger');
         if (!validator.isMobileNumber(phoneNumber))
             return;
 
@@ -248,6 +286,9 @@ const RenderPhoneFormatMessage = props => {
 };
 
 const RenderMessageWithProductIdDesign = props => {
+
+    const animatedColor = useRef(new Animated.Value(0)).current;
+
     const {
         item = {},
         navigation = {},
@@ -267,109 +308,96 @@ const RenderMessageWithProductIdDesign = props => {
         p_id
     } = item;
 
+    useEffect(_ => {
+        // const colorInterval = setInterval(handleAnimationChanges, 1000);
+        // return _ => clearInterval(colorInterval);
+    }, []);
+
+    // const handleAnimationChanges = _ => {
+    //     Animated.timing(animatedColor, {
+    //         duration: 1000,
+    //         useNativeDriver: false,
+    //         toValue: 1,
+    //     }).start(_ => {
+    //         Animated.timing(animatedColor, {
+    //             duration: 1000,
+    //             useNativeDriver: false,
+    //             toValue: 0,
+    //         }).start()
+    //     });
+    // };
+
+    // const backgroundColor = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#fea858', '#ed765e', '#fea858']
+    // });
+
+    // const backgroundColorForDelsa = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#4DC0BB', '#24ae95', '#21AD93']
+    // });
+
+    // const backgroundColorEditPrice = animatedColor.interpolate({
+    //     inputRange: [0, 0.5, 1],
+    //     outputRange: ['#556080', '#495577', '#556593']
+    // });
 
     if (!!p_id) {
         if (item.sender_id == loggedInUserId) {
-            if (active_pakage_type != 0)
-                return (
-                    <Pressable
-                        android_ripple={{
-                            color: '#ededed'
-                        }}
-                        activeOpacity={1}
-                        onPress={() => handleEditPriceModalVisiblity(p_id, item.id)}
-                    >
-                        <View
-                            style={{
-                                width: '100%',
-                                backgroundColor: '#556080',
-
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-
-                                flexDirection: 'row-reverse',
-
-                                paddingVertical: 5,
-                                borderBottomLeftRadius: 8,
-                                borderBottomRightRadius: 8,
-                                overflow: "hidden",
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-
-                            }}
-                        >
-                            {productDetailsLoading && item.id == selectedMessageId
-                                ?
-                                <ActivityIndicator
-                                    animating={productDetailsLoading}
-                                    size={20}
-                                    color='white'
-                                />
-                                :
-                                <FontAwesome5
-                                    name='edit'
-                                    color='white'
-                                    size={14}
-                                />
-                            }
-                            <Text style={{
-                                color: 'white',
-                                fontSize: 16,
-                                marginRight: 5,
-                                marginLeft: 10,
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            }}>
-                                {locales('labels.editPrice')}
-                            </Text>
-                            <FontAwesome5
-                                name='angle-left'
-                                color='white'
-                                size={14}
-                            />
-                        </View>
-                    </Pressable >
-                );
+            // if (active_pakage_type != 0)
             return (
                 <Pressable
                     android_ripple={{
                         color: '#ededed'
                     }}
                     activeOpacity={1}
-                    onPress={() => handlePromotionModalVisiblity(true)}
+                    style={{
+                        borderTopWidth: 1,
+                        borderColor: '#d5f0c0',
+                        backgroundColor: '#DCF8C6',
+                        borderBottomLeftRadius: 12,
+                        borderBottomRightRadius: 12,
+                        paddingVertical: 10,
+                    }}
+                    onPress={() => {
+                        analytics().logEvent('click_on_price_update_button');
+                        handleEditPriceModalVisiblity(p_id, item.id);
+                    }}
                 >
-                    <LinearGradient
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 0.8, y: 0.2 }}
+                    <Animated.View
+                        // start={{ x: 0, y: 1 }}
+                        // end={{ x: 0.8, y: 0.2 }}
+                        // colors={[colorFirst, colorSecond]}
                         style={{
-                            width: '100%',
-                            backgroundColor: '#21AD93',
+                            width: '95%',
 
                             alignItems: 'center',
                             justifyContent: 'center',
                             textAlign: 'center',
 
                             flexDirection: 'row-reverse',
-
-                            paddingVertical: 5,
-                            borderBottomLeftRadius: 8,
-                            borderBottomRightRadius: 8,
+                            alignSelf: 'center',
+                            paddingVertical: 10,
+                            borderRadius: 8,
                             overflow: "hidden",
-                            borderTopRightRadius: 0,
-                            borderTopLeftRadius: 0,
-                        }}
-                        colors={['#4DC0BB', '#21AD93']}
-                    >
+                            backgroundColor: "#556080",
 
-                        <Text style={{
-                            marginRight: 10
-                        }}>
+                        }}
+                    >
+                        {productDetailsLoading && item.id == selectedMessageId
+                            ?
+                            <ActivityIndicator
+                                animating={productDetailsLoading}
+                                size={20}
+                                color='white'
+                            />
+                            :
                             <FontAwesome5
-                                name='chess-queen'
+                                name='edit'
                                 color='white'
                                 size={14}
                             />
-                        </Text>
+                        }
                         <Text style={{
                             color: 'white',
                             fontSize: 16,
@@ -377,17 +405,103 @@ const RenderMessageWithProductIdDesign = props => {
                             marginLeft: 10,
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}>
-                            {locales('titles.inquireSecretary')}
-
+                            {locales('labels.editPrice')}
                         </Text>
                         <FontAwesome5
                             name='angle-left'
                             color='white'
                             size={14}
                         />
-                    </LinearGradient>
+                    </Animated.View>
                 </Pressable >
             );
+            // return (
+            //     <Pressable
+            //         android_ripple={{
+            //             color: '#ededed'
+            //         }}
+            //         activeOpacity={1}
+            //         style={{
+            //             borderTopWidth: 1,
+            //             borderColor: '#d5f0c0',
+            //             backgroundColor: '#DCF8C6',
+            //             borderBottomLeftRadius: 12,
+            //             borderBottomRightRadius: 12,
+            //             paddingVertical: 10,
+
+            //         }}
+            //         onPress={() => handlePromotionModalVisiblity(true)}
+            //     >
+            //         <Animated.View
+            //             // start={{ x: 0, y: 1 }}
+            //             // end={{ x: 0.8, y: 0.2 }}
+            //             // colors={[colorFirst, colorSecond]}
+            //             style={{
+            //                 width: '95%',
+
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //                 textAlign: 'center',
+
+            //                 flexDirection: 'row-reverse',
+            //                 alignSelf: 'center',
+            //                 paddingVertical: 10,
+            //                 borderRadius: 8,
+            //                 overflow: "hidden",
+            //                 backgroundColor: backgroundColorForDelsa,
+
+            //             }}
+            //         >
+            //             {/* <LinearGradient
+            //             start={{ x: 0, y: 1 }}
+            //             end={{ x: 0.8, y: 0.2 }}
+            //             style={{
+            //                 width: '100%',
+            //                 backgroundColor: '#21AD93',
+
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //                 textAlign: 'center',
+
+            //                 flexDirection: 'row-reverse',
+
+            //                 paddingVertical: 5,
+            //                 borderBottomLeftRadius: 8,
+            //                 borderBottomRightRadius: 8,
+            //                 overflow: "hidden",
+            //                 borderTopRightRadius: 0,
+            //                 borderTopLeftRadius: 0,
+            //             }}
+            //             colors={['#4DC0BB', '#21AD93']}
+            //         > */}
+
+            //             <Text style={{
+            //                 marginRight: 10
+            //             }}>
+            //                 <FontAwesome5
+            //                     name='chess-queen'
+            //                     color='white'
+            //                     size={14}
+            //                 />
+            //             </Text>
+            //             <Text style={{
+            //                 color: 'white',
+            //                 fontSize: 16,
+            //                 marginRight: 5,
+            //                 marginLeft: 10,
+            //                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
+            //             }}>
+            //                 {locales('titles.inquireSecretary')}
+
+            //             </Text>
+            //             <FontAwesome5
+            //                 name='angle-left'
+            //                 color='white'
+            //                 size={14}
+            //             />
+            //         </Animated.View>
+            //     </Pressable >
+            // );
         }
         return (
             <Pressable
@@ -395,25 +509,37 @@ const RenderMessageWithProductIdDesign = props => {
                     color: '#ededed'
                 }}
                 activeOpacity={1}
-                onPress={() => navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } })}
+                style={{
+                    borderTopWidth: 1,
+                    borderColor: '#f2f2f2',
+                    borderBottomLeftRadius: 12,
+                    borderBottomRightRadius: 12,
+                    paddingVertical: 10,
+                    backgroundColor: 'white'
+                }}
+                onPress={() => {
+                    analytics().logEvent('click_on_see_product');
+                    navigate('Messages', { screen: 'ProductDetails', params: { productId: p_id } });
+                }}
             >
-                <View
+
+                <Animated.View
+                    // start={{ x: 0, y: 1 }}
+                    // end={{ x: 0.8, y: 0.2 }}
+                    // colors={[colorFirst, colorSecond]}
                     style={{
-                        width: '100%',
-                        backgroundColor: '#5D9FD8',
+                        width: '95%',
 
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
 
                         flexDirection: 'row-reverse',
-
-                        paddingVertical: 5,
-                        borderBottomLeftRadius: 8,
-                        borderBottomRightRadius: 8,
+                        alignSelf: 'center',
+                        paddingVertical: 10,
+                        borderRadius: 8,
                         overflow: "hidden",
-                        borderTopRightRadius: 0,
-                        borderTopLeftRadius: 0,
+                        backgroundColor: "#fea858",
 
                     }}
                 >
@@ -441,7 +567,7 @@ const RenderMessageWithProductIdDesign = props => {
                         color='white'
                         size={14}
                     />
-                </View>
+                </Animated.View>
             </Pressable >
         );
     }
