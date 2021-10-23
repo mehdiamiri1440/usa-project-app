@@ -51,7 +51,7 @@ const Authentication = props => {
     let [idCardWithOwner, setIdCardWithOwner] = useState({});
 
 
-    let [stepNumber, setStepNumber] = useState(1);
+    let [stepNumber, setStepNumber] = useState(4);
 
 
     const changeStep = step => {

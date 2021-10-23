@@ -8,7 +8,6 @@ import {
     FlatList,
     ActivityIndicator,
     Pressable,
-    ScrollView,
     Linking, BackHandler,
     LayoutAnimation, UIManager, Platform
 } from 'react-native';
@@ -19,7 +18,6 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import Svg, { Path, Circle } from "react-native-svg";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
