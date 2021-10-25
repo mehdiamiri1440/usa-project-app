@@ -31,7 +31,9 @@ if (
 
 const RegisterRequestSuccessfully = props => {
 
-    const flatListRef = useRef();
+    const flatListRef = useRef(null);
+
+    const viewRef = useRef(null);
 
     const {
         products = [],
@@ -47,6 +49,7 @@ const RegisterRequestSuccessfully = props => {
     const [selectedButton, setSelectedButton] = useState(null);
     const [accessToContactInfoErrorMessage, setAccessToContactInfoErrorMessage] = useState('');
     const [showBox, setShowBox] = useState(true);
+    const [scrollOffset, setOffset] = useState(0);
 
     const handleBack = () => {
         if (props.route && props.route.params) {
@@ -55,7 +58,7 @@ const RegisterRequestSuccessfully = props => {
 
     }
 
-    const keyExtractor = useCallback((_, index) => index.toString(), []);
+    const keyExtractor = item => `${dataGenerator.generateKey('request_')}${item?.id.toString()}`;
 
     const getItemLayout = useCallback((data, index) => ({
         length: 180,
@@ -224,7 +227,11 @@ const RegisterRequestSuccessfully = props => {
                 item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
-                return flatListRef?.current?.scrollToIndex({ index, animated: true });
+                return setTimeout(() => flatListRef?.current?.scrollToOffset({
+                    offset: scrollOffset + 100,
+                    animated: true
+                }),
+                    500);
             }
         })
             .catch(err => {
@@ -700,7 +707,9 @@ const RegisterRequestSuccessfully = props => {
                             </Button>
                         }
                         {(item.isContactInfoShown) ?
-                            <>
+                            <View
+                                ref={viewRef}
+                            >
                                 <View
                                     style={{
                                         zIndex: 1,
@@ -791,7 +800,7 @@ const RegisterRequestSuccessfully = props => {
                                         {locales('labels.policeWarnDescription')}
                                     </Text>
                                 </View>
-                            </>
+                            </View>
                             : null}
                     </Pressable>
                 </Card>
@@ -1088,6 +1097,7 @@ const RegisterRequestSuccessfully = props => {
                         maxToRenderPerBatch={3}
                         getItemLayout={getItemLayout}
                         windowSize={10}
+                        onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
                         initialNumToRender={2}
                         keyExtractor={keyExtractor}
                         data={products}
