@@ -33,12 +33,14 @@ class RequestsTab extends Component {
             showGoldenModal: false,
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
-            appState: AppState.currentState
+            appState: AppState.currentState,
+            scrollOffset: 0
         }
     }
 
     goldensRef = React.createRef();
     buyadsRef = React.createRef();
+
 
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
@@ -250,8 +252,8 @@ class RequestsTab extends Component {
                     item.mobileNumber = phone;
                     this.setState({});
                     if (isFromGolden)
-                        return this.goldensRef?.current?.scrollToIndex({ index, animated: true });
-                    return this.buyadsRef?.current?.scrollToIndex({ index, animated: true });
+                        return setTimeout(() => this.goldensRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true }), 500);
+                    return setTimeout(() => this.buyadsRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true }), 500);
                 }
             })
                 .catch(err => {
@@ -1441,6 +1443,7 @@ class RequestsTab extends Component {
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
                     windowSize={10}
+                    onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
                     data={goldenBuyAdsList}
                     maxToRenderPerBatch={3}
                     keyExtractor={this.keyExtractor}
@@ -1741,10 +1744,10 @@ class RequestsTab extends Component {
                         </Dialog>
                     </Portal >
                     : null}
-
+                {this.renderHeaderComponent()}
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
-                    ListHeaderComponent={this.renderHeaderComponent}
+                    onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
                     ListEmptyComponent={this.renderListEmptyComponent}
                     windowSize={10}
                     data={relatedBuyAdRequestsList}
