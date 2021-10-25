@@ -922,11 +922,16 @@ class RegisterRequest extends Component {
                                     ListFooterComponent={this.subCategoriesListFooterComponent}
                                     refreshing={categoriesLoading}
                                     renderItem={this.renderItem}
+                                    keyboardDismissMode='none'
+                                    keyboardShouldPersistTaps='handled'
                                 />
 
-                                : <ScrollView style={{
-                                    paddingHorizontal: 15,
-                                }}
+                                : <ScrollView
+                                    keyboardDismissMode='none'
+                                    keyboardShouldPersistTaps='handled'
+                                    style={{
+                                        paddingHorizontal: 15,
+                                    }}
                                 >
                                     <Text
                                         style={{
