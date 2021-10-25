@@ -1744,12 +1744,12 @@ class RequestsTab extends Component {
                         </Dialog>
                     </Portal >
                     : null}
-                {this.renderHeaderComponent()}
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
                     onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
                     ListEmptyComponent={this.renderListEmptyComponent}
                     windowSize={10}
+                    ListHeaderComponent={this.renderHeaderComponent}
                     data={relatedBuyAdRequestsList}
                     maxToRenderPerBatch={3}
                     keyExtractor={this.keyExtractor}
