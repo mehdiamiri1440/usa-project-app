@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
 import {
     Text,
+    TouchableOpacity,
     StyleSheet,
     Image,
     View,
     FlatList,
     ActivityIndicator,
     Pressable,
-    ScrollView,
-    Linking, BackHandler
+    Linking, BackHandler,
+    LayoutAnimation, UIManager, Platform
 } from 'react-native';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import Svg, { Path, Circle } from "react-native-svg";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
@@ -25,6 +26,12 @@ import * as productActions from '../../redux/registerProduct/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 class RegisterProductSuccessfully extends Component {
     constructor(props) {
@@ -38,6 +45,7 @@ class RegisterProductSuccessfully extends Component {
             loaded: false,
             showMobileNumberWarnModal: false,
             accessToContactInfoErrorMessage: '',
+            showBox: true
         }
     }
 
@@ -111,7 +119,6 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
-                    console.log('ref', index)
                     return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
                 }
             })
@@ -152,7 +159,9 @@ class RegisterProductSuccessfully extends Component {
                     width: '100%',
                     padding: 20,
                     borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
-                    borderWidth: 0.5,
+                    borderWidth: !!item.is_golden ? 2 : 0.5,
+                    marginVertical: 20,
+                    borderRadius: 8
                 }}
                 key={item.id}
             >
@@ -390,8 +399,6 @@ class RegisterProductSuccessfully extends Component {
                     </View>
                 }
 
-
-
                 <View style={{
                     marginVertical: 15,
                     flexDirection: 'row-reverse',
@@ -450,7 +457,7 @@ class RegisterProductSuccessfully extends Component {
                                     :
                                     <FontAwesome5
                                         solid
-                                        name='phone-square-alt'
+                                        name='phone-alt'
                                         color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
                                         size={20} />
                                 }
@@ -576,7 +583,7 @@ class RegisterProductSuccessfully extends Component {
                                     {item.mobileNumber}
                                 </Text>
                                 <FontAwesome5
-                                    name='phone-square-alt'
+                                    name='phone-alt'
                                     size={20}
                                 />
                             </Pressable>
@@ -722,6 +729,10 @@ class RegisterProductSuccessfully extends Component {
             subCategoryName
         } = params;
 
+        const {
+            showBox
+        } = this.state;
+
         subCategoryId = subCategoryId || this.props.subCategoryId;
         subCategoryName = subCategoryName || this.props.subCategoryName;
 
@@ -739,11 +750,9 @@ class RegisterProductSuccessfully extends Component {
                     flexDirection: 'row-reverse',
                     width: deviceWidth,
                     justifyContent: 'center',
-                    backgroundColor: 'white',
-
                 }}>
                 <Text style={{
-                    color: '#1da6f4',
+                    color: showBox ? 'white' : '#1da6f4',
                     fontSize: 16,
                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     marginLeft: 5,
@@ -757,8 +766,7 @@ class RegisterProductSuccessfully extends Component {
                     <FontAwesome5
                         size={15}
                         name='arrow-left'
-                        color='#1DA1F2'
-
+                        color={showBox ? 'white' : '#1DA1F2'}
                     />
                 </Text>
             </Pressable>
@@ -767,56 +775,91 @@ class RegisterProductSuccessfully extends Component {
     };
 
     renderListHeaderComponent = _ => {
-        return (
-            <View
-                style={{
-                    padding: 20, marginVertical: 0,
-                    backgroundColor: 'white'
-                }}
-            >
-                <Text
-                    style={{
-                        color: 'black',
-                        fontSize: 22,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    }}
-                >
-                    {locales('labels.buyers')}
-                </Text>
+        const {
+            showBox
+        } = this.state;
 
-                <Text
+        if (showBox)
+            return (
+                <TouchableOpacity
+                    onPress={_ => {
+                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                        this.setState({ showBox: false })
+                    }}
                     style={{
-                        color: '#777777',
-                        fontSize: 16,
-                        marginVertical: 10,
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
                     }}
                 >
-                    {locales('labels.suggestedBuyersForYou')} <Text
-                        style={{
-                            color: '#21AD93',
-                            fontWeight: '200',
-                            fontSize: 16,
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        }}
-                    >
-                        {locales('titles.buskool')}
-                    </Text>
+                    <FontAwesome5
+                        name='angle-up'
+                        color='white'
+                        size={20}
+                    />
                     <Text
                         style={{
-                            color: '#777777',
-                            fontWeight: '200',
-                            fontSize: 16,
+                            fontSize: 18,
+                            color: 'white',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         }}
                     >
-                        {locales('labels.forYourProduct')}
+                        {locales('labels.suggestedBuyers')}
                     </Text>
-                </Text>
+                </TouchableOpacity>
+            );
+        return null;
 
-            </View>
+        // return (
+        //     <View
+        //         style={{
+        //             padding: 20, marginVertical: 0,
+        //             backgroundColor: 'white'
+        //         }}
+        //     >
+        //         <Text
+        //             style={{
+        //                 color: 'black',
+        //                 fontSize: 22,
+        //                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
+        //             }}
+        //         >
+        //             {locales('labels.buyers')}
+        //         </Text>
 
-        )
+        //         <Text
+        //             style={{
+        //                 color: '#777777',
+        //                 fontSize: 16,
+        //                 marginVertical: 10,
+        //                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        //             }}
+        //         >
+        //             {locales('labels.suggestedBuyersForYou')} <Text
+        //                 style={{
+        //                     color: '#21AD93',
+        //                     fontWeight: '200',
+        //                     fontSize: 16,
+        //                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        //                 }}
+        //             >
+        //                 {locales('titles.buskool')}
+        //             </Text>
+        //             <Text
+        //                 style={{
+        //                     color: '#777777',
+        //                     fontWeight: '200',
+        //                     fontSize: 16,
+        //                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        //                 }}
+        //             >
+        //                 {locales('labels.forYourProduct')}
+        //             </Text>
+        //         </Text>
+
+        //     </View>
+
+        // )
     }
 
     chooseBuyadsList = (buyAds, buyAdsFromParams, buyAdsAfterPaymentList) => {
@@ -905,7 +948,8 @@ class RegisterProductSuccessfully extends Component {
             showGoldenModal,
             accessToContactInfoErrorMessage,
             showMobileNumberWarnModal,
-            selectedContact
+            selectedContact,
+            showBox
         } = this.state;
 
         subCategoryId = subCategoryId || this.props.subCategoryId;
@@ -914,9 +958,6 @@ class RegisterProductSuccessfully extends Component {
 
         return (
             <>
-
-
-
                 {showMobileNumberWarnModal ?
                     < Portal
                         style={{
@@ -1002,8 +1043,6 @@ class RegisterProductSuccessfully extends Component {
                     </Portal >
                     : null
                 }
-
-
                 {showGoldenModal ?
                     <Portal
                         style={{
@@ -1092,55 +1131,90 @@ class RegisterProductSuccessfully extends Component {
                     </Portal >
                     : null
                 }
-
                 <View
                     style={{
                         flex: 1,
                         backgroundColor: 'white'
                     }}
                 >
-                    {buyAdsAfterPaymentList.length ? null :
-                        <View
+                    {buyAdsAfterPaymentList.length || showBox == false ? null :
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={['#aef8d6', '#67ce9e']}
                             style={{
-                                backgroundColor: 'rgba(237,248,230,0.6)',
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                                borderRadius: 8,
                                 padding: 20,
+                                width: '90%',
+                                alignSelf: 'center',
+                                marginVertical: 15,
+                                marginHorizontal: 25,
                             }}
                         >
                             <View
                                 style={{
                                     backgroundColor: 'white',
-                                    borderRadius: deviceWidth * 0.1,
-                                    height: deviceWidth * 0.2,
-                                    width: deviceWidth * 0.2,
-                                    borderWidth: 1,
-                                    borderColor: 'white',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
+                                    opacity: 0.3,
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 100,
+                                    top: '-35%',
+                                    overflow: 'hidden',
+                                    position: 'absolute',
                                 }}
                             >
-                                <FontAwesome
-                                    name='check'
-                                    size={50}
-                                    color='#21ad93'
-                                />
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    opacity: 0.3,
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 100,
+                                    left: '-15%',
+                                    overflow: 'hidden',
+                                    position: 'absolute',
+                                }}
+                            >
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="36"
+                                    height="32"
+                                    fill="none"
+                                    viewBox="0 0 36 32"
+                                >
+                                    <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                    <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                    <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                    <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                    <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
+                                    <Path stroke="#000" d="M9.778 16l5.333 4.445 7.111-8.89"></Path>
+                                </Svg>
+                                <Text
+                                    style={{
+                                        marginVertical: 10,
+                                        textAlign: 'center',
+                                        color: '#264653',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 18,
+                                        marginHorizontal: 10
+                                    }}
+                                >
+                                    {locales('titles.productRegisteredSuccessfully')}
+                                </Text>
                             </View>
                             <Text
                                 style={{
-                                    marginVertical: 10,
                                     textAlign: 'center',
-                                    color: '#21ad93',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 20
-                                }}
-                            >
-                                {locales('titles.productRegisteredSuccessfully')}
-                            </Text>
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    color: '#21AD93',
+                                    color: 'rgba(38,70,83,80)',
                                     paddingHorizontal: 10,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     fontSize: 16
@@ -1148,19 +1222,35 @@ class RegisterProductSuccessfully extends Component {
                             >
                                 {locales('titles.productdAccepted')}
                             </Text>
-                        </View>}
+                        </LinearGradient>
+                    }
 
                     <ActivityIndicator size={30} color='#00C569' animating={buyAdsAfterPaymentLoading} />
 
                     {this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList).length ?
-                        <FlatList
-                            renderItem={this.renderItem}
-                            data={this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList)}
-                            ListHeaderComponent={this.renderListHeaderComponent}
-                            ListFooterComponent={this.renderListFooterComponent}
-                            keyExtractor={this.keyExtractor}
-                            ref={this.flatListRef}
-                        />
+                        <LinearGradient
+                            start={{ x: 0, y: 0.51, z: 1 }}
+                            end={{ x: 0.8, y: 0.2, z: 1 }}
+                            colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                            style={{
+                                borderRadius: 8,
+                                alignSelf: 'center',
+                                flex: 1
+                            }}
+                        >
+
+                            <FlatList
+                                renderItem={this.renderItem}
+                                data={this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList)}
+                                ListHeaderComponent={this.renderListHeaderComponent}
+                                ListFooterComponent={this.renderListFooterComponent}
+                                keyExtractor={this.keyExtractor}
+                                ref={this.flatListRef}
+                                contentContainerStyle={{
+                                    padding: 10,
+                                }}
+                            />
+                        </LinearGradient>
                         :
                         <View>
                             <Text
