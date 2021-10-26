@@ -56,13 +56,23 @@ class RequestsTab extends Component {
             screen_class: "buyAd_suggestion",
         });
 
-        this.props.fetchRelatedRequests();
+        this.props.fetchRelatedRequests().then(({ payload = {} }) => {
+            const {
+                golden_buyAds = [],
+                buyAds = []
+            } = payload;
+
+            this.setState({
+                relatedBuyAdRequestsList: buyAds,
+                goldenBuyAdsList: golden_buyAds
+            });
+        });
 
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
-
     componentDidUpdate(prevProps, prevState) {
+        console.log('in  requests updated')
         if (prevState.fromMyBuskool == false && this.props.route && prevProps.route &&
             this.props.route.params && prevProps.route.params &&
             (this.props.route.params.fromMyNuskool != prevProps.route.params.fromMyNuskool ||
