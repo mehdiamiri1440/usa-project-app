@@ -660,58 +660,6 @@ class RequestsTab extends Component {
                                 </View>
                             </>
                             : null}
-
-                        {/* <Button
-
-                            onPress={event => this.openChat(event, item, true)}
-                            style={[styles.loginButton,
-                            {
-                                alignSelf: 'center', backgroundColor: 'transparent', borderWidth: 0,
-                                justifyContent: 'center', alignItems: 'center'
-                            }]}
-                        >
-
-                            <LinearGradient
-                                start={{ x: 0, y: 0.51, z: 1 }}
-                                end={{ x: 0.8, y: 0.2, z: 1 }}
-                                colors={['#c7a84f', '#f9f29f', '#c7a84f']}
-                                style={{
-                                    width: '100%',
-                                    borderWidth: 0,
-                                    paddingHorizontal: 10,
-                                    flexDirection: 'row-reverse',
-                                    alignItems: 'center',
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    height: 40,
-                                    borderRadius: 4,
-                                }}
-                            >
-                                <MaterialCommunityIcons name='message' color={!item.is_golden ? 'black' : '#333'} size={20} />
-                                <Text style={[
-                                    styles.textBold, {
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        color: '#333',
-                                        fontSize: 18,
-                                        paddingHorizontal: 3
-                                    }]}>
-                                    {locales('labels.messageToBuyer')}
-
-
-                                </Text>
-                                <ActivityIndicator size={20} color={'#333'}
-                                    animating={selectedButton == item.id &&
-                                        !!isUserAllowedToSendMessageLoading}
-                                    style={{
-                                        position: 'relative',
-                                        width: 10, height: 10, borderRadius: 5,
-                                        marginLeft: -10,
-                                        marginRight: 5
-                                    }}
-                                />
-                            </LinearGradient>
-                        </Button>
-                     */}
                     </View>
                     :
 
@@ -1337,32 +1285,6 @@ class RequestsTab extends Component {
                             </View>
                         </>
                         : null}
-
-                    {/* <Button
-                        onPress={event => !item.expired && this.openChat(event, item, false)}
-                        style={[item.expired ? styles.disableLoginButton : styles.loginButton,
-                        { alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }]}
-                    >
-                        <ActivityIndicator size={20} color='white'
-                            animating={selectedButton == item.id &&
-                                !!isUserAllowedToSendMessageLoading}
-                            style={{
-                                position: 'relative',
-                                width: 10, height: 10, borderRadius: 5,
-                                marginLeft: -15,
-                                marginRight: 5
-                            }}
-                        />
-                        <Text style={[styles.textWhite, styles.textBold, styles.textSize18, { marginTop: -3 }]}>
-                            {locales('labels.messageToBuyer')}
-                        </Text>
-                        <MaterialCommunityIcons name='message' color={!item.is_golden ? 'white' : '#333'} size={20}
-                            style={{
-                                marginHorizontal: 5
-                            }}
-                        />
-                    </Button>
-              */}
                 </View>
             </View>
 
@@ -1762,42 +1684,9 @@ class RequestsTab extends Component {
             </View>
         );
     }
-}
-
+};
 
 const styles = StyleSheet.create({
-    cardWrapper: {
-        width: deviceWidth,
-        paddingHorizontal: deviceWidth * 0.025,
-        alignSelf: 'center',
-    },
-    cardItemStyle: {
-        borderRadius: 5,
-        width: '100%',
-        backgroundColor: '#fff',
-        elevation: 2,
-        borderWidth: 1,
-    },
-    loginFailedContainer: {
-        backgroundColor: '#F8D7DA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#761C24'
-    },
-    deletationSuccessfullContainer: {
-        backgroundColor: '#00C569',
-        padding: 10,
-        borderRadius: 5
-    },
-    deletationSuccessfullText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: 'white'
-    },
     buttonText: {
         color: 'white',
         fontSize: 18,
@@ -1897,7 +1786,6 @@ const styles = StyleSheet.create({
         color: '#555',
     },
     dialogIcon: {
-
         height: 80,
         width: 80,
         textAlign: 'center',
@@ -1910,85 +1798,10 @@ const styles = StyleSheet.create({
     greenButton: {
         backgroundColor: '#00C569',
     },
-    redButton: {
-        backgroundColor: '#E41C39',
-    },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        textAlign: 'center',
-        color: '#777777',
-        fontSize: 16,
-        padding: 10,
-    },
     linearGradient: {
         height: deviceHeight * 0.15,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
-    textInputPadding: {
-        paddingVertical: 5,
-    },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#777777'
-    },
-    fontAwesomeEnvelope: {
-        color: "#fff",
-        margin: '15px'
-    },
-    textWhite: {
-        color: "#fff"
-    },
-    textCenterView: {
-        justifyContent: 'center',
-        flexDirection: "row-reverse",
-    },
-    textBold: {
-        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-    },
-    actionsWrapper: {
-        flexDirection: 'row-reverse',
-        flex: 1,
-        justifyContent: 'center',
-
-    },
-    elevatorIcon: {
-        backgroundColor: '#777777',
-        padding: 10,
-        borderRadius: 4,
-        height: 40,
-        marginTop: 10,
-        marginRight: 15
-    },
-    marginTop5: {
-        marginTop: 5
-    },
-    marginTop10: {
-        marginTop: 10
-    },
-    margin5: {
-        margin: 5
-    },
-    margin10: {
-        margin: 10
-    },
-    textSize18: {
-        fontSize: 18
     }
 });
 
