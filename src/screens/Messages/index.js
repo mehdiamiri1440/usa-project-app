@@ -3,8 +3,8 @@ import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, InputGroup, Input } from 'native-base';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
-
 import { TabView, TabBar } from 'react-native-tab-view';
+
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import * as messagesActions from '../../redux/messages/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
@@ -14,10 +14,12 @@ import MessagesTab from './MessagesTab';
 import RequestsTab from './RequestsTab';
 import Header from '../../components/header';
 
-
-
 const Messages = props => {
 
+    const routes = [
+        { key: 'messages', title: locales('labels.messages') },
+        { key: 'requests', title: locales('labels.suggestedBuyers') }
+    ];
 
     const serachInputRef = useRef();
 
@@ -32,14 +34,10 @@ const Messages = props => {
     } = user_info;
 
     const [searchText, setSearchText] = useState('');
-    const [refresh, setRefresh] = useState(false);
-    const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
-    const [routes] = useState([
-        { key: 'messages', title: locales('labels.messages') },
-        { key: 'requests', title: locales('labels.suggestedBuyers') }
-    ]
-    );
 
+    const [refresh, setRefresh] = useState(false);
+
+    const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
 
     useEffect(() => {
         if (props.route && props.route.params && (props.route.params.tabIndex == 0 || props.route.params.tabIndex == 1)) {
@@ -49,10 +47,7 @@ const Messages = props => {
 
     const handleSearch = text => setSearchText(text);
 
-
-
     const initialLayout = { width: deviceWidth, height: 0 };
-
 
     const renderScene = ({ route }) => {
         switch (route.key) {
@@ -77,15 +72,10 @@ const Messages = props => {
 
     const refreshTabs = _ => {
         setSearchText('');
-        if (index == 1) {
-            return props.fetchAllContactsList().then(_ => {
-                setRefresh(true);
-            });
-        }
-        return props.fetchRelatedRequests().then(_ => {
-            setRefresh(true);
-        });
-    }
+        if (index == 0)
+            return props.fetchAllContactsList().then(_ => setRefresh(true));
+        return props.fetchRelatedRequests().then(_ => setRefresh(true));
+    };
 
     const renderTabBar = internalProps => (
         <TabBar
@@ -103,7 +93,12 @@ const Messages = props => {
                     flexDirection: 'row',
                     margin: 0
                 }}>
-                    <Text style={{ color: '#333', fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                    <Text
+                        style={{
+                            color: '#333',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                        }}
+                    >
                         {route.title}
                     </Text>
                     {route.key == 'requests' ?
@@ -129,8 +124,6 @@ const Messages = props => {
                         </View>
                         : null}
                 </View>
-
-
             )}
         />
     );
@@ -151,40 +144,72 @@ const Messages = props => {
                         left: 0,
                         backgroundColor: 'white',
                     }}>
-                        <InputGroup rounded style={{
-                            borderWidth: 0,
-                            borderColor: '#e0e0e0',
-                            borderBottomColor: '#e0e0e0',
-                            borderBottomWidth: 1,
-                            width: '100%',
-                            borderRadius: 0,
+                        <InputGroup
+                            rounded
+                            style={{
+                                borderWidth: 0,
+                                borderColor: '#e0e0e0',
+                                borderBottomColor: '#e0e0e0',
+                                borderBottomWidth: 1,
+                                width: '100%',
+                                borderRadius: 0,
 
-                        }}>
+                            }}>
                             <Input
                                 value={searchText}
                                 ref={serachInputRef}
                                 onChangeText={handleSearch}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    color: '#777'
+                                }}
                                 placeholder={locales('labels.search')}
                                 placeholderTextColor="#e0e0e0"
 
                             />
-                            <Icon name='ios-search' style={{ color: '#e0e0e0', marginHorizontal: 5 }} />
+                            <Icon
+                                name='ios-search'
+                                style={{
+                                    color: '#e0e0e0',
+                                    marginHorizontal: 5
+                                }}
+                            />
                         </InputGroup>
                     </View>
                     :
-                    <View style={{ marginTop: 5, marginHorizontal: 5, padding: 4 }}>
-                        <InputGroup rounded style={{ backgroundColor: '#e0e0e0', elevation: 1 }}>
+                    <View
+                        style={{
+                            marginTop: 5,
+                            marginHorizontal: 5,
+                            padding: 4
+                        }}
+                    >
+                        <InputGroup
+                            rounded
+                            style={{
+                                backgroundColor: '#e0e0e0',
+                                elevation: 1
+                            }}
+                        >
                             <Input
                                 value={searchText}
                                 ref={serachInputRef}
                                 onChangeText={handleSearch}
-                                style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777' }}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    color: '#777'
+                                }}
                                 placeholder={locales('labels.searchContacts')}
                                 placeholderTextColor="#BEBEBE"
 
                             />
-                            <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
+                            <Icon
+                                name='ios-search'
+                                style={{
+                                    color: '#7E7E7E',
+                                    marginHorizontal: 5
+                                }}
+                            />
                         </InputGroup>
                     </View>
                 }
@@ -193,7 +218,7 @@ const Messages = props => {
                 {is_seller ?
                     <TabView
                         onSwipeStart={() => refreshTabs()}
-                        lazy
+                        lazy={_ => true}
                         removeClippedSubviews={true}
                         renderTabBar={renderTabBar}
                         useNativeDriver
