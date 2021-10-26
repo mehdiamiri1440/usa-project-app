@@ -24,26 +24,35 @@ const Messages = props => {
     const serachInputRef = useRef();
 
     const {
-        userProfile = {}
+        userProfile = {},
+        route = {}
     } = props;
+
     const {
         user_info = {}
     } = userProfile;
+
     const {
         is_seller
     } = user_info;
+
+    const {
+        params = {}
+    } = route;
+
+    const {
+        tabIndex = 0
+    } = params;
 
     const [searchText, setSearchText] = useState('');
 
     const [refresh, setRefresh] = useState(false);
 
-    const [index, setIndex] = useState(props.route?.params?.tabIndex || 0);
+    const [index, setIndex] = useState(tabIndex);
 
-    useEffect(() => {
-        if (props.route && props.route.params && (props.route.params.tabIndex == 0 || props.route.params.tabIndex == 1)) {
-            setIndex(props.route.params.tabIndex)
-        }
-    }, [props.route, props.route?.params, props.route?.params?.tabIndex])
+    useEffect(() => setIndex(tabIndex),
+        [props.route, props.route?.params, props.route?.params?.tabIndex]
+    );
 
     const handleSearch = text => setSearchText(text);
 

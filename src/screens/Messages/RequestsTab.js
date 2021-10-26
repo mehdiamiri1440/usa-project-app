@@ -252,8 +252,8 @@ class RequestsTab extends Component {
                     item.mobileNumber = phone;
                     this.setState({});
                     if (isFromGolden)
-                        return setTimeout(() => this.goldensRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true }), 500);
-                    return setTimeout(() => this.buyadsRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true }), 500);
+                        return this.goldensRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true });
+                    return this.buyadsRef?.current?.scrollToOffset({ offset: this.state.scrollOffset + 100, animated: true });
                 }
             })
                 .catch(err => {

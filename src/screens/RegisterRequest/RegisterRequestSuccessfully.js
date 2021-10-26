@@ -227,11 +227,10 @@ const RegisterRequestSuccessfully = props => {
                 item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
-                return setTimeout(() => flatListRef?.current?.scrollToOffset({
+                return flatListRef?.current?.scrollToOffset({
                     offset: scrollOffset + 100,
                     animated: true
-                }),
-                    500);
+                });
             }
         })
             .catch(err => {

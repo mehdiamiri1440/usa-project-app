@@ -119,7 +119,6 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
-                    console.log('ref', index)
                     return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
                 }
             })
