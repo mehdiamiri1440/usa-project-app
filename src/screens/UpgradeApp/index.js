@@ -89,16 +89,10 @@ class UpgradeApp extends Component {
                             paddingVertical: 7
 
 
-                    }}>
-                        {locales('labels.inUpdating')}
-                    </Text>
-                    <View
-                        style={{
-                            marginTop: 7,
-                            marginBottom: 15,
-                            paddingHorizontal: 15
                         }}>
-                        <Text
+                            {locales('labels.inUpdating')}
+                        </Text>
+                        <View
                             style={{
                                 marginTop: 7,
                                 marginBottom: 15,
@@ -106,12 +100,19 @@ class UpgradeApp extends Component {
                             }}>
                             <Text
                                 style={{
-                                    fontFamily: "IRANSansWeb(FaNum)_Medium",
-                                    color: '#21AD93',
-                                    textAlign: 'center'
+                                    marginTop: 7,
+                                    marginBottom: 15,
+                                    paddingHorizontal: 15
                                 }}>
-                                {appUpdateProgress}%
-                        </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: "IRANSansWeb(FaNum)_Medium",
+                                        color: '#21AD93',
+                                        textAlign: 'center'
+                                    }}>
+                                    {appUpdateProgress}%
+                                </Text>
+                            </Text>
                             <View style={{
                                 width: '100%',
                                 height: 7
