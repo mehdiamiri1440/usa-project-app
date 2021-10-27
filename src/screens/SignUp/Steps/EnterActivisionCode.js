@@ -207,10 +207,12 @@ const EnterActivisionCode = (props) => {
                             key={index}
                             style={[styles.cell, isFocused && styles.focusCell,
                             {
-                                borderColor: value.length === 4 && !valueError ? "#00C569"
+                                marginTop: 20,
+                                borderColor: value.length === 4 &&
+                                    !valueError ? "#00C569"
                                     : value.length === 4 && valueError
                                         ? '#de3545' :
-                                        "#bebebe",
+                                        "rgba(0, 0, 0, 0.15)",
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }]}
                             onLayout={getCellOnLayoutHandler(index)}>
@@ -221,12 +223,23 @@ const EnterActivisionCode = (props) => {
                         </Text>
                     )}
                 />
-                {!!valueError && <Label style={{
-                    fontSize: 14, marginVertical: 5, color: '#D81A1A', textAlign: 'center',
-                    fontFamily: 'IRANSansWeb(FaNum)_Light'
-                }}>{valueError}</Label>}
+                <Text
+                    style={{
+                        fontSize: 14,
+                        color: '#D81A1A',
+                        textAlign: 'center',
+                        fontFamily: 'IRANSansWeb(FaNum)_Light'
+                    }}>
+                    {valueError}
+                </Text>
             </SafeAreaView>
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 10 }}>
+            <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                }}
+            >
                 <Timer
                     min={2}
                     sec={0}
@@ -253,9 +266,17 @@ const EnterActivisionCode = (props) => {
                     style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
                     rounded
                 >
-                    <Text style={styles.buttonText}>{locales('titles.submitCode')}</Text>
-                    <ActivityIndicator size="small"
-                        animating={loading || props.loginLoading || props.userProfileLoading} color="white"
+                    <Text style={styles.buttonText}>
+                        {locales('titles.submitCode')}
+                    </Text>
+                    <ActivityIndicator
+                        size="small"
+                        animating={
+                            loading
+                            || props.loginLoading
+                            || props.userProfileLoading
+                        }
+                        color="white"
                         style={{
                             position: 'absolute', left: '20%', top: '28%',
                             width: 25, height: 25, borderRadius: 15
@@ -267,8 +288,15 @@ const EnterActivisionCode = (props) => {
                     style={styles.backButtonContainer}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <Text
+                        style={styles.backButtonText}>
+                        {locales('titles.previousStep')}
+                    </Text>
+                    <AntDesign
+                        name='arrowright'
+                        size={25}
+                        color='#00C569'
+                    />
                 </Button>
             </View>
         </>
@@ -282,10 +310,9 @@ const styles = StyleSheet.create({
     cell: {
         width: 70,
         backgroundColor: '#fff',
-        elevation: 1,
         height: 60,
         lineHeight: 65,
-        borderRadius: 5,
+        borderRadius: 8,
         fontSize: 24,
         borderWidth: 1,
         alignContent: 'center',
@@ -293,16 +320,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
     },
     focusCell: {
         borderColor: 'green',
@@ -313,20 +330,23 @@ const styles = StyleSheet.create({
 
     },
     backButtonText: {
-        color: '#7E7E7E',
+        color: '#00C569',
         width: '60%',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
         textAlign: 'center'
     },
     backButtonContainer: {
         textAlign: 'center',
-        borderRadius: 5,
         margin: 10,
         width: deviceWidth * 0.4,
+        elevation: 0,
         backgroundColor: 'white',
         alignItems: 'center',
         alignSelf: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#00C569',
+        borderRadius: 8,
     },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
@@ -352,6 +372,7 @@ const styles = StyleSheet.create({
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
+        elevation: 0,
         alignSelf: 'center',
         justifyContent: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -361,6 +382,7 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#00C569',
         borderRadius: 5,
+        elevation: 0,
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
