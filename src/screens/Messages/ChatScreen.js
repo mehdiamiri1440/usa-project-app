@@ -11,7 +11,7 @@ import Svg, { Pattern, Path, Defs, Image as SvgImage } from 'react-native-svg';
 import {
     View, Text, TouchableOpacity, Image, TextInput, FlatList,
     ActivityIndicator, ImageBackground, StyleSheet,
-    LayoutAnimation, UIManager, Platform, Modal, Pressable
+    LayoutAnimation, UIManager, Platform, Modal, Pressable, BackHandler
 } from 'react-native';
 import { Dialog, Paragraph } from 'react-native-paper';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -97,6 +97,7 @@ class ChatScreen extends Component {
 
         this.handleIncomingMessage();
 
+        BackHandler.addEventListener('hardwareBackPress', this.handleBack);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -107,6 +108,12 @@ class ChatScreen extends Component {
         }
 
     }
+
+    componentWillUnmount() {
+        return BackHandler.removeEventListener(this.handleBack);
+    }
+
+    handleBack = _ => this.props.navigation.goBack();
 
     handlePhoneNumberBannerVisiblity = _ => {
         AsyncStorage.getItem('@validPassedTimeForPhoneNumberBanner').then(result => {
@@ -1428,7 +1435,7 @@ class ChatScreen extends Component {
                                 flexDirection: 'row-reverse',
                                 width: '21%'
                             }}
-                            onPress={() => this.props.navigation.goBack()}
+                            onPress={this.handleBack}
                         >
                             <View
                                 style={{
