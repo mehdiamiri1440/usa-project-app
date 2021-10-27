@@ -320,88 +320,41 @@ class SignUp extends React.Component {
             <>
 
                 <ScrollView
-
+                    style={{
+                        backgroundColor: 'white'
+                    }}
                     keyboardShouldPersistTaps='handled'
                 >
 
-                    <LinearGradient
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 0.8, y: 0.2 }}
-                        colors={['#00C569', '#21AD93']}
+                    <Text
+                        style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            padding: 20,
+                            backgroundColor: '#264653',
+                            color: 'white',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 16,
+                        }}
                     >
-                        <View style={[styles.linearGradient, { alignItems: 'center', justifyContent: 'center' }]}>
-                            <Text
-                                style={[styles.headerTextStyle]}
-                            >
-                                {locales('titles.enterToBuskool')}
-                            </Text>
-                        </View >
-                    </LinearGradient>
-                    <View style={{
-                        width: deviceWidth,
-                        flexDirection: 'row-reverse', alignContent: 'center', justifyContent: 'center',
-                    }}>
-                        <View style={{
-                            marginTop: 20,
-                            flexDirection: 'row-reverse',
-                            alignItems: 'stretch',
-                            alignContent: 'center', alignSelf: 'center',
-                            width: deviceWidth - 80,
+                        {locales('titles.enterToBuskool')}
+                    </Text>
 
-                        }}>
-                            {stepsArray.map((item, index) => {
-                                return (
-                                    <React.Fragment key={index}>
-                                        <ShadowView
-                                            style={{
-                                                shadowColor: 'black',
-                                                shadowOpacity: 0.13,
-                                                shadowRadius: 1,
-                                                shadowOffset: { width: 0, height: 2 },
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center', color: 'white', alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    alignSelf: 'center', alignContent: 'center',
-                                                    shadowOffset: { width: 10, height: 10 },
-                                                    shadowColor: 'black',
-                                                    shadowOpacity: 1.0,
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                                    textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                    backgroundColor: stepNumber >= item ? "#00C569" : '#BEBEBE',
-                                                    width: 26, height: 26, borderRadius: 13
+                    {signUpError ?
+                        <Text
+                            style={{
+                                color: 'white',
+                                backgroundColor: '#DC3545',
+                                padding: 10, textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16,
+                                marginVertical: 10
+                            }}>
+                            {signUpError}
+                        </Text>
+                        : null}
 
-                                                }}
-                                            >
-                                                {item}
-                                            </Text>
-                                        </ShadowView>
-                                        {index < stepsArray.length - 1 && <View
-                                            style={{
-                                                height: 8,
-                                                flex: 1,
-                                                alignSelf: 'center',
-                                                backgroundColor: stepNumber - 1 >= item ? "#00C569" : '#BEBEBE',
-                                            }}>
-                                        </View>
-                                        }
-                                    </React.Fragment>
-                                )
-                            }
-                            )}
-                        </View>
-                    </View>
-
-                    {signUpError ? <Text style={{
-                        color: 'white',
-                        backgroundColor: '#DC3545',
-                        padding: 10, textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        fontSize: 16,
-                        marginVertical: 10
-                    }}>{signUpError}</Text> : null}
                     <View style={styles.stepsContainer}>
                         {successfullAlert && <View style={[styles.loginFailedContainer, { marginVertical: 10 }]}>
                             <Text
