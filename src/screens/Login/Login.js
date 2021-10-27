@@ -1,12 +1,11 @@
 import React from 'react'
-import { Text, StyleSheet, View, ActivityIndicator } from 'react-native'
+import { Text, View, ActivityIndicator } from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux'
-import { ScrollView } from 'react-native-gesture-handler';
-import { Button, Input, Label, InputGroup } from 'native-base';
+import { Button, Input } from 'native-base';
 
-import { deviceHeight, deviceWidth, validator } from '../../utils';
+import { validator } from '../../utils';
 import * as authActions from '../../redux/auth/actions'
 import * as profileActions from '../../redux/profile/actions';
 class Login extends React.Component {
