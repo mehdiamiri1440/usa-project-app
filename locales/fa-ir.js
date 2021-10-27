@@ -759,7 +759,7 @@ module.exports = {
     'titles.yourName': 'نام شما',
     'titles.yourFamilyName': 'نام‌خانوادگی شما',
 
-    "messages.signedUpUser": "لطفا شماره همراه خود را برای ورود یا ثبت‌ نام وارد نمایید .",
+    "messages.signedUpUser": "برای ورود یا ثبت نام ، لطفا شماره همراه خود را وارد کنید .",
     "messages.forgotPassword": "کلمه عبور خود را فراموش کرده ام",
     "messages.startToSignUp": "برای ثبت نام در باسکول بر روی دکمه زیر کلیک کنید",
     'messages.enterUserBasicInfo': 'ثبت مشخصات فردی شما',
