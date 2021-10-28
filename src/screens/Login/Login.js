@@ -141,7 +141,12 @@ class Login extends React.Component {
                         marginBottom: 0,
                         width: '93%',
                         backgroundColor: 'white',
-                        borderColor: validator.isMobileNumber(mobileNumber) ? '#00c569' : 'rgba(0, 0, 0, 0.15)',
+                        borderColor: (mobileNumberError ? '#D50000'
+                            : ((mobileNumber.length &&
+                                validator.isMobileNumber(mobileNumber))
+                                ? '#00C569'
+                                : 'rgba(0, 0, 0, 0.15)'
+                            )),
                         flexDirection: 'row',
                     }}
                     onChangeText={this.onMobileNumberSubmit}

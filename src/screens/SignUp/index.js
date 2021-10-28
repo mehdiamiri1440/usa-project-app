@@ -42,7 +42,7 @@ class SignUp extends React.Component {
             activityType: '',
             city: '',
             province: '',
-            stepNumber: 1,
+            stepNumber: 1
         }
     }
 
@@ -95,8 +95,28 @@ class SignUp extends React.Component {
         this.setState({ mobileNumber }, () => this.changeStep(2))
     };
 
-    setFullNameAndGender = (firstName, lastName, gender) => {
-        this.setState({ firstName, lastName, gender }, () => this.changeStep(4))
+    setFullNameAndGender = (
+        firstName,
+        lastName,
+        province,
+        provinceName,
+        city,
+        cityName,
+        activityType,
+        activityZone
+    ) => {
+        this.setState({
+            firstName,
+            lastName,
+            province,
+            provinceName,
+            cityName,
+            city,
+            activityType,
+            activityZone,
+            gender: 'man',
+            password: formatter.makeRandomString(8)
+        }, () => this.submitRegister())
     };
     setCityAndProvice = (city, province, provinceName, cityName) => {
         this.setState({ city, province, provinceName, cityName }, () => this.changeStep(5))
@@ -151,7 +171,7 @@ class SignUp extends React.Component {
             sex: gender,
             province: provinceName,
             city: cityName,
-            activity_type: activityType == 'buyer' ? '1' : '0',
+            activity_type: activityType,
             category_id: activityZone,
             verification_code: formatter.toLatinNumbers(verificationCode)
         };
@@ -241,7 +261,8 @@ class SignUp extends React.Component {
             })
         }).catch(err => {
             if (err && err.data)
-                this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+                return this.setState({ signUpError: Object.values(err.data.errors)[0][0] });
+            return this.setState({ signUpError: locales('labels.problemHappened') })
         });
     };
 
@@ -338,7 +359,10 @@ class SignUp extends React.Component {
                             fontSize: 16,
                         }}
                     >
-                        {locales('titles.enterToBuskool')}
+                        {stepNumber >= 3 ?
+                            locales('titles.welcomeToBuskool') :
+                            locales('titles.enterToBuskool')
+                        }
                     </Text>
 
                     {signUpError ?
@@ -358,7 +382,11 @@ class SignUp extends React.Component {
                     <View style={styles.stepsContainer}>
                         {successfullAlert && <View style={[styles.loginFailedContainer, { marginVertical: 10 }]}>
                             <Text
-                                style={styles.loginFailedText}
+                                style={[styles.loginFailedText,
+                                {
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }
+                                ]}
                             >
                                 {locales('titles.signUpDoneSuccessfully')}
                             </Text>
