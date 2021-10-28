@@ -1,16 +1,21 @@
 import React from 'react';
 import analytics from '@react-native-firebase/analytics';
 import {
-    Text, View, Image, ToastAndroid, Linking, Pressable
+    Text,
+    View,
+    Image,
+    ToastAndroid,
+    Linking,
+    Pressable
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Svg, { Path, G, Circle, Defs, Pattern, Use, Image as SvgImage } from "react-native-svg";
+import Svg,
+{ Path }
+    from "react-native-svg";
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
-import { Button } from 'native-base';
 import Clipboard from "@react-native-community/clipboard";
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../../../components/header';
 class ContactUs extends React.Component {
 
