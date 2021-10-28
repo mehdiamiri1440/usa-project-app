@@ -421,6 +421,7 @@ module.exports = {
     'titles.installIt': 'نصب کن',
     'titles.fastAndEasySale': 'فروش سریع و آسان تر',
     'titles.messanger': 'پیام ‌رسان',
+    'titles.messageToSupport': 'چت با پشتیبانی',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
     'titles.showAllComments': 'مشاهده همه نظرات',
