@@ -46,7 +46,15 @@ class Timer extends Component {
 
     render() {
         const { min, sec } = this.state;
-        let { substitutionText, timerStyle, isCountDownTimer, substitutionTextStyle, containerStyle, onSubstitution, inlineStyle = false } = this.props;
+        let {
+            substitutionText,
+            timerStyle,
+            isCountDownTimer,
+            substitutionTextStyle,
+            containerStyle,
+            onSubstitution,
+            inlineStyle = false
+        } = this.props;
         if (inlineStyle == true)
             return (
                 min === 0 && sec === 0 ? (
@@ -125,11 +133,10 @@ export default Timer;
 
 const styles = StyleSheet.create({
     forgotPassword: {
-        marginTop: 10,
         textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 18,
+        color: 'black',
+        fontSize: 14,
         padding: 10,
-        fontFamily: 'IRANSansWeb(FaNum)_Light'
+        fontFamily: 'IRANSansWeb(FaNum)_Medium'
     }
 })

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, AppState, Pressable, Linking } from 'react-native';
+import {
+    View, Text, Image, FlatList, StyleSheet,
+    Modal, ActivityIndicator, AppState,
+    Pressable, Linking
+} from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
@@ -56,13 +60,23 @@ class RequestsTab extends Component {
             screen_class: "buyAd_suggestion",
         });
 
-        this.props.fetchRelatedRequests();
+        this.props.fetchRelatedRequests().then(({ payload = {} }) => {
+            const {
+                golden_buyAds = [],
+                buyAds = []
+            } = payload;
+
+            this.setState({
+                relatedBuyAdRequestsList: buyAds,
+                goldenBuyAdsList: golden_buyAds
+            });
+        });
 
         AppState.addEventListener('change', this.handleAppStateChange)
     }
 
-
     componentDidUpdate(prevProps, prevState) {
+        console.log('in  requests updated')
         if (prevState.fromMyBuskool == false && this.props.route && prevProps.route &&
             this.props.route.params && prevProps.route.params &&
             (this.props.route.params.fromMyNuskool != prevProps.route.params.fromMyNuskool ||
@@ -1409,12 +1423,13 @@ class RequestsTab extends Component {
             >
 
                 {showMobileNumberWarnModal ?
-                    < Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        visible={showMobileNumberWarnModal}
+                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        onRequestClose={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        transparent
+                        animationType='fade'
+                    >
                         <Dialog
                             visible={showMobileNumberWarnModal}
                             onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
@@ -1488,16 +1503,17 @@ class RequestsTab extends Component {
                                 </Button>
                             </Dialog.Actions>
                         </Dialog>
-                    </Portal >
+                    </Modal >
                     : null}
 
                 {showGoldenModal ?
-                    < Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        visible={showGoldenModal}
+                        onDismiss={() => { this.setState({ showGoldenModal: false }) }}
+                        onRequestClose={() => { this.setState({ showGoldenModal: false }) }}
+                        transparent
+                        animationType='fade'
+                    >
                         <Dialog
                             visible={showGoldenModal}
                             onDismiss={() => { this.setState({ showGoldenModal: false }) }}
@@ -1576,16 +1592,17 @@ class RequestsTab extends Component {
                                 </Button>
                             </Dialog.Actions>
                         </Dialog>
-                    </Portal >
+                    </Modal >
                     : null}
 
                 {showDialog ?
-                    < Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        visible={showDialog}
+                        onDismiss={this.hideDialog}
+                        onRequestClose={this.hideDialog}
+                        transparent
+                        animationType='fade'
+                    >
                         <Dialog
                             visible={showDialog}
                             onDismiss={this.hideDialog}
@@ -1645,10 +1662,6 @@ class RequestsTab extends Component {
                                     </Text>
                                 </Button>
                             </View>
-
-
-
-
                             <Dialog.Actions style={{
                                 justifyContent: 'center',
                                 width: '100%',
@@ -1664,8 +1677,9 @@ class RequestsTab extends Component {
                                 </Button>
                             </Dialog.Actions>
                         </Dialog>
-                    </Portal >
+                    </Modal >
                     : null}
+
                 <FlatList
                     contentContainerStyle={{ backgroundColor: 'white' }}
                     onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
@@ -1765,6 +1779,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        elevation: 0,
         alignSelf: 'center',
         justifyContent: 'center',
     },

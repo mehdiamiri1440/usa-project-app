@@ -99,16 +99,17 @@ const BuyAdList = props => {
 
         <View
             style={{
-                padding: 20,
                 backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#FDFDFD' : '#FFFFFF',
                 width: '95%',
                 alignSelf: 'center',
+                overflow: 'hidden',
+                padding: 20,
                 borderRadius: 12,
                 marginVertical: 20,
                 borderColor: !!item.is_golden ? '#c7a84f' : '#DDD',
                 borderWidth: 0.8,
                 borderRightWidth: !!item.is_golden ? 12 : 1,
-                borderBottomWidth: item.is_golden ? 0.8 : 1
+                borderBottomWidth: item.is_golden ? 0.8 : 1,
             }}
             key={item.id}
         >
@@ -117,10 +118,9 @@ const BuyAdList = props => {
 
                 <View style={{
                     position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    marginTop: 13,
                     left: 0,
+                    bottom: 0,
+                    right: 0,
                     top: 0,
                     zIndex: 1
                 }}>
@@ -136,7 +136,7 @@ const BuyAdList = props => {
                         style={{
                             alignItems: 'center',
                             marginVertical: 5,
-                            right: -25,
+                            right: 15,
                             position: 'absolute',
                             flexDirection: 'row-reverse'
                         }}
@@ -159,74 +159,84 @@ const BuyAdList = props => {
                             {`${item.first_name} ${item.last_name}`}
                         </Text>
                     </View>
-                    <Text
+                    <View
                         style={{
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             position: 'absolute',
-                            top: 48,
-                            textAlign: 'center',
-                            left: deviceWidth * 0.29,
-                            fontSize: 20,
-                            color: '#7e7e7e'
-                        }}
-                    >
-                        {locales('labels.buyer')} <Text
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontWeight: '200',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                color: '#556083',
-                                marginHorizontal: 2
-                            }}
-                        >
-                            {` ${item.subcategory_name}`}
-                        </Text>
-                        {item.is_golden && active_pakage_type == 0 ?
-                            <Text> </Text>
-                            :
-                            item.name ? <>
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 20,
-                                        marginHorizontal: 2,
-                                        fontWeight: '200',
-                                        textAlign: 'center',
-                                        color: '#7e7e7e'
-                                    }}
-                                >
-                                    {locales('labels.fromType')}
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: '#556083',
-                                        fontSize: 20,
-                                        fontWeight: '200',
-                                        textAlign: 'center',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        marginHorizontal: 2
-                                    }}
-                                >
-                                    {` ${item.name} `}
-                                </Text>
-                            </> : null
-
-                        }
+                            left: deviceWidth * 0,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            bottom: 0,
+                            top: 0,
+                            right: 0,
+                        }}>
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlign: 'center',
-                                fontSize: 18,
-                                marginHorizontal: 2,
-                                fontWeight: '200',
-                                color: '#7e7e7e'
+                                textAlignVertical: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 20,
+                                top: -23,
+                                color: '#7e7e7e',
                             }}
                         >
-                            {locales('labels.is')}
-                        </Text>
-                    </Text>
+                            {locales('labels.buyer')} <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontWeight: '200',
+                                    fontSize: 20,
+                                    textAlign: 'center',
+                                    color: '#556083',
+                                    marginHorizontal: 2
+                                }}
+                            >
+                                {` ${item.subcategory_name} `}
+                            </Text>
+                            {item.is_golden && active_pakage_type == 0 ?
+                                <Text> </Text>
+                                :
+                                item.name ? <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontSize: 20,
+                                            marginHorizontal: 2,
+                                            fontWeight: '200',
+                                            textAlign: 'center',
+                                            color: '#7e7e7e'
+                                        }}
+                                    >
+                                        {locales('labels.fromType')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: '#556083',
+                                            fontSize: 20,
+                                            fontWeight: '200',
+                                            textAlign: 'center',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginHorizontal: 2
+                                        }}
+                                    >
+                                        {` ${item.name} `}
+                                    </Text>
+                                </> : null
 
+                            }
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    textAlign: 'center',
+                                    fontSize: 18,
+                                    marginHorizontal: 2,
+                                    fontWeight: '200',
+                                    color: '#7e7e7e'
+                                }}
+                            >
+                                {locales('labels.is')}
+                            </Text>
+                        </Text>
+
+                    </View>
                 </View>
 
                 : null}

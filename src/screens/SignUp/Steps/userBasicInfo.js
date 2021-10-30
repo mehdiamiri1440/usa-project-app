@@ -1,52 +1,130 @@
-import React from 'react'
-import { Text, StyleSheet, View, Pressable } from 'react-native'
-import { Button, Input, Item, Label, Radio } from 'native-base';
-import { connect } from 'react-redux'
-import { deviceHeight, deviceWidth } from '../../../utils/index'
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { validator } from '../../../utils';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import React from 'react';
+import {
+    Text,
+    StyleSheet,
+    View,
+    ActivityIndicator,
+    TouchableOpacity,
+    ScrollView,
+    Image
+} from 'react-native';
+import {
+    Button,
+    Input,
+    Item,
+    Label,
+    Radio
+} from 'native-base';
+import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
+import { connect } from 'react-redux';
+import RNPickerSelect from 'react-native-picker-select';
+
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+
+import { deviceWidth } from '../../../utils/index';
+import { validator } from '../../../utils';
 import * as authActions from '../../../redux/auth/actions'
-import ENUMS from '../../../enums';
-
-
+import * as locationActions from '../../../redux/locations/actions';
 class UserBasicInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             firstNameError: '',
             lastNameError: '',
-            genderError: '',
             firstName: '',
             lastName: '',
-            gender: ''
+            activityType: null,
+            activityZoneError: '',
+            activityTypeError: '',
+            selectedCategoryId: null,
+            province: null,
+            provinceError: '',
+            city: null,
+            cityError: ''
         }
     }
-    lastNameRef = React.createRef();
-    firstNameRef = React.createRef();
 
     componentDidMount() {
+        this.props.fetchAllActivityZones();
+        this.props.fetchAllProvinces();
         if (!!this.props.gender && !!this.props.firstName && !!this.props.lastName) {
             this.setState({ gender: this.props.gender, lastName: this.props.lastName, firstName: this.props.firstName });
         }
     }
 
     onSubmit = () => {
+        const {
+            allProvincesObject = {},
+            allCitiesObject = {},
+        } = this.props;
+
+        const {
+            provinces = []
+        } = allProvincesObject;
+
+        const {
+            cities = []
+        } = allCitiesObject;
 
         let {
-            gender, firstName, lastName
+            firstName,
+            lastName,
+            activityType,
+            province,
+            city,
+            selectedCategoryId,
         } = this.state;
 
-        let isGenderValid, isFirstNameValid, isLastNameValid, firstNameError, lastNameError, genderError;
+        let isFirstNameValid,
+            isLastNameValid,
+            isActivityTypeValid,
+            isProvinceValid,
+            isActivityZoneValid,
+            isCityValid,
+            firstNameError,
+            lastNameError,
+            provinceError,
+            cityError,
+            activityZoneError,
+            activityTypeError;
 
-        if (!gender) {
-            genderError = locales('errors.fieldNeeded', { fieldName: locales('labels.gender') })
-            isGenderValid = false;
+        if (!selectedCategoryId) {
+            activityZoneError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityZone') });
+            isActivityZoneValid = false;
         }
         else {
-            genderError = '';
-            isGenderValid = true;
+            activityZoneError = ''
+            isActivityZoneValid = true;
+        }
+
+        if (!province) {
+            provinceError = locales('errors.fieldNeeded', { fieldName: locales('labels.province') })
+            isProvinceValid = false;
+        }
+
+        else {
+            provinceError = '';
+            isProvinceValid = true;
+        }
+
+        if (!city) {
+            cityError = locales('errors.fieldNeeded', { fieldName: locales('labels.city') })
+            isCityValid = false;
+        }
+
+        else {
+            cityError = '';
+            isCityValid = true;
+        }
+
+        if (activityType == null) {
+            activityTypeError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityType') })
+            isActivityTypeValid = false;
+        }
+
+        else {
+            activityTypeError = '';
+            isActivityTypeValid = true;
         }
 
         if (!firstName) {
@@ -76,137 +154,159 @@ class UserBasicInfo extends React.Component {
             isLastNameValid = true;
         }
 
-        if (isLastNameValid && isFirstNameValid && isGenderValid) {
-            this.props.setFullNameAndGender(this.state.firstName, this.state.lastName, this.state.gender);
+        if (
+            isLastNameValid &&
+            isFirstNameValid &&
+            isActivityTypeValid &&
+            isActivityZoneValid &&
+            isProvinceValid &&
+            isCityValid
+        ) {
+            const provinceName = provinces.find(item => item.id == province).province_name;
+
+            const cityName = allCitiesObject &&
+                Object.entries(allCitiesObject).length &&
+                cities
+                ? cities.find(item => item.id == city).city_name : '';
+
+            this.props.setFullNameAndGender(
+                firstName,
+                lastName,
+                province,
+                provinceName,
+                city,
+                cityName,
+                activityType,
+                selectedCategoryId
+            );
         }
         else {
-            this.setState({ firstNameError, lastNameError, genderError })
+            this.setState({
+                firstNameError,
+                lastNameError,
+                provinceError,
+                cityError,
+                activityTypeError,
+                activityZoneError
+            });
         }
+    };
 
-    }
-
-    onFirstNameSubmit = firstName => {
+    onFirstNameChanged = firstName => {
         this.setState(() => ({
             firstName,
-            firstNameError: ''
+            firstNameError: !firstName || validator.isPersianName(firstName) ?
+                ''
+                : locales('errors.invalidFormat', { fieldName: locales('titles.firstName') })
         }));
     };
 
-    onLastNameRef = lastName => {
+    onLastNameChanged = lastName => {
         this.setState(() => ({
             lastName,
-            lastNameError: ''
+            lastNameError: !lastName || validator.isPersianName(lastName) ?
+                ''
+                : locales('errors.invalidFormat', { fieldName: locales('titles.lastName') })
         }));
+    };
+
+    setProvince = value => {
+        this.setState({ disableCity: true }, _ => {
+            let { provinces = [] } = this.props.allProvincesObject;
+            if (provinces.length) {
+                this.setState({
+                    province: value,
+                    provinceError: '',
+                    city: '',
+                    cityError: ''
+                });
+                this.props.fetchAllProvinces(provinces.some(item => item.id == value) ?
+                    provinces.find(item => item.id == value).id :
+                    undefined)
+                    .then(_ => {
+                        this.setState({ disableCity: false })
+                    })
+            };
+        });
+    };
+
+    setCity = value => {
+        if (!!value)
+            this.setState({ city: value, cityError: '' })
+    };
+
+    onActivityZoneSubmit = value => {
+        this.setState({ selectedCategoryId: value, activityZoneError: '' })
     };
 
     render() {
-        let { message, loading, error } = this.props
-        let { lastName, firstName, firstNameError, lastNameError, genderError } = this.state
+        let {
+            loading,
+            allProvincesObject = {},
+            fetchCitiesLoading,
+            allCitiesObject = {},
+            activityZoneLoading,
+            activityZones,
+            submitRegisterLoading
+        } = this.props
+
+        let {
+            lastName,
+            firstName,
+            firstNameError,
+            lastNameError,
+            city,
+            province,
+            provinceError,
+            cityError,
+            selectedCategoryId,
+            activityType,
+            activityTypeError,
+            activityZoneError,
+        } = this.state
+
+
+        let { provinces = [] } = allProvincesObject;
+
+        let { cities = [] } = allCitiesObject;
+
+        provinces = provinces.map(item => ({ ...item, value: item.province_name }));
+
+        if (allCitiesObject && Object.entries(allCitiesObject).length && cities) {
+            cities = cities.map(item => ({ ...item, value: item.city_name }))
+        };
+
         return (
-            <View >
-                <Text style={styles.userText}>
-                    {locales('messages.enterUserBasicInfo')}
-                </Text>
-                <View style={[styles.textInputPadding, {
-                    marginTop: -20,
-                    alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
-                }]}>
-                    <Pressable
-                        android_ripple={{
-                            color: '#ededed'
-                        }}
+            <ScrollView
+                keyboardDismissMode='none'
+                keyboardShouldPersistTaps='handled'
+            >
+                <View
+                    style={{ marginTop: 10 }}
+                >
+                    <Label
                         style={{
-                            width: deviceWidth * 0.3,
-                            borderWidth: 1,
-                            borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'woman' ? '#00C569' : '#BDC4CC'),
-                            paddingHorizontal: 20,
-                            paddingVertical: 10,
-                            borderRadius: 5,
-                            flexDirection: 'row-reverse',
-                            backgroundColor: '#fff'
+                            color: 'rgba(0, 0, 0, 0.7)',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            padding: 2,
+                            paddingHorizontal: 10
                         }}
-                        onPress={() => this.setState({ gender: 'woman', genderError: '' })}
                     >
-                        <Radio
-                            onPress={() => this.setState({ gender: 'woman', genderError: '' })}
-                            selected={this.state.gender === 'woman'}
-                            color={"#BEBEBE"}
-                            style={{ marginHorizontal: 5 }}
-                            selectedColor={"#00C569"}
-                        />
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <FontAwesome5
-                                name="female"
-                                style={{
-                                    fontSize: 25,
-                                    alignSelf: "center",
-                                    color: '#777'
-                                }}
-                            />
-                            <Text style={{
-                                marginHorizontal: 5, fontSize: 14,
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            }}>{locales('labels.woman')}</Text>
-                        </View>
-                    </Pressable>
-                    <Pressable
-                        android_ripple={{
-                            color: '#ededed'
-                        }}
-                        onPress={() => this.setState({ gender: 'man', genderError: '' })}
-                        style={{
-                            borderColor: this.state.genderError ? '#D50000' : (this.state.gender == 'man' ? '#00C569' : '#BDC4CC'),
-                            borderWidth: 1,
-                            width: deviceWidth * 0.3,
-                            paddingHorizontal: 20,
-                            paddingVertical: 10,
-                            borderRadius: 5,
-                            flexDirection: 'row-reverse',
-                            backgroundColor: '#fff'
-
-                        }}>
-                        <Radio
-                            onPress={() => this.setState({ gender: 'man', genderError: '' })}
-                            selected={this.state.gender === 'man'}
-                            color={"#BEBEBE"}
-                            style={{ marginHorizontal: 10 }}
-                            selectedColor={"#00C569"}
-                        />
-                        <View style={{ flexDirection: 'row-reverse' }}>
-                            <FontAwesome5
-                                name="male"
-                                style={{
-                                    fontSize: 25,
-                                    alignSelf: "center",
-                                    color: '#777'
-                                }}
-                            />
-                            <Text style={{
-                                marginHorizontal: 5, fontSize: 14,
-                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            }}>{locales('labels.man')}</Text>
-                        </View>
-                    </Pressable>
-                </View>
-                {!!genderError && <Label
-                    style={{
-                        fontSize: 14, color: '#D81A1A', textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        marginVertical: -10, marginHorizontal: 20
-                    }}>
-                    {genderError}
-                </Label>}
-
-                <View style={[styles.labelInputPadding]}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterFirstName')}
+                        {locales('titles.firstName')}
                     </Label>
-                    <Item regular
-
+                    <Item
+                        regular
                         style={{
-                            borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
+                            borderColor: (firstNameError ? '#D50000'
+                                : ((firstName.length &&
+                                    validator.isPersianName(firstName))
+                                    ? '#00C569'
+                                    : 'rgba(0, 0, 0, 0.15)'
+                                )),
                             borderRadius: 5,
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            width: deviceWidth * 0.95,
+                            alignSelf: 'center'
                         }}>
                         <Input
                             autoCapitalize='none'
@@ -222,41 +322,54 @@ class UserBasicInfo extends React.Component {
                                 direction: 'rtl',
                                 textAlign: 'right'
                             }}
-                            onChangeText={this.onFirstNameSubmit}
+                            onChangeText={this.onFirstNameChanged}
                             value={firstName}
                             placeholderTextColor="#bebebe"
-                            placeholder={locales('titles.firstName')}
-                            ref={this.firstNameRef}
+                            placeholder={locales('titles.enterFirstName')}
 
                         />
                     </Item>
-                    {!!firstNameError && <Label style={{
-                        fontSize: 14, textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        color: '#D81A1A'
-                    }}>{firstNameError}</Label>}
-                </View>
-                {/* <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={firstName.length ? '#00C569' : '#a8a8a8'}
-                            onChangeText={this.onFirstNameSubmit}
-                            ref={this.firstNameRef}
-                            isRtl={true}
-                            error={error && message.length && message[0]}
-                            labelTextStyle={{ paddingTop: 5 }}
-                            label={locales('titles.firstName')}
-                        />
-                    </View> */}
-
-                <View style={[styles.labelInputPadding, { marginTop: 10 }]}>
-                    <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
-                        {locales('titles.enterLastName')}
+                    <Label
+                        style={{
+                            fontSize: 14,
+                            height: 20,
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            color: '#D81A1A'
+                        }}>
+                        {firstNameError}
                     </Label>
-                    <Item regular style={{
-                        borderRadius: 5,
-                        overflow: 'hidden',
-                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')), borderRadius: 5,
-                    }}>
+                </View>
+                <View
+                    style={{
+                        marginTop: 5
+                    }}
+                >
+                    <Label
+                        style={{
+                            color: 'rgba(0, 0, 0, 0.7)',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            padding: 5,
+                            left: -5
+                        }}
+                    >
+                        {locales('titles.lastName')}
+                    </Label>
+                    <Item
+                        regular
+                        style={{
+                            borderRadius: 5,
+                            overflow: 'hidden',
+                            borderColor: (lastNameError ? '#D50000' :
+                                ((lastName.length &&
+                                    validator.isPersianName(lastName)) ?
+                                    '#00C569'
+                                    : 'rgba(0, 0, 0, 0.15)')),
+                            borderRadius: 5,
+                            width: deviceWidth * 0.95,
+                            alignSelf: 'center'
+                        }}
+                    >
                         <Input
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -271,89 +384,497 @@ class UserBasicInfo extends React.Component {
                                 direction: 'rtl',
                                 textAlign: 'right'
                             }}
-                            onChangeText={this.onLastNameRef}
+                            onChangeText={this.onLastNameChanged}
                             value={lastName}
-                            placeholder={locales('titles.lastName')}
-                            ref={this.lastNameRef}
-
+                            placeholderTextColor='#bebebe'
+                            placeholder={locales('titles.enterLastName')}
                         />
                     </Item>
-                    {!!lastNameError && <Label style={{
-                        fontSize: 14, textAlign: 'center',
-                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                        color: '#D81A1A'
-                    }}>{lastNameError}</Label>}
-                </View>
-                {/* <View style={styles.textInputPadding}>
-                        <OutlinedTextField
-                            baseColor={lastName.length ? '#00C569' : '#a8a8a8'}
-                            onChangeText={this.onLastNameRef}
-                            ref={this.lastNameRef}
-                            isRtl={true}
-                            error={error && message.length && message[0]}
-                            labelTextStyle={{ paddingTop: 5 }}
-                            label={locales('titles.lastName')}
-                        />
-                    </View> */}
-                <View style={{ flexDirection: 'row', width: '100%', paddingHorizontal: 10, justifyContent: 'space-between', marginTop: 5 }}>
-                    <Button
-                        onPress={() => this.onSubmit()}
-                        style={!firstName.length || !this.state.gender || !lastName.length ? styles.disableLoginButton : styles.loginButton}
-                        rounded
-                    >
-                        <Text style={styles.buttonText}>{locales('titles.submitInformation')}</Text>
-                    </Button>
-                    <Button
-                        onPress={() => this.props.changeStep(2)}
-                        style={styles.backButtonContainer}
-                        rounded
-                    >
-                        <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                        <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                    </Button>
+                    <Label
+                        style={{
+                            height: 20,
+                            fontSize: 14,
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            color: '#D81A1A'
+                        }}>
+                        {lastNameError}
+                    </Label>
                 </View>
 
-            </View>
+                <View
+                    style={{
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'space-around',
+                        marginTop: 5,
+                        width: deviceWidth,
+                    }}
+                >
+
+                    <View
+                        style={{
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}>
+                            <Label
+                                style={
+                                    {
+                                        color: 'black',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    }
+                                }
+                            >
+                                {locales('labels.province')}
+                            </Label>
+                            {!!loading ?
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#00C569"
+                                    style={{
+                                        position: 'relative',
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 25
+                                    }}
+                                />
+                                : null
+                            }
+                        </View>
+                        <Item
+                            regular
+                            style={{
+
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
+                                borderColor:
+                                    province ?
+                                        '#00C569'
+                                        : provinceError
+                                            ? '#D50000'
+                                            : 'rgba(0, 0, 0, 0.15)'
+                            }}
+                        >
+                            <RNPickerSelect
+                                Icon={() => <FontAwesome5
+                                    name='angle-down'
+                                    size={25}
+                                    color='#bebebe'
+                                />
+                                }
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={this.setProvince}
+                                style={smallPickersStyle}
+                                disabled={loading}
+                                value={province}
+                                placeholder={{
+                                    label: locales('labels.selectProvince'),
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}
+                                items={[...provinces.map(item => ({
+                                    label: item.province_name,
+                                    value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        <Label
+                            style={
+                                {
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    fontSize: 14,
+                                    color: '#D81A1A',
+                                    height: 20,
+                                    textAlign: 'center',
+                                }
+                            }
+                        >
+                            {provinceError}
+                        </Label>
+                    </View>
+
+                    <View
+                        style={{
+                        }}
+                    >
+                        <View style={{
+                            flexDirection: 'row-reverse'
+                        }}>
+                            <Label
+                                style={{
+                                    color: 'black',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                }}
+                            >
+                                {locales('labels.city')}
+                            </Label>
+                            {(!!fetchCitiesLoading) ?
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#00C569"
+                                    style={{
+                                        position: 'relative',
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 25
+                                    }}
+                                />
+                                : null}
+                        </View>
+                        <Item
+                            regular
+                            style={{
+                                borderRadius: 5,
+                                alignSelf: 'center',
+                                backgroundColor: '#fff',
+                                overflow: 'hidden',
+                                borderColor:
+                                    city ?
+                                        '#00C569' :
+                                        cityError ?
+                                            '#D50000' :
+                                            'rgba(0, 0, 0, 0.15)'
+                            }}
+                        >
+                            <RNPickerSelect
+                                Icon={() => <FontAwesome5
+                                    name='angle-down'
+                                    size={25}
+                                    color='#bebebe'
+                                />
+                                }
+                                useNativeAndroidPickerStyle={false}
+                                onValueChange={this.setCity}
+                                style={smallPickersStyle}
+                                disabled={
+                                    fetchCitiesLoading ||
+                                    loading ||
+                                    this.state.disableCity
+                                }
+                                value={city}
+                                placeholder={{
+                                    label: locales('labels.selectCity'),
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+
+                                }}
+                                items={[...cities.map(item => ({
+                                    label: item.city_name, value: item.id
+                                }))]}
+                            />
+                        </Item>
+                        <Label
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                fontSize: 14,
+                                color: '#D81A1A',
+                                textAlign: 'center',
+                                height: 20,
+                            }}>
+                            {cityError}
+                        </Label>
+                    </View>
+
+                </View>
+
+                <View
+                    style={{
+                        marginVertical: 5
+                    }}
+                >
+                    <Text
+                        style={
+                            {
+                                color: '#000000',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                paddingVertical: 5,
+                                left: -10,
+                            }
+                        }
+                    >
+                        {locales('labels.activityZone')}
+                    </Text>
+                    {activityZoneLoading ?
+                        <ActivityIndicator
+                            size="small"
+                            color="#00C569"
+                            style={{
+                                position: 'absolute',
+                                right: '19%',
+                                bottom: '51%',
+                                width: 50,
+                                height: 50,
+                                borderRadius: 25
+                            }}
+                        />
+                        : null
+                    }
+                    <Item
+                        regular
+                        style={{
+                            width: deviceWidth * 0.95,
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            borderColor:
+                                selectedCategoryId ?
+                                    '#00C569' :
+                                    activityZoneError ?
+                                        '#D50000' :
+                                        'rgba(0, 0, 0, 0.15)'
+                        }}
+                    >
+                        <RNPickerSelect
+                            Icon={() => <FontAwesome5
+                                name='angle-down'
+                                size={25}
+                                color='#bebebe'
+                            />
+                            }
+                            useNativeAndroidPickerStyle={false}
+                            onValueChange={this.onActivityZoneSubmit}
+                            style={styles}
+                            disabled={activityZoneLoading}
+                            value={selectedCategoryId}
+                            placeholder={{
+                                label: locales('labels.selectActivityZone'),
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            }}
+                            items={[...activityZones.map(item => ({
+                                label: item.category_name, value: item.id
+                            }))]}
+                        />
+                    </Item>
+                    <Label
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontSize: 14,
+                            height: 20,
+                            color: '#D81A1A',
+                            textAlign: 'center',
+                        }}>
+                        {activityZoneError}
+                    </Label>
+                </View>
+
+                <View
+                    style={{
+                        marginTop: 20,
+                        borderWidth: 1,
+                        borderColor: activityType == 0 || activityType == 1
+                            ? '#00C569'
+                            : activityTypeError
+                                ? '#D50000'
+                                : 'rgba(0, 0, 0, 0.15)',
+                        borderRadius: 8,
+                        height: 140,
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                        width: deviceWidth * 0.95,
+                        alignSelf: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            top: -13,
+                            backgroundColor: 'white',
+                            textAlign: 'center',
+                            position: 'absolute',
+                            width: '25%',
+                            right: 20,
+                            paddingHorizontal: 10,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 14,
+                            alignSelf: 'flex-end'
+                        }}
+                    >
+                        {locales('labels.activityType')}
+                    </Text>
+
+                    <View
+                        style={{
+                            paddingHorizontal: 20
+                        }}
+                    >
+
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => this.setState({
+                                activityType: 0,
+                                activityTypeError: ''
+                            })}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Radio
+                                onPress={() => this.setState({
+                                    activityType: 0,
+                                    activityTypeError: ''
+                                })}
+                                selected={activityType === 0}
+                                color={"#BEBEBE"}
+                                // style={{ marginHorizontal: 10 }}
+                                selectedColor="rgba(60, 193, 59, 1)"
+                            />
+                            <Svg
+                                style={{
+                                    marginHorizontal: 5,
+                                    bottom: 5
+                                }}
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24.011"
+                                height="29.612"
+                                viewBox="0 0 24.011 29.612"
+                            >
+                                <Path
+                                    fill='#000000'
+                                    d="M21.639 19.053l-5.225-1.513a1.421 1.421 0 01-1.021-1.358V14.9a.462.462 0 00-.027-.148 5.04 5.04 0 001.716-3.789V8.7h3.737V7.409h-3.737V5.152a5.052 5.052 0 10-10.1 0v2.257H3.17V8.7h3.81v2.257a5.04 5.04 0 001.676 3.754.462.462 0 00-.038.185v1.284A1.421 1.421 0 017.6 17.542l-5.23 1.511A3.3 3.3 0 000 22.208v6.262a.462.462 0 00.924 0v-6.262a2.372 2.372 0 011.7-2.269l1.864-.539v9.615a.693.693 0 001.386 0V19.3a.689.689 0 00-.059-.277l1.774-.514v2.125a2.2 2.2 0 002.233 2.163h4.343a2.2 2.2 0 002.235-2.166V18.5l1.81.524a.692.692 0 00-.022.171v9.827a.693.693 0 001.386 0v-9.6l1.808.523a2.372 2.372 0 011.7 2.268v6.261a.462.462 0 10.924 0v-6.266a3.3 3.3 0 00-2.367-3.155zM7.9 5.152a4.128 4.128 0 118.255 0v2.257H7.9zm0 5.81V8.7h8.255v2.257a4.128 4.128 0 11-8.255 0zm6.262 10.9H9.823a1.276 1.276 0 01-1.309-1.239v-2.508a2.351 2.351 0 001.028-1.934v-.832a5.036 5.036 0 004.927.03v.8a2.351 2.351 0 001.006 1.92v2.527a1.277 1.277 0 01-1.308 1.245z"
+                                    data-name="Path 11"
+                                    transform="translate(0 -.1)"
+                                ></Path>
+                            </Svg>
+                            <Text
+                                style={{
+                                    marginHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    color: '#000000'
+                                }}
+                            >
+                                {locales('labels.seller')}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => this.setState({
+                                activityType: 1,
+                                activityTypeError: ''
+                            })}
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                left: 5,
+                                marginTop: 20
+                            }}
+                        >
+                            <Radio
+                                onPress={() => this.setState({
+                                    activityType: 1,
+                                    activityTypeError: ''
+                                })}
+                                selected={activityType === 1}
+                                color={"#BEBEBE"}
+                                // style={{ marginHorizontal: 10 }}
+                                selectedColor="rgba(60, 193, 59, 1)"
+                            />
+                            <Svg
+                                style={{
+                                    marginHorizontal: 5,
+                                    bottom: 5,
+                                }}
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="25.404"
+                                height="35.49"
+                                viewBox="0 0 25.404 35.49"
+                            >
+                                <Path
+                                    fill='#000000'
+                                    d="M22.9 18.2l-5.528-1.6a1.476 1.476 0 01-.286-.118.483.483 0 00-.232-.153 1.5 1.5 0 01-.562-1.167V13.62a5.333 5.333 0 001.788-3.985v-4.19a5.345 5.345 0 10-10.69 0v4.19a5.332 5.332 0 001.734 3.936v1.587A1.5 1.5 0 018.039 16.6l-5.53 1.6A3.492 3.492 0 000 21.536v6.625a.489.489 0 10.978 0v-6.625a2.51 2.51 0 011.8-2.4l2.053-.593a.481.481 0 00.038.046L7.5 21.217a2 2 0 002.583.216l.923-.657a1.76 1.76 0 00.652 1.047l-2.065 9.966a.763.763 0 00.184.654l2.068 2.747.045.052a1.188 1.188 0 001.679 0l.024-.024 2.092-2.779a.767.767 0 00.179-.66L13.8 21.822a1.76 1.76 0 00.651-1.046l.923.657a2 2 0 002.583-.216l2.66-2.66 2 .58a2.51 2.51 0 011.8 2.4v6.625a.489.489 0 10.978 0v-6.626A3.492 3.492 0 0022.9 18.2zM14.525 1.478l-.044-.034.054.024zm-6.16 8.159V7.049q.27.025.541.025a5.711 5.711 0 004.032-1.662L14.4 3.945a2.222 2.222 0 011.153.676 3.456 3.456 0 001.541.894v4.12a4.367 4.367 0 11-8.735 0zm4.368 5.345a5.311 5.311 0 002.579-.666v.844a2.475 2.475 0 00.6 1.6l-2.762 1.964a1.7 1.7 0 00-.841 0l-2.79-1.986a2.474 2.474 0 00.577-1.58v-.88a5.31 5.31 0 002.634.7zm-3.219 5.654a1.027 1.027 0 01-1.326-.111L5.9 18.234l2.414-.7a2.444 2.444 0 00.414-.163l2.672 1.907c-.011.013-.022.023-.032.036zm5.372 11.244l-2.027 2.692a.209.209 0 01-.259 0l-2.027-2.692 2.006-9.693c.05 0 .1.008.151.008a.972.972 0 00.151-.008zm2.385-11.355a1.027 1.027 0 01-1.325.11l-1.858-1.322c-.01-.013-.022-.023-.032-.036l2.656-1.89a2.444 2.444 0 00.382.147l2.461.712z"
+                                    data-name="Path 7"
+                                    transform="translate(0 -.1)"
+                                ></Path>
+                            </Svg>
+                            <Text
+                                style={{
+                                    marginHorizontal: 5,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    color: '#000000'
+                                }}
+                            >
+                                {locales('labels.buyer')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <Label
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                        fontSize: 14,
+                        height: 20,
+                        color: '#D81A1A',
+                        textAlign: 'center',
+                    }}>
+                    {activityTypeError}
+                </Label>
+                <View style={{
+                    paddingHorizontal: 10,
+                    justifyContent: 'space-between',
+                    marginTop: 5
+                }}
+                >
+                    <Button
+                        onPress={this.onSubmit}
+                        style={[firstNameError ||
+                            lastNameError ||
+                            activityTypeError ||
+                            activityZoneError ||
+                            provinceError ||
+                            cityError ||
+                            !firstName ||
+                            !lastName ||
+                            !province ||
+                            !city ||
+                            activityType == null ||
+                            !selectedCategoryId
+                            ?
+                            styles.disableLoginButton :
+                            styles.loginButton,
+                        {
+                            width: deviceWidth * 0.95,
+                            elevation: 0
+                        }
+                        ]
+                        }
+                        rounded
+                    >
+                        <Text
+                            style={styles.buttonText}
+                        >
+                            {locales('titles.register')}
+                        </Text>
+                        <ActivityIndicator
+                            animating={submitRegisterLoading}
+                            size={20}
+                            style={{
+                                position: 'absolute',
+                                left: '37%'
+                            }}
+                            color='white'
+                        />
+                    </Button>
+                </View>
+            </ScrollView >
         )
-    }
-}
+    };
+
+};
+
 const styles = StyleSheet.create({
-    backButtonText: {
-        color: '#7E7E7E',
-        width: '60%',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
-        textAlign: 'center'
-    },
-    backButtonContainer: {
-        textAlign: 'center',
-        borderRadius: 5,
-        margin: 10,
-        width: deviceWidth * 0.4,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        justifyContent: 'center'
-    },
-    loginFailedContainer: {
-        backgroundColor: '#D4EDDA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#155724'
-    },
     buttonText: {
         color: 'white',
         width: '100%',
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
-    },
-    labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -377,66 +898,112 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center'
     },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        marginTop: 10,
-        textAlign: 'center',
-        color: '#7E7E7E',
+    inputIOS: {
         fontSize: 16,
-        padding: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#bebebe',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30,
     },
-    enterText: {
-        marginTop: 10,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#00C569',
-        fontSize: 20,
-        padding: 10,
+    inputAndroid: {
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.05,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        paddingVertical: 8,
+        height: 50,
+        color: 'black',
+        width: deviceWidth * 0.98,
     },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
-    textInputPadding: {
-        padding: 20,
-    },
-    userText: {
-        flexWrap: 'wrap',
-        fontFamily: 'IRANSansWeb(FaNum)_Light',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#7E7E7E'
-    },
-    labelInputPadding: {
-        paddingVertical: 5,
-        paddingHorizontal: 20
+    iconContainer: {
+        left: 10,
+        top: 13,
     }
 });
-const mapStateToProps = state => {
-    return {
-        loading: state.authReducer.checkAlreadySignedUpMobileNumberLoading,
-        error: state.authReducer.checkAlreadySignedUpMobileNumberError,
-        failed: state.authReducer.checkAlreadySignedUpMobileNumberFailed,
-        message: state.authReducer.checkAlreadySignedUpMobileNumberMessage,
+
+const smallPickersStyle = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#bebebe',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30,
+    },
+    inputAndroid: {
+        fontSize: 13,
+        paddingHorizontal: deviceWidth * 0.02,
+        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+        paddingVertical: 8,
+        height: 50,
+        color: 'black',
+        width: deviceWidth * 0.45,
+    },
+    iconContainer: {
+        left: 10,
+        top: 13,
     }
-}
+});
+
+const mapStateToProps = ({
+    locationsReducer,
+    authReducer
+}) => {
+
+    const {
+        fetchAllProvincesLoading,
+        fetchAllProvincesError,
+        fetchAllProvincesFailed,
+        fetchAllProvincesMessage,
+        allProvincesObject,
+        fetchAllCitiesLoading,
+        fetchAllCitiesError,
+        fetchAllCitiesFailed,
+        fetchAllCitiesMessage,
+        allCitiesObject,
+    } = locationsReducer;
+
+    const {
+        fetchAllActivityZonesLoading,
+        fetchAllActivityZonesError,
+        fetchAllActivityZonesFailed,
+        fetchAllActivityZonesMessage,
+        activityZones,
+        submitRegisterLoading,
+    } = authReducer;
+
+    return {
+        loading: fetchAllProvincesLoading,
+        error: fetchAllProvincesError,
+        failed: fetchAllProvincesFailed,
+        message: fetchAllProvincesMessage,
+        allProvincesObject: allProvincesObject,
+        fetchCitiesLoading: fetchAllCitiesLoading,
+        fetchCitiesError: fetchAllCitiesError,
+        fetchCitiesFailed: fetchAllCitiesFailed,
+        fetchCitiesMessage: fetchAllCitiesMessage,
+        allCitiesObject: allCitiesObject,
+
+        activityZoneLoading: fetchAllActivityZonesLoading,
+        activityZoneError: fetchAllActivityZonesError,
+        activityZoneFail: fetchAllActivityZonesFailed,
+        activityZoneMessage: fetchAllActivityZonesMessage,
+        activityZones,
+
+        submitRegisterLoading
+    }
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkAlreadySingedUpMobileNumber: (mobileNumber) => dispatch(authActions.checkAlreadySingedUpMobileNumber(mobileNumber))
+        fetchAllProvinces: (provinceId) => dispatch(locationActions.fetchAllProvinces(provinceId, false)),
+        fetchAllCities: () => dispatch(locationActions.fetchAllCities()),
+        fetchAllActivityZones: () => dispatch(authActions.fetchAllActivityZones()),
     }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(UserBasicInfo)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserBasicInfo);
