@@ -88,7 +88,11 @@ class ExtraProductCapacity extends React.Component {
             productCount,
         } = this.state;
         return (
-            <>
+            <View
+                style={{
+                    flex: 1
+                }}
+            >
 
                 <Header
                     title={locales('titles.extraProduct')}
@@ -106,15 +110,9 @@ class ExtraProductCapacity extends React.Component {
                             }
                         />
                     }
-                    style={{
-                        paddingVertical: 30,
-                    }}
                 >
 
-                    <View style={{
-                        paddingBottom: 60
-
-                    }}>
+                    <View>
 
                         <Card transparent>
                             <View style={{
@@ -368,8 +366,8 @@ class ExtraProductCapacity extends React.Component {
                         <PromoteRegistration isUsedAsComponent={true} showBothPackages={false} {...this.props} />
                     </View>
                 </ScrollView>
-                <CreditCardPayment />
-            </>
+                {/* <CreditCardPayment /> */}
+            </View>
         )
     }
 }

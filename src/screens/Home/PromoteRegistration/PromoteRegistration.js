@@ -33,7 +33,7 @@ class PromoteRegistration extends React.Component {
         super(props)
         this.state = {
             visibility: false,
-            paymentType: 1,
+            paymentType: 3,
             activeTab: 1,
             packageVisibility: false,
             elevatorVisibility: false,
@@ -62,7 +62,7 @@ class PromoteRegistration extends React.Component {
             id
         } = user_info;
 
-        if (!!userProfile && !!user_info)
+        if (!!userProfile && !!user_info && !!id)
             return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
                 if (supported) {
                     Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
