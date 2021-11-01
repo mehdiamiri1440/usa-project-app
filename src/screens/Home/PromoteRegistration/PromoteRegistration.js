@@ -2,11 +2,13 @@ import React, { createRef } from 'react';
 import {
     Text, View, Modal, Pressable, ScrollView,
     StyleSheet, Linking, RefreshControl,
-    TouchableOpacity
+    TouchableOpacity,
+    LayoutAnimation, UIManager, Platform,
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
+import Svg, { Circle, Path, G } from "react-native-svg";
 import { Card, Button } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
@@ -18,12 +20,24 @@ import * as homeActions from '../../../redux/home/actions';
 import { numberWithCommas } from '../../../utils/formatter';
 import CreditCardPayment from './CreditCardPayment';
 import Header from '../../../components/header';
+import { validator } from '../../../utils';
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 class PromoteRegistration extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             visibility: false,
-            paymentType: 1,
+            paymentType: 3,
+            activeTab: 1,
+            packageVisibility: false,
+            elevatorVisibility: false,
+            passwordVisibility: false
         }
     }
 
@@ -36,15 +50,24 @@ class PromoteRegistration extends React.Component {
     }
 
     pay = (type = 3) => {
-        let userId = '';
-        if (!!this.props.userProfile && !!this.props.userProfile.user_info)
-            userId = this.props.userProfile.user_info.id;
+        const {
+            userProfile = {}
+        } = this.props;
 
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${userId}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
-            }
-        })
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            id
+        } = user_info;
+
+        if (!!userProfile && !!user_info && !!id)
+            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
+                if (supported) {
+                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
+                }
+            })
     };
 
     handleScrollToTopButtonClick = () => {
@@ -112,6 +135,931 @@ class PromoteRegistration extends React.Component {
         });
     };
 
+    handleVisibilityOfCards = name => {
+        switch (name) {
+            case 'package':
+                return this.setState({ packageVisibility: !this.state.packageVisibility });
+            case 'elevator':
+                return this.setState({ elevatorVisibility: !this.state.elevatorVisibility });
+            case 'password':
+                return this.setState({ passwordVisibility: !this.state.passwordVisibility });
+            default:
+                break;
+        }
+    }
+
+    openCallPad = phoneNumber => {
+
+        if (!validator.isMobileNumber(phoneNumber))
+            return;
+
+        return Linking.canOpenURL(`tel:${phoneNumber}`).then((supported) => {
+            if (!!supported) {
+                Linking.openURL(`tel:${phoneNumber}`)
+            }
+            else {
+
+            }
+        })
+            .catch(_ => { })
+    };
+
+    renderPackagesDetails = _ => {
+
+        let {
+            dashboard,
+            isUsedAsComponent = false,
+            showBothPackages = true,
+            packagesPrices = {},
+        } = this.props;
+
+        const {
+            prices = {}
+        } = packagesPrices;
+        const {
+            "type-1": typeOne = 0,
+            "type-3": typeThree = 0,
+            "type-1-discount": typeOneDiscount = 0,
+            "type-3-discount": typeThreeDiscount = 0,
+            "discount-deadline": discountDeadLine = {}
+        } = prices;
+
+        const {
+            days = 0,
+            hours = 0
+        } = discountDeadLine;
+
+        let {
+            active_package_type: activePackageType = 0,
+        } = dashboard;
+
+        const {
+            visibility,
+            paymentType,
+            activeTab,
+            packageVisibility,
+            elevatorVisibility,
+            passwordVisibility
+        } = this.state;
+
+        const hasDiscount = typeThreeDiscount || typeThreeDiscount;
+
+        return (
+            <>
+                {activeTab == 1 ?
+                    <View
+                        style={{
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#140092',
+                            width: '80%',
+                            padding: 5,
+                            marginBottom: 5
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 22,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                            }}
+                        >
+                            {locales('labels.20%Better')}
+                        </Text>
+                    </View>
+                    : null
+                }
+                <Text style={{
+                    color: '#140092',
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 28,
+                    textAlign: 'center',
+                    marginTop: 5,
+                    textAlignVertical: 'center',
+                    textDecorationLine: (hasDiscount) ? 'line-through' : 'none'
+                }}>
+                    {
+                        activeTab == 0 ?
+                            locales('titles.threeMonths') :
+                            locales('titles.annuan')
+                    } {numberWithCommas((hasDiscount ?
+                        activeTab == 0 ? typeOne : typeThree
+                        : this.choosePrice()
+                    ) / 10)}
+                    <Text
+                        style={{
+                            color: '#140092',
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            fontWeight: '200',
+                            fontSize: 20,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                        }}
+                    >
+                        {` ${locales('titles.toman')}`}
+                    </Text>
+                </Text>
+                {hasDiscount ?
+                    <Text
+                        style={{
+                            color: '#3888FF',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 22,
+                            textAlign: 'center',
+                            marginTop: 5,
+                            textAlignVertical: 'center',
+                        }}>
+                        {numberWithCommas((activeTab == 0 ? typeOneDiscount : typeThreeDiscount) / 10)}
+                        <Text
+                            style={{
+                                color: '#3888FF',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                fontWeight: '200',
+                                fontSize: 18,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                            }}
+                        >
+                            {` ${locales('titles.toman')}`}
+                        </Text>
+                    </Text>
+                    : null
+                }
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        width: '85%',
+                        alignSelf: 'center',
+                        color: 'rgba(0, 0, 0, 0.8)',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        marginTop: 5
+                    }}
+                >
+                    {activeTab == 0 ?
+                        locales('labels.threeMonthPackageDescription') :
+                        locales('labels.annualPackageDescription')
+                    }
+                </Text>
+                {hasDiscount ?
+                    <>
+                        <LinearGradient
+                            start={{ x: 0, y: 1 }}
+                            end={{ x: 0.8, y: 0.2 }}
+                            style={{
+                                width: '60%',
+                                marginTop: 15,
+                                borderRadius: 32,
+                                alignSelf: 'center',
+                                padding: 10,
+                            }}
+                            colors={['#e5d05d', '#FEEE98', '#e5d05d']}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: 'black',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 18,
+                                }}
+                            >
+                                {locales('labels.30%DiscountForNewJoining')}
+                            </Text>
+                        </LinearGradient>
+                        <Text
+                            style={{
+                                color: '#3888FF',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 22,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginTop: 10
+                            }}>
+                            {numberWithCommas((activeTab == 0 ? typeOneDiscount : typeThreeDiscount) / 10)}
+                            <Text
+                                style={{
+                                    color: '#3888FF',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    fontWeight: '200',
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                }}
+                            >
+                                {` ${locales('titles.toman')}`}
+                            </Text>
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%',
+                            }}
+                        >
+                            <FontAwesome5
+                                name='clock'
+                                color='#F03738'
+                                size={18}
+                                style={{ marginHorizontal: 3 }}
+                            />
+
+                            {days > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}
+                                >
+                                    {locales('labels.day', { fieldName: days })}
+                                </Text>
+                                : null}
+
+                            {hours > 0 && days > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                    }}
+                                >
+                                    {` ${locales('labels.and')} `}
+                                </Text>
+                                : null
+                            }
+
+                            {hours > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}
+                                >
+                                    {locales('labels.hours', { fieldName: hours })}
+                                </Text>
+                                : null}
+
+                            <Text
+                                style={{
+                                    color: '#F03738',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center'
+                                }}
+                            >
+                                {` ${locales('labels.tillEndOfTheDiscount')}`}
+                            </Text>
+                        </View>
+                    </>
+                    : null
+                }
+                <Button
+                    style={
+                        {
+                            width: '70%',
+                            borderRadius: 6,
+                            height: 50,
+                            marginTop: 10,
+                            backgroundColor: '#FF6600',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    onPress={_ => this.pay(paymentType)}
+                >
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+                        <Text style={
+                            {
+                                textAlign: 'center',
+                                alignSelf: 'center',
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                            }
+                        }
+                        >
+                            {locales('labels.promoteRegistration')
+                            }
+                        </Text>
+                        <FontAwesome5
+                            name='angle-left'
+                            color='white'
+                            size={20}
+                            style={{
+                                left: 10
+                            }}
+                        />
+                    </View>
+                </Button>
+                {/* end of three month package price */}
+                <ShadowView
+                    style={{
+                        shadowColor: '#000000',
+                        shadowOpacity: 0.2,
+                        shadowRadius: 1,
+                        shadowOffset: { width: 0, height: 0 },
+                        backgroundColor: 'white',
+                        width: '100%',
+                        marginTop: 20
+                    }}
+                >
+                    <Text
+                        style={{
+                            backgroundColor: 'rgba(189, 216, 226, 0.35)',
+                            textAlign: 'right',
+                            color: 'black',
+                            paddingVertical: 10,
+                            paddingHorizontal: 15,
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                        }}
+                    >
+                        {activeTab == 0 ?
+                            locales('labels.basicPackagesFeatures') :
+                            locales('labels.annualPackageFeatures')
+                        }
+                    </Text>
+                </ShadowView>
+
+                <View>
+                    <View
+                        style={{
+                            width: 1,
+                            height: '100%',
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            position: 'absolute',
+                            left: '20%'
+                        }}
+                    ></View>
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: '#000000',
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}>
+                                {locales('labels.productCountToAdvertise')}
+                            </Text>
+                        </View>
+
+                        <Text style={{
+                            color: '#000000',
+                            fontSize: 20,
+                            textAlign: 'center',
+                            left: -20,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            textAlignVertical: 'center'
+                        }}
+                        >
+                            {activeTab == 0 ? 3 : 7}
+                        </Text>
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            borderBottomWidth: 1,
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text style={{
+                                fontSize: 16,
+                                color: '#000000',
+                                marginHorizontal: 5,
+                                textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                textAlignVertical: 'center',
+                                paddingBottom: 5
+                            }}>
+                                {locales('labels.dailyBuyersCount')}
+                            </Text>
+                        </View>
+
+                        <Text
+                            style={{
+                                color: '#000000',
+                                fontSize: 20,
+                                left: -20,
+                                textAlign: 'center',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                textAlignVertical: 'center'
+                            }}
+                        >
+                            {activeTab == 0 ? 10 : 30}
+                        </Text>
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            width: '100%',
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: '#000000',
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}>
+                                {locales('labels.abilityToConnectToGoldenBuyers')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15,
+                            }}
+                            solid
+                            size={20}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            marginTop: 10,
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: '#000000',
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}
+                            >
+                                {locales('labels.accessToBuyersContactInfo')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            padding: 10,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: '#000000',
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}>
+                                {locales('labels.inquireDelsa')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            padding: 10,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: '#000000',
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}
+                            >
+                                {locales('labels.giveBuyersAccessToYourContactInfo')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}>
+                                {locales('labels.advertiseProductsInBuskoolChannel')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            padding: 10,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}>
+                                {locales('labels.5xConnectionWithBuyers')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            marginTop: 10,
+                            padding: 10,
+                            justifyContent: 'space-between',
+                            width: '100%'
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    marginHorizontal: 5,
+                                    textAlign: 'center',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                    textAlignVertical: 'center',
+                                    paddingBottom: 5
+                                }}
+                            >
+                                {locales('labels.validatedSellerSign')}
+                            </Text>
+                        </View>
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
+                            style={{
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
+                    </View>
+                </View>
+                {hasDiscount ?
+                    <>
+                        <Text style={{
+                            color: '#140092',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: 22,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            textDecorationLine: 'line-through'
+                        }}>
+                            {numberWithCommas((activeTab == 0
+                                ? typeOne
+                                : typeThree) / 10)
+                            }
+                            <Text
+                                style={{
+                                    color: '#140092',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                }}
+                            >
+                            </Text> {locales('titles.toman')}
+                        </Text>
+                        <Text
+                            style={{
+                                color: '#3888FF',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                marginTop: 10
+                            }}>
+                            {numberWithCommas((activeTab == 0 ? typeOneDiscount : typeThreeDiscount) / 10)}
+                            <Text
+                                style={{
+                                    color: '#3888FF',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontWeight: '200',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                }}
+                            >
+                                {` ${locales('titles.toman')}`}
+                            </Text>
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%',
+                                marginVertical: 10
+                            }}
+                        >
+                            <FontAwesome5
+                                name='clock'
+                                color='#F03738'
+                                size={18}
+                                style={{ marginHorizontal: 3 }}
+                            />
+
+                            {days > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}
+                                >
+                                    {locales('labels.day', { fieldName: days })}
+                                </Text>
+                                : null}
+
+                            {hours > 0 && days > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                    }}
+                                >
+                                    {` ${locales('labels.and')} `}
+                                </Text>
+                                : null
+                            }
+
+                            {hours > 0 ?
+                                <Text
+                                    style={{
+                                        color: '#F03738',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 15,
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}
+                                >
+                                    {locales('labels.hours', { fieldName: hours })}
+                                </Text>
+                                : null}
+
+                            <Text
+                                style={{
+                                    color: '#F03738',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center'
+                                }}
+                            >
+                                {` ${locales('labels.tillEndOfTheDiscount')}`}
+                            </Text>
+                        </View>
+                    </>
+                    : null
+                }
+                <Button
+                    style={
+                        {
+                            width: '70%',
+                            borderRadius: 6,
+                            height: 50,
+                            marginTop: 30,
+                            backgroundColor: '#FF6600',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    onPress={_ => this.pay(paymentType)}
+                >
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
+                        <Text style={
+                            {
+                                textAlign: 'center',
+                                alignSelf: 'center',
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                            }
+                        }
+                        >
+                            {locales('labels.promoteRegistration')
+                            }
+                        </Text>
+                        <FontAwesome5
+                            name='angle-left'
+                            color='white'
+                            size={20}
+                            style={{
+                                left: 10
+                            }}
+                        />
+                    </View>
+                </Button>
+            </>
+        );
+        return;
+    }
+
     render() {
 
         let {
@@ -144,10 +1092,19 @@ class PromoteRegistration extends React.Component {
         const {
             visibility,
             paymentType,
+            activeTab,
+            packageVisibility,
+            elevatorVisibility,
+            passwordVisibility
         } = this.state;
 
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white'
+                }}
+            >
                 <Modal
                     transparent={false}
                     animationType="fade"
@@ -409,7 +1366,6 @@ class PromoteRegistration extends React.Component {
                     </View>
                 </Modal>
 
-
                 {!isUsedAsComponent ?
                     <Header
                         title={locales('labels.promoteRegistration')}
@@ -419,6 +1375,415 @@ class PromoteRegistration extends React.Component {
                     null}
 
                 <ScrollView
+                    contentContainerStyle={{
+                        paddingBottom: 20
+                    }}
+                >
+                    <View
+                        style={{
+                            padding: 20
+                        }}
+                    >
+                        {/* why promote ? */}
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="36"
+                                height="32"
+                                fill="none"
+                                viewBox="0 0 36 32"
+                            >
+                                <Circle cx="20" cy="16" r="16" fill="#BDD8E2"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#BDD8E2"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#BDD8E2"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#BDD8E2"></Circle>
+                                <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
+                                <Path
+                                    fill="#000"
+                                    d="M16 8.291a4.168 4.168 0 00-4.167 4.167.52.52 0 101.042 0 3.126 3.126 0 016.25 0c0 .781-.196 1.225-.459 1.56-.212.271-.46.473-.77.724-.126.103-.263.214-.412.342-.488.418-1.004.944-1.388 1.787-.381.835-.617 1.943-.617 3.504v.104a.52.52 0 001.042 0v-.104c0-1.46.22-2.41.522-3.072.3-.654.695-1.065 1.119-1.429.097-.083.202-.168.312-.257.34-.276.721-.585 1.012-.956.421-.537.68-1.213.68-2.203 0-2.3-1.866-4.167-4.166-4.167zM16 23.5a.624.624 0 100-1.249.624.624 0 000 1.249z"
+                                ></Path>
+                            </Svg>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    marginHorizontal: 7,
+                                }}
+                            >
+                                {locales('titles.promoteDescriptionTitle')}
+                            </Text>
+                        </View>
+                        {/* end of why promote */}
+
+                        {/* title text */}
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginVertical: 15,
+                                paddingRight: 4
+                            }}
+                        >
+                            {locales('titles.specialSellersTo')} <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    color: '#078D06'
+                                }}
+                            >
+                                {locales('titles.moreRealBuyers')}
+                            </Text> <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16
+                                }}
+                            >
+                                {locales('titles.haveAccessTo')}.
+                            </Text>
+                        </Text>
+                        {/* end of title text */}
+
+                        {/* header buttons */}
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginVertical: 10
+                            }}
+                        >
+                            <ShadowView
+                                style={{
+                                    shadowColor: 'rgba(0, 0, 0, 0.15)',
+                                    shadowOpacity: 0.3,
+                                    shadowRadius: activeTab == 0 ? 2 : 0,
+                                    shadowOffset: { width: 0, height: 0 },
+                                    backgroundColor: 'white',
+                                    width: '50%'
+
+                                }}
+                            >
+                                <Pressable
+                                    onPress={_ => this.setState({ activeTab: 0, paymentType: 1 })}
+                                    style={{
+                                        borderBottomWidth: 2,
+                                        borderBottomColor: activeTab == 0 ?
+                                            '#FF6600' :
+                                            '#EAEAEA',
+                                        padding: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            color: `rgba(0,0,0,${activeTab == 0 ? '1' : '0.5'})`
+                                        }}
+                                    >
+                                        {locales('titles.threeMonthBasicPackage')}
+                                    </Text>
+                                </Pressable>
+                            </ShadowView>
+                            <ShadowView
+                                style={{
+                                    shadowColor: 'rgba(0, 0, 0, 0.15)',
+                                    shadowOpacity: 0.3,
+                                    shadowRadius: activeTab == 1 ? 2 : 0,
+                                    shadowOffset: { width: 0, height: 0 },
+                                    backgroundColor: 'white',
+                                    width: '50%'
+                                }}
+                            >
+                                <Pressable
+                                    onPress={_ => this.setState({ activeTab: 1, paymentType: 3 })}
+                                    style={{
+                                        borderBottomWidth: 2,
+                                        borderBottomColor: activeTab == 1 ?
+                                            '#FF6600' :
+                                            '#EAEAEA',
+                                        padding: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            color: `rgba(0,0,0,${activeTab == 1 ? '1' : '0.5'})`
+                                        }}
+                                    >
+                                        {locales('titles.annualSpecialPackage')}
+                                    </Text>
+                                </Pressable>
+                            </ShadowView>
+                        </View>
+                        {/* end of header buttons */}
+
+                        {/* three month package price */}
+                    </View>
+                    {this.renderPackagesDetails()}
+                    <ShadowView
+                        style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.1,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 4 },
+                            backgroundColor: '#E2F0F5',
+                            width: '95%',
+                            borderRadius: 12,
+                            alignSelf: 'center',
+                            marginTop: 20
+                        }}
+                    >
+                        <View
+                            style={{
+                                borderRadius: 12,
+                                borderWidth: 1,
+                                width: '100%',
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
+                                style={{
+
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row-reverse'
+                                }}
+                                onPress={_ => this.handleVisibilityOfCards('package')}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {locales('titles.whatIsSpecialPaymentPackage')}
+                                </Text>
+                                <FontAwesome5
+                                    name={`angle-${packageVisibility ? 'up' : 'down'}`}
+                                    size={20}
+                                    color='#bebebe'
+                                />
+                            </Pressable>
+                            {packageVisibility ?
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        padding: 10,
+                                        textAlign: 'right',
+                                        color: '#2D3031'
+                                    }}
+                                >
+                                    {locales('labels.specialPackageDescription')}
+                                </Text>
+                                : null}
+                        </View>
+                    </ShadowView>
+
+                    <ShadowView
+                        style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.1,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 4 },
+                            backgroundColor: '#E2F0F5',
+                            width: '95%',
+                            borderRadius: 12,
+                            alignSelf: 'center',
+                            marginTop: 20
+                        }}
+                    >
+                        <View
+                            style={{
+                                borderRadius: 12,
+                                borderWidth: 1,
+                                width: '100%',
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row-reverse'
+                                }}
+                                onPress={_ => this.handleVisibilityOfCards('elevator')}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {locales('titles.whatIsElevatorInSpecialPaymentPackage')}
+                                </Text>
+                                <FontAwesome5
+                                    name={`angle-${elevatorVisibility ? 'up' : 'down'}`}
+                                    size={20}
+                                    color='#bebebe'
+                                />
+                            </Pressable>
+                            {elevatorVisibility ?
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 14,
+                                        padding: 10,
+                                        textAlign: 'right',
+                                        color: '#2D3031'
+                                    }}
+                                >
+                                    {locales('labels.elevatorPackageDescription')}
+                                </Text>
+                                : null}
+                        </View>
+                    </ShadowView>
+
+                    <ShadowView
+                        style={{
+                            shadowColor: 'black',
+                            shadowOpacity: 0.1,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 4 },
+                            backgroundColor: '#E2F0F5',
+                            width: '95%',
+                            borderRadius: 12,
+                            alignSelf: 'center',
+                            marginTop: 20
+                        }}
+                    >
+                        <View
+                            style={{
+                                borderRadius: 12,
+                                borderWidth: 1,
+                                width: '100%',
+                                borderColor: '#e0e0e0',
+                                padding: 10,
+                            }}
+                        >
+                            <Pressable
+                                android_ripple={{
+                                    color: '#ededed'
+                                }}
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row-reverse'
+                                }}
+                                onPress={_ => this.handleVisibilityOfCards('password')}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 16
+                                    }}
+                                >
+                                    {locales('titles.doesNotHaveSecondPasswordToPayOnLine')}
+                                </Text>
+                                <FontAwesome5
+                                    name={`angle-${passwordVisibility ? 'up' : 'down'}`}
+                                    size={20}
+                                    color='#bebebe'
+                                />
+                            </Pressable>
+                            {passwordVisibility ?
+                                <>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 14,
+                                            padding: 10,
+                                            textAlign: 'right',
+                                            color: '#2D3031'
+                                        }}
+                                    >
+                                        {locales('labels.passwordPackageDescription')}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-around'
+                                        }}
+                                    >
+                                        <Pressable
+                                            onPress={_ => this.openCallPad('09178928266')}
+                                            style={{
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    padding: 10,
+                                                    textAlign: 'center',
+                                                    color: '#2D3031'
+                                                }}
+                                            >
+                                                09178928266
+                                            </Text>
+                                            <FontAwesome5
+                                                name='phone-alt'
+                                                color='black'
+                                                size={15}
+                                            />
+                                        </Pressable>
+                                        <Pressable
+                                            onPress={_ => this.openCallPad('09118413054')}
+                                            style={{
+                                                flexDirection: 'row-reverse',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    fontSize: 14,
+                                                    padding: 10,
+                                                    textAlign: 'center',
+                                                    color: '#2D3031'
+                                                }}
+                                            >
+                                                09118413054
+                                            </Text>
+                                            <FontAwesome5
+                                                name='phone-alt'
+                                                color='black'
+                                                size={15}
+                                            />
+                                        </Pressable>
+                                    </View>
+                                </>
+                                : null}
+                        </View>
+                    </ShadowView>
+
+                </ScrollView>
+
+
+                {/* <ScrollView
                     ref={this.wrapperRef}
                     refreshControl={
                         <RefreshControl
@@ -459,7 +1824,6 @@ class PromoteRegistration extends React.Component {
                                 textAlignVertical: 'center',
                                 marginVertical: 7
                             }}>
-                                {/* {locales('titles.promoteDescriptionTitle')} */}
                                 {locales('titles.didYouKnow')}؟
                             </Text>
                             <View
@@ -522,13 +1886,6 @@ class PromoteRegistration extends React.Component {
                                             }}>
                                             {`${locales('titles.promoteDescriptionTextThird')}`}
                                         </Text>
-                                        {/* <Text style={{
-                                            color: '#707070',
-                                            fontSize: 16,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                        }}>
-                                            {` ${locales('titles.extraBuyAdRequestDescriptionTextThird')} `}
-                                        </Text> */}
                                     </Text>
                                 </View>
                             </View>
@@ -608,16 +1965,6 @@ class PromoteRegistration extends React.Component {
                                     </Text>
                                 </View>
                             </View>
-                            {/* <Text
-                                style={{
-                                    color: '#38485F',
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center', marginVertical: 10,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 18
-                                }}>
-                                {` ${locales('titles.promoteDescriptionTextFourth')} `}
-                            </Text> */}
                         </View>
                     </ShadowView>
                         : null}
@@ -630,11 +1977,6 @@ class PromoteRegistration extends React.Component {
                             borderWidth: 2,
                             borderColor: '#21AD93',
                         }}>
-                            {/* <LinearGradient
-                                start={{ x: 0, y: 1 }}
-                                end={{ x: 0.8, y: 0.2 }}
-                                colors={['#00C569', '#21AD93']}
-                            > */}
                             <Text
                                 style={{
                                     color: 'white',
@@ -693,36 +2035,9 @@ class PromoteRegistration extends React.Component {
                                     }}
                                 >
                                     {numberWithCommas(typeThree / 10)}
-                                    {/* {typeThree ? numberWithCommas(typeThree / 10) : ' '} */}
                                 </Text>
                                 {` ${locales('titles.toman')} `}
                             </Text>
-
-                            {/* </LinearGradient> */}
-
-                            {/* <View style={{
-                                flexDirection: 'row-reverse', marginVertical: 10,
-                                backgroundColor: '#EEFEF6', alignItems: 'center',
-                                padding: 10, justifyContent: 'center', width: '100%'
-                            }}>
-                                <FontAwesome5
-                                    name='plus-circle'
-                                    color='#808C9B'
-                                    style={{ marginHorizontal: 5 }}
-                                    size={16}
-                                />
-                                <Text
-                                    style={{
-                                        color: '#808C9B',
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 15,
-                                        textAlign: 'center',
-                                        textAlignVertical: 'center',
-                                    }}
-                                >
-                                    {locales('titles.oneMonthFree')}
-                                </Text>
-                            </View> */}
 
                             <View style={{
                             }}>
@@ -1015,16 +2330,6 @@ class PromoteRegistration extends React.Component {
                                     />
 
                                 </View>
-                                {/* 
-                                <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', marginTop: 10 }}>
-                                    <Text style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
-                                        textAlignVertical: 'center',
-                                        color: '#1DA1F2'
-                                    }}>
-                                        {locales('labels.abilityToBuyYearly')}
-                                    </Text>
-                                </View> */}
                                 {activePackageType < 3 && typeThreeDiscount ? <View
                                     style={{
                                         width: '100%',
@@ -1191,7 +2496,6 @@ class PromoteRegistration extends React.Component {
                                         colors={['#21AD93', '#00C569']}
                                     >
                                         <TouchableOpacity
-                                            // onPress={() => this.pay()}
                                             onPress={_ => this.setState({ paymentType: 3 }, _ => this.navigateToPaymentType())}
                                         >
                                             <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
@@ -1212,12 +2516,6 @@ class PromoteRegistration extends React.Component {
                             marginBottom: 50,
 
                         }}>
-                            {/* <LinearGradient
-                                start={{ x: 0, y: 1 }}
-                                end={{ x: 0.8, y: 0.2 }}
-                                colors={['#556080', '#556080']}
-                            > */}
-
                             <Text style={{
                                 color: '#556080',
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -1245,12 +2543,9 @@ class PromoteRegistration extends React.Component {
                                         textAlignVertical: 'center',
                                     }}
                                 >
-                                    {/* {typeOne ? numberWithCommas(typeOne / 10) : ' '} */}
                                     {numberWithCommas(typeOne / 10)}
                                 </Text> {locales('titles.toman')}
                             </Text>
-                            {/* </LinearGradient> */}
-
 
                             <View style={{
                             }}>
@@ -1646,16 +2941,6 @@ class PromoteRegistration extends React.Component {
                                     </View>
                                 </View>
                                     : null}
-                                {/* <View style={{ flexDirection: 'row-reverse', justifyContent: 'center' }}>
-                                    <Text style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 18, textAlign: 'center',
-                                        textAlignVertical: 'center',
-                                        color: '#1DA1F2'
-                                    }}>
-                                        {locales('labels.abilityToBuyThreeMonth')}
-                                    </Text>
-                                </View> */}
-
 
                                 {activePackageType == 1 ? <View
                                     style={{
@@ -1682,7 +2967,6 @@ class PromoteRegistration extends React.Component {
                                             height: 50,
                                             margin: 20, backgroundColor: '#556080', alignSelf: 'center'
                                         }]}
-                                        // onPress={() => this.pay(1)}
                                         onPress={_ => this.setState({ paymentType: 1 }, _ => this.navigateToPaymentType())}
                                     >
                                         <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('labels.promoteRegistration')}
@@ -1720,7 +3004,6 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}>
-                                {/* {locales('titles.promoteDescriptionTitle')} */}
                                 {locales('titles.whatIsSpecialPackage')}؟
                             </Text>
                             <View
@@ -1772,7 +3055,8 @@ class PromoteRegistration extends React.Component {
 
                 </ScrollView>
                 {!isUsedAsComponent ? <CreditCardPayment /> : null}
-            </>
+      */}
+            </View>
         )
     }
 }

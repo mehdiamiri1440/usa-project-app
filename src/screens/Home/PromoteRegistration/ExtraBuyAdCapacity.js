@@ -103,9 +103,6 @@ class ExtraBuyAdCapacity extends React.Component {
                             }
                         />
                     }
-                    style={{
-                        paddingVertical: 30,
-                    }}
                 >
 
                     <Card transparent>
@@ -157,12 +154,7 @@ class ExtraBuyAdCapacity extends React.Component {
                     </Card>
 
 
-                    <View style={{
-                        paddingBottom: 60
-
-                    }}>
-
-
+                    <View>
                         <Card transparent>
                             <View style={{
                                 borderRadius: 4,
@@ -372,7 +364,7 @@ class ExtraBuyAdCapacity extends React.Component {
                         <PromoteRegistration isUsedAsComponent={true} showBothPackages={false} {...this.props} />
                     </View>
                 </ScrollView>
-                <CreditCardPayment />
+                {/* <CreditCardPayment /> */}
             </>
         )
     }

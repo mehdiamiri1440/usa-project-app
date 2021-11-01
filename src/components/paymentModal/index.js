@@ -75,7 +75,7 @@ const PaymentModal = props => {
                 </View>
             </View>
             <PromoteRegistration isUsedAsComponent showBothPackages {...props} />
-            <CreditCardPayment />
+            {/* <CreditCardPayment /> */}
         </Modal>
     )
 };
