@@ -215,7 +215,7 @@ class PromoteRegistration extends React.Component {
                             backgroundColor: '#140092',
                             width: '80%',
                             padding: 5,
-                            marginBottom: 10
+                            marginBottom: 5
                         }}
                     >
                         <Text
@@ -237,6 +237,7 @@ class PromoteRegistration extends React.Component {
                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                     fontSize: 28,
                     textAlign: 'center',
+                    marginTop: 5,
                     textAlignVertical: 'center',
                     textDecorationLine: (hasDiscount) ? 'line-through' : 'none'
                 }}>
@@ -268,7 +269,7 @@ class PromoteRegistration extends React.Component {
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             fontSize: 22,
                             textAlign: 'center',
-                            marginTop: 10,
+                            marginTop: 5,
                             textAlignVertical: 'center',
                         }}>
                         {numberWithCommas((activeTab == 0 ? typeOneDiscount : typeThreeDiscount) / 10)}
@@ -295,7 +296,7 @@ class PromoteRegistration extends React.Component {
                         color: 'rgba(0, 0, 0, 0.8)',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 14,
-                        marginTop: 10
+                        marginTop: 5
                     }}
                 >
                     {activeTab == 0 ?
@@ -310,7 +311,7 @@ class PromoteRegistration extends React.Component {
                             end={{ x: 0.8, y: 0.2 }}
                             style={{
                                 width: '60%',
-                                marginTop: 10,
+                                marginTop: 15,
                                 borderRadius: 32,
                                 alignSelf: 'center',
                                 padding: 10,
@@ -540,9 +541,10 @@ class PromoteRegistration extends React.Component {
                         </View>
 
                         <Text style={{
-                            color: '#666666',
+                            color: '#000000',
                             fontSize: 20,
                             textAlign: 'center',
+                            left: -20,
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             textAlignVertical: 'center'
                         }}
@@ -582,8 +584,9 @@ class PromoteRegistration extends React.Component {
 
                         <Text
                             style={{
-                                color: '#666666',
+                                color: '#000000',
                                 fontSize: 20,
+                                left: -20,
                                 textAlign: 'center',
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 textAlignVertical: 'center'
@@ -612,32 +615,26 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#666666',
+                                    color: '#000000',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}>
                                 {locales('labels.abilityToConnectToGoldenBuyers')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
-                            }}>
-                            <FontAwesome5
-                                name='check'
-                                color='#0AA709'
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
+                                marginHorizontal: 5,
+                                left: -15,
+                            }}
+                            solid
+                            size={20}
+                        />
                     </View>
 
                     <View
@@ -659,10 +656,10 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#666666',
+                                    color: '#000000',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}
@@ -670,24 +667,16 @@ class PromoteRegistration extends React.Component {
                                 {locales('labels.accessToBuyersContactInfo')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
+                                marginHorizontal: 5,
+                                left: -15
                             }}
-                        >
-                            <FontAwesome5
-                                name='check'
-                                color='#0AA709'
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
-
+                            solid
+                            size={20}
+                        />
                     </View>
 
                     <View
@@ -708,33 +697,26 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#666666',
+                                    color: '#000000',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}>
                                 {locales('labels.inquireDelsa')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
-                            }}>
-                            <FontAwesome5
-                                name='check'
-                                color='#0AA709'
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
-
+                                marginHorizontal: 5,
+                                left: -15
+                            }}
+                            solid
+                            size={20}
+                        />
                     </View>
 
                     <View
@@ -756,10 +738,10 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#666666',
+                                    color: '#000000',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}
@@ -767,23 +749,16 @@ class PromoteRegistration extends React.Component {
                                 {locales('labels.giveBuyersAccessToYourContactInfo')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name='check'
+                            color='#0AA709'
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
+                                marginHorizontal: 5,
+                                left: -15
                             }}
-                        >
-                            <FontAwesome5
-                                name='check'
-                                color='#0AA709'
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
+                            solid
+                            size={20}
+                        />
 
                     </View>
 
@@ -807,33 +782,26 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#CCCCCC',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}>
                                 {locales('labels.advertiseProductsInBuskoolChannel')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center'
+                                marginHorizontal: 5,
+                                left: -15
                             }}
-                        >
-                            <FontAwesome5
-                                name={activeTab == 0 ? 'times' : 'check'}
-                                color={activeTab == 0 ? '#F03738' : '#0AA709'}
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
+                            solid
+                            size={20}
+                        />
 
                     </View>
 
@@ -857,33 +825,26 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#CCCCCC',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}>
                                 {locales('labels.5xConnectionWithBuyers')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center'
+                                marginHorizontal: 5,
+                                left: -15
                             }}
-                        >
-                            <FontAwesome5
-                                name={activeTab == 0 ? 'times' : 'check'}
-                                color={activeTab == 0 ? '#F03738' : '#0AA709'}
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
+                            solid
+                            size={20}
+                        />
 
                     </View>
 
@@ -904,10 +865,10 @@ class PromoteRegistration extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    color: '#CCCCCC',
                                     marginHorizontal: 5,
                                     textAlign: 'center',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     textAlignVertical: 'center',
                                     paddingBottom: 5
                                 }}
@@ -915,23 +876,16 @@ class PromoteRegistration extends React.Component {
                                 {locales('labels.validatedSellerSign')}
                             </Text>
                         </View>
-
-                        <Text
+                        <FontAwesome5
+                            name={activeTab == 0 ? 'times' : 'check'}
+                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
                             style={{
-                                color: '#666666',
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textAlignVertical: 'center'
+                                marginHorizontal: 5,
+                                left: -15
                             }}
-                        >
-                            <FontAwesome5
-                                name={activeTab == 0 ? 'times' : 'check'}
-                                color={activeTab == 0 ? '#F03738' : '#0AA709'}
-                                style={{ marginHorizontal: 5 }}
-                                solid
-                                size={20}
-                            />
-                        </Text>
+                            solid
+                            size={20}
+                        />
                     </View>
                 </View>
                 {hasDiscount ?
