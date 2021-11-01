@@ -21,6 +21,7 @@ import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
 import ImageZoom from 'react-native-image-pan-zoom';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -1691,18 +1692,34 @@ class ProductDetails extends PureComponent {
                                                 borderRadius: 5,
                                                 marginLeft: !is_elevated ? 5 : 0,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: !!is_elevated ? '45%' : '55%',
+                                                backgroundColor: '#140092',
+                                                width: !!is_elevated ? '45%' : '46%',
                                                 paddingRight: 40,
-                                                backgroundColor: '#E41C38'
                                             }}
                                         >
                                             <Text
                                                 onPress={this.navigateToPaymentType}
 
-                                                style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                                {locales('titles.elevateProduct')}</Text>
-                                            <FontAwesome5
-                                                name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
+                                                style={
+                                                    [styles.buttonText,
+                                                    {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                    }
+                                                    ]
+                                                }
+                                            >
+                                                {locales('titles.elevateProduct')}
+                                            </Text>
+                                            <MaterialCommunityIcons
+                                                name='stairs-up'
+                                                size={25}
+                                                color='white'
+                                                style={
+                                                    {
+                                                        position: 'absolute',
+                                                        right: 35
+                                                    }}
+                                            />
                                         </Button>
                                         <Button
                                             style={{
@@ -1710,13 +1727,36 @@ class ProductDetails extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: '40%',
+                                                width: !is_elevated ? '46%' : '40%',
                                                 paddingRight: 15,
-                                                backgroundColor: '#000546'
+                                                backgroundColor: 'rgba(20, 0, 146, 0.25)',
+                                                elevation: 0
                                             }}
                                         >
-                                            <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                            <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
+                                            <Text
+                                                onPress={() => this.setState({
+                                                    editionFlag:
+                                                        true
+                                                })}
+                                                style={
+                                                    [styles.buttonText,
+                                                    {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        color: '#140092'
+                                                    }
+                                                    ]}
+                                            >
+                                                {locales('titles.edit')}
+                                            </Text>
+                                            <MaterialCommunityIcons
+                                                name='pencil'
+                                                size={20}
+                                                style={{
+                                                    right: 45,
+                                                    position: 'absolute'
+                                                }}
+                                                color='#140092'
+                                            />
                                         </Button>
                                     </View> :
                                         null

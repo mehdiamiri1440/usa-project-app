@@ -14,6 +14,7 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Input, Label, Item, Toast, Button } from 'native-base';
 import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
@@ -1494,7 +1495,7 @@ class Product extends PureComponent {
                                                     // maxWidth: 130,
                                                     flex: 1,
                                                     marginRight: 15,
-                                                    backgroundColor: '#E41C38',
+                                                    backgroundColor: '#140092',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     height: 40,
@@ -1506,9 +1507,11 @@ class Product extends PureComponent {
                                                 <View
                                                     style={[styles.textCenterView, styles.buttonText]}>
                                                     <Text style={[styles.textWhite, { marginHorizontal: 5 }]}>
-                                                        <FontAwesome5 name='chart-line' size={20} color='white' />
+                                                        <MaterialCommunityIcons name='stairs-up' size={20} color='white' />
                                                     </Text>
-                                                    <Text style={[styles.textWhite, styles.textBold]}>
+                                                    <Text style={[styles.textWhite, {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                    }]}>
                                                         {locales('titles.elevateProduct')}
                                                     </Text>
                                                 </View>
@@ -1521,7 +1524,7 @@ class Product extends PureComponent {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     // maxWidth: 130,
                                                     flex: 1,
-                                                    backgroundColor: '#000546',
+                                                    backgroundColor: 'rgba(20, 0, 146, 0.25)',
                                                     height: 40,
                                                     elevation: 0
                                                 }}
@@ -1529,10 +1532,25 @@ class Product extends PureComponent {
                                             >
                                                 <View
                                                     style={[styles.textCenterView, styles.buttonText]}>
-                                                    <Text style={[styles.textWhite, styles.marginTop5]}>
-                                                        <EvilIcons name='pencil' size={30} color='white' />
-                                                    </Text>
-                                                    <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
+                                                    <MaterialCommunityIcons
+                                                        name='pencil'
+                                                        size={20}
+                                                        style={{
+                                                            top: 7
+                                                        }}
+                                                        color='#140092'
+                                                    />
+                                                    <Text
+                                                        style={[
+                                                            styles.textWhite,
+                                                            styles.margin5,
+                                                            {
+                                                                color: '#140092',
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                            }
+                                                        ]
+                                                        }
+                                                    >
                                                         {locales('titles.edit')}
                                                     </Text>
                                                 </View>
