@@ -1466,12 +1466,19 @@ class PromoteRegistration extends React.Component {
                                     shadowRadius: activeTab == 0 ? 2 : 0,
                                     shadowOffset: { width: 0, height: 0 },
                                     backgroundColor: 'white',
-                                    width: '50%'
+                                    width: '50%',
+                                    zIndex: activeTab == 0 ? 1 : 0
 
                                 }}
                             >
                                 <Pressable
-                                    onPress={_ => this.setState({ activeTab: 0, paymentType: 1 })}
+                                    onPress={_ => this.setState(
+                                        {
+                                            activeTab: 0,
+                                            paymentType: 1
+                                        }
+                                    )
+                                    }
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 0 ?
@@ -1499,7 +1506,8 @@ class PromoteRegistration extends React.Component {
                                     shadowRadius: activeTab == 1 ? 2 : 0,
                                     shadowOffset: { width: 0, height: 0 },
                                     backgroundColor: 'white',
-                                    width: '50%'
+                                    width: '50%',
+                                    zIndex: activeTab == 1 ? 1 : 0
                                 }}
                             >
                                 <Pressable
