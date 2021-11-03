@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView,
     Pressable, Linking, Share, RefreshControl,
-    ActivityIndicator
+    ActivityIndicator, Animated
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -111,6 +111,8 @@ class ProductDetails extends PureComponent {
             shouldShowPriceSheet: false,
 
             isScrollForButtonsReached: false,
+
+            animatedValue: new Animated.Value(deviceHeight + 140)
         }
     }
 
@@ -896,7 +898,9 @@ class ProductDetails extends PureComponent {
 
             shouldShowPriceSheet,
 
-            isScrollForButtonsReached
+            isScrollForButtonsReached,
+
+            animatedValue
         } = this.state;
 
 
@@ -1870,10 +1874,22 @@ class ProductDetails extends PureComponent {
                                 if (event.nativeEvent.contentOffset.y > 60 && !isScrollForButtonsReached)
                                     this.setState({
                                         isScrollForButtonsReached: true,
+                                    }, _ => {
+                                        Animated.timing(this.state.animatedValue, {
+                                            toValue: deviceHeight - 140,
+                                            duration: 500,
+                                            useNativeDriver: true
+                                        }).start()
                                     })
                                 else if (event.nativeEvent.contentOffset.y < 60 && isScrollForButtonsReached)
                                     this.setState({
                                         isScrollForButtonsReached: false
+                                    }, _ => {
+                                        Animated.timing(this.state.animatedValue, {
+                                            toValue: deviceHeight + 140,
+                                            duration: 500,
+                                            useNativeDriver: true
+                                        }).start()
                                     })
                             }}
                             refreshControl={
@@ -2706,13 +2722,15 @@ class ProductDetails extends PureComponent {
                     productDetailsInfoFailed || productDetailsInfoError ? null :
                         !this.props.productDetailsInfoLoading
                             && userId != loggedInUserId ?
-                            <ShadowView
+                            <Animated.View
                                 style={{
+                                    transform: [{
+                                        translateY: animatedValue
+                                    }],
                                     width: '100%',
                                     shadowColor: 'black',
                                     shadowOpacity: 0.13,
                                     position: 'absolute',
-                                    bottom: isScrollForButtonsReached ? 0 : -60,
                                     backgroundColor: 'white',
                                     shadowRadius: 1,
                                     shadowOffset: { width: 0, height: 2 },
@@ -2809,7 +2827,7 @@ class ProductDetails extends PureComponent {
                                     </View>
 
                                 </Button>
-                            </ShadowView>
+                            </Animated.View>
                             : null
                 }
             </>
