@@ -23,6 +23,8 @@ module.exports = {
     'errors.canNotBeLessThan': '{fieldName} نمی‌تواند کمتر از {number} باشد',
     'errors.canNotBeLessThanChar': '{fieldName} نمی‌تواند کمتر از {number} کارکتر باشد',
     'errors.retryLatter': 'مشکلی پیش آمده است . لطفا چند دقیقه دیگر مجددا تلاش کنید.',
+    'errors.selectYours': '{fieldName} خود را انتخاب کنید.',
+    'errors.writeInPersian': '{fieldName} را به فارسی بنویسید.',
 
     "labels.man": "آقا",
     'labels.putAMessage': 'پیامی بگذارید',

@@ -89,7 +89,7 @@ class UserBasicInfo extends React.Component {
             activityTypeError;
 
         if (!selectedCategoryId) {
-            activityZoneError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityZone') });
+            activityZoneError = locales('errors.selectYours', { fieldName: locales('labels.activityZone') });
             isActivityZoneValid = false;
         }
         else {
@@ -98,7 +98,7 @@ class UserBasicInfo extends React.Component {
         }
 
         if (!province) {
-            provinceError = locales('errors.fieldNeeded', { fieldName: locales('labels.province') })
+            provinceError = locales('errors.selectYours', { fieldName: locales('labels.province') })
             isProvinceValid = false;
         }
 
@@ -108,7 +108,7 @@ class UserBasicInfo extends React.Component {
         }
 
         if (!city) {
-            cityError = locales('errors.fieldNeeded', { fieldName: locales('labels.city') })
+            cityError = locales('errors.selectYours', { fieldName: locales('labels.city') })
             isCityValid = false;
         }
 
@@ -118,7 +118,7 @@ class UserBasicInfo extends React.Component {
         }
 
         if (activityType == null) {
-            activityTypeError = locales('errors.fieldNeeded', { fieldName: locales('labels.activityType') })
+            activityTypeError = locales('errors.selectYours', { fieldName: locales('labels.activityType') })
             isActivityTypeValid = false;
         }
 
@@ -128,11 +128,11 @@ class UserBasicInfo extends React.Component {
         }
 
         if (!firstName) {
-            firstNameError = locales('errors.fieldNeeded', { fieldName: locales('titles.firstName') })
+            firstNameError = locales('errors.selectYours', { fieldName: locales('titles.firstName') })
             isFirstNameValid = false;
         }
         else if (!validator.isPersianName(firstName)) {
-            firstNameError = locales('errors.invalidFormat', { fieldName: locales('titles.firstName') });
+            firstNameError = locales('errors.writeInPersian', { fieldName: locales('titles.firstName') });
             isFirstNameValid = false;
         }
         else {
@@ -142,11 +142,11 @@ class UserBasicInfo extends React.Component {
 
 
         if (!lastName) {
-            lastNameError = locales('errors.fieldNeeded', { fieldName: locales('titles.lastName') })
+            lastNameError = locales('errors.selectYours', { fieldName: locales('titles.lastName') })
             isLastNameValid = false;
         }
         else if (!validator.isPersianName(lastName)) {
-            lastNameError = locales('errors.invalidFormat', { fieldName: locales('titles.lastName') });
+            lastNameError = locales('errors.writeInPersian', { fieldName: locales('titles.lastName') });
             isLastNameValid = false;
         }
         else {
@@ -197,7 +197,7 @@ class UserBasicInfo extends React.Component {
             firstName,
             firstNameError: !firstName || validator.isPersianName(firstName) ?
                 ''
-                : locales('errors.invalidFormat', { fieldName: locales('titles.firstName') })
+                : locales('errors.writeInPersian', { fieldName: locales('titles.firstName') })
         }));
     };
 
@@ -206,7 +206,7 @@ class UserBasicInfo extends React.Component {
             lastName,
             lastNameError: !lastName || validator.isPersianName(lastName) ?
                 ''
-                : locales('errors.invalidFormat', { fieldName: locales('titles.lastName') })
+                : locales('errors.writeInPersian', { fieldName: locales('titles.lastName') })
         }));
     };
 
@@ -322,7 +322,7 @@ class UserBasicInfo extends React.Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 textDecorationLine: 'none',
-                                fontSize: 16,
+                                fontSize: 14,
                                 height: 50,
                                 backgroundColor: '#fff',
                                 padding: 3,
@@ -340,7 +340,8 @@ class UserBasicInfo extends React.Component {
                         style={{
                             fontSize: 14,
                             height: 20,
-                            textAlign: 'center',
+                            textAlign: 'right',
+                            marginRight: 10,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                             color: '#D81A1A'
                         }}>
@@ -391,7 +392,7 @@ class UserBasicInfo extends React.Component {
                             style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 textDecorationLine: 'none',
-                                fontSize: 16,
+                                fontSize: 14,
                                 height: 50,
                                 backgroundColor: '#fff',
                                 padding: 3,
@@ -408,7 +409,8 @@ class UserBasicInfo extends React.Component {
                         style={{
                             height: 20,
                             fontSize: 14,
-                            textAlign: 'center',
+                            textAlign: 'right',
+                            marginRight: 10,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                             color: '#D81A1A'
                         }}>
@@ -511,7 +513,8 @@ class UserBasicInfo extends React.Component {
                                     fontSize: 14,
                                     color: '#D81A1A',
                                     height: 20,
-                                    textAlign: 'center',
+                                    textAlign: 'right',
+                                    marginRight: 4,
                                 }
                             }
                         >
@@ -598,7 +601,8 @@ class UserBasicInfo extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 fontSize: 14,
                                 color: '#D81A1A',
-                                textAlign: 'center',
+                                textAlign: 'right',
+                                marginRight: 4,
                                 height: 20,
                             }}>
                             {cityError}
@@ -688,7 +692,8 @@ class UserBasicInfo extends React.Component {
                             fontSize: 14,
                             height: 20,
                             color: '#D81A1A',
-                            textAlign: 'center',
+                            textAlign: 'right',
+                            marginRight: 10,
                         }}>
                         {activityZoneError}
                     </Label>

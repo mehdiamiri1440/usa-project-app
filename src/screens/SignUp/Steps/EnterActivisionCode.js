@@ -268,7 +268,12 @@ const EnterActivisionCode = (props) => {
                     style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
                     rounded
                 >
-                    <Text style={styles.buttonText}>
+                    <Text style={[styles.buttonText,
+                    {
+                        color: value.length !== 4 ?
+                            'rgba(0, 0, 0, 0.38)' :
+                            'white'
+                    }]}>
                         {locales('titles.submitCode')}
                     </Text>
                     <ActivityIndicator
@@ -287,17 +292,22 @@ const EnterActivisionCode = (props) => {
                 </Button>
                 <Button
                     onPress={() => props.changeStep(1)}
-                    style={styles.backButtonContainer}
+                    style={[styles.backButtonContainer, {
+                        backgroundColor: 'white',
+                        borderColor: '#747474'
+                    }]}
                     rounded
                 >
                     <Text
-                        style={styles.backButtonText}>
+                        style={[styles.backButtonText, {
+                            color: '#747474'
+                        }]}>
                         {locales('titles.previousStep')}
                     </Text>
                     <AntDesign
                         name='arrowright'
                         size={25}
-                        color='#00C569'
+                        color='#747474'
                     />
                 </Button>
             </View>
