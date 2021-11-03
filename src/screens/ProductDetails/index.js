@@ -34,6 +34,7 @@ import Header from '../../components/header';
 import RegisterationModal from '../../components/RegisterationModal';
 import ContactsListModal from '../../components/contactsListModal';
 import { shareToSocial } from '../../components/shareToSocial';
+import { numberWithCommas } from '../../utils/formatter';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -106,6 +107,10 @@ class ProductDetails extends PureComponent {
             RegisterationModalReturnType: null,
 
             showContactListModal: false,
+
+            shouldShowPriceSheet: false,
+
+            isScrollForButtonsReached: false,
         }
     }
 
@@ -115,6 +120,7 @@ class ProductDetails extends PureComponent {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
     refRBSheet = React.createRef();
+    priceRBSheet = React.createRef();
 
 
     wrapper = React.createRef();
@@ -412,6 +418,31 @@ class ProductDetails extends PureComponent {
 
     };
 
+    redirectToScreensViaAchivePrice = _ => {
+
+        const {
+            loggedInUserId,
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+        this.setState({ shouldShowPriceSheet: false }, _ => {
+            if (loggedInUserId) {
+                if (is_seller)
+                    return this.props.navigation.navigate('RegisterProductStack');
+                return this.props.navigation.navigate('RegisterRequestStack', {
+                    screen: 'RegisterRequest'
+                });
+            }
+            return this.props.navigation.navigate('StartUp', { screen: 'SignUp' });
+        });
+    };
 
     onSubmit = () => {
 
@@ -716,16 +747,20 @@ class ProductDetails extends PureComponent {
                 user_name,
                 is_verified
             }
+            switch (RegisterationModalReturnType) {
+                case 1:
+                    return this.fetchContactInfo(productIdFromProductDetails, userId, true);
+                case 0:
+                    if (shouldOpenChat == true)
+                        return this.props.navigation.navigate('Chat', {
+                            contact: selectedContact,
+                            profile_photo,
+                            productId: productIdFromProductDetails
+                        });
+                    break;
+                default:
+                    break;
 
-            if (RegisterationModalReturnType == 1)
-                this.fetchContactInfo(productIdFromProductDetails, userId, true);
-            else {
-                if (shouldOpenChat == true)
-                    this.props.navigation.navigate('Chat', {
-                        contact: selectedContact,
-                        profile_photo,
-                        productId: productIdFromProductDetails
-                    });
             }
         });
     };
@@ -746,6 +781,34 @@ class ProductDetails extends PureComponent {
             productId: productIdFromProductDetails,
             bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productIdFromProductDetails}`
         });
+    };
+
+    openCallPadFromAchivePrice = _ => {
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+
+        const {
+            productIdFromProductDetails,
+            userId,
+            has_phone
+        } = this.state;
+
+        this.setState({ shouldShowPriceSheet: false }, _ => {
+            this.priceRBSheet?.current?.close();
+            if (has_phone && !is_seller)
+                return this.fetchContactInfo(productIdFromProductDetails, userId);
+            return this.openChat();
+        })
     };
 
     render() {
@@ -829,7 +892,11 @@ class ProductDetails extends PureComponent {
             category_id,
             sub_category_id,
 
-            showContactListModal
+            showContactListModal,
+
+            shouldShowPriceSheet,
+
+            isScrollForButtonsReached
         } = this.state;
 
 
@@ -890,6 +957,176 @@ class ProductDetails extends PureComponent {
                         productName={product_name}
                         {...this.props}
                     />
+                    : null
+                }
+
+                {shouldShowPriceSheet ?
+                    <RBSheet
+                        ref={this.priceRBSheet}
+                        closeOnDragDown
+                        closeOnPressMask
+                        onClose={_ => this.setState(
+                            {
+                                shouldShowPriceSheet: false
+                            }, _ => this.priceRBSheet?.current?.close()
+                        )
+                        }
+                        height={250}
+                        animationType='fade'
+                        customStyles={{
+                            draggableIcon: {
+                                backgroundColor: "#000"
+                            },
+                            container: {
+                                borderTopLeftRadius: 12,
+                                borderTopRightRadius: 12,
+                                backgroundColor: '#FAFAFA'
+                            }
+                        }}
+                    >
+                        <FontAwesome5
+                            onPress={_ => this.setState({
+                                shouldShowPriceSheet: false
+                            }, _ => this.priceRBSheet?.current?.close())}
+                            name='times'
+                            color='#777'
+                            size={20}
+                            style={{
+                                position: 'absolute',
+                                right: 15,
+                                top: 10,
+                            }}
+                        />
+                        <ScrollView
+                            style={{
+                                marginTop: 10
+                            }}
+                            contentContainerStyle={{
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 20,
+                                    color: 'black',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                {locales('titles.minOfThePrice')} <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontSize: 20,
+                                        color: 'black'
+                                    }}
+                                >
+                                    {locales('titles.forEachKilo')}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontSize: 20,
+                                        color: 'black',
+                                    }}
+                                >
+                                    {` ${product_name}`}
+                                </Text>
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 22,
+                                    color: '#140092',
+                                    marginTop: 5
+                                }}
+                            >
+                                {numberWithCommas(min_sale_price)} <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 22,
+                                        color: '#140092'
+                                    }}
+                                >
+                                    {locales('titles.toman')}
+                                </Text>
+                            </Text>
+
+                            <Button
+                                onPress={this.openCallPadFromAchivePrice}
+                                style={{
+                                    backgroundColor: has_phone && !is_seller
+                                        ? '#FF6600' : '#FFD5A8',
+                                    borderRadius: 8,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    alignSelf: 'center',
+                                    marginTop: 10,
+                                    width: '80%',
+                                    paddingVertical: 10,
+                                    flexDirection: 'row-reverse'
+                                }}
+                            >
+                                {has_phone && !is_seller ?
+                                    <FontAwesome5
+                                        name='phone-alt'
+                                        color='white'
+                                        solid
+                                        size={16}
+                                    />
+                                    : <Svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <SvgPath
+                                            fill="#F60"
+                                            d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
+                                        ></SvgPath>
+                                        <SvgPath
+                                            fill="#F60"
+                                            d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
+                                        ></SvgPath>
+                                    </Svg>
+                                }
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 20,
+                                        color: has_phone && !is_seller ? 'white' : '#FF6600',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                        marginRight: 8
+                                    }}
+                                >
+                                    {locales(`labels.${has_phone && !is_seller ?
+                                        'callWithSeller'
+                                        : 'chatWithSeller'}`)}
+                                </Text>
+                            </Button>
+                            <Text
+                                onPress={this.redirectToScreensViaAchivePrice}
+                                style={{
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 18,
+                                    color: '#FF6600',
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    marginTop: 20,
+                                    bottom: 10
+                                }}
+                            >
+                                {is_seller || !loggedInUserId ?
+                                    locales('labels.haveProductToSell')
+                                    :
+                                    locales('titles.registerBuyAdRequest')
+                                }
+                            </Text>
+                        </ScrollView>
+
+                    </RBSheet>
                     : null
                 }
 
@@ -1621,8 +1858,24 @@ class ProductDetails extends PureComponent {
                         </ScrollView>
                         :
                         <ScrollView
-                            style={{ backgroundColor: 'white' }}
+                            style={{
+                                backgroundColor: 'white',
+                            }}
+                            contentContainerStyle={{
+                                paddingBottom: 55
+
+                            }}
                             ref={this.wrapper}
+                            onScroll={event => {
+                                if (event.nativeEvent.contentOffset.y > 60 && !isScrollForButtonsReached)
+                                    this.setState({
+                                        isScrollForButtonsReached: true,
+                                    })
+                                else if (event.nativeEvent.contentOffset.y < 60 && isScrollForButtonsReached)
+                                    this.setState({
+                                        isScrollForButtonsReached: false
+                                    })
+                            }}
                             refreshControl={
                                 <RefreshControl
                                     refreshing={!!this.props.productDetailsInfoLoading}
@@ -1788,7 +2041,7 @@ class ProductDetails extends PureComponent {
                                         justifyContent: 'space-between',
                                     }}>
                                         <FontAwesome5
-                                            name='folder'
+                                            name='user-circle'
                                             color='#777777'
                                             solid
                                             size={20}
@@ -1800,10 +2053,19 @@ class ProductDetails extends PureComponent {
                                             marginHorizontal: 7,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         }}>
-                                            {locales('titles.category')}
+                                            {locales('labels.seller')}
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{sub_category_name}</Text>
+                                    <Text
+                                        style={
+                                            {
+                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                            }
+                                        }
+                                    >
+                                        {`${first_name} ${last_name}`}
+                                    </Text>
                                 </View>
 
                                 <View style={{
@@ -1823,8 +2085,13 @@ class ProductDetails extends PureComponent {
                                             solid
                                             size={20}
                                         />
-                                        <Text style={{ color: '#777777', fontSize: 16, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {locales('titles.province/city')}
+                                        <Text style={{
+                                            color: '#777777',
+                                            fontSize: 18,
+                                            marginHorizontal: 7,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}>
+                                            {locales('labels.address')}
                                         </Text>
                                     </View>
                                     <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
@@ -1884,7 +2151,7 @@ class ProductDetails extends PureComponent {
                                     </Text>
                                 </View>
 
-                                <View style={{
+                                {/* <View style={{
                                     flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                     borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
                                     marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
@@ -1906,7 +2173,41 @@ class ProductDetails extends PureComponent {
                                         </Text>
                                     </View>
                                     <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.achiveThePrice')}</Text>
-                                </View>
+                                </View> */}
+
+                                <Button
+                                    onPress={_ => this.setState(
+                                        {
+                                            shouldShowPriceSheet: true
+                                        }, _ => this.priceRBSheet?.current?.open()
+                                    )
+                                    }
+                                    style={{
+                                        marginTop: 10,
+                                        alignSelf: 'center',
+                                        width: '85%',
+                                        elevation: 0,
+                                        borderRadius: 6,
+                                        borderWidth: 1,
+                                        borderColor: '#FF6600',
+                                        backgroundColor: 'white',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            textAlignVertical: 'center',
+                                            color: '#FF6600',
+                                            fontSize: 16,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                        }}
+                                    >
+                                        {locales('titles.achiveSaleStatus')}
+                                    </Text>
+                                </Button>
+
 
                                 <View
 
@@ -2403,19 +2704,23 @@ class ProductDetails extends PureComponent {
                 }
                 {
                     productDetailsInfoFailed || productDetailsInfoError ? null :
-                        !this.props.productDetailsInfoLoading && userId != loggedInUserId ?
-                            <ShadowView style={{
-                                width: '100%',
-                                height: 65,
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                backgroundColor: 'white',
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }} >
+                        !this.props.productDetailsInfoLoading
+                            && userId != loggedInUserId ?
+                            <ShadowView
+                                style={{
+                                    width: '100%',
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    position: 'absolute',
+                                    bottom: isScrollForButtonsReached ? 0 : -60,
+                                    backgroundColor: 'white',
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 {(has_phone && !is_seller) ?
                                     <Button
                                         onPress={() => {
@@ -2426,14 +2731,24 @@ class ProductDetails extends PureComponent {
                                             alignItems: 'center',
                                             width: '45%',
                                             justifyContent: 'center',
-                                            backgroundColor: isContactInfoShown ? '#E0E0E0' : '#00C569'
+                                            backgroundColor: isContactInfoShown ? '#E0E0E0' : '#FF6600'
                                             // width: !!is_elevated ? '50%' : '46%'
                                         }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>
-                                            {!sellerMobileNumberLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                                <FontAwesome5 solid name='phone-square-alt'
-                                                    size={20} />
+                                            {!sellerMobileNumberLoading ? <Text
+                                                style={[
+                                                    styles.textWhite,
+                                                    {
+                                                        top: 10
+                                                    }
+                                                ]}
+                                            >
+                                                <FontAwesome5
+                                                    solid
+                                                    name='phone-alt'
+                                                    size={18}
+                                                />
                                             </Text> :
                                                 <ActivityIndicator
                                                     animating={true}
@@ -2441,8 +2756,15 @@ class ProductDetails extends PureComponent {
                                                     color='white'
                                                 />
                                             }
-                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                                {locales('labels.contactInfo')}
+                                            <Text style={
+                                                [
+                                                    styles.textWhite,
+                                                    styles.margin5,
+                                                    styles.textBold,
+                                                    styles.textSize18
+                                                ]}
+                                            >
+                                                {locales('labels.callWithSeller')}
                                             </Text>
                                         </View>
                                     </Button>
@@ -2452,9 +2774,7 @@ class ProductDetails extends PureComponent {
                                     style={[styles.loginButton, {
                                         zIndex: 1,
                                         width: (!is_seller && has_phone) ? '45%' : '95%',
-                                        backgroundColor: (!is_seller && has_phone) ? 'white' : '#FF5722',
-                                        borderColor: (!is_seller && has_phone) ? '#556080' : '#FF5722',
-                                        borderWidth: (!is_seller && has_phone) ? 1 : 0,
+                                        backgroundColor: '#FFD5A8',
                                     }]}
                                 >
                                     <View style={[styles.textCenterView, styles.buttonText]}>
@@ -2462,14 +2782,29 @@ class ProductDetails extends PureComponent {
                                             marginTop: 7,
                                             color: (!is_seller && has_phone) ? '#556080' : 'white',
                                         }]}>
-                                            <FontAwesome5 solid name='comment-alt' size={20} />
+                                            <Svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <SvgPath
+                                                    fill="#F60"
+                                                    d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
+                                                ></SvgPath>
+                                                <SvgPath
+                                                    fill="#F60"
+                                                    d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
+                                                ></SvgPath>
+                                            </Svg>
                                         </Text>
                                         <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18,
                                         {
-                                            color: (!is_seller && has_phone) ? '#556080' : 'white',
+                                            color: '#FF6600'
                                         }
                                         ]}>
-                                            {(!is_seller && has_phone) ? locales('labels.chat') : locales('labels.chatWithSeller')}
+                                            {locales('labels.chatWithSeller')}
                                         </Text>
                                     </View>
 
