@@ -188,10 +188,12 @@ const EnterActivisionCode = (props) => {
                     ref={ref}
                     {...codeProps}
                     value={value}
-                    onChangeText={value => {
+                    onChangeText={val => {
                         setValueError('');
-                        setValue(value);
+                        setValue(val);
                         setFlag(false)
+                        if (val && val.length == 4)
+                            onSubmit(val);
                     }}
                     cellCount={CELL_COUNT}
                     rootStyle={styles.codeFiledRoot}
