@@ -43,6 +43,7 @@ class PromoteRegistration extends React.Component {
 
     wrapperRef = createRef();
     refRBSheet = createRef();
+    scrollViewRef = createRef();
 
     componentDidMount() {
         analytics().logEvent('package_payment');
@@ -213,7 +214,9 @@ class PromoteRegistration extends React.Component {
                             alignItems: 'center',
                             justifyContent: 'center',
                             backgroundColor: '#140092',
-                            width: '80%',
+                            width: '100%',
+                            borderBottomLeftRadius: 30,
+                            borderBottomRightRadius: 30,
                             padding: 5,
                             marginBottom: 5
                         }}
@@ -296,12 +299,12 @@ class PromoteRegistration extends React.Component {
                         color: 'rgba(0, 0, 0, 0.8)',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 14,
-                        marginTop: 5
+                        marginVertical: 5
                     }}
                 >
                     {activeTab == 0 ?
-                        locales('labels.threeMonthPackageDescription') :
-                        locales('labels.annualPackageDescription')
+                        locales('labels.monthlyPackageDescription') :
+                        locales('titles.specialPackageDescription')
                     }
                 </Text>
                 {hasDiscount ?
@@ -428,9 +431,9 @@ class PromoteRegistration extends React.Component {
                 <Button
                     style={
                         {
-                            width: '70%',
+                            width: '75%',
                             borderRadius: 6,
-                            height: 50,
+                            height: 55,
                             marginTop: 10,
                             backgroundColor: '#FF6600',
                             alignSelf: 'center',
@@ -586,13 +589,14 @@ class PromoteRegistration extends React.Component {
                             style={{
                                 color: '#000000',
                                 fontSize: 20,
-                                left: -20,
                                 textAlign: 'center',
+                                top: activeTab == 0 ? -3 : 0,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                left: activeTab == 0 ? -20 : 0,
                             }}
                         >
-                            {activeTab == 0 ? 10 : 30}
+                            {activeTab == 0 ? 10 : locales('titles.unlimited')}
                         </Text>
                     </View>
 
@@ -1014,9 +1018,9 @@ class PromoteRegistration extends React.Component {
                 <Button
                     style={
                         {
-                            width: '70%',
+                            width: '60%',
                             borderRadius: 6,
-                            height: 50,
+                            height: 45,
                             marginTop: 30,
                             backgroundColor: '#FF6600',
                             alignSelf: 'center',
@@ -1375,6 +1379,7 @@ class PromoteRegistration extends React.Component {
                     null}
 
                 <ScrollView
+                    ref={this.scrollViewRef}
                     contentContainerStyle={{
                         paddingBottom: 20
                     }}
@@ -1424,29 +1429,14 @@ class PromoteRegistration extends React.Component {
                         {/* title text */}
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 fontSize: 16,
                                 textAlign: 'center',
                                 marginVertical: 15,
                                 paddingRight: 4
                             }}
                         >
-                            {locales('titles.specialSellersTo')} <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16,
-                                    color: '#078D06'
-                                }}
-                            >
-                                {locales('titles.moreRealBuyers')}
-                            </Text> <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16
-                                }}
-                            >
-                                {locales('titles.haveAccessTo')}.
-                            </Text>
+                            {locales('titles.buyersAndSellersAccess')}
                         </Text>
                         {/* end of title text */}
 
@@ -1787,7 +1777,53 @@ class PromoteRegistration extends React.Component {
                                 : null}
                         </View>
                     </ShadowView>
-
+                    <Button
+                        style={
+                            {
+                                width: '60%',
+                                borderRadius: 6,
+                                height: 45,
+                                marginTop: 30,
+                                backgroundColor: '#140092',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        onPress={_ => this.setState(
+                            {
+                                activeTab: this.state.activeTab == 0 ? 1 : 0,
+                                paymentType: this.state.activeTab == 0 ? 3 : 1
+                            }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
+                                animated: true,
+                                y: 0
+                            }), 100)
+                        )
+                        }
+                    >
+                        <View
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <Text style={
+                                {
+                                    textAlign: 'center',
+                                    alignSelf: 'center',
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                }
+                            }
+                            >
+                                {activeTab == 1 ?
+                                    locales('titles.threeMonthBasicPackage')
+                                    : locales('titles.annualSpecialPackage')
+                                }
+                            </Text>
+                        </View>
+                    </Button>
                 </ScrollView>
 
 
