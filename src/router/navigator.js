@@ -698,7 +698,7 @@ const routes = props => {
                                     }}
                                     onPress={() => {
                                         closePromotionModal();
-                                        navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                        navigationRef?.current?.navigate('PromoteRegistration')
                                     }}
                                 >
                                     <Text style={[styles.buttonText, {
@@ -1132,7 +1132,7 @@ const routes = props => {
                                         onPress={() => {
                                             closePromoteRegistrationModal();
                                             closeSuggestedBuyerModal();
-                                            navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                            navigationRef?.current?.navigate('PromoteRegistration');
                                         }}
                                     >
 
