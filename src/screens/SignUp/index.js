@@ -259,8 +259,6 @@ class SignUp extends React.Component {
                             }
 
                             if (isFromAchivePrice == true) {
-                                if (is_seller)
-                                    return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
                                 return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
