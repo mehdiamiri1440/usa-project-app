@@ -68,7 +68,8 @@ const EnterActivisionCode = (props) => {
                             sort_by: ENUMS.SORT_LIST.values.BM,
                             to_record_number: 16,
                         };
-                        props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
+                        props.fetchAllProductsList(item, true)
+                            .then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         props.fetchUserProfile().then((userProfileResult = {}) => {
                             const {
@@ -88,6 +89,7 @@ const EnterActivisionCode = (props) => {
                                 contact,
                                 profile_photo,
                                 isFromRequests,
+                                isFromAchivePrice,
                                 route = {},
                             } = props;
 
@@ -136,6 +138,7 @@ const EnterActivisionCode = (props) => {
                             global.meInfo.loggedInUserId = id;
 
                             const popAction = StackActions.pop(1);
+
                             if (contact && Object.keys(contact).length) {
                                 props.navigation.dispatch(popAction);
                                 props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
@@ -147,6 +150,13 @@ const EnterActivisionCode = (props) => {
                                     return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
                                 return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
+
+                            if (isFromAchivePrice == true) {
+                                if (is_seller)
+                                    return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                return props.navigation.navigate('Home', { screen: 'ProductsList' });
+                            }
+
                         })
                     })
                 }

@@ -442,7 +442,12 @@ class ProductDetails extends PureComponent {
                     screen: 'RegisterRequest'
                 });
             }
-            return this.props.navigation.navigate('StartUp', { screen: 'SignUp' });
+            return this.props.navigation.navigate('StartUp', {
+                screen: 'SignUp',
+                params: {
+                    isFromAchivePrice: true
+                }
+            });
         });
     };
 
@@ -1022,6 +1027,7 @@ class ProductDetails extends PureComponent {
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         fontSize: 20,
+                                        fontWeight: '200',
                                         color: 'black'
                                     }}
                                 >
@@ -1030,6 +1036,7 @@ class ProductDetails extends PureComponent {
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontWeight: '200',
                                         fontSize: 20,
                                         color: 'black',
                                     }}
@@ -1048,6 +1055,7 @@ class ProductDetails extends PureComponent {
                                 {numberWithCommas(min_sale_price)} <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontWeight: '200',
                                         fontSize: 22,
                                         color: '#140092'
                                     }}
