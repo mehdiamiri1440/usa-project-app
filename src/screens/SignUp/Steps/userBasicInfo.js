@@ -497,7 +497,7 @@ class UserBasicInfo extends React.Component {
                                 disabled={loading}
                                 value={province}
                                 placeholder={{
-                                    label: locales('labels.selectProvince'),
+                                    label: locales('titles.yourProvince'),
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 }}
                                 items={[...provinces.map(item => ({
@@ -587,7 +587,7 @@ class UserBasicInfo extends React.Component {
                                 }
                                 value={city}
                                 placeholder={{
-                                    label: locales('labels.selectCity'),
+                                    label: locales('titles.yourCity'),
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
 
                                 }}
@@ -678,7 +678,7 @@ class UserBasicInfo extends React.Component {
                             disabled={activityZoneLoading}
                             value={selectedCategoryId}
                             placeholder={{
-                                label: locales('labels.selectActivityZone'),
+                                label: locales('labels.selectYourActivityZone'),
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                             }}
                             items={[...activityZones.map(item => ({
@@ -786,7 +786,7 @@ class UserBasicInfo extends React.Component {
                                     color: activityType == 0 ? "rgba(60, 193, 59, 1)" : '#000000'
                                 }}
                             >
-                                {locales('labels.seller')}
+                                {locales('labels.IAmSeller')}
                             </Text>
                         </TouchableOpacity>
 
@@ -848,7 +848,7 @@ class UserBasicInfo extends React.Component {
                                     color: activityType == 1 ? "rgba(60, 193, 59, 1)" : '#000000'
                                 }}
                             >
-                                {locales('labels.buyer')}
+                                {locales('labels.IAmBuyer')}
                             </Text>
                         </TouchableOpacity>
 

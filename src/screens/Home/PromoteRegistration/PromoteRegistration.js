@@ -60,15 +60,23 @@ class PromoteRegistration extends React.Component {
         } = userProfile;
 
         const {
-            id
+            id,
+            wallet_balance = 0
         } = user_info;
 
-        if (!!userProfile && !!user_info && !!id)
-            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
-                if (supported) {
-                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
-                }
-            })
+        const buyingPrice = this.choosePrice() / 10;
+        ;
+        if (wallet_balance >= buyingPrice) {
+            return this.navigateToPaymentType();
+        }
+        else {
+            if (!!userProfile && !!user_info && !!id)
+                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
+                    if (supported) {
+                        return Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
+                    }
+                });
+        }
     };
 
     handleScrollToTopButtonClick = () => {

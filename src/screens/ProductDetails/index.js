@@ -1134,7 +1134,7 @@ class ProductDetails extends PureComponent {
                                 {is_seller || !loggedInUserId ?
                                     locales('labels.haveProductToSell')
                                     :
-                                    locales('titles.registerBuyAdRequest')
+                                    null
                                 }
                             </Text>
                         </ScrollView>
