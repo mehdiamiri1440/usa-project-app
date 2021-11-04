@@ -1020,7 +1020,8 @@ class ProductDetails extends PureComponent {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     fontSize: 20,
                                     color: 'black',
-                                    textAlign: 'center'
+                                    textAlign: 'center',
+                                    paddingHorizontal: 5
                                 }}
                             >
                                 {locales('titles.minOfThePrice')} <Text
