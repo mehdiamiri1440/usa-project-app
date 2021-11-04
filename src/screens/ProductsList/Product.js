@@ -1468,7 +1468,52 @@ class Product extends PureComponent {
                                         {formatter.convertedNumbersToTonUnit(stock)}
                                     </Text> */}
                                     </View>
-
+                                    {!!!loggedInUserId ?
+                                        <View
+                                            style={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center',
+                                                borderRadius: 6,
+                                                borderColor: '#128C7E',
+                                                borderWidth: 1,
+                                                width: '100%',
+                                                flexDirection: 'row-reverse',
+                                                marginVertical: 8
+                                            }}
+                                        >
+                                            <Svg
+                                                style={{
+                                                    marginLeft: 3
+                                                }}
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="26"
+                                                height="26"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <Path
+                                                    fill="#128C7E"
+                                                    d="M2.667 4h18.666a1.333 1.333 0 011.334 1.333v13.334A1.334 1.334 0 0121.332 20H2.667a1.333 1.333 0 01-1.334-1.333V5.333A1.333 1.333 0 012.667 4zm0 14.667h18.666V5.333H2.667v13.334z"
+                                                ></Path>
+                                                <Path
+                                                    fill="#128C7E"
+                                                    d="M18 9.333H6A.667.667 0 116 8h12a.667.667 0 110 1.333zM18 12H6a.667.667 0 010-1.333h12A.667.667 0 0118 12zM18 14.667h-6.667a.667.667 0 010-1.334H18a.667.667 0 110 1.334z"
+                                                ></Path>
+                                            </Svg>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    textAlign: 'center',
+                                                    color: '#128C7E',
+                                                    fontSize: 16,
+                                                    marginRight: 3
+                                                }}
+                                            >
+                                                {locales('titles.achiveSaleStatus')}
+                                            </Text>
+                                        </View>
+                                        : null}
                                 </View>
 
                                 {loggedInUserId == myuser_id && shouldShowMyButtons ?
