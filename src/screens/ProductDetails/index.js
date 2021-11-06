@@ -256,10 +256,10 @@ class ProductDetails extends PureComponent {
             } = productDetailsInfo[1];
 
             this.setState({
-                minimumOrder: min_sale_amount.toString(),
-                maximumPrice: max_sale_price.toString(),
-                minimumPrice: min_sale_price.toString(),
-                amount: stock.toString(),
+                minimumOrder: min_sale_amount?.toString(),
+                maximumPrice: max_sale_price?.toString(),
+                minimumPrice: min_sale_price?.toString(),
+                amount: stock?.toString(),
                 loaded: true,
 
                 related_products,
@@ -1279,7 +1279,7 @@ class ProductDetails extends PureComponent {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                                {locales('labels.callWithSeller')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -1886,7 +1886,8 @@ class ProductDetails extends PureComponent {
                                     }, _ => {
                                         Animated.timing(this.state.animatedValue, {
                                             toValue: deviceHeight - (
-                                                deviceHeight > 710 ? 140 : 115
+                                                deviceHeight > 710 ? 140 :
+                                                    deviceHeight < 680 ? 140 : 115
                                             ),
                                             duration: 500,
                                             useNativeDriver: true

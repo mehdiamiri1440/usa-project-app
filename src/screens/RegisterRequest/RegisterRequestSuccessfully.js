@@ -590,7 +590,7 @@ const RegisterRequestSuccessfully = props => {
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithSeller')}
                                         </Text>
 
                                     </LinearGradient>
@@ -834,7 +834,7 @@ const RegisterRequestSuccessfully = props => {
                             <FontAwesome5 name="times" color="#777" solid size={18} />
                         </Button>
                         <Paragraph style={styles.headerTextDialogModal}>
-                            {locales('labels.contactInfo')}
+                            {locales('labels.callWithSeller')}
                         </Paragraph>
                     </Dialog.Actions>
                     <View

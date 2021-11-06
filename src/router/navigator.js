@@ -968,7 +968,7 @@ const routes = props => {
                                                     paddingHorizontal: 3
                                                 }}
                                             >
-                                                {locales('labels.contactInfo')}
+                                                {locales('labels.callWithBuyer')}
                                             </Text>
                                         </LinearGradient>
 

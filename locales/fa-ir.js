@@ -218,6 +218,8 @@ module.exports = {
     'labels.contactInfo': 'اطلاعات تماس',
     'labels.returnOfMoneyConfirmation': 'تضمین بازگشت وجه',
     'labels.search': 'جستجو',
+    'labels.callWithSeller': 'تماس با فروشنده',
+    'labels.callWithBuyer': 'تماس با خریدار',
     'labels.credit': 'اعتبار',
     'labels.is': 'هستم',
     'labels.addImage': 'افزودن تصویر',

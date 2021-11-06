@@ -510,7 +510,7 @@ class RequestsTab extends Component {
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithBuyer')}
                                         </Text>
                                     </LinearGradient>
 
@@ -809,7 +809,7 @@ class RequestsTab extends Component {
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithBuyer')}
                                         </Text>
 
                                     </LinearGradient>
@@ -1134,7 +1134,7 @@ class RequestsTab extends Component {
                                             paddingHorizontal: 3
                                         }}
                                     >
-                                        {locales('labels.contactInfo')}
+                                        {locales('labels.callWithBuyer')}
                                     </Text>
 
                                 </LinearGradient>
@@ -1444,7 +1444,7 @@ class RequestsTab extends Component {
                                     <FontAwesome5 name="times" color="#777" solid size={18} />
                                 </Button>
                                 <Paragraph style={styles.headerTextDialogModal}>
-                                    {locales('labels.contactInfo')}
+                                    {locales('labels.callWithBuyer')}
                                 </Paragraph>
                             </Dialog.Actions>
 

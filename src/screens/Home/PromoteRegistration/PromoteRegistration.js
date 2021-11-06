@@ -436,7 +436,7 @@ class PromoteRegistration extends React.Component {
                     </>
                     : null
                 }
-                <Button
+                <Pressable
                     style={
                         {
                             width: '75%',
@@ -479,7 +479,7 @@ class PromoteRegistration extends React.Component {
                             }}
                         />
                     </View>
-                </Button>
+                </Pressable>
                 {/* end of three month package price */}
                 <ShadowView
                     style={{
@@ -1387,6 +1387,7 @@ class PromoteRegistration extends React.Component {
                     null}
 
                 <ScrollView
+                    stickyHeaderIndices={[1]}
                     ref={this.scrollViewRef}
                     contentContainerStyle={{
                         paddingBottom: 20
@@ -1449,12 +1450,24 @@ class PromoteRegistration extends React.Component {
                         {/* end of title text */}
 
                         {/* header buttons */}
+
+                        {/* end of header buttons */}
+
+                        {/* three month package price */}
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
                         <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginVertical: 10
+                                marginBottom: 30,
+                                width: '95%',
+                                alignSelf: 'center'
                             }}
                         >
                             <ShadowView
@@ -1531,9 +1544,6 @@ class PromoteRegistration extends React.Component {
                                 </Pressable>
                             </ShadowView>
                         </View>
-                        {/* end of header buttons */}
-
-                        {/* three month package price */}
                     </View>
                     {this.renderPackagesDetails()}
                     <ShadowView
