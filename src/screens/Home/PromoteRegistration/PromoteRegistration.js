@@ -1,14 +1,14 @@
 import React, { createRef } from 'react';
 import {
     Text, View, Modal, Pressable, ScrollView,
-    StyleSheet, Linking, RefreshControl,
+    StyleSheet, Linking, RefreshControl, Image,
     TouchableOpacity,
     LayoutAnimation, UIManager, Platform,
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import Svg, { Circle, Path, G } from "react-native-svg";
+import Svg, { Circle, Path, G, Stop, Defs } from "react-native-svg";
 import { Card, Button } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
@@ -462,8 +462,8 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 alignSelf: 'center',
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 20,
                             }
                         }
                         >
@@ -517,7 +517,7 @@ class PromoteRegistration extends React.Component {
                             height: '100%',
                             backgroundColor: 'rgba(0,0,0,0.1)',
                             position: 'absolute',
-                            left: '20%'
+                            left: '25%'
                         }}
                     ></View>
                     <View
@@ -1023,7 +1023,7 @@ class PromoteRegistration extends React.Component {
                     </>
                     : null
                 }
-                <Button
+                <Pressable
                     style={
                         {
                             width: '60%',
@@ -1049,8 +1049,8 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 alignSelf: 'center',
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
                             }
                         }
                         >
@@ -1066,7 +1066,7 @@ class PromoteRegistration extends React.Component {
                             }}
                         />
                     </View>
-                </Button>
+                </Pressable>
             </>
         );
         return;
@@ -1795,53 +1795,78 @@ class PromoteRegistration extends React.Component {
                                 : null}
                         </View>
                     </ShadowView>
-                    <Button
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['rgba(38, 70, 83, 0.19)', 'rgba(255, 255, 255, 0)']}
                         style={
                             {
-                                width: '60%',
-                                borderRadius: 6,
-                                height: 45,
+                                width: '70%',
+                                borderRadius: 50,
+                                height: 55,
+                                padding: 0.2,
                                 marginTop: 30,
-                                backgroundColor: '#140092',
+                                flexDirection: 'row-reverse',
                                 alignSelf: 'center',
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}
-                        onPress={_ => this.setState(
-                            {
-                                activeTab: this.state.activeTab == 0 ? 1 : 0,
-                                paymentType: this.state.activeTab == 0 ? 3 : 1
-                            }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
-                                animated: true,
-                                y: 0
-                            }), 100)
-                        )
-                        }
                     >
-                        <View
-                            style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flexDirection: 'row-reverse'
-                            }}
-                        >
-                            <Text style={
+                        <Button
+                            style={
                                 {
-                                    textAlign: 'center',
+                                    width: '100%',
+                                    borderRadius: 50,
+                                    height: '98%',
+                                    backgroundColor: 'rgba(196, 196, 196, 0.4)',
+                                    flexDirection: 'row-reverse',
+                                    elevation: 0,
                                     alignSelf: 'center',
-                                    color: 'white',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16,
-                                }
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            onPress={_ => this.setState(
+                                {
+                                    activeTab: this.state.activeTab == 0 ? 1 : 0,
+                                    paymentType: this.state.activeTab == 0 ? 3 : 1
+                                }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
+                                    animated: true,
+                                    y: 0
+                                }), 100)
+                            )
                             }
+                        >
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row-reverse'
+                                }}
                             >
-                                {activeTab == 1 ?
-                                    locales('titles.threeMonthBasicPackage')
-                                    : locales('titles.annualSpecialPackage')
+                                <Text style={
+                                    {
+                                        textAlign: 'center',
+                                        alignSelf: 'center',
+                                        color: '#264653',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                    }
                                 }
-                            </Text>
-                        </View>
-                    </Button>
+                                >
+                                    {activeTab == 1 ?
+                                        locales('titles.threeMonthBasicPackage')
+                                        : locales('titles.annualSpecialPackage')
+                                    }
+                                </Text>
+                            </View>
+                            <Image
+                                style={{
+                                    marginHorizontal: 10
+                                }}
+                                source={require('../../../../assets/icons/arrows.png')}
+                            />
+                        </Button>
+                    </LinearGradient>
                 </ScrollView>
 
 

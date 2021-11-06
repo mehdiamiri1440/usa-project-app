@@ -268,6 +268,7 @@ module.exports = {
     'labels.monthlyPackageDescription': 'این بسته شامل مجموعه امکانات پایه باسکول از جمله دسترسی به شماره تماس خریداران ، دسترسی به خریداران طلایی و جذب چندین برابری خریداران نسبت به حالت رایگان است.',
     'labels.specialPackagesFeatures': 'ویژگی های بسته ویژه',
     'labels.basicPackagesFeatures': 'ویژگی های بسته پایه',
+    'lables.loginText': 'برای ارتباط مستقیم با کاربران باسکول اطلاعات خود را وارد کنید .',
     'labels.buyers': 'خریداران',
     'labels.submittedComments': 'نظر ثبت شده',
     'labels.satisfyWithBuskool': 'آیا از باسکول راضی هستید ؟',

@@ -385,7 +385,18 @@ const GetMobileNumber = props => {
 
     return (
         <View>
-
+            <Text
+                style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    color: 'black',
+                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                    fontSize: 14,
+                    marginBottom: 20
+                }}
+            >
+                {locales('lables.loginText')}
+            </Text>
             <Text
                 style={{
                     color: '#555555',
@@ -405,6 +416,7 @@ const GetMobileNumber = props => {
                     *
                 </Text>
             </Text>
+
 
             <Text
                 style={{
