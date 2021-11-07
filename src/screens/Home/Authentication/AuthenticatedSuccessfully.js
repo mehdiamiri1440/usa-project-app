@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import Svg, { Path, G, Circle } from "react-native-svg";
 
@@ -209,7 +210,11 @@ const AuthenticatedSuccessfully = props => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row-reverse'
                             }}
-                            onPress={_ => props.navigation.navigate('SpecialProducts')}
+                            onPress={_ => {
+                                analytics().logEvent('suggested_products_in_authentication');
+                                props.navigation.navigate('SpecialProducts');
+                            }
+                            }
                         >
                             <LinearGradient
                                 start={{ x: 0, y: 0, }}
@@ -303,7 +308,10 @@ const AuthenticatedSuccessfully = props => {
                                         justifyContent: 'space-between',
                                         flexDirection: 'row-reverse'
                                     }}
-                                    onPress={_ => props.navigation.navigate('PromoteRegistration')}
+                                    onPress={_ => {
+                                        analytics().logEvent('promote_registration_in_authentication');
+                                        props.navigation.navigate('PromoteRegistration');
+                                    }}
                                 >
                                     <LinearGradient
                                         start={{ x: 0, y: 0, }}
@@ -400,7 +408,11 @@ const AuthenticatedSuccessfully = props => {
                                     justifyContent: 'space-between',
                                     flexDirection: 'row-reverse'
                                 }}
-                                onPress={_ => props.navigation.navigate('RequestsStack')}
+                                onPress={_ => {
+                                    analytics().logEvent('see_buyads_in_authentication');
+                                    props.navigation.navigate('RequestsStack');
+                                }
+                                }
                             >
                                 <LinearGradient
                                     start={{ x: 0, y: 0, }}

@@ -1,9 +1,8 @@
 import React, { createRef } from 'react';
 import {
     Text, View, Modal, Pressable, ScrollView,
-    StyleSheet, Linking, RefreshControl, Image,
-    TouchableOpacity,
-    LayoutAnimation, UIManager, Platform,
+    StyleSheet, Linking, Image,
+    UIManager, Platform,
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
@@ -1483,12 +1482,15 @@ class PromoteRegistration extends React.Component {
                                 }}
                             >
                                 <Pressable
-                                    onPress={_ => this.setState(
-                                        {
-                                            activeTab: 0,
-                                            paymentType: 1
-                                        }
-                                    )
+                                    onPress={_ => {
+                                        analytics().logEvent('three_month_package_upper_button')
+                                        this.setState(
+                                            {
+                                                activeTab: 0,
+                                                paymentType: 1
+                                            }
+                                        )
+                                    }
                                     }
                                     style={{
                                         borderBottomWidth: 2,
@@ -1522,7 +1524,11 @@ class PromoteRegistration extends React.Component {
                                 }}
                             >
                                 <Pressable
-                                    onPress={_ => this.setState({ activeTab: 1, paymentType: 3 })}
+                                    onPress={_ => {
+                                        analytics().logEvent('annual_package_upper_button')
+                                        this.setState({ activeTab: 1, paymentType: 3 });
+                                    }
+                                    }
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 1 ?
@@ -1825,15 +1831,22 @@ class PromoteRegistration extends React.Component {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
-                            onPress={_ => this.setState(
-                                {
-                                    activeTab: this.state.activeTab == 0 ? 1 : 0,
-                                    paymentType: this.state.activeTab == 0 ? 3 : 1
-                                }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
-                                    animated: true,
-                                    y: 0
-                                }), 100)
-                            )
+                            onPress={_ => {
+                                if (this.state.activeTab == 0)
+                                    analytics().logEvent('annual_package_upper_button')
+                                else
+                                    analytics().logEvent('three_month_package_low_button')
+
+                                this.setState(
+                                    {
+                                        activeTab: this.state.activeTab == 0 ? 1 : 0,
+                                        paymentType: this.state.activeTab == 0 ? 3 : 1
+                                    }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
+                                        animated: true,
+                                        y: 0
+                                    }), 100)
+                                )
+                            }
                             }
                         >
                             <View

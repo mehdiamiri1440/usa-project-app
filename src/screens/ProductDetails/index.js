@@ -434,6 +434,7 @@ class ProductDetails extends PureComponent {
         const {
             is_seller
         } = user_info;
+        analytics().logEvent('want_to_add_product_in_price_modal')
         this.setState({ shouldShowPriceSheet: false }, _ => {
             if (loggedInUserId) {
                 if (is_seller)
@@ -812,8 +813,11 @@ class ProductDetails extends PureComponent {
 
         this.setState({ shouldShowPriceSheet: false }, _ => {
             this.priceRBSheet?.current?.close();
-            if (has_phone && !is_seller)
+            if (has_phone && !is_seller) {
+                analytics().logEvent('call_with_seller_in_price_modal');
                 return this.fetchContactInfo(productIdFromProductDetails, userId);
+            }
+            analytics().logEvent('chat_with_seller_in_price_modal');
             return this.openChat();
         })
     };
@@ -1955,16 +1959,24 @@ class ProductDetails extends PureComponent {
                                     </View>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center',
-                                    width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        width: deviceWidth,
+                                        justifyContent: 'space-between',
+                                        paddingHorizontal: 15,
 
-                                }}>
-                                    {userId == loggedInUserId ? <View style={{
-                                        flexDirection: 'row', justifyContent: 'space-around',
-                                        flex: 1
-                                        // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
-                                    }}>
+                                    }}
+                                >
+                                    {userId == loggedInUserId ? <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-around',
+                                            flex: 1
+                                            // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
+                                        }}
+                                    >
                                         <Button
                                             style={{
                                                 color: 'white',
@@ -2202,55 +2214,59 @@ class ProductDetails extends PureComponent {
                                     <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.achiveThePrice')}</Text>
                                 </View> */}
 
-                                <Button
-                                    onPress={_ => this.setState(
-                                        {
-                                            shouldShowPriceSheet: true
-                                        }, _ => this.priceRBSheet?.current?.open()
-                                    )
-                                    }
-                                    style={{
-                                        marginTop: 40,
-                                        marginBottom: 25,
-                                        alignSelf: 'center',
-                                        width: '70%',
-                                        elevation: 0,
-                                        borderRadius: 6,
-                                        borderWidth: 1,
-                                        borderColor: '#FF6600',
-                                        backgroundColor: 'white',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row-reverse'
-                                    }}
-                                >
-                                    <Svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
+                                {loggedInUserId != userId ?
+                                    <Button
+                                        onPress={_ => {
+                                            analytics().logEvent('show_price_in_product_view')
+                                            this.setState(
+                                                {
+                                                    shouldShowPriceSheet: true
+                                                }, _ => this.priceRBSheet?.current?.open()
+                                            )
+                                        }
+                                        }
                                         style={{
-                                            marginHorizontal: 5
-                                        }}
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <SvgPath
-                                            fill="#FF6600"
-                                            d="M19.388.405a.605.605 0 00-1.141.399c.929 2.67-.915 4.664-2.321 5.732l-.568-.814c-.191-.273-.618-.5-.95-.504l-3.188.014a2.162 2.162 0 00-1.097.338L.729 12.157a1.01 1.01 0 00-.247 1.404l4.269 6.108c.32.455.831.4 1.287.082l9.394-6.588c.27-.191.582-.603.692-.918l.998-3.145c.11-.314.043-.793-.148-1.066l-.346-.496c1.888-1.447 3.848-4.004 2.76-7.133zm-4.371 9.358a1.608 1.608 0 01-2.24-.396 1.614 1.614 0 01.395-2.246 1.607 1.607 0 011.868.017c-.272.164-.459.26-.494.275a.606.606 0 00.259 1.153c.086 0 .174-.02.257-.059.194-.092.402-.201.619-.33a1.615 1.615 0 01-.664 1.586z"
-                                        ></SvgPath>
-                                    </Svg>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            textAlignVertical: 'center',
-                                            color: '#FF6600',
-                                            fontSize: 16,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                            marginTop: 40,
+                                            marginBottom: 25,
+                                            alignSelf: 'center',
+                                            width: '70%',
+                                            elevation: 0,
+                                            borderRadius: 6,
+                                            borderWidth: 1,
+                                            borderColor: '#FF6600',
+                                            backgroundColor: 'white',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row-reverse'
                                         }}
                                     >
-                                        {locales('titles.achiveSaleStatus')}
-                                    </Text>
-                                </Button>
-
+                                        <Svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="20"
+                                            height="20"
+                                            style={{
+                                                marginHorizontal: 5
+                                            }}
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <SvgPath
+                                                fill="#FF6600"
+                                                d="M19.388.405a.605.605 0 00-1.141.399c.929 2.67-.915 4.664-2.321 5.732l-.568-.814c-.191-.273-.618-.5-.95-.504l-3.188.014a2.162 2.162 0 00-1.097.338L.729 12.157a1.01 1.01 0 00-.247 1.404l4.269 6.108c.32.455.831.4 1.287.082l9.394-6.588c.27-.191.582-.603.692-.918l.998-3.145c.11-.314.043-.793-.148-1.066l-.346-.496c1.888-1.447 3.848-4.004 2.76-7.133zm-4.371 9.358a1.608 1.608 0 01-2.24-.396 1.614 1.614 0 01.395-2.246 1.607 1.607 0 011.868.017c-.272.164-.459.26-.494.275a.606.606 0 00.259 1.153c.086 0 .174-.02.257-.059.194-.092.402-.201.619-.33a1.615 1.615 0 01-.664 1.586z"
+                                            ></SvgPath>
+                                        </Svg>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                color: '#FF6600',
+                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                            }}
+                                        >
+                                            {locales('titles.achiveSaleStatus')}
+                                        </Text>
+                                    </Button>
+                                    : null}
 
                                 <View
 

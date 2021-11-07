@@ -1469,7 +1469,11 @@ class Product extends PureComponent {
                                     </Text> */}
                                     </View>
                                     {!!!loggedInUserId ?
-                                        <View
+                                        <Pressable
+                                            onPress={_ => {
+                                                analytics().logEvent('show_price_in_product');
+                                                this.props.navigation.push('ProductDetails', { productId });
+                                            }}
                                             style={{
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
@@ -1505,7 +1509,7 @@ class Product extends PureComponent {
                                             >
                                                 {locales('titles.achiveSaleStatus')}
                                             </Text>
-                                        </View>
+                                        </Pressable>
                                         : null}
                                 </View>
 
