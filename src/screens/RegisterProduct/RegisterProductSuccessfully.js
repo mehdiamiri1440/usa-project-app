@@ -420,7 +420,7 @@ class RegisterProductSuccessfully extends Component {
                             }}
                             style={{
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                                width: '50%',
+                                width: '52%',
                                 zIndex: 1000,
                                 marginHorizontal: 10,
                                 position: 'relative',
@@ -450,7 +450,7 @@ class RegisterProductSuccessfully extends Component {
                             >
                                 {buyerMobileNumberLoading && selectedButton == item.id ?
                                     <ActivityIndicator
-                                        size={20}
+                                        size={18}
                                         color={(!item.is_golden ? 'white' : '#333')}
                                         animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                     />
@@ -459,13 +459,13 @@ class RegisterProductSuccessfully extends Component {
                                         solid
                                         name='phone-alt'
                                         color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                        size={20} />
+                                        size={18} />
                                 }
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 3,
-                                        fontSize: 18,
+                                        fontSize: 17,
                                         color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                         paddingHorizontal: 3
                                     }}

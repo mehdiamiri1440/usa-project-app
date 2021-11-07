@@ -539,7 +539,7 @@ const RegisterRequestSuccessfully = props => {
                                     onPress={() => fetchContactInfo(item, index)}
                                     style={{
                                         borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
-                                        width: '47%',
+                                        width: '50%',
                                         zIndex: 1000,
                                         position: 'relative',
                                         alignSelf: 'center',
@@ -565,7 +565,7 @@ const RegisterRequestSuccessfully = props => {
                                     >
                                         {!!sellerMobileNumberLoading && selectedButton == item.id ?
                                             <ActivityIndicator
-                                                size={20}
+                                                size={17}
                                                 color='white'
                                                 animating
                                                 style={{
@@ -579,13 +579,13 @@ const RegisterRequestSuccessfully = props => {
                                                 solid
                                                 name='phone-alt'
                                                 color='white'
-                                                size={20} />
+                                                size={17} />
                                         }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 marginHorizontal: 3,
-                                                fontSize: 18,
+                                                fontSize: 17,
                                                 color: 'white',
                                                 paddingHorizontal: 3
                                             }}
