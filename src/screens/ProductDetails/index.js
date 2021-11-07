@@ -1068,8 +1068,7 @@ class ProductDetails extends PureComponent {
                             <Button
                                 onPress={this.openCallPadFromAchivePrice}
                                 style={{
-                                    backgroundColor: has_phone && !is_seller
-                                        ? '#FF6600' : '#FFD5A8',
+                                    backgroundColor: '#FF6600',
                                     borderRadius: 8,
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -1095,11 +1094,11 @@ class ProductDetails extends PureComponent {
                                         viewBox="0 0 24 24"
                                     >
                                         <SvgPath
-                                            fill="#F60"
+                                            fill="white"
                                             d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
                                         ></SvgPath>
                                         <SvgPath
-                                            fill="#F60"
+                                            fill="white"
                                             d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
                                         ></SvgPath>
                                     </Svg>
@@ -1108,7 +1107,7 @@ class ProductDetails extends PureComponent {
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 20,
-                                        color: has_phone && !is_seller ? 'white' : '#FF6600',
+                                        color: 'white',
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
                                         marginRight: 8
