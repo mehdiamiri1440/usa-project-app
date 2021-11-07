@@ -1471,7 +1471,7 @@ class Product extends PureComponent {
                                     {!!!loggedInUserId ?
                                         <Pressable
                                             onPress={_ => {
-                                                analytics().logEvent('show_price_in_product');
+                                                analytics().logEvent('click_on_btn_in_product_list');
                                                 this.props.navigation.push('ProductDetails', { productId });
                                             }}
                                             style={{

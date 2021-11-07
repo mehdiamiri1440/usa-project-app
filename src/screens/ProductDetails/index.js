@@ -434,7 +434,7 @@ class ProductDetails extends PureComponent {
         const {
             is_seller
         } = user_info;
-        analytics().logEvent('want_to_add_product_in_price_modal')
+        analytics().logEvent('register_product_in_price_modal')
         this.setState({ shouldShowPriceSheet: false }, _ => {
             if (loggedInUserId) {
                 if (is_seller)
@@ -814,10 +814,10 @@ class ProductDetails extends PureComponent {
         this.setState({ shouldShowPriceSheet: false }, _ => {
             this.priceRBSheet?.current?.close();
             if (has_phone && !is_seller) {
-                analytics().logEvent('call_with_seller_in_price_modal');
+                analytics().logEvent('phone_btn_in_price_modal');
                 return this.fetchContactInfo(productIdFromProductDetails, userId);
             }
-            analytics().logEvent('chat_with_seller_in_price_modal');
+            analytics().logEvent('chat_btn_in_price_modal');
             return this.openChat();
         })
     };
@@ -2217,7 +2217,7 @@ class ProductDetails extends PureComponent {
                                 {loggedInUserId != userId ?
                                     <Button
                                         onPress={_ => {
-                                            analytics().logEvent('show_price_in_product_view')
+                                            analytics().logEvent('show_price_btn_in_product_view')
                                             this.setState(
                                                 {
                                                     shouldShowPriceSheet: true

@@ -211,7 +211,7 @@ const AuthenticatedSuccessfully = props => {
                                 flexDirection: 'row-reverse'
                             }}
                             onPress={_ => {
-                                analytics().logEvent('suggested_products_in_authentication');
+                                analytics().logEvent('suggested_products_in_verification');
                                 props.navigation.navigate('SpecialProducts');
                             }
                             }
@@ -309,7 +309,7 @@ const AuthenticatedSuccessfully = props => {
                                         flexDirection: 'row-reverse'
                                     }}
                                     onPress={_ => {
-                                        analytics().logEvent('promote_registration_in_authentication');
+                                        analytics().logEvent('package_promotion_in_verification');
                                         props.navigation.navigate('PromoteRegistration');
                                     }}
                                 >
@@ -409,7 +409,7 @@ const AuthenticatedSuccessfully = props => {
                                     flexDirection: 'row-reverse'
                                 }}
                                 onPress={_ => {
-                                    analytics().logEvent('see_buyads_in_authentication');
+                                    analytics().logEvent('click_buyads_in_verification');
                                     props.navigation.navigate('RequestsStack');
                                 }
                                 }

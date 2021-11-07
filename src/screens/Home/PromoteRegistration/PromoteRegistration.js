@@ -1483,7 +1483,7 @@ class PromoteRegistration extends React.Component {
                             >
                                 <Pressable
                                     onPress={_ => {
-                                        analytics().logEvent('three_month_package_upper_button')
+                                        analytics().logEvent('switch_to_package_type_one_in_top')
                                         this.setState(
                                             {
                                                 activeTab: 0,
@@ -1505,7 +1505,7 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 16,
                                             textAlign: 'center',
-                                            color: `rgba(0,0,0,${activeTab == 0 ? '1' : '0.5'})`
+                                            color: activeTab == 0 ? '#000000' : '#808080'
                                         }}
                                     >
                                         {locales('titles.threeMonthBasicPackage')}
@@ -1525,7 +1525,7 @@ class PromoteRegistration extends React.Component {
                             >
                                 <Pressable
                                     onPress={_ => {
-                                        analytics().logEvent('annual_package_upper_button')
+                                        analytics().logEvent('switch_to_package_type_three_in_top')
                                         this.setState({ activeTab: 1, paymentType: 3 });
                                     }
                                     }
@@ -1542,7 +1542,7 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 16,
                                             textAlign: 'center',
-                                            color: `rgba(0,0,0,${activeTab == 1 ? '1' : '0.5'})`
+                                            color: activeTab == 1 ? '#000000' : '#808080'
                                         }}
                                     >
                                         {locales('titles.annualSpecialPackage')}
@@ -1833,9 +1833,9 @@ class PromoteRegistration extends React.Component {
                                 }}
                             onPress={_ => {
                                 if (this.state.activeTab == 0)
-                                    analytics().logEvent('annual_package_upper_button')
+                                    analytics().logEvent('switch_to_package_type_three_in_down')
                                 else
-                                    analytics().logEvent('three_month_package_low_button')
+                                    analytics().logEvent('switch_to_package_type_one_in_down')
 
                                 this.setState(
                                     {
