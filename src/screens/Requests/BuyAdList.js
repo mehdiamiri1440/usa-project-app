@@ -412,7 +412,7 @@ const BuyAdList = props => {
                         onPress={() => fetchContactInfo(item)}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                            width: item.has_msg ? '47%' : '70%',
+                            width: item.has_msg ? '49%' : '70%',
                             zIndex: 1000,
                             position: 'relative',
                             alignSelf: 'center',
@@ -442,7 +442,7 @@ const BuyAdList = props => {
                         >
                             {buyerMobileNumberLoading && selectedButton == item.id ?
                                 <ActivityIndicator
-                                    size={20}
+                                    size={19}
                                     color={(!item.is_golden ? 'white' : '#333')}
                                     animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                 />
@@ -451,13 +451,13 @@ const BuyAdList = props => {
                                     solid
                                     name='phone-square-alt'
                                     color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                    size={20} />
+                                    size={19} />
                             }
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     marginHorizontal: 3,
-                                    fontSize: 18,
+                                    fontSize: 17,
                                     color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                     paddingHorizontal: 3
                                 }}
