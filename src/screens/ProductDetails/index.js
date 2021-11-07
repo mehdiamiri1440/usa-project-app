@@ -1973,7 +1973,7 @@ class ProductDetails extends PureComponent {
                                                 marginLeft: !is_elevated ? 5 : 0,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 backgroundColor: '#140092',
-                                                width: !!is_elevated ? '45%' : '46%',
+                                                width: !!is_elevated ? '48%' : '46%',
                                                 paddingRight: 40,
                                             }}
                                         >
@@ -1997,7 +1997,7 @@ class ProductDetails extends PureComponent {
                                                 style={
                                                     {
                                                         position: 'absolute',
-                                                        right: '25%'
+                                                        right: is_elevated ? '18%' : '25%',
                                                     }}
                                             />
                                         </Button>
@@ -2032,7 +2032,7 @@ class ProductDetails extends PureComponent {
                                                 name='pencil'
                                                 size={20}
                                                 style={{
-                                                    right: '25%',
+                                                    right: is_elevated ? '18%' : '25%',
                                                     position: 'absolute'
                                                 }}
                                                 color='#140092'
