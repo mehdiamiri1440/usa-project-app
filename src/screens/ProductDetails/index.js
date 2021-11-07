@@ -547,7 +547,7 @@ class ProductDetails extends PureComponent {
     };
 
     getProductUrl = _ => {
-        if (this.props.productDetailsInfo.length)
+        if (this.props.productDetailsInfo && this.props.productDetailsInfo.length)
             return (
                 "/product-view/خرید-عمده-" +
                 this.props.productDetailsInfo[0].product.main.sub_category_name.replace(" ", "-") +
@@ -1410,7 +1410,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: amountError ? '#D50000' : amount && amount.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5, padding: 3
                                             }}>
                                             <Input
@@ -1438,7 +1438,7 @@ class ProductDetails extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                            textAlign: !amountError && amount && amount.length ? 'left' : 'right'
                                         }}>
 
                                             {!!amountError && <Text style={{
@@ -1462,7 +1462,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder && minimumOrder.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1490,7 +1490,7 @@ class ProductDetails extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
+                                            textAlign: !minimumOrderError && minimumOrder && minimumOrder.length ? 'left' : 'right'
                                         }}>
 
                                             {!!minimumOrderError && <Text style={{
@@ -1514,7 +1514,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice && minimumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1561,7 +1561,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice && maximumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1997,7 +1997,7 @@ class ProductDetails extends PureComponent {
                                                 style={
                                                     {
                                                         position: 'absolute',
-                                                        right: 35
+                                                        right: '25%'
                                                     }}
                                             />
                                         </Button>
@@ -2032,7 +2032,7 @@ class ProductDetails extends PureComponent {
                                                 name='pencil'
                                                 size={20}
                                                 style={{
-                                                    right: 45,
+                                                    right: '25%',
                                                     position: 'absolute'
                                                 }}
                                                 color='#140092'
