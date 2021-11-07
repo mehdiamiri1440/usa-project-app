@@ -7,6 +7,7 @@ import {
     View,
     FlatList,
     ActivityIndicator,
+    ScrollView,
     Pressable,
     Linking, BackHandler,
     LayoutAnimation, UIManager, Platform
@@ -40,6 +41,7 @@ class RegisterProductSuccessfully extends Component {
             subCategoryId: null,
             selectedBuyAdId: -1,
             showGoldenModal: false,
+            scrollToOffset: 0,
             selectedContact: {},
             subCategoryName: '',
             loaded: false,
@@ -50,6 +52,7 @@ class RegisterProductSuccessfully extends Component {
     }
 
     flatListRef = React.createRef();
+    scrollViewRef = React.createRef();
     isComponentMounted = false;
 
     componentDidMount() {
@@ -119,7 +122,11 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
-                    return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
+                    return this.scrollViewRef?.current?.scrollTo({
+                        x: 0,
+                        y: this.state.scrollToOffset + 105,
+                        animated: true
+                    })
                 }
             })
                 .catch(err => {
@@ -1131,7 +1138,12 @@ class RegisterProductSuccessfully extends Component {
                     </Portal >
                     : null
                 }
-                <View
+                <ScrollView
+                    onScroll={event => {
+                        console.log(event.nativeEvent.contentOffset.y)
+                        this.setState({ scrollToOffset: event.nativeEvent.contentOffset.y })
+                    }}
+                    ref={this.scrollViewRef}
                     style={{
                         flex: 1,
                         backgroundColor: 'white'
@@ -1276,7 +1288,7 @@ class RegisterProductSuccessfully extends Component {
                             </Button>
                         </View>
                     }
-                </View>
+                </ScrollView>
             </>
         )
     }

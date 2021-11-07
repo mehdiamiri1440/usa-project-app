@@ -3,7 +3,7 @@ import {
     Text, View, Pressable, FlatList, StyleSheet,
     Image, ActivityIndicator, Linking,
     LayoutAnimation, UIManager, Platform,
-    TouchableOpacity
+    TouchableOpacity, ScrollView
 } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -32,6 +32,8 @@ if (
 const RegisterRequestSuccessfully = props => {
 
     const flatListRef = useRef(null);
+
+    const scrollViewRef = useRef(null);
 
     const viewRef = useRef(null);
 
@@ -227,8 +229,9 @@ const RegisterRequestSuccessfully = props => {
                 item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
-                return flatListRef?.current?.scrollToOffset({
-                    offset: scrollOffset + 100,
+                return scrollViewRef?.current?.scrollTo({
+                    y: scrollOffset + 100,
+                    x: 0,
                     animated: true
                 });
             }
@@ -874,94 +877,98 @@ const RegisterRequestSuccessfully = props => {
                 onBackButtonPressed={_ => handleBack()}
                 {...props}
             />
-            {products && products.length && showBox == true ?
-                <LinearGradient
-                    start={{ x: 0, y: 0.51, z: 1 }}
-                    end={{ x: 0.8, y: 0.2, z: 1 }}
-                    colors={['#aef8d6', '#67ce9e']}
-                    style={{
-                        borderRadius: 8,
-                        padding: 20,
-                        width: '95%',
-                        alignSelf: 'center',
-                        marginVertical: 15,
-                        marginHorizontal: 25,
-                    }}
-                >
-                    <View
+            <ScrollView
+                ref={scrollViewRef}
+                onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
+            >
+                {products && products.length && showBox == true ?
+                    <LinearGradient
+                        start={{ x: 0, y: 0.51, z: 1 }}
+                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                        colors={['#aef8d6', '#67ce9e']}
                         style={{
-                            backgroundColor: 'white',
-                            opacity: 0.3,
-                            width: 100,
-                            height: 100,
-                            borderRadius: 100,
-                            top: '-35%',
-                            overflow: 'hidden',
-                            position: 'absolute',
+                            borderRadius: 8,
+                            padding: 20,
+                            width: '95%',
+                            alignSelf: 'center',
+                            marginVertical: 15,
+                            marginHorizontal: 25,
                         }}
                     >
-                    </View>
-                    <View
-                        style={{
-                            backgroundColor: 'white',
-                            opacity: 0.3,
-                            width: 100,
-                            height: 100,
-                            borderRadius: 100,
-                            left: '-15%',
-                            overflow: 'hidden',
-                            position: 'absolute',
-                        }}
-                    >
-                    </View>
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="36"
-                            height="32"
-                            fill="none"
-                            viewBox="0 0 36 32"
-                        >
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
-                            <Path stroke="#000" d="M9.778 16l5.333 4.445 7.111-8.89"></Path>
-                        </Svg>
-                        <Text
+                        <View
                             style={{
-                                marginVertical: 10,
-                                textAlign: 'center',
-                                color: '#264653',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
-                                marginHorizontal: 10
+                                backgroundColor: 'white',
+                                opacity: 0.3,
+                                width: 100,
+                                height: 100,
+                                borderRadius: 100,
+                                top: '-35%',
+                                overflow: 'hidden',
+                                position: 'absolute',
                             }}
                         >
-                            {locales('titles.requestSubmittedSuccessfully')}
+                        </View>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                opacity: 0.3,
+                                width: 100,
+                                height: 100,
+                                borderRadius: 100,
+                                left: '-15%',
+                                overflow: 'hidden',
+                                position: 'absolute',
+                            }}
+                        >
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="36"
+                                height="32"
+                                fill="none"
+                                viewBox="0 0 36 32"
+                            >
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
+                                <Path stroke="#000" d="M9.778 16l5.333 4.445 7.111-8.89"></Path>
+                            </Svg>
+                            <Text
+                                style={{
+                                    marginVertical: 10,
+                                    textAlign: 'center',
+                                    color: '#264653',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 18,
+                                    marginHorizontal: 10
+                                }}
+                            >
+                                {locales('titles.requestSubmittedSuccessfully')}
+                            </Text>
+                        </View>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: 'rgba(38,70,83,80)',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16
+                            }}
+                        >
+                            {locales('titles.registerRequestFullDescription')}
                         </Text>
-                    </View>
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            color: 'rgba(38,70,83,80)',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('titles.registerRequestFullDescription')}
-                    </Text>
-                </LinearGradient>
-                : null}
+                    </LinearGradient>
+                    : null}
 
-            {/* 
+                {/* 
             <View
                 style={{
                     backgroundColor: '#edf8e6',
@@ -1017,95 +1024,95 @@ const RegisterRequestSuccessfully = props => {
             </View> */}
 
 
-            {!products || !products.length ? <Text
-                style={{
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    fontSize: 15,
-                    color: '#777777',
-                    marginTop: 40
-                }}>
-                {locales('titles.registerRequestDescription')}
-                <Text
-                    style={{
-                        paddingHorizontal: 10,
-                        textAlign: 'center',
-                        fontWeight: '200',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 15,
-                        color: '#21ad93'
-                    }}>
-                    {` ${locales('titles.buskool')}`}،
-                </Text>
-                <Text
+                {!products || !products.length ? <Text
                     style={{
                         paddingHorizontal: 10,
                         textAlign: 'center',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontWeight: '200',
                         fontSize: 15,
-                        color: '#777777'
+                        color: '#777777',
+                        marginTop: 40
                     }}>
-                    {` ${locales('titles.willBeSentToBuyers')}`}
-                </Text>
-            </Text> : null}
+                    {locales('titles.registerRequestDescription')}
+                    <Text
+                        style={{
+                            paddingHorizontal: 10,
+                            textAlign: 'center',
+                            fontWeight: '200',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: '#21ad93'
+                        }}>
+                        {` ${locales('titles.buskool')}`}،
+                    </Text>
+                    <Text
+                        style={{
+                            paddingHorizontal: 10,
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontWeight: '200',
+                            fontSize: 15,
+                            color: '#777777'
+                        }}>
+                        {` ${locales('titles.willBeSentToBuyers')}`}
+                    </Text>
+                </Text> : null}
 
-            {!products || !products.length ? <Button
-                onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
-                style={{
-                    textAlign: 'center',
-                    borderRadius: 5,
-                    marginVertical: 40,
-                    backgroundColor: '#00C569',
-                    width: '70%',
-                    color: 'white',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    elevation: 0,
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                }}
-                rounded
-            >
-                <Text style={{
-                    color: 'white',
-                    width: '100%',
-                    textAlign: 'center',
-                    fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                }}>{locales('labels.productsList')}</Text>
-            </Button> : null}
-
-
-            {products && products.length ?
-                <LinearGradient
-                    start={{ x: 0, y: 0.51, z: 1 }}
-                    end={{ x: 0.8, y: 0.2, z: 1 }}
-                    colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                {!products || !products.length ? <Button
+                    onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
                     style={{
-                        borderRadius: 8,
+                        textAlign: 'center',
+                        borderRadius: 5,
+                        marginVertical: 40,
+                        backgroundColor: '#00C569',
+                        width: '70%',
+                        color: 'white',
+                        alignItems: 'center',
                         alignSelf: 'center',
-                        flex: 1
+                        justifyContent: 'center',
+                        elevation: 0,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
                     }}
+                    rounded
                 >
+                    <Text style={{
+                        color: 'white',
+                        width: '100%',
+                        textAlign: 'center',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}>{locales('labels.productsList')}</Text>
+                </Button> : null}
 
-                    <FlatList
-                        ListHeaderComponent={renderListHeaderComponent}
-                        ListFooterComponent={renderListFooterComponent}
-                        maxToRenderPerBatch={3}
-                        getItemLayout={getItemLayout}
-                        windowSize={10}
-                        onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
-                        initialNumToRender={2}
-                        keyExtractor={keyExtractor}
-                        data={products}
-                        ref={flatListRef}
-                        renderItem={renderItem}
-                        ItemSeparatorComponent={renderItemSeparatorComponent}
-                    />
-                </LinearGradient>
-                : null}
+
+                {products && products.length ?
+                    <LinearGradient
+                        start={{ x: 0, y: 0.51, z: 1 }}
+                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                        colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                        style={{
+                            borderRadius: 8,
+                            alignSelf: 'center',
+                            flex: 1
+                        }}
+                    >
+
+                        <FlatList
+                            ListHeaderComponent={renderListHeaderComponent}
+                            ListFooterComponent={renderListFooterComponent}
+                            maxToRenderPerBatch={3}
+                            getItemLayout={getItemLayout}
+                            windowSize={10}
+                            initialNumToRender={2}
+                            keyExtractor={keyExtractor}
+                            data={products}
+                            ref={flatListRef}
+                            renderItem={renderItem}
+                            ItemSeparatorComponent={renderItemSeparatorComponent}
+                        />
+                    </LinearGradient>
+                    : null}
+            </ScrollView>
         </View>
     )
 }
