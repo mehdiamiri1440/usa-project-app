@@ -95,6 +95,9 @@ const BuyAdList = props => {
             .catch(_ => { })
     };
 
+    if (!item.has_msg && !item.has_phone)
+        return null;
+
     return (
 
         <View
