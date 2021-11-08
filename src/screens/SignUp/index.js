@@ -259,6 +259,7 @@ class SignUp extends React.Component {
                             }
 
                             if (isFromAchivePrice == true) {
+                                this.props.navigation.dispatch(popAction);
                                 return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
