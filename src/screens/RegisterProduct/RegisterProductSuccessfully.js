@@ -1140,7 +1140,6 @@ class RegisterProductSuccessfully extends Component {
                 }
                 <ScrollView
                     onScroll={event => {
-                        console.log(event.nativeEvent.contentOffset.y)
                         this.setState({ scrollToOffset: event.nativeEvent.contentOffset.y })
                     }}
                     ref={this.scrollViewRef}

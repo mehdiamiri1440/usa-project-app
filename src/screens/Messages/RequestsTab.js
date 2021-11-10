@@ -76,7 +76,6 @@ class RequestsTab extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('in  requests updated')
         if (prevState.fromMyBuskool == false && this.props.route && prevProps.route &&
             this.props.route.params && prevProps.route.params &&
             (this.props.route.params.fromMyNuskool != prevProps.route.params.fromMyNuskool ||
@@ -133,7 +132,6 @@ class RequestsTab extends Component {
         if (
             this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused
         ) {
-            console.log('app is in forground from requests')
             this.props.fetchRelatedRequests().then(result => {
                 this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
             });

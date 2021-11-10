@@ -159,19 +159,22 @@ class ProductDetails extends PureComponent {
         } = params;
 
         if (productId) {
-            return this.props.fetchAllProductInfo(productId).catch(({ response = {} }) => {
+            return this.props.fetchAllProductInfo(productId)
+                .catch(({ response = {} }) => {
 
-                const {
-                    data = {}
-                } = response;
+                    const {
+                        data = {}
+                    } = response;
 
-                const {
-                    status
-                } = data;
-
-                if (!status)
-                    this.props.navigation.navigate('Home', { screen: 'ProductsList' })
-            });
+                    const {
+                        status
+                    } = data;
+                    if (!status)
+                        return this.props.navigation.navigate('Home',
+                            {
+                                screen: 'ProductsList'
+                            });
+                });
         }
     };
 

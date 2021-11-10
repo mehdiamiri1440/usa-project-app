@@ -251,11 +251,7 @@ const AuthenticatedSuccessfully = props => {
                                     </G>
                                 </Svg>
                             </LinearGradient>
-                            <View
-                                style={{
-                                    right: 15
-                                }}
-                            >
+                            <View>
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -350,11 +346,7 @@ const AuthenticatedSuccessfully = props => {
                                             </G>
                                         </Svg>
                                     </LinearGradient>
-                                    <View
-                                        style={{
-                                            right: 15
-                                        }}
-                                    >
+                                    <View>
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -449,7 +441,7 @@ const AuthenticatedSuccessfully = props => {
                                 </LinearGradient>
                                 <View
                                     style={{
-                                        right: 45
+                                        right: 25
                                     }}
                                 >
                                     <Text
