@@ -208,8 +208,8 @@ class ContactUs extends React.Component {
                         >
                             <Image
                                 style={{
-                                    width: 40,
-                                    height: 40,
+                                    width: 42,
+                                    height: 42,
                                     backgroundColor: 'white'
                                 }}
                                 source={require('../../../../assets/icons/instagram.png')}
