@@ -119,7 +119,7 @@ class ContactUs extends React.Component {
                                 shadowOffset: { width: 0, height: 4 },
                                 backgroundColor: '#E2F0F5',
                                 width: '95%',
-                                borderRadius: 12,
+                                borderRadius: 15,
                                 alignSelf: 'center',
                                 marginTop: 30
                             }}
@@ -132,7 +132,7 @@ class ContactUs extends React.Component {
                                     width: '100%',
                                     borderColor: '#e0e0e0',
                                     padding: 10,
-                                    borderRadius: 12,
+                                    borderRadius: 15,
                                     borderWidth: 1,
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
@@ -144,7 +144,8 @@ class ContactUs extends React.Component {
                                     style={{
                                         flexDirection: 'row-reverse',
                                         justifyContent: 'center',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        borderRadius: 15
                                     }}
                                 >
                                     <LinearGradient
@@ -185,7 +186,7 @@ class ContactUs extends React.Component {
                                 <FontAwesome5
                                     name='angle-left'
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                         </ShadowView>
@@ -207,8 +208,9 @@ class ContactUs extends React.Component {
                         >
                             <Image
                                 style={{
-                                    width: 30,
-                                    height: 30
+                                    width: 40,
+                                    height: 40,
+                                    backgroundColor: 'white'
                                 }}
                                 source={require('../../../../assets/icons/instagram.png')}
                             />

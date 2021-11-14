@@ -812,5 +812,6 @@ module.exports = {
     'messages.userNotAuthorized': 'اطلاعات هویتی این کاربر ،',
     'messages.enterCode': 'کد ۴ رقمی که به شماره {fieldName} ارسال شده است را اینجا وارد کنید',
     'messages.nearBuskool': "نزد باسکول",
+    'messages.enterSentCode': 'کد ۴ رقمی ارسال شده به شماره {fieldName} را وارد کنید .'
   }
 };

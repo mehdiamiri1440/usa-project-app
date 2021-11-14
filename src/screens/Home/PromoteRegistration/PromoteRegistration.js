@@ -231,8 +231,8 @@ class PromoteRegistration extends React.Component {
                         <Text
                             style={{
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 22,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 20,
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}
@@ -904,7 +904,7 @@ class PromoteRegistration extends React.Component {
                         <Text style={{
                             color: '#140092',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 22,
+                            fontSize: 18,
                             textAlign: 'center',
                             textAlignVertical: 'center',
                             textDecorationLine: 'line-through'
@@ -1597,7 +1597,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${packageVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {packageVisibility ?
@@ -1660,7 +1660,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${elevatorVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {elevatorVisibility ?
@@ -1723,7 +1723,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${passwordVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {passwordVisibility ?
@@ -1828,7 +1828,9 @@ class PromoteRegistration extends React.Component {
                                     flexDirection: 'row-reverse',
                                     elevation: 0,
                                     alignSelf: 'center',
-                                    justifyContent: 'center',
+                                    justifyContent: 'space-around',
+                                    paddingLeft: 30,
+                                    paddingRight: 10,
                                     alignItems: 'center',
                                 }}
                             onPress={_ => {

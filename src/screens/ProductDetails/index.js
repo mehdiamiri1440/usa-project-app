@@ -999,7 +999,7 @@ class ProductDetails extends PureComponent {
                             }, _ => this.priceRBSheet?.current?.close()
                         )
                         }
-                        height={250}
+                        height={300}
                         animationType='fade'
                         customStyles={{
                             draggableIcon: {
@@ -1069,7 +1069,7 @@ class ProductDetails extends PureComponent {
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     fontSize: 22,
                                     color: '#140092',
-                                    marginTop: 5
+                                    marginVertical: 20
                                 }}
                             >
                                 {numberWithCommas(min_sale_price)} <Text
@@ -1145,7 +1145,7 @@ class ProductDetails extends PureComponent {
                                     color: '#FF6600',
                                     textAlign: 'center',
                                     textAlignVertical: 'center',
-                                    marginTop: 20,
+                                    marginTop: 40,
                                     bottom: 10
                                 }}
                             >
@@ -1959,17 +1959,30 @@ class ProductDetails extends PureComponent {
                                                 this.setState({ showContactListModal: true });
                                             }}
                                             style={{
-                                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
-                                                flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                                borderWidth: 0.8,
+                                                borderColor: '#777777',
+                                                borderRadius: 6,
+                                                padding: 5,
+                                                flexDirection: 'row-reverse',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
                                             }}>
-                                            <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
-                                            <Text style={{
-                                                color: '#777777', fontSize: 14, marginLeft: 5,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
-                                            }}>
+                                            <FontAwesome
+                                                name='share-alt'
+                                                size={14}
+                                                color='rgba(46, 58, 89, 0.8)'
+                                                style={{ marginHorizontal: 5 }}
+                                            />
+                                            <Text
+                                                style={{
+                                                    color: '#264653',
+                                                    fontSize: 14,
+                                                    marginLeft: 5,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                                }}
+                                            >
                                                 {locales('labels.share')}
                                             </Text>
-
                                         </Pressable>
                                     </View>
                                 </View>

@@ -182,7 +182,7 @@ const EnterActivisionCode = (props) => {
         <>
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
-                {locales('messages.enterCode', { fieldName: mobileNumber })}
+                {locales('messages.enterSentCode', { fieldName: mobileNumber })}
             </Text>
             {/* {!error && value.length === 4 && flag && message && message.length &&
                 <View style={styles.loginFailedContainer}>
@@ -273,7 +273,13 @@ const EnterActivisionCode = (props) => {
                         setFlag(true);
                         onSubmit(value)
                     }}
-                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
+                    style={[
+                        value.length !== 4
+                            ? styles.disableLoginButton
+                            : styles.loginButton,
+                        {
+                            borderRadius: 8
+                        }]}
                     rounded
                 >
                     <Text style={[styles.buttonText,
