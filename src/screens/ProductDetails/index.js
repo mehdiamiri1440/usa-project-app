@@ -1034,127 +1034,154 @@ class ProductDetails extends PureComponent {
                                 justifyContent: 'space-between',
                             }}
                         >
-                            <Text
+                            <View
+
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 20,
-                                    color: 'black',
-                                    textAlign: 'center',
-                                    paddingHorizontal: 5
+                                    top: 20
                                 }}
                             >
-                                {locales('titles.minOfThePrice')} <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                        fontSize: 20,
-                                        fontWeight: '200',
-                                        color: 'black'
-                                    }}
-                                >
-                                    {locales('titles.forEachKilo')}
-                                </Text>
                                 <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                        fontWeight: '200',
-                                        fontSize: 20,
-                                        color: 'black',
-                                    }}
-                                >
-                                    {` ${product_name}`}
-                                </Text>
-                            </Text>
-                            <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                    fontSize: 22,
-                                    color: '#140092',
-                                    marginVertical: 20
-                                }}
-                            >
-                                {numberWithCommas(min_sale_price)} <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontWeight: '200',
-                                        fontSize: 22,
-                                        color: '#140092'
+                                        fontSize: 20,
+                                        color: 'black',
+                                        textAlign: 'center',
+                                        paddingHorizontal: 5
                                     }}
                                 >
-                                    {locales('titles.toman')}
-                                </Text>
-                            </Text>
-
-                            <Button
-                                onPress={this.openCallPadFromAchivePrice}
-                                style={{
-                                    backgroundColor: '#FF6600',
-                                    borderRadius: 8,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    alignSelf: 'center',
-                                    marginTop: 10,
-                                    width: '80%',
-                                    paddingVertical: 10,
-                                    flexDirection: 'row-reverse'
-                                }}
-                            >
-                                {has_phone && !is_seller ?
-                                    <FontAwesome5
-                                        name='phone-alt'
-                                        color='white'
-                                        solid
-                                        size={16}
-                                    />
-                                    : <Svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
+                                    {locales('titles.minOfThePrice')} <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 20,
+                                            fontWeight: '200',
+                                            color: 'black'
+                                        }}
                                     >
-                                        <SvgPath
-                                            fill="white"
-                                            d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
-                                        ></SvgPath>
-                                        <SvgPath
-                                            fill="white"
-                                            d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
-                                        ></SvgPath>
-                                    </Svg>
-                                }
+                                        {locales('titles.forEachKilo')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontWeight: '200',
+                                            fontSize: 20,
+                                            color: 'black',
+                                        }}
+                                    >
+                                        {` ${product_name}`}
+                                    </Text>
+                                </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        fontSize: 20,
-                                        color: 'white',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 22,
+                                        color: '#140092',
+                                        marginTop: 20,
                                         textAlign: 'center',
-                                        textAlignVertical: 'center',
-                                        marginRight: 8
+                                        bottom: 20
                                     }}
                                 >
-                                    {locales(`labels.${has_phone && !is_seller ?
-                                        'callWithSeller'
-                                        : 'chatWithSeller'}`)}
+                                    {numberWithCommas(min_sale_price)} <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontWeight: '200',
+                                            fontSize: 22,
+                                            color: '#140092'
+                                        }}
+                                    >
+                                        {locales('titles.toman')}
+                                    </Text>
                                 </Text>
-                            </Button>
-                            <Text
-                                onPress={this.redirectToScreensViaAchivePrice}
+                            </View>
+                            <View
                                 style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 18,
-                                    color: '#FF6600',
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    marginTop: 40,
-                                    bottom: 10
+                                    marginTop: 30,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
                             >
-                                {is_seller || !loggedInUserId ?
-                                    locales('labels.haveProductToSell')
-                                    :
-                                    null
-                                }
-                            </Text>
+                                <Button
+                                    onPress={this.openCallPadFromAchivePrice}
+                                    style={{
+                                        backgroundColor: '#FF6600',
+                                        borderRadius: 8,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        marginTop: 10,
+                                        width: '80%',
+                                        paddingVertical: 10,
+                                        flexDirection: 'row-reverse'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            alignSelf: 'center',
+                                            flexDirection: 'row-reverse'
+                                        }}
+                                    >
+                                        {has_phone && !is_seller ?
+                                            <FontAwesome5
+                                                name='phone-alt'
+                                                color='white'
+                                                solid
+                                                size={16}
+                                            />
+                                            : <Svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <SvgPath
+                                                    fill="white"
+                                                    d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
+                                                ></SvgPath>
+                                                <SvgPath
+                                                    fill="white"
+                                                    d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
+                                                ></SvgPath>
+                                            </Svg>
+                                        }
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 20,
+                                                color: 'white',
+                                                alignSelf: 'center',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                marginRight: 8
+                                            }}
+                                        >
+                                            {locales(`labels.${has_phone && !is_seller ?
+                                                'callWithSeller'
+                                                : 'chatWithSeller'}`)}
+                                        </Text>
+                                    </View>
+                                </Button>
+                                <Text
+                                    onPress={this.redirectToScreensViaAchivePrice}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 18,
+                                        color: '#FF6600',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                        marginTop: 40,
+                                        bottom: 10
+                                    }}
+                                >
+                                    {is_seller || !loggedInUserId ?
+                                        locales('labels.haveProductToSell')
+                                        :
+                                        null
+                                    }
+                                </Text>
+                            </View>
                         </ScrollView>
 
                     </RBSheet>
@@ -1928,12 +1955,13 @@ class ProductDetails extends PureComponent {
                                     onRefresh={() => this.componentDidMount()}
                                 />
                             }>
-                            <ShadowView style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
-                            }}>
+                            <ShadowView
+                                style={{
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
+                                }}>
                                 <ProductImages
                                     showFullSizeImage={this.showFullSizeImage}
                                     photosWithCompletePath={photosWithCompletePath}
