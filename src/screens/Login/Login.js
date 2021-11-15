@@ -158,7 +158,7 @@ class Login extends React.Component {
                     error && !firstLoad ?
                         <Text
                             style={{
-                                height: 40,
+                                height: 50,
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 color: '#F03738',
